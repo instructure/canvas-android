@@ -20,6 +20,8 @@ apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'au.com.dius.pact'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -143,6 +145,9 @@ dependencies {
 
     // Remote Config
     implementation Libs.FIREBASE_CONFIG
+
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
 }
 
 // Define our pact-publish object

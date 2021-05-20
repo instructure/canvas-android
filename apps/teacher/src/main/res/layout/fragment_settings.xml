@@ -88,20 +88,6 @@
                 android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/helpButton"
-                style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:selectableItemBackground"
-                android:gravity="center_vertical"
-                android:minHeight="?android:listPreferredItemHeight"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/help"
-                android:textColor="@color/defaultTextDark"
-                android:textSize="16sp"/>
-
-            <TextView
                 android:id="@+id/featureFlagButton"
                 style="@style/TextFont.Medium"
                 android:layout_width="match_parent"

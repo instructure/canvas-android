@@ -28,6 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
@@ -61,9 +62,10 @@ import kotlinx.coroutines.Job
 import java.net.URLDecoder
 
 class AssignmentDetailsView(
-    val canvasContext: CanvasContext,
-    inflater: LayoutInflater,
-    parent: ViewGroup
+        val canvasContext: CanvasContext,
+        isAccessiblityEnabled: Boolean = false,
+        inflater: LayoutInflater,
+        parent: ViewGroup
 ) :
     MobiusView<AssignmentDetailsViewState, AssignmentDetailsEvent>(
         R.layout.fragment_assignment_details,
@@ -77,12 +79,30 @@ class AssignmentDetailsView(
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         toolbar.title = context.getString(R.string.assignmentDetails)
         toolbar.subtitle = canvasContext.name
-        toolbar.setMenu(R.menu.bookmark_menu) { consumer?.accept(AssignmentDetailsEvent.AddBookmarkClicked) }
+
+        val navigation = context as? Navigation
+        val bookmarkFeatureAllowed = navigation?.canBookmark() ?: true // We allow bookmarking by default if it's not explicitly disabled
+        if (bookmarkFeatureAllowed) {
+            toolbar.setMenu(R.menu.bookmark_menu) { consumer?.accept(AssignmentDetailsEvent.AddBookmarkClicked) }
+        }
+
         submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
         submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
+
+        if (isAccessiblityEnabled) {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(constraintParent)
+            constraintSet.clear(submitButton.id, ConstraintSet.BOTTOM)
+            constraintSet.clear(swipeRefreshLayout.id, ConstraintSet.TOP)
+            constraintSet.clear(swipeRefreshLayout.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(submitButton.id, ConstraintSet.TOP, toolbar.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.TOP, submitButton.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+            constraintSet.applyTo(constraintParent)
+        }
     }
 
     override fun applyTheme() {
@@ -95,12 +115,16 @@ class AssignmentDetailsView(
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         submitButton.onClick {
-            logEvent(AnalyticsEventConstants.ASSIGNMENT_SUBMIT_SELECTED)
-            output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked)
+            onSubmitClick(output)
         }
         attachmentIcon.onClick { output.accept(AssignmentDetailsEvent.DiscussionAttachmentClicked) }
         swipeRefreshLayout.setOnRefreshListener { output.accept(AssignmentDetailsEvent.PullToRefresh) }
         setupDescriptionView()
+    }
+
+    private fun onSubmitClick(output: Consumer<AssignmentDetailsEvent>) {
+        logEvent(AnalyticsEventConstants.ASSIGNMENT_SUBMIT_SELECTED)
+        output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked)
     }
 
     private fun setupDescriptionView() {
@@ -148,12 +172,13 @@ class AssignmentDetailsView(
             noDescriptionContainer.setVisible(visibilities.noDescriptionLabel)
             descriptionWebView.setVisible(visibilities.description)
             allowedAttemptsContainer.setVisible(visibilities.allowedAttempts)
-            submitButton.isEnabled = visibilities.submitButtonEnabled
+            submitButton.isEnabled = visibilities.submitButtonEnabled && visibilities.submitButton
             if (visibilities.submitButtonEnabled) {
                 submitButton.alpha = 1f
             } else {
                 submitButton.alpha = 0.2f
             }
+            submitButton.importantForAccessibility = if (visibilities.submitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
             submitButton.setVisible(visibilities.submitButton)
             submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
             submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)

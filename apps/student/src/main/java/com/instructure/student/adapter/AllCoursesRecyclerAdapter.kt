@@ -20,18 +20,17 @@ package com.instructure.student.adapter
 import android.app.Activity
 import android.view.View
 import android.widget.Toast
+import com.instructure.student.R
+import com.instructure.student.holders.CourseViewHolder
+import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.isInvited
-import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.student.R
-import com.instructure.student.holders.CourseViewHolder
-import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 
 
 class AllCoursesRecyclerAdapter(
@@ -58,7 +57,7 @@ class AllCoursesRecyclerAdapter(
         mApiCall?.cancel()
         mApiCall = tryWeave {
             val courses = awaitApi<List<Course>> { CourseManager.getCourses(isRefresh, it) }
-                    .filter { !it.accessRestrictedByDate && !it.isInvited() && it.isNotDeleted() }
+                    .filter { !it.accessRestrictedByDate && !it.isInvited() }
             addAll(courses)
             notifyDataSetChanged()
             isAllPagesLoaded = true

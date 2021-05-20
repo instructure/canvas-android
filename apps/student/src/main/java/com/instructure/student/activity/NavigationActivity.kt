@@ -24,7 +24,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -61,11 +60,14 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
+import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
@@ -75,12 +77,14 @@ import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.navigation.*
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.StudentPrefs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
@@ -88,25 +92,28 @@ import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
+@AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
-    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
+    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver(),
+        ErrorReportDialog.ErrorReportDialogResultListener {
+
+    @Inject
+    lateinit var navigationBehavior: NavigationBehavior
+
+    @Inject
+    lateinit var appShortcutManager: AppShortcutManager
+
+    @Inject
+    lateinit var typefaceBehavior: TypefaceBehavior
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
     private var drawerItemSelectedJob: Job? = null
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var colorOverlayJob: Job? = null
-
-    /** 'Root' fragments that should include the bottom nav bar */
-    private val bottomNavBarFragments = listOf(
-        DashboardFragment::class.java,
-        CalendarFragment::class.java,
-        ToDoListFragment::class.java,
-        NotificationListFragment::class.java,
-        InboxFragment::class.java
-    )
 
     override fun contentResId(): Int = R.layout.activity_navigation
 
@@ -118,6 +125,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             closeNavigationDrawer()
             delay(250)
             when (v.id) {
+                R.id.navigationDrawerItem_help -> {
+                    HelpDialogFragment.show(this@NavigationActivity)
+                }
                 R.id.navigationDrawerItem_files -> {
                     ApiPrefs.user?.let { handleRoute(FileListFragment.makeRoute(it)) }
                 }
@@ -141,13 +151,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }, route)
                 }
                 R.id.navigationDrawerItem_changeUser -> {
-                    StudentLogoutTask(if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS).execute()
+                    StudentLogoutTask(if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS, typefaceBehavior = typefaceBehavior).execute()
                 }
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
                             .setTitle(R.string.logout_warning)
                             .setPositiveButton(android.R.string.yes) { _, _ ->
-                                StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                                StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
                             }
                             .setNegativeButton(android.R.string.no, null)
                             .create()
@@ -159,7 +169,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_stopMasquerading -> {
                     MasqueradeHelper.stopMasquerading(startActivityClass)
                 }
-                R.id.navigationDrawerSettings -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
+                R.id.navigationDrawerSettings, R.id.navigationDrawerAccount -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
             }
         }
     }
@@ -173,7 +183,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             /* Update nav bar visibility to show for specific 'root' fragments. Also show the nav bar when there is
              only one fragment on the backstack, which commonly occurs with non-root fragments when routing
              from external sources. */
-            val visible = it::class.java in bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1
+            val visible = it::class.java in navigationBehavior.bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1
             bottomBar.setVisible(visible)
             bottomBarDivider.setVisible(visible)
         }
@@ -208,7 +218,26 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
         }
 
-        AppShortcutManager.make(this)
+        appShortcutManager.make(this)
+
+        setupNavDrawerItems()
+    }
+
+    private fun setupNavDrawerItems() {
+        navigationDrawerItem_files.setVisible(navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.FILES))
+        navigationDrawerItem_bookmarks.setVisible(navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.BOOKMARKS))
+        navigationDrawerSettings.setVisible(navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.SETTINGS))
+        navigationMenuItemsDivider.setVisible(navigationBehavior.visibleNavigationMenuItems.isNotEmpty())
+
+        optionsMenuTitle.setVisible(navigationBehavior.visibleOptionsMenuItems.isNotEmpty())
+        navigationDrawerItem_showGrades.setVisible(navigationBehavior.visibleOptionsMenuItems.contains(OptionsMenuItem.SHOW_GRADES))
+        navigationDrawerItem_colorOverlay.setVisible(navigationBehavior.visibleOptionsMenuItems.contains(OptionsMenuItem.COLOR_OVERLAY))
+        optionsMenuItemsDivider.setVisible(navigationBehavior.visibleOptionsMenuItems.isNotEmpty())
+
+        navigationDrawerAccount.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.ACCOUNT))
+        navigationDrawerItem_help.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.HELP))
+        navigationDrawerItem_changeUser.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.CHANGE_USER))
+        navigationDrawerItem_logout.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.LOGOUT))
     }
 
     override fun initialCoreDataLoadingComplete() {
@@ -268,9 +297,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun loadLandingPage(clearBackStack: Boolean) {
-        if (clearBackStack) clearBackStack(DashboardFragment::class.java)
-        val dashboardRoute = DashboardFragment.makeRoute(ApiPrefs.user)
-        addFragment(DashboardFragment.newInstance(dashboardRoute), dashboardRoute)
+        if (clearBackStack) clearBackStack(navigationBehavior.homeFragmentClass)
+        val homeRoute = navigationBehavior.createHomeFragmentRoute(ApiPrefs.user)
+        addFragment(navigationBehavior.createHomeFragment(homeRoute), homeRoute)
 
         if (intent.extras?.containsKey(AppShortcutManager.APP_SHORTCUT_PLACEMENT) == true) {
             // Launch to the app shortcut placement
@@ -374,15 +403,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions {
-        ColorUtils.colorIt(ThemePrefs.primaryColor, navigationDrawerInstitutionImage.background)
-        navigationDrawerInstitutionImage.loadUri(Uri.parse(ThemePrefs.logoUrl), R.mipmap.ic_launcher_foreground)
-
         //Navigation items
         navigationDrawerItem_files.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_gauge.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_studio.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_bookmarks.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerAccount.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_changeUser.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerItem_help.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_logout.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_startMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
@@ -489,13 +517,20 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         toast(R.string.fileQuotaExceeded)
     }
 
+    override fun overrideFont() {
+        super.overrideFont()
+        if (navigationBehavior.shouldOverrideFont) {
+            typefaceBehavior.overrideFont()
+        }
+    }
+
     //endregion
 
     //region Bottom Bar Navigation
 
     private val bottomBarItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item: MenuItem ->
         when (item.itemId) {
-            R.id.bottomNavigationCourses -> handleRoute(Route(DashboardFragment::class.java, ApiPrefs.user))
+            R.id.bottomNavigationHome -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
             R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
             R.id.bottomNavigationToDo -> {
                 val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
@@ -526,7 +561,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         topFragment?.let {
             val currentFragmentClass = it::class.java
             when (item.itemId) {
-                R.id.bottomNavigationCourses -> abortReselect = currentFragmentClass.isAssignableFrom(DashboardFragment::class.java)
+                R.id.bottomNavigationHome -> abortReselect = currentFragmentClass.isAssignableFrom(navigationBehavior.homeFragmentClass)
                 R.id.bottomNavigationCalendar -> abortReselect = currentFragmentClass.isAssignableFrom(CalendarFragment::class.java)
                 R.id.bottomNavigationToDo -> abortReselect = currentFragmentClass.isAssignableFrom(ToDoListFragment::class.java)
                 R.id.bottomNavigationNotifications -> abortReselect = currentFragmentClass.isAssignableFrom(NotificationListFragment::class.java)
@@ -536,7 +571,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         if(!abortReselect) {
             when (item.itemId) {
-                R.id.bottomNavigationCourses -> handleRoute(Route(DashboardFragment::class.java, ApiPrefs.user))
+                R.id.bottomNavigationHome -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
                 R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
                 R.id.bottomNavigationToDo -> {
                     val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
@@ -602,7 +637,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             is ToDoListFragment -> setBottomBarItemSelected(R.id.bottomNavigationToDo)
             //Notifications
             is NotificationListFragment-> {
-                setBottomBarItemSelected(if(fragment.isCourseOrGroup()) R.id.bottomNavigationCourses
+                setBottomBarItemSelected(if(fragment.isCourseOrGroup()) R.id.bottomNavigationHome
                 else R.id.bottomNavigationNotifications)
             }
             //Inbox
@@ -611,7 +646,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             is InboxComposeMessageFragment,
             is InboxRecipientsFragment -> setBottomBarItemSelected(R.id.bottomNavigationInbox)
             //courses
-            else -> setBottomBarItemSelected(R.id.bottomNavigationCourses)
+            else -> setBottomBarItemSelected(R.id.bottomNavigationHome)
         }
     }
 
@@ -907,6 +942,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         dialog?.show(supportFragmentManager, BookmarkCreationDialog::class.java.simpleName)
     }
 
+    override fun canBookmark(): Boolean = navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.BOOKMARKS)
+
     override fun updateUnreadCount(unreadCount: String) {
         // get the view
         val bottomBarNavView = bottomBar?.getChildAt(0)
@@ -984,30 +1021,24 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
     }
 
-    companion object {
-        fun createIntent(context: Context): Intent {
-            return Intent(context, NavigationActivity::class.java)
-        }
+    override fun onTicketPost() {
+        // The message is a little longer than normal, so show it for LENGTH_LONG instead of LENGTH_SHORT
+        Toast.makeText(this, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
+    }
 
+    override fun onTicketError() {
+        toast(R.string.errorOccurred)
+    }
+
+    companion object {
         fun createIntent(context: Context, route: Route): Intent {
             return Intent(context, NavigationActivity::class.java).apply { putExtra(Route.ROUTE, route) }
         }
 
-        fun createIntent(context: Context, extras: Bundle): Intent {
-            val intent = Intent(context, NavigationActivity::class.java)
-            intent.putExtra(Const.EXTRAS, extras)
-            return intent
-        }
-
-        fun createIntent(context: Context, message: String, messageType: Int): Intent {
-            val intent = createIntent(context)
-            intent.putExtra(Const.MESSAGE, message)
-            intent.putExtra(Const.MESSAGE_TYPE, messageType)
-            return intent
-        }
-
-        fun createIntent(context: Context, masqueradingUserId: Long): Intent = createIntent(context).apply {
-            putExtra(Const.QR_CODE_MASQUERADE_ID, masqueradingUserId)
+        fun createIntent(context: Context, masqueradingUserId: Long): Intent {
+            return Intent(context, NavigationActivity::class.java).apply {
+                putExtra(Const.QR_CODE_MASQUERADE_ID, masqueradingUserId)
+            }
         }
 
         val startActivityClass: Class<out Activity>

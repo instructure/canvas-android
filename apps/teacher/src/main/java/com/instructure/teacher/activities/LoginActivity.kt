@@ -34,7 +34,9 @@ import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.getColorCompat
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : BaseLoginInitActivity() {
 
     override fun beginLoginFlowIntent(): Intent = LoginLandingPageActivity.createIntent(this)
@@ -53,6 +55,12 @@ class LoginActivity : BaseLoginInitActivity() {
             startActivity(RouteValidatorActivity.createIntent(this, intent.data!!))
             finish()
         }
+    }
+
+    override fun startApp() {
+        val intent = launchApplicationMainActivityIntent()
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     companion object {

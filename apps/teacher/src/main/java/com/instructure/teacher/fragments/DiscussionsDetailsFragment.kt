@@ -16,13 +16,17 @@
 package com.instructure.teacher.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.view.accessibility.AccessibilityManager
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.widget.ScrollView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.*
@@ -228,7 +232,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun populateDiscussionTopic(discussionTopicHeader: DiscussionTopicHeader, discussionTopic: DiscussionTopic) {
+    override fun populateDiscussionTopic(discussionTopicHeader: DiscussionTopicHeader, discussionTopic: DiscussionTopic, topLevelReplyPosted: Boolean) {
         // Check if we have permissions and if we have any discussions to display.
 
         loadDiscussionJob = tryWeave {
@@ -262,7 +266,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
             delay(300)
             discussionsScrollView.post {
-                discussionsScrollView.scrollTo(0, presenter?.scrollPosition ?: 0)
+                if (topLevelReplyPosted) {
+                    discussionsScrollView.fullScroll(ScrollView.FOCUS_DOWN)
+                } else {
+                    discussionsScrollView.scrollTo(0, presenter?.scrollPosition)
+                }
                 discussionRepliesWebView.setVisible()
             }
         } catch { Logger.e("Error loading discussion " + it.message) }
@@ -434,6 +442,14 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     override fun onResume() {
         super.onResume()
         setupToolbar()
+
+        if (isAccessibilityEnabled() && mDiscussionTopicHeader.htmlUrl != null) {
+            alternateViewButton.visibility = View.VISIBLE
+            alternateViewButton.setOnClickListener {
+                val bundle = InternalWebViewFragment.makeBundle(mDiscussionTopicHeader.htmlUrl!!, mDiscussionTopicHeader.title!!, shouldAuthenticate = true)
+                RouteMatcher.route(requireActivity(), Route(null, InternalWebViewFragment::class.java, canvasContext, bundle))
+            }
+        }
 
         swipeRefreshLayout.setOnRefreshListener {
             presenter.loadData(true)
@@ -676,6 +692,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
+    }
+
+    private fun isAccessibilityEnabled(): Boolean {
+        val am: AccessibilityManager? = requireContext().getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
+        return am?.isEnabled ?: false && am?.isTouchExplorationEnabled ?: false
     }
 
     override fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry) {

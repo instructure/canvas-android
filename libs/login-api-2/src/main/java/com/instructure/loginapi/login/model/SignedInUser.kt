@@ -33,7 +33,8 @@ data class SignedInUser(
         var clientId: String?,
         var clientSecret: String?,
         var calendarFilterPrefs: ArrayList<String>?,
-        var lastLogoutDate: Date? = null
+        var lastLogoutDate: Date? = null,
+        var canvasForElementary: Boolean = false
 ) : Comparable<SignedInUser>, Parcelable {
     override fun compareTo(other: SignedInUser): Int {
         // We want newest first.

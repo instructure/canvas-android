@@ -167,7 +167,7 @@ class DiscussionsReplyFragment : ParentFragment() {
         postDiscussionJob = tryWeave {
             if (attachment == null) {
                 if (discussionEntryId == discussionTopicHeaderId) {
-                    messageSentResponse(awaitApiResponse { DiscussionManager.postToDiscussionTopic(canvasContext, discussionTopicHeaderId, message!!, it) })
+                    messageSentResponse(awaitApiResponse { DiscussionManager.postToDiscussionTopic(canvasContext, discussionTopicHeaderId, message!!, it) }, topLevel = true)
                 } else {
                     messageSentResponse(awaitApiResponse { DiscussionManager.replyToDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, message!!, it) })
                 }
@@ -176,7 +176,7 @@ class DiscussionsReplyFragment : ParentFragment() {
                     messageSentResponse(awaitApiResponse {
                         DiscussionManager.postToDiscussionTopic(canvasContext, discussionTopicHeaderId, message!!, File(attachment!!.fullPath), attachment?.contentType
                                 ?: "multipart/form-data", it)
-                    })
+                    }, topLevel = true)
                 } else {
                     messageSentResponse(awaitApiResponse {
                         DiscussionManager.replyToDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, message!!, File(attachment!!.fullPath), attachment?.contentType
@@ -189,7 +189,7 @@ class DiscussionsReplyFragment : ParentFragment() {
         }
     }
 
-    private fun messageSentResponse(response: Response<DiscussionEntry>) {
+    private fun messageSentResponse(response: Response<DiscussionEntry>, topLevel: Boolean = false) {
         if (response.code() in 200..299 && response.body() != null) {
             val discussionEntry = response.body()
 
@@ -205,7 +205,7 @@ class DiscussionsReplyFragment : ParentFragment() {
 
             // Post successful
             DiscussionCaching(discussionTopicHeaderId).saveEntry(discussionEntry) // Save to cache
-            DiscussionEntryEvent(discussionEntry!!.id).postSticky() // Notify about new reply
+            DiscussionEntryEvent(discussionEntry!!.id, topLevel).postSticky() // Notify about new reply
             toast(R.string.utils_discussionSentSuccess)
             activity?.onBackPressed()
         } else {

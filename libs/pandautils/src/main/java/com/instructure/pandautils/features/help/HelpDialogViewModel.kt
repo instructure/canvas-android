@@ -1,0 +1,161 @@
+/*
+ * Copyright (C) 2021 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.pandautils.features.help
+
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.HelpLinksManager
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.HelpLink
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.R
+import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.PackageInfoProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
+import java.util.*
+import javax.inject.Inject
+
+@HiltViewModel
+class HelpDialogViewModel @Inject constructor(
+    private val helpLinksManager: HelpLinksManager,
+    private val courseManager: CourseManager,
+    @ApplicationContext private val context: Context,
+    private val apiPrefs: ApiPrefs,
+    private val packageInfoProvider: PackageInfoProvider,
+    private val helpLinkFilter: HelpLinkFilter) : ViewModel() {
+
+    val state: LiveData<ViewState>
+        get() = _state
+    private val _state = MutableLiveData<ViewState>()
+
+    val data: LiveData<HelpDialogViewData>
+        get() = _data
+    private val _data = MutableLiveData<HelpDialogViewData>()
+
+    val events: LiveData<Event<HelpDialogAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<HelpDialogAction>>()
+
+    init {
+        loadHelpLinks()
+    }
+
+    private fun loadHelpLinks() {
+        viewModelScope.launch {
+            _state.postValue(ViewState.Loading)
+
+            try {
+                val helpLinks = helpLinksManager.getHelpLinksAsync(true).await()
+                    .dataOrThrow
+
+                val helpLinksViewData = if (helpLinks.customHelpLinks.isNotEmpty()) {
+                    // We have custom links, let's use those
+                    createLinks(helpLinks.customHelpLinks)
+                } else {
+                    // Default links
+                    createLinks(helpLinks.defaultHelpLinks)
+                }
+
+                _data.postValue(HelpDialogViewData(helpLinksViewData))
+                _state.postValue(ViewState.Success)
+            } catch (e: Exception) {
+                _state.postValue(ViewState.Error())
+                Logger.d("Failed to grab help links: ${e.printStackTrace()}")
+            }
+        }
+    }
+
+    // Maps links to views and then adds them to the container
+    private suspend fun createLinks(list: List<HelpLink>): List<HelpLinkItemViewModel> {
+
+        // Share love link is specific to Android - Add it to the list returned from the API
+        val rateLink = HelpLinkViewData(context.getString(R.string.shareYourLove), context.getString(R.string.shareYourLoveDetails), HelpDialogAction.RateTheApp)
+
+        val favoriteCourses = courseManager.getAllFavoriteCoursesAsync(false).await()
+            .dataOrThrow
+
+        return list
+            // Only want links for students
+            .filter { helpLinkFilter.isLinkAllowed(it, favoriteCourses) }
+            .map { HelpLinkItemViewModel(HelpLinkViewData(it.text, it.subtext, mapAction(it)), ::onLinkClicked) }
+            .plus(HelpLinkItemViewModel(rateLink, ::onLinkClicked))
+    }
+
+    private fun filterLinks(link: HelpLink, favoriteCourses: List<Course>): Boolean {
+        return ((link.availableTo.contains("student") || link.availableTo.contains("user"))
+            && (link.url != "#teacher_feedback" || favoriteCourses.filter { !it.isTeacher }.count() > 0))
+    }
+
+    private fun mapAction(link: HelpLink): HelpDialogAction {
+        return when {
+            // Internal routes
+            link.url == "#create_ticket" -> HelpDialogAction.ReportProblem
+            link.url == "#teacher_feedback" -> HelpDialogAction.AskInstructor
+            // External URL, but we handle within the app
+            link.id.contains("submit_feature_idea") -> createSubmitFeatureIdea()
+            link.url.startsWith("tel:") -> HelpDialogAction.Phone(link.url)
+            link.url.startsWith("mailto:") -> HelpDialogAction.SendMail(link.url)
+            link.url.contains("cases.canvaslms.com/liveagentchat") -> HelpDialogAction.OpenExternalBrowser(link.url)
+            // External URL
+            else -> HelpDialogAction.OpenWebView(link.url, link.text)
+        }
+    }
+
+    private fun createSubmitFeatureIdea(): HelpDialogAction.SubmitFeatureIdea {
+        val recipient = context.getString(R.string.utils_mobileSupportEmailAddress)
+
+        // Try to get the version number and version code
+        val packageInfo = packageInfoProvider.getPackageInfo()
+        val versionName = packageInfo?.versionName
+        val versionCode = packageInfo?.versionCode
+
+        val subject = "[${context.getString(R.string.featureSubject)}] Issue with Canvas [Android] $versionName"
+
+        val installDateString = if (packageInfo != null) {
+            DateHelper.dayMonthYearFormat.format(Date(packageInfo.firstInstallTime))
+        } else {
+            ""
+        }
+
+        val user = apiPrefs.user
+        // Populate the email body with information about the user
+        var emailBody = ""
+        emailBody += context.getString(R.string.understandRequest) + "\n"
+        emailBody += context.getString(R.string.help_userId) + " " + user?.id + "\n"
+        emailBody += context.getString(R.string.help_email) + " " + user?.email + "\n"
+        emailBody += context.getString(R.string.help_domain) + " " + apiPrefs.domain + "\n"
+        emailBody += context.getString(R.string.help_versionNum) + " " + versionName + " " + versionCode + "\n"
+        emailBody += context.getString(R.string.help_locale) + " " + Locale.getDefault() + "\n"
+        emailBody += context.getString(R.string.installDate) + " " + installDateString + "\n"
+        emailBody += "----------------------------------------------\n"
+
+        return HelpDialogAction.SubmitFeatureIdea(recipient, subject, emailBody)
+    }
+
+    private fun onLinkClicked(action: HelpDialogAction) {
+        _events.value = Event(action)
+    }
+}

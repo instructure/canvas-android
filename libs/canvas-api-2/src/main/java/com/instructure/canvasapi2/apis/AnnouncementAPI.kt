@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 import retrofit2.http.Url
 
 
@@ -36,6 +37,12 @@ object AnnouncementAPI {
 
         @GET
         fun getNextPageAnnouncementsList(@Url nextUrl: String): Call<List<DiscussionTopicHeader>>
+
+        /**
+         * This API call returns the latest announcements. The current implementation is the latest 14 days.
+         */
+        @GET("announcements?include[]=sections")
+        fun getAnnouncements(@Query("context_codes[]") courseCode: String): Call<List<DiscussionTopicHeader>>
     }
 
     fun getFirstPageAnnouncements(canvasContext: CanvasContext, adapter: RestBuilder, callback: StatusCallback<List<DiscussionTopicHeader>>, params: RestParams) {
@@ -45,5 +52,9 @@ object AnnouncementAPI {
 
     fun getNextPage(nextUrl: String, adapter: RestBuilder, callback: StatusCallback<List<DiscussionTopicHeader>>, params: RestParams) {
         callback.addCall(adapter.build(AnnouncementInterface::class.java, params).getNextPageAnnouncementsList(nextUrl)).enqueue(callback)
+    }
+
+    fun getAnnouncements(canvasContext: CanvasContext, adapter: RestBuilder, callback: StatusCallback<List<DiscussionTopicHeader>>, params: RestParams) {
+        callback.addCall(adapter.build(AnnouncementInterface::class.java, params).getAnnouncements(canvasContext.contextId)).enqueue(callback)
     }
 }

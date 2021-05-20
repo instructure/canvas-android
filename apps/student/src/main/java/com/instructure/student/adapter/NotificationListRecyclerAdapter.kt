@@ -34,7 +34,6 @@ import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.pandarecycler.util.GroupSortedList.GroupComparatorCallback
 import com.instructure.pandarecycler.util.GroupSortedList.ItemComparatorCallback
 import com.instructure.pandarecycler.util.Types
@@ -157,8 +156,7 @@ class NotificationListRecyclerAdapter(
 
         coursesCallback = object : StatusCallback<List<Course>>() {
             override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-                val courses = response.body()?.filter { it.isNotDeleted() }
-                courseMap = createCourseMap(courses)
+                courseMap = createCourseMap(response.body())
                 populateActivityStreamAdapter()
             }
         }

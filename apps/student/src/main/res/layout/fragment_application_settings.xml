@@ -137,18 +137,6 @@
                 android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/help"
-                style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/listPreferredItemHeight"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/help"
-                android:textSize="16sp"/>
-
-            <TextView
                 android:id="@+id/featureFlags"
                 style="@style/TextFont.Medium"
                 android:layout_width="match_parent"

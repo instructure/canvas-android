@@ -94,11 +94,11 @@ class PageDetailsFragment : BasePresenterFragment<
     override fun onReadySetGo(presenter: PageDetailsPresenter) {
 
         if (mPage.frontPage) {
-            presenter?.getFrontPage(mCanvasContext, true)
+            presenter.getFrontPage(mCanvasContext, true)
         } else if (!mPageId.isBlank()) {
-            presenter?.getPage(mPageId, mCanvasContext, true)
+            presenter.getPage(mPageId, mCanvasContext, true)
         } else {
-            presenter?.getPage(mPage.url ?: "", mCanvasContext, true)
+            presenter.getPage(mPage.url ?: "", mCanvasContext, true)
         }
         setupToolbar()
 

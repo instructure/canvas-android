@@ -20,6 +20,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.waitForView
 import com.instructure.teacher.R
@@ -134,5 +135,13 @@ class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
 
     fun refresh() {
         waitForView(withId(R.id.swipeRefreshLayout)).swipeDown()
+    }
+
+    fun assertQuizUnpublished() {
+        onView(withId(R.id.publishStatusTextView)).assertHasText("Unpublished")
+    }
+
+    fun assertQuizPublished() {
+        onView(withId(R.id.publishStatusTextView)).assertHasText("Published")
     }
 }

@@ -168,7 +168,9 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
         val todos = ToDoManager.mergeToDoUpcoming(todoList, null)
 
         // Now populate the todoList and upcomingList with the course information
-        todos.forEach {
+        todos
+            .filter { it.todoType != ToDo.Type.Grading }
+            .forEach {
             ToDo.setContextInfo(it, courseMap!!, groupMap!!)
             if (it.canvasContext != null && it.comparisonDate != null) {
                 addOrUpdateItem(DateHelper.getCleanDate(it.comparisonDate!!.time), it)
@@ -223,7 +225,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
             override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
                 val body = response.body() ?: return
                 val filteredCourses = body.filter {
-                    !it.accessRestrictedByDate && !it.isInvited()  && it.isNotDeleted() && (when (filterMode) {
+                    !it.accessRestrictedByDate && !it.isInvited() && (when (filterMode) {
                                 is FavoritedCourses -> it.isFavorite
                                 else -> true
                             })

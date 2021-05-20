@@ -20,7 +20,6 @@ package com.instructure.student.activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.widget.Toast
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -28,10 +27,11 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.router.Route
-import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
@@ -41,9 +41,7 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.FileUtils
-import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.coroutines.Job
 
 //Intended to handle all routing to fragments from links both internal and external
