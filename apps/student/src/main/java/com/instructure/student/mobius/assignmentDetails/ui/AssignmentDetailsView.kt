@@ -97,8 +97,10 @@ class AssignmentDetailsView(
             constraintSet.clone(constraintParent)
             constraintSet.clear(submitButton.id, ConstraintSet.BOTTOM)
             constraintSet.clear(swipeRefreshLayout.id, ConstraintSet.TOP)
+            constraintSet.clear(swipeRefreshLayout.id, ConstraintSet.BOTTOM)
             constraintSet.connect(submitButton.id, ConstraintSet.TOP, toolbar.id, ConstraintSet.BOTTOM)
             constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.TOP, submitButton.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
             constraintSet.applyTo(constraintParent)
         }
     }
