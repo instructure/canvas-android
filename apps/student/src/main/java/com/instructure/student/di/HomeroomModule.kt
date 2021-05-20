@@ -16,13 +16,19 @@
  */
 package com.instructure.student.di
 
+import android.content.res.Resources
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.managers.AnnouncementManager
+import com.instructure.canvasapi2.managers.PlannerManager
+import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.pandautils.features.elementary.homeroom.CourseCardCreator
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import com.instructure.student.mobius.elementary.StudentHomeroomRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -31,5 +37,16 @@ class HomeroomModule {
     @Provides
     fun provideHomeroomRouter(activity: FragmentActivity): HomeroomRouter {
         return StudentHomeroomRouter(activity)
+    }
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class HomeroomViewModelModule {
+
+    @Provides
+    fun provideCourseCardCreator(plannerManager: PlannerManager, userManager: UserManager,
+                                 announcementManager: AnnouncementManager, resources: Resources): CourseCardCreator {
+        return CourseCardCreator(plannerManager, userManager, announcementManager, resources)
     }
 }

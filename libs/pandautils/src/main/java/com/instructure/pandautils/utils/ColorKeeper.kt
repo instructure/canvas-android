@@ -179,6 +179,8 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
 @Suppress("unused", "DEPRECATION")
 object ColorApiHelper {
 
+    const val K5_DEFAULT_COLOR = "#394B58"
+
     /**
      * Returns a color via a callback, if no color is in the cache it will pull from canvas via the api
      * If nothing is found in the cache or api a color is generated

@@ -23,10 +23,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.managers.AnnouncementManager
-import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -71,8 +69,8 @@ class HomeroomViewModelTest {
     private val announcementManager: AnnouncementManager = mockk(relaxed = true)
     private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
-    private val assignmentManager: AssignmentManager = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
+    private val courseCardCreator: CourseCardCreator = mockk(relaxed = true)
 
     private lateinit var viewModel: HomeroomViewModel
 
@@ -281,9 +279,9 @@ class HomeroomViewModelTest {
     fun `Create course cards from dashboard courses that are not homeroom`() {
         // Given
         val courses = listOf(
-            Course(id = 1, name = "Course 1", homeroomCourse = true, courseColor = "#FFFFFF"),
-            Course(id = 2, name = "Course 2", homeroomCourse = false, imageUrl = "www.imageurl.com", courseColor = "#FFFFFF"),
-            Course(id = 3, name = "Course 3 not on dashboard", homeroomCourse = false, courseColor = "#FFFFFF")
+            Course(id = 1, name = "Course 1", homeroomCourse = true),
+            Course(id = 2, name = "Course 2", homeroomCourse = false),
+            Course(id = 3, name = "Course 3 not on dashboard", homeroomCourse = false)
         )
         every { courseManager.getCoursesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
@@ -300,9 +298,7 @@ class HomeroomViewModelTest {
         every { announcementManager.getLatestAnnouncementAsync(any(), any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()))
 
-        val assignmentsDeferred: Deferred<DataResult<List<Assignment>>> = mockk()
-        every { assignmentManager.getAllAssignmentsAsync(any(), any()) } returns assignmentsDeferred
-        coEvery { listOf(assignmentsDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()))
+        coEvery { courseCardCreator.createCourseCards(any(), any(), any(), any()) } returns listOf(mockk<CourseCardViewModel>())
 
         // When
         viewModel = createViewModel()
@@ -311,13 +307,97 @@ class HomeroomViewModelTest {
         // Then
         assertEquals(ViewState.Success, viewModel.state.value)
 
-        assertEquals(1, viewModel.data.value!!.courseCards.size)
-
-        val courseViewData = (viewModel.data.value!!.courseCards[0] as CourseCardViewModel).data
-        assertEquals("Course 2", courseViewData.courseName)
-        assertEquals("", courseViewData.announcementText)
-        assertEquals("www.imageurl.com", courseViewData.imageUrl)
+        // Verify that course card creation is called with the correct list of courses
+        val dashboardCourses = slot<MutableList<Course>>()
+        coVerify { courseCardCreator.createCourseCards(capture(dashboardCourses), any(), any(), any()) }
+        assertEquals(1, dashboardCourses.captured.size)
     }
 
-    private fun createViewModel() = HomeroomViewModel(apiPrefs, resources, courseManager, announcementManager, htmlContentFormatter, oauthManager, assignmentManager, colorKeeper)
+    @Test
+    fun `Do not create course cards if there are only homeroom courses`() {
+        // Given
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", homeroomCourse = true)
+        )
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        val dashboardCards = listOf(DashboardCard(id = 2))
+        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(dashboardCards)
+        }
+
+        mockkStatic("kotlinx.coroutines.AwaitKt")
+
+        val announcements = listOf(DiscussionTopicHeader(title = "Course 1 first", message = "First message"))
+
+        val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
+        every { announcementManager.getLatestAnnouncementAsync(any(), any()) } returns announcementsDeferred
+        coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(announcements))
+
+        coEvery { courseCardCreator.createCourseCards(any(), any(), any(), any()) } returns listOf(mockk<CourseCardViewModel>())
+
+        // When
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, Observer {})
+
+        // Then
+        assertEquals(ViewState.Success, viewModel.state.value)
+
+        // Verify that course card creation is not called, because we don't have dashboard courses
+        coVerify(exactly = 0) { courseCardCreator.createCourseCards(any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `Show empty state if there are no announcements and no courses`() {
+        // Given
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        // When
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, Observer {})
+
+        // Then
+        assertEquals(ViewState.Empty(R.string.homeroomEmptyTitle, R.string.homeroomEmptyMessage, R.drawable.ic_panda_super), viewModel.state.value)
+    }
+
+    @Test
+    fun `Create course cards from the saved courses when refreshing assignments data`() {
+        // Given
+        val courses = listOf(Course(id = 2, name = "Course 2", homeroomCourse = false))
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        val dashboardCards = listOf(DashboardCard(id = 2))
+        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(dashboardCards)
+        }
+
+        coEvery { courseCardCreator.createCourseCards(any(), any(), any(), any()) } returns listOf(mockk<CourseCardViewModel>())
+
+        // When
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, Observer {})
+
+        // Capture the dashboard cards list from the first call
+        val dashboardCourses = slot<MutableList<Course>>()
+        coVerify { courseCardCreator.createCourseCards(capture(dashboardCourses), any(), any(), any()) }
+
+        viewModel.refreshAssignmentsStatus()
+
+        // Then
+        // Verify that course card creation is called with the correct list of courses
+        assertEquals(ViewState.Success, viewModel.state.value)
+        coVerify { courseCardCreator.createCourseCards(eq(dashboardCourses.captured), any(), any(), any()) }
+    }
+
+    private fun createViewModel() = HomeroomViewModel(apiPrefs, resources, courseManager, announcementManager, htmlContentFormatter, oauthManager, colorKeeper, courseCardCreator)
 }
