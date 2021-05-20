@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Submission Failed</string>
     <string name="submissionStatusFailedSubtitle">Tap to view details</string>
     <string name="submissionAndRubric">Submission &amp; Rubric</string>
+    <string name="commentsAndRubric">Comments &amp; Rubric</string>
     <string name="errorLoadingAssignment">There was a problem loading this assignment. Please check your connection and try again.</string>
     <string name="submitted">Submitted</string>
     <string name="notSubmitted">Not Submitted</string>
@@ -75,6 +75,7 @@
     <string name="addFileFabContentDesc">Show Add File Options</string>
     <string name="recordAudio">Record Audio</string>
     <string name="recordVideo">Record Video</string>
+    <string name="a11y_textSubmissionEditor">Text Submission Editor</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Write&#8230;</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Your assignment is locked by module \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Your assignment is locked by a module requirement</string>
     <string name="submissionDetailsAssignmentLocked">Assignment Locked</string>
+    <string name="submissionDetailsNoSubmissionAllowed">No Submission Allowed</string>
     <string name="webPreview">Preview of the entered URL</string>
     <string name="websiteUrl">Website URL</string>
     <string name="noneContentMessage">This assignment does not allow online submissions</string>
@@ -100,6 +102,7 @@
     <string name="noOnlineSubmissions">No Online Submissions</string>
     <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
     <string name="openTool">Open Tool</string>
+    <string name="a11y_submissionText">Submission text</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
@@ -126,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Attach files to your comment by tapping an option below</string>
     <string name="emptySubmissionCommentsSubtext">Have questions about your assignment?\nMessage your instructor.</string>
     <string name="submissionCommentErrorMessage">This message could not be sent. Tap to try again.</string>
+    <string name="mediaUpload">Media Upload</string>
     <string name="mediaUploadAudio">Media Upload - Audio</string>
     <string name="mediaUploadVideo">Media Upload - Video</string>
     <string name="commentSubmissionTypeText">Text Submission</string>
@@ -195,6 +199,17 @@
     <string name="noAssignmentsInGroup">No Assignments in this group</string>
     <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Sort by</string>
+    <string name="sortByDialogTimeOption">Time</string>
+    <string name="sortByDialogTypeOption">Type</string>
+    <string name="sortByTime">Sort by Time</string>
+    <string name="sortByType">Sort by Type</string>
+    <string name="sortByDialogCancel">Cancel</string>
+    <string name="assignmentsListAllGradingPeriods">All</string>
+    <string name="a11y_sortByTimeButton">Sort assignments button, sort by time</string>
+    <string name="a11y_sortByTypeButton">Sort assignments button, sort by type</string>
+    <string name="a11y_assignmentsSortedByTime">Assignments sorted by time</string>
+    <string name="a11y_assignmentsSortedByType">Assignments sorted by type</string>
 
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>
@@ -204,6 +219,7 @@
     <!-- Discussions -->
     <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
     <string name="fileCurrentlyLocked">This file is currently locked</string>
+    <string name="a11y_discussionReplyEditor">Discussion Reply Editor</string>
 
     <!-- Events -->
     <string name="Starts">Starts</string>
@@ -254,6 +270,7 @@
     <string name="createFolder">Create Folder</string>
     <string name="createAFile">Create A File</string>
     <string name="createFileFolderFabContentDesc">Show Create File and Create Folder Buttons</string>
+    <string name="hideCreateFileFolderFabContentDesc">Hide Create File and Create Folder Buttons</string>
     <string name="folderCreationError">An error occurred during folder creation.</string>
     <string name="rename">Rename</string>
     <string name="renameFile">Rename file</string>
@@ -1121,4 +1138,31 @@
     <string name="conferenceDetails">Conference Details</string>
     <string name="recordings">Recordings</string>
     <string name="conferenceInProgress">Conference in progress</string>
+
+    <string name="a11y_criterion_content_description">Criterion rating %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">more information</string>
+    <string name="a11y_create_file_folder_visible">Create File and Folder buttons visible</string>
+    <string name="a11y_create_file_folder_gone">Create File and Folder buttons invisible</string>
+    <string name="unselect_all">Unselect All</string>
+    <string name="select_all">Select All</string>
+    <string name="all_courses">All courses</string>
+    <string name="all_groups">All groups</string>
+    <string name="edit_dashboard_course_description">Select courses for Dashboard or navigate to course details.</string>
+    <string name="edit_dashboard_group_description">Select groups for Dashboard or navigate to course details.</string>
+    <string name="current_enrollments">Current enrollments</string>
+    <string name="past_enrollments">Past enrollments</string>
+    <string name="future_enrollments">Future enrollments</string>
+    <string name="added_to_dashboard">Added to Dashboard</string>
+    <string name="removed_from_dashboard">Removed from Dashboard</string>
+    <string name="all_added_to_dashboard">All added to Dashboard</string>
+    <string name="all_removed_from_dashboard">All removed from Dashboard</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Inactive courses could not be added to Dashboard.</string>
+    <string name="edit_dashboard">Edit Dashboard</string>
+    <string name="edit_dashboard_empty_title">No courses here</string>
+    <string name="edit_dashboard_empty_message">You have to be enrolled in a course to add it to the Dashboard.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Remove from dashboard</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Remove all from dashboard</string>
+    <string name="a11y_content_description_add_to_dashboard">Add to dashboard</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Add all to dashboard</string>
 </resources>

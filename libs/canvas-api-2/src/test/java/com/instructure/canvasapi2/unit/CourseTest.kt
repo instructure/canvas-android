@@ -30,7 +30,7 @@ import java.time.OffsetDateTime
 
 class CourseTest {
 
-    private val baseCourse = Course(accessRestrictedByDate = false, workflowState = "available")
+    val baseCourse = Course(accessRestrictedByDate = false, workflowState = Course.WorkflowState.AVAILABLE)
 
     @Before
     fun setup() {
@@ -483,7 +483,7 @@ class CourseTest {
 
     @Test
     fun courseIsBetweenValidDateRange_workFlowStateCompleted() {
-        val course = Course(workflowState = "completed")
+        val course = Course(workflowState = Course.WorkflowState.COMPLETED)
 
         assertFalse(course.isBetweenValidDateRange())
     }
@@ -550,19 +550,19 @@ class CourseTest {
 
     @Test
     fun `Course is not deleted when workflow state is available`() {
-        val course = baseCourse.copy(workflowState = "available")
+        val course = baseCourse.copy(workflowState = Course.WorkflowState.AVAILABLE)
         assertTrue(course.isNotDeleted())
     }
 
     @Test
     fun `Course is not deleted when workflow state is completed`() {
-        val course = baseCourse.copy(workflowState = "completed")
+        val course = baseCourse.copy(workflowState = Course.WorkflowState.COMPLETED)
         assertTrue(course.isNotDeleted())
     }
 
     @Test
     fun `Course is deleted when workflow state is deleted`() {
-        val course = baseCourse.copy(workflowState = "deleted")
+        val course = baseCourse.copy(workflowState = Course.WorkflowState.DELETED)
         assertFalse(course.isNotDeleted())
     }
 }

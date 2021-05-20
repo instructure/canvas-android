@@ -19,6 +19,7 @@ package com.instructure.student.ui.interaction
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAccountNotification
+import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -61,16 +62,16 @@ class DashboardInteractionTest : StudentTest() {
     fun testDashboardCourses_addFavorite() {
         // Starring should add course to favorite list
 
-        val data = getToDashboard(courseCount = 2,favoriteCourseCount = 1)
-        val nonFavorite = data.courses.values.filter {x -> !x.isFavorite}.first()
+        val data = getToDashboard(courseCount = 2, favoriteCourseCount = 1)
+        val nonFavorite = data.courses.values.filter { x -> !x.isFavorite }.first()
 
         dashboardPage.assertCourseNotShown(nonFavorite)
 
         dashboardPage.editFavorites()
-        editFavoritesPage.assertCourseDisplayed(nonFavorite)
-        editFavoritesPage.assertCourseNotFavorited(nonFavorite)
-        editFavoritesPage.toggleCourse(nonFavorite)
-        editFavoritesPage.assertCourseFavorited(nonFavorite)
+        editDashboardPage.assertCourseDisplayed(nonFavorite)
+        editDashboardPage.assertCourseNotFavorited(nonFavorite)
+        editDashboardPage.favoriteCourse(nonFavorite)
+        editDashboardPage.assertCourseFavorited(nonFavorite)
 
         Espresso.pressBack()
 
@@ -83,15 +84,15 @@ class DashboardInteractionTest : StudentTest() {
         // Un-starring should remove course from favorite list
 
         val data = getToDashboard(courseCount = 2, favoriteCourseCount = 2)
-        val favorite = data.courses.values.filter {x -> x.isFavorite}.first()
+        val favorite = data.courses.values.filter { x -> x.isFavorite }.first()
 
         dashboardPage.assertDisplaysCourse(favorite)
 
         dashboardPage.editFavorites()
-        editFavoritesPage.assertCourseDisplayed(favorite)
-        editFavoritesPage.assertCourseFavorited(favorite)
-        editFavoritesPage.toggleCourse(favorite)
-        editFavoritesPage.assertCourseNotFavorited(favorite)
+        editDashboardPage.assertCourseDisplayed(favorite)
+        editDashboardPage.assertCourseFavorited(favorite)
+        editDashboardPage.unfavoriteCourse(favorite)
+        editDashboardPage.assertCourseNotFavorited(favorite)
 
         Espresso.pressBack()
 
@@ -102,25 +103,38 @@ class DashboardInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
-    fun testDashboardCourses_seeAll() {
-        // Clicking "See all" should show all courses
+    fun testDashboardCourses_addAllToFavorites() {
+        val data = getToDashboard(courseCount = 3, favoriteCourseCount = 0)
+        val toFavorite = data.courses.values
 
-        // Verify that favorite courses are showing
-        val data = getToDashboard(courseCount=2, favoriteCourseCount=1)
-        val favorites = data.courses.values.filter {x -> x.isFavorite}
-        val all = data.courses.values
-        dashboardPage.assertDisplaysCourses()
-        for(course in favorites) {
-            dashboardPage.assertDisplaysCourse(course)
-        }
+        data.courses.values.forEach { dashboardPage.assertDisplaysCourse(it) }
 
-        // Verify that all courses show in "See All" page
-        dashboardPage.assertSeeAllDisplayed()
-        dashboardPage.clickSeeAll()
-        for(course in all) {
-            allCoursesPage.assertDisplaysCourse(course)
-        }
-        allCoursesPage.assertDisplaysAllCourses()
+        dashboardPage.editFavorites()
+        toFavorite.forEach { editDashboardPage.assertCourseNotFavorited(it) }
+        editDashboardPage.selectAllCourses()
+        toFavorite.forEach { editDashboardPage.assertCourseFavorited(it) }
+
+        Espresso.pressBack()
+
+        toFavorite.forEach { dashboardPage.assertDisplaysCourse(it) }
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    fun testDashboardCourses_removeAllFromFavorites() {
+        val data = getToDashboard(courseCount = 3, favoriteCourseCount = 2)
+        val toRemove = data.courses.values.filter { it.isFavorite }
+
+        toRemove.forEach { dashboardPage.assertDisplaysCourse(it) }
+
+        dashboardPage.editFavorites()
+        toRemove.forEach { editDashboardPage.assertCourseFavorited(it) }
+        editDashboardPage.unselectAllCourses()
+        toRemove.forEach { editDashboardPage.assertCourseNotFavorited(it) }
+
+        Espresso.pressBack()
+
+        data.courses.values.forEach { dashboardPage.assertDisplaysCourse(it) }
     }
 
     @Test
@@ -138,7 +152,7 @@ class DashboardInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardAnnouncement_dismiss() {
         // Tapping dismiss should remove the announcement. Refresh should not display it again.
-        val data = getToDashboard(courseCount = 1,favoriteCourseCount = 1,announcementCount = 1)
+        val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
         val announcement = data.accountNotifications.values.first()
         dashboardPage.assertAnnouncementShowing(announcement)
         dashboardPage.dismissAnnouncement()
@@ -151,7 +165,7 @@ class DashboardInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardAnnouncement_view() {
         // Tapping global announcement displays the content
-        val data = getToDashboard(courseCount = 1,favoriteCourseCount = 1,announcementCount = 1)
+        val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
         val announcement = data.accountNotifications.values.first()
         dashboardPage.assertAnnouncementShowing(announcement)
         dashboardPage.tapAnnouncementAndAssertDisplayed(announcement)
@@ -169,7 +183,7 @@ class DashboardInteractionTest : StudentTest() {
         courseBrowserPage.assertTitleCorrect(course)
         var tabs = data.courseTabs[course.id]
         assertNotNull("Expected course tabs to be populated", tabs)
-        for(tab in tabs!!) {
+        for (tab in tabs!!) {
             courseBrowserPage.assertTabDisplayed(tab)
         }
     }

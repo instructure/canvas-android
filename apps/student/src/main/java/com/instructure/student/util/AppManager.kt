@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -42,11 +43,17 @@ import com.instructure.student.tasks.StudentLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
+import dagger.hilt.android.HiltAndroidApp
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor.DartEntrypoint
+import javax.inject.Inject
 
+@HiltAndroidApp
 class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
+
+    @Inject
+    lateinit var typefaceBehavior: TypefaceBehavior
 
     // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
     private val defaultTracker: Tracker by lazy {
@@ -78,7 +85,7 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
         }
 
-        MasqueradeHelper.masqueradeLogoutTask = Runnable { StudentLogoutTask(LogoutTask.Type.LOGOUT).execute() }
+        MasqueradeHelper.masqueradeLogoutTask = Runnable { StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute() }
 
         ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.defaultPrimary)
 
@@ -211,7 +218,7 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
     }
 
     override fun performLogoutOnAuthError() {
-        StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+        StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
     }
 
     companion object {

@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Ekki tókst að skila</string>
     <string name="submissionStatusFailedSubtitle">Smelltu til að skoða upplýsingar</string>
     <string name="submissionAndRubric">Skil &amp; matsviðmið</string>
+    <string name="commentsAndRubric">Athugasemdir og matsviðmið</string>
     <string name="errorLoadingAssignment">Það kom upp vandamál við að hlaða inn þessu verkefni. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="submitted">Skilað</string>
     <string name="notSubmitted">Ekki lagt fram</string>
@@ -76,6 +76,7 @@
     <string name="recordAudio">Taka upp hljóð</string>
     <string name="recordVideo">Taka upp myndband</string>
 
+    <string name="a11y_textSubmissionEditor">Ritill fyrir textaskil</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Skrifa&#8230;</string>
     <string name="textSubmissionFailureMessage">Eitthvað fór úrskeiðis við upphleðslu skila. Skila aftur.</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Verkefninu er læst af einingu \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Verkefninu er læst af einingakröfu</string>
     <string name="submissionDetailsAssignmentLocked">Verkefni læst</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Engin skil leyfð</string>
     <string name="webPreview">Forskoðun innslegnar vefslóðar</string>
     <string name="websiteUrl">Slóð vefsvæðis</string>
     <string name="noneContentMessage">Þetta verkefni leyfir ekki netskil</string>
@@ -101,6 +103,7 @@
 
     <string name="speedGraderExternalToolMessage">Þetta verkefni er með tengil á ytra verkfæri fyrir skil.</string>
     <string name="openTool">Opna verkfæri</string>
+    <string name="a11y_submissionText">Skilatexti</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Af %s stigum</string>
     <string name="outOfPointsAbbreviatedFormatted">Af %s st</string>
@@ -126,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Festu skrár við athugasemdina með því að smella á valkostinn hér að neðan</string>
     <string name="emptySubmissionCommentsSubtext">Ertu með spurningar um verkefnið?\nSendu skilaboð á kennarann þinn.</string>
     <string name="submissionCommentErrorMessage">Ekki var hægt að senda þessi skilaboð. Smelltu til að reyna aftur.</string>
+    <string name="mediaUpload">Upphleðsla á miðla</string>
     <string name="mediaUploadAudio">Upphleðsla margmiðlunarefnis - Hljóð</string>
     <string name="mediaUploadVideo">Upphleðsla margmiðlunarefnis - Myndband</string>
     <string name="commentSubmissionTypeText">Textaskil</string>
@@ -196,6 +200,17 @@
     <string name="excusedAssignment">Þetta verkefni er undanskilið og verður ekki með í heildarútreikningum</string>
     <string name="excused">Dæmi</string>
 
+    <string name="sortByDialogTitle">Raða eftir</string>
+    <string name="sortByDialogTimeOption">Tími</string>
+    <string name="sortByDialogTypeOption">Tegund</string>
+    <string name="sortByTime">Raða eftir tíma</string>
+    <string name="sortByType">Raða eftir gerð</string>
+    <string name="sortByDialogCancel">Hætta við</string>
+    <string name="assignmentsListAllGradingPeriods">Allt</string>
+    <string name="a11y_sortByTimeButton">Hnappur til að raða verkefnum, raða eftir tíma</string>
+    <string name="a11y_sortByTypeButton">Hnappur til að raða verkefnum, raða eftir gerð</string>
+    <string name="a11y_assignmentsSortedByTime">Verkefnum raðað eftir tíma</string>
+    <string name="a11y_assignmentsSortedByType">Verkefnum raðað eftir gerð</string>
     <!-- Assignment editing -->
     <string name="points">Punktar\u0020</string>
     <string name="save">Vista</string>
@@ -205,6 +220,7 @@
     <string name="forbidden">Svör eru bara sýnileg þeim sem hafa birt minnst eitt svar.</string>
 
     <string name="fileCurrentlyLocked">Þessi skrá er læst eins og er</string>
+    <string name="a11y_discussionReplyEditor">Ritill fyrir umræðusvör</string>
     <!-- Events -->
     <string name="Starts">Byrjar</string>
     <string name="Ends">Lýkur</string>
@@ -254,6 +270,7 @@
     <string name="createFolder">Stofna möppu</string>
     <string name="createAFile">Stofna skrá</string>
     <string name="createFileFolderFabContentDesc">Sýna stofna skrá og stofna möppu hnappana</string>
+    <string name="hideCreateFileFolderFabContentDesc">Fela hnappana Stofna skrá og Stofna möppu</string>
     <string name="folderCreationError">Villa kom upp við stofnun möppu.</string>
     <string name="rename">Endurnefna</string>
     <string name="renameFile">Endurnefna skrá</string>
@@ -1114,4 +1131,30 @@
     <string name="conferenceDetails">Upplýsingar um ráðstefnur</string>
     <string name="recordings">Upptökur</string>
     <string name="conferenceInProgress">Ráðstefna í gangi</string>
+    <string name="a11y_criterion_content_description">Viðmiðunarmat %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">frekari upplýsingar</string>
+    <string name="a11y_create_file_folder_visible">Hnapparnir Stofna skrá og Stofna möppu sýnilegir</string>
+    <string name="a11y_create_file_folder_gone">Hnapparnir Stofna skrá og Stofna möppu ósýnilegir</string>
+    <string name="unselect_all">Afvelja allt</string>
+    <string name="select_all">Velja allt</string>
+    <string name="all_courses">Öll námskeið</string>
+    <string name="all_groups">Allir hópar</string>
+    <string name="edit_dashboard_course_description">Veldu námskeið fyrir stjórnborðið eða farðu að upplýsingum námskeiðs.</string>
+    <string name="edit_dashboard_group_description">Veldu hópa fyrir stjórnborðið eða farðu að upplýsingum námskeiðs.</string>
+    <string name="current_enrollments">Núverandi innritanir</string>
+    <string name="past_enrollments">Fyrri innritanir</string>
+    <string name="future_enrollments">Framtíðarinnritanir</string>
+    <string name="added_to_dashboard">Bætt við stjórnborð</string>
+    <string name="removed_from_dashboard">Fjarlægt af stjórnborði</string>
+    <string name="all_added_to_dashboard">Öllu bætt við stjórnborðið</string>
+    <string name="all_removed_from_dashboard">Allt fjarlægt af stjórnborðinu</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Ekki var hægt að bæta óvirkum námskeiðum við stjórnborðið.</string>
+    <string name="edit_dashboard">Breyta stjórnborði</string>
+    <string name="edit_dashboard_empty_title">Engin námskeið hér</string>
+    <string name="edit_dashboard_empty_message">Þú hefur innritað þig á námskeið til að bæta því við stjórnborðið.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Fjarlægja af stjórnborði</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Fjarlægja allt af stjórnborði</string>
+    <string name="a11y_content_description_add_to_dashboard">Bæta við stjórnborð</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Bæta öllu við stjórnborð</string>
 </resources>

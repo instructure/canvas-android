@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Cyflwyniad wedi methu</string>
     <string name="submissionStatusFailedSubtitle">Tapiwch i weld manylion</string>
     <string name="submissionAndRubric">Cyflwyniad a Chyfarwyddyd Sgorio</string>
+    <string name="commentsAndRubric">Sylwadau a Chyfarwyddyd Sgorio</string>
     <string name="errorLoadingAssignment">Problem wrth lwytho’r aseiniad hwn. Gwiriwch eich cysylltiad a rhoi cynnig arall arni.</string>
     <string name="submitted">Wedi Cyflwyno</string>
     <string name="notSubmitted">Heb Gyflwyno</string>
@@ -78,6 +78,7 @@
 
     <string name="recordVideo">Recordio Fideo</string>
 
+    <string name="a11y_textSubmissionEditor">Golygydd Cyflwyno Testun</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Ysgrifennwch&#8230;</string>
     <string name="textSubmissionFailureMessage">Aeth rhywbeth o’i le wrth lwytho\'r cyflwyniad i fyny. Cyflwyno eto.</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Cafodd eich aseiniad ei gloi gan fodiwl \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Mae eich aseiniad wedi\'i gloi gan ofynion y modiwl</string>
     <string name="submissionDetailsAssignmentLocked">Aseiniad wedi’i gloi</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Ni Chaniateir Cyflwyno</string>
     <string name="webPreview">Rhagolwg o’r URL a roddwyd</string>
     <string name="websiteUrl">URL Gwefan</string>
     <string name="noneContentMessage">Dydy’r aseiniad hwn ddim yn caniatáu cyflwyniadau ar-lein.</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Dim Cyflwyniadau Ar-lein</string>
     <string name="speedGraderExternalToolMessage">Mae’r aseiniad hwn yn cysylltu ag adnodd allanol ar gyfer cyflwyniadau.</string>
     <string name="openTool">Agor Adnodd</string>
+    <string name="a11y_submissionText">Testun cyflwyniad</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Allan o %s pwynt</string>
     <string name="outOfPointsAbbreviatedFormatted">Allan o %s pwynt</string>
@@ -124,6 +127,7 @@
     <string name="chooseFileForCommentSubtext">Atodwch ffeiliau i\'ch sylw trwy dapio opsiwn isod</string>
     <string name="emptySubmissionCommentsSubtext">Oes gennych chi gwestiwn am eich aseiniad?\nAnfonwch neges at eich addysgwr.</string>
     <string name="submissionCommentErrorMessage">Doedd dim modd anfon y neges hon. Tapiwch i roi cynnig arall arni.</string>
+    <string name="mediaUpload">Llwytho cyfryngau i fyny</string>
     <string name="mediaUploadAudio">Llwytho cyfryngau i fyny - Sain</string>
     <string name="mediaUploadVideo">Llwytho cyfryngau i fyny - Fideo</string>
     <string name="commentSubmissionTypeText">Cyflwyniad Testun</string>
@@ -190,6 +194,17 @@
     <string name="noAssignmentsInGroup">Dim Aseiniadau yn y grŵp hwn</string>
     <string name="excusedAssignment">Mae’r aseiniad hwn wedi’i esgusodi ac ni fydd yn cael ei ystyried yn y cyfanswm</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Trefnu yn ôl</string>
+    <string name="sortByDialogTimeOption">Amser</string>
+    <string name="sortByDialogTypeOption">Math</string>
+    <string name="sortByTime">Trefnu yn ôl Amser</string>
+    <string name="sortByType">Trefnu yn ôl Math</string>
+    <string name="sortByDialogCancel">Canslo</string>
+    <string name="assignmentsListAllGradingPeriods">Y cyfan</string>
+    <string name="a11y_sortByTimeButton">Trefnu’r botwm aseiniadau, trefnu yn ôl amser</string>
+    <string name="a11y_sortByTypeButton">Trefnu’r botwm aseiniadau, trefnu yn ôl math</string>
+    <string name="a11y_assignmentsSortedByTime">Aseiniadau wedi’u trefnu yn ôl amser</string>
+    <string name="a11y_assignmentsSortedByType">Aseiniadau wedi’u trefnu yn ôl math</string>
     <!-- Assignment editing -->
     <string name="points">Pwynt\u0020</string>
     <string name="save">Cadw</string>
@@ -198,6 +213,7 @@
     <string name="forbidden">Dim ond y rheini sydd wedi cyflwyno o leiaf un ateb sy’n gallu gweld yr atebion.</string>
 
     <string name="fileCurrentlyLocked">Mae’r ffeil hon wedi’i chloi ar hyn o bryd</string>
+    <string name="a11y_discussionReplyEditor">Golygydd Ateb Trafodaeth</string>
     <!-- Events -->
     <string name="Starts">Yn dechrau</string>
     <string name="Ends">Yn gorffen</string>
@@ -249,6 +265,7 @@
     <string name="createFolder">Creu Ffolder</string>
     <string name="createAFile">Creu Ffeil</string>
     <string name="createFileFolderFabContentDesc">Dangos Botymau Creu Ffeil a Creu Ffolder</string>
+    <string name="hideCreateFileFolderFabContentDesc">Cuddio Botymau Creu Ffeil a Creu Ffolder</string>
     <string name="folderCreationError">Gwall wrth greu ffolder.</string>
     <string name="rename">Ailenwi</string>
     <string name="renameFile">Ailenwi ffeil</string>
@@ -1100,4 +1117,30 @@
     <string name="conferenceDetails">Manylion Cynhadledd</string>
     <string name="recordings">Recordiad</string>
     <string name="conferenceInProgress">Cynhadledd ar waith</string>
+    <string name="a11y_criterion_content_description">Sgoriau maen prawf %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">rhagor o wybodaeth</string>
+    <string name="a11y_create_file_folder_visible">Botymau Creu Ffeil a Creu Ffolder yn weladwy</string>
+    <string name="a11y_create_file_folder_gone">Botymau Creu Ffeil a Creu Ffolder yn gudd</string>
+    <string name="unselect_all">Dad-ddewis y cyfan</string>
+    <string name="select_all">Dewis y cyfan</string>
+    <string name="all_courses">Pob cwrs</string>
+    <string name="all_groups">Pob grŵp</string>
+    <string name="edit_dashboard_course_description">Dewis cyrsiau ar gyfer y Dangosfwrdd neu grwydro i fanylion y cwrs.</string>
+    <string name="edit_dashboard_group_description">Dewis grwpiau ar gyfer y Dangosfwrdd neu grwydro i fanylion y cwrs.</string>
+    <string name="current_enrollments">Ymrestriadau presennol</string>
+    <string name="past_enrollments">Ymrestriadau\'r gorffennol</string>
+    <string name="future_enrollments">Ymrestriadau yn y dyfodol</string>
+    <string name="added_to_dashboard">Wedi ychwanegu i’r Dangosfwrdd</string>
+    <string name="removed_from_dashboard">Wedi’i dynnu o’r Dangosfwrdd</string>
+    <string name="all_added_to_dashboard">Wedi ychwanegu’r cyfan at y Dangosfwrdd</string>
+    <string name="all_removed_from_dashboard">Wedi tynnu’r cyfan o’r Dangosfwrdd</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Doedd dim modd ychwanegu\'r cyrsiau anweithredol at y Dangosfwrdd</string>
+    <string name="edit_dashboard">Golygu Dangosfwrdd</string>
+    <string name="edit_dashboard_empty_title">Dim cyrsiau yma</string>
+    <string name="edit_dashboard_empty_message">Mae’n rhaid i chi fod wedi ymrestru ar gwrs i’w ychwanegu at Dangosfwrdd.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Tynnu o’r dangosfwrdd</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Tynnu’r cyfan o’r dangosfwrdd</string>
+    <string name="a11y_content_description_add_to_dashboard">Ychwanegu at y dangosfwrdd</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Ychwanegu’r cyfan at y dangosfwrdd</string>
 </resources>

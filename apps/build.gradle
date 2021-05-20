@@ -37,6 +37,7 @@ buildscript {
         classpath Plugins.BUILD_SCAN
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
         classpath Plugins.SQLDELIGHT
+        classpath Plugins.HILT
     }
 }
 

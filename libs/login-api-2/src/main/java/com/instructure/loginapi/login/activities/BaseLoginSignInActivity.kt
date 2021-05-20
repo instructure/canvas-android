@@ -29,11 +29,13 @@ import android.view.LayoutInflater
 import android.webkit.*
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.OAuthManager.getToken
@@ -65,6 +67,8 @@ import com.instructure.loginapi.login.util.Const.MASQUERADE_FLOW
 import com.instructure.loginapi.login.util.Const.MOBILE_VERIFY_FLOW
 import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
+import com.instructure.loginapi.login.viewmodel.LoginViewModel
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler.setStatusBarLight
 import com.instructure.pandautils.utils.setGone
@@ -98,6 +102,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
     private val accountDomain: AccountDomain by lazy { intent.getParcelableExtra<AccountDomain>(ACCOUNT_DOMAIN) }
     private val progressBarHandler = Handler()
+
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -487,14 +493,18 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     }
 
     /**
-     * Override and do not call super if you need additional logic before launching the main activity intent.
-     * It is expected that the class overriding will launch an intent.
+     * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
      */
-    protected fun handleLaunchApplicationMainActivityIntent() {
-        val intent = launchApplicationMainActivityIntent()
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
+    protected open fun handleLaunchApplicationMainActivityIntent() {
+        viewModel.checkCanvasForElementaryFeature().observe(this, Observer { event: Event<Boolean>? ->
+            event?.getContentIfNotHandled()?.let { result: Boolean ->
+                val intent = launchApplicationMainActivityIntent()
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.putExtra("canvas_for_elementary", result)
+                startActivity(intent)
+                finish()
+            }
+        })
     }
 
     //region Snicker Doodles

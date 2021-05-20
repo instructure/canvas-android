@@ -27,10 +27,10 @@ import retrofit2.http.*
 internal object StreamAPI {
 
     internal interface StreamInterface {
-        @GET("users/self/activity_stream")
+        @GET("users/self/activity_stream?only_active_courses=true")
         fun getUserStream(): Call<List<StreamItem>>
 
-        @GET("{contextId}/activity_stream")
+        @GET("{contextId}/activity_stream?only_active_courses=true")
         fun getContextStream(@Path("contextId") contextId: Long): Call<List<StreamItem>>
 
         @GET
@@ -39,7 +39,7 @@ internal object StreamAPI {
         @DELETE("users/self/activity_stream/{streamId}")
         fun hideStreamItem(@Path("streamId") streamId: Long): Call<HiddenStreamItem>
 
-        @GET("users/self/activity_stream")
+        @GET("users/self/activity_stream?only_active_courses=true")
         fun getUserStreamCustomCount(@Query("per_page") number: Int): Call<List<StreamItem>>
     }
 

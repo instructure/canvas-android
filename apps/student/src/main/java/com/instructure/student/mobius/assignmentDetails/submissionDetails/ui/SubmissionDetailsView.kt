@@ -121,7 +121,7 @@ class SubmissionDetailsView(
             ) {
                 when (newState) {
                     SlidingUpPanelLayout.PanelState.ANCHORED -> {
-                        submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+                        submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                     }
                     SlidingUpPanelLayout.PanelState.EXPANDED -> {
                         submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS

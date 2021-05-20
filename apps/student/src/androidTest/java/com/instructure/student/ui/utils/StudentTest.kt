@@ -17,7 +17,6 @@
 package com.instructure.student.ui.utils
 
 import android.app.Activity
-import android.content.Context
 import android.os.Environment
 import androidx.test.espresso.Espresso
 import android.view.View
@@ -40,6 +39,7 @@ abstract class StudentTest : CanvasTest() {
 
     override val activityRule: InstructureActivityTestRule<out Activity> =
         StudentActivityTestRule(LoginActivity::class.java)
+
     lateinit var originalActivity : Activity
 
     // Sometimes activityRule.activity can get nulled out over time, probably as we
@@ -55,7 +55,6 @@ abstract class StudentTest : CanvasTest() {
     /**
      * Required for auto complete of page objects within tests
      */
-    val allCoursesPage = AllCoursesPage()
     val annotationCommentListPage = AnnotationCommentListPage()
     val assignmentDetailsPage = AssignmentDetailsPage()
     val assignmentListPage = AssignmentListPage()
@@ -68,7 +67,7 @@ abstract class StudentTest : CanvasTest() {
     val dashboardPage = DashboardPage()
     val discussionDetailsPage = DiscussionDetailsPage()
     val discussionListPage = DiscussionListPage()
-    val editFavoritesPage = EditFavoritesPage()
+    val editDashboardPage = EditDashboardPage()
     val fileListPage = FileListPage()
     val fileUploadPage = FileUploadPage()
     val helpPage = HelpPage()

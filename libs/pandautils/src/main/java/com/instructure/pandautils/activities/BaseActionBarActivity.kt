@@ -32,6 +32,7 @@ abstract class BaseActionBarActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         BundleSaver.restoreBundleFromDisk(savedInstanceState)
         super.onCreate(savedInstanceState)
+        overrideFont()
         if (contentResId() != 0) {
             setContentView(contentResId())
         }
@@ -72,5 +73,9 @@ abstract class BaseActionBarActivity : AppCompatActivity() {
             }
         }
         return super.onKeyUp(keyCode, event)
+    }
+
+    open fun overrideFont() {
+
     }
 }

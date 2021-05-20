@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Poročajte o težavi.</string>
     <string name="errorReportSubject">Kratek opis predmeta</string>
     <string name="errorReportDescription">Opis</string>
-    <string name="errorReportWriteSomething">Nekaj napišite ...</string>
     <string name="errorReportSend">Pošlji</string>
     <string name="errorReportThankyou">Hvala za poročanje o težavi naši ekipi za podporo.  Potrdilo in posodobitve boste prejeli prek e-pošte.</string>
     <string name="errorReportSeverityText">Kako to vpliva na vas?</string>
@@ -86,7 +85,6 @@
     <string name="errorSeverityExtremelyCritical">SKRAJNO KRITIČNI NUJNI PRIMER</string>
 
     <string name="errorReportEmailAddress">E-poštni naslov</string>
-    <string name="errorReportEnterEmail">Vnesite svoj e-poštni naslov ...</string>
     <string name="errorReportUnknown">Neznano</string>
 
     <!-- Distance Strings -->

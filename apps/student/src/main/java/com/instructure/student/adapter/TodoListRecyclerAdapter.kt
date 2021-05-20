@@ -168,7 +168,9 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
         val todos = ToDoManager.mergeToDoUpcoming(todoList, null)
 
         // Now populate the todoList and upcomingList with the course information
-        todos.forEach {
+        todos
+            .filter { it.todoType != ToDo.Type.Grading }
+            .forEach {
             ToDo.setContextInfo(it, courseMap!!, groupMap!!)
             if (it.canvasContext != null && it.comparisonDate != null) {
                 addOrUpdateItem(DateHelper.getCleanDate(it.comparisonDate!!.time), it)

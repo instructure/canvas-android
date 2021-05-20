@@ -108,7 +108,7 @@ class OnActivityResults(results: ActivityResult, skipId: String? = null) : Panda
 
 class FileUploadNotification(val intent: Intent?, val attachments: List<Attachment>)
 class FileUploadEvent(fileNotification: FileUploadNotification) : PandaRationedBusEvent<FileUploadNotification>(fileNotification)
-class DiscussionEntryEvent(entryId: Long) : PandaRationedBusEvent<Long>(entryId)
+class DiscussionEntryEvent(entryId: Long, val topLevelReplyPosted: Boolean = false) : PandaRationedBusEvent<Long>(entryId)
 
 class OnBackStackChangedEvent(clazz: Class<*>?) : PandaRationedBusEvent<Class<*>?>(clazz)
 

@@ -107,7 +107,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun goToDashboard() {
-        onView(withId(R.id.bottomNavigationCourses)).click()
+        onView(withId(R.id.bottomNavigationHome)).click()
     }
 
     fun assertConversationStarred(conversation: Conversation) {

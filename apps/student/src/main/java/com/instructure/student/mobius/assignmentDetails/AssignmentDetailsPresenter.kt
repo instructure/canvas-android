@@ -17,6 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import android.content.Context
+import android.view.accessibility.AccessibilityManager
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*

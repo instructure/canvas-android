@@ -99,7 +99,7 @@ class DiscussionsDetailsPresenter(
 
         if(newEntry.parentId == -1L) { //No Parent, add to DiscussionTopicHeader
             discussionTopic.views.add(newEntry)
-            notifyEntryAdded()
+            notifyEntryAdded(topLevel = true)
             return
         }
 
@@ -126,8 +126,8 @@ class DiscussionsDetailsPresenter(
         }
     }
 
-    private fun notifyEntryAdded() {
-        viewCallback?.populateDiscussionTopic(discussionTopicHeader, discussionTopic)
+    private fun notifyEntryAdded(topLevel: Boolean = false) {
+        viewCallback?.populateDiscussionTopic(discussionTopicHeader, discussionTopic, topLevel)
         // Removed due to issue with reloading discussions after reply/edit, removal doesn't appear to have any negative effects.
         //DiscussionTopicEvent(discussionTopic, getSkipId()).post()
 

@@ -27,7 +27,9 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
 import com.instructure.loginapi.login.snicker.SnickerDoodle
 import com.instructure.pandautils.services.PushNotificationRegistrationService
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {

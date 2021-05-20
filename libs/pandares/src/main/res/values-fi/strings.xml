@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Lähetys epäonnistui</string>
     <string name="submissionStatusFailedSubtitle">Napauta tarkastellaksesi tietoja</string>
     <string name="submissionAndRubric">Lähetys &amp; Rubriikki</string>
+    <string name="commentsAndRubric">Kommentit &amp; Rubriikki</string>
     <string name="errorLoadingAssignment">Tämän tehtävän lataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
     <string name="submitted">Lähetetty</string>
     <string name="notSubmitted">Ei lähetetty</string>
@@ -76,6 +76,7 @@
     <string name="recordAudio">Nauhoita ääni</string>
     <string name="recordVideo">Nauhoita video</string>
 
+    <string name="a11y_textSubmissionEditor">Tekstin lähetyksen editori</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Kirjoita&#8230;</string>
     <string name="textSubmissionFailureMessage">Jotakin meni pieleen lähetyksen päivityksessä. Lähetä uudelleen.</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Tehtäväsi lukittiin moduulilla \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Tehtäväsi lukittiin moduulin vaatimuksella </string>
     <string name="submissionDetailsAssignmentLocked">Tehtävä lukittu</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Lähetyksiä ei sallita</string>
     <string name="webPreview">Syötetyn URL-linkin esikatselu</string>
     <string name="websiteUrl">Verkkosivuston URL</string>
     <string name="noneContentMessage">Tämä tehtävä ei salli verkkolähetyksiä.</string>
@@ -101,6 +103,7 @@
 
     <string name="speedGraderExternalToolMessage">Tämä tehtävä linkittää ulkoisen työkalun lähetyksiin.</string>
     <string name="openTool">Avaa työkalu</string>
+    <string name="a11y_submissionText">Lähetyksen testi</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s pisteestä</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s pistettä</string>
@@ -126,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Liitä tiedostoja kommenttiisi napauttamalla alla olevaa vaihtoehtoa</string>
     <string name="emptySubmissionCommentsSubtext">Onko sinulla kysyttävää tehtävästäsi?\nLähetä viesti ohjaajallesi.</string>
     <string name="submissionCommentErrorMessage">Tämän viestin lähettäminen epäonnistui. Yritä uudelleen napauttamalla.</string>
+    <string name="mediaUpload">Mediatiedoston lataus</string>
     <string name="mediaUploadAudio">Median lataus - ääni</string>
     <string name="mediaUploadVideo">Median lataus - video</string>
     <string name="commentSubmissionTypeText">Tekstin lähetys</string>
@@ -196,6 +200,17 @@
     <string name="excusedAssignment">Tämän tehtävän annetaan mennä eikä sitä oteta huomioon koko laskelmassa</string>
     <string name="excused">EX</string>
 
+    <string name="sortByDialogTitle">Lajitteluperuste</string>
+    <string name="sortByDialogTimeOption">Aika</string>
+    <string name="sortByDialogTypeOption">Tyyppi</string>
+    <string name="sortByTime">Lajittele ajan perusteella</string>
+    <string name="sortByType">Lajittele tyypin perusteella</string>
+    <string name="sortByDialogCancel">Peruuta</string>
+    <string name="assignmentsListAllGradingPeriods">Kaikki</string>
+    <string name="a11y_sortByTimeButton">Lajittele tehtävät -painike, lajittele ajan perusteella</string>
+    <string name="a11y_sortByTypeButton">Lajittele tehtävät -painike, lajittele tyypin perusteella</string>
+    <string name="a11y_assignmentsSortedByTime">Tehtävät lajiteltu ajan perusteella</string>
+    <string name="a11y_assignmentsSortedByType">Tehtävät lajiteltu tyypin perusteella</string>
     <!-- Assignment editing -->
     <string name="points">Pisteitä\u0020</string>
     <string name="save">Tallenna</string>
@@ -205,6 +220,7 @@
     <string name="forbidden">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
 
     <string name="fileCurrentlyLocked">Tämä tiedosto on parhaillaan lukittu</string>
+    <string name="a11y_discussionReplyEditor">Keskustelun lähetyksen editori</string>
     <!-- Events -->
     <string name="Starts">Alkaa</string>
     <string name="Ends">Päättyy</string>
@@ -254,6 +270,7 @@
     <string name="createFolder">Kansion luonti</string>
     <string name="createAFile">Luo tiedosto</string>
     <string name="createFileFolderFabContentDesc">Näytä Luo tiedosto - ja Luo kansio -painikkeet</string>
+    <string name="hideCreateFileFolderFabContentDesc">Piilota Luo tiedosto - ja Luo kansio -painikkeet</string>
     <string name="folderCreationError">Kansion luonnin aikana tapahtui virhe.</string>
     <string name="rename">Nimeä uudelleen</string>
     <string name="renameFile">Tiedostojen nimeäminen uudelleen</string>
@@ -1114,4 +1131,30 @@
     <string name="conferenceDetails">Konferenssin tiedot</string>
     <string name="recordings">Nauhoitukset</string>
     <string name="conferenceInProgress">Kokous käynnissä</string>
+    <string name="a11y_criterion_content_description">Kriteerien luokitukset %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">lisätietoja</string>
+    <string name="a11y_create_file_folder_visible">Luo tiedosto ja kansio -painikkeet näkyvissä</string>
+    <string name="a11y_create_file_folder_gone">Luo tiedosto ja kansio -painikkeet eivät näkyvissä</string>
+    <string name="unselect_all">Poista kaikki valinnat</string>
+    <string name="select_all">Valitse kaikki</string>
+    <string name="all_courses">Kaikki kurssit</string>
+    <string name="all_groups">Kaikki ryhmät</string>
+    <string name="edit_dashboard_course_description">Valitse kurssit koontinäyttöön tai siirry kurssin tietoihin.</string>
+    <string name="edit_dashboard_group_description">Valitse ryhmät koontinäyttöön tai siirry kurssin tietoihin.</string>
+    <string name="current_enrollments">Tämänhetkiset ilmoittautumiset</string>
+    <string name="past_enrollments">Aiemmat ilmoittautumiset</string>
+    <string name="future_enrollments">Tulevat ilmoittautumiset</string>
+    <string name="added_to_dashboard">Lisätty koontinäyttöön</string>
+    <string name="removed_from_dashboard">Poistettu koontinäytöstä</string>
+    <string name="all_added_to_dashboard">Kaikki lisätty koontinäyttöön</string>
+    <string name="all_removed_from_dashboard">Kaikki poistettu koontinäytöstä</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Passiivisten kurssien lisäys koontinäyttöön ei onnistunut.</string>
+    <string name="edit_dashboard">Muokkaa koontinäyttöä</string>
+    <string name="edit_dashboard_empty_title">Ei kursseja täällä</string>
+    <string name="edit_dashboard_empty_message">Sinun täytyy olla ilmoittautunut kurssille, jotta voisit lisätä sen koontinäyttöön.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Poista koontinäytöstä</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Poista widget koontinäytöstä</string>
+    <string name="a11y_content_description_add_to_dashboard">Lisää koontinäytölle</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Lisää kaikki koontinäyttöön</string>
 </resources>

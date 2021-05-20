@@ -17,6 +17,7 @@
 
 package com.instructure.student.fragment
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -33,6 +34,8 @@ import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
+import io.flutter.plugin.common.MethodCall
+import io.flutter.plugin.common.MethodChannel
 import kotlinx.android.extensions.CacheImplementation
 import kotlinx.android.extensions.ContainerOptions
 
@@ -66,6 +69,7 @@ class CalendarFragment : ParentFragment() {
     private fun setupChannelCallbacks(channel: CalendarScreenChannel) {
         channel.onRouteToItem = ::routeToItem
         channel.onOpenDrawer = ::openDrawer
+        channel.onShowDialog = ::showDialog
     }
 
     private fun openDrawer() {
@@ -102,6 +106,16 @@ class CalendarFragment : ParentFragment() {
         }
 
         route?.let { RouteMatcher.route(requireContext(), it) }
+    }
+
+    private fun showDialog(call: MethodCall, result: MethodChannel.Result) {
+        AlertDialog.Builder(activity, R.style.AccentDialogTheme)
+            .setTitle(call.argument<String>("title"))
+            .setMessage(call.argument<String>("message"))
+            .setPositiveButton(call.argument<String>("positiveButtonText")) { _, _ -> result.success(true) }
+            .setNegativeButton(call.argument<String>("negativeButtonText")) { _, _ -> result.success(false) }
+            .create()
+            .show()
     }
 
     override fun handleBackPressed(): Boolean = flutterFragment?.handleBackPressed() ?: false

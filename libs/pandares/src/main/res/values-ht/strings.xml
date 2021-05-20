@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Soumisyon Echwe</string>
     <string name="submissionStatusFailedSubtitle">Tape pou afiche detay</string>
     <string name="submissionAndRubric">Soumisyon &amp; Ribrik</string>
+    <string name="commentsAndRubric">Kòmantè &amp; Ribrik</string>
     <string name="errorLoadingAssignment">Te gen yon pwobl pouchaje devwa sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
     <string name="submitted">Soumèt</string>
     <string name="notSubmitted">Pa Soumèt</string>
@@ -78,6 +78,7 @@
 
     <string name="recordVideo">Anrejistre Videyo</string>
 
+    <string name="a11y_textSubmissionEditor">Editè Soumisyon Tèks</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Ekri&#8230;</string>
     <string name="textSubmissionFailureMessage">Gen yon bagay ki pase mal pandan soumisyon ap transfere. Soumèt ankò.</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Devwa w la bloke pa modil \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Devwa w la bloke pa yon egzijans modil </string>
     <string name="submissionDetailsAssignmentLocked">Sesyon Bloke</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Okenn Soumisyon pa Otorize</string>
     <string name="webPreview">Apèsi URL ki antre a</string>
     <string name="websiteUrl">URL sit Web</string>
     <string name="noneContentMessage">Devwa sa a pa otorize soumisyon an liy.</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Pa Gen Soumisyon an Liy</string>
     <string name="speedGraderExternalToolMessage">Sesyon sa a relye a yon zouti ekstèn pou soumisyon.</string>
     <string name="openTool">Ouvri Zouti</string>
+    <string name="a11y_submissionText">Tèks soumisyon</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Sou %s pwen</string>
     <string name="outOfPointsAbbreviatedFormatted">Sou %s pts</string>
@@ -124,6 +127,7 @@
     <string name="chooseFileForCommentSubtext">Klike sou yonn nan opsyon pi ba yo pou ka atache fichye nan kòmantè w</string>
     <string name="emptySubmissionCommentsSubtext">Ou gen kesyon ki gen rapò a devwa ou a?\nEkri enstriktè w la.</string>
     <string name="submissionCommentErrorMessage">Mesaj sa a pa t ka ale. Tape pou eseye ankò.</string>
+    <string name="mediaUpload">Transfè Medya</string>
     <string name="mediaUploadAudio">Transfè Medya - Odyo</string>
     <string name="mediaUploadVideo">Transfè Medya - Videyo</string>
     <string name="commentSubmissionTypeText">Soumisyon Tèks</string>
@@ -190,6 +194,17 @@
     <string name="noAssignmentsInGroup">Pa gen Sesyon nan gwoup sa a</string>
     <string name="excusedAssignment">Yo egzante sesyon sa a ni yo pa p konsidere li nan kalkil total la.</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Klase pa</string>
+    <string name="sortByDialogTimeOption">Tan</string>
+    <string name="sortByDialogTypeOption">Tip</string>
+    <string name="sortByTime">Triye pa Lè</string>
+    <string name="sortByType">Triye pa Tip</string>
+    <string name="sortByDialogCancel">Anile</string>
+    <string name="assignmentsListAllGradingPeriods">Tout</string>
+    <string name="a11y_sortByTimeButton">Bouton pou triye devwa yo, triye pa lè</string>
+    <string name="a11y_sortByTypeButton">Bouton pou triye devwa yo, triye pa tip</string>
+    <string name="a11y_assignmentsSortedByTime">Devwa triye pa lè</string>
+    <string name="a11y_assignmentsSortedByType">Devwa triye pa tip</string>
     <!-- Assignment editing -->
     <string name="points">Pwen\u0020</string>
     <string name="save">Anrejistre</string>
@@ -198,6 +213,7 @@
     <string name="forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
 
     <string name="fileCurrentlyLocked">Fichye sa a bloke pou kounye a</string>
+    <string name="a11y_discussionReplyEditor">Editè Repons Diskisyon</string>
     <!-- Events -->
     <string name="Starts">Kòmanse</string>
     <string name="Ends">Fini</string>
@@ -249,6 +265,7 @@
     <string name="createFolder">Kreye Dosye</string>
     <string name="createAFile">Kreye yon Fichye</string>
     <string name="createFileFolderFabContentDesc">Afiche Bouton Kreye Fichye epi Kreye Dosye</string>
+    <string name="hideCreateFileFolderFabContentDesc">Kache Bouton Kreye Fichye ak Kreye Dosye a</string>
     <string name="folderCreationError">Gen yon erè ki fèt pandan kreyasyon dosye a.</string>
     <string name="rename">Chanje non</string>
     <string name="renameFile">Chanje non fichye</string>
@@ -1100,4 +1117,30 @@
     <string name="conferenceDetails">Detay Konferans</string>
     <string name="recordings">Anrejistreman</string>
     <string name="conferenceInProgress">Konferans ap fèt</string>
+    <string name="a11y_criterion_content_description">Evalyasyon kritè %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">plis enfòmasyon</string>
+    <string name="a11y_create_file_folder_visible">Bouton Kreye Fichye ak Dosye yo vizib</string>
+    <string name="a11y_create_file_folder_gone">Bouton Kreye Fichye ak Dosye yo envizib</string>
+    <string name="unselect_all">Deseleksyone Tout</string>
+    <string name="select_all">Seleksyone Tout</string>
+    <string name="all_courses">Tout kpi</string>
+    <string name="all_groups">Tout Gwoup</string>
+    <string name="edit_dashboard_course_description">Seleksyone kou pou Tablo a oswa navige nan detay kou yo.</string>
+    <string name="edit_dashboard_group_description">Seleksyone gwoup pou Tablo a oswa navige nan detay kou yo.</string>
+    <string name="current_enrollments">Enskripsyon aktyèl</string>
+    <string name="past_enrollments">Enskripsyon pase</string>
+    <string name="future_enrollments">Pwochen enskripsyon</string>
+    <string name="added_to_dashboard">Ajoute nan Tablo</string>
+    <string name="removed_from_dashboard">Elimine nan Tablo</string>
+    <string name="all_added_to_dashboard">Tout ajoute nan Tablo</string>
+    <string name="all_removed_from_dashboard">Tout elimine nan Tablo</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Kou ki pa aktif yo pa t kapab ajoute nan Tablo.</string>
+    <string name="edit_dashboard">Modifye Tablo</string>
+    <string name="edit_dashboard_empty_title">Pa gen kou la a</string>
+    <string name="edit_dashboard_empty_message">Ou dwe enskri nan yon kou pou w ka ajoute l nan Tablo a.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Elimine nan tablo</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Elimine tout nan tablo</string>
+    <string name="a11y_content_description_add_to_dashboard">Ajoute nan tablo</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Ajoute tout nan tablo</string>
 </resources>

@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Inlevering mislukt</string>
     <string name="submissionStatusFailedSubtitle">Tik om details te bekijken</string>
     <string name="submissionAndRubric">Inlevering en rubriek</string>
+    <string name="commentsAndRubric">Opmerkingen &amp; Rubriek</string>
     <string name="errorLoadingAssignment">Er is een probleem met het laden van deze opdracht. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="submitted">Ingediend</string>
     <string name="notSubmitted">Niet ingediend</string>
@@ -78,6 +78,7 @@
 
     <string name="recordVideo">Video opnemen</string>
 
+    <string name="a11y_textSubmissionEditor">Editor voor tekstinlevering</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Schrijven&#8230;</string>
     <string name="textSubmissionFailureMessage">Er is iets mis gegaan bij het uploaden van de opdracht. Opnieuw inleveren.</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Je opdracht is vergrendeld door module \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Je opdracht wordt vergrendeld door een modulevereiste</string>
     <string name="submissionDetailsAssignmentLocked">Opdracht vergrendeld</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Geen inlevering toegestaan</string>
     <string name="webPreview">Voorbeeld van de ingevoerde URL</string>
     <string name="websiteUrl">Website-URL</string>
     <string name="noneContentMessage">Voor deze opdracht zijn geen online-inleveringen toegestaan.</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Geen online-inleveringen</string>
     <string name="speedGraderExternalToolMessage">Deze opdracht heeft een link naar een externe tool voor inleveringen.</string>
     <string name="openTool">Tool openen</string>
+    <string name="a11y_submissionText">Inleveringstekst</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Zonder %s punten</string>
     <string name="outOfPointsAbbreviatedFormatted">Zonder %s punten</string>
@@ -124,6 +127,7 @@
     <string name="chooseFileForCommentSubtext">Koppel bestanden aan je opmerking door op een optie hieronder te tikken</string>
     <string name="emptySubmissionCommentsSubtext">Vragen over je opdracht?\nStuur een bericht naar je cursusleider.</string>
     <string name="submissionCommentErrorMessage">Dit bericht kan niet worden verzonden. Tik om het nogmaals te proberen.</string>
+    <string name="mediaUpload">Media Upload</string>
     <string name="mediaUploadAudio">Media-upload - audio</string>
     <string name="mediaUploadVideo">Media-upload - video</string>
     <string name="commentSubmissionTypeText">Tekstinzending</string>
@@ -190,6 +194,17 @@
     <string name="noAssignmentsInGroup">Geen opdrachten in deze groep</string>
     <string name="excusedAssignment">Deze opdracht is verwijderd en wordt niet in overweging genomen voor de totale berekening</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Sorteren op</string>
+    <string name="sortByDialogTimeOption">Tijd</string>
+    <string name="sortByDialogTypeOption">Type</string>
+    <string name="sortByTime">Sorteren op tijd</string>
+    <string name="sortByType">Sorteren op type</string>
+    <string name="sortByDialogCancel">Annuleren</string>
+    <string name="assignmentsListAllGradingPeriods">Alle</string>
+    <string name="a11y_sortByTimeButton">Knop voor opdrachten sorteren, sorteren op tijd</string>
+    <string name="a11y_sortByTypeButton">Knop voor opdrachten sorteren, sorteren op type</string>
+    <string name="a11y_assignmentsSortedByTime">Opdrachten gesorteerd op tijd</string>
+    <string name="a11y_assignmentsSortedByType">Opdrachten gesorteerd op type</string>
     <!-- Assignment editing -->
     <string name="points">Punten\u0020</string>
     <string name="save">Opslaan</string>
@@ -198,6 +213,7 @@
     <string name="forbidden">Antwoorden zijn alleen zichtbaar voor degenen die minimaal één antwoord hebben geplaatst.</string>
 
     <string name="fileCurrentlyLocked">Dit bestand is momenteel vergrendeld</string>
+    <string name="a11y_discussionReplyEditor">Editor voor discussieantwoorden</string>
     <!-- Events -->
     <string name="Starts">Begint op</string>
     <string name="Ends">Eindigt</string>
@@ -249,6 +265,7 @@
     <string name="createFolder">Map aanmaken</string>
     <string name="createAFile">Bestand aanmaken</string>
     <string name="createFileFolderFabContentDesc">Knoppen Bestand aanmaken en Map aanmaken weergeven</string>
+    <string name="hideCreateFileFolderFabContentDesc">Knoppen voor Bestand maken en Map maken verbergen</string>
     <string name="folderCreationError">Fout tijdens het aanmaken van de map.</string>
     <string name="rename">Naam wijzigen</string>
     <string name="renameFile">Bestandsnaam wijzigen</string>
@@ -1100,4 +1117,30 @@
     <string name="conferenceDetails">Vergaderingdetails</string>
     <string name="recordings">Opnamen</string>
     <string name="conferenceInProgress">Vergadering is bezig</string>
+    <string name="a11y_criterion_content_description">Criteriabeoordeling %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">meer informatie</string>
+    <string name="a11y_create_file_folder_visible">Knoppen voor Bestand maken en Map maken zichtbaar</string>
+    <string name="a11y_create_file_folder_gone">Knoppen voor Bestand maken en Map maken onzichtbaar</string>
+    <string name="unselect_all">Alles deselecteren</string>
+    <string name="select_all">Alles selecteren</string>
+    <string name="all_courses">Alle cursussen</string>
+    <string name="all_groups">Alle Groepen</string>
+    <string name="edit_dashboard_course_description">Selecteer cursussen voor Dashboard of navigeer naar cursusdetails.</string>
+    <string name="edit_dashboard_group_description">Selecteer groepen voor Dashboard of navigeer naar cursusdetails.</string>
+    <string name="current_enrollments">Huidige inschrijvingen</string>
+    <string name="past_enrollments">Oude inschrijvingen</string>
+    <string name="future_enrollments">Toekomstige inschrijvingen</string>
+    <string name="added_to_dashboard">Toegevoegd aan Dashboard</string>
+    <string name="removed_from_dashboard">Verwijderd uit Dashboard</string>
+    <string name="all_added_to_dashboard">Alles toegevoegd aan Dashboard</string>
+    <string name="all_removed_from_dashboard">Alles verwijderd uit Dashboard</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Inactieve cursussen kunnen niet aan Dashboard worden toegevoegd.</string>
+    <string name="edit_dashboard">Dashboard bewerken</string>
+    <string name="edit_dashboard_empty_title">Geen cursussen hier</string>
+    <string name="edit_dashboard_empty_message">Je moet in een cursus zijn ingeschreven om die aan het Dashboard te kunnen toevoegen.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Verwijderen uit Dashboard</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Alles verwijderen uit Dashboard</string>
+    <string name="a11y_content_description_add_to_dashboard">Toevoegen aan Dashboard</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Alles toevoegen aan Dashboard</string>
 </resources>

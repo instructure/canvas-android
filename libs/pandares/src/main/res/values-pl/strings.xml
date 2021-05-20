@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,6 +47,7 @@
     <string name="submissionStatusFailedTitle">Przesyłanie zadania nie powiodło się</string>
     <string name="submissionStatusFailedSubtitle">Stuknij, aby wyświetlić szczegóły</string>
     <string name="submissionAndRubric">Przesyłka i kryteria ocen</string>
+    <string name="commentsAndRubric">Komentarze i kryteria ocen</string>
     <string name="errorLoadingAssignment">Wystąpił problem z wczytaniem tego zadania. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="submitted">Przesłano</string>
     <string name="notSubmitted">Nie wysłano</string>
@@ -78,6 +78,7 @@
     <string name="recordAudio">Nagraj dźwięk</string>
     <string name="recordVideo">Nagraj dźwięk</string>
 
+    <string name="a11y_textSubmissionEditor">Edytor zgłoszeń tekstowych</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Napisz&#8230;</string>
     <string name="textSubmissionFailureMessage">Wystąpił problem z przesyłaniem. Prześlij ponownie.</string>
@@ -95,6 +96,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Twoje zadanie jest zablokowane przez moduł \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Twoje zadanie jest zablokowane przez wymóg modułu</string>
     <string name="submissionDetailsAssignmentLocked">Zablokowano zadanie</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Przesyłki nie są dozwolone</string>
     <string name="webPreview">Podgląd wprowadzonego adresu URL</string>
     <string name="websiteUrl">Adres URL witryny</string>
     <string name="noneContentMessage">To zadanie nie umożliwia przesyłania online</string>
@@ -103,6 +105,7 @@
 
     <string name="speedGraderExternalToolMessage">To zadanie odnosi się do zewnętrznego narzędzia do przesyłania.</string>
     <string name="openTool">Otwórz narzędzie</string>
+    <string name="a11y_submissionText">Tekst przesyłki</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Z %s pkt</string>
     <string name="outOfPointsAbbreviatedFormatted">Z %s pkt</string>
@@ -128,6 +131,7 @@
     <string name="chooseFileForCommentSubtext">Załącz pliki do komentarza, stukając poniższą opcję.</string>
     <string name="emptySubmissionCommentsSubtext">Masz pytania dotyczące zadania?\nWyślij wiadomość do instruktora.</string>
     <string name="submissionCommentErrorMessage">Nie można wysłać tego komunikatu, Stuknij, aby ponowić próbę.</string>
+    <string name="mediaUpload">Ładowanie mediów</string>
     <string name="mediaUploadAudio">Przesyłanie pliku multimedialnego - audio</string>
     <string name="mediaUploadVideo">Przesyłanie pliku multimedialnego - wideo</string>
     <string name="commentSubmissionTypeText">Zgłoszenie tekstowe</string>
@@ -198,6 +202,17 @@
     <string name="excusedAssignment">To zadanie zostało usprawiedliwione i nie zostanie ujęte w ostatecznym rozliczeniu</string>
     <string name="excused">EX</string>
 
+    <string name="sortByDialogTitle">Sortuj wg</string>
+    <string name="sortByDialogTimeOption">Czas</string>
+    <string name="sortByDialogTypeOption">Typ</string>
+    <string name="sortByTime">Sortuj wg czasu</string>
+    <string name="sortByType">Sortuj wg typu</string>
+    <string name="sortByDialogCancel">Anuluj</string>
+    <string name="assignmentsListAllGradingPeriods">Wszystkie</string>
+    <string name="a11y_sortByTimeButton">Przycisk sortowania zadań, sortuj wg czasu</string>
+    <string name="a11y_sortByTypeButton">Przycisk sortowania zadań, sortuj wg typu</string>
+    <string name="a11y_assignmentsSortedByTime">Zadania posortowane wg czasu</string>
+    <string name="a11y_assignmentsSortedByType">Zadania posortowane wg typu</string>
     <!-- Assignment editing -->
     <string name="points">Punkty\u0020</string>
     <string name="save">Zapisz</string>
@@ -207,6 +222,7 @@
     <string name="forbidden">Odpowiedzi są widoczne tylko dla tych osób, które opublikowały co najmniej jedną odpowiedź.</string>
 
     <string name="fileCurrentlyLocked">Aktualnie plik jest zablokowany</string>
+    <string name="a11y_discussionReplyEditor">Edytor odpowiedzi w dyskusji</string>
     <!-- Events -->
     <string name="Starts">Rozpoczyna się</string>
     <string name="Ends">Kończy się</string>
@@ -258,6 +274,7 @@
     <string name="createFolder">Utwórz folder</string>
     <string name="createAFile">Utwórz plik</string>
     <string name="createFileFolderFabContentDesc">Pokaż przyciski tworzenia plików i folderów</string>
+    <string name="hideCreateFileFolderFabContentDesc">Ukryj przyciski tworzenia plików i folderów</string>
     <string name="folderCreationError">Wystąpił błąd podczas tworzenia folderu.</string>
     <string name="rename">Zmień nazwę</string>
     <string name="renameFile">Zmień nazwę pliku</string>
@@ -1142,4 +1159,30 @@
     <string name="conferenceDetails">Szczegóły konferencji</string>
     <string name="recordings">Nagrań</string>
     <string name="conferenceInProgress">Konferencja w toku</string>
+    <string name="a11y_criterion_content_description">Punktacja dla danego kryterium %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">więcej informacji</string>
+    <string name="a11y_create_file_folder_visible">Przyciski tworzenia plików i folderów są widoczne</string>
+    <string name="a11y_create_file_folder_gone">Ukryto przyciski tworzenia plików i folderów</string>
+    <string name="unselect_all">Usuń zaznaczenia</string>
+    <string name="select_all">Zaznacz wszystko</string>
+    <string name="all_courses">Wszystkie kursy</string>
+    <string name="all_groups">Wszystkie grupy</string>
+    <string name="edit_dashboard_course_description">Wybierz kursy dla panelu nawigacyjnego lub przejdź do szczegółów kursu.</string>
+    <string name="edit_dashboard_group_description">Wybierz grupy dla panelu nawigacyjnego lub przejdź do szczegółów kursu.</string>
+    <string name="current_enrollments">Bieżące zapisy</string>
+    <string name="past_enrollments">Wcześniejsze zapisy</string>
+    <string name="future_enrollments">Przyszłe zapisy</string>
+    <string name="added_to_dashboard">Dodano do panelu nawigacyjnego</string>
+    <string name="removed_from_dashboard">Usunięto z panelu nawigacyjnego</string>
+    <string name="all_added_to_dashboard">Wszystko dodano do panelu nawigacyjnego</string>
+    <string name="all_removed_from_dashboard">Wszystko usunięto z panelu nawigacyjnego</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Nieaktywnych kursów nie można dodać do panelu nawigacyjnego.</string>
+    <string name="edit_dashboard">Edytuj panel nawigacyjny</string>
+    <string name="edit_dashboard_empty_title">Brak kursów</string>
+    <string name="edit_dashboard_empty_message">Aby dodać kurs do panelu nawigacyjnego, musisz się do niego zapisać.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Usuń z panelu nawigacyjnego</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Usuń wszystko z panelu nawigacyjnego</string>
+    <string name="a11y_content_description_add_to_dashboard">Dodaj do panelu nawigacyjnego</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Dodaj wszystko do panelu nawigacyjnego</string>
 </resources>

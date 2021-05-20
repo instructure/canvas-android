@@ -19,45 +19,19 @@ package com.instructure.teacher.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Toast
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.ActivityResult
 import com.instructure.pandautils.utils.OnActivityResults
 import com.instructure.pandautils.utils.postSticky
-import com.instructure.teacher.R
-import com.instructure.teacher.dialog.HelpDialogStyled
 
-abstract class BaseAppCompatActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
-
-    override fun onTicketPost() {
-        dismissHelpDialog()
-        Toast.makeText(applicationContext, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onTicketError() {
-        dismissHelpDialog()
-        Toast.makeText(applicationContext, R.string.errorOccurred, Toast.LENGTH_LONG).show()
-    }
-
-    private fun dismissHelpDialog() {
-        val fragment = supportFragmentManager.findFragmentByTag(HelpDialogStyled.TAG)
-        if (fragment is HelpDialogStyled) {
-            try {
-                fragment.dismiss()
-            } catch (e: IllegalStateException) {
-                Logger.e("Committing a transaction after activities saved state was called: " + e)
-            }
-        }
-    }
+abstract class BaseAppCompatActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == UploadFilesDialog.CAMERA_PIC_REQUEST ||
-                requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
-                requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY) {
+            requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
+            requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY) {
             //File Dialog Fragment will not be notified of onActivityResult(), alert manually
             OnActivityResults(ActivityResult(requestCode, resultCode, data), null).postSticky()
         }

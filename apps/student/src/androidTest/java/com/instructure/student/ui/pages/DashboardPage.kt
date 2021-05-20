@@ -18,11 +18,8 @@
 
 package com.instructure.student.ui.pages
 
-import android.os.SystemClock.sleep
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
@@ -30,7 +27,6 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -51,7 +47,6 @@ import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertGone
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -67,10 +62,8 @@ import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
-import org.hamcrest.BaseMatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.Description
 import org.hamcrest.Matcher
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
@@ -78,8 +71,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
     private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
-    private val selectFavorites by WaitForViewWithId(R.id.selectFavorites)
-    private val seeAllCoursesButton by WaitForViewWithId(R.id.seeAllTextView)
+    private val selectFavorites by WaitForViewWithId(R.id.editDashboardTextView)
     private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
 
     // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
@@ -141,14 +133,6 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
-    fun assertSeeAllDisplayed() {
-        seeAllCoursesButton.assertDisplayed()
-    }
-
-    fun clickSeeAll() {
-        seeAllCoursesButton.click()
-    }
-
     fun signOut() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
@@ -162,6 +146,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun pressChangeUser() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_changeUser).scrollTo().click()
+    }
+
+    fun goToHelp() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
     }
 
     fun gotoGlobalFiles() {

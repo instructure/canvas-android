@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +15,6 @@
   ~
   -->
 <resources>
-
     <string name="noFilesFound">Ni najdenih datotek.</string>
     <string name="searchFilesHint">Poišči datoteke</string>
     <string name="fileSearchInstructions">Vnesite iskalno besedo s tremi ali več znaki.</string>
@@ -34,6 +32,7 @@
     <string name="selectedListItem">Izbrano: %s</string>
 
     <!-- Student Strings -->
+
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Podrobnosti o nalogi</string>
     <string name="submission_types">Vrste oddaj</string>
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Oddaja ni uspela.</string>
     <string name="submissionStatusFailedSubtitle">Tapnite za ogled podrobnosti</string>
     <string name="submissionAndRubric">Oddaja in ocenjevalni vodnik</string>
+    <string name="commentsAndRubric">Komentarji in ocenjevalni vodnik</string>
     <string name="errorLoadingAssignment">Prišlo je do težave z nalaganjem te naloge. Preverite svojo povezavo in poskusite znova.</string>
     <string name="submitted">Poslano</string>
     <string name="notSubmitted">Ni oddano.</string>
@@ -55,10 +55,8 @@
     <string name="attemptsUsedLabel">Število poskusov</string>
     <string name="noAttemptsLeft">Na voljo ni več noben poskus</string>
     <string name="resubmitAssignment">Ponovno pošlji nalogo</string>
-
     <string name="launchingExternalTool">Zaganjam zunanje orodje ...</string>
     <string name="launchExternalTool">Zaženi zunanje orodje</string>
-
     <string name="preview">Predogled</string>
     <string name="submissionUploadFailedMessage">Nalaganje ene ali več datotek ni uspelo. Preverite internetno povezavo in poskusite poslati znova.</string>
     <string name="submissionUploadByteProgress">%1$s od %2$s</string>
@@ -69,18 +67,20 @@
     <string name="submissionDeleted">Oddaja je izbrisana</string>
     <string name="missingSubmissionLabel">Manjkajoče</string>
     <string name="gradedSubmissionLabel">Ocenjeno</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Za naslove URL, ki uporabljajo »http://«, predogled ni na voljo.</string>
     <string name="submissionUrlNotAUrlError">Vnesite veljaven naslov URL.</string>
     <string name="enterAUrlHereForYourSubmission">Tukaj vnesite naslov URL za svojo oddajo</string>
     <string name="addFileFabContentDesc">Prikaži možnosti za Dodaj datoteko</string>
     <string name="recordAudio">Posnemi zvok</string>
-
     <string name="recordVideo">Posnemi videoposnetek</string>
 
+    <string name="a11y_textSubmissionEditor">Urejevalnik oddaje besedila</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Zapis&#8230;</string>
     <string name="textSubmissionFailureMessage">Prišlo je do težav pri nalaganju oddaje. Ponovno pošlji.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Oddaja</string>
     <string name="submissionVersions">Različice oddaj</string>
@@ -94,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Vašo nalogo je zaklenil modul \"%1$s\".</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Vašo nalogo je zaklenjena zaradi zahtev modula.</string>
     <string name="submissionDetailsAssignmentLocked">Naloga je zaklenjena</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Oddaje niso dovoljene</string>
     <string name="webPreview">Predogled vnesenega naslova URL</string>
     <string name="websiteUrl">URL spletnega mesta</string>
     <string name="noneContentMessage">Pri tej nalogi spletne oddaje niso dovoljene.</string>
@@ -101,6 +102,8 @@
     <string name="noOnlineSubmissions">Ni spletnih oddaj</string>
     <string name="speedGraderExternalToolMessage">Ta naloga je za oddaje povezana z zunanjim orodjem.</string>
     <string name="openTool">Odpri orodje</string>
+    <string name="a11y_submissionText">Besedilo oddaje</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Od %s točk</string>
     <string name="outOfPointsAbbreviatedFormatted">Od %s točk</string>
@@ -112,10 +115,12 @@
     <string name="scoreStatisticsLow">Nizko: %s</string>
     <string name="scoreStatisticsMean">Povprečje: %s</string>
     <string name="scoreStatisticsHigh">Visoko: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Po meri prilagojen rezultat</string>
     <string name="rubricEmptyMessage">Za to nalogo ni ocenjevalnega vodnika</string>
     <string name="rubricViewLongDescription">Ogled dolgega opisa</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">Nalagam datoteko %1$d od %2$d</string>
     <string name="assignmentSubmissionCommentUpload">Nalagam komentar za %s</string>
@@ -124,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Komentarju priložite datoteke, tako da se dotaknete možnosti spodaj</string>
     <string name="emptySubmissionCommentsSubtext">Ali imate vprašanja o vaši nalogi?\nPošljite sporočilo izvajalcu.</string>
     <string name="submissionCommentErrorMessage">Tega sporočila ni bilo mogoče poslati. Tapnite, da poskusite znova.</string>
+    <string name="mediaUpload">Nalaganje medija</string>
     <string name="mediaUploadAudio">Nalaganje medija – zvočni posnetek</string>
     <string name="mediaUploadVideo">Nalaganje medija – videoposnetek</string>
     <string name="commentSubmissionTypeText">Oddaja besedila</string>
@@ -134,6 +140,7 @@
     <string name="commentSubmissionTypeMediaFile">Medijska datoteka</string>
     <string name="commentSubmissionTypeAudio">Zvok</string>
     <string name="commentSubmissionTypeVideo">Videoposnetek</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Različica:</string>
 
@@ -183,6 +190,8 @@
     <string name="submissionDetailsDueAt">Rok %1$s ob %2$s.</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">dop.</string>
     <string name="lowercasePM">pop.</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Zaklenjeno</string>
     <string name="assignments">Naloge:</string>
@@ -190,14 +199,28 @@
     <string name="noAssignmentsInGroup">V tej skupini ni nalog.</string>
     <string name="excusedAssignment">Ta naloga je opravičena in ne bo upoštevana v končnem izračunu.</string>
     <string name="excused">Opravičeno</string>
+    <string name="sortByDialogTitle">Razvrsti glede na</string>
+    <string name="sortByDialogTimeOption">Čas</string>
+    <string name="sortByDialogTypeOption">Vrsta</string>
+    <string name="sortByTime">Razvrsti po času</string>
+    <string name="sortByType">Razvrsti po vrsti</string>
+    <string name="sortByDialogCancel">Prekliči</string>
+    <string name="assignmentsListAllGradingPeriods">Vse</string>
+    <string name="a11y_sortByTimeButton">Gumb za razvrščanje nalog, razvrščanje po času</string>
+    <string name="a11y_sortByTypeButton">Gumb za razvrščanje nalog, razvrščanje po vrsti</string>
+    <string name="a11y_assignmentsSortedByTime">Naloge, razvrščene po času</string>
+    <string name="a11y_assignmentsSortedByType">Naloge, razvrščene po vrsti</string>
+
     <!-- Assignment editing -->
     <string name="points">Točke\u0020</string>
     <string name="save">Shrani</string>
     <string name="cancel">Prekliči</string>
+
     <!-- Discussions -->
     <string name="forbidden">Odgovori so vidni samo tistim, ki so objavili vsaj en odgovor.</string>
-
     <string name="fileCurrentlyLocked">Ta datoteka je trenutno zaklenjena</string>
+    <string name="a11y_discussionReplyEditor">Urejevalnik odgovorov v razpravi</string>
+
     <!-- Events -->
     <string name="Starts">Začne se</string>
     <string name="Ends">Konča se</string>
@@ -216,8 +239,6 @@
     <string name="whatIfDialogText">Simulacija rezultatov</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s od %2$s točk, %3$s</string>
-
-
     <string name="inbox">Pošta</string>
     <string name="unread">Neprebrano</string>
     <string name="archived">Arhivirano</string>
@@ -249,6 +270,7 @@
     <string name="createFolder">Ustvari mapo</string>
     <string name="createAFile">Ustvari datoteko</string>
     <string name="createFileFolderFabContentDesc">Prikaži gumbe »Ustvari datoteko« in »Ustvari mapo«</string>
+    <string name="hideCreateFileFolderFabContentDesc">Skrij gumba »Ustvari datoteko« in »Ustvari mapo«</string>
     <string name="folderCreationError">Med ustvarjanjem mape je prišlo do napake.</string>
     <string name="rename">Preimenuj</string>
     <string name="renameFile">Preimenuj datoteko</string>
@@ -382,8 +404,8 @@
     <string name="students">Študenti</string>
     <string name="observers">Skriti bralci</string>
     <string name="syllabusMissing">Učni načrt ni dodan.</string>
-
     <string name="syllabusEventsError">Pri nalaganju vaših modulov je prišlo do napake.</string>
+
     <string name="canvas">Sistem Canvas</string>
     <string name="chooseRecipient">Izberi prejemnike</string>
     <string name="messageHasNoRecipients">To sporočilo trenutno nima prejemnikov.</string>
@@ -409,6 +431,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Odstranjeno</string>
+
     <string name="loadingCanvas">Nalaganje vsebine sistema Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -425,9 +448,11 @@
     <string name="stopMasquerading">Prenehaj z vlogo uporabnika</string>
     <string name="userId">ID uporabnika</string>
     <string name="masqueradeFail">Prišlo je do napake pri prevzemanju vloge uporabnika</string>
+
     <string name="emptyId">ID ne sme biti prazen.</string>
 
     <string name="goToQuiz">Pojdi na kviz</string>
+
     <string name="quizzes">Kvizi</string>
 
     <string name="lastDiscussionPost">Zadnja objava</string>
@@ -486,8 +511,8 @@
     <string name="goToModules">Pojdi v module</string>
     <string name="markDone">Označi kot dokončano</string>
     <string name="moduleItemNotFound">Elementa modula ni bilo mogoče najti</string>
-
     <string name="errorLoadingModules">Pri nalaganju vaših modulov je prišlo do napake.</string>
+
     <string name="help">Pomoč</string>
     <string name="instructor_question">Vprašanje za učitelja</string>
     <string name="link">Povezava</string>
@@ -503,11 +528,11 @@
     <string name="textEntry">Vnos besedila</string>
     <string name="onlineURL">Spletni naslov URL</string>
     <string name="oneFileOnly">Pri tej oddaji je sprejemljivo le nalaganje ene datoteke.</string>
-
-
     <string name="websiteEntry">Dodaj vnos spletnega mesta</string>
     <string name="mediaRecordingEntry">Medijski posnetki</string>
     <string name="submit">Pošlji</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Neshranjeni napredek</string>
     <string name="informationLost">Neshranjene informacije bodo izgubljene. Ali želite nadaljevati?</string>
@@ -522,6 +547,7 @@
     <!-- Submission Details Strings -->
     <string name="next">Naprej</string>
     <string name="addComment">Dodaj komentar&#8230;</string>
+
     <string name="home">Glavna stran</string>
     <string name="Notifications">Obvestila</string>
 
@@ -551,6 +577,8 @@
     <string name="clickToViewSubmission">Ob oddaji je bilo spletno mesto posneto. Tapnite in držite spodnjo sliko, da odprete ali prenesete polno sliko.</string>
     <string name="urlSubmissionNoPreview">Ta oddaja je bila v obliki naslova URL za zunanjo stran. Ne pozabite, da se je ta stran morda spremenila, od kar se je oddaja prvič pojavila.</string>
     <string name="contentDescriptionPreviewImage">Predogled poslanega naslova URL</string>
+
+
     <string name="isNotSupportedFeature">%1$s niso podprti.</string>
     <string name="isNotSupported">Povezava ni podprta.</string>
     <string name="openInBrowser">Odpri v brskalniku</string>
@@ -566,15 +594,19 @@
     <string name="panda_fact_string">Dejstvo o pandi:&#160;</string>
     <string name="remove">Odstrani</string>
     <string name="founders">Ustanovitelji</string>
+
     <string name="EULA">Licenčni pogoji za končnega uporabnika</string>
     <string name="privacyPolicy">Pravilnik o zasebnosti</string>
     <string name="termsOfUse">Pogoji uporabe</string>
     <string name="canvasOnGithub">Canvas na GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Kvizi kot naloge</string>
     <string name="practiceQuizzes">Kvizi za vajo</string>
     <string name="gradedSurveys">Ocenjene ankete</string>
     <string name="surveys">Ankete</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Čakajoča opravila</string>
     <string name="gradesWidgetTitle">Ocene</string>
@@ -620,12 +652,12 @@
     <string name="profileSettings">Nastavitve profila</string>
     <string name="accountPreferences">Prednostne nastavitve računa</string>
     <string name="pinAndFingerprint">Koda PIN in prstni odtis</string>
-
     <string name="pairWithObserver">Poveži s skritim bralcem</string>
     <string name="pairWithObserverDetails">Starši se lahko z vami povežejo, tako da preberejo to kodo QR v aplikaciji Canvas Parent. Ta koda poteče v sedmih dneh ali po eni uporabi.</string>
     <string name="pairingCodeLabel">Koda za seznanjanje:\u0020</string>
     <string name="pairingCodeErrorTitle">Napaka kode za seznanjanje</string>
     <string name="pairingCodeErrorDescription">Kode za seznanjanje ni bilo mogoče pridobiti. Ta funkcija je na voljo samo za študente.</string>
+
     <string name="launchSpeedgrader">Odpri aplikacijo SpeedGrader</string>
 
     <string name="search_todo">Čakajoča opravila Čakajočaopravila seznamopravil seznam opravil seznami opravil seznam opravila</string>
@@ -696,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Merilo</string>
-
     <string name="content_description_speed_grader_slider">Drsnik za ocene</string>
+
     <string name="createNewCalendarEvent">Ustvari nov dogodek</string>
     <string name="enableFunMode">Izklopi pande</string>
 
@@ -784,6 +816,7 @@
     <string name="notification_desc_recording_ready">Bodite obveščeni, ko bo posnetek konference pripravljen.</string>
 
     <string name="unlimited">Neomejeno</string>
+
     <string name="question">Vprašanje</string>
     <plurals name="question_count">
         <item quantity="one">%d vprašanje</item>
@@ -794,16 +827,17 @@
         <item quantity="one">%s točka</item>
         <item quantity="other">%s točk</item>
     </plurals>
+
     <string name="timeLimit">Časovna omejitev</string>
     <string name="newPushNotifications">%1$s novih obvestil</string>
     <string name="like">všeček</string>
     <string name="likeEntryLabel">Všečkaj vnos</string>
     <string name="likes">všečki</string>
-
     <plurals name="likeCountLabel">
         <item quantity="one">%s všeček</item>
         <item quantity="other">%s všečkov</item>
     </plurals>
+
     <string name="color_1">Rdeče</string>
     <string name="color_2">Živo rožnato</string>
     <string name="color_3">Sivka</string>
@@ -862,6 +896,7 @@
     <string name="editDashboard">Uredi preglednico</string>
     <string name="editDashboardDescriptor">Izberite, katere predmete želite videti na nadzorni plošči</string>
     <string name="a11y_editYourCourseList">Uredi svoj seznam predmetov</string>
+
     <string name="dashboard">Preglednica</string>
     <string name="previous">Nazaj</string>
     <string name="pageNum" formatted="false">Stran %d od %d</string>
@@ -889,8 +924,8 @@
     <string name="tapToViewAnnouncement">Tapnite za ogled obvestila.</string>
     <string name="acceptCourseInvitation">Sprejmi</string>
     <string name="declineCourseInvitation">Zavrni</string>
-
     <string name="outOf">od</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">S tem predmetom ni povezana nobena datoteka.</string>
     <string name="noFilesSubtextGroup">S to skupino ni povezana nobena datoteka.</string>
@@ -951,6 +986,7 @@
     <string name="unableToViewInBrowser">Zunanje aplikacije za ogled tega orodja LTI ni bilo mogoče najti.</string>
 
     <string name="commentUpload">Nalaganje komentarjev</string>
+
     <string name="frontPage">Prva stran</string>
     <string name="editPage">Uredi stran</string>
     <string name="description">Opis</string>
@@ -963,10 +999,10 @@
     <string name="conferencesNotSupported">Konference na mobilni napravi še niso podprte.</string>
     <string name="filePreviewContentDescription">Slika predogleda datoteke</string>
     <string name="pdfError">Med nalaganjem tega PDF je prišlo do napake</string>
-
     <string name="featureNotAllowedInStudentView">Res nam je žal! Ta funkcija ni dovoljena v pogledu študenta.</string>
     <string name="nothingToSeeHere">Tu ni ničesar za ogled.</string>
     <string name="unsupportedFeature">Nepodprta funkcija</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Dodaj študenta</string>
     <string name="addChildSubTitle">Vnesite kodo za vzpostavljanje povezave študentov, ki ste jo prejeli.</string>
@@ -974,6 +1010,7 @@
     <string name="addChildErrorMessage">Vzpostavljanje povezave ni bilo uspešno. Prepričajte se, da je vaša koda za vzpostavljanje povezave pravilna in veljavna glede na časovno omejitev uporabe.</string>
     <string name="gradeComplete">Zaključeno</string>
     <string name="gradeIncomplete">Nezaključeno</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Nastavitve objavljanja</string>
     <string name="postGradesTab">Pošlji ocene v SIS</string>
@@ -1004,11 +1041,12 @@
     <string name="gradeAfterPosting">Ocena po objavi</string>
     <string name="gradeOverride">Preglasitev ocene</string>
     <string name="currentGrade">Trenutna ocena</string>
-
     <string name="opensInCanvasStudent">Odpiranje v Canvas Student</string>
     <string name="tab_student_view">Pogled študenta</string>
 
+
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">Izbrana glava: %s</string>
     <string name="content_description_chosen_body">Izbrano telo: %s</string>
     <string name="content_description_chosen_feet">Izbrane noge: %s</string>
@@ -1061,7 +1099,6 @@
 
     <string name="addVideoComment">Dodaj komentar v obliki videoposnetka</string>
     <string name="addAudioComment">Dodaj komentar v obliki zvočnega posnetka</string>
-
     <string name="audioRecordingError">Pri poskusu snemanja zvoka je prišlo do nepričakovane napake.</string>
     <string name="videoRecordingError">Pri poskusu snemanja videoposnetka je prišlo do nepričakovane napake.</string>
 
@@ -1080,6 +1117,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minuta</item>
         <item quantity="other">%s minut</item>
@@ -1100,4 +1138,31 @@
     <string name="conferenceDetails">Podrobnosti o konferenci</string>
     <string name="recordings">Snemanja</string>
     <string name="conferenceInProgress">V teku je konferenca</string>
+
+    <string name="a11y_criterion_content_description">Ocena merila %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">več informacij</string>
+    <string name="a11y_create_file_folder_visible">Ustvari vidne gumbe datotek in map</string>
+    <string name="a11y_create_file_folder_gone">Ustvari nevidne gumbe datotek in map</string>
+    <string name="unselect_all">Razveljavi izbiro za vse</string>
+    <string name="select_all">Izberi vse</string>
+    <string name="all_courses">Vsi predmeti</string>
+    <string name="all_groups">Vse skupine</string>
+    <string name="edit_dashboard_course_description">Izberite predmete za nadzorno ploščo ali pa se pomaknite na podrobnosti o predmetu.</string>
+    <string name="edit_dashboard_group_description">Izberite skupine za nadzorno ploščo ali pa se pomaknite na podrobnosti o predmetu.</string>
+    <string name="current_enrollments">Trenutni vpisi</string>
+    <string name="past_enrollments">Pretekli vpisi</string>
+    <string name="future_enrollments">Prihodnji vpisi</string>
+    <string name="added_to_dashboard">Dodano na nadzorno ploščo</string>
+    <string name="removed_from_dashboard">Odstranjeno z nadzorne plošče</string>
+    <string name="all_added_to_dashboard">Vse dodano na nadzorno ploščo</string>
+    <string name="all_removed_from_dashboard">Vse odstranjeno z nadzorne plošče</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Neaktivnih predmetov ni mogoče dodati na nadzorno ploščo</string>
+    <string name="edit_dashboard">Uredi preglednico</string>
+    <string name="edit_dashboard_empty_title">Tukaj ni predmetov</string>
+    <string name="edit_dashboard_empty_message">Če želite predmet dodati na nadzorno ploščo, morate biti vanj vpisani</string>
+    <string name="a11y_content_description_remove_from_dashboard">Odstrani z nadzorne plošče</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Odstrani vse z nadzorne plošče</string>
+    <string name="a11y_content_description_add_to_dashboard">Dodaj na nadzorno ploščo</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Dodaj vse na nadzorno ploščo</string>
 </resources>

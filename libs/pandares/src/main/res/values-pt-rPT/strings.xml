@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Falha no envio</string>
     <string name="submissionStatusFailedSubtitle">Toque para ver detalhes</string>
     <string name="submissionAndRubric">Submissão e Rubrica</string>
+    <string name="commentsAndRubric">Comentários &amp; Rubrica</string>
     <string name="errorLoadingAssignment">Ocorreu um problema ao carregar esta tarefa. É favor verificar sua conexão e tente novamente.</string>
     <string name="submitted">Submetido</string>
     <string name="notSubmitted">Não Entregue</string>
@@ -78,6 +78,7 @@
 
     <string name="recordVideo">Gravar Vídeo</string>
 
+    <string name="a11y_textSubmissionEditor">Editor de Submissão de Texto</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Escrever&#8230;</string>
     <string name="textSubmissionFailureMessage">Algo deu errado no carregamento do envio. Envie novamente.</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Sua tarefa está bloqueada por módulo \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Sua tarefa está bloqueada por um requisito de módulo</string>
     <string name="submissionDetailsAssignmentLocked">Tarefa bloqueada</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Não é permitida a submissão</string>
     <string name="webPreview">Visualização do URL inserido</string>
     <string name="websiteUrl">URL do Website</string>
     <string name="noneContentMessage">Esta tarefa não permite envios online</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Nenhum envio online</string>
     <string name="speedGraderExternalToolMessage">Esta atribuição liga a uma ferramenta externa para submissões.</string>
     <string name="openTool">Abrir ferramenta</string>
+    <string name="a11y_submissionText">Texto de submissão</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Fora de %s pontos</string>
     <string name="outOfPointsAbbreviatedFormatted">Fora de %s pts</string>
@@ -124,6 +127,7 @@
     <string name="chooseFileForCommentSubtext">Anexe ficheiros ao seu comentário ao carregar em uma opção abaixo</string>
     <string name="emptySubmissionCommentsSubtext">Tem dúvidas sobre a sua tarefa?\nEnvie mensagem ao seu instrutor.</string>
     <string name="submissionCommentErrorMessage">Esta mensagem não pôde ser enviada. Toque para tentar novamente.</string>
+    <string name="mediaUpload">Carregar Multimédia</string>
     <string name="mediaUploadAudio">Envio de mídia - Áudio</string>
     <string name="mediaUploadVideo">Envio de mídia - Vídeo</string>
     <string name="commentSubmissionTypeText">Entrega de Texto</string>
@@ -190,6 +194,17 @@
     <string name="noAssignmentsInGroup">Não existem Tarefas neste grupo</string>
     <string name="excusedAssignment">Esta atribuição está esquecida e não será considerada no cálculo total</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Classificar por</string>
+    <string name="sortByDialogTimeOption">Hora</string>
+    <string name="sortByDialogTypeOption">Tipo</string>
+    <string name="sortByTime">Classificar por Hora</string>
+    <string name="sortByType">Classificar por Tipo</string>
+    <string name="sortByDialogCancel">Cancelar</string>
+    <string name="assignmentsListAllGradingPeriods">Todos</string>
+    <string name="a11y_sortByTimeButton">Classificar botão de tarefas, classificar por tempo</string>
+    <string name="a11y_sortByTypeButton">Classificar botão de tarefas, classificar por tipo</string>
+    <string name="a11y_assignmentsSortedByTime">Tarefas classificadas por tempo</string>
+    <string name="a11y_assignmentsSortedByType">Tarefas classificadas por tipo</string>
     <!-- Assignment editing -->
     <string name="points">Pontos\u0020</string>
     <string name="save">Guardar</string>
@@ -198,6 +213,7 @@
     <string name="forbidden">As respostas apenas estão visíveis para aqueles que publicaram pelo menos uma resposta.</string>
 
     <string name="fileCurrentlyLocked">Este ficheiro está bloqueado de momento</string>
+    <string name="a11y_discussionReplyEditor">Editor da Resposta de Discussão</string>
     <!-- Events -->
     <string name="Starts">Inicia</string>
     <string name="Ends">Termina</string>
@@ -249,6 +265,7 @@
     <string name="createFolder">Criar Pasta</string>
     <string name="createAFile">Criar um ficheiro</string>
     <string name="createFileFolderFabContentDesc">Mostrar botões Criar ficheiro e criar pastas</string>
+    <string name="hideCreateFileFolderFabContentDesc">Ocultar Criar Ficheiro e Criar Botões de Pasta</string>
     <string name="folderCreationError">Ocorreu um erro durante a criação da pasta.</string>
     <string name="rename">Mudar o nome</string>
     <string name="renameFile">Renomear ficheiro</string>
@@ -1100,4 +1117,30 @@
     <string name="conferenceDetails">Detalhes da Conferência</string>
     <string name="recordings">Gravações</string>
     <string name="conferenceInProgress">Conferência em curso</string>
+    <string name="a11y_criterion_content_description">Critério de classificação %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">mais informações</string>
+    <string name="a11y_create_file_folder_visible">Botões Criar Ficheiro e Pasta visíveis</string>
+    <string name="a11y_create_file_folder_gone">Botões Criar Ficheiro e Pasta invisíveis</string>
+    <string name="unselect_all">Desselecionar tudo</string>
+    <string name="select_all">Selecionar tudo</string>
+    <string name="all_courses">Todas as disciplinas</string>
+    <string name="all_groups">Todos os grupos</string>
+    <string name="edit_dashboard_course_description">Selecionar disciplinas para Painel ou navegar até aos detalhes da disciplina.</string>
+    <string name="edit_dashboard_group_description">Selecionar grupos para Painel ou navegar até aos detalhes da disciplina.</string>
+    <string name="current_enrollments">Inscrições atuais</string>
+    <string name="past_enrollments">Inscrições passadas</string>
+    <string name="future_enrollments">Inscrições futuras</string>
+    <string name="added_to_dashboard">Adicionado ao Painel</string>
+    <string name="removed_from_dashboard">Removido do Painel</string>
+    <string name="all_added_to_dashboard">Tudo adicionado ao Painel</string>
+    <string name="all_removed_from_dashboard">Tudo removido do Painel</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">As disciplinas inativas não podiam ser adicionadas ao Painel.</string>
+    <string name="edit_dashboard">Editar painel</string>
+    <string name="edit_dashboard_empty_title">Não há disciplinas aqui</string>
+    <string name="edit_dashboard_empty_message">É necessário estar inscrito numa disciplina para o adicionar ao Painel.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Retirar do painel</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Retirar tudo do painel</string>
+    <string name="a11y_content_description_add_to_dashboard">Adicionar ao painel</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Adicionar tudo ao painel</string>
 </resources>

@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Innlevering feilet</string>
     <string name="submissionStatusFailedSubtitle">Trykk for å vise detaljer</string>
     <string name="submissionAndRubric">Innlevering &amp; Vurderingsveiledning</string>
+    <string name="commentsAndRubric">Kommentarer &amp; rubrikker</string>
     <string name="errorLoadingAssignment">Det var et problem med lasting av denne oppgaven. Kontroller tilkoblingen og prøv på nytt.</string>
     <string name="submitted">Sendt inn</string>
     <string name="notSubmitted">Ikke levert</string>
@@ -78,6 +78,7 @@
 
     <string name="recordVideo">Ta opp video</string>
 
+    <string name="a11y_textSubmissionEditor">Redigeringsprogram for tekstinnlevering</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
     <string name="textSubmissionFailureMessage">Noe gikk galt ved opplasting av innlevering. Lever på nytt.</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Oppgaven din er låst av modulen \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Oppgaven din er låst etter modulforespørsel</string>
     <string name="submissionDetailsAssignmentLocked">Oppgave låst</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Ingen innlevering tillatt</string>
     <string name="webPreview">Forhåndsvisning av skrevet inn URL</string>
     <string name="websiteUrl">Websidens URL</string>
     <string name="noneContentMessage">Denne oppgaven tillater ikke levering på nett</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Ingen levering på nett</string>
     <string name="speedGraderExternalToolMessage">Denne oppgaven er lenket til et eksternt verktøy for innleveringer.</string>
     <string name="openTool">Åpne verktøy</string>
+    <string name="a11y_submissionText">Innleveringstekst</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Av %s poeng</string>
     <string name="outOfPointsAbbreviatedFormatted">Av %s poeng</string>
@@ -124,6 +127,7 @@
     <string name="chooseFileForCommentSubtext">Legg ved fil i kommentaren din ved å trykke på et valg nedenfor</string>
     <string name="emptySubmissionCommentsSubtext">Har du spørsmål angående oppgaven?\nSend en melding til instruktøren.</string>
     <string name="submissionCommentErrorMessage">Meldingen kunne ikke sendes. Trykk for å prøve igjen.</string>
+    <string name="mediaUpload">Mediaopplasting</string>
     <string name="mediaUploadAudio">Laste opp Media - lyd</string>
     <string name="mediaUploadVideo">Laste opp Media - video</string>
     <string name="commentSubmissionTypeText">Tekstinnlevering</string>
@@ -190,6 +194,17 @@
     <string name="noAssignmentsInGroup">Ingen oppgaver i denne gruppen</string>
     <string name="excusedAssignment">Denne oppgaven er fritatt og blir ikke vurdert i den totale beregningen</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Sorter etter</string>
+    <string name="sortByDialogTimeOption">Tid</string>
+    <string name="sortByDialogTypeOption">Skriv</string>
+    <string name="sortByTime">Sorter etter tid</string>
+    <string name="sortByType">Sorter etter type</string>
+    <string name="sortByDialogCancel">Avbryt</string>
+    <string name="assignmentsListAllGradingPeriods">Alle</string>
+    <string name="a11y_sortByTimeButton">Sorter oppgaver-knapp, sorter etter tid</string>
+    <string name="a11y_sortByTypeButton">Sorter oppgaver-knapp, sorter etter type</string>
+    <string name="a11y_assignmentsSortedByTime">Oppgaver sortert etter tid</string>
+    <string name="a11y_assignmentsSortedByType">Oppgaver sortert etter type</string>
     <!-- Assignment editing -->
     <string name="points">Poeng\u0020</string>
     <string name="save">Lagre</string>
@@ -198,6 +213,7 @@
     <string name="forbidden">Svarene er kun synlige for dem som har postet minst ett svar.</string>
 
     <string name="fileCurrentlyLocked">Denne filen er for tiden låst</string>
+    <string name="a11y_discussionReplyEditor">Redigeringsprogram for diskusjonssvar</string>
     <!-- Events -->
     <string name="Starts">Starter</string>
     <string name="Ends">Slutter</string>
@@ -249,6 +265,7 @@
     <string name="createFolder">Opprett mappe</string>
     <string name="createAFile">Opprett en fil</string>
     <string name="createFileFolderFabContentDesc">Vis knapper for opprett fil og opprett mappe</string>
+    <string name="hideCreateFileFolderFabContentDesc">Skjul tastene «opprette fil» og «opprette mappe»</string>
     <string name="folderCreationError">En fil oppsto under opprettelse av mappe.</string>
     <string name="rename">Gi nytt navn</string>
     <string name="renameFile">Gi nytt navn til en fil</string>
@@ -1100,4 +1117,30 @@
     <string name="conferenceDetails">Konferanse informasjon</string>
     <string name="recordings">Opptak</string>
     <string name="conferenceInProgress">Konferanse pågår</string>
+    <string name="a11y_criterion_content_description">Kriterievurdering %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">mer informasjon</string>
+    <string name="a11y_create_file_folder_visible">Opprett fil- og mappe-knapper synlige</string>
+    <string name="a11y_create_file_folder_gone">Opprett fil- og mappe-knapper usynlige</string>
+    <string name="unselect_all">Velg bort alle</string>
+    <string name="select_all">Velg alle</string>
+    <string name="all_courses">Alle emner</string>
+    <string name="all_groups">Alle grupper</string>
+    <string name="edit_dashboard_course_description">Velg emner for dashbord eller naviger til emnedetaljer.</string>
+    <string name="edit_dashboard_group_description">Velg grupper for dashbord eller naviger til emnedetaljer.</string>
+    <string name="current_enrollments">Gjeldende påmeldinger</string>
+    <string name="past_enrollments">Tidligere påmeldinger</string>
+    <string name="future_enrollments">Framtidige påmeldinger</string>
+    <string name="added_to_dashboard">Lagt til dashbord</string>
+    <string name="removed_from_dashboard">Fjernet fra dashbord</string>
+    <string name="all_added_to_dashboard">Alle lagt til dashbord</string>
+    <string name="all_removed_from_dashboard">Alle fjernet fra dashbord</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Inaktive emner kunne ikke legges til dashbord.</string>
+    <string name="edit_dashboard">Rediger dashbord</string>
+    <string name="edit_dashboard_empty_title">Ingen emner her</string>
+    <string name="edit_dashboard_empty_message">Du må være lagt til i et emne for å kunne legge det til på dashbordet.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Fjern fra dashbord</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Fjern alle fra dashbord</string>
+    <string name="a11y_content_description_add_to_dashboard">Legg til dashbord</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Legg til alle til dashbord</string>
 </resources>

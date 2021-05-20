@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import instructure.androidblueprint.FragmentViewInterface
 
 interface DiscussionsDetailsView : FragmentViewInterface {
-    fun populateDiscussionTopic(discussionTopicHeader: DiscussionTopicHeader, discussionTopic: DiscussionTopic)
+    fun populateDiscussionTopic(discussionTopicHeader: DiscussionTopicHeader, discussionTopic: DiscussionTopic, topLevelReplyPosted: Boolean = false)
     fun populateDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader, forceNetwork: Boolean)
     fun populateAsForbidden()
     fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int)

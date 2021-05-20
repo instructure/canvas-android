@@ -27,7 +27,9 @@ import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginSignInActivity
 import com.instructure.pandautils.services.PushNotificationRegistrationService
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SignInActivity : BaseLoginSignInActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {

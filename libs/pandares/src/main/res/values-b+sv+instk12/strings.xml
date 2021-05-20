@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Inlämningen misslyckades</string>
     <string name="submissionStatusFailedSubtitle">Tryck för att visa detaljer</string>
     <string name="submissionAndRubric">Inlämning och matris</string>
+    <string name="commentsAndRubric">Kommentarer och matris</string>
     <string name="errorLoadingAssignment">Ett problem uppstod vid inläsningen av den här uppgiften. Kontrollera din anslutning och försök igen.</string>
     <string name="submitted">Skickad</string>
     <string name="notSubmitted">Inte skickad</string>
@@ -76,6 +76,7 @@
     <string name="recordAudio">Spela in ljud</string>
     <string name="recordVideo">Spela in video</string>
 
+    <string name="a11y_textSubmissionEditor">Textinlämningsredigerare</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
     <string name="textSubmissionFailureMessage">Något gick fel vid uppladdning av inlämningen. Lämna in igen.</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Din uppgift har låsts av modulen \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Din uppgift har låsts på grund av ett modulkrav</string>
     <string name="submissionDetailsAssignmentLocked">Uppgift låst</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Inlämning inte tillåten</string>
     <string name="webPreview">Förhandsgranskning av angiven URL</string>
     <string name="websiteUrl">Webbplatsens URL</string>
     <string name="noneContentMessage">Den här uppgiften tillåter inte onlineinlämningar</string>
@@ -101,6 +103,7 @@
 
     <string name="speedGraderExternalToolMessage">Den här uppgiften länkar till ett externt verktyg för inlämningar.</string>
     <string name="openTool">Öppna verktyg</string>
+    <string name="a11y_submissionText">Inlämningstext</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Av %s poäng</string>
     <string name="outOfPointsAbbreviatedFormatted">Av %s poäng</string>
@@ -126,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Bifoga filer till dina kommentarer genom att välja ett alternativ nedan</string>
     <string name="emptySubmissionCommentsSubtext">Har du frågor om din uppgift?\nSkicka ett meddelande till din instruktör.</string>
     <string name="submissionCommentErrorMessage">Detta meddelande kunde inte skickas. Tryck för att försöka igen.</string>
+    <string name="mediaUpload">Mediauppladdning</string>
     <string name="mediaUploadAudio">Mediauppladdning – ljud</string>
     <string name="mediaUploadVideo">Mediauppladdning – video</string>
     <string name="commentSubmissionTypeText">Textinlämning</string>
@@ -196,6 +200,17 @@
     <string name="excusedAssignment">Den här uppgiften är ursäktad och kommer inte räknas in i den totala uträkningen</string>
     <string name="excused">EX</string>
 
+    <string name="sortByDialogTitle">Sortera efter</string>
+    <string name="sortByDialogTimeOption">Tid</string>
+    <string name="sortByDialogTypeOption">Typ</string>
+    <string name="sortByTime">Sortera efter tid</string>
+    <string name="sortByType">Sortera efter typ</string>
+    <string name="sortByDialogCancel">Avbryt</string>
+    <string name="assignmentsListAllGradingPeriods">Alla</string>
+    <string name="a11y_sortByTimeButton">Sortera uppgiftsknappar, sortera efter tid</string>
+    <string name="a11y_sortByTypeButton">Sortera uppgiftsknappar, sortera efter typ</string>
+    <string name="a11y_assignmentsSortedByTime">Uppgifter sorterade efter tid</string>
+    <string name="a11y_assignmentsSortedByType">Uppgifter sorterade efter typ</string>
     <!-- Assignment editing -->
     <string name="points">Poäng\u0020</string>
     <string name="save">Spara</string>
@@ -205,6 +220,7 @@
     <string name="forbidden">Svaren är endast synliga för de som har publicerat minst ett svar.</string>
 
     <string name="fileCurrentlyLocked">Den här filen är för närvarande låst</string>
+    <string name="a11y_discussionReplyEditor">Diskussionssvarsredigerare</string>
     <!-- Events -->
     <string name="Starts">Börjar</string>
     <string name="Ends">Slutar</string>
@@ -254,6 +270,7 @@
     <string name="createFolder">Skapa mapp</string>
     <string name="createAFile">Skapa en fil</string>
     <string name="createFileFolderFabContentDesc">Visa knappar för Skapa fil och Skapa mapp</string>
+    <string name="hideCreateFileFolderFabContentDesc">Dölj knappar för Skapa fil och Skapa mapp</string>
     <string name="folderCreationError">Ett fel uppstod när mappen skapades.</string>
     <string name="rename">Byt namn</string>
     <string name="renameFile">Byt namn på filen</string>
@@ -1114,4 +1131,30 @@
     <string name="conferenceDetails">Konferensinformation</string>
     <string name="recordings">Inspelningar</string>
     <string name="conferenceInProgress">Konferens pågår...</string>
+    <string name="a11y_criterion_content_description">Kriteriebedömning %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">mer information</string>
+    <string name="a11y_create_file_folder_visible">Skapa synliga fil- och mappknappar</string>
+    <string name="a11y_create_file_folder_gone">Skapa osynliga fil- och mappknappar</string>
+    <string name="unselect_all">Avmarkera alla</string>
+    <string name="select_all">Välj alla</string>
+    <string name="all_courses">Alla kurser</string>
+    <string name="all_groups">Alla grupper</string>
+    <string name="edit_dashboard_course_description">Välj kurser för översikten eller navigera till kursinformationen.</string>
+    <string name="edit_dashboard_group_description">Välj grupper för översikten eller navigera till kursinformationen.</string>
+    <string name="current_enrollments">Aktuella registreringar</string>
+    <string name="past_enrollments">Tidigare registreringar</string>
+    <string name="future_enrollments">Kommande registreringar</string>
+    <string name="added_to_dashboard">Tillagt i översikten</string>
+    <string name="removed_from_dashboard">Borttaget från översikten</string>
+    <string name="all_added_to_dashboard">Alla lades till i översikten</string>
+    <string name="all_removed_from_dashboard">Alla togs bort från översikten</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Det gick inte att lägga till inaktiva kurser i översikten.</string>
+    <string name="edit_dashboard">Redigera översikt</string>
+    <string name="edit_dashboard_empty_title">Inga kurser här</string>
+    <string name="edit_dashboard_empty_message">Du måste vara registrerad för en kurs för att lägga till den i översikten.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Ta bort från översikten</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Ta bort alla från översikten</string>
+    <string name="a11y_content_description_add_to_dashboard">Lägg till i översikten</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Lägga till alla i översikten</string>
 </resources>

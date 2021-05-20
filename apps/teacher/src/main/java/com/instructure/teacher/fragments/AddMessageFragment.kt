@@ -254,6 +254,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                         chips.clearRecipients()
                         selectedCourse = canvasContext
                         courseWasSelected()
+                        courseSpinner.contentDescription = getString(R.string.a11y_content_description_inbox_course_spinner, selectedCourse?.name)
                     }
                 }
             }

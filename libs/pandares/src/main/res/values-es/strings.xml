@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">No se pudo entregar</string>
     <string name="submissionStatusFailedSubtitle">Toca para ver los detalles</string>
     <string name="submissionAndRubric">Entrega y rúbrica</string>
+    <string name="commentsAndRubric">Comentarios y Rúbrica</string>
     <string name="errorLoadingAssignment">Se produjo un problema al cargar esta tarea. Compruebe su conexión y vuelva a intentarlo.</string>
     <string name="submitted">Entregado</string>
     <string name="notSubmitted">No entregado</string>
@@ -76,6 +76,7 @@
     <string name="recordAudio">Grabar audio</string>
     <string name="recordVideo">Grabar video</string>
 
+    <string name="a11y_textSubmissionEditor">Editor de Entrega de Texto</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Escriba&#8230;</string>
     <string name="textSubmissionFailureMessage">Algo salió mal al cargar la entrega. Entregar nuevamente.</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Su tarea está bloqueada por el módulo \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Su tarea está bloqueada por un requisito del módulo</string>
     <string name="submissionDetailsAssignmentLocked">Tarea bloqueada</string>
+    <string name="submissionDetailsNoSubmissionAllowed">No se permiten entregas</string>
     <string name="webPreview">Vista previa de la URL ingresada</string>
     <string name="websiteUrl">URL de la página web</string>
     <string name="noneContentMessage">Esta tarea no permite entregas en línea</string>
@@ -101,6 +103,7 @@
 
     <string name="speedGraderExternalToolMessage">Esta tarea se vincula con una herramienta externa para entregas.</string>
     <string name="openTool">Abrir herramienta</string>
+    <string name="a11y_submissionText">Texto de la entrega</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">De %s puntos</string>
     <string name="outOfPointsAbbreviatedFormatted">De %s pts</string>
@@ -126,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Adjunte archivos a su comentario; para ello, toque una opción a continuación</string>
     <string name="emptySubmissionCommentsSubtext">¿Tiene consultas sobre su tarea?\nEnvíe un mensaje a su profesor.</string>
     <string name="submissionCommentErrorMessage">El mensaje no pudo enviarse. Tocar para volver a intentarlo.</string>
+    <string name="mediaUpload">Carga de multimedia</string>
     <string name="mediaUploadAudio">Carga de archivos multimedia: audio</string>
     <string name="mediaUploadVideo">Carga de archivos multimedia: video</string>
     <string name="commentSubmissionTypeText">Entrega del texto</string>
@@ -196,6 +200,17 @@
     <string name="excusedAssignment">Esta tarea está justificada y no será considerada en el cálculo total</string>
     <string name="excused">EX</string>
 
+    <string name="sortByDialogTitle">Ordenar por</string>
+    <string name="sortByDialogTimeOption">Hora</string>
+    <string name="sortByDialogTypeOption">Tipo</string>
+    <string name="sortByTime">Ordenar por hora</string>
+    <string name="sortByType">Ordenar por tipo</string>
+    <string name="sortByDialogCancel">Cancelar</string>
+    <string name="assignmentsListAllGradingPeriods">Todo</string>
+    <string name="a11y_sortByTimeButton">Botón Ordenar tareas, ordenar por hora</string>
+    <string name="a11y_sortByTypeButton">Botón Ordenar tareas, ordenar por tipo</string>
+    <string name="a11y_assignmentsSortedByTime">Tareas ordenadas por hora</string>
+    <string name="a11y_assignmentsSortedByType">Tareas ordenadas por tipo</string>
     <!-- Assignment editing -->
     <string name="points">Puntos\u0020</string>
     <string name="save">Guardar</string>
@@ -205,6 +220,7 @@
     <string name="forbidden">Las respuestas son visibles solamente para aquellos que han publicado al menos una respuesta.</string>
 
     <string name="fileCurrentlyLocked">Este archivo está bloqueado actualmente</string>
+    <string name="a11y_discussionReplyEditor">Editor de Respuesta de Discusión</string>
     <!-- Events -->
     <string name="Starts">Comienza en</string>
     <string name="Ends">Finaliza</string>
@@ -254,6 +270,7 @@
     <string name="createFolder">Crear carpeta</string>
     <string name="createAFile">Crear un archivo</string>
     <string name="createFileFolderFabContentDesc">Mostrar botones Crear archivo y Crear carpeta</string>
+    <string name="hideCreateFileFolderFabContentDesc">Ocultar los botones Crear archivo y Crear carpeta</string>
     <string name="folderCreationError">Se produjo un error durante la creación de la carpeta.</string>
     <string name="rename">Renombrar</string>
     <string name="renameFile">Renombrar archivo</string>
@@ -1115,4 +1132,30 @@
     <string name="conferenceDetails">Detalles de la conferencia</string>
     <string name="recordings">Grabaciones</string>
     <string name="conferenceInProgress">Conferencia en curso</string>
+    <string name="a11y_criterion_content_description">Valoración del criterio %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">más información</string>
+    <string name="a11y_create_file_folder_visible">Botones Crear archivo y Carpeta visibles</string>
+    <string name="a11y_create_file_folder_gone">Botones Crear archivo y Carpeta invisibles</string>
+    <string name="unselect_all">Anular selección de todo</string>
+    <string name="select_all">Seleccionar todo</string>
+    <string name="all_courses">Todos los cursos</string>
+    <string name="all_groups">Todos los grupos</string>
+    <string name="edit_dashboard_course_description">Seleccionar cursos para el Tablero, o navegar a la información del curso.</string>
+    <string name="edit_dashboard_group_description">Seleccionar grupos para el Tablero, o navegar a la información del curso.</string>
+    <string name="current_enrollments">Inscripciones actuales</string>
+    <string name="past_enrollments">Inscripciones pasadas</string>
+    <string name="future_enrollments">Inscripciones futuras</string>
+    <string name="added_to_dashboard">Agregado al Tablero</string>
+    <string name="removed_from_dashboard">Eliminado del Tablero</string>
+    <string name="all_added_to_dashboard">Todo agregado al Tablero</string>
+    <string name="all_removed_from_dashboard">Todo eliminado del Tablero</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Los cursos inactivos no se pudieron agregar al Tablero.</string>
+    <string name="edit_dashboard">Editar Tablero</string>
+    <string name="edit_dashboard_empty_title">Aquí no hay cursos</string>
+    <string name="edit_dashboard_empty_message">Debe estar inscripto en un curso para agregarlo al Tablero.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Eliminar del Tablero</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Eliminar todo del Tablero</string>
+    <string name="a11y_content_description_add_to_dashboard">Agregar al Tablero</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Agregar todo al Tablero</string>
 </resources>

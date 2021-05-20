@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,6 +44,7 @@
     <string name="submissionStatusFailedTitle">提交項目失敗</string>
     <string name="submissionStatusFailedSubtitle">點選以檢視詳情</string>
     <string name="submissionAndRubric">提交項目及評分標準</string>
+    <string name="commentsAndRubric">評論及評分標準</string>
     <string name="errorLoadingAssignment">載入此作業時出現問題。請檢查您的連接然後重試。</string>
     <string name="submitted">已提交</string>
     <string name="notSubmitted">未提交</string>
@@ -77,6 +77,7 @@
 
     <string name="recordVideo">錄製視訊</string>
 
+    <string name="a11y_textSubmissionEditor">文字提交項目編輯器</string>
     <!-- Student Submission -->
     <string name="submissionWrite">寫入&#8230;</string>
     <string name="textSubmissionFailureMessage">上傳提交項目時出現問題。重新提交。</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">您的作業由單元 \"%1$s\" 鎖定</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">您的作業由單元要求鎖定</string>
     <string name="submissionDetailsAssignmentLocked">作業已鎖定</string>
+    <string name="submissionDetailsNoSubmissionAllowed">不允許任何提交項目</string>
     <string name="webPreview">預覽輸入的 URL</string>
     <string name="websiteUrl">網站 URL</string>
     <string name="noneContentMessage">此作業不允許線上提交項目</string>
@@ -100,6 +102,7 @@
     <string name="noOnlineSubmissions">沒有線上提交項目</string>
     <string name="speedGraderExternalToolMessage">此作業已連結至外部工具以供提交。</string>
     <string name="openTool">開啟工具</string>
+    <string name="a11y_submissionText">提交項目文字</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">滿分為 %s 分</string>
     <string name="outOfPointsAbbreviatedFormatted">滿分為 %s 分</string>
@@ -123,6 +126,7 @@
     <string name="chooseFileForCommentSubtext">輕點以下的一個選項，將檔案附加到您的評論中</string>
     <string name="emptySubmissionCommentsSubtext">有與您的作業有關的問題嗎？\n傳送訊息給您的導師。</string>
     <string name="submissionCommentErrorMessage">無法傳送訊息。輕點以重試。</string>
+    <string name="mediaUpload">媒體上傳</string>
     <string name="mediaUploadAudio">媒體上傳 — 音訊</string>
     <string name="mediaUploadVideo">媒體上傳 — 視訊</string>
     <string name="commentSubmissionTypeText">文字提交項目</string>
@@ -189,6 +193,17 @@
     <string name="noAssignmentsInGroup">在本群組中沒有作業</string>
     <string name="excusedAssignment">該作業已被免除，不予計入總評分</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">排序依據</string>
+    <string name="sortByDialogTimeOption">時間</string>
+    <string name="sortByDialogTypeOption">類型</string>
+    <string name="sortByTime">依時間排序</string>
+    <string name="sortByType">依類型排序</string>
+    <string name="sortByDialogCancel">取消</string>
+    <string name="assignmentsListAllGradingPeriods">全部</string>
+    <string name="a11y_sortByTimeButton">排列作業列表按鈕，依時間排序</string>
+    <string name="a11y_sortByTypeButton">排列作業列表按鈕，依類型排序</string>
+    <string name="a11y_assignmentsSortedByTime">依時間排序的作業列表</string>
+    <string name="a11y_assignmentsSortedByType">依類型排序的作業列表</string>
     <!-- Assignment editing -->
     <string name="points">分數\u0020</string>
     <string name="save">儲存</string>
@@ -197,6 +212,7 @@
     <string name="forbidden">只有曾發送一個或以上回覆的才能查閱回覆。</string>
 
     <string name="fileCurrentlyLocked">此檔案目前已鎖定</string>
+    <string name="a11y_discussionReplyEditor">討論區回覆編輯器</string>
     <!-- Events -->
     <string name="Starts">開始</string>
     <string name="Ends">結束</string>
@@ -247,6 +263,7 @@
     <string name="createFolder">創建資料夾</string>
     <string name="createAFile">創建檔案</string>
     <string name="createFileFolderFabContentDesc">顯示創建檔案與創建資料夾按鈕</string>
+    <string name="hideCreateFileFolderFabContentDesc">隱藏建立檔案與建立資料夾按鈕</string>
     <string name="folderCreationError">創建資料夾時發生錯誤。</string>
     <string name="rename">重命名</string>
     <string name="renameFile">重命名檔案</string>
@@ -1086,4 +1103,30 @@
     <string name="conferenceDetails">會議詳情</string>
     <string name="recordings">記錄</string>
     <string name="conferenceInProgress">會議進行中</string>
+    <string name="a11y_criterion_content_description">標準評級%s</string>
+    <string name="a11y_criterion_description_content_description">%s，%s</string>
+    <string name="a11y_criterion_button_click_description">更多資訊</string>
+    <string name="a11y_create_file_folder_visible">建立檔案與資料夾按鈕顯示</string>
+    <string name="a11y_create_file_folder_gone">建立檔案與資料夾按鈕隱藏</string>
+    <string name="unselect_all">取消全選</string>
+    <string name="select_all">全選</string>
+    <string name="all_courses">所有課程</string>
+    <string name="all_groups">所有群組</string>
+    <string name="edit_dashboard_course_description">選擇控制面板的課程或導航到課程詳細資料。</string>
+    <string name="edit_dashboard_group_description">選擇控制面板的群組或導航到課程詳細資料。</string>
+    <string name="current_enrollments">目前註冊</string>
+    <string name="past_enrollments">過去註冊</string>
+    <string name="future_enrollments">未來註冊</string>
+    <string name="added_to_dashboard">添加到控制面板中</string>
+    <string name="removed_from_dashboard">從控制面板移除</string>
+    <string name="all_added_to_dashboard">全部添加到控制面板中</string>
+    <string name="all_removed_from_dashboard">全部從控制面板移除</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">無法將未啟用的課程添加到控制面板中。</string>
+    <string name="edit_dashboard">編輯控制面板</string>
+    <string name="edit_dashboard_empty_title">此處沒有課程</string>
+    <string name="edit_dashboard_empty_message">您必須註冊課程才能將其添加到控制面板中。</string>
+    <string name="a11y_content_description_remove_from_dashboard">從控制面板移除</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">全部從控制面板移除</string>
+    <string name="a11y_content_description_add_to_dashboard">添加到控制面板中</string>
+    <string name="a11y_content_description_add_all_to_dashboard">全部添加到控制面板中</string>
 </resources>
