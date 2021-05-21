@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom.itemviewmodels
 
-import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan

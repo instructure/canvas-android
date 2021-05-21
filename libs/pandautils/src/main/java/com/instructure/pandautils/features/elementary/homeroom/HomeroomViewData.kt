@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
-import android.text.SpannableString
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
