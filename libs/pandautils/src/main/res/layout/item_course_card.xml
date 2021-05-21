@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{() -> itemViewModel.onCardClick.invoke()}"
+            android:minHeight="220dp"
             app:cardCornerRadius="3dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
@@ -66,6 +67,8 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:textColor="@{Color.parseColor(itemViewModel.data.courseColor)}"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
                     tools:text="Math" />
 
                 <View

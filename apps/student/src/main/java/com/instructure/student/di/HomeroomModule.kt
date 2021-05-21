@@ -39,14 +39,3 @@ class HomeroomModule {
         return StudentHomeroomRouter(activity)
     }
 }
-
-@Module
-@InstallIn(ViewModelComponent::class)
-class HomeroomViewModelModule {
-
-    @Provides
-    fun provideCourseCardCreator(plannerManager: PlannerManager, userManager: UserManager,
-                                 announcementManager: AnnouncementManager, resources: Resources): CourseCardCreator {
-        return CourseCardCreator(plannerManager, userManager, announcementManager, resources)
-    }
-}
