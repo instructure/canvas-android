@@ -84,6 +84,10 @@ class HomeroomViewModelTest {
         every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
+
+        mockkStatic("kotlinx.coroutines.AwaitKt")
+
+        coEvery { courseCardCreator.createCourseCards(any(), any(), any(), any()) } returns listOf(mockk<CourseCardViewModel>())
     }
 
     @After
@@ -121,8 +125,6 @@ class HomeroomViewModelTest {
             DiscussionTopicHeader(title = "Course 1 first", message = "First message"),
             DiscussionTopicHeader(title = "Course 1 second", message = "Second message"))
 
-        mockkStatic("kotlinx.coroutines.AwaitKt")
-
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
         every { announcementManager.getLatestAnnouncementAsync(courses[0], any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(announcements))
@@ -154,8 +156,6 @@ class HomeroomViewModelTest {
         val announcements = listOf(
             DiscussionTopicHeader(title = "Course 1 first", message = "First message"),
             DiscussionTopicHeader(title = "Course 1 second", message = "Second message"))
-
-        mockkStatic("kotlinx.coroutines.AwaitKt")
 
         val announcementsDeferred1: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
         every { announcementManager.getLatestAnnouncementAsync(courses[0], any()) } returns announcementsDeferred1
@@ -193,8 +193,6 @@ class HomeroomViewModelTest {
 
         val announcements = listOf(DiscussionTopicHeader(title = "Course 1 first", message = "First message"))
 
-        mockkStatic("kotlinx.coroutines.AwaitKt")
-
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
         every { announcementManager.getLatestAnnouncementAsync(courses[0], any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(announcements))
@@ -220,8 +218,6 @@ class HomeroomViewModelTest {
 
         val announcements = listOf(DiscussionTopicHeader(title = "Course 1 first", message = "First message"))
 
-        mockkStatic("kotlinx.coroutines.AwaitKt")
-
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
         every { announcementManager.getLatestAnnouncementAsync(courses[0], any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(announcements))
@@ -246,8 +242,6 @@ class HomeroomViewModelTest {
         }
 
         val announcements = listOf(DiscussionTopicHeader(title = "Course 1 first", message = "First message"))
-
-        mockkStatic("kotlinx.coroutines.AwaitKt")
 
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
         every { announcementManager.getLatestAnnouncementAsync(courses[0], any()) } returns announcementsDeferred
@@ -292,13 +286,9 @@ class HomeroomViewModelTest {
             coEvery { await() } returns DataResult.Success(dashboardCards)
         }
 
-        mockkStatic("kotlinx.coroutines.AwaitKt")
-
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
         every { announcementManager.getLatestAnnouncementAsync(any(), any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()))
-
-        coEvery { courseCardCreator.createCourseCards(any(), any(), any(), any()) } returns listOf(mockk<CourseCardViewModel>())
 
         // When
         viewModel = createViewModel()
@@ -328,15 +318,11 @@ class HomeroomViewModelTest {
             coEvery { await() } returns DataResult.Success(dashboardCards)
         }
 
-        mockkStatic("kotlinx.coroutines.AwaitKt")
-
         val announcements = listOf(DiscussionTopicHeader(title = "Course 1 first", message = "First message"))
 
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
         every { announcementManager.getLatestAnnouncementAsync(any(), any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(announcements))
-
-        coEvery { courseCardCreator.createCourseCards(any(), any(), any(), any()) } returns listOf(mockk<CourseCardViewModel>())
 
         // When
         viewModel = createViewModel()
@@ -353,10 +339,6 @@ class HomeroomViewModelTest {
     fun `Show empty state if there are no announcements and no courses`() {
         // Given
         every { courseManager.getCoursesAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
-
-        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
@@ -380,8 +362,6 @@ class HomeroomViewModelTest {
         every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(dashboardCards)
         }
-
-        coEvery { courseCardCreator.createCourseCards(any(), any(), any(), any()) } returns listOf(mockk<CourseCardViewModel>())
 
         // When
         viewModel = createViewModel()

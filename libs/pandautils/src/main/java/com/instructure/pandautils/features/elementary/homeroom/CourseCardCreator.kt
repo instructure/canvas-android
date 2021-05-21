@@ -17,9 +17,6 @@
 package com.instructure.pandautils.features.elementary.homeroom
 
 import android.content.res.Resources
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.PlannerManager
@@ -60,16 +57,16 @@ class CourseCardCreator(
         val plannerItems = plannerManager.getPlannerItemsAsync(forceNetworkAssignments, now.toApiString(), tomorrow).await().dataOrNull
         val missingSubmissions = userManager.getAllMissingSubmissionsAsync(forceNetworkAssignments).await().dataOrNull
 
-        val assignmentsDueStrings = createDueTexts(dashboardCourses,
-            plannerItems ?: emptyList(),
-            missingSubmissions ?: emptyList())
+        val assignmentsDueTexts = createDueTexts(dashboardCourses, plannerItems ?: emptyList())
+        val assignmentsMissingTexts = createMissingTexts(dashboardCourses, missingSubmissions
+            ?: emptyList())
 
         return dashboardCourses
             .mapIndexed { index, course ->
                 val viewData = CourseCardViewData(
                     course.name,
-                    assignmentsDueStrings[course.id]
-                        ?: SpannableString(resources.getString(R.string.nothingDueToday)),
+                    assignmentsDueTexts[course.id] ?: "",
+                    assignmentsMissingTexts[course.id] ?: "",
                     announcements[index]?.title ?: "",
                     getCourseColor(course),
                     course.imageUrl ?: "")
@@ -78,12 +75,13 @@ class CourseCardCreator(
                     viewData,
                     { events.postValue(Event(HomeroomAction.OpenCourse(course))) },
                     { events.postValue(Event(HomeroomAction.OpenAssignments(course))) },
-                    { openAnnouncementDetails(events, course, announcements[index]) }
+                    { openAnnouncementDetails(events, course, announcements[index]) },
+                    resources.getColor(R.color.destructive, null)
                 )
             }
     }
 
-    private fun createDueTexts(courses: List<Course>, plannerItems: List<PlannerItem>, missingAssignments: List<Assignment>): Map<Long, SpannableString> {
+    private fun createDueTexts(courses: List<Course>, plannerItems: List<PlannerItem>): Map<Long, String> {
         val dueTodayCountByCourses = courses
             .associate { Pair(it.id, 0) }
             .toMutableMap()
@@ -94,42 +92,44 @@ class CourseCardCreator(
                 dueTodayCountByCourses.computeIfPresent(item.courseId!!) { _, value -> value + 1 }
             }
 
+        return courses.associate {
+            Pair(it.id, createDueTextForCourse(dueTodayCountByCourses[it.id] ?: 0))
+        }
+    }
+
+    private fun isNotSubmittedAssignment(it: PlannerItem) =
+        it.courseId != null && it.submissions?.submitted == false && it.plannableType == PLANNABLE_TYPE_ASSIGNMENT && it.submissions?.missing == false
+
+    private fun createDueTextForCourse(dueCount: Int): String {
+        return if (dueCount == 0) {
+            resources.getString(R.string.nothingDueToday)
+        } else {
+            resources.getString(R.string.dueToday, dueCount)
+        }
+    }
+
+    private fun createMissingTexts(courses: List<Course>, missingAssignments: List<Assignment>): Map<Long, String> {
         val missingCountByCourses = courses
             .associate { Pair(it.id, 0) }
             .toMutableMap()
 
         missingAssignments
             .filter { it.plannerOverride?.dismissed != true }
-            .forEach { item ->
-                missingCountByCourses.computeIfPresent(item.courseId) { _, value -> value + 1 }
+            .forEach { assignment ->
+                missingCountByCourses.computeIfPresent(assignment.courseId) { _, value -> value + 1 }
             }
 
         return courses
             .associate {
-                Pair(it.id, createDueTextForCourse(dueTodayCountByCourses[it.id]
-                    ?: 0, missingCountByCourses[it.id] ?: 0))
+                Pair(it.id, createMissingTextForCourse(missingCountByCourses[it.id] ?: 0))
             }
     }
 
-    private fun isNotSubmittedAssignment(it: PlannerItem) =
-        it.courseId != null && it.submissions?.submitted == false && it.plannableType == PLANNABLE_TYPE_ASSIGNMENT && it.submissions?.missing == false
-
-    private fun createDueTextForCourse(dueToday: Int, missing: Int): SpannableString {
-        val dueTodayString = if (dueToday == 0) {
-            resources.getString(R.string.nothingDueToday)
+    private fun createMissingTextForCourse(missingCount: Int): String {
+        return if (missingCount == 0) {
+            ""
         } else {
-            resources.getString(R.string.dueToday, dueToday)
-        }
-
-        return if (missing == 0) {
-            SpannableString(dueTodayString)
-        } else {
-            val missingString = resources.getString(R.string.missing, missing)
-            val separator = " | "
-            val completeString = SpannableString(dueTodayString + separator + missingString)
-            val spanColor = resources.getColor(R.color.destructive, null)
-            completeString.setSpan(ForegroundColorSpan(spanColor), dueTodayString.length + separator.length, completeString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            return completeString
+            resources.getString(R.string.missing, missingCount)
         }
     }
 

@@ -30,7 +30,8 @@ data class AnnouncementViewData(val courseName: String, val title: String, val h
 
 data class CourseCardViewData(
     val courseName: String,
-    val assignmentsDueText: SpannableString,
+    val assignmentsDueText: String,
+    val assignmentsMissingText: String,
     val announcementText: String,
     val courseColor: String,
     val imageUrl: String)
