@@ -131,6 +131,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var airwolfDomain by StringPref("", "airwolf_domain")
 
+    var canvasForElementary by BooleanPref()
+
     /**
      * clearAllData is required for logout.
      * Clears all data including credentials and cache.

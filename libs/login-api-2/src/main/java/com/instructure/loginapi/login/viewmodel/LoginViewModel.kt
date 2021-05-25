@@ -36,9 +36,9 @@ class LoginViewModel @Inject constructor(private val featureFlagProvider: Featur
 
     private val canvasForElementaryResult = MutableLiveData<Event<Boolean>>()
 
-    fun checkCanvasForElementaryFeature(errorFallback: Boolean = false): LiveData<Event<Boolean>> {
+    fun checkCanvasForElementaryFeature(): LiveData<Event<Boolean>> {
         viewModelScope.launch {
-            val canvasForElementaryFlag = featureFlagProvider.getCanvasForElementaryFlag(errorFallback)
+            val canvasForElementaryFlag = featureFlagProvider.getCanvasForElementaryFlag()
             canvasForElementaryResult.postValue(Event(canvasForElementaryFlag))
         }
 
