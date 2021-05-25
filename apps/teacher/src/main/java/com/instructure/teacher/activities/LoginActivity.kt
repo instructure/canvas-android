@@ -24,6 +24,7 @@ import android.os.Bundle
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
+import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.services.PushNotificationRegistrationService
 import com.instructure.pandautils.utils.ColorKeeper
@@ -32,6 +33,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
+import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.getColorCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,6 +63,10 @@ class LoginActivity : BaseLoginInitActivity() {
         val intent = launchApplicationMainActivityIntent()
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+
+    override fun logout() {
+        TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
 
     companion object {

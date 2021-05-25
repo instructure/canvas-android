@@ -183,8 +183,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                             ApiPrefs.accessToken = user.accessToken
                         }
 
-                        ApiPrefs.token = user.token
-
                         startApp(user.canvasForElementary)
                     }
 

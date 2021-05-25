@@ -42,15 +42,11 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     const val ACCOUNT_LOCALE: String = "account"
 
-    @Deprecated("Deprecated in favor of accessToken")
-    var token by StringPref()
-
     var accessToken by StringPref()
 
     var refreshToken by StringPref()
 
-    // TODO - Remove in favor of just access token once refresh is 100%
-    fun getValidToken(): String = if (accessToken.isNotEmpty()) accessToken else token
+    fun getValidToken(): String = accessToken
 
     var protocol by StringPref("https", "api_protocol")
 

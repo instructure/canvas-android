@@ -25,14 +25,22 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
+import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs.getValidToken
 import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.R
+import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.view.CanvasLoadingView
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
+import retrofit2.Call
+import retrofit2.Response
 
 abstract class BaseLoginInitActivity : AppCompatActivity() {
 
@@ -63,6 +71,8 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
 
     protected abstract val isTesting: Boolean
 
+    protected abstract fun logout()
+
     private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +99,12 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                 startActivity(beginLoginFlowIntent())
             } else {
                 // Start App
-                startApp()
+                tryWeave {
+                    UserManager.getSelfAsync(true).await().dataOrThrow
+                    startApp()
+                } catch {
+                    logout()
+                }
             }
 
             // We only want to finish here on debug builds, our login bypass for UI testing depends
@@ -105,12 +120,35 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                         startActivity(beginLoginFlowIntent())
                     } else {
                         //Start App
-                        startApp()
+                        tryWeave {
+                            UserManager.getSelfAsync(true).await().dataOrThrow
+                            startApp()
+                        } catch {
+                            logout()
+                        }
                     }
                     finish()
                 }
             }, 1750) // This delay allows the animation to finish.
         }
+    }
+
+    private fun checkIfTokenIsValid() {
+        UserManager.getSelf(true, object: StatusCallback<User>() {
+            override fun onResponse(data: Call<User>, response: Response<User>) {
+                super.onResponse(data, response)
+                if (response.isSuccessful) {
+                    startApp()
+                } else {
+                    logout()
+                }
+            }
+
+            override fun onFailure(data: Call<User>, t: Throwable) {
+                super.onFailure(data, t)
+                logout()
+            }
+        })
     }
 
     /**
