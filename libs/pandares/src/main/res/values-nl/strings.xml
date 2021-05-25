@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,6 +78,7 @@
 
     <string name="recordVideo">Video opnemen</string>
 
+    <string name="a11y_textSubmissionEditor">Editor voor tekstinlevering</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Schrijven&#8230;</string>
     <string name="textSubmissionFailureMessage">Er is iets mis gegaan bij het uploaden van de opdracht. Opnieuw inleveren.</string>
@@ -127,6 +127,7 @@
     <string name="chooseFileForCommentSubtext">Koppel bestanden aan je opmerking door op een optie hieronder te tikken</string>
     <string name="emptySubmissionCommentsSubtext">Vragen over je opdracht?\nStuur een bericht naar je cursusleider.</string>
     <string name="submissionCommentErrorMessage">Dit bericht kan niet worden verzonden. Tik om het nogmaals te proberen.</string>
+    <string name="mediaUpload">Media Upload</string>
     <string name="mediaUploadAudio">Media-upload - audio</string>
     <string name="mediaUploadVideo">Media-upload - video</string>
     <string name="commentSubmissionTypeText">Tekstinzending</string>
@@ -212,6 +213,7 @@
     <string name="forbidden">Antwoorden zijn alleen zichtbaar voor degenen die minimaal één antwoord hebben geplaatst.</string>
 
     <string name="fileCurrentlyLocked">Dit bestand is momenteel vergrendeld</string>
+    <string name="a11y_discussionReplyEditor">Editor voor discussieantwoorden</string>
     <!-- Events -->
     <string name="Starts">Begint op</string>
     <string name="Ends">Eindigt</string>
@@ -1120,4 +1122,25 @@
     <string name="a11y_criterion_button_click_description">meer informatie</string>
     <string name="a11y_create_file_folder_visible">Knoppen voor Bestand maken en Map maken zichtbaar</string>
     <string name="a11y_create_file_folder_gone">Knoppen voor Bestand maken en Map maken onzichtbaar</string>
+    <string name="unselect_all">Alles deselecteren</string>
+    <string name="select_all">Alles selecteren</string>
+    <string name="all_courses">Alle cursussen</string>
+    <string name="all_groups">Alle Groepen</string>
+    <string name="edit_dashboard_course_description">Selecteer cursussen voor Dashboard of navigeer naar cursusdetails.</string>
+    <string name="edit_dashboard_group_description">Selecteer groepen voor Dashboard of navigeer naar cursusdetails.</string>
+    <string name="current_enrollments">Huidige inschrijvingen</string>
+    <string name="past_enrollments">Oude inschrijvingen</string>
+    <string name="future_enrollments">Toekomstige inschrijvingen</string>
+    <string name="added_to_dashboard">Toegevoegd aan Dashboard</string>
+    <string name="removed_from_dashboard">Verwijderd uit Dashboard</string>
+    <string name="all_added_to_dashboard">Alles toegevoegd aan Dashboard</string>
+    <string name="all_removed_from_dashboard">Alles verwijderd uit Dashboard</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Inactieve cursussen kunnen niet aan Dashboard worden toegevoegd.</string>
+    <string name="edit_dashboard">Dashboard bewerken</string>
+    <string name="edit_dashboard_empty_title">Geen cursussen hier</string>
+    <string name="edit_dashboard_empty_message">Je moet in een cursus zijn ingeschreven om die aan het Dashboard te kunnen toevoegen.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Verwijderen uit Dashboard</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Alles verwijderen uit Dashboard</string>
+    <string name="a11y_content_description_add_to_dashboard">Toevoegen aan Dashboard</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Alles toevoegen aan Dashboard</string>
 </resources>

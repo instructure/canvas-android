@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,6 +78,7 @@
 
     <string name="recordVideo">Enregistrer la vidéo</string>
 
+    <string name="a11y_textSubmissionEditor">Éditeur de soumission de texte</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Écrire&#8230;</string>
     <string name="textSubmissionFailureMessage">Un problème est survenu lors de l’envoi de la soumission. Relancez la soumission.</string>
@@ -127,6 +127,7 @@
     <string name="chooseFileForCommentSubtext">Joignez des fichiers à votre commentaire en appuyant sur l\'une des options ci-dessous</string>
     <string name="emptySubmissionCommentsSubtext">Vous avez des questions sur votre travail ?\nEnvoyez un message à votre instructeur.</string>
     <string name="submissionCommentErrorMessage">Impossible d’envoyer ce message. Appuyez pour réessayer</string>
+    <string name="mediaUpload">Téléchargement de média</string>
     <string name="mediaUploadAudio">Envoi de média – Audio</string>
     <string name="mediaUploadVideo">Envoi de média – Vidéo</string>
     <string name="commentSubmissionTypeText">Soumission de texte</string>
@@ -212,6 +213,7 @@
     <string name="forbidden">Les réponses ne sont visibles que pour ceux qui ont publié au moins une réponse.</string>
 
     <string name="fileCurrentlyLocked">Ce fichier est actuellement verrouillé</string>
+    <string name="a11y_discussionReplyEditor">Éditeur de réponses de discussion</string>
     <!-- Events -->
     <string name="Starts">Démarre</string>
     <string name="Ends">Prend fin</string>
@@ -1120,4 +1122,25 @@
     <string name="a11y_criterion_button_click_description">Plus d\'informations</string>
     <string name="a11y_create_file_folder_visible">Boutons de création de fichier et de répertoire visibles</string>
     <string name="a11y_create_file_folder_gone">Boutons de création de fichier et de répertoire invisibles</string>
+    <string name="unselect_all">Désélectionner tout</string>
+    <string name="select_all">Tout sélectionner</string>
+    <string name="all_courses">Tous les cours</string>
+    <string name="all_groups">Tous les groupes</string>
+    <string name="edit_dashboard_course_description">Sélectionnez des cours pour le Tableau de bord ou accédez aux détails du cours.</string>
+    <string name="edit_dashboard_group_description">Sélectionnez les groupes pour le Tableau de bord ou accédez aux détails des cours.</string>
+    <string name="current_enrollments">Inscriptions actuelles</string>
+    <string name="past_enrollments">Inscriptions passées</string>
+    <string name="future_enrollments">Inscriptions futures</string>
+    <string name="added_to_dashboard">Ajoutés au Tableau de bord</string>
+    <string name="removed_from_dashboard">Supprimés du Tableau de bord</string>
+    <string name="all_added_to_dashboard">Tous ajoutés au Tableau de bord</string>
+    <string name="all_removed_from_dashboard">Tous supprimés du Tableau de bord</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Les cours inactifs n\'ont pas pu être ajoutés au Tableau de bord.</string>
+    <string name="edit_dashboard">Modifier le tableau de bord</string>
+    <string name="edit_dashboard_empty_title">Aucun cours ici</string>
+    <string name="edit_dashboard_empty_message">Vous devez être inscrit à un cours pour l\'ajouter au Tableau de bord.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Supprimer du Tableau de bord</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Supprimer tout du tableau de bord</string>
+    <string name="a11y_content_description_add_to_dashboard">Ajouter au tableau de bord</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Ajouter tout au tableau de bord</string>
 </resources>
