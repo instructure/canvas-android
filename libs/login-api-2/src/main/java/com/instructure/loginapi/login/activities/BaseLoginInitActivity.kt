@@ -133,24 +133,6 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkIfTokenIsValid() {
-        UserManager.getSelf(true, object: StatusCallback<User>() {
-            override fun onResponse(data: Call<User>, response: Response<User>) {
-                super.onResponse(data, response)
-                if (response.isSuccessful) {
-                    startApp()
-                } else {
-                    logout()
-                }
-            }
-
-            override fun onFailure(data: Call<User>, t: Throwable) {
-                super.onFailure(data, t)
-                logout()
-            }
-        })
-    }
-
     /**
      * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
      */
