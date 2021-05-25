@@ -58,6 +58,8 @@ fun Course.isCreationPending(): Boolean = enrollments?.any { it.enrollmentState 
 fun Course.isNotDeleted(): Boolean = workflowState != Course.WorkflowState.DELETED
 fun Course.isPublished(): Boolean = workflowState != Course.WorkflowState.UNPUBLISHED
 
+fun ModuleItem.isLocked(): Boolean = moduleDetails?.lockedForUser ?: false || moduleDetails?.lockExplanation.isValid() && moduleDetails?.lockDate?.before(Date()) == true && moduleDetails.unlockDate?.after(Date()) == true
+
 fun MediaComment.asAttachment() = Attachment().also {
     it.contentType = contentType ?: ""
     it.displayName = displayName
