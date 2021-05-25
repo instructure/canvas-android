@@ -67,7 +67,7 @@ class LoginViewModelTest {
     @Test
     fun `Emit feature flag from feature flag provider`() {
         // Given
-        coEvery { featureFlagProvider.getCanvasForElementaryFlag(any()) } returns true
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
 
         // When
         viewModel = LoginViewModel(featureFlagProvider)
