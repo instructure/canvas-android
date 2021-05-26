@@ -599,7 +599,7 @@ class SubmissionContentView(
                         SlidingUpPanelLayout.PanelState.ANCHORED -> {
                             submissionVersionsButton?.isClickable = true
                             postPanelEvent(newState, 0.5f)
-                            contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+                            contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                         }
                         SlidingUpPanelLayout.PanelState.EXPANDED -> {
                             submissionVersionsButton?.isClickable = false
