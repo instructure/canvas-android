@@ -25,22 +25,14 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
-import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.UserManager
-import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs.getValidToken
 import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.R
-import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.view.CanvasLoadingView
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
-import retrofit2.Call
-import retrofit2.Response
 
 abstract class BaseLoginInitActivity : AppCompatActivity() {
 
@@ -99,12 +91,15 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                 startActivity(beginLoginFlowIntent())
             } else {
                 // Start App
-                tryWeave {
-                    UserManager.getSelfAsync(true).await().dataOrThrow
-                    startApp()
-                } catch {
-                    logout()
-                }
+                viewModel.checkIfTokenIsValid().observe(this, Observer { event ->
+                    event.getContentIfNotHandled()?.let {
+                        if (it) {
+                            startApp()
+                        } else {
+                            logout()
+                        }
+                    }
+                })
             }
 
             // We only want to finish here on debug builds, our login bypass for UI testing depends
@@ -120,12 +115,15 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                         startActivity(beginLoginFlowIntent())
                     } else {
                         //Start App
-                        tryWeave {
-                            UserManager.getSelfAsync(true).await().dataOrThrow
-                            startApp()
-                        } catch {
-                            logout()
-                        }
+                        viewModel.checkIfTokenIsValid().observe(this, Observer { event ->
+                            event.getContentIfNotHandled()?.let {
+                                if (it) {
+                                    startApp()
+                                } else {
+                                    logout()
+                                }
+                            }
+                        })
                     }
                     finish()
                 }
