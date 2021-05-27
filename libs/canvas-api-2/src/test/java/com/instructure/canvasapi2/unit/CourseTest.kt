@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.isNotDeleted
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -30,7 +29,7 @@ import java.time.OffsetDateTime
 
 class CourseTest {
 
-    val baseCourse = Course(accessRestrictedByDate = false, workflowState = Course.WorkflowState.AVAILABLE)
+    private val baseCourse = Course(accessRestrictedByDate = false, workflowState = Course.WorkflowState.AVAILABLE)
 
     @Before
     fun setup() {
@@ -546,23 +545,5 @@ class CourseTest {
                 startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
 
         assertTrue(course.isBetweenValidDateRange())
-    }
-
-    @Test
-    fun `Course is not deleted when workflow state is available`() {
-        val course = baseCourse.copy(workflowState = Course.WorkflowState.AVAILABLE)
-        assertTrue(course.isNotDeleted())
-    }
-
-    @Test
-    fun `Course is not deleted when workflow state is completed`() {
-        val course = baseCourse.copy(workflowState = Course.WorkflowState.COMPLETED)
-        assertTrue(course.isNotDeleted())
-    }
-
-    @Test
-    fun `Course is deleted when workflow state is deleted`() {
-        val course = baseCourse.copy(workflowState = Course.WorkflowState.DELETED)
-        assertFalse(course.isNotDeleted())
     }
 }
