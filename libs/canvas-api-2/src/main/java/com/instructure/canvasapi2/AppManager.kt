@@ -76,7 +76,14 @@ abstract class AppManager : Application() {
     open fun onCanvasTokenRefreshed() = Unit
 
     private fun logTokenAnalytics() {
-        val analyticsString = AnalyticsEventConstants.REFRESH_TOKEN
+        val analyticsString = if (ApiPrefs.refreshToken.isNotEmpty()) {
+            AnalyticsEventConstants.REFRESH_TOKEN
+        } else if (ApiPrefs.token.isNotEmpty()) {
+            AnalyticsEventConstants.FOREVER_TOKEN
+        } else {
+            // No token means new user, which means they'll also get a refresh token
+            AnalyticsEventConstants.REFRESH_TOKEN
+        }
 
         // Ideally, tokens will be paired with user ids to determine unique events
         val bundle = Bundle().apply {

@@ -431,6 +431,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                 val token = response.body()
                 refreshToken = token!!.refreshToken!!
                 accessToken = token.accessToken!!
+                @Suppress("DEPRECATION")
+                ApiPrefs.token = "" // TODO: Remove when we're 100% using refresh tokens
 
                 // We now need to get the cache user
                 getSelf(object : StatusCallback<User>() {

@@ -76,6 +76,7 @@ object QRLogin {
         // Configure the token in prefs
         ApiPrefs.refreshToken = tokenResponse.refreshToken!!
         ApiPrefs.accessToken = tokenResponse.accessToken!!
+        ApiPrefs.token = "" // TODO: Remove when we're 100% using refresh tokens
 
         if(tokenResponse.realUser == null) {
             // This is a real login, not masquerading. Go ahead and cache the user.
