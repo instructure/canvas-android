@@ -70,6 +70,9 @@ fun ViewInteraction.assertHasContentDescription(stringId: Int): ViewInteraction
 fun ViewInteraction.assertHasChild(matcher: Matcher<View>): ViewInteraction
         = check(ViewAssertions.matches(ViewMatchers.withChild(matcher)))
 
+fun ViewInteraction.assertSelected(): ViewInteraction
+    = check(ViewAssertions.matches(ViewMatchers.isSelected()))
+
 // Extensions for ViewActions
 
 fun ViewInteraction.typeText(arg0: String): ViewInteraction = perform(ViewActions.typeText(arg0))

@@ -223,6 +223,8 @@ class MockCanvas {
     /** Map of user id to bookmarks */
     val bookmarks = mutableMapOf<Long, MutableList<Bookmark>>()
 
+    var featureFlags = FeatureFlags()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
