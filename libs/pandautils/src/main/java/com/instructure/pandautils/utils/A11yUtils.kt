@@ -49,4 +49,9 @@ fun getContentDescriptionForMinusGradeString(grade: String, context: Context): S
     } else grade
 }
 
+fun isAccessibilityEnabled(context: Context): Boolean {
+    val am: AccessibilityManager? = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
+    return am?.isEnabled ?: false && am?.isTouchExplorationEnabled ?: false
+}
+
 

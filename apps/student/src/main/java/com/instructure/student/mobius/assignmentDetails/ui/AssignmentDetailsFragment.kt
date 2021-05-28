@@ -58,18 +58,13 @@ class AssignmentDetailsFragment :
     override fun makeUpdate() = AssignmentDetailsUpdate()
 
     override fun makeView(inflater: LayoutInflater, parent: ViewGroup) =
-        AssignmentDetailsView(canvasContext, isAccessibilityEnabled(), inflater, parent)
+        AssignmentDetailsView(canvasContext, isAccessibilityEnabled(requireContext()), inflater, parent)
 
     override fun makePresenter() = AssignmentDetailsPresenter
 
     override fun makeInitModel() = AssignmentDetailsModel(assignmentId, canvasContext, shouldRouteToSubmissionDetails = submissionId.isNotBlank())
 
     override fun getExternalEventSources() = listOf(AssignmentDetailsEventBusSource())
-
-    private fun isAccessibilityEnabled(): Boolean {
-        val am: AccessibilityManager? = requireContext().getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
-        return am?.isEnabled ?: false && am?.isTouchExplorationEnabled ?: false
-    }
 
     companion object {
         const val VIDEO_REQUEST_CODE = 45519
