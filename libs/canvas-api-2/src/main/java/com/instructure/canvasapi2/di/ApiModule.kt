@@ -50,6 +50,11 @@ object ApiModule {
     }
 
     @Provides
+    fun provideUserManager(): UserManager {
+        return UserManager
+    }
+
+    @Provides
     @Singleton
     fun provideHelpLinksApi(): HelpLinksAPI {
         return HelpLinksAPI
