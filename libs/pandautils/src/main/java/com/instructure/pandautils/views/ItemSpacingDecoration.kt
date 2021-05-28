@@ -14,22 +14,19 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.di
+package com.instructure.pandautils.views
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.teacher.features.elementary.TeacherHomeroomRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import android.graphics.Rect
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
-@Module
-@InstallIn(FragmentComponent::class)
-class HomeroomModule {
+class SpacesItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
 
-    @Provides
-    fun provideHomeroomRouter(): HomeroomRouter {
-        return TeacherHomeroomRouter()
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        outRect.left = space;
+        outRect.right = space;
+        outRect.bottom = space;
+        outRect.top = space;
     }
+
 }

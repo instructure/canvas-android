@@ -17,10 +17,18 @@
 package com.instructure.pandautils.features.elementary.homeroom.itemviewmodels
 
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.CourseCardViewData
+import com.instructure.pandautils.features.elementary.homeroom.AnnouncementViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class CourseCardViewModel(val data: CourseCardViewData) : ItemViewModel {
+class AnnouncementItemViewModel(
+    val data: AnnouncementViewData,
+    val onPreviousAnnouncementsClicked: () -> Unit,
+    private val onLtiButtonPressed: (url: String, announcementMessage: String) -> Unit
+) : ItemViewModel {
 
-    override val layoutId: Int = R.layout.item_course_card
+    override val layoutId: Int = R.layout.item_announcement
+
+    fun onLtiButtonPressed(url: String) {
+        onLtiButtonPressed(url, data.htmlContent)
+    }
 }

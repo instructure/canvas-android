@@ -21,6 +21,8 @@ import android.content.res.Resources
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.pandautils.typeface.TypefaceBehavior
+import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.Module
 import dagger.Provides
@@ -55,5 +57,11 @@ class ApplicationModule {
     @Provides
     fun provideHtmlContentFormatter(@ApplicationContext context: Context, oAuthManager: OAuthManager, firebaseCrashlytics: FirebaseCrashlytics): HtmlContentFormatter {
         return HtmlContentFormatter(context, firebaseCrashlytics, oAuthManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideColorKeeper(): ColorKeeper {
+        return ColorKeeper
     }
 }

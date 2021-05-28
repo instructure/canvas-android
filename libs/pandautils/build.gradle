@@ -111,6 +111,7 @@ dependencies {
     testImplementation Libs.MOCKK
     testImplementation Libs.KOTLIN_COROUTINES_TEST
     testImplementation Libs.ANDROIDX_CORE_TESTING
+    testImplementation Libs.THREETEN_BP
 
     /* Media handling */
     api("com.github.bumptech.glide:glide:$glideVersion") {

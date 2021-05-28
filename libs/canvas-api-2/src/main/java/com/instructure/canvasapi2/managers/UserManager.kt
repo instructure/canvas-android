@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
-import com.instructure.canvasapi2.utils.weave.awaitApi
 
 object UserManager {
 
@@ -265,6 +264,19 @@ object UserManager {
     private fun getSystemAcceptLanguage(): String {
         val systemLocale = ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0]
         return "${systemLocale.toLanguageTag()},${systemLocale.language}"
+    }
+
+    fun getAllMissingSubmissionsAsync(forceNetwork: Boolean) = apiAsync<List<Assignment>> { getAllMissingSubmissions(forceNetwork, it) }
+
+    private fun getAllMissingSubmissions(forceNetwork: Boolean, callback: StatusCallback<List<Assignment>>) {
+        val adapter = RestBuilder(callback)
+        val depaginatedCallback = object : ExhaustiveListCallback<Assignment>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Assignment>>, nextUrl: String, isCached: Boolean) {
+                UserAPI.getNextPageMissingSubmissions(nextUrl, adapter, forceNetwork, callback)
+            }
+        }
+        adapter.statusCallback = depaginatedCallback
+        UserAPI.getMissingSubmissions(forceNetwork, adapter, depaginatedCallback)
     }
 
 }

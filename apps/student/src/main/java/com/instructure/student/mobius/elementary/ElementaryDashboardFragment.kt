@@ -64,6 +64,13 @@ class ElementaryDashboardFragment : ParentFragment() {
         })
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (dashboardPager?.adapter as? ElementaryDashboardPagerAdapter)?.refreshHomeroomAssignments()
+        }
+    }
+
     companion object {
         fun newInstance(route: Route) =
             ElementaryDashboardFragment().apply {

@@ -21,7 +21,7 @@
     <data>
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel" />
+            type="com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementItemViewModel" />
     </data>
 
     <LinearLayout

@@ -49,17 +49,17 @@ object AnnouncementManager {
         AnnouncementAPI.getFirstPageAnnouncements(canvasContext, adapter, depaginatedCallback, params)
     }
 
-    fun getAnnouncementsAsync(canvasContext: CanvasContext, forceNetwork: Boolean)
-        = apiAsync<List<DiscussionTopicHeader>> { getAnnouncements(canvasContext, forceNetwork, it) }
+    fun getLatestAnnouncementAsync(canvasContext: CanvasContext, forceNetwork: Boolean)
+        = apiAsync<List<DiscussionTopicHeader>> { getLatestAnnouncement(canvasContext, forceNetwork, it) }
 
-    private fun getAnnouncements(
+    private fun getLatestAnnouncement(
         canvasContext: CanvasContext,
         forceNetwork: Boolean,
         callback: StatusCallback<List<DiscussionTopicHeader>>
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
-        AnnouncementAPI.getAnnouncements(canvasContext, adapter, callback, params)
+        AnnouncementAPI.getLatestAnnouncement(canvasContext, adapter, callback, params)
     }
 }

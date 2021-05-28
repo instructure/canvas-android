@@ -14,27 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.elementary.homeroom
+package com.instructure.canvasapi2.models
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
-interface HomeroomRouter {
-
-    fun canRouteInternally(url: String): Boolean
-
-    fun routeInternally(url: String)
-
-    fun openMedia(url: String)
-
-    fun openAnnouncements(canvasContext: CanvasContext)
-
-    fun openCourse(course: Course)
-
-    fun openAssignments(course: Course)
-
-    fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader)
-
-    fun updateColors()
-}
+@Parcelize
+data class PlannerOverride(
+    @SerializedName("dismissed")
+    val dismissed: Boolean = false
+) : Parcelable
