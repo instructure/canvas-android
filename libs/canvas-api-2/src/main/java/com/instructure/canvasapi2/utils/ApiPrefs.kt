@@ -49,7 +49,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var refreshToken by StringPref()
 
-    // TODO - Remove in favor of just access token once refresh is 100%
     fun getValidToken(): String = if (accessToken.isNotEmpty()) accessToken else token
 
     var protocol by StringPref("https", "api_protocol")
@@ -130,6 +129,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     var pandataInfo by GsonPref(PandataInfo::class.java)
 
     var airwolfDomain by StringPref("", "airwolf_domain")
+
+    var canvasForElementary by BooleanPref()
 
     /**
      * clearAllData is required for logout.

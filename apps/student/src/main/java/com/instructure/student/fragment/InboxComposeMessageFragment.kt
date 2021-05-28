@@ -234,6 +234,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                         chips.clearRecipients()
                         selectedContext = canvasContext
                         courseWasSelected()
+                        courseSpinner.contentDescription = getString(R.string.a11y_content_description_inbox_course_spinner, selectedContext?.name)
                     }
                 }
             }

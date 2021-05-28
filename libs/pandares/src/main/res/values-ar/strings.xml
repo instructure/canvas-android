@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -82,6 +81,7 @@
 
     <string name="recordVideo">تسجيل الفيديو</string>
 
+    <string name="a11y_textSubmissionEditor">محرر إرسال النص</string>
     <!-- Student Submission -->
     <string name="submissionWrite">كتابة&#8230;</string>
     <string name="textSubmissionFailureMessage">حدث مشكلة أثناء تحميل الإرسال. أعد الإرسال.</string>
@@ -130,6 +130,7 @@
     <string name="chooseFileForCommentSubtext">قم بإرفاق ملفات لتعليقك بالضغط على إحدى الخيارات أدناه</string>
     <string name="emptySubmissionCommentsSubtext">لديك أسئلة بشأن مهمتك؟\nراسل معلمك.</string>
     <string name="submissionCommentErrorMessage">تعذر إرسال هذه الرسالة. اضغط لإعادة المحاولة.</string>
+    <string name="mediaUpload">تحميل الوسائط</string>
     <string name="mediaUploadAudio">تحميل وسائط - صوت</string>
     <string name="mediaUploadVideo">تحميل وسائط - فيديو</string>
     <string name="commentSubmissionTypeText">إرسال النص</string>
@@ -215,6 +216,7 @@
     <string name="forbidden">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
 
     <string name="fileCurrentlyLocked">هذا الملف مؤمّن في الوقت الحالي</string>
+    <string name="a11y_discussionReplyEditor">محرر رد النقاش</string>
     <!-- Events -->
     <string name="Starts">يبدأ</string>
     <string name="Ends">ينتهي</string>
@@ -1175,4 +1177,25 @@
     <string name="a11y_criterion_button_click_description">معلومات إضافية</string>
     <string name="a11y_create_file_folder_visible">أزرار إنشاء الملف والمجلد مرئية</string>
     <string name="a11y_create_file_folder_gone">أزرار إنشاء الملف والمجلد غير مرئية</string>
+    <string name="unselect_all">إلغاء تحديد الكل</string>
+    <string name="select_all">تحديد الكل</string>
+    <string name="all_courses">جميع المساقات</string>
+    <string name="all_groups">كل المجموعات</string>
+    <string name="edit_dashboard_course_description">حدد مساقات للوحة المعلومات أو تنقل إلى تفاصيل المساق.</string>
+    <string name="edit_dashboard_group_description">حدد مجموعات للوحة المعلومات أو تنقل إلى تفاصيل المساق.</string>
+    <string name="current_enrollments">التسجيلات الحالية</string>
+    <string name="past_enrollments">التسجيلات الماضية</string>
+    <string name="future_enrollments">التسجيلات المستقبلية</string>
+    <string name="added_to_dashboard">تمت الإضافة إلى لوحة المعلومات</string>
+    <string name="removed_from_dashboard">تمت الإزالة من لوحة المعلومات</string>
+    <string name="all_added_to_dashboard">تمت إضافة الكل إلى لوحة المعلومات</string>
+    <string name="all_removed_from_dashboard">تمت إزالة الكل من لوحة المعلومات</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">تعذر إضافة المساقات غير النشطة إلى لوحة المعلومات.</string>
+    <string name="edit_dashboard">تحرير لوحة المعلومات</string>
+    <string name="edit_dashboard_empty_title">لا توجد مساقات هنا</string>
+    <string name="edit_dashboard_empty_message">يجب أن تكون مسجلًا في مساق لإضافته إلى لوحة المعلومات.</string>
+    <string name="a11y_content_description_remove_from_dashboard">الإزالة من لوحة المعلومات</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">إزالة الكل من لوحة المعلومات</string>
+    <string name="a11y_content_description_add_to_dashboard">الإضافة إلى لوحة المعلومات</string>
+    <string name="a11y_content_description_add_all_to_dashboard">إضافة الكل إلى لوحة المعلومات</string>
 </resources>

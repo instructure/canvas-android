@@ -59,6 +59,8 @@ object UserManager {
         UserAPI.getSelf(adapter, params, callback)
     }
 
+    fun getSelfAsync(forceNetwork: Boolean) = apiAsync<User> { getSelf(forceNetwork, it) }
+
     fun getSelfSettings(forceNetwork: Boolean) = apiAsync<UserSettings> { callback ->
         UserAPI.getSelfSettings(
             adapter = RestBuilder(callback),

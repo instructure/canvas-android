@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 import kotlinx.coroutines.Deferred
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 object CourseManager {
 

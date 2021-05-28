@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -78,6 +77,7 @@
 
     <string name="recordVideo">動画を録画する</string>
 
+    <string name="a11y_textSubmissionEditor">テキスト提出エディタ</string>
     <!-- Student Submission -->
     <string name="submissionWrite">&#8230; を書く</string>
     <string name="textSubmissionFailureMessage">提出物のアップロードで不具合が発生しました。もう一度提出します。</string>
@@ -126,6 +126,7 @@
     <string name="chooseFileForCommentSubtext">下のオプションをタップして、ファイルをコメントに貼付してください</string>
     <string name="emptySubmissionCommentsSubtext">課題について質問はありますか？\n講師からのメッセージ。</string>
     <string name="submissionCommentErrorMessage">このメッセージを送信できませんでした。タップして再試行してください。</string>
+    <string name="mediaUpload">メディアをアップロード</string>
     <string name="mediaUploadAudio">メディアアップロード - 音声</string>
     <string name="mediaUploadVideo">メディアアップロード - 動画</string>
     <string name="commentSubmissionTypeText">テキストの提出</string>
@@ -211,6 +212,7 @@
     <string name="forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
 
     <string name="fileCurrentlyLocked">このファイルは現在ロックされています</string>
+    <string name="a11y_discussionReplyEditor">ディスカッション返信エディタ</string>
     <!-- Events -->
     <string name="Starts">開始</string>
     <string name="Ends">終了</string>
@@ -1113,4 +1115,25 @@
     <string name="a11y_criterion_button_click_description">詳細はこちら</string>
     <string name="a11y_create_file_folder_visible">表示されるファイルとフォルダの作成ボタン</string>
     <string name="a11y_create_file_folder_gone">非表示のファイルとフォルダの作成ボタン</string>
+    <string name="unselect_all">すべて選択解除</string>
+    <string name="select_all">すべて選択</string>
+    <string name="all_courses">全コース</string>
+    <string name="all_groups">すべてのグループ</string>
+    <string name="edit_dashboard_course_description">ダッシュボードのコースを選択するか、コース詳細に移動します。</string>
+    <string name="edit_dashboard_group_description">ダッシュボードのグループを選択するか、コース詳細に移動します。</string>
+    <string name="current_enrollments">現在の登録</string>
+    <string name="past_enrollments">過去の登録</string>
+    <string name="future_enrollments">将来の登録</string>
+    <string name="added_to_dashboard">ダッシュボードに追加</string>
+    <string name="removed_from_dashboard">ダッシュボードから削除</string>
+    <string name="all_added_to_dashboard">ダッシュボードにすべて追加</string>
+    <string name="all_removed_from_dashboard">ダッシュボードからすべて削除</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">非アクティブなコースはダッシュ​​ボードに追加できませんでした。</string>
+    <string name="edit_dashboard">ダッシュボードを編集する</string>
+    <string name="edit_dashboard_empty_title">ここにはコースはありません</string>
+    <string name="edit_dashboard_empty_message">ダッシュボードに追加するには、コースに登録する必要があります。</string>
+    <string name="a11y_content_description_remove_from_dashboard">ダッシュボードから削除</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">ダッシュボードすべてから削除</string>
+    <string name="a11y_content_description_add_to_dashboard">ダッシュボードに追加</string>
+    <string name="a11y_content_description_add_all_to_dashboard">ダッシュ​​ボードにすべてを追加</string>
 </resources>

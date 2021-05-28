@@ -63,6 +63,8 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
 
     protected abstract val isTesting: Boolean
 
+    protected abstract fun logout()
+
     private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +91,15 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                 startActivity(beginLoginFlowIntent())
             } else {
                 // Start App
-                startApp()
+                viewModel.checkIfTokenIsValid().observe(this, Observer { event ->
+                    event.getContentIfNotHandled()?.let {
+                        if (it) {
+                            startApp()
+                        } else {
+                            logout()
+                        }
+                    }
+                })
             }
 
             // We only want to finish here on debug builds, our login bypass for UI testing depends
@@ -105,7 +115,15 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                         startActivity(beginLoginFlowIntent())
                     } else {
                         //Start App
-                        startApp()
+                        viewModel.checkIfTokenIsValid().observe(this, Observer { event ->
+                            event.getContentIfNotHandled()?.let {
+                                if (it) {
+                                    startApp()
+                                } else {
+                                    logout()
+                                }
+                            }
+                        })
                     }
                     finish()
                 }

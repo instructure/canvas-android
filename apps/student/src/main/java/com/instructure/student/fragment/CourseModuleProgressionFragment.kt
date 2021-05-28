@@ -31,10 +31,7 @@ import androidx.viewpager.widget.ViewPager
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.ModuleManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.isRtl
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -325,7 +322,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             markDoneWrapper.setGone()
         } else {
             val completionRequirement = item.completionRequirement
-            if (completionRequirement != null && ModuleItem.MUST_MARK_DONE == completionRequirement.type) {
+            if (completionRequirement != null && ModuleItem.MUST_MARK_DONE == completionRequirement.type && !item.isLocked()) {
                 markDoneWrapper.setVisible()
                 markDoneCheckbox.isChecked = completionRequirement.completed
             } else {

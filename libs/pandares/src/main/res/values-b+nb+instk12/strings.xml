@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,6 +76,7 @@
     <string name="recordAudio">Lydopptak</string>
     <string name="recordVideo">Ta opp video</string>
 
+    <string name="a11y_textSubmissionEditor">Redigeringsprogram for tekstinnlevering</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
     <string name="textSubmissionFailureMessage">Noe gikk galt ved opplasting av innlevering. Lever på nytt.</string>
@@ -129,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Legg ved fil i kommentaren din ved å trykke på et valg nedenfor</string>
     <string name="emptySubmissionCommentsSubtext">Har du spørsmål angående oppgaven?\nSend en melding til instruktøren.</string>
     <string name="submissionCommentErrorMessage">Meldingen kunne ikke sendes. Trykk for å prøve igjen.</string>
+    <string name="mediaUpload">Mediaopplasting</string>
     <string name="mediaUploadAudio">Laste opp Media - lyd</string>
     <string name="mediaUploadVideo">Laste opp Media - video</string>
     <string name="commentSubmissionTypeText">Tekstinnsending</string>
@@ -219,6 +220,7 @@
     <string name="forbidden">Svarene er kun synlige for dem som har postet minst ett svar.</string>
 
     <string name="fileCurrentlyLocked">Denne filen er for tiden låst</string>
+    <string name="a11y_discussionReplyEditor">Redigeringsprogram for diskusjonssvar</string>
     <!-- Events -->
     <string name="Starts">Starter</string>
     <string name="Ends">Slutter</string>
@@ -402,8 +404,8 @@
     <string name="students">Elev</string>
     <string name="observers">Observatører</string>
     <string name="syllabusMissing">En fagoversikt er ikke blitt lagt til.</string>
-
     <string name="syllabusEventsError">Det var et avvik ved lasting av modulene dine.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Velg mottaker(e)</string>
     <string name="messageHasNoRecipients">Denne meldingen har foreløpig ingen mottakere.</string>
@@ -446,6 +448,7 @@
     <string name="stopMasquerading">Slutt å opptre som bruker</string>
     <string name="userId">Bruker-ID</string>
     <string name="masqueradeFail">Det oppsto en feil da du prøvde å opptre som bruker</string>
+
     <string name="emptyId">ID kan ikke være tom</string>
 
     <string name="goToQuiz">Gå til quiz</string>
@@ -602,6 +605,8 @@
     <string name="practiceQuizzes">Øvelsestester</string>
     <string name="gradedSurveys">Vurdert spørreundersøkelser</string>
     <string name="surveys">Spørreundersøkelser</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Å gjøre</string>
     <string name="gradesWidgetTitle">Vurderinger</string>
@@ -647,12 +652,12 @@
     <string name="profileSettings">Profilinnstillinger</string>
     <string name="accountPreferences">Kontoinnstillinger</string>
     <string name="pinAndFingerprint">PIN og fingeravtrykk</string>
-
     <string name="pairWithObserver">Pare med observatør</string>
     <string name="pairWithObserverDetails">Få en forelder til å skanne denne QR-koden fra Canvas foreldreapplikasjonen for å pare med deg. Denne koden vil utløpe om sju dager, eller etter en gangs bruk.</string>
     <string name="pairingCodeLabel">Paringskode:\u0020</string>
     <string name="pairingCodeErrorTitle">Feil med paringskode</string>
     <string name="pairingCodeErrorDescription">Kunne ikke hente en paringskode. Denne funksjonen støttes kun for elever.</string>
+
     <string name="launchSpeedgrader">Åpne Speedgrader</string>
 
     <string name="search_todo">todo to do todos todo list</string>
@@ -723,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-
     <string name="content_description_speed_grader_slider">Vurderingsglidebryter</string>
+
     <string name="createNewCalendarEvent">Opprett ny hendelse</string>
     <string name="enableFunMode">Skru av pandaene</string>
 
@@ -811,6 +816,7 @@
     <string name="notification_desc_recording_ready">Bli varslet når et konferanseopptak er klart.</string>
 
     <string name="unlimited">Ubegrenset</string>
+
     <string name="question">Spørsmål</string>
     <plurals name="question_count">
         <item quantity="one">%d spørsmål</item>
@@ -821,6 +827,7 @@
         <item quantity="one">%s poeng</item>
         <item quantity="other">%s poeng</item>
     </plurals>
+
     <string name="timeLimit">Tidsbegrensning</string>
     <string name="newPushNotifications">%1$s Nye varsler</string>
     <string name="like">liker</string>
@@ -992,10 +999,10 @@
     <string name="conferencesNotSupported">Konferanser støttes ikke på mobil.</string>
     <string name="filePreviewContentDescription">Forhåndsvisning av filen</string>
     <string name="pdfError">En feil oppsto under innlastingen av denne PDF-en.</string>
-
     <string name="featureNotAllowedInStudentView">Beklager! Denne funksjonen er ikke tillatt i elev-visning.</string>
     <string name="nothingToSeeHere">Ingenting å se her</string>
     <string name="unsupportedFeature">Ikke støttet funksjon</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Legg til elev</string>
     <string name="addChildSubTitle">Oppgi elevparingskoden som ble gitt til deg.</string>
@@ -1034,11 +1041,12 @@
     <string name="gradeAfterPosting">Vurder etter publisering</string>
     <string name="gradeOverride">Overskriv vurdering</string>
     <string name="currentGrade">Gjeldende vurdering</string>
-
     <string name="opensInCanvasStudent">Åpnes i Canvas Elev</string>
     <string name="tab_student_view">Vis som elev</string>
 
+
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">Valgt hode: %s</string>
     <string name="content_description_chosen_body">Valgt kropp: %s</string>
     <string name="content_description_chosen_feet">Valgte føtter: %s</string>
@@ -1109,6 +1117,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minutt</item>
         <item quantity="other">%s minutter</item>
@@ -1129,9 +1138,31 @@
     <string name="conferenceDetails">Konferanse informasjon</string>
     <string name="recordings">Opptak</string>
     <string name="conferenceInProgress">Konferanse pågår</string>
+
     <string name="a11y_criterion_content_description">Kriterievurdering %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">mer informasjon</string>
     <string name="a11y_create_file_folder_visible">Opprett fil- og mappe-knapper synlige</string>
     <string name="a11y_create_file_folder_gone">Opprett fil- og mappe-knapper usynlige</string>
+    <string name="unselect_all">Velg bort alle</string>
+    <string name="select_all">Velg alle</string>
+    <string name="all_courses">Alle fag</string>
+    <string name="all_groups">Alle grupper</string>
+    <string name="edit_dashboard_course_description">Velg fag for Oversikt eller naviger til fagdetaljer.</string>
+    <string name="edit_dashboard_group_description">Velg grupper for Oversikt eller naviger til fagdetaljer.</string>
+    <string name="current_enrollments">Gjeldende påmeldinger</string>
+    <string name="past_enrollments">Tidligere påmeldinger</string>
+    <string name="future_enrollments">Framtidige påmeldinger</string>
+    <string name="added_to_dashboard">Lagt til Oversikt</string>
+    <string name="removed_from_dashboard">Fjernet fra Oversikt</string>
+    <string name="all_added_to_dashboard">Alle lagt til Oversikt</string>
+    <string name="all_removed_from_dashboard">Alle fjernet fra Oversikt</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Inaktive fag kunne ikke legges til Oversikt.</string>
+    <string name="edit_dashboard">Forandre oversikten</string>
+    <string name="edit_dashboard_empty_title">Ingen fag her</string>
+    <string name="edit_dashboard_empty_message">Du må være lagt til i et fag for å kunne legge det til på Oversikten.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Fjern fra oversikt</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Fjern alle fra oversikt</string>
+    <string name="a11y_content_description_add_to_dashboard">Legg til oversikt</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Legg til alle til oversikt</string>
 </resources>
