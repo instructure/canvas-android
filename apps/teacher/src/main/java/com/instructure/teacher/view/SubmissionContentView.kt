@@ -181,6 +181,10 @@ class SubmissionContentView(
         mBottomViewPager = bottomViewPager.apply { id = View.generateViewId() }
 
         initializeSubmissionView()
+
+        if (isAccessibilityEnabled(context)) {
+            slidingUpPanelLayout?.anchorPoint = 1.0f
+        }
     }
 
     override fun onAttachedToWindow() {

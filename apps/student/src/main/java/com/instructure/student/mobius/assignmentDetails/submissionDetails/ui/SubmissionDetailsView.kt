@@ -95,6 +95,10 @@ class SubmissionDetailsView(
         drawerViewPager.adapter = drawerPagerAdapter
         configureDrawerTabLayout()
         configureSlidingPanelHeight()
+
+        if (isAccessibilityEnabled(context)) {
+            slidingUpPanelLayout?.anchorPoint = 1.0f
+        }
     }
 
     private fun configureDrawerTabLayout() {
