@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
+import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.ColorApiHelper
 import kotlinx.coroutines.awaitAll
@@ -43,7 +43,7 @@ class CourseCardCreator(
 ) {
 
     suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean,
-                                  updateAssignments: Boolean, events: MutableLiveData<Event<HomeroomAction>>): List<CourseCardViewModel> {
+                                  updateAssignments: Boolean, events: MutableLiveData<Event<HomeroomAction>>): List<CourseCardItemViewModel> {
         val announcements = dashboardCourses
             .map { announcementManager.getLatestAnnouncementAsync(it, forceNetwork) }
             .awaitAll()
@@ -71,7 +71,7 @@ class CourseCardCreator(
                     getCourseColor(course),
                     course.imageUrl ?: "")
 
-                CourseCardViewModel(
+                CourseCardItemViewModel(
                     viewData,
                     { events.postValue(Event(HomeroomAction.OpenCourse(course))) },
                     { events.postValue(Event(HomeroomAction.OpenAssignments(course))) },
@@ -89,7 +89,10 @@ class CourseCardCreator(
         plannerItems
             .filter { isNotSubmittedAssignment(it) }
             .forEach { item ->
-                dueTodayCountByCourses.computeIfPresent(item.courseId!!) { _, value -> value + 1 }
+                val dueTodayCount = dueTodayCountByCourses[item.courseId!!]
+                if (dueTodayCount != null) {
+                    dueTodayCountByCourses[item.courseId!!] = dueTodayCount + 1
+                }
             }
 
         return courses.associate {
@@ -98,7 +101,7 @@ class CourseCardCreator(
     }
 
     private fun isNotSubmittedAssignment(it: PlannerItem) =
-        it.courseId != null && it.submissions?.submitted == false && it.plannableType == PLANNABLE_TYPE_ASSIGNMENT && it.submissions?.missing == false
+        it.courseId != null && it.submissionState?.submitted == false && it.plannableType == PLANNABLE_TYPE_ASSIGNMENT && it.submissionState?.missing == false
 
     private fun createDueTextForCourse(dueCount: Int): String {
         return if (dueCount == 0) {
@@ -116,7 +119,10 @@ class CourseCardCreator(
         missingAssignments
             .filter { it.plannerOverride?.dismissed != true }
             .forEach { assignment ->
-                missingCountByCourses.computeIfPresent(assignment.courseId) { _, value -> value + 1 }
+                val missingCount = missingCountByCourses[assignment.courseId]
+                if (missingCount != null) {
+                    missingCountByCourses[assignment.courseId] = missingCount + 1
+                }
             }
 
         return courses

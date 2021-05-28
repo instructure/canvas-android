@@ -21,7 +21,7 @@
     <data>
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel" />
+            type="com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardItemViewModel" />
 
         <import type="android.view.View" />
 

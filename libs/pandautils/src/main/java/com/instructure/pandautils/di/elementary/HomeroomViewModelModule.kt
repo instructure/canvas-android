@@ -1,4 +1,4 @@
-package com.instructure.pandautils.di
+package com.instructure.pandautils.di.elementary
 
 import android.content.res.Resources
 import com.instructure.canvasapi2.managers.AnnouncementManager

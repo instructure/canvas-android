@@ -23,7 +23,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.CourseCardViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class CourseCardViewModel(
+class CourseCardItemViewModel(
     val data: CourseCardViewData,
     val onCardClick: () -> Unit,
     val onDueTextClick: () -> Unit,

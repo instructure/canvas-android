@@ -29,8 +29,8 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel
-import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
+import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementItemViewModel
+import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorApiHelper
@@ -126,7 +126,7 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean, updateAssignments: Boolean = false): List<CourseCardViewModel> {
+    private suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean, updateAssignments: Boolean = false): List<CourseCardItemViewModel> {
         return courseCardCreator.createCourseCards(dashboardCourses, forceNetwork, updateAssignments, _events)
     }
 
@@ -138,17 +138,17 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementViewModel> {
+    private suspend fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementItemViewModel> {
         return homeroomCourses
             .mapIndexed { index, course -> createAnnouncementViewModel(course, announcementsData[index].dataOrNull?.firstOrNull()) }
             .filterNotNull()
     }
 
-    private suspend fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementViewModel? {
+    private suspend fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementItemViewModel? {
         return if (announcement != null) {
             val htmlWithIframes = htmlContentFormatter.formatHtmlWithIframes(announcement.message
                 ?: "")
-            AnnouncementViewModel(
+            AnnouncementItemViewModel(
                 AnnouncementViewData(course.name, announcement.title ?: "", htmlWithIframes),
                 { _events.postValue(Event(HomeroomAction.OpenAnnouncements(course))) },
                 ::ltiButtonPressed

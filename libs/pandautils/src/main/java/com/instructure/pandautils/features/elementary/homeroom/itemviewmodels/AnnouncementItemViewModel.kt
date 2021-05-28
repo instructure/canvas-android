@@ -14,13 +14,21 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models
+package com.instructure.pandautils.features.elementary.homeroom.itemviewmodels
 
-import com.google.gson.annotations.SerializedName
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.elementary.homeroom.AnnouncementViewData
+import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class Submissions(
-    @SerializedName("submitted")
-    val submitted: Boolean = false,
-    @SerializedName("missing")
-    val missing: Boolean = false
-)
+class AnnouncementItemViewModel(
+    val data: AnnouncementViewData,
+    val onPreviousAnnouncementsClicked: () -> Unit,
+    private val onLtiButtonPressed: (url: String, announcementMessage: String) -> Unit
+) : ItemViewModel {
+
+    override val layoutId: Int = R.layout.item_announcement
+
+    fun onLtiButtonPressed(url: String) {
+        onLtiButtonPressed(url, data.htmlContent)
+    }
+}

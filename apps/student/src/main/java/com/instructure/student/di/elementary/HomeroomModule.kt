@@ -14,11 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.di
+package com.instructure.student.di.elementary
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.teacher.features.elementary.TeacherHomeroomRouter
+import com.instructure.student.mobius.elementary.StudentHomeroomRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +29,7 @@ import dagger.hilt.android.components.FragmentComponent
 class HomeroomModule {
 
     @Provides
-    fun provideHomeroomRouter(): HomeroomRouter {
-        return TeacherHomeroomRouter()
+    fun provideHomeroomRouter(activity: FragmentActivity): HomeroomRouter {
+        return StudentHomeroomRouter(activity)
     }
 }
