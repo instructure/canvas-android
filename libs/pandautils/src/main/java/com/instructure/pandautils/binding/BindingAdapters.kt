@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.binding
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
@@ -35,15 +36,17 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
 import java.net.URLDecoder
 
-@BindingAdapter(value = ["itemViewModels", "onItemsAdded"], requireAll = false)
-fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>?, onItemsAdded: Runnable?) {
-    container.removeAllViews()
-    itemViewModels?.forEach { item: ItemViewModel ->
-        val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(container.context), item.layoutId, container, false)
-        binding.setVariable(BR.itemViewModel, item)
-        container.addView(binding.root)
+@BindingAdapter(value = ["itemViewModels", "onItemsAdded", "shouldUpdate"], requireAll = false)
+fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>?, onItemsAdded: Runnable?, shouldUpdate: Boolean?) {
+    if (shouldUpdate == null || shouldUpdate || container.childCount == 0) {
+        container.removeAllViews()
+        itemViewModels?.forEach { item: ItemViewModel ->
+            val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(container.context), item.layoutId, container, false)
+            binding.setVariable(BR.itemViewModel, item)
+            container.addView(binding.root)
+        }
+        onItemsAdded?.run()
     }
-    onItemsAdded?.run()
 }
 
 @BindingAdapter("emptyViewState")

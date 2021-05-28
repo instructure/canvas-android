@@ -69,7 +69,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:itemViewModels="@{viewModel.data.announcements}"
-                        app:onItemsAdded="@{() -> viewModel.onAnnouncementViewsReady()}"/>
+                        app:onItemsAdded="@{() -> viewModel.onAnnouncementViewsReady()}"
+                        app:shouldUpdate="@{viewModel.shouldUpdateAnnouncements}"/>
 
                     <TextView
                         android:layout_width="match_parent"

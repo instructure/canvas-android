@@ -66,6 +66,8 @@ class HomeroomViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<HomeroomAction>>()
 
+    var shouldUpdateAnnouncements: Boolean = true
+
     private var dashboardCourses: List<Course> = emptyList()
 
     init {
@@ -108,6 +110,7 @@ class HomeroomViewModel @Inject constructor(
                 }
 
                 val viewData = HomeroomViewData(greetingString, announcementViewModels, courseViewModels)
+                shouldUpdateAnnouncements = true
                 _data.postValue(viewData)
 
                 if (viewData.isEmpty()) {
@@ -199,6 +202,7 @@ class HomeroomViewModel @Inject constructor(
                 val courseViewModels = createCourseCards(dashboardCourses, false, updateAssignments = true)
                 val viewData = _data.value
 
+                shouldUpdateAnnouncements = false
                 _data.postValue(HomeroomViewData(
                     viewData?.greetingMessage ?: "",
                     viewData?.announcements ?: emptyList(),

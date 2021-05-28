@@ -46,8 +46,7 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -178,6 +177,7 @@ class HomeroomViewModelTest {
         assertEquals(ViewState.Success, viewModel.state.value)
 
         assertEquals(1, viewModel.data.value!!.announcements.size)
+        assertTrue(viewModel.shouldUpdateAnnouncements)
 
         val announcementViewData = (viewModel.data.value!!.announcements[0] as AnnouncementItemViewModel).data
         assertEquals(AnnouncementViewData("Course 1", "Course 1 first", "First message"), announcementViewData)
@@ -374,8 +374,9 @@ class HomeroomViewModelTest {
         viewModel.refreshAssignmentsStatus()
 
         // Then
-        // Verify that course card creation is called with the correct list of courses
+        // Verify that course card creation is called with the correct list of courses and announcements should not update
         assertEquals(ViewState.Success, viewModel.state.value)
+        assertFalse(viewModel.shouldUpdateAnnouncements)
         coVerify { courseCardCreator.createCourseCards(eq(dashboardCourses.captured), any(), any(), any()) }
     }
 
