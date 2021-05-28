@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.pandautils.features.help.HelpDialogViewModel
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.coEvery
@@ -45,6 +46,7 @@ class LoginViewModelTest {
     var instantExecutorRule = InstantTaskExecutorRule()
 
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val userManager: UserManager = mockk(relaxed = true)
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
@@ -70,7 +72,7 @@ class LoginViewModelTest {
         coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
 
         // When
-        viewModel = LoginViewModel(featureFlagProvider)
+        viewModel = LoginViewModel(featureFlagProvider, userManager)
         val canvasElementaryFeature = viewModel.checkCanvasForElementaryFeature()
         canvasElementaryFeature.observe(lifecycleOwner, Observer {})
 
