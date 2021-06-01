@@ -17,6 +17,7 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.FeatureFlags
 import com.instructure.canvasapi2.utils.RemoteConfigParam
@@ -230,6 +231,54 @@ class HomeroomInteractionTest : StudentTest() {
 
         courseBrowserPage.assertPageObjects()
         courseBrowserPage.assertTitleCorrect(courses[0])
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testDueTodayAndMissingAssignments() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 1)
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+
+        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+
+        goToHomeroom(data)
+
+        homeroomPage.assertPageObjects()
+
+        // With the current implementation of MockCanvas, all the assignments will show up as due today and missing, because both Mock endpoints will return all the assignments.
+        // This cannot happen in normal circumstances, but for testing the UI it's fine.
+        // We can add a more sophisticated approach when other tests will need it.
+        // Veryfing the logic that one can be due today or missing only is covered by unit tests.
+        homeroomPage.assertToDoText("2 due today | 2 missing")
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testOpenAssignments() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 1)
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+
+        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+
+        goToHomeroom(data)
+
+        homeroomPage.assertPageObjects()
+        homeroomPage.openAssignments("2 due today | 2 missing")
+
+        assignmentListPage.assertPageObjects()
+        assignmentListPage.assertHasAssignment(assignment1)
     }
 
     private fun createMockDataWithHomeroomCourse(

@@ -108,4 +108,14 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
             .scrollTo()
             .click()
     }
+
+    fun assertToDoText(todoText: String) {
+        onView(withId(R.id.todoText) + withText(todoText)).assertDisplayed()
+    }
+
+    fun openAssignments(todoText: String) {
+        onView(withId(R.id.todoText) + withText(todoText))
+            .scrollTo()
+            .click()
+    }
 }
