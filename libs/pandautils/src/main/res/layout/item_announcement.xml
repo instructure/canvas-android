@@ -65,6 +65,7 @@
             app:onLtiButtonPressed="@{(url) -> itemViewModel.onLtiButtonPressed(url)}"/>
 
         <TextView
+            android:id="@+id/viewPreviousAnnouncements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/defaultActionColor"

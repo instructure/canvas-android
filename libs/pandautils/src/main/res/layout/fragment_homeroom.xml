@@ -34,6 +34,7 @@
         android:id="@+id/homeroomPage">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/homeroomSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:onRefreshListener="@{() -> viewModel.refresh()}"
@@ -45,6 +46,7 @@
                 android:scrollbars="none">
 
                 <LinearLayout
+                    android:id="@+id/homeroomContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
@@ -74,6 +76,7 @@
                         app:shouldUpdate="@{viewModel.shouldUpdateAnnouncements}"/>
 
                     <TextView
+                        android:id="@+id/mySubjectsTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -85,6 +88,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/noSubjectsText"
                         style="@style/TextFont.Regular"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -104,6 +108,7 @@
                         android:paddingStart="@dimen/homeroomCardSpacing"
                         android:paddingEnd="@dimen/homeroomCardSpacing"
                         android:paddingBottom="@dimen/homeroomCardSpacing"
+                        android:visibility="@{viewModel.data.courseCards.empty ? View.GONE : View.VISIBLE}"
                         app:recyclerViewItemViewModels="@{viewModel.data.courseCards}"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:spanCount="2"/>

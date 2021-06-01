@@ -69,6 +69,8 @@
                     android:textColor="@{Color.parseColor(itemViewModel.data.courseColor)}"
                     android:textAllCaps="true"
                     android:textStyle="bold"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     tools:text="Math" />
 
                 <View

@@ -16,23 +16,228 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.FeatureFlags
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
+import com.instructure.espresso.page.getStringFromResource
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
+import org.junit.Test
 
 class HomeroomInteractionTest : StudentTest() {
 
     override fun displaysPageObjects() = Unit
 
-    private fun goToElementaryDashboard(
-        courseCount: Int = 3,
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testAnnouncementsAndCoursesShowUpOnHomeroom() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 3)
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        goToHomeroom(data)
+
+        homeroomPage.assertPageObjects()
+
+        val student = data.students[0]
+        homeroomPage.assertWelcomeText(student.shortName!!)
+        homeroomPage.assertAnnouncementDisplayed(homeroomCourse.name, homeroomAnnouncement.title!!, homeroomAnnouncement.message!!)
+
+        homeroomPage.assertCourseItemsCount(3)
+        data.courses.values
+            .filter { !it.homeroomCourse }
+            .forEach {
+                homeroomPage.assertCourseDisplayed(it.name, homeroomPage.getStringFromResource(R.string.nothingDueToday), "")
+            }
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testOnlyCoursesShowUpOnHomeroomIfNoHomeroomAnnouncement() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 3, homeroomCourseCount = 0)
+
+        goToHomeroom(data)
+
+        homeroomPage.assertPageObjects()
+
+        val student = data.students[0]
+        homeroomPage.assertWelcomeText(student.shortName!!)
+        homeroomPage.assertAnnouncementNotDisplayed()
+
+        homeroomPage.assertCourseItemsCount(3)
+        data.courses.values
+            .filter { !it.homeroomCourse }
+            .forEach {
+                homeroomPage.assertCourseDisplayed(it.name, homeroomPage.getStringFromResource(R.string.nothingDueToday), "")
+            }
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testOnlyAnnouncementShowsUpOnHomeroomIfNoHomeroomAnnouncement() {
+        val data = createMockDataWithHomeroomCourse()
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        goToHomeroom(data)
+
+        val student = data.students[0]
+        homeroomPage.assertWelcomeText(student.shortName!!)
+        homeroomPage.assertAnnouncementDisplayed(homeroomCourse.name, homeroomAnnouncement.title!!, homeroomAnnouncement.message!!)
+
+        homeroomPage.assertCourseItemsCount(0)
+        homeroomPage.assertNoSubjectsTextDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testEmptyState() {
+        val data = createMockDataWithHomeroomCourse()
+
+        goToHomeroom(data)
+
+        homeroomPage.assertHomeroomContentNotDisplayed()
+        homeroomPage.assertCourseItemsCount(0)
+        homeroomPage.assertEmptyViewDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testRefresh() {
+        val data = createMockDataWithHomeroomCourse()
+
+        goToHomeroom(data)
+
+        homeroomPage.assertHomeroomContentNotDisplayed()
+        homeroomPage.assertCourseItemsCount(0)
+        homeroomPage.assertEmptyViewDisplayed()
+
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        val student = data.students[0]
+        data.addCourseWithEnrollment(student, Enrollment.EnrollmentType.Student)
+        data.addCourseWithEnrollment(student, Enrollment.EnrollmentType.Student)
+
+        homeroomPage.refresh()
+
+        homeroomPage.assertWelcomeText(student.shortName!!)
+        homeroomPage.assertAnnouncementDisplayed(homeroomCourse.name, homeroomAnnouncement.title!!, homeroomAnnouncement.message!!)
+
+        homeroomPage.assertCourseItemsCount(2)
+        data.courses.values
+            .filter { !it.homeroomCourse }
+            .forEach {
+                homeroomPage.assertCourseDisplayed(it.name, homeroomPage.getStringFromResource(R.string.nothingDueToday), "")
+            }
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testOpenHomeroomCourseAnnouncements() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 3)
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        goToHomeroom(data)
+
+        homeroomPage.assertPageObjects()
+
+        val student = data.students[0]
+        homeroomPage.assertWelcomeText(student.shortName!!)
+        homeroomPage.assertAnnouncementDisplayed(homeroomCourse.name, homeroomAnnouncement.title!!, homeroomAnnouncement.message!!)
+
+        homeroomPage.openHomeroomAnnouncements()
+
+        announcementListPage.assertToolbarTitle()
+        announcementListPage.assertAnnouncementTitleVisible(homeroomAnnouncement.title!!)
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testShowCourseCardWithAnnouncement() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 3)
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+        val courseAnnouncement = data.addDiscussionTopicToCourse(courses[0], user, isAnnouncement = true)
+
+        goToHomeroom(data)
+
+        homeroomPage.assertPageObjects()
+
+        homeroomPage.assertCourseDisplayed(courses[0].name, homeroomPage.getStringFromResource(R.string.nothingDueToday), courseAnnouncement.title!!)
+        homeroomPage.assertCourseDisplayed(courses[1].name, homeroomPage.getStringFromResource(R.string.nothingDueToday), "")
+        homeroomPage.assertCourseDisplayed(courses[2].name, homeroomPage.getStringFromResource(R.string.nothingDueToday), "")
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testOpenCourseAnnouncements() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 3)
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+        val courseAnnouncement = data.addDiscussionTopicToCourse(courses[0], user, isAnnouncement = true)
+
+        goToHomeroom(data)
+
+        homeroomPage.assertPageObjects()
+
+        homeroomPage.openCourseAnnouncemnt(courseAnnouncement.title!!)
+
+        discussionDetailsPage.assertPageObjects()
+        discussionDetailsPage.assertTitleText(courseAnnouncement.title!!)
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testOpenCourse() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 3)
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+
+        goToHomeroom(data)
+
+        homeroomPage.assertPageObjects()
+
+        homeroomPage.openCourse(courses[0].name)
+
+        courseBrowserPage.assertPageObjects()
+        courseBrowserPage.assertTitleCorrect(courses[0])
+    }
+
+    private fun createMockDataWithHomeroomCourse(
+        courseCount: Int = 0,
         pastCourseCount: Int = 0,
         favoriteCourseCount: Int = 0,
-        announcementCount: Int = 0): MockCanvas {
+        announcementCount: Int = 0,
+        homeroomCourseCount: Int = 1): MockCanvas {
 
         // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
         Thread.sleep(3000)
@@ -43,13 +248,18 @@ class HomeroomInteractionTest : StudentTest() {
             courseCount = courseCount,
             pastCourseCount = pastCourseCount,
             favoriteCourseCount = favoriteCourseCount,
-            accountNotificationCount = announcementCount)
+            accountNotificationCount = announcementCount,
+            homeroomCourseCount = homeroomCourseCount)
 
         data.featureFlags = FeatureFlags(true)
+
+        return data
+    }
+
+    private fun goToHomeroom(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLoginElementary(data.domain, token, student)
         elementaryDashboardPage.waitForRender()
-        return data
     }
 }

@@ -16,9 +16,96 @@
  */
 package com.instructure.student.ui.pages
 
-import com.instructure.espresso.page.BasePage
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.web.assertion.WebViewAssertions
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.espresso.*
+import com.instructure.espresso.matchers.WaitForViewMatcher
+import com.instructure.espresso.page.*
 import com.instructure.student.R
+import org.hamcrest.Matchers
 
 class HomeroomPage : BasePage(R.id.homeroomPage) {
 
+    private val swipeRefreshLayout by OnViewWithId(R.id.homeroomSwipeRefreshLayout)
+    private val welcomeText by OnViewWithId(R.id.welcomeText)
+    private val announcementsContainer by OnViewWithId(R.id.announcementsContainer)
+    private val mySubjectsTitle by OnViewWithId(R.id.mySubjectsTitle)
+    private val coursesRecyclerView by OnViewWithId(R.id.coursesRecyclerView)
+    private val noSubjectsText by OnViewWithId(R.id.noSubjectsText, autoAssert = false)
+
+    fun assertWelcomeText(studentName: String) {
+        welcomeText.assertHasText(getStringFromResource(R.string.homeroomWelcomeMessage, studentName))
+    }
+
+    fun assertAnnouncementDisplayed(courseName: String, title: String, content: String) {
+        onView(withAncestor(R.id.announcementsContainer) + withText(courseName)).assertDisplayed()
+        onView(withAncestor(R.id.announcementsContainer) + withText(title)).assertDisplayed()
+
+        Web.onWebView()
+            .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "html"))
+            .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(content)))
+
+        onView(withAncestor(R.id.announcementsContainer) + withText(R.string.viewPreviousAnnouncements))
+            .scrollTo()
+            .assertDisplayed()
+    }
+
+    fun assertAnnouncementNotDisplayed() {
+        announcementsContainer.check(ViewAssertions.matches(ViewMatchers.hasChildCount(0)))
+    }
+
+    fun assertCourseItemsCount(coursesCount: Int) {
+        coursesRecyclerView.check(RecyclerViewItemCountAssertion(coursesCount))
+    }
+
+    fun assertCourseDisplayed(courseName: String, todoText: String, announcementText: String) {
+        val titleMatcher = withId(R.id.courseNameText) + withText(courseName)
+        val todoTextMatcher = withId(R.id.todoText) + withText(todoText)
+        val announcementMatcher = withId(R.id.announcementText) + withText(announcementText)
+
+        onView(withId(R.id.cardView) + withDescendant(titleMatcher) + withDescendant(todoTextMatcher) + withDescendant(announcementMatcher))
+            .scrollTo()
+            .assertDisplayed()
+    }
+
+    fun assertNoSubjectsTextDisplayed() {
+        noSubjectsText
+            .scrollTo()
+            .assertDisplayed()
+            .assertHasText(R.string.homeroomNoSubjects)
+    }
+
+    fun assertHomeroomContentNotDisplayed() {
+        onViewWithId(R.id.homeroomContent).assertNotDisplayed()
+    }
+
+    fun assertEmptyViewDisplayed() {
+        onViewWithId(R.id.emptyView).assertDisplayed()
+        onViewWithText(R.string.homeroomEmptyTitle).assertDisplayed()
+        onViewWithText(R.string.homeroomEmptyMessage).assertDisplayed()
+    }
+
+    fun refresh() {
+        swipeRefreshLayout.swipeDown()
+    }
+
+    fun openHomeroomAnnouncements() {
+        onViewWithId(R.id.viewPreviousAnnouncements)
+            .click()
+    }
+
+    fun openCourseAnnouncemnt(announcementText: String) {
+        onView(withId(R.id.announcementText) + withText(announcementText))
+            .click()
+    }
+
+    fun openCourse(courseName: String) {
+        onView(withId(R.id.courseNameText) + withText(courseName))
+            .scrollTo()
+            .click()
+    }
 }
