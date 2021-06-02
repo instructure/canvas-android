@@ -100,7 +100,6 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
 
     fun openCourseAnnouncemnt(announcementText: String) {
         onView(withId(R.id.announcementText) + withText(announcementText))
-            .scrollTo()
             .click()
     }
 
