@@ -109,7 +109,7 @@ fun ViewInteraction.doubleClick(): ViewInteraction = perform(ViewActions.doubleC
 
 fun ViewInteraction.longClick(): ViewInteraction = perform(ViewActions.longClick())
 
-fun ViewInteraction.scrollTo(): ViewInteraction = perform(ViewActions.scrollTo())
+fun ViewInteraction.scrollTo(): ViewInteraction = perform(NestedScrollViewExtension())
 
 fun ViewInteraction.typeTextIntoFocusedView(arg0: String): ViewInteraction = perform(ViewActions.typeTextIntoFocusedView(arg0))
 
