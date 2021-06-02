@@ -193,7 +193,7 @@ class HomeroomInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCourseAnnouncements() {
-        val data = createMockDataWithHomeroomCourse(courseCount = 3)
+        val data = createMockDataWithHomeroomCourse(courseCount = 1)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
         val user = data.users.values.first()
 

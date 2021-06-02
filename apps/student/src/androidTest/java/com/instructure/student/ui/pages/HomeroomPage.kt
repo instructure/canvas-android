@@ -100,6 +100,7 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
 
     fun openCourseAnnouncemnt(announcementText: String) {
         onView(withId(R.id.announcementText) + withText(announcementText))
+            .scrollTo()
             .click()
     }
 
@@ -110,7 +111,9 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
     }
 
     fun assertToDoText(todoText: String) {
-        onView(withId(R.id.todoText) + withText(todoText)).assertDisplayed()
+        onView(withId(R.id.todoText) + withText(todoText))
+            .scrollTo()
+            .assertDisplayed()
     }
 
     fun openAssignments(todoText: String) {
