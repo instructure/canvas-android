@@ -68,6 +68,7 @@ import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
+import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
@@ -94,6 +95,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
+const val DAYS_FOR_FLEXIBLE_UPDATE = 10
+
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
@@ -108,6 +111,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var typefaceBehavior: TypefaceBehavior
+
+    @Inject
+    lateinit var updateManager: UpdateManager
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -192,6 +198,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onResume() {
         super.onResume()
         applyCurrentFragmentTheme()
+        checkAppUpdates()
+    }
+
+    private fun checkAppUpdates() {
+        updateManager.checkForInAppUpdate(this)
     }
 
     private fun applyCurrentFragmentTheme() {
