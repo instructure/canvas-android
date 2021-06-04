@@ -16,8 +16,14 @@
  */
 package com.instructure.canvasapi2.models
 
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.SubmissionStateTypeAdapter
 
+/**
+ * If this class is expanded with other fields, the type adapter should be updated as well.
+ */
+@JsonAdapter(SubmissionStateTypeAdapter::class)
 data class SubmissionState(
     @SerializedName("submitted")
     val submitted: Boolean = false,
