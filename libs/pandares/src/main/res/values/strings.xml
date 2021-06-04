@@ -1189,4 +1189,7 @@
     <string name="a11y_content_description_message_recipients">Recipients</string>
     <string name="a11y_content_description_inbox_subject">Subject</string>
     <string name="a11y_content_description_inbox_course_spinner">Select a course, %s</string>
+
+    <string name="studentAnnotationUnsupported">Student Annotation (Unsupported)</string>
+    <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently unsupported on mobile.</string>
 </resources>

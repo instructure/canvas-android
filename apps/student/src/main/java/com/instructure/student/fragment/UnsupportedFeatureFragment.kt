@@ -32,12 +32,13 @@ open class UnsupportedFeatureFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var featureName by NullableStringArg(key = Const.FEATURE_NAME)
+    private var unsupportedDescription by NullableStringArg(key = Const.UNSUPPORTED_DESCRIPTION)
     private var url by NullableStringArg(key = Const.URL)
 
     override fun title(): String = getString(R.string.unsupported)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_unsupported_feature, container, false)
+        return inflater.inflate(R.layout.fragment_unsupported_feature, container, false)
     }
 
     override fun applyTheme() {
@@ -49,10 +50,10 @@ open class UnsupportedFeatureFragment : ParentFragment() {
 
     private fun initViews() {
         // Set the text
-        if (featureName != null) {
-            featureText.text = String.format(getString(R.string.isNotSupportedFeature), featureName)
-        } else {
-            featureText.text = getString(R.string.isNotSupported)
+        when {
+            unsupportedDescription != null -> featureText.text = unsupportedDescription
+            featureName != null -> featureText.text = String.format(getString(R.string.isNotSupportedFeature), featureName)
+            else -> featureText.text = getString(R.string.isNotSupported)
         }
 
         openInBrowser.setOnClickListener {
@@ -72,10 +73,11 @@ open class UnsupportedFeatureFragment : ParentFragment() {
 
     companion object {
 
-        fun makeRoute(canvasContext: CanvasContext, title: String, url: String? = null): Route {
+        fun makeRoute(canvasContext: CanvasContext, featureName: String? = null, unsupportedDescription: String? = null, url: String? = null): Route {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putString(Const.FEATURE_NAME, title)
+                putString(Const.FEATURE_NAME, featureName)
+                putString(Const.UNSUPPORTED_DESCRIPTION, unsupportedDescription)
                 putString(Const.URL, url)
             }
             return Route(UnsupportedFeatureFragment::class.java, canvasContext, bundle)
