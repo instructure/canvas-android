@@ -56,6 +56,10 @@ open class UnsupportedFeatureFragment : ParentFragment() {
             else -> featureText.text = getString(R.string.isNotSupported)
         }
 
+        if (url.isNullOrEmpty()) {
+            openInBrowser.setGone()
+        }
+
         openInBrowser.setOnClickListener {
             if (featureName != null) {
                 Analytics.trackUnsupportedFeature(requireActivity(), featureName)
