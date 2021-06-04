@@ -44,14 +44,17 @@ const val IMMEDIATE_UPDATE_REQUEST_CODE = 1802
 const val NOTIFICATION_ID = 2801
 
 class UpdateManager(private val appUpdateManager: AppUpdateManager,
-                    private val notificationManager: NotificationManager) {
+                    private val notificationManager: NotificationManager,
+                    private val updatePrefs: UpdatePrefs) {
 
     fun checkForInAppUpdate(activity: Activity) {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 appUpdateManager.completeUpdate()
             } else {
-                startInAppUpdate(activity, appUpdateInfo)
+                if (updatePrefs.shouldShowUpdateNotification(appUpdateInfo)) {
+                    startInAppUpdate(activity, appUpdateInfo)
+                }
             }
         }
     }

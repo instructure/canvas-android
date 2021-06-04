@@ -26,6 +26,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
+import com.instructure.pandautils.update.UpdatePrefs
 import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
@@ -84,7 +85,13 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideUpdateManager(appUpdateManager: AppUpdateManager, notificationManager: NotificationManager): UpdateManager {
-        return UpdateManager(appUpdateManager, notificationManager)
+    fun provideUpdateManager(appUpdateManager: AppUpdateManager, notificationManager: NotificationManager, updatePrefs: UpdatePrefs): UpdateManager {
+        return UpdateManager(appUpdateManager, notificationManager, updatePrefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdatePrefs(): UpdatePrefs {
+        return UpdatePrefs()
     }
 }
