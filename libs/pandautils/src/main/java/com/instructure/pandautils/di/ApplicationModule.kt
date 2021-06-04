@@ -79,11 +79,7 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideAppUpdateManager(@ApplicationContext context: Context): AppUpdateManager {
-        return FakeAppUpdateManager(context).apply {
-            setUpdateAvailable(400)
-            setClientVersionStalenessDays(20)
-            setUpdatePriority(3)
-        }
+        return AppUpdateManagerFactory.create(context)
     }
 
     @Provides
