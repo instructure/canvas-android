@@ -29,20 +29,19 @@ import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
-import com.google.android.play.core.install.InstallState
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.instructure.pandautils.R
-import java.util.*
 
 const val IMMEDIATE_THRESHOLD = 4
-const val FLEXIBLE_THRESHOLD = 0
+const val FLEXIBLE_THRESHOLD = 2
 const val DAYS_FOR_FLEXIBLE_UPDATE = 10
 const val CHANNEL_ID = "appUpdatesChannel"
 const val FLEXIBLE_UPDATE_REQUEST_CODE = 1801
 const val IMMEDIATE_UPDATE_REQUEST_CODE = 1802
+const val NOTIFICATION_ID = 2801
 
 class UpdateManager(private val appUpdateManager: AppUpdateManager,
                     private val notificationManager: NotificationManager) {
@@ -85,7 +84,7 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
                                 .setAutoCancel(true)
                                 .setContentIntent(pendingIntent)
                         with(NotificationManagerCompat.from(activity)) {
-                            notify(Random().nextInt(), builder.build())
+                            notify(NOTIFICATION_ID, builder.build())
                         }
                     }
                 }
