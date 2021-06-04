@@ -19,7 +19,9 @@ package com.instructure.pandautils.update
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -71,11 +73,17 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
                 val listener = InstallStateUpdatedListener {
                     if (it.installStatus() == InstallStatus.DOWNLOADED) {
                         registerNotificationChannel(activity)
+                        val intent = Intent(activity, activity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        val pendingIntent: PendingIntent = PendingIntent.getActivity(activity, 0, intent, 0)
                         val builder = NotificationCompat.Builder(activity, CHANNEL_ID)
                                 .setSmallIcon(activity.applicationInfo.icon)
                                 .setContentTitle(activity.getString(R.string.appUpdateReadyTitle))
                                 .setContentText(activity.getString(R.string.appUpdateReadyDescription))
                                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setAutoCancel(true)
+                                .setContentIntent(pendingIntent)
                         with(NotificationManagerCompat.from(activity)) {
                             notify(Random().nextInt(), builder.build())
                         }
@@ -93,8 +101,8 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
                         FLEXIBLE_UPDATE_REQUEST_CODE
                 )
                 if (appUpdateManager is FakeAppUpdateManager) {
-                    appUpdateManager.setTotalBytesToDownload(20)
-                    appUpdateManager.setBytesDownloaded(20)
+                    appUpdateManager.userAcceptsUpdate()
+                    appUpdateManager.downloadStarts()
                     appUpdateManager.downloadCompletes()
                 }
             }
