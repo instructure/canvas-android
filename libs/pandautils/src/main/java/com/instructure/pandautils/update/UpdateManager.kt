@@ -38,7 +38,7 @@ import com.instructure.pandautils.R
 import java.util.*
 
 const val IMMEDIATE_THRESHOLD = 4
-const val FLEXIBLE_THRESHOLD = 2
+const val FLEXIBLE_THRESHOLD = 0
 const val DAYS_FOR_FLEXIBLE_UPDATE = 10
 const val CHANNEL_ID = "appUpdatesChannel"
 const val FLEXIBLE_UPDATE_REQUEST_CODE = 1801
@@ -64,7 +64,7 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
                 appUpdateManager.startUpdateFlowForResult(
                         appUpdateInfo,
                         activity,
-                        AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE)
+                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
                                 .setAllowAssetPackDeletion(true)
                                 .build(),
                         IMMEDIATE_UPDATE_REQUEST_CODE
