@@ -1191,5 +1191,7 @@
     <string name="a11y_content_description_inbox_course_spinner">Select a course, %s</string>
 
     <string name="studentAnnotationUnsupported">Student Annotation (Unsupported)</string>
-    <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently unsupported on mobile.</string>
+    <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently not supported on mobile.</string>
+    <string name="unsupportedSubmissionType">Unsupported Submission Type</string>
+    <string name="studentAnnotationUnsupportedMessage">Submission cannot be displayed, because Student Annotation is currently not supported on mobile.</string>
 </resources>
