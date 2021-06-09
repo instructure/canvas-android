@@ -92,6 +92,6 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideUpdatePrefs(): UpdatePrefs {
-        return UpdatePrefs()
+        return UpdatePrefs
     }
 }
