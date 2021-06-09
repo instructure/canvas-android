@@ -16,52 +16,20 @@
 
 package com.instructure.pandautils.update
 
-import com.google.android.play.core.appupdate.AppUpdateInfo
-import com.instructure.canvasapi2.utils.*
-import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.math.abs
+import com.instructure.canvasapi2.utils.IntPref
+import com.instructure.canvasapi2.utils.PrefManager
+import com.instructure.canvasapi2.utils.StringPref
 
 
 const val UPDATE_PREFS_FILE_NAME = "updatePreferences"
 const val FLEXIBLE_UPDATE_NOTIFICATION_MAX_COUNT = 2
 const val FLEXIBLE_UPDATE_NOTIFICATION_INTERVAL_DAYS = 1
 
-class UpdatePrefs : PrefManager(UPDATE_PREFS_FILE_NAME) {
+object UpdatePrefs : PrefManager(UPDATE_PREFS_FILE_NAME) {
 
-    private var lastUpdateNotificationDate by StringPref()
-    private var lastUpdateNotificationVersionCode by IntPref()
-    private var lastUpdateNotificationCount by IntPref()
-    private var hasShownThisStart = false
-
-    fun shouldShowUpdateNotification(appUpdateInfo: AppUpdateInfo): Boolean {
-
-        if (lastUpdateNotificationDate.isBlank() || lastUpdateNotificationVersionCode != appUpdateInfo.availableVersionCode()) {
-            lastUpdateNotificationDate = Date().toApiString() ?: ""
-            lastUpdateNotificationVersionCode = appUpdateInfo.availableVersionCode()
-            lastUpdateNotificationCount = 1
-            hasShownThisStart = true
-            return true
-        }
-
-        if (appUpdateInfo.updatePriority() >= IMMEDIATE_THRESHOLD && !hasShownThisStart) {
-            hasShownThisStart = true
-            return true
-        }
-
-        if (appUpdateInfo.updatePriority() in FLEXIBLE_THRESHOLD until IMMEDIATE_THRESHOLD) {
-            val lastUpdateDate = lastUpdateNotificationDate.toDate()
-            val currentDate = Date()
-            val diff = TimeUnit.DAYS.convert(abs(currentDate.time - lastUpdateDate!!.time), TimeUnit.MILLISECONDS)
-
-            if (diff >= FLEXIBLE_UPDATE_NOTIFICATION_INTERVAL_DAYS && lastUpdateNotificationCount <= FLEXIBLE_UPDATE_NOTIFICATION_MAX_COUNT) {
-                lastUpdateNotificationCount += 1
-                lastUpdateNotificationDate = Date().toApiString() ?: ""
-                return true
-            }
-        }
-
-        return false
-    }
+    var lastUpdateNotificationDate by StringPref()
+    var lastUpdateNotificationVersionCode by IntPref()
+    var lastUpdateNotificationCount by IntPref()
+    var hasShownThisStart = false
 
 }

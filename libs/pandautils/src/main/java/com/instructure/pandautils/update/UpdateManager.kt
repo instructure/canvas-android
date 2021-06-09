@@ -33,7 +33,12 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
+import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 const val IMMEDIATE_THRESHOLD = 4
 const val FLEXIBLE_THRESHOLD = 2
@@ -52,7 +57,7 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 appUpdateManager.completeUpdate()
             } else {
-                if (updatePrefs.shouldShowUpdateNotification(appUpdateInfo)) {
+                if (shouldShowUpdateNotification(appUpdateInfo)) {
                     startInAppUpdate(activity, appUpdateInfo)
                 }
             }
@@ -102,11 +107,6 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
                                 .build(),
                         FLEXIBLE_UPDATE_REQUEST_CODE
                 )
-                if (appUpdateManager is FakeAppUpdateManager) {
-                    appUpdateManager.userAcceptsUpdate()
-                    appUpdateManager.downloadStarts()
-                    appUpdateManager.downloadCompletes()
-                }
             }
         }
     }
@@ -121,5 +121,35 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
             }
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private fun shouldShowUpdateNotification(appUpdateInfo: AppUpdateInfo): Boolean {
+
+        if (updatePrefs.lastUpdateNotificationDate.isBlank() || updatePrefs.lastUpdateNotificationVersionCode != appUpdateInfo.availableVersionCode()) {
+            updatePrefs.lastUpdateNotificationDate = Date().toApiString() ?: ""
+            updatePrefs.lastUpdateNotificationVersionCode = appUpdateInfo.availableVersionCode()
+            updatePrefs.lastUpdateNotificationCount = 1
+            updatePrefs.hasShownThisStart = true
+            return true
+        }
+
+        if (appUpdateInfo.updatePriority() >= IMMEDIATE_THRESHOLD && !updatePrefs.hasShownThisStart) {
+            updatePrefs.hasShownThisStart = true
+            return true
+        }
+
+        if (appUpdateInfo.updatePriority() in FLEXIBLE_THRESHOLD until IMMEDIATE_THRESHOLD) {
+            val lastUpdateDate = updatePrefs.lastUpdateNotificationDate.toDate()
+            val currentDate = Date()
+            val diff = TimeUnit.DAYS.convert(abs(currentDate.time - lastUpdateDate!!.time), TimeUnit.MILLISECONDS)
+
+            if (diff >= FLEXIBLE_UPDATE_NOTIFICATION_INTERVAL_DAYS && updatePrefs.lastUpdateNotificationCount <= FLEXIBLE_UPDATE_NOTIFICATION_MAX_COUNT) {
+                updatePrefs.lastUpdateNotificationCount += 1
+                updatePrefs.lastUpdateNotificationDate = Date().toApiString() ?: ""
+                return true
+            }
+        }
+
+        return false
     }
 }
