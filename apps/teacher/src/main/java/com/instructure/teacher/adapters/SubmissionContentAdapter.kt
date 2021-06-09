@@ -64,4 +64,8 @@ class SubmissionContentAdapter(
     fun invalidateSubmissionCache() {
         mStudentSubmissions.onEach { it.isCached = false }
     }
+
+    fun updateAnnotations(position: Int) {
+        mContentMap[position]?.updateAnnotations()
+    }
 }
