@@ -107,6 +107,30 @@ object ApiEndpoint : Endpoint(
                     }
                 }
             )
+    ),
+    Segment("features") to Endpoint(
+        Segment("environment") to Endpoint(
+            response = {
+                GET {
+                    request.successResponse(data.featureFlags)
+                }
+            }
+        )
+    ),
+    Segment("announcements") to Endpoint(
+        response = {
+            GET {
+                val contextCodes = request.url().queryParameter("context_codes[]")
+                val courseId = contextCodes?.substringAfter("_")?.toLong()
+
+                val firstAnnouncement = data.courseDiscussionTopicHeaders[courseId]
+                    ?.filter { it.announcement }
+                    ?.firstOrNull()
+
+                val result = firstAnnouncement?.let { listOf(it) } ?: emptyList()
+                request.successResponse(result)
+            }
+        }
     )
 )
 

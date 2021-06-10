@@ -86,13 +86,16 @@ class LoginActivity : BaseLoginInitActivity() {
      * ONLY USE FOR UI TESTING
      * Skips the traditional login process by directly setting the domain, token, and user info.
      */
-    fun loginWithToken(token: String, domain: String, user: User) {
+    fun loginWithToken(token: String, domain: String, user: User, canvasForElementary: Boolean = false) {
         ApiPrefs.accessToken = token
         ApiPrefs.domain = domain
         ApiPrefs.user = user
         ApiPrefs.userAgent = Utils.generateUserAgent(this, userAgent())
         finish()
-        val intent = Intent(this, NavigationActivity.startActivityClass).apply { intent?.extras?.let { putExtras(it) } }
+        val intent = Intent(this, NavigationActivity.startActivityClass).apply {
+            intent?.extras?.let { putExtras(it) }
+            putExtra("canvas_for_elementary", canvasForElementary)
+        }
         startActivity(intent)
     }
 

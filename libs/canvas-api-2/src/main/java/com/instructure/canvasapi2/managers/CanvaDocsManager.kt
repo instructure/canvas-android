@@ -39,7 +39,7 @@ object CanvaDocsManager {
         callback: StatusCallback<CanvaDocAnnotationResponse>
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(domain = canvaDocDomain, apiVersion = "")
+        val params = RestParams(domain = canvaDocDomain, apiVersion = "", isForceReadFromNetwork = true)
         CanvaDocsAPI.getAnnotations(sessionId, adapter, params, callback)
     }
 

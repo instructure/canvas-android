@@ -20,8 +20,8 @@ package com.instructure.canvas.espresso.mockCanvas
 
 import android.util.Log
 import com.github.javafaker.Faker
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas.Companion.data
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
-import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocCoordinate
@@ -34,9 +34,7 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.threeten.bp.LocalDateTime
 import org.threeten.bp.OffsetDateTime
-import java.time.LocalDate.now
 import java.util.*
 
 class MockCanvas {
@@ -223,6 +221,11 @@ class MockCanvas {
     /** Map of user id to bookmarks */
     val bookmarks = mutableMapOf<Long, MutableList<Bookmark>>()
 
+    var featureFlags = FeatureFlags()
+
+    /** Map of courseId to the courses latest announcement */
+    val latestAnnouncements = mutableMapOf<Long, DiscussionTopicHeader>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -326,16 +329,17 @@ class MockCanvas {
  * such if [parentCount] is non-zero it is also required that [studentCount] be non-zero for correct behavior.
  */
 fun MockCanvas.Companion.init(
-        courseCount: Int = 0,
-        pastCourseCount: Int = 0,
-        favoriteCourseCount: Int = 0,
-        studentCount: Int = 0,
-        teacherCount: Int = 0,
-        parentCount: Int = 0,
-        accountNotificationCount: Int = 0,
-        createSections: Boolean = false,
-        publishCourses: Boolean = true,
-        withGradingPeriods: Boolean = false
+    courseCount: Int = 0,
+    pastCourseCount: Int = 0,
+    favoriteCourseCount: Int = 0,
+    studentCount: Int = 0,
+    teacherCount: Int = 0,
+    parentCount: Int = 0,
+    accountNotificationCount: Int = 0,
+    createSections: Boolean = false,
+    publishCourses: Boolean = true,
+    withGradingPeriods: Boolean = false,
+    homeroomCourseCount: Int = 0
 ): MockCanvas {
     data = MockCanvas()
 
@@ -370,6 +374,10 @@ fun MockCanvas.Companion.init(
     }
 
     repeat(pastCourseCount) { data.addCourse(concluded = true) }
+
+    repeat(homeroomCourseCount) {
+        data.addCourse(isHomeroom = true)
+    }
 
     // Add enrollments
     data.courses.values.forEach { course ->
@@ -442,27 +450,40 @@ fun MockCanvas.updateUserEnrollments() {
     }
 }
 
+fun MockCanvas.addCourseWithEnrollment(user: User, enrollmentType: Enrollment.EnrollmentType) {
+    val course = addCourse()
+
+    addEnrollment(
+        user = user,
+        course = course,
+        type = enrollmentType,
+        courseSectionId = if(course.sections.count() > 0) course.sections.get(0).id else 0
+    )
+}
+
 /** Creates a new Course and adds it to MockCanvas */
 fun MockCanvas.addCourse(
-        isFavorite: Boolean = false,
-        concluded: Boolean = false,
-        id: Long = newItemId(),
-        section: Section? = null,
-        isPublic: Boolean = true,
-        withGradingPeriod: Boolean = false
+    isFavorite: Boolean = false,
+    concluded: Boolean = false,
+    id: Long = newItemId(),
+    section: Section? = null,
+    isPublic: Boolean = true,
+    withGradingPeriod: Boolean = false,
+    isHomeroom: Boolean = false
 ): Course {
     val randomCourseName = Randomizer.randomCourseName()
     val endAt = if (concluded) OffsetDateTime.now().minusWeeks(1).toApiString() else null
     val course = Course(
-            id = id,
-            name = randomCourseName,
-            originalName = randomCourseName,
-            courseCode = randomCourseName.substring(0, 2),
-            term = terms.values.first(),
-            endAt = endAt,
-            isFavorite = isFavorite,
-            sections = if(section != null) listOf(section) else listOf<Section>(),
-            isPublic = isPublic
+        id = id,
+        name = randomCourseName,
+        originalName = randomCourseName,
+        courseCode = randomCourseName.substring(0, 2),
+        term = terms.values.first(),
+        endAt = endAt,
+        isFavorite = isFavorite,
+        sections = if (section != null) listOf(section) else listOf<Section>(),
+        isPublic = isPublic,
+        homeroomCourse = isHomeroom
     )
     courses += course.id to course
 

@@ -131,6 +131,21 @@ fun StudentTest.tokenLogin(domain: String, token: String, user: User) {
     dashboardPage.assertPageObjects()
 }
 
+fun StudentTest.tokenLoginElementary(domain: String, token: String, user: User) {
+    activityRule.runOnUiThread {
+        (originalActivity as LoginActivity).loginWithToken(
+            token,
+            domain,
+            user,
+            canvasForElementary = true
+        )
+    }
+    // Sometimes, especially on slow FTL emulators, it can take a bit for the dashboard to show
+    // up after a token login.  Add some tolerance for that.
+    waitForMatcherWithSleeps(withId(R.id.elementaryDashboardPage), 20000).check(matches(isDisplayed()))
+    elementaryDashboardPage.assertPageObjects()
+}
+
 fun StudentTest.routeTo(route: String) {
     val url = "canvas-student://${CanvasRestAdapter.canvasDomain}/$route"
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))

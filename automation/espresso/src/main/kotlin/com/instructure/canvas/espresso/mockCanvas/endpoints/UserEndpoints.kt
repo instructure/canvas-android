@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import okio.Buffer
 import java.nio.charset.Charset
+import java.util.*
 
 /**
  * ROUTES:
@@ -65,6 +66,41 @@ object UserEndpoint : Endpoint(
     Segment("todo") to UserTodoEndpoint,
     Segment("observer_pairing_codes") to UserPairingCodeEndpoint,
     Segment("activity_stream") to UserActivityStreamEndpoint,
+    Segment("planner") to Endpoint(
+        Segment("items") to Endpoint(
+            response = {
+                GET {
+                    val userId = pathVars.userId
+                    val userCourseIds = data.enrollments.values.filter {it.userId == userId}.map {it -> it.courseId}
+
+                    // Gather our assignments
+                    // Currently we assume all the assignments are due today
+                    val plannerItemsList = data.assignments.values
+                        .filter { userCourseIds.contains(it.courseId) }
+                        .map {
+                            val plannable = Plannable(it.id, it.name ?: "", it.courseId, null, userId, null, null, it.id)
+                            PlannerItem(it.courseId, null, userId, null, null, "assignment", plannable, Date(), null, SubmissionState())
+                        }
+
+                    request.successResponse(plannerItemsList)
+                }
+            }
+        )
+    ),
+    Segment("missing_submissions") to Endpoint(
+        response = {
+            GET {
+                val userId = pathVars.userId
+                val userCourseIds = data.enrollments.values.filter {it.userId == userId}.map {it -> it.courseId}
+
+                // Currently we assume all the assignments are missing
+                val missingAssignmentsList = data.assignments.values
+                    .filter { userCourseIds.contains(it.courseId) }
+
+                request.successResponse(missingAssignmentsList)
+            }
+        }
+    ),
     Segment("bookmarks") to UserBookmarksEndpoint,
     response = {
         GET {
