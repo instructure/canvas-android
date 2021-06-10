@@ -26,10 +26,12 @@ import com.instructure.student.mobius.conferences.conference_details.ui.Conferen
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsViewState
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceRecordingViewState
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class ConferenceDetailsRenderTest : StudentRenderTest() {
     private val canvasContext: CanvasContext = Course(id = 123L, name = "Test Course")

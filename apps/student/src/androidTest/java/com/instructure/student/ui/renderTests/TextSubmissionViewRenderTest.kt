@@ -19,8 +19,10 @@ import android.os.Build
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
 import com.instructure.student.ui.pages.renderPages.TextSubmissionViewRenderPage
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class TextSubmissionViewRenderTest : StudentRenderTest() {
 
     private val page = TextSubmissionViewRenderPage()

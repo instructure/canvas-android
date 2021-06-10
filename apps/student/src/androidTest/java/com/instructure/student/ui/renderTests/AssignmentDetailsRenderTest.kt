@@ -34,6 +34,7 @@ import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,6 +42,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class AssignmentDetailsRenderTest : StudentRenderTest() {
 

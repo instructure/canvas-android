@@ -24,10 +24,12 @@ import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.syllabus.SyllabusModel
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class SyllabusRenderTest : StudentRenderTest() {
 

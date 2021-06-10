@@ -25,9 +25,11 @@ import com.instructure.espresso.replaceText
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers.not
 import org.junit.Test
 
+@HiltAndroidTest
 class UrlSubmissionUploadRenderTest : StudentRenderTest() {
 
     private val testUrl = "https://www.instructure.com"

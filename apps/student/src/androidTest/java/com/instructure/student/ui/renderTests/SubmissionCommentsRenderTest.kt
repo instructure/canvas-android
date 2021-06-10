@@ -38,12 +38,14 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class SubmissionCommentsRenderTest: StudentRenderTest() {
     private lateinit var user: User

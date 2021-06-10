@@ -22,8 +22,10 @@ import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.QuizSubmissionViewFragment
 import com.instructure.student.ui.pages.renderPages.QuizSubmissionViewRenderPage
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class QuizSubmissionViewRenderTest : StudentRenderTest() {
 
     private val url = "https://www.google.com"
