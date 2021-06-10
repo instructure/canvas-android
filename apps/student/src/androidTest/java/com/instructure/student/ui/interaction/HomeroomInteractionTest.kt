@@ -30,8 +30,10 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class HomeroomInteractionTest : StudentTest() {
 
     override fun displaysPageObjects() = Unit
