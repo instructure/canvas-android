@@ -66,7 +66,7 @@ abstract class CanvasTest : InstructureTestingContract {
 
     abstract val isTesting: Boolean
 
-    @Rule
+    @Rule(order = 1)
     override fun chain(): TestRule {
         return RuleChain
                 .outerRule(ScreenshotTestRule())

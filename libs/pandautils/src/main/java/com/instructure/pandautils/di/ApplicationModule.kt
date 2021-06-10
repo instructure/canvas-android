@@ -76,22 +76,4 @@ class ApplicationModule {
     fun provideNotificationManager(@ApplicationContext context: Context): NotificationManager {
         return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
-
-    @Provides
-    @Singleton
-    fun provideAppUpdateManager(@ApplicationContext context: Context): AppUpdateManager {
-        return AppUpdateManagerFactory.create(context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideUpdateManager(appUpdateManager: AppUpdateManager, notificationManager: NotificationManager, updatePrefs: UpdatePrefs): UpdateManager {
-        return UpdateManager(appUpdateManager, notificationManager, updatePrefs)
-    }
-
-    @Provides
-    @Singleton
-    fun provideUpdatePrefs(): UpdatePrefs {
-        return UpdatePrefs
-    }
 }

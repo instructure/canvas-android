@@ -18,8 +18,10 @@ package com.instructure.student.ui
 
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.espresso.filters.P1
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class LoginLandingPageTest: StudentTest() {
 
     // Runs live; no MockCanvas

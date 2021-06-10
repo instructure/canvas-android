@@ -112,7 +112,7 @@ dependencies {
     def runnerVersion = "1.1.1"
     def rulesVersion = "1.1.1"
     def espressoVersion = "3.1.1"
-    def junitVersion = "4.12"
+    def junitVersion = "4.13.1"
 
     // Update exclusions based on ./gradlew :app:androidDependencies
     implementation("androidx.test:runner:$runnerVersion") {
