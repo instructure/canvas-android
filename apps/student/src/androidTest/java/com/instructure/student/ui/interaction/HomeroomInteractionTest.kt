@@ -19,7 +19,6 @@ package com.instructure.student.ui.interaction
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.models.FeatureFlags
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.espresso.page.getStringFromResource
@@ -296,8 +295,6 @@ class HomeroomInteractionTest : StudentTest() {
             favoriteCourseCount = favoriteCourseCount,
             accountNotificationCount = announcementCount,
             homeroomCourseCount = homeroomCourseCount)
-
-        data.featureFlags = FeatureFlags(true)
 
         return data
     }

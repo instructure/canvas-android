@@ -221,8 +221,6 @@ class MockCanvas {
     /** Map of user id to bookmarks */
     val bookmarks = mutableMapOf<Long, MutableList<Bookmark>>()
 
-    var featureFlags = FeatureFlags()
-
     /** Map of courseId to the courses latest announcement */
     val latestAnnouncements = mutableMapOf<Long, DiscussionTopicHeader>()
 
