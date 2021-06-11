@@ -26,8 +26,10 @@ import com.instructure.espresso.randomString
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class EditQuizDetailsPageTest : TeacherTest() {
 
     @Test

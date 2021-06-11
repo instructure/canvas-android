@@ -21,8 +21,10 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addConversations
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.teacher.ui.utils.*
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class InboxPageTest: TeacherTest() {
     @Test
     override fun displaysPageObjects() {

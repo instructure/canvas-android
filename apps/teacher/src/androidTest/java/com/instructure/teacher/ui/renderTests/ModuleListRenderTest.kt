@@ -33,10 +33,12 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListViewState
 import com.instructure.teacher.ui.renderTests.pages.ModuleListRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Test
 
+@HiltAndroidTest
 class ModuleListRenderTest : TeacherRenderTest() {
 
     private val page = ModuleListRenderPage()

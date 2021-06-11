@@ -22,11 +22,13 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.ui.renderTests.pages.CalendarEventRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
 
+@HiltAndroidTest
 class CalendarEventRenderTest : TeacherRenderTest() {
 
     private val calendarEventRenderPage = CalendarEventRenderPage()
