@@ -38,7 +38,7 @@ import dagger.hilt.android.testing.UninstallModules
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertFalse
 import org.junit.Test
-import java.util.*
+import org.threeten.bp.OffsetDateTime
 
 @UninstallModules(UpdateModule::class)
 @HiltAndroidTest
@@ -131,7 +131,7 @@ class InAppUpdatePageTest : TeacherTest() {
         with(updatePrefs) {
             lastUpdateNotificationCount = 1
             lastUpdateNotificationVersionCode = 400
-            lastUpdateNotificationDate = Date().toApiString()!!
+            lastUpdateNotificationDate = OffsetDateTime.now().toApiString()!!
         }
 
         with(appUpdateManager) {
@@ -150,6 +150,7 @@ class InAppUpdatePageTest : TeacherTest() {
         with(updatePrefs) {
             lastUpdateNotificationCount = 2
             lastUpdateNotificationVersionCode = 400
+            lastUpdateNotificationDate = OffsetDateTime.now().toApiString()!!
         }
 
         with(appUpdateManager) {
@@ -167,8 +168,8 @@ class InAppUpdatePageTest : TeacherTest() {
     fun showFlexibleConfirmationDialogForNewVersion() {
         with(updatePrefs) {
             lastUpdateNotificationCount = 2
-            lastUpdateNotificationDate = Date().toApiString()!!
             lastUpdateNotificationVersionCode = 399
+            lastUpdateNotificationDate = OffsetDateTime.now().toApiString()!!
         }
 
         with(appUpdateManager) {
@@ -183,10 +184,11 @@ class InAppUpdatePageTest : TeacherTest() {
     }
 
     @Test
-    fun hideFlexibleConfirmationIfItWasShownThisStart() {
+    fun hideFlexibleConfirmationIfItWasShownToday() {
         with(updatePrefs) {
             lastUpdateNotificationCount = 1
             lastUpdateNotificationVersionCode = 400
+            lastUpdateNotificationDate = OffsetDateTime.now().toApiString()!!
             hasShownThisStart = true
         }
 
@@ -219,6 +221,7 @@ class InAppUpdatePageTest : TeacherTest() {
         with(updatePrefs) {
             lastUpdateNotificationCount = 1
             lastUpdateNotificationVersionCode = 400
+            lastUpdateNotificationDate = OffsetDateTime.now().minusDays(2).toApiString()!!
             hasShownThisStart = true
         }
 
