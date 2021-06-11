@@ -168,6 +168,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         }
 
         RatingDialog.showRatingDialog(this, com.instructure.pandautils.utils.AppType.TEACHER)
+
+        updateManager.checkForInAppUpdate(this)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -178,11 +180,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 handlePushNotification(hasUnreadPushNotification(it.extras))
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        updateManager.checkForInAppUpdate(this)
     }
 
     override fun onDestroy() {

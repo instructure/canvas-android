@@ -203,7 +203,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onResume() {
         super.onResume()
         applyCurrentFragmentTheme()
-        checkAppUpdates()
     }
 
     private fun checkAppUpdates() {
@@ -237,6 +236,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         appShortcutManager.make(this)
 
         setupNavDrawerItems()
+
+        checkAppUpdates()
     }
 
     private fun setupNavDrawerItems() {

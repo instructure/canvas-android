@@ -184,7 +184,11 @@ class InAppUpdateInteractionTest : StudentTest() {
 
     @Test
     fun hideFlexibleConfirmationIfItWasShownThisStart() {
-        updatePrefs.hasShownThisStart = true
+        with(updatePrefs) {
+            lastUpdateNotificationCount = 1
+            lastUpdateNotificationVersionCode = 400
+            hasShownThisStart = true
+        }
 
         with(appUpdateManager) {
             setUpdateAvailable(400)
@@ -212,7 +216,11 @@ class InAppUpdateInteractionTest : StudentTest() {
 
     @Test
     fun hideImmediateFlowIfItWasShownThisStart() {
-        updatePrefs.hasShownThisStart = true
+        with(updatePrefs) {
+            lastUpdateNotificationCount = 1
+            lastUpdateNotificationVersionCode = 400
+            hasShownThisStart = true
+        }
 
         with(appUpdateManager) {
             setUpdateAvailable(400)
