@@ -868,6 +868,19 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `ShowCreateSubmissionView with student annotation submissionType shows student annotation view`() {
+        val submissionType = Assignment.SubmissionType.STUDENT_ANNOTATION
+        assignment = assignment.copy(htmlUrl = "www.instructure.com")
+
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
+
+        verify(timeout = 100) {
+            view.showStudentAnnotationView("www.instructure.com")
+        }
+        confirmVerified(view)
+    }
+
+    @Test
     fun `ShowCreateSubmissionView with mediaRecording submissionType calls showMediaRecordingView`() {
         val submissionType = Assignment.SubmissionType.MEDIA_RECORDING
 
@@ -974,6 +987,22 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `Displays student annotation type in dialog when submission type is student annotation`() {
+        val course = Course()
+        val assignment = assignment.copy(
+            submissionTypesRaw = listOf("student_annotation")
+        )
+
+        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, false))
+
+        verify(timeout = 100) {
+            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(studentAnnotation = true))
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
     fun `Displays mediaRecording when submission type is mediaRecording`() {
         val course = Course()
         val assignment = assignment.copy(
@@ -993,13 +1022,13 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Displays all submission types when all are present`() {
         val course = Course()
         val assignment = assignment.copy(
-            submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload")
+            submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload", "student_annotation")
         )
 
         connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(true, true, true, true))
+            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(true, true, true, true, studentAnnotation = true))
         }
 
         confirmVerified(view)
