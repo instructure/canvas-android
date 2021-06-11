@@ -326,6 +326,12 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         pdfFragment?.addDocumentListener(documentListener)
     }
 
+    fun updateAnnotations() {
+        if (pdfFragment?.document != null) {
+            loadAnnotations()
+        }
+    }
+
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private val documentListener = object : DocumentListener by DocumentListenerSimpleDelegate() {
         override fun onDocumentLoaded(pdfDocument: PdfDocument) {
@@ -340,59 +346,63 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
             pdfFragment?.enterAnnotationCreationMode()
             if (docSession.annotationMetadata?.canRead() != true) return
-            annotationsJob = tryWeave {
-                // Snag them annotations with the session id
-                val annotations = awaitApi<CanvaDocAnnotationResponse> { CanvaDocsManager.getAnnotations(apiValues.sessionId, apiValues.canvaDocsDomain, it) }
-                // We don't want to trigger the annotation events here, so unregister and re-register after
-                pdfFragment?.document?.annotationProvider?.removeOnAnnotationUpdatedListener(mAnnotationUpdateListener)
+            loadAnnotations()
+        }
+    }
 
-                // Grab all the annotations and sort them by type (descending).
-                // This will result in all of the comments being iterated over first as the COMMENT_REPLY type is last in the AnnotationType enum.
-                val sortedAnnotationList = annotations.data.sortedByDescending { it.annotationType }
-                for (item in sortedAnnotationList) {
-                    if (item.annotationType == CanvaDocAnnotation.AnnotationType.COMMENT_REPLY) {
-                        // Grab the annotation comments and store them to be displayed later when user selects annotation
-                        if (commentRepliesHashMap.containsKey(item.inReplyTo)) {
-                            commentRepliesHashMap[item.inReplyTo]?.add(item)
-                        } else {
-                            commentRepliesHashMap[item.inReplyTo!!] = arrayListOf(item)
-                        }
+    private fun loadAnnotations() {
+        annotationsJob = tryWeave {
+            // Snag them annotations with the session id
+            val annotations = awaitApi<CanvaDocAnnotationResponse> { CanvaDocsManager.getAnnotations(apiValues.sessionId, apiValues.canvaDocsDomain, it) }
+            // We don't want to trigger the annotation events here, so unregister and re-register after
+            pdfFragment?.document?.annotationProvider?.removeOnAnnotationUpdatedListener(mAnnotationUpdateListener)
+
+            // Grab all the annotations and sort them by type (descending).
+            // This will result in all of the comments being iterated over first as the COMMENT_REPLY type is last in the AnnotationType enum.
+            val sortedAnnotationList = annotations.data.sortedByDescending { it.annotationType }
+            for (item in sortedAnnotationList) {
+                if (item.annotationType == CanvaDocAnnotation.AnnotationType.COMMENT_REPLY) {
+                    // Grab the annotation comments and store them to be displayed later when user selects annotation
+                    if (commentRepliesHashMap.containsKey(item.inReplyTo)) {
+                        commentRepliesHashMap[item.inReplyTo]?.add(item)
                     } else {
-                        // We don't want to add deleted annotations to the view
-                        if (!item.deleted) {
-                            val annotation = item.convertCanvaDocAnnotationToPDF(this@PdfSubmissionView.context)
-                            if (annotation != null) {
-                                // If the user doesn't have at least write permissions we need to lock down all annotations
-                                if (docSession.annotationMetadata?.canWrite() == false) {
+                        commentRepliesHashMap[item.inReplyTo!!] = arrayListOf(item)
+                    }
+                } else {
+                    // We don't want to add deleted annotations to the view
+                    if (!item.deleted) {
+                        val annotation = item.convertCanvaDocAnnotationToPDF(this@PdfSubmissionView.context)
+                        if (annotation != null) {
+                            // If the user doesn't have at least write permissions we need to lock down all annotations
+                            if (docSession.annotationMetadata?.canWrite() == false) {
+                                annotation.flags = EnumSet.of(AnnotationFlags.LOCKED, AnnotationFlags.LOCKEDCONTENTS, AnnotationFlags.NOZOOM)
+                            } else {
+                                if (item.userId != docSession.annotationMetadata?.userId) {
                                     annotation.flags = EnumSet.of(AnnotationFlags.LOCKED, AnnotationFlags.LOCKEDCONTENTS, AnnotationFlags.NOZOOM)
-                                } else {
-                                    if (item.userId != docSession.annotationMetadata?.userId) {
-                                        annotation.flags = EnumSet.of(AnnotationFlags.LOCKED, AnnotationFlags.LOCKEDCONTENTS, AnnotationFlags.NOZOOM)
-                                    }
                                 }
-
-                                if(commentRepliesHashMap.containsKey(annotation.name)
-                                        && (item.annotationType != CanvaDocAnnotation.AnnotationType.TEXT && item.annotationType != CanvaDocAnnotation.AnnotationType.FREE_TEXT)) {
-                                    annotation.contents = "comment"
-                                }
-
-                                pdfFragment?.document?.annotationProvider?.addAnnotationToPage(annotation)
-                                pdfFragment?.notifyAnnotationHasChanged(annotation)
                             }
+
+                            if(commentRepliesHashMap.containsKey(annotation.name)
+                                && (item.annotationType != CanvaDocAnnotation.AnnotationType.TEXT && item.annotationType != CanvaDocAnnotation.AnnotationType.FREE_TEXT)) {
+                                annotation.contents = "comment"
+                            }
+
+                            pdfFragment?.document?.annotationProvider?.addAnnotationToPage(annotation)
+                            pdfFragment?.notifyAnnotationHasChanged(annotation)
                         }
                     }
-
                 }
 
-                noteHinter?.notifyDrawablesChanged()
-                pdfFragment?.document?.annotationProvider?.addOnAnnotationUpdatedListener(mAnnotationUpdateListener)
-                pdfFragment?.addOnAnnotationSelectedListener(annotationSelectedListener)
-                pdfFragment?.addOnAnnotationDeselectedListener(mAnnotationDeselectedListener)
-            } catch {
-                // Show error
-                toast(R.string.annotationErrorOccurred)
-                it.printStackTrace()
             }
+
+            noteHinter?.notifyDrawablesChanged()
+            pdfFragment?.document?.annotationProvider?.addOnAnnotationUpdatedListener(mAnnotationUpdateListener)
+            pdfFragment?.addOnAnnotationSelectedListener(annotationSelectedListener)
+            pdfFragment?.addOnAnnotationDeselectedListener(mAnnotationDeselectedListener)
+        } catch {
+            // Show error
+            toast(R.string.annotationErrorOccurred)
+            it.printStackTrace()
         }
     }
 

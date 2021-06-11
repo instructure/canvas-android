@@ -1190,6 +1190,8 @@
     <string name="a11y_content_description_inbox_subject">Subject</string>
     <string name="a11y_content_description_inbox_course_spinner">Select a course, %s</string>
 
+    <string name="speedGraderAnonymousSubmissionMessage">This student\'s responses are hidden because this assignment is anonymous.</string>
+
     <string name="studentAnnotationUnsupported">Student Annotation (Unsupported)</string>
     <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently not supported on mobile.</string>
     <string name="unsupportedSubmissionType">Unsupported Submission Type</string>

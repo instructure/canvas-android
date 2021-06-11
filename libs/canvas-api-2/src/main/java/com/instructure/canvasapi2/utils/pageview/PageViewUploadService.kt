@@ -184,17 +184,9 @@ abstract class PageViewUploadService : JobService() {
 
                 setPersisted(true)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    setRequiresBatteryNotLow(true)
-                }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    setRequiredNetworkType(JobInfo.NETWORK_TYPE_NOT_ROAMING)
-                    setPeriodic(REPEAT_INTERVAL, REPEAT_FLEX)
-                } else {
-                    setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-                    setPeriodic(REPEAT_INTERVAL)
-                }
+                    setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    setPeriodic(TimeUnit.MINUTES.toMillis(2))
 
             }.build()
 
