@@ -417,7 +417,8 @@ class QuizDetailsFragment : BasePresenterFragment<
 
     private fun navigateToSubmissions(course: Course, assignment: Assignment?, filter: SubmissionListFilter) {
         assignment ?: return // We can't navigate to the submission list if there isn't an associated assignment
-        val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
+        val assignmentWithAnonymousGrading = assignment.copy(anonymousGrading = mQuiz.allowAnonymousSubmissions)
+        val args = AssignmentSubmissionListFragment.makeBundle(assignmentWithAnonymousGrading, filter)
         RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
     }
 

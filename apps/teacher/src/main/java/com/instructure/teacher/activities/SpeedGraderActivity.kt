@@ -71,6 +71,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
     private val submissions: ArrayList<GradeableStudentSubmission> by lazy { intent.extras!!.getParcelableArrayList<GradeableStudentSubmission>(Const.SUBMISSION) ?: arrayListOf() }
     private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable<DiscussionTopicHeader>(Const.DISCUSSION_HEADER) }
+    private val anonymousGrading: Boolean? by lazy { intent.extras?.getBoolean(Const.ANONYMOUS_GRADING) }
 
     private val initialSelection: Int by lazy { intent.extras!!.getInt(Const.SELECTED_ITEM, 0) }
     private var currentSelection = 0
@@ -115,7 +116,12 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     }
 
     override fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>) {
-        adapter = SubmissionContentAdapter(assignment, presenter!!.course, submissions)
+        val assignmentWithAnonymousGrading = if (anonymousGrading != null) {
+            assignment.copy(anonymousGrading = anonymousGrading!!)
+        } else {
+            assignment
+        }
+        adapter = SubmissionContentAdapter(assignmentWithAnonymousGrading, presenter!!.course, submissions)
         submissionContentPager.offscreenPageLimit = 1
         submissionContentPager.pageMargin = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics))
         submissionContentPager.setPageMarginDrawable(R.color.dividerColor)
@@ -280,7 +286,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
          */
         private const val MAX_HISTORY_THRESHOLD = 8
 
-        fun makeBundle(courseId: Long, assignmentId: Long, submissions: List<GradeableStudentSubmission>, selectedIdx: Int): Bundle {
+        fun makeBundle(courseId: Long, assignmentId: Long, submissions: List<GradeableStudentSubmission>, selectedIdx: Int, anonymousGrading: Boolean? = null): Bundle {
             return Bundle().apply {
                 putLong(Const.COURSE_ID, courseId)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
@@ -299,7 +305,13 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 }
 
                 // Only sort when anon grading is off
-                if(submissions.firstOrNull()?.submission?.assignment?.anonymousGrading != true) {
+                val anonymousGradingOn = if (anonymousGrading != null) {
+                    anonymousGrading
+                } else {
+                    submissions.firstOrNull()?.submission?.assignment?.anonymousGrading == true
+                }
+
+                if(!anonymousGradingOn) {
                     // We need to sort the submissions so they appear in the same order as the submissions list
                     putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions.sortedBy {
                         (it.assignee as? StudentAssignee)?.student?.sortableName?.toLowerCase()
@@ -309,6 +321,10 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 }
 
                 putInt(Const.SELECTED_ITEM, selectedIdx)
+
+                if (anonymousGrading != null) {
+                    putBoolean(Const.ANONYMOUS_GRADING, anonymousGrading)
+                }
             }
         }
 
