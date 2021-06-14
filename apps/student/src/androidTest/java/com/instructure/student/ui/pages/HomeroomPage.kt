@@ -23,7 +23,6 @@ import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.*
-import com.instructure.espresso.matchers.WaitForViewMatcher
 import com.instructure.espresso.page.*
 import com.instructure.student.R
 import org.hamcrest.Matchers
@@ -46,12 +45,12 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
         onView(withAncestor(R.id.announcementsContainer) + withText(title)).assertDisplayed()
 
         Web.onWebView()
-            .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "html"))
-            .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(content)))
+                .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "html"))
+                .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(content)))
 
         onView(withAncestor(R.id.announcementsContainer) + withText(R.string.viewPreviousAnnouncements))
-            .scrollTo()
-            .assertDisplayed()
+                .scrollTo()
+                .assertDisplayed()
     }
 
     fun assertAnnouncementNotDisplayed() {
@@ -68,15 +67,15 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
         val announcementMatcher = withId(R.id.announcementText) + withText(announcementText)
 
         onView(withId(R.id.cardView) + withDescendant(titleMatcher) + withDescendant(todoTextMatcher) + withDescendant(announcementMatcher))
-            .scrollTo()
-            .assertDisplayed()
+                .scrollTo()
+                .assertDisplayed()
     }
 
     fun assertNoSubjectsTextDisplayed() {
         noSubjectsText
-            .scrollTo()
-            .assertDisplayed()
-            .assertHasText(R.string.homeroomNoSubjects)
+                .scrollTo()
+                .assertDisplayed()
+                .assertHasText(R.string.homeroomNoSubjects)
     }
 
     fun assertHomeroomContentNotDisplayed() {
@@ -95,29 +94,30 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
 
     fun openHomeroomAnnouncements() {
         onViewWithId(R.id.viewPreviousAnnouncements)
-            .click()
+                .click()
     }
 
-    fun openCourseAnnouncemnt(announcementText: String) {
+    fun openCourseAnnouncment(announcementText: String) {
         onView(withId(R.id.announcementText) + withText(announcementText))
-            .click()
+                .scrollTo()
+                .click()
     }
 
     fun openCourse(courseName: String) {
         onView(withId(R.id.courseNameText) + withText(courseName))
-            .scrollTo()
-            .click()
+                .scrollTo()
+                .click()
     }
 
     fun assertToDoText(todoText: String) {
         onView(withId(R.id.todoText) + withText(todoText))
-            .scrollTo()
-            .assertDisplayed()
+                .scrollTo()
+                .assertDisplayed()
     }
 
     fun openAssignments(todoText: String) {
         onView(withId(R.id.todoText) + withText(todoText))
-            .scrollTo()
-            .click()
+                .scrollTo()
+                .click()
     }
 }

@@ -204,7 +204,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         homeroomPage.assertPageObjects()
 
-        homeroomPage.openCourseAnnouncemnt(courseAnnouncement.title!!)
+        homeroomPage.openCourseAnnouncment(courseAnnouncement.title!!)
 
         discussionDetailsPage.assertPageObjects()
         discussionDetailsPage.assertTitleText(courseAnnouncement.title!!)
