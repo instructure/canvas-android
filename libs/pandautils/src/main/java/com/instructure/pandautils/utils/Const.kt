@@ -130,6 +130,7 @@ object Const {
     const val POSITION = "position"
     const val QUIZ_ANSWER_ID = "answer_id"
     const val ANONYMOUS_GRADING = "anonymousGrading"
+    const val UNSUPPORTED_DESCRIPTION = "unsupportedDescription"
 
     // Shared File
     const val FILENAME = "fileName"

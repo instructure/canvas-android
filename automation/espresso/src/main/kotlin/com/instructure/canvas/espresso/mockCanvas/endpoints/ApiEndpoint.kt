@@ -108,15 +108,6 @@ object ApiEndpoint : Endpoint(
                 }
             )
     ),
-    Segment("features") to Endpoint(
-        Segment("environment") to Endpoint(
-            response = {
-                GET {
-                    request.successResponse(data.featureFlags)
-                }
-            }
-        )
-    ),
     Segment("announcements") to Endpoint(
         response = {
             GET {

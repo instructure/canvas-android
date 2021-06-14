@@ -18,7 +18,6 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.models.FeatureFlags
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.panda_annotations.FeatureCategory
@@ -95,7 +94,6 @@ class ElementaryDashboardInteractionTest : StudentTest() {
             favoriteCourseCount = favoriteCourseCount,
             accountNotificationCount = announcementCount)
 
-        data.featureFlags = FeatureFlags(true)
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLoginElementary(data.domain, token, student)

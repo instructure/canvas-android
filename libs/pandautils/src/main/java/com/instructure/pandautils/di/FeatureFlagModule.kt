@@ -16,7 +16,7 @@
  */
 package com.instructure.pandautils.di
 
-import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -30,7 +30,7 @@ import dagger.hilt.components.SingletonComponent
 class FeatureFlagModule {
 
     @Provides
-    fun provideFeatureFlagProvider(featuresManager: FeaturesManager, remoteConfigUtils: RemoteConfigUtils, apiPrefs: ApiPrefs): FeatureFlagProvider {
-        return FeatureFlagProvider(featuresManager, remoteConfigUtils, apiPrefs)
+    fun provideFeatureFlagProvider(userManager: UserManager, remoteConfigUtils: RemoteConfigUtils, apiPrefs: ApiPrefs): FeatureFlagProvider {
+        return FeatureFlagProvider(userManager, remoteConfigUtils, apiPrefs)
     }
 }

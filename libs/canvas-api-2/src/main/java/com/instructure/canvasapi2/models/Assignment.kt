@@ -158,7 +158,8 @@ data class Assignment(
         ONLINE_URL("online_url"),
         MEDIA_RECORDING("media_recording"),
         ATTENDANCE("attendance"),
-        NOT_GRADED("not_graded")
+        NOT_GRADED("not_graded"),
+        STUDENT_ANNOTATION("student_annotation")
     }
 
     enum class GradingType {
@@ -182,7 +183,7 @@ data class Assignment(
         val submissionType = submissionTypes[0]
 
         return when (submissionType) {
-            SubmissionType.MEDIA_RECORDING, SubmissionType.ONLINE_TEXT_ENTRY, SubmissionType.ONLINE_URL, SubmissionType.ONLINE_UPLOAD -> TurnInType.ONLINE
+            SubmissionType.MEDIA_RECORDING, SubmissionType.ONLINE_TEXT_ENTRY, SubmissionType.ONLINE_URL, SubmissionType.ONLINE_UPLOAD, SubmissionType.STUDENT_ANNOTATION -> TurnInType.ONLINE
             SubmissionType.ONLINE_QUIZ -> TurnInType.QUIZ
             SubmissionType.DISCUSSION_TOPIC -> TurnInType.DISCUSSION
             SubmissionType.ON_PAPER -> TurnInType.ON_PAPER
@@ -253,6 +254,7 @@ data class Assignment(
                     "media_recording" -> SubmissionType.MEDIA_RECORDING
                     "attendance" -> SubmissionType.ATTENDANCE
                     "not_graded" -> SubmissionType.NOT_GRADED
+                    "student_annotation" -> SubmissionType.STUDENT_ANNOTATION
                     else -> SubmissionType.NONE
                 }
 
@@ -276,6 +278,7 @@ data class Assignment(
                 SubmissionType.MEDIA_RECORDING -> context.getString(R.string.canvasAPI_mediaRecording)
                 SubmissionType.ATTENDANCE -> context.getString(R.string.canvasAPI_attendance)
                 SubmissionType.NOT_GRADED -> context.getString(R.string.canvasAPI_notGraded)
+                SubmissionType.STUDENT_ANNOTATION -> context.getString(R.string.canvasAPI_studentAnnotation)
             }
         }
 

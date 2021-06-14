@@ -70,6 +70,7 @@ object AnalyticsEventConstants {
     const val SUBMIT_TEXTENTRY_SELECTED = "submit_textentry_selected"
     const val SUBMIT_MEDIARECORDING_SELECTED = "submit_mediarecording_selected"
     const val SUBMIT_STUDIO_SELECTED = "submit_studio_selected"
+    const val SUBMIT_STUDENT_ANNOTATION_SELECTED = "submit_student_annotation_selected"
     const val SUBMISSION_CELL_SELECTED = "submission_cell_selected"
     const val SUBMISSION_COMMENTS_SELECTED = "submission_comments_selected"
     const val SUBMISSION_COMMENTS_TEXT_REPLY = "submission_comments_text_reply"

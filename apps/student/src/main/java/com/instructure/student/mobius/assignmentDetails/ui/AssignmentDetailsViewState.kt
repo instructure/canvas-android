@@ -79,7 +79,8 @@ data class SubmissionTypesVisibilities(
     var urlEntry: Boolean = false,
     var fileUpload: Boolean = false,
     var mediaRecording: Boolean = false,
-    var studioUpload: Boolean = false
+    var studioUpload: Boolean = false,
+    var studentAnnotation: Boolean = false
 )
 
 data class QuizDescriptionViewState(

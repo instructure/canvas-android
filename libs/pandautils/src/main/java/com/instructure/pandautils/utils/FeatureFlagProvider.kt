@@ -16,13 +16,13 @@
  */
 package com.instructure.pandautils.utils
 
-import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 
 class FeatureFlagProvider(
-    private val featuresManager: FeaturesManager,
+    private val userManager: UserManager,
     private val remoteConfigUtils: RemoteConfigUtils,
     private val apiPrefs: ApiPrefs
 ) {
@@ -31,9 +31,8 @@ class FeatureFlagProvider(
         try {
             val k5enabled = remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
             return if (k5enabled) {
-                val featureFlagResult = featuresManager.getFeatureFlagsAsync().await()
-                val featureFlags = featureFlagResult.dataOrThrow
-                val canvasForElementary = featureFlags.canvasForElementary
+                val userResult = userManager.getSelfAsync(false).await()
+                val canvasForElementary = userResult.dataOrThrow.k5User
                 apiPrefs.canvasForElementary = canvasForElementary
                 canvasForElementary
             } else {
