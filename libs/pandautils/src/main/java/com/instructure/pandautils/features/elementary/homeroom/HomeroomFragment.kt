@@ -87,11 +87,7 @@ class HomeroomFragment : Fragment() {
 
                 val calculatedSpan = (width - spacing * 4) / cardRequiredSpace
 
-                val span = when {
-                    calculatedSpan < 3 -> 2
-                    calculatedSpan >= 4 -> 4
-                    else -> 3
-                }
+                val span = if (calculatedSpan < 2) 1 else 2
 
                 (coursesRecyclerView.layoutManager as GridLayoutManager).spanCount = span
             }
