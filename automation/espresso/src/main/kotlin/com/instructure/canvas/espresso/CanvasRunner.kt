@@ -75,22 +75,4 @@ open class CanvasRunner : AndroidJUnitRunner() {
         super.finish(resultCode, results)
     }
 
-    companion object {
-
-//        private const val START_ACTIVITY_TIMEOUT_SECONDS = 120
-//
-//        init {
-//            try {
-//                // private static final int START_ACTIVITY_TIMEOUT_SECONDS = 45;
-//                // https://android.googlesource.com/platform/frameworks/testing/+/7a552ffc0bce492a7b87755490f3df7490dc357c/support/src/android/support/test/runner/MonitoringInstrumentation.java#78
-//                val field = MonitoringInstrumentation::class.java.getDeclaredField("START_ACTIVITY_TIMEOUT_SECONDS")
-//                field.isAccessible = true
-//                field.set(null, START_ACTIVITY_TIMEOUT_SECONDS)
-//            } catch (e: Exception) {
-//                throw RuntimeException(e)
-//            }
-//        }
-
-    }
-
 }
