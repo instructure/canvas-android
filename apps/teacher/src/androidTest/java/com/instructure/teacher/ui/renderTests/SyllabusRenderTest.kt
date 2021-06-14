@@ -25,9 +25,11 @@ import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.ui.renderTests.pages.SyllabusRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
 
+@HiltAndroidTest
 class SyllabusRenderTest : TeacherRenderTest() {
 
     private val syllabusRenderPage = SyllabusRenderPage()

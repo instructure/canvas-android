@@ -23,9 +23,11 @@ import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellView
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class GradeCellRenderTest : StudentRenderTest() {
 

@@ -27,8 +27,10 @@ import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.ActivityHelper
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class EditSyllabusPageTest : TeacherTest() {
 
     override fun displaysPageObjects() = Unit

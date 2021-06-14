@@ -46,7 +46,7 @@ android {
         versionName = '1.13.1'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
-        testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
+        testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
         /* BuildConfig fields */
@@ -289,6 +289,10 @@ dependencies {
     /* DI */
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
+    androidTestImplementation Libs.HILT_TESTING
+    kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
+
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -33,11 +33,13 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.core.AllOf
 import org.junit.Before
 import org.junit.Test
 import java.io.File
 
+@HiltAndroidTest
 class PickerSubmissionUploadInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 

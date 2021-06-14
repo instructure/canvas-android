@@ -30,9 +30,11 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.ui.pages.renderPages.SubmissionFilesRenderPage
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class SubmissionFilesRenderTest : StudentRenderTest() {
 

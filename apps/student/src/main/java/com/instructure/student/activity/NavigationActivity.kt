@@ -26,7 +26,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -68,6 +71,7 @@ import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
+import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
@@ -77,7 +81,10 @@ import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
-import com.instructure.student.navigation.*
+import com.instructure.student.navigation.AccountMenuItem
+import com.instructure.student.navigation.NavigationBehavior
+import com.instructure.student.navigation.NavigationMenuItem
+import com.instructure.student.navigation.OptionsMenuItem
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -94,6 +101,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
@@ -108,6 +116,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var typefaceBehavior: TypefaceBehavior
+
+    @Inject
+    lateinit var updateManager: UpdateManager
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -194,6 +205,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         applyCurrentFragmentTheme()
     }
 
+    private fun checkAppUpdates() {
+        updateManager.checkForInAppUpdate(this)
+    }
+
     private fun applyCurrentFragmentTheme() {
         Handler().post {
             (currentFragment as? FragmentInteractions)?.let {
@@ -221,6 +236,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         appShortcutManager.make(this)
 
         setupNavDrawerItems()
+
+        checkAppUpdates()
     }
 
     private fun setupNavDrawerItems() {

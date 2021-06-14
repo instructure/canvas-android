@@ -25,8 +25,10 @@ import com.instructure.teacher.features.postpolicies.ui.PostGradeViewState
 import com.instructure.teacher.ui.renderTests.pages.PostGradeRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class PostGradeRenderTest : TeacherRenderTest() {
 
     private val page = PostGradeRenderPage()

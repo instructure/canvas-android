@@ -43,7 +43,7 @@ object Versions {
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.4.3"
-    const val HILT = "2.33-beta"
+    const val HILT = "2.35"
     const val LIFECYCLE = "2.3.0"
     const val FRAGMENT_KTX = "1.3.1"
 }
@@ -109,6 +109,8 @@ object Libs {
     /* Dependency Inejction */
     const val HILT = "com.google.dagger:hilt-android:${Versions.HILT}"
     const val HILT_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
+    const val HILT_TESTING = "com.google.dagger:hilt-android-testing:${Versions.HILT}"
+    const val HILT_TESTING_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
 
     /* Android Architecture Components */
     const val VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"

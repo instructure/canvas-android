@@ -12,10 +12,12 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
+@HiltAndroidTest
 class ProfileSettingsInteractionTest : StudentTest() {
 
     override fun displaysPageObjects() = Unit // Not used for interaction tests
