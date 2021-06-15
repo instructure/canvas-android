@@ -96,17 +96,15 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
     }
 
     fun assertElementaryMenuItemsShownInDrawer() {
-        onView(withText(R.string.navDrawerAccount)).assertDisplayed()
+        onView(withText(R.string.files)).assertDisplayed()
+        onView(withText(R.string.settings)).assertDisplayed()
         onView(withText(R.string.help)).assertDisplayed()
+        onView(withText(R.string.changeUser)).assertDisplayed()
         onView(withText(R.string.logout)).assertDisplayed()
     }
 
     fun assertNotElementaryMenuItemsDontShowInDrawer() {
-        onView(withText(R.string.files)).assertNotDisplayed()
-        onView(withText(R.string.bookmarks)).assertNotDisplayed()
-        onView(withText(R.string.settings)).assertNotDisplayed()
         onView(withText(R.string.showGrades)).assertNotDisplayed()
         onView(withText(R.string.colorOverlay)).assertNotDisplayed()
-        onView(withText(R.string.changeUser)).assertNotDisplayed()
     }
 }
