@@ -20,6 +20,7 @@ import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -43,6 +44,7 @@ import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
@@ -309,6 +311,11 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         catch(t: Throwable) {
             return false
         }
+    }
+
+    fun scrollToTop() {
+        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(10)))
+                .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 }
 
