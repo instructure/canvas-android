@@ -180,7 +180,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_stopMasquerading -> {
                     MasqueradeHelper.stopMasquerading(startActivityClass)
                 }
-                R.id.navigationDrawerSettings, R.id.navigationDrawerAccount -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
+                R.id.navigationDrawerSettings -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
             }
         }
     }
@@ -251,7 +251,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         navigationDrawerItem_colorOverlay.setVisible(navigationBehavior.visibleOptionsMenuItems.contains(OptionsMenuItem.COLOR_OVERLAY))
         optionsMenuItemsDivider.setVisible(navigationBehavior.visibleOptionsMenuItems.isNotEmpty())
 
-        navigationDrawerAccount.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.ACCOUNT))
         navigationDrawerItem_help.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.HELP))
         navigationDrawerItem_changeUser.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.CHANGE_USER))
         navigationDrawerItem_logout.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.LOGOUT))
@@ -425,7 +424,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         navigationDrawerItem_gauge.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_studio.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_bookmarks.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerAccount.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_changeUser.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_help.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_logout.setOnClickListener(mNavigationDrawerItemClickListener)
