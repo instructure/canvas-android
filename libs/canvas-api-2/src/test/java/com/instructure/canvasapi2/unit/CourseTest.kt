@@ -527,11 +527,27 @@ class CourseTest {
         val endDate = OffsetDateTime.now().plusDays(50).withNano(0)
 
         val term = Term(startAt = startDate.toString(), endAt = endDate.toString())
-        val section = Section(startAt = badStartDate.toString(), endAt = badEndDate.toString())
+        val section = Section(startAt = badStartDate.toString(), endAt = badEndDate.toString(), restrictEnrollmentsToSectionDates = true)
         val course = baseCourse.copy(restrictEnrollmentsToCourseDate = false,
                 startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
 
         assertFalse(course.isBetweenValidDateRange())
+    }
+
+    @Test
+    fun `Is between valid date range when section dates are invalid but enrollment is not restricted between section dates`() {
+        val badStartDate = OffsetDateTime.now().minusDays(30).withNano(0)
+        val badEndDate = OffsetDateTime.now().minusDays(20).withNano(0)
+
+        val startDate = OffsetDateTime.now().minusDays(50).withNano(0)
+        val endDate = OffsetDateTime.now().plusDays(50).withNano(0)
+
+        val term = Term(startAt = startDate.toString(), endAt = endDate.toString())
+        val section = Section(startAt = badStartDate.toString(), endAt = badEndDate.toString(), restrictEnrollmentsToSectionDates = false)
+        val course = baseCourse.copy(restrictEnrollmentsToCourseDate = false,
+            startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
+
+        assertTrue(course.isBetweenValidDateRange())
     }
 
     @Test
