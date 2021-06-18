@@ -475,7 +475,6 @@ class DiscussionsInteractionTest : StudentTest() {
         val attachment = createHtmlAttachment(data, attachmentHtml)
         discussionEntry.attachments = mutableListOf(attachment)
 
-        discussionDetailsPage.scrollToTop()
         discussionDetailsPage.refresh() // To pick up updated reply
         discussionDetailsPage.assertReplyDisplayed(discussionEntry)
         discussionDetailsPage.assertReplyAttachment(discussionEntry)

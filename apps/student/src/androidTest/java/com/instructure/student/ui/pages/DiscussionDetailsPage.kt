@@ -79,6 +79,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     }
 
     fun refresh() {
+        scrollToTop()
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(10)))
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
