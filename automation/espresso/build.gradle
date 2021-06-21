@@ -20,7 +20,7 @@ buildscript {
     ext.kotlinVersion = "1.3.20"
 
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
 
@@ -32,13 +32,9 @@ buildscript {
     }
 }
 
-plugins {
-    id("com.jfrog.bintray") version "1.8.4"
-}
-
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
 }
@@ -46,21 +42,6 @@ allprojects {
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
-
-// This plugin, along with the publishing{} section below, allows us to generate a
-// pom file WITH DEPENDENCIES without running "./gradlew install".  It was thought,
-// at one point, that running "./gradlew install" in our jitpack.yml script was messing up our
-// multiple-artifact-mono-repo strategy, but that may not be the case after all.
-// (What was messing us up was providing the same pom.xml file to both
-// artifacts, which essentially made them the same artifact.)
-//
-// So, at some point, we may want to get rid of this plugin and accompanying publishing{}
-// logic, and just go with "./gradlew clean build install" in our jitpack.yml script and then
-// reference the alternate-location pom-default.xml in our script commands.
-apply plugin: 'digital.wup.android-maven-publish'
-
-group = 'com.github.instructure'
-version = System.getenv("MVN_VERSION") ?: "snapshot"
 
 android {
     compileSdkVersion 28

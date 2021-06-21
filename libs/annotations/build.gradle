@@ -86,7 +86,7 @@ android {
 
 repositories {
     google()
-    jcenter()
+    mavenCentral()
     maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
     maven {
         credentials {

@@ -23,9 +23,7 @@ buildscript {
         google()
         mavenCentral()
         maven { url "https://www.jitpack.io" }
-        jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://dl.bintray.com/instructure/maven" }
     }
 
     dependencies {
@@ -54,8 +52,6 @@ allprojects {
             url 'https://customers.pspdfkit.com/maven/'
         }
         maven { url "https://maven.google.com/" }
-        jcenter()
-        maven { url "https://dl.bintray.com/instructure/maven" }
     }
 }
 
