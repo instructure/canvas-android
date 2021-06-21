@@ -227,7 +227,7 @@ data class Course(
                     true
                 } else {
                     // All we need is one valid section
-                    sections.any { section -> isWithinDates(section.startAt.toDate(), section.endAt.toDate(), now) }
+                    sections.any { section -> !section.restrictEnrollmentsToSectionDates || isWithinDates(section.startAt.toDate(), section.endAt.toDate(), now) }
                 }
             } else {
                 false
