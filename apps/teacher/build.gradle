@@ -191,11 +191,6 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-    maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
-}
-
 androidExtensions {
     experimental = true
 }

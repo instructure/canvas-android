@@ -46,10 +46,6 @@ configurations {
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
 }
 
-repositories {
-    mavenCentral()
-}
-
 androidExtensions {
     experimental = true
 }

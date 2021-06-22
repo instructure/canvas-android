@@ -23,7 +23,6 @@ buildscript {
         google()
         mavenCentral()
         maven { url "https://www.jitpack.io" }
-        maven { url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
@@ -32,7 +31,6 @@ buildscript {
         classpath Plugins.GOOGLE_SERVICES
         classpath Plugins.KOTLIN
         classpath Plugins.FIREBASE_CRASHLYTICS
-        classpath Plugins.BUILD_SCAN
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
         classpath Plugins.SQLDELIGHT
         classpath Plugins.HILT
