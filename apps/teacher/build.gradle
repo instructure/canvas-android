@@ -252,7 +252,7 @@ dependencies {
     implementation Libs.PHOTO_VIEW
 
     /* Flexbox Layout */
-    implementation 'com.google.android:flexbox:1.1.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1'
 
     /* Support libs */
