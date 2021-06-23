@@ -38,7 +38,6 @@ object Versions {
     const val ANALYTICS = "17.4.1"
     const val FIREBASE_ANALYTICS = "17.4.1"
     const val PSPDFKIT = "6.5.2"
-    const val EXOPLAYER = "2.9.6"
     const val PHOTO_VIEW = "2.3.0"
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
@@ -121,7 +120,7 @@ object Libs {
 
     /* Other */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
-    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:${Versions.EXOPLAYER}"
+    const val EXOPLAYER = "com.github.google.ExoPlayer:exoplayer:r2.9.6"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:${Versions.ANDROID_SVG}"
 }
