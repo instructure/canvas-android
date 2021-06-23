@@ -98,7 +98,7 @@ dependencies {
     api project(path: ':blueprint')
     api project(path: ':interactions')
 
-    implementation 'com.wonderkiln:camerakit:0.13.4'
+    implementation 'com.github.CameraKit:camerakit-android:v0.13.4'
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
