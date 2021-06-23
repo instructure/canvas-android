@@ -26,14 +26,14 @@ import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
 import com.instructure.loginapi.login.snicker.SnickerDoodle
-import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading)
+        PushNotificationRegistrationWorker.scheduleJob(this, ApiPrefs.isMasquerading)
 
         CookieManager.getInstance().flush()
 

@@ -271,9 +271,6 @@ dependencies {
     implementation Libs.FIREBASE_MESSAGING
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
-
     /* AAC */
     implementation Libs.VIEW_MODEL
     implementation Libs.LIVE_DATA

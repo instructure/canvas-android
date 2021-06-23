@@ -149,8 +149,9 @@ dependencies {
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
     implementation Libs.PLAY_CORE_KTX
 
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
+    /* Work Manager */
+    implementation Libs.ANDROIDX_WORK_MANAGER
+    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     /* DI */
     implementation Libs.HILT

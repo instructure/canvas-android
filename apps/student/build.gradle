@@ -314,9 +314,6 @@ dependencies {
     implementation Libs.PLAY_CORE
     implementation Libs.PLAY_CORE_KTX
 
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
-
     /* Database */
     implementation "com.squareup.sqldelight:android-driver:1.4.3"
 
