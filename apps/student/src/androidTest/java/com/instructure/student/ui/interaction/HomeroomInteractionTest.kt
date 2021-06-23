@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.StubLandscape
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Enrollment
@@ -204,7 +205,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         homeroomPage.assertPageObjects()
 
-        homeroomPage.openCourseAnnouncemnt(courseAnnouncement.title!!)
+        homeroomPage.openCourseAnnouncment(courseAnnouncement.title!!)
 
         discussionDetailsPage.assertPageObjects()
         discussionDetailsPage.assertTitleText(courseAnnouncement.title!!)
@@ -256,6 +257,7 @@ class HomeroomInteractionTest : StudentTest() {
         homeroomPage.assertToDoText("2 due today | 2 missing")
     }
 
+    @StubLandscape
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenAssignments() {
