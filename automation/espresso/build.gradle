@@ -144,7 +144,8 @@ dependencies {
     api("junit:junit:$junitVersion")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    api('com.schibsted.spain:barista:2.4.0') {
+    // Currently we can only get this from Jitpack, so we had to change the package name. It will be soon migrated to Maven Central.
+    api('com.github.AdevintaSpain:Barista:v2.4.0') {
         exclude group: 'com.android.support'
         exclude group: 'org.jetbrains.kotlin'
     }
