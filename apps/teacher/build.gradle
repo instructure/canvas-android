@@ -25,6 +25,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'dagger.hilt.android.plugin'
 
+def updatePriority = 0
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
