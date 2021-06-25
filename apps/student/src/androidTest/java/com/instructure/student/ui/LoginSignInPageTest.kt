@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui
 
+import com.instructure.canvas.espresso.Stub
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.enterDomain
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -26,6 +27,7 @@ class LoginSignInPageTest: StudentTest() {
 
     // Runs live; no MockCanvas
     @Test
+    @Stub
     override fun displaysPageObjects() {
         loginLandingPage.clickFindMySchoolButton()
         enterDomain()
