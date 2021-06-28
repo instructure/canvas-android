@@ -26,6 +26,7 @@ apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'dagger.hilt.android.plugin'
 
+def updatePriority = 0
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
@@ -213,7 +214,7 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
-                    new LocaleTransformer(),
+                    new LocaleTransformer(project),
                     new FlutterA11yOffsetTransformer(),
                     new FlutterTextureDisconnectFix()
             )

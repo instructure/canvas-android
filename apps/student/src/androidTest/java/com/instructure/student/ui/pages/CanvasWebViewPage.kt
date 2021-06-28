@@ -16,17 +16,15 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.annotation.StringRes
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
-import androidx.test.espresso.web.webdriver.DriverAtoms.getText
-import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
-import androidx.test.espresso.web.webdriver.DriverAtoms.webScrollIntoView
+import androidx.test.espresso.web.webdriver.DriverAtoms.*
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.withElementRepeat
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
@@ -35,16 +33,20 @@ import org.hamcrest.Matchers.containsString
  * An abstraction for operations on a full-screen (or mostly-full-screen) webpage.
  */
 open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
-    fun runTextChecks(vararg checks : WebViewTextCheck) {
-        for(check in checks) {
-            if(check.repeatSecs != null) {
+
+    fun verifyTitle(@StringRes title: Int) {
+        onView(withAncestor(R.id.toolbar) + withText(title)).assertVisible()
+    }
+
+    fun runTextChecks(vararg checks: WebViewTextCheck) {
+        for (check in checks) {
+            if (check.repeatSecs != null) {
                 onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
-                        .withElementRepeat(findElement(check.locatorType, check.locatorValue), check.repeatSecs)
-                        .check(webMatches(getText(), containsString(check.textValue)))
-            }
-            else {
+                    .withElementRepeat(findElement(check.locatorType, check.locatorValue), check.repeatSecs)
+                    .check(webMatches(getText(), containsString(check.textValue)))
+            } else {
                 onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
-                        .withElement(findElement(check.locatorType, check.locatorValue))
+                    .withElement(findElement(check.locatorType, check.locatorValue))
                         .check(webMatches(getText(), containsString(check.textValue)))
             }
         }
