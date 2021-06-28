@@ -165,7 +165,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     fun testHelp_searchCanvasGuides() {
         signInStudent()
 
-        dashboardPage.goToHelp()c
+        dashboardPage.goToHelp()
         helpPage.launchGuides()
         canvasWebViewPage.verifyTitle(R.string.searchGuides)
     }
