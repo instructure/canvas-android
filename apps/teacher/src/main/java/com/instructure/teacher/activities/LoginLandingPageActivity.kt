@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
 import com.instructure.loginapi.login.snicker.SnickerDoodle
-import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.teacher.R
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,7 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading)
+        PushNotificationRegistrationWorker.scheduleJob(this, ApiPrefs.isMasquerading)
         return SplashActivity.createIntent(this, null)
     }
 

@@ -98,7 +98,7 @@ dependencies {
     api project(path: ':blueprint')
     api project(path: ':interactions')
 
-    implementation 'com.wonderkiln:camerakit:0.13.4'
+    implementation 'com.github.CameraKit:camerakit-android:v0.13.4'
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
@@ -149,8 +149,9 @@ dependencies {
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
     implementation Libs.PLAY_CORE_KTX
 
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
+    /* Work Manager */
+    implementation Libs.ANDROIDX_WORK_MANAGER
+    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     /* DI */
     implementation Libs.HILT

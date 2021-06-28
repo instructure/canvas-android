@@ -28,7 +28,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
-import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Utils
 import com.instructure.student.BuildConfig
@@ -40,7 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginActivity : BaseLoginInitActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading)
+        PushNotificationRegistrationWorker.scheduleJob(this, ApiPrefs.isMasquerading)
 
         CookieManager.getInstance().flush()
 

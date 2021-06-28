@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
-import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -77,7 +77,7 @@ class LoginActivity : BaseLoginInitActivity() {
         }
 
         fun createLaunchApplicationMainActivityIntent(context: Context, extras: Bundle?): Intent {
-            PushNotificationRegistrationService.scheduleJob(context, ApiPrefs.isMasquerading)
+            PushNotificationRegistrationWorker.scheduleJob(context, ApiPrefs.isMasquerading)
 
             return SplashActivity.createIntent(context, extras)
         }

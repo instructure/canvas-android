@@ -192,11 +192,6 @@ android {
     }
 }
 
-repositories {
-    jcenter()
-    maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
-}
-
 androidExtensions {
     experimental = true
 }
@@ -258,7 +253,7 @@ dependencies {
     implementation Libs.PHOTO_VIEW
 
     /* Flexbox Layout */
-    implementation 'com.google.android:flexbox:1.1.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1'
 
     /* Support libs */
@@ -276,9 +271,6 @@ dependencies {
     implementation Libs.PLAY_CORE_KTX
     implementation Libs.FIREBASE_MESSAGING
     testImplementation Libs.ANDROIDX_CORE_TESTING
-
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
 
     /* AAC */
     implementation Libs.VIEW_MODEL

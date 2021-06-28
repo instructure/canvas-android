@@ -27,14 +27,6 @@
         <service android:name=".services.FileUploadService"/>
         <!--Push Notifications-->
 
-        <service
-            android:exported="false"
-            android:name=".services.PushNotificationRegistrationService">
-            <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
-            </intent-filter>
-        </service>
-
         <receiver android:name=".receivers.PushDeleteReceiver"/>
 
     </application>

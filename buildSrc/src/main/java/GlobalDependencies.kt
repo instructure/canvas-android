@@ -27,7 +27,6 @@ object Versions {
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.3.3"
     const val ANDROIDX = "1.0.0"
-    const val FIREBASE_JOB_DISPATCHER = "0.8.6"
     const val FIREBASE_CONFIG = "18.0.0"
     const val PLAY_CORE = "1.10.0"
     const val PLAY_CORE_KTX = "1.8.1"
@@ -38,7 +37,6 @@ object Versions {
     const val ANALYTICS = "17.4.1"
     const val FIREBASE_ANALYTICS = "17.4.1"
     const val PSPDFKIT = "6.5.2"
-    const val EXOPLAYER = "2.9.6"
     const val PHOTO_VIEW = "2.3.0"
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
@@ -46,6 +44,7 @@ object Versions {
     const val HILT = "2.35"
     const val LIFECYCLE = "2.3.0"
     const val FRAGMENT_KTX = "1.3.1"
+    const val WORK_MANAGER = "2.5.0"
 }
 
 object Libs {
@@ -75,6 +74,8 @@ object Libs {
     const val ANDROIDX_VECTOR = "androidx.vectordrawable:vectordrawable:${Versions.ANDROIDX}"
     const val ANDROIDX_SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.1.0"
+    const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
+    const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
 
     /* Play Services */
     const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics:${Versions.FIREBASE_ANALYTICS}"
@@ -84,7 +85,6 @@ object Libs {
     const val PLAY_SERVICES_WEARABLE = "com.google.android.gms:play-services-wearable:16.0.1"
     const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:16.0.1"
     const val FIREBASE_CORE = "com.google.firebase:firebase-core:17.2.0"
-    const val FIREBASE_JOB_DISPATCHER = "com.firebase:firebase-jobdispatcher:${Versions.FIREBASE_JOB_DISPATCHER}"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config:${Versions.FIREBASE_CONFIG}"
     const val PLAY_CORE = "com.google.android.play:core:${Versions.PLAY_CORE}"
     const val PLAY_CORE_KTX = "com.google.android.play:core-ktx:${Versions.PLAY_CORE_KTX}"
@@ -121,7 +121,7 @@ object Libs {
 
     /* Other */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
-    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:${Versions.EXOPLAYER}"
+    const val EXOPLAYER = "com.github.google.ExoPlayer:exoplayer:r2.9.6"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:${Versions.ANDROID_SVG}"
 }
