@@ -39,6 +39,7 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.R
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers
 import org.junit.Before
@@ -164,12 +165,9 @@ class NavigationDrawerInteractionTest : StudentTest() {
     fun testHelp_searchCanvasGuides() {
         signInStudent()
 
-        dashboardPage.goToHelp()
+        dashboardPage.goToHelp()c
         helpPage.launchGuides()
-        canvasWebViewPage.runTextChecks(
-                // Potentially brittle -- the web content could be changed by another team
-                WebViewTextCheck(Locator.CLASS_NAME, "lia-panel-heading-bar-title", "Guides by Product", 25)
-        )
+        canvasWebViewPage.verifyTitle(R.string.searchGuides)
     }
 
     // Should send an error report
