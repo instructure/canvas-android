@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.UnreadConversationCount
 import com.instructure.canvasapi2.utils.APIHelper
+import okhttp3.FormBody
 import java.util.*
 
 /**
@@ -162,7 +163,21 @@ object ConversationEndpoint : Endpoint(
             POST {
                 if (data.conversations.containsKey(pathVars.conversationId)) {
                     val conversation = data.conversations[pathVars.conversationId]!!
-                    val messageBody = request.url().queryParameter("body")
+                    val bodyParamsSize = (request.body() as? FormBody)?.size() ?: 0
+                    var bodyIndex = -1
+                    for (index in 0..bodyParamsSize) {
+                        if ((request.body() as? FormBody)?.name(index) == "body") {
+                            bodyIndex = index
+                            break
+                        }
+                    }
+
+                    val messageBody = if (bodyIndex != -1) {
+                        (request.body() as? FormBody)?.value(bodyIndex)
+                    } else {
+                        null
+                    }
+
                     val message = Message(
                         id = data.newItemId(),
                         authorId = request.user!!.id,
