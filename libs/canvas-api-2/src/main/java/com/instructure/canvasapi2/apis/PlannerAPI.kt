@@ -6,6 +6,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
