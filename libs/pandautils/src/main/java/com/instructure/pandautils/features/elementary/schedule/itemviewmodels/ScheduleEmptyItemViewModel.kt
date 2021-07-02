@@ -14,17 +14,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.elementary.schedule
+package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
-import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class ScheduleViewData(val itemViewModels: List<ItemViewModel>)
-
-data class ScheduleCourseViewData(
-        val courseName: String,
-        val openable: Boolean,
-        val courseColor: String,
-        val imageUrl: String,
-        val plannerItems: List<ItemViewModel>
-)
+class ScheduleEmptyItemViewModel : ItemViewModel {
+    override val layoutId: Int
+        get() = TODO("Not yet implemented")
+}

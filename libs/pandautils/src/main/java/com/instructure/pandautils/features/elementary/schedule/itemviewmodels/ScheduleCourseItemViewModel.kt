@@ -16,16 +16,12 @@
 
 package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.pandautils.features.elementary.schedule.ScheduleCourseViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
-import java.util.*
 
-class CourseScheduleItemViewModel(
-        val title: String,
-        val course: Course? = null,
-        val date: Date,
-        val plannerItems: List<PlannerItem>
+class ScheduleCourseItemViewModel(
+        val data: ScheduleCourseViewData,
+        val onHeaderClick: () -> Unit
 ) : ItemViewModel {
     override val layoutId: Int
         get() = TODO("Not yet implemented")

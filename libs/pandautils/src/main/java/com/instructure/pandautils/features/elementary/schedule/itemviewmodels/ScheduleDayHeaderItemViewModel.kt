@@ -19,7 +19,7 @@ package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class DayHeaderItemViewModel(
+class ScheduleDayHeaderItemViewModel(
         val dayText: String,
         val dateText: String,
         val onTodayClick: (() -> Unit)? = null
