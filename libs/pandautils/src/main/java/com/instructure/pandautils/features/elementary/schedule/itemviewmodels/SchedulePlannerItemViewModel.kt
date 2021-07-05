@@ -16,9 +16,9 @@
 
 package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
+import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class SchedulePlannerItemViewModel : ItemViewModel {
-    override val layoutId: Int
-        get() = TODO("Not yet implemented")
+    override val layoutId: Int = R.layout.item_schedule_planner_item
 }

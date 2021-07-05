@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.ScheduleCourseViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
@@ -23,6 +24,5 @@ class ScheduleCourseItemViewModel(
         val data: ScheduleCourseViewData,
         val onHeaderClick: () -> Unit
 ) : ItemViewModel {
-    override val layoutId: Int
-        get() = TODO("Not yet implemented")
+    override val layoutId: Int = R.layout.item_schedule_course
 }

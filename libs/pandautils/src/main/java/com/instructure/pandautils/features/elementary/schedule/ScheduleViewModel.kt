@@ -17,6 +17,9 @@
 package com.instructure.pandautils.features.elementary.schedule
 
 import android.content.res.Resources
+import android.text.format.DateUtils
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.AnnouncementManager
@@ -26,9 +29,18 @@ import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.features.elementary.homeroom.HomeroomAction
+import com.instructure.pandautils.features.elementary.homeroom.HomeroomViewData
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayHeaderItemViewModel
+import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.isSameDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import org.threeten.bp.DateTimeUtils
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -41,31 +53,51 @@ class ScheduleViewModel @Inject constructor(
         private val announcementManager: AnnouncementManager,
         private val toDoManager: ToDoManager) : ViewModel() {
 
+    val state: LiveData<ViewState>
+        get() = _state
+    private val _state = MutableLiveData<ViewState>()
+
+    val data: LiveData<ScheduleViewData>
+        get() = _data
+    private val _data = MutableLiveData<ScheduleViewData>()
+
+    val events: LiveData<Event<ScheduleAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<ScheduleAction>>()
+
     init {
         viewModelScope.launch {
             val startDate = Date()
+            val weekStart = DateHelper.getLastSunday(startDate)
             val userTodos = toDoManager.getUserTodosAsync(true).await().dataOrNull
 
-            val courses = courseManager.getCoursesAsync(true).await()
-            val coursesMap = courses.dataOrThrow
-                    .filter { !it.homeroomCourse }
-                    .associateBy { it.id }
-            val dashboardCourses = courseManager.getDashboardCoursesAsync(true)
-                    .await()
-                    .dataOrThrow
-                    .mapNotNull { coursesMap[it.id] }
-            val announcementMap = dashboardCourses.associateWith {
-                announcementManager.getLatestAnnouncementAsync(it, true)
-                        .await()
-                        .dataOrNull
-                        ?.firstOrNull()
-            }
             val plannerItems = plannerManager.getPlannerItemsAsync(
                     true,
-                    DateHelper.getLastSunday(startDate).toApiString(),
+                    weekStart.toApiString(),
                     DateHelper.getNextSaturday(startDate).toApiString())
                     .await()
                     .dataOrNull
+
+
+            val itemViewModels = mutableListOf<ItemViewModel>()
+            for (i in 0..6) {
+                val calendar = Calendar.getInstance()
+                calendar.time = weekStart
+                calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) + i)
+                val date = calendar.time
+                itemViewModels.add(ScheduleDayHeaderItemViewModel(
+                        SimpleDateFormat("EEEE", Locale.getDefault()).format(date),
+                        SimpleDateFormat("MMMM dd", Locale.getDefault()).format(date),
+                        !Date().isSameDay(date),
+                        this@ScheduleViewModel::jumpToToday))
+
+                val filteredPlannerItems = plannerItems?.filter { date.isSameDay(it.plannableDate) }.orEmpty().map {  }
+            }
+            _data.postValue(ScheduleViewData(itemViewModels))
         }
+    }
+
+    fun jumpToToday() {
+
     }
 }

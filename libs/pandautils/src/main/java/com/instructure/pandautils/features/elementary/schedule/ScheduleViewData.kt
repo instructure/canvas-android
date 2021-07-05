@@ -28,3 +28,7 @@ data class ScheduleCourseViewData(
         val imageUrl: String,
         val plannerItems: List<ItemViewModel>
 )
+
+sealed class ScheduleAction {
+
+}

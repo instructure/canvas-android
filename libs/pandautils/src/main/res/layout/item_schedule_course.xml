@@ -45,6 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@{itemViewModel.data.openable ? @drawable/ic_open_arrow : null}"
+                android:onClick="@{() -> itemViewModel.data.openable ? itemViewModel.onHeaderClick.invoke() : null}"
                 android:gravity="center_vertical"
                 android:lineSpacingExtra="2sp"
                 android:minHeight="48dp"

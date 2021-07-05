@@ -2,6 +2,7 @@ package com.instructure.canvasapi2.di
 
 import com.instructure.canvasapi2.apis.HelpLinksAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.apis.ToDoAPI
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -58,6 +59,11 @@ object ApiModule {
     @Provides
     fun provideUserManager(): UserManager {
         return UserManager
+    }
+
+    @Provides
+    fun provideToDoManager(): ToDoManager {
+        return ToDoManager
     }
 
     @Provides

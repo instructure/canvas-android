@@ -22,7 +22,8 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 class ScheduleDayHeaderItemViewModel(
         val dayText: String,
         val dateText: String,
-        val onTodayClick: (() -> Unit)? = null
+        val todayVisible: Boolean,
+        val onTodayClick: (() -> Unit)
 ) : ItemViewModel {
 
     override val layoutId: Int = R.layout.item_schedule_day_header
