@@ -16,11 +16,12 @@
  */
 package com.instructure.pandautils.binding
 
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -122,5 +123,12 @@ fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: 
     if (overlayColor != null) {
         imageView.setCourseImage(imageUrl, overlayColor, true)
     }
+}
+
+@BindingAdapter("layout_constraintWidth_percent")
+fun bindConstraintWidthPercentage(view: View, percentage: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    params.matchConstraintPercentWidth = percentage
+    view.layoutParams = params
 }
 
