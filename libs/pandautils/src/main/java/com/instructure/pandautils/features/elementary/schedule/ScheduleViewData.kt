@@ -16,8 +16,12 @@
 
 package com.instructure.pandautils.features.elementary.schedule
 
+import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
+import java.util.*
 
 data class ScheduleViewData(val itemViewModels: List<ItemViewModel>)
 
@@ -26,8 +30,33 @@ data class ScheduleCourseViewData(
         val openable: Boolean,
         val courseColor: String,
         val imageUrl: String,
-        val plannerItems: List<ItemViewModel>
+        val plannerItems: List<SchedulePlannerItemViewModel>
 )
+
+data class SchedulePlannerItemData(
+        val title: String,
+        val type: PlannerItemType,
+        val points: Double?,
+        val dueDate: String?,
+        val openable: Boolean
+)
+
+enum class PlannerItemType(@DrawableRes val iconRes: Int) {
+    ANNOUNCEMENT(R.drawable.ic_announcement),
+    ASSIGNMENT(R.drawable.ic_assignment),
+    QUIZ(R.drawable.ic_quiz),
+    DISCUSSION(R.drawable.ic_discussion),
+    PEER_REVIEW(R.drawable.ic_peer_review),
+    CALENDAR_EVENT(R.drawable.ic_calendar),
+    PAGE(R.drawable.ic_pages)
+}
+
+enum class ScheduleItemViewModelType(val viewType: Int) {
+    COURSE(1),
+    DAY_HEADER(2),
+    PLANNER_ITEM(3),
+    EMPTY(4)
+}
 
 sealed class ScheduleAction {
 

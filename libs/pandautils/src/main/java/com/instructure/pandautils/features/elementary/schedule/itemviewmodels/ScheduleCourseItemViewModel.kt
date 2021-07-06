@@ -18,6 +18,8 @@ package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.ScheduleCourseViewData
+import com.instructure.pandautils.features.elementary.schedule.ScheduleItemViewModelType
+import com.instructure.pandautils.features.elementary.schedule.ScheduleViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class ScheduleCourseItemViewModel(
@@ -25,4 +27,6 @@ class ScheduleCourseItemViewModel(
         val onHeaderClick: () -> Unit
 ) : ItemViewModel {
     override val layoutId: Int = R.layout.item_schedule_course
+
+    override val viewType: Int = ScheduleItemViewModelType.COURSE.viewType
 }

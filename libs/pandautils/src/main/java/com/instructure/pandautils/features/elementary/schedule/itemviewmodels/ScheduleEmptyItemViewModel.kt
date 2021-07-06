@@ -16,9 +16,12 @@
 
 package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
+import com.instructure.pandautils.features.elementary.schedule.ScheduleItemViewModelType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class ScheduleEmptyItemViewModel : ItemViewModel {
     override val layoutId: Int
         get() = TODO("Not yet implemented")
+
+    override val viewType: Int = ScheduleItemViewModelType.EMPTY.viewType
 }

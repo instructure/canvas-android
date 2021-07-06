@@ -26,15 +26,19 @@ import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.PlannerManager
 import com.instructure.canvasapi2.managers.ToDoManager
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomAction
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomViewData
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleCourseItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayHeaderItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.pandautils.utils.isSameDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
@@ -71,13 +75,17 @@ class ScheduleViewModel @Inject constructor(
             val weekStart = DateHelper.getLastSunday(startDate)
             val userTodos = toDoManager.getUserTodosAsync(true).await().dataOrNull
 
+            val courses = courseManager.getCoursesAsync(true).await()
+            val coursesMap = courses.dataOrThrow
+                    .filter { !it.homeroomCourse }
+                    .associateBy { it.id }
+
             val plannerItems = plannerManager.getPlannerItemsAsync(
                     true,
                     weekStart.toApiString(),
                     DateHelper.getNextSaturday(startDate).toApiString())
                     .await()
                     .dataOrNull
-
 
             val itemViewModels = mutableListOf<ItemViewModel>()
             for (i in 0..6) {
@@ -91,7 +99,42 @@ class ScheduleViewModel @Inject constructor(
                         !Date().isSameDay(date),
                         this@ScheduleViewModel::jumpToToday))
 
-                val filteredPlannerItems = plannerItems?.filter { date.isSameDay(it.plannableDate) }.orEmpty().map {  }
+                val coursePlannerMap = plannerItems
+                        ?.filter {
+                            date.isSameDay(it.plannable.dueAt) && it.courseId != null
+                        }
+                        .orEmpty()
+                        .groupBy { coursesMap[it.courseId] }
+
+                val courseViewModels = coursePlannerMap.entries.map {
+                    val scheduleViewData = ScheduleCourseViewData(
+                            it.key?.name ?: "To Do",
+                            true,
+                            getCourseColor(it.key),
+                            it.key?.imageUrl ?: "",
+                            it.value.map {
+                                SchedulePlannerItemViewModel(
+                                        SchedulePlannerItemData(
+                                                it.plannable.title,
+                                                PlannerItemType.ASSIGNMENT,
+                                                it.plannable.pointsPossible,
+                                                if (it.plannable.dueAt != null) "Due ${SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(it.plannable.dueAt)}" else "",
+                                                true
+                                        ),
+                                        {},
+                                        {}
+                                )
+                            }
+                    )
+
+                    ScheduleCourseItemViewModel(
+                            scheduleViewData,
+                            {}
+                    )
+                }
+
+                itemViewModels.addAll(courseViewModels)
+
             }
             _data.postValue(ScheduleViewData(itemViewModels))
         }
@@ -99,5 +142,13 @@ class ScheduleViewModel @Inject constructor(
 
     fun jumpToToday() {
 
+    }
+
+    private fun getCourseColor(course: Course?): String {
+        return if (!course?.courseColor.isNullOrEmpty()) {
+            course?.courseColor!!
+        } else {
+            ColorApiHelper.K5_DEFAULT_COLOR
+        }
     }
 }

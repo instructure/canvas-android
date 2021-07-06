@@ -33,7 +33,8 @@ fun OffsetDateTime.getTime(): String {
     return format(pattern).toLowerCase()
 }
 
-fun Date.isSameDay(date: Date): Boolean {
+fun Date.isSameDay(date: Date?): Boolean {
+    if (date == null) return false
     val calendar1: Calendar = Calendar.getInstance()
     calendar1.time = this
     val calendar2: Calendar = Calendar.getInstance()

@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.elementary.schedule.ScheduleItemViewModelType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class ScheduleDayHeaderItemViewModel(
@@ -27,4 +28,6 @@ class ScheduleDayHeaderItemViewModel(
 ) : ItemViewModel {
 
     override val layoutId: Int = R.layout.item_schedule_day_header
+
+    override val viewType: Int = ScheduleItemViewModelType.DAY_HEADER.viewType
 }
