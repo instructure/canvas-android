@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -127,11 +128,13 @@ fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: 
     }
 }
 
-@BindingAdapter(value = ["borderColor", "borderWidth", "backgroundColor", "cornerRadius"], requireAll = false)
-fun addBorderToContainer(viewGroup: ViewGroup, borderColor: Int?, borderWidth: Int?, backgroundColor: Int?, cornerRadius: Int?) {
+@BindingAdapter(value = ["borderColor", "borderWidth", "backgroundColor", "cornerRadius", "borderColorRes"], requireAll = false)
+fun addBorderToContainer(viewGroup: ViewGroup, borderColor: Int?, borderWidth: Int?, backgroundColor: Int?, cornerRadius: Int?, borderColorRes: Int?) {
     val border = GradientDrawable()
     val background = backgroundColor ?: 0xffffff
-    val strokeColor = borderColor ?: 0x000000
+    val strokeColor = borderColor
+            ?: borderColorRes
+            ?: 0x000000
     border.setColor(background)
     border.setStroke(borderWidth?.toPx ?: 2.toPx, strokeColor)
     border.cornerRadius = cornerRadius?.toPx?.toFloat() ?: 4.toPx.toFloat()

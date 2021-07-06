@@ -434,5 +434,6 @@
     <string name="notificationChannelDescriptionInAppUpdate">Canvas notifications for in-app updates.</string>
     <string name="appUpdateReadyTitle">App ready to update</string>
     <string name="appUpdateReadyDescription">Restart the app to install the new version</string>
+    <string name="nothing_planned_yet">Nothing planned yet</string>
 
 </resources>

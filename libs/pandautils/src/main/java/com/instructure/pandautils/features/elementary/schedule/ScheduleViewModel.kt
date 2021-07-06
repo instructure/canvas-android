@@ -30,10 +30,12 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomAction
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomViewData
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleCourseItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayHeaderItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleEmptyItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -126,15 +128,19 @@ class ScheduleViewModel @Inject constructor(
                                 )
                             }
                     )
-
                     ScheduleCourseItemViewModel(
                             scheduleViewData,
                             {}
                     )
                 }
 
-                itemViewModels.addAll(courseViewModels)
-
+                if (courseViewModels.isEmpty()) {
+                    itemViewModels.add(ScheduleEmptyItemViewModel(
+                            ScheduleEmptyViewData(resources.getString(R.string.nothing_planned_yet))
+                    ))
+                } else {
+                    itemViewModels.addAll(courseViewModels)
+                }
             }
             _data.postValue(ScheduleViewData(itemViewModels))
         }

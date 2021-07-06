@@ -41,6 +41,10 @@ data class SchedulePlannerItemData(
         val openable: Boolean
 )
 
+data class ScheduleEmptyViewData(
+        val title: String
+)
+
 enum class PlannerItemType(@DrawableRes val iconRes: Int) {
     ANNOUNCEMENT(R.drawable.ic_announcement),
     ASSIGNMENT(R.drawable.ic_assignment),
