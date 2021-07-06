@@ -82,6 +82,7 @@ class GradesViewModel @Inject constructor(
                     it.id,
                     it.name,
                     getCourseColor(it),
+                    it.imageUrl ?: "",
                     it.enrollments?.first()?.computedCurrentScore,
                     createGradeText(it))
                 ) { gradeRowClicked(it) }
