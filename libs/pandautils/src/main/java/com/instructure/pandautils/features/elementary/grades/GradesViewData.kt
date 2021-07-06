@@ -22,7 +22,7 @@ data class GradesViewData(val items: List<ItemViewModel>)
 
 data class GradingPeriod(val id: Long, val name: String)
 
-data class GradeRowViewData(val courseId: Long, val courseName: String, val courseColor: String, val score: Float?, val gradeText: String)
+data class GradeRowViewData(val courseId: Long, val courseName: String, val courseColor: String, val score: Double?, val gradeText: String)
 
 sealed class GradesAction
 

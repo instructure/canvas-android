@@ -20,19 +20,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.features.elementary.grades.itemviewmodels.GradeRowItemViewModel
 import com.instructure.pandautils.features.elementary.grades.itemviewmodels.GradingPeriodSelectorItemViewModel
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorApiHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class GradesViewModel @Inject constructor(
-    private val userManager: UserManager
+    private val courseManager: CourseManager
 ) : ViewModel() {
 
 
@@ -61,8 +64,8 @@ class GradesViewModel @Inject constructor(
     private fun loadData(forceNetwork: Boolean) {
         viewModelScope.launch {
             try {
-                delay(2000)
-                val viewData = createDummyViewData()
+                val coursesWithGrades = courseManager.getCoursesWithGradesAsync(forceNetwork).await()
+                val viewData = createViewData(coursesWithGrades.dataOrThrow)
                 _data.postValue(viewData)
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
@@ -71,18 +74,47 @@ class GradesViewModel @Inject constructor(
         }
     }
 
-    private fun createDummyViewData(): GradesViewData {
+    private fun createViewData(courses: List<Course>): GradesViewData {
         val gradingPeriod = GradingPeriod(1, "Current Grading Period")
 
-        return GradesViewData(listOf(
-            GradingPeriodSelectorItemViewModel(listOf(gradingPeriod), gradingPeriod),
-            GradeRowItemViewModel(GradeRowViewData(1, "Math", "#123456", 90.0f, "90%")),
-            GradeRowItemViewModel(GradeRowViewData(2, "Art", "#12ff56", 80.0f, "80%")),
-            GradeRowItemViewModel(GradeRowViewData(3, "History", "#55ff56", 10.0f, "10%")),
-            GradeRowItemViewModel(GradeRowViewData(4, "Social Studies", "#55ffaa", 10.0f, "10%")),
-            GradeRowItemViewModel(GradeRowViewData(5, "Music", "#00ffaa", 100.0f, "100%")),
-            GradeRowItemViewModel(GradeRowViewData(6, "P. E.", "#88ffaa", null, "Not graded")),
-        ))
+        val gradeRowItems = courses
+            .filter { !it.homeroomCourse }
+            .map {
+                GradeRowItemViewModel(GradeRowViewData(
+                    it.id,
+                    it.name,
+                    getCourseColor(it),
+                    it.enrollments?.first()?.computedCurrentScore,
+                    createGradeText(it)))
+            }
+
+        val items = listOf<ItemViewModel>(GradingPeriodSelectorItemViewModel(listOf(gradingPeriod), gradingPeriod))
+            .plus(gradeRowItems)
+
+        return GradesViewData(items)
+    }
+
+    private fun createGradeText(it: Course): String {
+        val currentGrade = it.enrollments?.first()?.computedCurrentGrade
+        return if (currentGrade != null) {
+            currentGrade
+        } else {
+            val currentScore = it.enrollments?.first()?.computedCurrentScore
+            val currentScoreRounded = currentScore?.roundToInt()
+            if (currentScoreRounded != null) {
+                "$currentScoreRounded%"
+            } else {
+                "--"
+            }
+        }
+    }
+
+    private fun getCourseColor(course: Course): String {
+        return if (course.courseColor.isNullOrEmpty()) {
+            ColorApiHelper.K5_DEFAULT_COLOR
+        } else {
+            course.courseColor!!
+        }
     }
 
     fun refresh() {
