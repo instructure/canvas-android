@@ -18,7 +18,7 @@ package com.instructure.student.di.elementary
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.student.mobius.elementary.StudentHomeroomRouter
+import com.instructure.student.mobius.elementary.homeroom.StudentHomeroomRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

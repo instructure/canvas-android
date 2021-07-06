@@ -75,8 +75,6 @@ class GradesViewModel @Inject constructor(
     }
 
     private fun createViewData(courses: List<Course>): GradesViewData {
-        val gradingPeriod = GradingPeriod(1, "Current Grading Period")
-
         val gradeRowItems = courses
             .filter { !it.homeroomCourse }
             .map {
@@ -85,10 +83,11 @@ class GradesViewModel @Inject constructor(
                     it.name,
                     getCourseColor(it),
                     it.enrollments?.first()?.computedCurrentScore,
-                    createGradeText(it)))
+                    createGradeText(it))
+                ) { gradeRowClicked(it) }
             }
 
-        val items = listOf<ItemViewModel>(GradingPeriodSelectorItemViewModel(listOf(gradingPeriod), gradingPeriod))
+        val items = listOf(createGradingPeriodsViewModel())
             .plus(gradeRowItems)
 
         return GradesViewData(items)
@@ -115,6 +114,16 @@ class GradesViewModel @Inject constructor(
         } else {
             course.courseColor!!
         }
+    }
+
+    private fun gradeRowClicked(course: Course) {
+        _events.postValue(Event(GradesAction.OpenCourseGrades(course)))
+    }
+
+    private fun createGradingPeriodsViewModel(): GradingPeriodSelectorItemViewModel {
+        val gradingPeriod = GradingPeriod(1, "Current Grading Period")
+
+        return GradingPeriodSelectorItemViewModel(listOf(gradingPeriod), gradingPeriod)
     }
 
     fun refresh() {

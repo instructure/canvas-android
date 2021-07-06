@@ -14,22 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.elementary.grades
+package com.instructure.teacher.features.elementary.grades
 
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.features.elementary.grades.GradesRouter
 
-data class GradesViewData(val items: List<ItemViewModel>)
-
-data class GradingPeriod(val id: Long, val name: String)
-
-data class GradeRowViewData(val courseId: Long, val courseName: String, val courseColor: String, val score: Double?, val gradeText: String)
-
-sealed class GradesAction {
-    data class OpenCourseGrades(val course: Course) : GradesAction()
-}
-
-enum class GradesItemViewType(val viewType: Int) {
-    GRADING_PERIOD_SELECTOR(0),
-    GRADE_ROW(1)
+class TeacherGradesRouter : GradesRouter {
+    override fun openCourseGrades(course: Course) = Unit
 }

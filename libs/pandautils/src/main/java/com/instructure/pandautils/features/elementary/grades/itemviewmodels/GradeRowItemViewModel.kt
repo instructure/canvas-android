@@ -21,7 +21,10 @@ import com.instructure.pandautils.features.elementary.grades.GradeRowViewData
 import com.instructure.pandautils.features.elementary.grades.GradesItemViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class GradeRowItemViewModel(val data: GradeRowViewData) : ItemViewModel {
+class GradeRowItemViewModel(
+    val data: GradeRowViewData,
+    val onRowClicked: () -> Unit
+) : ItemViewModel {
 
     override val layoutId: Int = R.layout.item_grade_row
 

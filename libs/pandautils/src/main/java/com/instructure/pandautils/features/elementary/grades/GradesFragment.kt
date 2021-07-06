@@ -24,9 +24,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.databinding.FragmentGradesBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class GradesFragment : Fragment() {
+
+    @Inject
+    lateinit var gradesRouter: GradesRouter
 
     private val viewModel: GradesViewModel by viewModels()
 
@@ -37,11 +41,17 @@ class GradesFragment : Fragment() {
 
         viewModel.events.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
-
+                handleAction(it)
             }
         })
 
         return binding.root
+    }
+
+    private fun handleAction(action: GradesAction) {
+        when (action) {
+            is GradesAction.OpenCourseGrades -> gradesRouter.openCourseGrades(action.course)
+        }
     }
 
     companion object {
