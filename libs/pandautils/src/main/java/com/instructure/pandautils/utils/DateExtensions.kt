@@ -41,3 +41,19 @@ fun Date.isSameDay(date: Date?): Boolean {
     calendar2.time = date
     return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) && calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
 }
+
+fun Date.isNextDay(date: Date?): Boolean {
+    if (date == null) return false
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) + 1)
+    return calendar.time.isSameDay(this)
+}
+
+fun Date.isPreviousDay(date: Date?): Boolean {
+    if (date == null) return false
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) - 1)
+    return calendar.time.isSameDay(this)
+}

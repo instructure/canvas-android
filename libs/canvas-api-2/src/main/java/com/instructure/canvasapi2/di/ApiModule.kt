@@ -83,4 +83,9 @@ object ApiModule {
     fun providePlannerApi(): PlannerAPI {
         return PlannerAPI
     }
+
+    @Provides
+    fun provideAssignmentManager(): AssignmentManager {
+        return AssignmentManager
+    }
 }

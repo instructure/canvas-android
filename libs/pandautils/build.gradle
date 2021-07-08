@@ -163,4 +163,6 @@ dependencies {
     implementation Libs.VIEW_MODE_SAVED_STATE
     implementation Libs.FRAGMENT_KTX
     kapt Libs.LIFECYCLE_COMPILER
+
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 }

@@ -435,5 +435,13 @@
     <string name="appUpdateReadyTitle">App ready to update</string>
     <string name="appUpdateReadyDescription">Restart the app to install the new version</string>
     <string name="nothing_planned_yet">Nothing planned yet</string>
+    <string name="schedule_tag_graded">Graded</string>
+    <string name="schedule_tag_replies">Replies</string>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">Late</string>
+    <string name="schedule_tag_redo">Redo</string>
+    <string name="schedule_tag_excused">Excused</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
 
 </resources>

@@ -16,12 +16,14 @@
 
 package com.instructure.pandautils.features.elementary.schedule
 
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import com.instructure.canvasapi2.models.Course
+import androidx.annotation.StringRes
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemTagItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
-import java.util.*
 
 data class ScheduleViewData(val itemViewModels: List<ItemViewModel>)
 
@@ -38,11 +40,17 @@ data class SchedulePlannerItemData(
         val type: PlannerItemType,
         val points: Double?,
         val dueDate: String?,
-        val openable: Boolean
+        val openable: Boolean,
+        val chips: List<SchedulePlannerItemTagItemViewModel>
 )
 
 data class ScheduleEmptyViewData(
         val title: String
+)
+
+data class SchedulePlannerItemTag(
+        val text: String,
+        @ColorInt val color: Int
 )
 
 enum class PlannerItemType(@DrawableRes val iconRes: Int) {
@@ -60,6 +68,15 @@ enum class ScheduleItemViewModelType(val viewType: Int) {
     DAY_HEADER(2),
     PLANNER_ITEM(3),
     EMPTY(4)
+}
+
+enum class PlannerItemTag(@StringRes val text: Int, @ColorRes val color: Int) {
+    EXCUSED(R.string.schedule_tag_excused, R.color.textLightGray),
+    GRADED(R.string.schedule_tag_graded, R.color.textLightGray),
+    REPLIES(R.string.schedule_tag_replies, R.color.textLightGray),
+    FEEDBACK(R.string.schedule_tag_feedback, R.color.textLightGray),
+    LATE(R.string.schedule_tag_late, R.color.canvasRed),
+    REDO(R.string.schedule_tag_redo, R.color.canvasRed)
 }
 
 sealed class ScheduleAction {

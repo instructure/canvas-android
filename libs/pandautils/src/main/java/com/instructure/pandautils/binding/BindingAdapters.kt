@@ -16,10 +16,11 @@
  */
 package com.instructure.pandautils.binding
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
@@ -29,13 +30,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.features.elementary.schedule.PlannerItemTag
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.setCourseImage
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toPx
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
 import java.net.URLDecoder
@@ -128,16 +129,15 @@ fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: 
     }
 }
 
-@BindingAdapter(value = ["borderColor", "borderWidth", "backgroundColor", "cornerRadius", "borderColorRes"], requireAll = false)
-fun addBorderToContainer(viewGroup: ViewGroup, borderColor: Int?, borderWidth: Int?, backgroundColor: Int?, cornerRadius: Int?, borderColorRes: Int?) {
+@BindingAdapter(value = ["borderColor", "borderWidth", "backgroundColor", "borderCornerRadius"], requireAll = false)
+fun addBorderToContainer(view: View, borderColor: Int?, borderWidth: Int?, backgroundColor: Int?, borderCornerRadius: Int?) {
     val border = GradientDrawable()
     val background = backgroundColor ?: 0xffffff
     val strokeColor = borderColor
-            ?: borderColorRes
             ?: 0x000000
     border.setColor(background)
     border.setStroke(borderWidth?.toPx ?: 2.toPx, strokeColor)
-    border.cornerRadius = cornerRadius?.toPx?.toFloat() ?: 4.toPx.toFloat()
-    viewGroup.background = border
+    border.cornerRadius = borderCornerRadius?.toPx?.toFloat() ?: 4.toPx.toFloat()
+    view.background = border
 }
 
