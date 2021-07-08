@@ -1186,6 +1186,10 @@
     <string name="gradesSelect">Select</string>
     <string name="selectGradingPeriod">Select Grading Period</string>
     <string name="currentGradingPeriod">Current Grading Period</string>
+    <string name="failedToLoadGrades">Failed to load grades</string>
+    <string name="failedToLoadGradesForGradingPeriod">Failed to load grades for grading period</string>
+    <string name="failedToRefreshGrades">Failed to refresh grades</string>
+    <string name="noGradesToDisplay">No grades to display</string>
 
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 

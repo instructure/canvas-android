@@ -71,7 +71,7 @@ class GradesViewModel @Inject constructor(
         loadData(true)
     }
 
-    private fun loadData(forceNetwork: Boolean) {
+    private fun loadData(forceNetwork: Boolean, previouslySelectedGradingPeriod: GradingPeriod? = null) {
         viewModelScope.launch {
             try {
                 val coursesWithGrades = courseManager.getCoursesWithGradesAsync(forceNetwork).await().dataOrThrow
@@ -84,9 +84,23 @@ class GradesViewModel @Inject constructor(
                 val viewData = createViewData(gradeRowViewModels)
 
                 _data.postValue(viewData)
-                _state.postValue(ViewState.Success)
+                if (viewData.items.isEmpty()) {
+                    _state.postValue(ViewState.Empty(emptyTitle = R.string.noGradesToDisplay))
+                } else {
+                    _state.postValue(ViewState.Success)
+                }
             } catch (e: Exception) {
-                _state.postValue(ViewState.Error("Failed to load grades"))
+                if (_data.value == null || _data.value?.items?.isNullOrEmpty() == true) {
+                    _state.postValue(ViewState.Error(resources.getString(R.string.failedToLoadGrades)))
+                } else {
+                    _state.postValue(ViewState.Error())
+                    _events.postValue(Event(GradesAction.ShowRefreshError))
+                }
+
+                if (previouslySelectedGradingPeriod != null) {
+                    gradingPeriodsViewModel?.selectedGradingPeriod = previouslySelectedGradingPeriod
+                    gradingPeriodsViewModel?.notifyChange()
+                }
             }
         }
     }
@@ -124,7 +138,7 @@ class GradesViewModel @Inject constructor(
     private fun createViewData(gradeRowItems: List<GradeRowItemViewModel>): GradesViewData {
         val items = mutableListOf<ItemViewModel>()
 
-        if (gradingPeriodsViewModel != null && gradingPeriodsViewModel!!.isNotEmpty()) {
+        if (gradingPeriodsViewModel != null && gradingPeriodsViewModel!!.isNotEmpty() && gradeRowItems.isNotEmpty()) {
             items.add(gradingPeriodsViewModel!!)
         }
         items.addAll(gradeRowItems)
@@ -164,19 +178,20 @@ class GradesViewModel @Inject constructor(
 
     fun gradingPeriodSelected(gradingPeriod: GradingPeriod) {
         if (gradingPeriodsViewModel?.selectedGradingPeriod != gradingPeriod) {
+            val previouslySelectedGradingPeriod = gradingPeriodsViewModel?.selectedGradingPeriod
             gradingPeriodsViewModel?.selectedGradingPeriod = gradingPeriod
             gradingPeriodsViewModel?.notifyChange()
 
             _state.postValue(ViewState.Refresh)
             if (gradingPeriod.id == CURRENT_GRADING_PERIOD_ID) {
-                loadData(true)
+                loadData(true, previouslySelectedGradingPeriod)
             } else {
-                loadDataForGradingPeriod(gradingPeriod.id)
+                loadDataForGradingPeriod(gradingPeriod.id, previouslySelectedGradingPeriod)
             }
         }
     }
 
-    private fun loadDataForGradingPeriod(id: Long) {
+    private fun loadDataForGradingPeriod(id: Long, previouslySelectedGradingPeriod: GradingPeriod?) {
         viewModelScope.launch {
             try {
                 val enrollments = enrollmentManager.getEnrollmentsForGradingPeriodAsync(id, true).await().dataOrThrow
@@ -187,7 +202,13 @@ class GradesViewModel @Inject constructor(
                 _state.postValue(ViewState.Success)
                 _data.postValue(viewData)
             } catch (e: Exception) {
-                _state.postValue(ViewState.Error("Failed to load grades"))
+                _state.postValue(ViewState.Error())
+                _events.postValue(Event(GradesAction.ShowGradingPeriodError))
+
+                if (previouslySelectedGradingPeriod != null) {
+                    gradingPeriodsViewModel?.selectedGradingPeriod = previouslySelectedGradingPeriod
+                    gradingPeriodsViewModel?.notifyChange()
+                }
             }
         }
     }
