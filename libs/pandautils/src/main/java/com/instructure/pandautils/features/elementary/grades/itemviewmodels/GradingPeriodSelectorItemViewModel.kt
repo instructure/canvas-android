@@ -16,17 +16,30 @@
  */
 package com.instructure.pandautils.features.elementary.grades.itemviewmodels
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.lifecycle.MutableLiveData
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.elementary.grades.GradesAction
 import com.instructure.pandautils.features.elementary.grades.GradesItemViewType
 import com.instructure.pandautils.features.elementary.grades.GradingPeriod
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class GradingPeriodSelectorItemViewModel(
-    val gradingPeriod: List<GradingPeriod>,
-    val selectedGradingPeriod: GradingPeriod
-) : ItemViewModel {
+    private val events: MutableLiveData<Event<GradesAction>>,
+    private val gradingPeriods: List<GradingPeriod>,
+    @get:Bindable var selectedGradingPeriod: GradingPeriod
+) : BaseObservable(), ItemViewModel {
 
     override val layoutId: Int = R.layout.item_grading_period_selector
 
     override val viewType: Int = GradesItemViewType.GRADING_PERIOD_SELECTOR.viewType
+
+    fun onClick() {
+        val index = gradingPeriods.indexOfFirst { it.id == selectedGradingPeriod.id }
+        events.postValue(Event(GradesAction.OpenGradingPeriodsDialog(gradingPeriods, index)))
+    }
+
+    fun isNotEmpty() = gradingPeriods.isNotEmpty()
 }

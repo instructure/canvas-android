@@ -16,12 +16,16 @@
  */
 package com.instructure.pandautils.features.elementary.grades
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.grades.itemviewmodels.GradeRowItemViewModel
 import com.instructure.pandautils.features.elementary.grades.itemviewmodels.GradingPeriodSelectorItemViewModel
 import com.instructure.pandautils.mvvm.Event
@@ -33,9 +37,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
+private const val CURRENT_GRADING_PERIOD_ID = -1L
+
 @HiltViewModel
 class GradesViewModel @Inject constructor(
-    private val courseManager: CourseManager
+    private val courseManager: CourseManager,
+    private val resources: Resources,
+    private val enrollmentManager: EnrollmentManager
 ) : ViewModel() {
 
 
@@ -51,21 +59,30 @@ class GradesViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<GradesAction>>()
 
+    private var gradingPeriodsViewModel: GradingPeriodSelectorItemViewModel? = null
+    private var coursesMap = emptyMap<Long, Course>()
+
     init {
         loadInitialData()
     }
 
     private fun loadInitialData() {
         _state.postValue(ViewState.Loading)
-        loadData(false)
+        loadData(true)
     }
 
-    // Probably should add grading period parameter here
     private fun loadData(forceNetwork: Boolean) {
         viewModelScope.launch {
             try {
-                val coursesWithGrades = courseManager.getCoursesWithGradesAsync(forceNetwork).await()
-                val viewData = createViewData(coursesWithGrades.dataOrThrow)
+                val coursesWithGrades = courseManager.getCoursesWithGradesAsync(forceNetwork).await().dataOrThrow
+                coursesMap = coursesWithGrades
+                    .filter { !it.homeroomCourse }
+                    .associateBy { it.id }
+
+                gradingPeriodsViewModel = createGradingPeriodsViewModel(coursesWithGrades)
+                val gradeRowViewModels = createGradeRowViewModels(coursesWithGrades)
+                val viewData = createViewData(gradeRowViewModels)
+
                 _data.postValue(viewData)
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
@@ -74,8 +91,23 @@ class GradesViewModel @Inject constructor(
         }
     }
 
-    private fun createViewData(courses: List<Course>): GradesViewData {
-        val gradeRowItems = courses
+    private fun createGradingPeriodsViewModel(courses: List<Course>): GradingPeriodSelectorItemViewModel? {
+        val gradingPeriods = courses
+            .flatMap { it.gradingPeriods ?: emptyList() }
+            .distinctBy { gradingPeriod -> gradingPeriod.id }
+            .map { gradingPeriod -> GradingPeriod(gradingPeriod.id, gradingPeriod.title ?: "") }
+
+        return if (gradingPeriods.isNotEmpty()) {
+            val currentGradingPeriod = GradingPeriod(CURRENT_GRADING_PERIOD_ID, resources.getString(R.string.currentGradingPeriod))
+            val allGradingPeriods = listOf(currentGradingPeriod).plus(gradingPeriods)
+            GradingPeriodSelectorItemViewModel(_events, allGradingPeriods, currentGradingPeriod)
+        } else {
+            null
+        }
+    }
+
+    private fun createGradeRowViewModels(courses: List<Course>): List<GradeRowItemViewModel> {
+        return courses
             .filter { !it.homeroomCourse }
             .map {
                 GradeRowItemViewModel(GradeRowViewData(
@@ -84,23 +116,27 @@ class GradesViewModel @Inject constructor(
                     getCourseColor(it),
                     it.imageUrl ?: "",
                     it.enrollments?.first()?.computedCurrentScore,
-                    createGradeText(it))
+                    createGradeText(it.enrollments?.first()?.computedCurrentScore, it.enrollments?.first()?.computedCurrentGrade))
                 ) { gradeRowClicked(it) }
             }
+    }
 
-        val items = listOf(createGradingPeriodsViewModel())
-            .plus(gradeRowItems)
+    private fun createViewData(gradeRowItems: List<GradeRowItemViewModel>): GradesViewData {
+        val items = mutableListOf<ItemViewModel>()
+
+        if (gradingPeriodsViewModel != null && gradingPeriodsViewModel!!.isNotEmpty()) {
+            items.add(gradingPeriodsViewModel!!)
+        }
+        items.addAll(gradeRowItems)
 
         return GradesViewData(items)
     }
 
-    private fun createGradeText(it: Course): String {
-        val currentGrade = it.enrollments?.first()?.computedCurrentGrade
-        return if (currentGrade != null) {
-            currentGrade
+    private fun createGradeText(score: Double?, grade: String?): String {
+        return if (grade != null) {
+            grade
         } else {
-            val currentScore = it.enrollments?.first()?.computedCurrentScore
-            val currentScoreRounded = currentScore?.roundToInt()
+            val currentScoreRounded = score?.roundToInt()
             if (currentScoreRounded != null) {
                 "$currentScoreRounded%"
             } else {
@@ -121,14 +157,57 @@ class GradesViewModel @Inject constructor(
         _events.postValue(Event(GradesAction.OpenCourseGrades(course)))
     }
 
-    private fun createGradingPeriodsViewModel(): GradingPeriodSelectorItemViewModel {
-        val gradingPeriod = GradingPeriod(1, "Current Grading Period")
-
-        return GradingPeriodSelectorItemViewModel(listOf(gradingPeriod), gradingPeriod)
-    }
-
     fun refresh() {
         _state.postValue(ViewState.Refresh)
         loadData(true)
+    }
+
+    fun gradingPeriodSelected(gradingPeriod: GradingPeriod) {
+        if (gradingPeriodsViewModel?.selectedGradingPeriod != gradingPeriod) {
+            gradingPeriodsViewModel?.selectedGradingPeriod = gradingPeriod
+            gradingPeriodsViewModel?.notifyChange()
+
+            _state.postValue(ViewState.Refresh)
+            if (gradingPeriod.id == CURRENT_GRADING_PERIOD_ID) {
+                loadData(true)
+            } else {
+                loadDataForGradingPeriod(gradingPeriod.id)
+            }
+        }
+    }
+
+    private fun loadDataForGradingPeriod(id: Long) {
+        viewModelScope.launch {
+            try {
+                val enrollments = enrollmentManager.getEnrollmentsForGradingPeriodAsync(id, true).await().dataOrThrow
+
+                val gradeRowItems = createGradeRowsForGradingPeriod(enrollments)
+                val viewData = createViewData(gradeRowItems)
+
+                _state.postValue(ViewState.Success)
+                _data.postValue(viewData)
+            } catch (e: Exception) {
+                _state.postValue(ViewState.Error("Failed to load grades"))
+            }
+        }
+    }
+
+    private fun createGradeRowsForGradingPeriod(enrollments: List<Enrollment>): List<GradeRowItemViewModel> {
+        return enrollments
+            .filter { coursesMap.containsKey(it.courseId) }
+            .map { createGradeRowFromEnrollment(it) }
+    }
+
+    private fun createGradeRowFromEnrollment(enrollment: Enrollment): GradeRowItemViewModel {
+        val course = coursesMap[enrollment.courseId]!!
+        val gradeRowViewData = GradeRowViewData(
+            course.id,
+            course.name,
+            getCourseColor(course),
+            course.imageUrl ?: "",
+            enrollment.grades?.currentScore,
+            createGradeText(enrollment.grades?.currentScore, enrollment.grades?.currentGrade))
+
+        return GradeRowItemViewModel(gradeRowViewData) { gradeRowClicked(course) }
     }
 }

@@ -39,9 +39,10 @@
             android:textSize="13sp" />
 
         <TextView
-            android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:drawableEnd="@drawable/ic_chevron_down_small"
             android:drawablePadding="4dp"
             android:drawableTint="@color/defaultTextDark"
@@ -51,7 +52,10 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:textSize="24sp"
+            android:layout_marginTop="-16dp"
             android:text="@{itemViewModel.selectedGradingPeriod.name}"
+            android:onClick="@{() -> itemViewModel.onClick()}"
+            android:foreground="?attr/selectableItemBackground"
             tools:text="Current Grading Period" />
 
     </LinearLayout>

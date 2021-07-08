@@ -33,6 +33,7 @@ data class GradeRowViewData(
 
 sealed class GradesAction {
     data class OpenCourseGrades(val course: Course) : GradesAction()
+    data class OpenGradingPeriodsDialog(val gradingPeriods: List<GradingPeriod>, val selectedGradingPeriodIndex: Int) : GradesAction()
 }
 
 enum class GradesItemViewType(val viewType: Int) {

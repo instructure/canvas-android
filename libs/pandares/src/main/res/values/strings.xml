@@ -1184,6 +1184,8 @@
     <string name="homeroomEmptyMessage">Your subjects show up here.</string>
     <string name="homeroomNoSubjects">You currently have no subjects.</string>
     <string name="gradesSelect">Select</string>
+    <string name="selectGradingPeriod">Select Grading Period</string>
+    <string name="currentGradingPeriod">Current Grading Period</string>
 
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 
