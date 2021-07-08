@@ -60,7 +60,7 @@ class GradesViewModel @Inject constructor(
     private val _events = MutableLiveData<Event<GradesAction>>()
 
     private var gradingPeriodsViewModel: GradingPeriodSelectorItemViewModel? = null
-    private var coursesMap = emptyMap<Long, Course>()
+    private var courses = emptyList<Course>()
 
     init {
         loadInitialData()
@@ -75,12 +75,11 @@ class GradesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val coursesWithGrades = courseManager.getCoursesWithGradesAsync(forceNetwork).await().dataOrThrow
-                coursesMap = coursesWithGrades
+                courses = coursesWithGrades
                     .filter { !it.homeroomCourse }
-                    .associateBy { it.id }
 
-                gradingPeriodsViewModel = createGradingPeriodsViewModel(coursesWithGrades)
-                val gradeRowViewModels = createGradeRowViewModels(coursesWithGrades)
+                gradingPeriodsViewModel = createGradingPeriodsViewModel(courses)
+                val gradeRowViewModels = createGradeRowViewModels(courses)
                 val viewData = createViewData(gradeRowViewModels)
 
                 _data.postValue(viewData)
@@ -122,7 +121,6 @@ class GradesViewModel @Inject constructor(
 
     private fun createGradeRowViewModels(courses: List<Course>): List<GradeRowItemViewModel> {
         return courses
-            .filter { !it.homeroomCourse }
             .map {
                 GradeRowItemViewModel(GradeRowViewData(
                     it.id,
@@ -214,20 +212,19 @@ class GradesViewModel @Inject constructor(
     }
 
     private fun createGradeRowsForGradingPeriod(enrollments: List<Enrollment>): List<GradeRowItemViewModel> {
-        return enrollments
-            .filter { coursesMap.containsKey(it.courseId) }
-            .map { createGradeRowFromEnrollment(it) }
+        val enrollmentsMap = enrollments.associateBy { it.courseId }
+        return courses
+            .map { createGradeRowFromEnrollment(it, enrollmentsMap[it.id]) }
     }
 
-    private fun createGradeRowFromEnrollment(enrollment: Enrollment): GradeRowItemViewModel {
-        val course = coursesMap[enrollment.courseId]!!
+    private fun createGradeRowFromEnrollment(course: Course, enrollment: Enrollment?): GradeRowItemViewModel {
         val gradeRowViewData = GradeRowViewData(
             course.id,
             course.name,
             getCourseColor(course),
             course.imageUrl ?: "",
-            enrollment.grades?.currentScore,
-            createGradeText(enrollment.grades?.currentScore, enrollment.grades?.currentGrade))
+            enrollment?.grades?.currentScore,
+            createGradeText(enrollment?.grades?.currentScore, enrollment?.grades?.currentGrade))
 
         return GradeRowItemViewModel(gradeRowViewData) { gradeRowClicked(course) }
     }
