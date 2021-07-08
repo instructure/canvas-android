@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
@@ -139,5 +140,10 @@ fun addBorderToContainer(view: View, borderColor: Int?, borderWidth: Int?, backg
     border.setStroke(borderWidth?.toPx ?: 2.toPx, strokeColor)
     border.cornerRadius = borderCornerRadius?.toPx?.toFloat() ?: 4.toPx.toFloat()
     view.background = border
+}
+
+@BindingAdapter("imageRes")
+fun bindImageResource(imageView: ImageView, @DrawableRes imageRes: Int) {
+    imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
 }
 

@@ -39,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:buttonTint="@color/schedule_checkbox_color_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -48,8 +49,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
-            android:src="@{itemViewModel.data.type.iconRes}"
             android:tint="@color/canvasTextDark"
+            app:imageRes="@{itemViewModel.data.type.iconRes}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/checkbox"
             app:layout_constraintTop_toTopOf="parent"
@@ -80,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:flexWrap="wrap"
-                app:itemViewModels="@{itemViewModel.data.chips}"/>
+                app:itemViewModels="@{itemViewModel.data.chips}" />
         </LinearLayout>
 
         <LinearLayout

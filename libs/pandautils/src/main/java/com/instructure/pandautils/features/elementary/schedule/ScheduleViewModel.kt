@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
@@ -213,7 +214,7 @@ class ScheduleViewModel @Inject constructor(
         return SchedulePlannerItemViewModel(
                 SchedulePlannerItemData(
                         plannerItem.plannable.title,
-                        PlannerItemType.ASSIGNMENT,
+                        getTypeForPlannerItem(plannerItem),
                         plannerItem.plannable.pointsPossible,
                         "Due ${SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(plannerItem.plannableDate)}",
                         true,
@@ -222,6 +223,18 @@ class ScheduleViewModel @Inject constructor(
                 {},
                 {}
         )
+    }
+
+    private fun getTypeForPlannerItem(plannerItem: PlannerItem): PlannerItemType {
+        return when(plannerItem.plannableType) {
+            PlannableType.ASSIGNMENT -> PlannerItemType.ASSIGNMENT
+            PlannableType.ANNOUNCEMENT -> PlannerItemType.ANNOUNCEMENT
+            PlannableType.QUIZ -> PlannerItemType.QUIZ
+            PlannableType.WIKI_PAGE -> PlannerItemType.PAGE
+            PlannableType.CALENDAR_EVENT -> PlannerItemType.CALENDAR_EVENT
+            PlannableType.DISCUSSION_TOPIC -> PlannerItemType.DISCUSSION
+            else -> PlannerItemType.CALENDAR_EVENT
+        }
     }
 
     private fun getCourseColor(course: Course?): String {
