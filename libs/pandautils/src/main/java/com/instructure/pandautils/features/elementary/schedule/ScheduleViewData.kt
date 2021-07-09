@@ -38,7 +38,7 @@ data class ScheduleCourseViewData(
 data class SchedulePlannerItemData(
         val title: String,
         val type: PlannerItemType,
-        val points: Double?,
+        val points: String?,
         val dueDate: String?,
         val openable: Boolean,
         val chips: List<SchedulePlannerItemTagItemViewModel>
@@ -60,7 +60,8 @@ enum class PlannerItemType(@DrawableRes val iconRes: Int) {
     DISCUSSION(R.drawable.ic_discussion),
     PEER_REVIEW(R.drawable.ic_peer_review),
     CALENDAR_EVENT(R.drawable.ic_calendar),
-    PAGE(R.drawable.ic_pages)
+    PAGE(R.drawable.ic_pages),
+    TO_DO(R.drawable.ic_calendar)
 }
 
 enum class ScheduleItemViewModelType(val viewType: Int) {

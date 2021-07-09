@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomAction
@@ -45,6 +46,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import org.threeten.bp.DateTimeUtils
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -215,9 +217,9 @@ class ScheduleViewModel @Inject constructor(
                 SchedulePlannerItemData(
                         plannerItem.plannable.title,
                         getTypeForPlannerItem(plannerItem),
-                        plannerItem.plannable.pointsPossible,
-                        "Due ${SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(plannerItem.plannableDate)}",
-                        true,
+                        getPointsText(plannerItem.plannable.pointsPossible),
+                        getDueText(plannerItem),
+                        plannerItem.htmlUrl != null,
                         createChips(plannerItem)
                 ),
                 {},
@@ -226,14 +228,29 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun getTypeForPlannerItem(plannerItem: PlannerItem): PlannerItemType {
-        return when(plannerItem.plannableType) {
+        return when (plannerItem.plannableType) {
             PlannableType.ASSIGNMENT -> PlannerItemType.ASSIGNMENT
             PlannableType.ANNOUNCEMENT -> PlannerItemType.ANNOUNCEMENT
             PlannableType.QUIZ -> PlannerItemType.QUIZ
             PlannableType.WIKI_PAGE -> PlannerItemType.PAGE
             PlannableType.CALENDAR_EVENT -> PlannerItemType.CALENDAR_EVENT
             PlannableType.DISCUSSION_TOPIC -> PlannerItemType.DISCUSSION
-            else -> PlannerItemType.CALENDAR_EVENT
+            PlannableType.PLANNER_NOTE -> PlannerItemType.TO_DO
+        }
+    }
+
+    private fun getPointsText(points: Double?): String? {
+        if (points == null) return null
+        val numberFormatter = DecimalFormat("##.##")
+        return resources.getQuantityString(R.plurals.schedule_points, points.toInt(), numberFormatter.format(points))
+    }
+
+    private fun getDueText(plannerItem: PlannerItem): String {
+        val simpleDateFormat = SimpleDateFormat("hh:mm aa", Locale.getDefault())
+        return when (plannerItem.plannableType) {
+            PlannableType.CALENDAR_EVENT -> resources.getString(R.string.schedule_calendar_event_due_text, simpleDateFormat.format(plannerItem.plannableDate))
+            PlannableType.PLANNER_NOTE -> resources.getString(R.string.schedule_todo_due_text, simpleDateFormat.format(plannerItem.plannableDate))
+            else -> resources.getString(R.string.schedule_due_text, simpleDateFormat.format(plannerItem.plannableDate))
         }
     }
 

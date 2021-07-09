@@ -443,5 +443,13 @@
     <string name="schedule_tag_excused">Excused</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="yesterday">Yesterday</string>
+    <string name="schedule_calendar_event_due_text">At %s</string>
+    <string name="schedule_todo_due_text">To Do: %s</string>
+    <string name="schedule_due_text">Due: %s</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s pts</item>
+    </plurals>
 
 </resources>
