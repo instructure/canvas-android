@@ -132,6 +132,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var canvasForElementary by BooleanPref()
 
+    var elementaryDashboardEnabledOverride by BooleanPref(true)
+
     /**
      * clearAllData is required for logout.
      * Clears all data including credentials and cache.
