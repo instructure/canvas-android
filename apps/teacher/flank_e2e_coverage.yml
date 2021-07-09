@@ -19,7 +19,8 @@ gcloud:
   directories-to-pull:
     - /sdcard/
   test-targets:
-  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
+  - annotation com.instructure.canvas.espresso.E2E
+  - notAnnotation com.instructure.canvas.espresso.Stub
   device:
   - model: NexusLowRes
     version: 25

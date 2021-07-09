@@ -55,8 +55,15 @@ object InboxApi {
         @GET
         fun getNextPage(@Url nextURL: String): Call<List<Conversation>>
 
+        @FormUrlEncoded
         @POST("conversations?group_conversation=true")
-        fun createConversation(@Query("recipients[]") recipients: List<String>, @Query(value = "body", encoded = true) message: String, @Query(value = "subject", encoded = true) subject: String, @Query("context_code") contextCode: String, @Query("attachment_ids[]") attachmentIds: LongArray, @Query("bulk_message") isBulk: Int): Call<List<Conversation>>
+        fun createConversation(
+            @Field("recipients[]") recipients: List<String>,
+            @Field("body") message: String,
+            @Field("subject") subject: String,
+            @Field("context_code") contextCode: String,
+            @Field("attachment_ids[]") attachmentIds: LongArray,
+            @Field("bulk_message") isBulk: Int): Call<List<Conversation>>
 
         @GET("conversations/{conversationId}?include[]=participant_avatars")
         fun getConversation(@Path("conversationId") conversationId: Long): Call<Conversation>
@@ -70,18 +77,17 @@ object InboxApi {
         @POST("conversations/{conversationId}/remove_messages")
         fun deleteMessages(@Path("conversationId") conversationId: Long, @Query("remove[]") messageIds: List<Long>): Call<Conversation>
 
+        @FormUrlEncoded
         @POST("conversations/{conversationId}/add_message?group_conversation=true")
-        fun addMessage(@Path("conversationId") conversationId: Long, @Query("recipients[]") recipientIds: List<String>, @Query(value = "body", encoded = true) body: String, @Query("included_messages[]") includedMessageIds: LongArray, @Query("attachment_ids[]") attachmentIds: LongArray, @Query("context_code") contextCode: String?): Call<Conversation>
+        fun addMessage(@Path("conversationId") conversationId: Long,
+                       @Field("recipients[]") recipientIds: List<String>,
+                       @Field("body") body: String,
+                       @Field("included_messages[]") includedMessageIds: LongArray,
+                       @Field("attachment_ids[]") attachmentIds: LongArray,
+                       @Field("context_code") contextCode: String?): Call<Conversation>
 
         @PUT("conversations")
         fun markConversationAsUnread(@Query("conversation_ids[]") conversationId: Long, @Query("event") conversationEvent: String): Call<Void>
-
-        @POST("conversations/{id}/add_message")
-        fun addMessageToConversationSynchronous(@Path("id") conversationId: Long, @Query("body") message: String, @Query("attachment_ids[]") attachments: List<Long>): Call<Conversation>
-
-        @POST("conversations?group_conversation=true")
-        fun createConversationWithAttachmentSynchronous(@Query("recipients[]") recipients: List<String>, @Query("body") message: String, @Query("subject") subject: String, @Query("context_code") contextCode: String, @Query("bulk_message") isGroup: Int, @Query("attachment_ids[]") attachments: List<Long>): Call<List<Conversation>>
-
     }
 
     fun getConversation(adapter: RestBuilder, callback: StatusCallback<Conversation>, params: RestParams, conversationId: Long) {
@@ -141,24 +147,5 @@ object InboxApi {
     @Throws(IOException::class)
     fun getConversation(adapter: RestBuilder, params: RestParams, conversationId: Long): Response<Conversation> {
         return adapter.build(InboxInterface::class.java, params).getConversation(conversationId).execute()
-    }
-
-    @Throws(IOException::class)
-    fun addMessageToConversationSynchronous(adapter: RestBuilder, params: RestParams, conversationId: Long, messageBody: String, attachmentIds: List<Long>): Response<Conversation> {
-
-        return adapter.build(InboxInterface::class.java, params).addMessageToConversationSynchronous(conversationId, messageBody, attachmentIds).execute()
-    }
-
-    @Throws(IOException::class)
-    fun createConversationWithAttachmentSynchronous(adapter: RestBuilder, params: RestParams, userIDs: List<String>, message: String, subject: String, contextId: String, isGroup: Boolean, attachmentIds: List<Long>): List<Conversation>? {
-        // The message has to be sent to somebody.
-        if (userIDs.isEmpty()) return null
-
-        return try {
-            adapter.build(InboxInterface::class.java, params).createConversationWithAttachmentSynchronous(userIDs, message, subject, contextId, if (isGroup) 0 else 1, attachmentIds).execute().body()
-        } catch (e: Exception) {
-            null
-        }
-
     }
 }
