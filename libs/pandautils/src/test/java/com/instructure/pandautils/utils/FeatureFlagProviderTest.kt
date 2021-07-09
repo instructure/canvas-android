@@ -30,6 +30,7 @@ import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -40,6 +41,11 @@ class FeatureFlagProviderTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private val featureFlagProvider = FeatureFlagProvider(userManager, remoteConfigUtils, apiPrefs)
+
+    @Before
+    fun setUp() {
+        every { apiPrefs.elementaryDashboardEnabledOverride } returns true
+    }
 
     @Test
     fun `Return false if remote config flag is not enabled`() = runBlockingTest {
@@ -127,5 +133,22 @@ class FeatureFlagProviderTest {
 
         // Then
         verify { apiPrefs.canvasForElementary = true }
+    }
+
+    @Test
+    fun `Return false if remote config flag and feature flag is enabled but dashboard override is false`() = runBlockingTest {
+        // Given
+        every { apiPrefs.elementaryDashboardEnabledOverride } returns false
+        every { remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN) } returns true
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User(k5User = true))
+        }
+
+
+        // When
+        val canvasForElementaryFlag = featureFlagProvider.getCanvasForElementaryFlag()
+
+        // Then
+        assertFalse(canvasForElementaryFlag)
     }
 }
