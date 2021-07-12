@@ -119,13 +119,13 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                             event.getContentIfNotHandled()?.let {
                                 if (it) {
                                     startApp()
+                                    finish()
                                 } else {
                                     logout()
                                 }
                             }
                         })
                     }
-                    finish()
                 }
             }, 1750) // This delay allows the animation to finish.
         }
