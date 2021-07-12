@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version='1.0' encoding='UTF-8'?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -57,6 +57,7 @@
     <string name="canvasAPI_onlineURL">Website URL</string>
     <string name="canvasAPI_mediaRecording">Media Recording</string>
     <string name="canvasAPI_attendance">Attendance</string>
+    <string name="canvasAPI_studentAnnotation">Student Annotation</string>
     <string name="quiz_scoring_policy_highest">Highest</string>
     <string name="quiz_scoring_policy_average">Average</string>
     <string name="quiz_scoring_policy_latest">Latest</string>

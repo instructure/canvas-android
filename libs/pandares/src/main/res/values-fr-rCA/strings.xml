@@ -57,7 +57,7 @@
     <string name="resubmitAssignment">Envoyer la tâche de nouveau</string>
 
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
 
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">Le téléversement d\'un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
@@ -73,7 +73,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URL utilisant http://</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Saisissez un URL ici pour votre envoi</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer le son</string>
 
     <string name="recordVideo">Enregistrer la vidéo</string>
@@ -912,7 +912,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Cette tâche n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Cette tâche n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1073,8 +1073,8 @@
     <string name="closeRecordingView">Fermer la vue d’enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur s\'est produite lors de la tentative de lecture.</string>
-    <string name="errorSubmittingMediaComment">Une erreur s\'est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
+    <string name="errorShowingVideoReplay">Une erreur s&apos;est produite lors de la tentative de lecture.</string>
+    <string name="errorSubmittingMediaComment">Une erreur s&apos;est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>
     <string name="addAudioComment">Ajouter un commentaire audio</string>
@@ -1143,4 +1143,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Tout retirer du tableau de bord</string>
     <string name="a11y_content_description_add_to_dashboard">Ajouter au tableau de bord</string>
     <string name="a11y_content_description_add_all_to_dashboard">Tout ajouter au tableau de bord</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Compte</string>
+    <string name="dashboardTabHomeroom">Classe titulaire</string>
+    <string name="dashboardTabSchedule">Calendrier</string>
+    <string name="dashboardTabGrades">Notes</string>
+    <string name="dashboardTabResources">Ressources</string>
+    <string name="homeroomWelcomeMessage">Bienvenue, %1$s!</string>
+    <string name="homeroomMySubjects">Mes Objets</string>
+
+    <string name="viewPreviousAnnouncements">Voir les annonces précédentes</string>
+    <string name="homeroomError">Échec lors du chargement de la classe titulaire</string>
+    <string name="homeroomRefreshFail">Échec lord de l\'actualisation de la classe titulaire</string>
+
+
+    <string name="nothingDueToday">Rien n’est dû aujourd’hui</string>
+    <string name="dueToday">%1$s dû aujourd’hui</string>
+    <string name="missing">%1$s manquant</string>
+    <string name="homeroomEmptyTitle">Bienvenue!</string>
+    <string name="homeroomEmptyMessage">Vos sujets apparaissent ici.</string>
+    <string name="homeroomNoSubjects">Vous n’avez actuellement aucun sujet.</string>
+
+
+    <string name="open_alternate_view">Ouvrir une vue alternative plus accessible</string>
+    <string name="a11y_content_description_message_recipients">Destinataires</string>
+    <string name="a11y_content_description_inbox_subject">Objet</string>
+    <string name="a11y_content_description_inbox_course_spinner">Sélectionner un cours, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Les réponses de cet étudiant sont masquées du fait que cette tâche est anonyme.</string>
+
+    <string name="studentAnnotationUnsupported">Annotation d’étudiant (non pris en charge)</string>
+    <string name="studentAnnotationUnsupportedDescription">L’annotation d’étudiant n’est actuellement pas prise en charge sur les mobiles.</string>
+    <string name="unsupportedSubmissionType">Type d’envoi non pris en charge</string>
+    <string name="studentAnnotationUnsupportedMessage">L’envoi ne peut pas être affiché, car l’annotation d’étudiant n’est actuellement pas prise en charge sur mobile.</string>
 </resources>

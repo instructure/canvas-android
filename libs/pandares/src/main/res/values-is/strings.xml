@@ -1157,4 +1157,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Fjarlægja allt af stjórnborði</string>
     <string name="a11y_content_description_add_to_dashboard">Bæta við stjórnborð</string>
     <string name="a11y_content_description_add_all_to_dashboard">Bæta öllu við stjórnborð</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Reikningur</string>
+    <string name="dashboardTabHomeroom">Námssalur</string>
+    <string name="dashboardTabSchedule">Áætlun</string>
+    <string name="dashboardTabGrades">Einkunnir</string>
+    <string name="dashboardTabResources">Hjálparefni</string>
+    <string name="homeroomWelcomeMessage">Velkomin/n, %1$s!</string>
+    <string name="homeroomMySubjects">Námsefnið mitt</string>
+
+    <string name="viewPreviousAnnouncements">Skoða fyrri tilkynningar</string>
+    <string name="homeroomError">Mistókst að hlaða inn Skólastofu</string>
+    <string name="homeroomRefreshFail">Mistókst að endurglæða Skólastofu</string>
+
+
+    <string name="nothingDueToday">Ekkert á skilum í dag</string>
+    <string name="dueToday">%1$s á skilum í dag</string>
+    <string name="missing">%1$s vantar</string>
+    <string name="homeroomEmptyTitle">Velkomin(n)!</string>
+    <string name="homeroomEmptyMessage">Efni þitt sést hér.</string>
+    <string name="homeroomNoSubjects">Þú hefur engin efni eins og er.</string>
+
+
+    <string name="open_alternate_view">Opnið annað auðveldara útlit</string>
+    <string name="a11y_content_description_message_recipients">Viðtakendur</string>
+    <string name="a11y_content_description_inbox_subject">Efni</string>
+    <string name="a11y_content_description_inbox_course_spinner">Veldu námskeið, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Svör nemanda eru falin því þetta verkefni er nafnlaust.</string>
+
+    <string name="studentAnnotationUnsupported">Athugasemd nemanda (Enginn stuðningur)</string>
+    <string name="studentAnnotationUnsupportedDescription">Ekki er stuðningur við athugasemd nemanda á farsímum.</string>
+    <string name="unsupportedSubmissionType">Gerð skila ekki studd</string>
+    <string name="studentAnnotationUnsupportedMessage">Ekki hægt að birta skil því ekki er stuðningur við athugasemd nemanda á farsímum.</string>
 </resources>

@@ -58,10 +58,8 @@
     <string name="attemptsUsedLabel">المحاولات المستخدمة</string>
     <string name="noAttemptsLeft">لا توجد محاولات متبقية</string>
     <string name="resubmitAssignment">إعادة إرسال المهمة</string>
-
     <string name="launchingExternalTool">جارٍ تشغيل الأداة الخارجية...</string>
     <string name="launchExternalTool">تشغيل الأداة الخارجية</string>
-
     <string name="preview">معاينة</string>
     <string name="submissionUploadFailedMessage">تعذر تحميل ملف أو أكثر. تحقق من اتصالك بالإنترنت وأعد محاولة الإرسال.</string>
     <string name="submissionUploadByteProgress">%1$s من %2$s</string>
@@ -72,19 +70,20 @@
     <string name="submissionDeleted">تم حذف الإرسال</string>
     <string name="missingSubmissionLabel">مفقود</string>
     <string name="gradedSubmissionLabel">تم تقييم الدرجة</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">لا توجد معاينة متوفرة لعناوين URL باستخدام \'http://\'</string>
     <string name="submissionUrlNotAUrlError">يُرجى إدخال عنوان URL صالح</string>
     <string name="enterAUrlHereForYourSubmission">أدخل عنوان URL هنا لإرسالك</string>
     <string name="addFileFabContentDesc">إظهار خيارات إضافة الملف</string>
     <string name="recordAudio">تسجيل الصوت</string>
-
     <string name="recordVideo">تسجيل الفيديو</string>
-
     <string name="a11y_textSubmissionEditor">محرر إرسال النص</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">كتابة&#8230;</string>
     <string name="textSubmissionFailureMessage">حدث مشكلة أثناء تحميل الإرسال. أعد الإرسال.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">إرسال</string>
     <string name="submissionVersions">إصدارات الإرسال</string>
@@ -107,6 +106,7 @@
     <string name="speedGraderExternalToolMessage">ترتبط هذه المهمة بأداة خارجية للإرسالات.</string>
     <string name="openTool">فتح أداة</string>
     <string name="a11y_submissionText">نص الإرسال</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">من إجمالي %s من النقاط</string>
     <string name="outOfPointsAbbreviatedFormatted">من إجمالي %s من النقاط</string>
@@ -118,10 +118,12 @@
     <string name="scoreStatisticsLow">المنخفض: %s</string>
     <string name="scoreStatisticsMean">المتوسط: %s</string>
     <string name="scoreStatisticsHigh">المرتفع: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">نتيجة مخصصة</string>
     <string name="rubricEmptyMessage">لا يوجد أي مقياس تقييم لهذه المهمة</string>
     <string name="rubricViewLongDescription">عرض وصف طويل</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">جارٍ تحميل الملف %1$d لـ %2$d</string>
     <string name="assignmentSubmissionCommentUpload">جار تحميل تعليق لـ %s</string>
@@ -141,6 +143,7 @@
     <string name="commentSubmissionTypeMediaFile">ملفات الوسائط</string>
     <string name="commentSubmissionTypeAudio">صوت</string>
     <string name="commentSubmissionTypeVideo">فيديو</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">الإصدار:</string>
 
@@ -190,6 +193,8 @@
     <string name="submissionDetailsDueAt">تاريخ الاستحقاق %1$s في %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">ص</string>
     <string name="lowercasePM">م</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">مؤمّن</string>
     <string name="assignments">المهام</string>
@@ -208,15 +213,17 @@
     <string name="a11y_sortByTypeButton">فرز زر المهام، الفرز حسب النوع</string>
     <string name="a11y_assignmentsSortedByTime">المهام المفروزة حسب الوقت</string>
     <string name="a11y_assignmentsSortedByType">المهام المفروزة حسب النوع</string>
+
     <!-- Assignment editing -->
     <string name="points">نقاط\u0020</string>
     <string name="save">حفظ</string>
     <string name="cancel">إلغاء</string>
+
     <!-- Discussions -->
     <string name="forbidden">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
-
     <string name="fileCurrentlyLocked">هذا الملف مؤمّن في الوقت الحالي</string>
     <string name="a11y_discussionReplyEditor">محرر رد النقاش</string>
+
     <!-- Events -->
     <string name="Starts">يبدأ</string>
     <string name="Ends">ينتهي</string>
@@ -235,8 +242,6 @@
     <string name="whatIfDialogText">النتيجة المفترضة</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s من إجمالي %2$s نقاط، %3$s</string>
-
-
     <string name="inbox">علبة الوارد</string>
     <string name="unread">غير مقروء</string>
     <string name="archived">مؤرشف</string>
@@ -422,8 +427,8 @@
     <string name="students">الطلاب</string>
     <string name="observers">المراقبون</string>
     <string name="syllabusMissing">لم تتم إضافة مخطط دراسي.</string>
-
     <string name="syllabusEventsError">حدث خطأ أثناء تحميل الوحدات النمطية.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">اختيار المستلم (المستلمين)</string>
     <string name="messageHasNoRecipients">لا يوجد حاليًا متلقين لهذه الرسالة.</string>
@@ -449,6 +454,7 @@
 
     <!-- Notifications -->
     <string name="deleted">تم الحذف</string>
+
     <string name="loadingCanvas">جارٍ تحميل محتوى Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -465,9 +471,11 @@
     <string name="stopMasquerading">إيقاف التصرف كمستخدم</string>
     <string name="userId">معرف المستخدم</string>
     <string name="masqueradeFail">حدث خطأ ما عند محاولة التصرف كمستخدم</string>
+
     <string name="emptyId">لا يمكن ترك المعرف فارغًا</string>
 
     <string name="goToQuiz">الانتقال إلى الاختبار</string>
+
     <string name="quizzes">اختبارات موجزة</string>
 
     <string name="lastDiscussionPost">آخر نشر</string>
@@ -526,8 +534,8 @@
     <string name="goToModules">الانتقال إلى الوحدات</string>
     <string name="markDone">وضع علامة "تم"</string>
     <string name="moduleItemNotFound">لم يتم العثور على عنصر الوحدة المنطقية</string>
-
     <string name="errorLoadingModules">حدث خطأ أثناء تحميل الوحدات النمطية.</string>
+
     <string name="help">المساعدة</string>
     <string name="instructor_question">سؤال من المعلم</string>
     <string name="link">ارتباط</string>
@@ -543,11 +551,11 @@
     <string name="textEntry">إدخال النص</string>
     <string name="onlineURL">عنوان URL عبر الإنترنت</string>
     <string name="oneFileOnly">يقبل هذا الإرسال تحميل ملف واحد</string>
-
-
     <string name="websiteEntry">إضافة إدخال موقع ويب</string>
     <string name="mediaRecordingEntry">تسجيلات الوسائط</string>
     <string name="submit">إرسال</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">لم يتم حفظ التقدم</string>
     <string name="informationLost">سيتم فقد المعلومات غير المحفوظة. هل تريد المواصلة؟</string>
@@ -562,6 +570,7 @@
     <!-- Submission Details Strings -->
     <string name="next">التالي</string>
     <string name="addComment">إضافة تعليق&#8230;</string>
+
     <string name="home">الصفحة الرئيسية</string>
     <string name="Notifications">الإعلامات</string>
 
@@ -591,6 +600,8 @@
     <string name="clickToViewSubmission">تم تصوير لقطة لموقع الويب أثناء قيامك بالتسليم. اضغط باستمرار على الصورة أدناه لفتح أو تنزيل الصورة الكاملة.</string>
     <string name="urlSubmissionNoPreview">كان هذا الإرسال هو عنوان URL المؤدي إلى صفحة خارجية. ضع في اعتبارك أن هذه الصفحة ربما قد تغيرت منذ حدوث الإرسال الأصلي.</string>
     <string name="contentDescriptionPreviewImage">معاينة عنوان URL الذي تم إرساله</string>
+
+
     <string name="isNotSupportedFeature">%1$s غير مدعوم.</string>
     <string name="isNotSupported">الارتباط غير مدعوم.</string>
     <string name="openInBrowser">الفتح في المستعرض</string>
@@ -606,15 +617,19 @@
     <string name="panda_fact_string">واقع باندا:&#160;</string>
     <string name="remove">إزالة</string>
     <string name="founders">المؤسسون</string>
+
     <string name="EULA">اتفاقية ترخيص المستخدم النهائي</string>
     <string name="privacyPolicy">سياسة الخصوصية</string>
     <string name="termsOfUse">شروط الاستخدام</string>
     <string name="canvasOnGithub">Canvas على GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">اختبارات المهمة</string>
     <string name="practiceQuizzes">التدريب على اختبارات موجزة</string>
     <string name="gradedSurveys">استطلاعات تم تقييمها</string>
     <string name="surveys">الاستطلاعات</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">قائمة مهام</string>
     <string name="gradesWidgetTitle">الدرجات</string>
@@ -660,12 +675,12 @@
     <string name="profileSettings">إعدادات ملف التعريف</string>
     <string name="accountPreferences">تفضيلات الحساب</string>
     <string name="pinAndFingerprint">PIN وبصمة الأصبع</string>
-
     <string name="pairWithObserver">الإقران بالمراقب</string>
     <string name="pairWithObserverDetails">اطلب من أحد الوالدين مسح رمز QR من تطبيق Canvas Parent لإقرانه بك. ستنتهي صلاحية هذا الرمز خلال سبعة أيام، أو بعد استخدام واحد.</string>
     <string name="pairingCodeLabel">رمز الإقران:\u0020</string>
     <string name="pairingCodeErrorTitle">خطأ في رمز الإقران</string>
     <string name="pairingCodeErrorDescription">يتعذر استرداد رمز الإقران. هذه الميزة مدعومة للطلاب فقط.</string>
+
     <string name="launchSpeedgrader">فتح SpeedGrader</string>
 
     <string name="search_todo">قائمة ما يجب القيام به</string>
@@ -736,8 +751,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">مقياس</string>
-
     <string name="content_description_speed_grader_slider">شريط تمرير التقديرات</string>
+
     <string name="createNewCalendarEvent">إنشاء حدث جديد</string>
     <string name="enableFunMode">إيقاف تشغيل الباندا</string>
 
@@ -824,6 +839,7 @@
     <string name="notification_desc_recording_ready">الحصول على إعلامات عند وجود تسجيل مؤتمر جاهز.</string>
 
     <string name="unlimited">غير محدود</string>
+
     <string name="question">السؤال</string>
     <plurals name="question_count">
         <item quantity="zero">%d أسئلة</item>
@@ -842,12 +858,12 @@
         <item quantity="many">%s نقاط</item>
         <item quantity="other">%s نقاط</item>
     </plurals>
+
     <string name="timeLimit">الحد الزمني</string>
     <string name="newPushNotifications">%1$s من الإعلامات الجديدة</string>
     <string name="like">إعجاب</string>
     <string name="likeEntryLabel">إعجاب بالمشاركة</string>
     <string name="likes">إعجابات</string>
-
     <plurals name="likeCountLabel">
         <item quantity="zero">%s إعجابات</item>
         <item quantity="one">%s إعجاب</item>
@@ -856,6 +872,7 @@
         <item quantity="many">%s إعجابات</item>
         <item quantity="other">%s إعجابات</item>
     </plurals>
+
     <string name="color_1">أحمر</string>
     <string name="color_2">وردي ناصع</string>
     <string name="color_3">أرجواني شاحب</string>
@@ -914,6 +931,7 @@
     <string name="editDashboard">تحرير لوحة المعلومات</string>
     <string name="editDashboardDescriptor">حدد أي مساقات تود أن تراها على لوحة المعلومات</string>
     <string name="a11y_editYourCourseList">تحرير قائمة المساق</string>
+
     <string name="dashboard">لوحة المعلومات</string>
     <string name="previous">السابق</string>
     <string name="pageNum" formatted="false">صفحة %d من %d</string>
@@ -941,8 +959,8 @@
     <string name="tapToViewAnnouncement">انقر لعرض الإعلان</string>
     <string name="acceptCourseInvitation">قبول</string>
     <string name="declineCourseInvitation">رفض</string>
-
     <string name="outOf">من إجمالي</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">لا توجد ملفات مقترنة بهذا المساق.</string>
     <string name="noFilesSubtextGroup">لا توجد ملفات مقترنة بهذه المجموعة.</string>
@@ -1011,6 +1029,7 @@
     <string name="unableToViewInBrowser">لا يمكننا العثور على تطبيق خارجي لعرض أداة LTI (تبادلية أدوات التعلم) هذه.</string>
 
     <string name="commentUpload">تحميل التعليق</string>
+
     <string name="frontPage">الصفحة الأمامية</string>
     <string name="editPage">تحرير صفحة</string>
     <string name="description">الوصف</string>
@@ -1023,10 +1042,10 @@
     <string name="conferencesNotSupported">لم يتم بعد دعم المؤتمرات على الأجهزة المحمولة.</string>
     <string name="filePreviewContentDescription">صورة معاينة الملف</string>
     <string name="pdfError">حدث خطأ أثناء محاولة تحميل ملف PDF هذا.</string>
-
     <string name="featureNotAllowedInStudentView">عذراً! هذه الميزة غير مسموح بها في طريقة عرض الطالب.</string>
     <string name="nothingToSeeHere">لا شيء للمشاهدة هنا</string>
     <string name="unsupportedFeature">ميزة غير مدعومة</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">إضافة طالب</string>
     <string name="addChildSubTitle">أدخل رمز إقران الطالب المقدم لك.</string>
@@ -1072,9 +1091,9 @@
     <string name="gradeAfterPosting">التقدير بعد النشر</string>
     <string name="gradeOverride">تجاوز التقدير</string>
     <string name="currentGrade">التقدير الحالي</string>
-
     <string name="opensInCanvasStudent">يفتح في Canvas Student</string>
     <string name="tab_student_view">طريقة عرض الطالب</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">اختر الرأس: %s</string>
@@ -1129,7 +1148,6 @@
 
     <string name="addVideoComment">إضافة تعليق فيديو</string>
     <string name="addAudioComment">إضافة تعليق صوتي</string>
-
     <string name="audioRecordingError">حدث خطأ غير متوقع أثناء محاولة تسجيل صوت.</string>
     <string name="videoRecordingError">حدث خطأ غير متوقع أثناء محاولة تسجيل فيديو.</string>
 
@@ -1148,6 +1166,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s، %s</string>
+
     <plurals name="minutes">
         <item quantity="zero">%s من الدقائق</item>
         <item quantity="one">%s دقيقة</item>
@@ -1172,6 +1191,7 @@
     <string name="conferenceDetails">تفاصيل المؤتمر</string>
     <string name="recordings">التسجيلات</string>
     <string name="conferenceInProgress">المؤتمر قيد التقدم</string>
+
     <string name="a11y_criterion_content_description">تصنيف المعيار %s</string>
     <string name="a11y_criterion_description_content_description">%s، %s</string>
     <string name="a11y_criterion_button_click_description">معلومات إضافية</string>
@@ -1198,4 +1218,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">إزالة الكل من لوحة المعلومات</string>
     <string name="a11y_content_description_add_to_dashboard">الإضافة إلى لوحة المعلومات</string>
     <string name="a11y_content_description_add_all_to_dashboard">إضافة الكل إلى لوحة المعلومات</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">الحساب</string>
+    <string name="dashboardTabHomeroom">صف التسجيل</string>
+    <string name="dashboardTabSchedule">جدول</string>
+    <string name="dashboardTabGrades">التقديرات</string>
+    <string name="dashboardTabResources">الموارد</string>
+    <string name="homeroomWelcomeMessage">مرحبًا، %1$s!</string>
+    <string name="homeroomMySubjects">موضوعاتي</string>
+    <string name="viewPreviousAnnouncements">عرض إعلانات سابقة</string>
+    <string name="homeroomError">فشل تحميل جلسة التسجيل</string>
+    <string name="homeroomRefreshFail">فشل تحديث جلسة التسجيل</string>
+
+    <string name="nothingDueToday">لا شيء مستحق اليوم</string>
+    <string name="dueToday">%1$s مستحق اليوم</string>
+    <string name="missing">%1$s مفقود</string>
+    <string name="homeroomEmptyTitle">مرحبًا!</string>
+    <string name="homeroomEmptyMessage">تظهر الموضوعات هنا.</string>
+    <string name="homeroomNoSubjects">ليس لديك موضوعات في الوقت الحالي.</string>
+
+
+    <string name="open_alternate_view">فتح طريقة عرض بديلة أكثر سهولة</string>
+
+    <string name="a11y_content_description_message_recipients">المتلقون</string>
+    <string name="a11y_content_description_inbox_subject">الموضوع</string>
+    <string name="a11y_content_description_inbox_course_spinner">حدد مساقًا، %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">استجابات هذا الطالب مخفية لأن هذه المهمة مجهولة الاسم.</string>
+
+    <string name="studentAnnotationUnsupported">التعليق التوضيحي للطالب (غير مدعوم)</string>
+    <string name="studentAnnotationUnsupportedDescription">التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
+    <string name="unsupportedSubmissionType">نوع إرسال غير مدعوم</string>
+    <string name="studentAnnotationUnsupportedMessage">لا يمكن عرض الإرسال، لأن التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
 </resources>

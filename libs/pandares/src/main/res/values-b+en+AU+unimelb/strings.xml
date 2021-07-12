@@ -55,10 +55,8 @@
     <string name="attemptsUsedLabel">Attempts Used</string>
     <string name="noAttemptsLeft">No attempts left</string>
     <string name="resubmitAssignment">Resubmit Assignment</string>
-
     <string name="launchingExternalTool">Launching External Tool&#8230;</string>
     <string name="launchExternalTool">Launch External Tool</string>
-
     <string name="preview">Preview</string>
     <string name="submissionUploadFailedMessage">One or more files failed to upload. Check your internet connection and retry to submit.</string>
     <string name="submissionUploadByteProgress">%1$s of %2$s</string>
@@ -69,19 +67,20 @@
     <string name="submissionDeleted">Submission Deleted</string>
     <string name="missingSubmissionLabel">Missing</string>
     <string name="gradedSubmissionLabel">Graded</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>
     <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
     <string name="addFileFabContentDesc">Show Add File Options</string>
     <string name="recordAudio">Record Audio</string>
-
     <string name="recordVideo">Record Video</string>
-
     <string name="a11y_textSubmissionEditor">Text Submission Editor</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Write&#8230;</string>
     <string name="textSubmissionFailureMessage">Something went wrong on submission upload. Submit again.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Submission</string>
     <string name="submissionVersions">Submission versions</string>
@@ -104,6 +103,7 @@
     <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
     <string name="openTool">Open Tool</string>
     <string name="a11y_submissionText">Submission text</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
     <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
@@ -115,10 +115,12 @@
     <string name="scoreStatisticsLow">Low: %s</string>
     <string name="scoreStatisticsMean">Mean: %s</string>
     <string name="scoreStatisticsHigh">High: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>
     <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
     <string name="rubricViewLongDescription">View long description</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">Uploading file %1$d of %2$d</string>
     <string name="assignmentSubmissionCommentUpload">Uploading comment for %s</string>
@@ -138,6 +140,7 @@
     <string name="commentSubmissionTypeMediaFile">Media File</string>
     <string name="commentSubmissionTypeAudio">Audio</string>
     <string name="commentSubmissionTypeVideo">Video</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -187,6 +190,8 @@
     <string name="submissionDetailsDueAt">Due %1$s at %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Locked</string>
     <string name="assignments">Assignments</string>
@@ -205,15 +210,17 @@
     <string name="a11y_sortByTypeButton">Sort assignments button, sort by type</string>
     <string name="a11y_assignmentsSortedByTime">Assignments sorted by time</string>
     <string name="a11y_assignmentsSortedByType">Assignments sorted by type</string>
+
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+
     <!-- Discussions -->
     <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
-
     <string name="fileCurrentlyLocked">This file is currently locked</string>
     <string name="a11y_discussionReplyEditor">Discussion Reply Editor</string>
+
     <!-- Events -->
     <string name="Starts">Starts</string>
     <string name="Ends">Ends</string>
@@ -232,8 +239,6 @@
     <string name="whatIfDialogText">What-If Score</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s out of %2$s points, %3$s</string>
-
-
     <string name="inbox">Inbox</string>
     <string name="unread">Unread</string>
     <string name="archived">Archived</string>
@@ -399,8 +404,8 @@
     <string name="students">Students</string>
     <string name="observers">Auditors</string>
     <string name="syllabusMissing">A subject overview not has been added.</string>
-
     <string name="syllabusEventsError">There was an error loading your modules.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Choose Recipient(s)</string>
     <string name="messageHasNoRecipients">This message currently has no recipients.</string>
@@ -426,6 +431,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Deleted</string>
+
     <string name="loadingCanvas">Loading Canvas Content&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -442,9 +448,11 @@
     <string name="stopMasquerading">Stop Acting As User</string>
     <string name="userId">User ID</string>
     <string name="masqueradeFail">There was an error when trying to act as user</string>
+
     <string name="emptyId">The ID cannot be blank.</string>
 
     <string name="goToQuiz">Go To Quiz</string>
+
     <string name="quizzes">Quizzes</string>
 
     <string name="lastDiscussionPost">Last post</string>
@@ -503,8 +511,8 @@
     <string name="goToModules">Go to Modules</string>
     <string name="markDone">Mark done</string>
     <string name="moduleItemNotFound">Module Item Not Found</string>
-
     <string name="errorLoadingModules">There was an error loading your modules.</string>
+
     <string name="help">Help</string>
     <string name="instructor_question">Instructor Question</string>
     <string name="link">Link</string>
@@ -520,11 +528,11 @@
     <string name="textEntry">Text Entry</string>
     <string name="onlineURL">Online URL</string>
     <string name="oneFileOnly">This submission only accepts one file upload</string>
-
-
     <string name="websiteEntry">Add Website Entry</string>
     <string name="mediaRecordingEntry">Media Recordings</string>
     <string name="submit">Submit</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Unsaved Progress</string>
     <string name="informationLost">Unsaved information will be lost. Do you want to continue?</string>
@@ -539,6 +547,7 @@
     <!-- Submission Details Strings -->
     <string name="next">Next</string>
     <string name="addComment">Add a comment&#8230;</string>
+
     <string name="home">Home</string>
     <string name="Notifications">Notifications</string>
 
@@ -568,6 +577,8 @@
     <string name="clickToViewSubmission">A snapshot of the website was taken when you turned it in. Tap and hold the image below to open or download the full image.</string>
     <string name="urlSubmissionNoPreview">This submission was a URL to an external page. Keep in mind that this page may have changed since the submission originally occurred.</string>
     <string name="contentDescriptionPreviewImage">A preview of the submitted URL</string>
+
+
     <string name="isNotSupportedFeature">%1$s are not supported.</string>
     <string name="isNotSupported">The link is not supported.</string>
     <string name="openInBrowser">Open In Browser</string>
@@ -583,15 +594,19 @@
     <string name="panda_fact_string">Panda Fact:&#160;</string>
     <string name="remove">Remove</string>
     <string name="founders">Founders</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="termsOfUse">Terms of Use</string>
     <string name="canvasOnGithub">Canvas on GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Assignment Quizzes</string>
     <string name="practiceQuizzes">Practice Quizzes</string>
     <string name="gradedSurveys">Graded Surveys</string>
     <string name="surveys">Surveys</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">To Do</string>
     <string name="gradesWidgetTitle">Grades</string>
@@ -637,12 +652,12 @@
     <string name="profileSettings">Profile Settings</string>
     <string name="accountPreferences">Account Preferences</string>
     <string name="pinAndFingerprint">PIN and Fingerprint</string>
-
     <string name="pairWithObserver">Pair with Auditor</string>
     <string name="pairWithObserverDetails">Have your parent scan this QR code from the Canvas Parent app to pair with you. This code will expire in seven days, or after one use.</string>
     <string name="pairingCodeLabel">Pairing Code:\u0020</string>
     <string name="pairingCodeErrorTitle">Pairing Code Error</string>
     <string name="pairingCodeErrorDescription">Unable to retrieve a pairing code. This feature is only supported for students.</string>
+
     <string name="launchSpeedgrader">Open Speedgrader</string>
 
     <string name="search_todo">todo to do todos todo list</string>
@@ -713,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-
     <string name="content_description_speed_grader_slider">Grade slider</string>
+
     <string name="createNewCalendarEvent">Create New Event</string>
     <string name="enableFunMode">Turn off the pandas.</string>
 
@@ -801,6 +816,7 @@
     <string name="notification_desc_recording_ready">Get notified when a conference recording is ready.</string>
 
     <string name="unlimited">Unlimited</string>
+
     <string name="question">Question</string>
     <plurals name="question_count">
         <item quantity="one">%d question</item>
@@ -811,16 +827,17 @@
         <item quantity="one">%s point</item>
         <item quantity="other">%s points</item>
     </plurals>
+
     <string name="timeLimit">Time Limit</string>
     <string name="newPushNotifications">%1$s New Notifications</string>
     <string name="like">like</string>
     <string name="likeEntryLabel">Like Entry</string>
     <string name="likes">likes</string>
-
     <plurals name="likeCountLabel">
         <item quantity="one">%s like</item>
         <item quantity="other">%s likes</item>
     </plurals>
+
     <string name="color_1">Red</string>
     <string name="color_2">Hot Pink</string>
     <string name="color_3">Lavender</string>
@@ -879,6 +896,7 @@
     <string name="editDashboard">Edit Dashboard</string>
     <string name="editDashboardDescriptor">Select which subjects you would like to see on the Dashboard</string>
     <string name="a11y_editYourCourseList">Edit your subject list</string>
+
     <string name="dashboard">Dashboard</string>
     <string name="previous">Previous</string>
     <string name="pageNum" formatted="false">Page %d of %d</string>
@@ -906,8 +924,8 @@
     <string name="tapToViewAnnouncement">Tap to view announcement</string>
     <string name="acceptCourseInvitation">Accept</string>
     <string name="declineCourseInvitation">Decline</string>
-
     <string name="outOf">out of</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">There are no files associated with this subject.</string>
     <string name="noFilesSubtextGroup">There are no files associated with this group.</string>
@@ -968,6 +986,7 @@
     <string name="unableToViewInBrowser">We are unable to find an external app to view this LTI tool.</string>
 
     <string name="commentUpload">Comment Upload</string>
+
     <string name="frontPage">Front Page</string>
     <string name="editPage">Edit Page</string>
     <string name="description">Description</string>
@@ -980,10 +999,10 @@
     <string name="conferencesNotSupported">Conferences are not yet supported on mobile.</string>
     <string name="filePreviewContentDescription">File preview image</string>
     <string name="pdfError">An error occurred trying to load this PDF.</string>
-
     <string name="featureNotAllowedInStudentView">So sorry! This feature isn\'t allowed in student view.</string>
     <string name="nothingToSeeHere">Nothing To See Here</string>
     <string name="unsupportedFeature">Unsupported Feature</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Add Student</string>
     <string name="addChildSubTitle">Input the student pairing code provided to you.</string>
@@ -991,6 +1010,7 @@
     <string name="addChildErrorMessage">Pairing Failed. Make sure your pairing code is correct and within the time limit of use.</string>
     <string name="gradeComplete">Complete</string>
     <string name="gradeIncomplete">Incomplete</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Post Settings</string>
     <string name="postGradesTab">Post Grades</string>
@@ -1021,9 +1041,9 @@
     <string name="gradeAfterPosting">Grade after posting</string>
     <string name="gradeOverride">Grade override</string>
     <string name="currentGrade">Current grade</string>
-
     <string name="opensInCanvasStudent">Opens in Canvas Student</string>
     <string name="tab_student_view">Student View</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Chosen head: %s</string>
@@ -1078,7 +1098,6 @@
 
     <string name="addVideoComment">Add video comment</string>
     <string name="addAudioComment">Add audio comment</string>
-
     <string name="audioRecordingError">An unexpected error occurred while trying to record audio.</string>
     <string name="videoRecordingError">An unexpected error occurred while trying to record video.</string>
 
@@ -1097,6 +1116,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
         <item quantity="other">%s Minutes</item>
@@ -1117,6 +1137,7 @@
     <string name="conferenceDetails">Conference Details</string>
     <string name="recordings">Recordings</string>
     <string name="conferenceInProgress">Conference in progress</string>
+
     <string name="a11y_criterion_content_description">Criterion rating %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">more information</string>
@@ -1143,4 +1164,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Remove all from dashboard</string>
     <string name="a11y_content_description_add_to_dashboard">Add to dashboard</string>
     <string name="a11y_content_description_add_all_to_dashboard">Add all to dashboard</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Account</string>
+    <string name="dashboardTabHomeroom">Homeroom</string>
+    <string name="dashboardTabSchedule">Schedule</string>
+    <string name="dashboardTabGrades">Grades</string>
+    <string name="dashboardTabResources">Resources</string>
+    <string name="homeroomWelcomeMessage">Welcome, %1$s!</string>
+    <string name="homeroomMySubjects">My Topics</string>
+    <string name="viewPreviousAnnouncements">View Previous Announcements</string>
+    <string name="homeroomError">Failed to load Homeroom</string>
+    <string name="homeroomRefreshFail">Failed to refresh Homeroom</string>
+
+    <string name="nothingDueToday">Nothing Due Today</string>
+    <string name="dueToday">%1$s due today</string>
+    <string name="missing">%1$s missing</string>
+    <string name="homeroomEmptyTitle">Welcome!</string>
+    <string name="homeroomEmptyMessage">Your topics show up here.</string>
+    <string name="homeroomNoSubjects">You currently have no topics.</string>
+
+
+    <string name="open_alternate_view">Open a more accessible alternative view</string>
+
+    <string name="a11y_content_description_message_recipients">Recipients</string>
+    <string name="a11y_content_description_inbox_subject">Topic</string>
+    <string name="a11y_content_description_inbox_course_spinner">Select a subject, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">This student\'s responses are hidden because this assignment is anonymous.</string>
+
+    <string name="studentAnnotationUnsupported">Student Annotation (Unsupported)</string>
+    <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently not supported on mobile.</string>
+    <string name="unsupportedSubmissionType">Unsupported Submission Type</string>
+    <string name="studentAnnotationUnsupportedMessage">Submission cannot be displayed, because Student Annotation is currently not supported on mobile.</string>
 </resources>

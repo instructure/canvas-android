@@ -227,7 +227,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -425,5 +424,10 @@
     <string name="searchQuizzesHint">Chwilio Cwisiau</string>
     <string name="noItemsMatchingQuery">Dim eitemau’n cyfateb \"%s\"</string>
     <string name="selected">Wedi dewis</string>
+
+    <string name="notificationChannelNameInAppUpdate">Hysbysiadau diweddaru ap</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Hysbysiadau Canvas ar gyfer diweddariadau mewn ap</string>
+    <string name="appUpdateReadyTitle">Ap yn barod i’w ddiweddaru</string>
+    <string name="appUpdateReadyDescription">Ail-gychwynnwch yr ap i osod y fersiwn newydd</string>
 
 </resources>

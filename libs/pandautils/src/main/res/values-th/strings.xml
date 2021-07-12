@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">เลือกไฟล์สื่อ</string>
+    <string name="takeVideo">ถ่ายวิดีโอ</string>
+    <string name="noCameraOnDevice">ไม่มีกล้อง</string>
+    <string name="takePhoto">ถ่ายภาพ</string>
+    <string name="choosePhotoFromGallery">เลือกภาพจากแกลเลอรี่</string>
+
+    <string name="utils_edit">แก้ไข</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">อัพโหลดไป Canvas</string>
+    <string name="preparingUpload">กำลังเตรียมการอัพโหลด</string>
+    <string name="loadingFilesIndeterminate">กำลังโหลดไฟล์&#8230;</string>
+    <string name="fileUploadSuccess">อัพโหลดเสร็จสิ้น</string>
+    <string name="noNetwork">เครือข่ายไม่พร้อมใช้งาน - กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+    <string name="uploadMessage">"กำลังอัพโหลด ตรวจสอบการแจ้งสถานะการอัพโหลด</string>
+    <string name="uploadingFile">กำลังอัพโหลดไฟล์&#8230;</string>
+    <string name="errorUploadingFile">เกิดข้อผิดพลาดขณะอัพโหลดไฟล์ของคุณ กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+    <string name="fileSubmission">ส่งไฟล์</string>
+    <string name="uploadFiles">อัพโหลดไฟล์</string>
+    <string name="upload">อัพโหลด</string>
+    <string name="errorSendingMessage">เกิดข้อผิดพลาดในการส่งข้อความของคุณ กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+
+    <string name="notificationChannelNameFileUploadsName">การแจ้งข้อมูลการอัพโหลด</string>
+    <string name="notificationChannelNameFileUploadsDescription">การแจ้งข้อมูลของ Canvas สำหรับการอัพดหลดที่กำลังดำเนินการ</string>
+
+
+    <!-- Turn in Files -->
+    <string name="addFile">เพิ่มไฟล์</string>
+
+    <string name="fromCamera">กล้องถ่ายรูป</string>
+    <string name="fromGallery">แกลเลอรี่</string>
+    <string name="fromDevice">อุปกรณ์</string>
+    <string name="fromOtherApplication">อื่น ๆ</string>
+    <string name="Domain">โดเมน</string>
+    <string name="files">ไฟล์</string>
+    <string name="file">ไฟล์</string>
+    <string name="fileTalkBack">ไฟล์ %s</string>
+    <string name="folderTalkBack">โฟลเดอร์ %s</string>
+    <string name="addItem">เพิ่มรายการ</string>
+    <string name="assignment">ภารกิจ</string>
+    <string name="attachedFiles">ไฟล์ที่แนบ</string>
+    <string name="turnIn">ส่งมอบ</string>
+    <string name="course">บทเรียน</string>
+    <string name="sending">กำลังส่ง&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">ให้ดาว หนึ่ง</string>
+    <string name="star2">ให้ดาว สอง</string>
+    <string name="star3">ให้ดาว สาม</string>
+    <string name="star4">ให้ดาว สี่</string>
+    <string name="star5">ให้ดาว ห้า</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">ปัจจุบันคุณใช้งานเกินโควต้าพื้นที่จัดเก็บไฟล์ข้อมูลของคุณแล้ว</string>
+    <string name="errorSubmittingFiles">เกิดข้อผิดพลาดขณะส่งมอบไฟล์ของคุณ กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+    <string name="errorLoadingFiles">เกิดข้อผิดพลาดขณะโหลดไฟล์ของคุณ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณและลองใหม่อีกครั้ง</string>
+    <string name="filesUploadedSuccessfully">อัพโหลดไฟล์เสร็จสิ้น</string>
+    <string name="filesSubmittedSuccessfully">จัดส่งไฟล์เสร็จสิ้น</string>
+    <string name="messageSentSuccessfully">ส่งข้อความเสร็จสิ้น</string>
+    <string name="shareWithCanvas">แอพอื่น ๆ สามารถแชร์ไฟล์กับ Canvas! สังเกตไอคอนด้านล่างในแอพแล้วกดเลือก Canvas</string>
+    <string name="shareWithCanvas2">ข้อมูลจะเปิดขึ้นในแอพนี้ จากนั้นเพียงแค่เลือกบทเรียนและภารกิจที่คุณต้องการส่งมอบไฟล์ข้อมูล</string>
+    <string name="contentDescriptionSocialShare">ไอคอนแชร์</string>
+    <string name="submitAssignment">จัดส่งภารกิจ</string>
+    <string name="assignmentHeader">ภารกิจ:</string>
+    <string name="submittingAssignment">กำลังจัดส่งภารกิจ&#8230;</string>
+    <string name="conversations">การพูดคุย </string>
+    <string name="inbox">กล่องจดหมาย </string>
+    <string name="divider">ตัวหาร</string>
+    <string name="legal">ประเด็นทางกฎหมาย</string>
+    <string name="completeHomework">ทำการบ้านของคุณให้เสร็จสิ้น</string>
+    <string name="takeExam">ทำข้อสอบ</string>
+    <string name="fileIcon">ไอคอนไฟล์</string>
+    <string name="uploadingFileNum" formatted="false">กำลังอัพโหลด %d จาก %d</string>
+    <string name="fileLocked" formatted="false">%s ถูกล็อคไว้</string>
+    <string name="filePermissionGranted">ไฟล์พร้อมดาวน์โหลดแล้วตอนนี้ กรุณาลองใหม่อีกครั้ง</string>
+    <string name="filePermissionDenied">ไฟล์ไม่สามารถดาวน์โหลดได้หากไม่ให้อนุญาต</string>
+    <string name="pleaseTryAgain">ให้อนุญาตแล้ว กรุณาลองใหม่อีกครั้ง</string>
+    <string name="pickFile">เลือกไฟล์</string>
+    <string name="assignmentSubmissionUpload">กำลังอัพโหลดผลงานจัดส่งสำหรับ %s</string>
+    <string name="assignmentSubmissionError">การจัดส่งสำหรับ %s ล้มเหลว</string>
+    <string name="assignmentSubmissionComplete">จัดส่ง %s เสร็จสิ้น</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">เกิดข้อผิดพลาดที่ไม่คาดคิด</string>
+    <string name="serverError">เกิดข้อผิดพลาดกับเซิร์ฟเวอร์</string>
+    <string name="unauthorized">คุณไม่ได้รับอนุญาตให้สืบค้น คุณไม่มีสิทธิ์อนุญาตหรือคุณยังไม่สามารถเข้าถึงได้ (เช่น บทเรียนยังไม่ได้เริ่มต้น)</string>
+    <string name="fileNoLongerExists">ไฟล์นี้ไม่มีอยู่อีกต่อไป</string>
+    <string name="invalidAccessToken">รายการของคุณเกินกำหนดเวลาแล้ว กรุณาล็อกอินเพื่อเริ่มทำรายการใหม่</string>
+    <string name="uploadingFromSourceFailed">ไม่สามารถอัพโหลดไฟล์จากต้นทางนี้ได้</string>
+    <string name="errorGettingPhoto">มีข้อผิดพลาดในการสืบค้นภาพ กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+    <string name="errorTextMissing">เพิ่มข้อความเพื่อส่งข้อความ</string>
+
+    <string name="fileUploadNotSupported">คุณไม่สามารถอัพโหลดไฟล์ไปยังภารกิจที่เลือก</string>
+    <string name="noCourseSelected">กรุณาเลือกบทเรียน</string>
+    <string name="selectCourse">เลือกบทเรียน</string>
+    <string name="selectAssignment">เลือกภารกิจ</string>
+    <string name="loadingAssignments">กำลังโหลดภารกิจ...</string>
+    <string name="noAssignmentSelected">กรุณาเลือกภารกิจ</string>
+    <string name="noAssignmentsWithFileUpload">บทเรียนนี้ไม่มีภารกิจที่อนุญาตให้อัพโหลดไฟล์</string>
+    <string name="teacherNotAllowedFileSubmission">ในฐานะผู้สอนในบทเรียนนี้ คุณไม่สามารถจัดส่งไฟล์ข้อมูลได้</string>
+    <string name="noFilesUploaded">คุณไม่ได้เลือกไฟล์ใด ๆ</string>
+    <string name="oneOrMoreExtensionNotAllowed">ไฟล์บางส่วนมีนามสกุลที่ไม่อนุญาต</string>
+    <string name="extensionNotAllowed">ไม่อนุญาตประเภทไฟล์ที่เลือก</string>
+    <string name="allowedExtensions">นามสกุลที่ใช้ได้:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> กรุณาตรวจสอบการเชื่อมต่อข้อมูลของคุณและลองใหม่อีกครั้ง </string>
+    <string name="noApps">อุปกรณ์ของคุณไม่มีแอพพลิเคชั่นที่ติดตั้งไว้ที่สามารถจัดการไฟล์นี้</string>
+    <string name="noAppsShort">ไม่สามารถเปิดได้</string>
+    <string name="unexpectedErrorOpeningFile">เกิดข้อผิดพลาดที่ไม่คาดคิดขณะพยายามเปิดไฟล์</string>
+    <string name="unexpectedErrorDownloadingFile">เกิดข้อผิดพลาดที่ไม่คาดคิดขณะพยายามดาวน์โหลดไฟล์</string>
+
+    <string name="done">เสร็จสิ้น</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">ใช้คุณสมบัตินี้โดยจะต้องมีสิทธิ์อนุญาต</string>
+    <string name="noConnection">ไม่มีการต่อเชื่อม</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">บทเรียนและกลุ่มโปรดของคุณจะปรากฏขึ้นที่นี่</string>
+    <string name="addCoursesGroups">เพิ่มบทเรียน/กลุ่ม</string>
+    <string name="noDiscussions">ไม่มีการพูดคุย</string>
+    <string name="noDiscussionsSubtext">เริ่มการพูดคุยกับบุคคลอื่น ๆ</string>
+    <string name="noDiscussionsTeacher">เริ่มการพูดคุยกับผู้เรียนของคุณ</string>
+    <string name="nothingUnread">Inbox Zero!</string>
+    <string name="nothingUnreadSubtext">คุณไม่ได้ก้าวหน้าไปไหนเลย!</string>
+    <string name="nothingStarred">ไม่มีข้อความที่ดาวไว้</string>
+    <string name="nothingStarredSubtext">เก็บข้อความที่สำคัญ ๆ ในกลุ่มย่อยนี้โดยกดเลือกที่ดาวในข้อความแต่ละรายการ</string>
+    <string name="nothingSent">ไม่มีข้อมูลจัดส่ง</string>
+    <string name="nothingSentSubtext">คุณยังไม่ได้ส่งข้อความใด ๆ</string>
+    <string name="nothingArchived">ไม่มีข้อมูลที่จัดเก็บแยก</string>
+    <string name="nothingArchivedSubtext">คุณยังไม่ได้จัดเก็บแยกข้อความใด ๆ</string>
+    <string name="noQuizzes">ไม่มีแบบทดสอบ</string>
+    <string name="noQuizzesSubtext">ขออภัย ยังไม่มีแบบทดสอบ</string>
+    <string name="noQuizzesTeacher">ไม่มีแบบทดสอบที่เผยแพร่ให้จัดแสดง</string>
+    <string name="noAnnouncements">ไม่มีประกาศ</string>
+    <string name="noAnnouncementsSubtext">ไม่มีประกาศใด ๆ ในตอนนี้</string>
+    <string name="noCourses">ไม่มีบทเรียน</string>
+    <string name="noCoursesSubtext">ดูเหมือนจะยังไม่ได้เชื่อมโยงบทเรียนใด ๆ กับบัญชีนี้ เยี่ยมชมเว็บเพื่อจัดทำบทเรียนในวันนี้</string>
+    <string name="noAssignments">ไม่มีภารกิจ</string>
+    <string name="noAssignmentsSubtext">ดูเหมือนจะยังไม่ได้จัดทำภารกิจในพื้นที่นี้ ถึงเวลาออกไปสำรวจโลกภายนอกแล้ว</string>
+    <string name="noAssignmentsTeacher">ดูเหมือนจะไม่มีภารกิจที่เผยแพร่ในตอนนี้</string>
+    <string name="noFiles">ไม่มีไฟล์</string>
+    <string name="noFilesForAssignment">ไม่มีไฟล์สำหรับผลงานจัดส่งนี้</string>
+    <string name="noFilesSubtext">ไม่มีไฟล์ที่เชื่อมโยงกับบัญชีนี้</string>
+    <string name="emptyFolder">โฟลเดอร์นี้ว่างเปล่า</string>
+    <string name="notSupported">ไม่รองรับ</string>
+    <string name="noEvents">ไม่มีกิจกรรมในวันนี้!</string>
+    <string name="noEventsSubtext">ดูเหมือนนี่จะเป็นวันที่เหมาะสำหรับพักผ่อนแบบสบาย ๆ</string>
+    <string name="noSubmission">ไม่มีผลงานจัดส่ง</string>
+    <string name="noSubmissionTeacher">ผู้เรียนรายนี้ยังไม่มีผลงานจัดส่งใด ๆ</string>
+    <string name="locked">ล็อคแล้ว</string>
+    <string name="lockedSubtext">ภารกิจนี้ถูกล็อคจนถึง %1$s จาก %2$s</string>
+    <string name="chooseFile">เลือกไฟล์</string>
+    <string name="chooseFileSubtext">แนบไฟล์กับผลงานจัดส่งของคุณโดยกดเลือกตัวเลือกด้านล่าง</string>
+    <string name="chooseFileForUploadSubtext">เลือกไฟล์ที่จะอัพโหลดโดยกดเลือกที่ตัวเลือกด้านล่าง</string>
+    <string name="noNotifications">ไม่มีการแจ้งข้อมูล</string>
+    <string name="noNotificationsSubtext">ไม่มีข้อมูลที่จะแจ้งในตอนนี้</string>
+    <string name="noTodos">ดีมาก!</string>
+    <string name="noTodosSubtext">รายการสิ่งที่ต้องทำของคุณว่างเปล่า ถึงเวลารีชาร์จแล้ว</string>
+    <string name="noSyllabus">ไม่มีหลักสูตร</string>
+    <string name="noSyllabusSubtext">หลักสูตรยังไม่ได้จัดทำ</string>
+    <string name="noBookmarks">ไม่มีบุ๊กมาร์ก</string>
+    <string name="noBookmarksSubtext">บุ๊กมาร์กเป็นทางลัดไปยังหน้าจอในแอพ เพิ่มรายการไปยังหน้าจอที่คุณต้องการกำหนดบุ๊กมาร์ก</string>
+    <string name="noModules">ไม่มีหน่วยการเรียน</string>
+    <string name="noModulesSubtext">ดูเหมือนจะยังไม่ได้จัดทำหน่วยการเรียนใด ๆ</string>
+    <string name="noPages">ไม่มีหน้าเพจ</string>
+    <string name="noPagesSubtext">ดูเหมือนจะยังไม่ได้จัดทำหน้าเพจใด ๆ</string>
+    <string name="modulesLockedSubtext">หน่วยการเรียนถูกปิดใช้งานสำหรับบทเรียนนี้</string>
+    <string name="modulesLocked">มีบางอย่างผิดปกติ</string>
+
+    <!--General-->
+    <string name="yes">ใช่</string>
+    <string name="no">ไม่</string>
+
+    <string name="inbox_all">กล่องจดหมาย</string>
+    <string name="inbox_unread">ไม่ได้อ่าน</string>
+    <string name="inbox_starred">ให้ดาวแล้ว</string>
+    <string name="inbox_sent">ส่งแล้ว</string>
+    <string name="inbox_archived">จัดเก็บแยกแล้ว</string>
+
+    <string name="forbidden">การตอบกลับจะแสดงเฉพาะกับผู้ที่โพสต์การตอบกลับอย่างน้อยหนึ่งรายการ</string>
+
+    <string name="like">ไลค์</string>
+    <string name="likes">ไลค์</string>
+    <string name="lockedAssignmentNotModule">ภารกิจนี้ถูกล็อคไว้</string>
+    <string name="deletedEntryNoChildren">รายการการพูดคุยที่ลบไปนี้ไม่มีการตอบกลับ</string>
+    <string name="deleted">ลบแล้ว</string>
+    <string name="deleted_by">[ลบโดย %1$s]</string>
+    <string name="lockedDiscussionDesc">การพูดคุยนี้เป็นส่วนหนึ่งของหน่วยการเรียน %s และยังไม่ได้ปลดล็อค</string>
+    <string name="gradedDiscussion">การพูดคุยที่มีการให้เกรด</string>
+    <string name="pointsPossible">คะแนนที่เป็นไปได้</string>
+    <string name="sideCommentEntry">สำหรับการพูดคุยประเภทนี้ คุณจะไม่สามารถแสดงความเห็นในรายการใด ๆ ในระดับนี้</string>
+
+    <string name="accessibility_overflow">ล้นเกิน</string>
+
+    <string name="discussion_response">ความเห็น</string>
+    <string name="discussion_responses">ความเห็น</string>
+    <string name="discussion_unread">ไม่ได้อ่าน</string>
+    <string name="discussion_reply">ตอบกลับ</string>
+    <string name="close">ปิด</string>
+
+    <string name="noInternetConnectionTitle">ไม่มีการเชื่อมต่ออินเทอร์เน็ต</string>
+    <string name="noInternetConnectionMessage">การดำเนินการนี้ต้องมีการเชื่อมต่ออินเทอร์เน็ต</string>
+    <string name="content_description_avatar">ภาพประจำตัว</string>
+    <string name="a11y_avatarNameFormatted">%s ภาพประจำตัว</string>
+    <string name="formattedAvatarAction">ดูรายละเอียดผู้ใช้สำหรับ %s</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">เราเป็นอย่างไรบ้าง</string>
+    <string name="utils_rateUs">คุณจะให้คะแนนเราเท่าใด</string>
+    <string name="utils_doBetter">เราสามารถทำอะไรให้ดีกว่านี้</string>
+    <string name="utils_sendFeedback">ส่งความเห็น</string>
+    <string name="utils_suggestions">คำแนะนำสำหรับ Android</string>
+    <string name="utils_domain">โดเมน</string>
+    <string name="utils_versionNum">เวอร์ชั่น:</string>
+    <string name="utils_userId">ID ผู้ใช้</string>
+    <string name="utils_email">อีเมล</string>
+    <string name="utils_dontShowAgain">ไม่ต้องแสดงอีก</string>
+    <string name="utils_installDate">วันที่ติดตั้ง:</string>
+    <string name="utils_device">อุปกรณ์</string>
+    <string name="utils_osVersion">เวอร์ชั่น OS</string>
+    <string name="loading">กำลังโหลด</string>
+    <string name="save">บันทึก</string>
+    <string name="cropInstructions">จีบนิ้วและลากเพื่อปรับภาพ</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s การตอบกลับ</item>
+        <item quantity="other">%s การตอบกลับ</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">ลบการตอบกลับนี้แล้ว %s</string>
+    <string name="utils_discussionsUnknownAuthor">ผู้จัดทำที่ไม่รู้จัก</string>
+    <string name="utils_discussionsReply">ตอบกลับ</string>
+    <string name="utils_discussionsEdit">แก้ไข</string>
+    <string name="utils_discussionsDeleteWarning">แน่ใจว่าต้องการลบการตอบกลับนี้หรือไม่</string>
+    <string name="utils_availableToLabel">พร้อมสำหรับ:</string>
+    <string name="utils_availableFromLabel">ใช้ได้จาก</string>
+    <string name="utils_dueDateHeaderLabel">ครบกำหนด</string>
+    <string name="utils_dueLabel">ครบกำหนด:</string>
+    <string name="utils_delete">ลบ</string>
+    <string name="utils_dueDateAtTime" formatted="false">ครบกำหนด %1s เมื่อ %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">ความพร้อม:</string>
+    <string name="utils_pinnedIcon">ไอคอนสำหรับการพูดคุยที่ปักหมุดไว้</string>
+    <string name="utils_pinDiscussion">ปักหมุดการพูดคุย</string>
+    <string name="utils_unpinDiscussion">เลิกปักหมุดการพูดคุย</string>
+    <string name="utils_discussionPinned">การพูดคุยที่ปักหมุดไว้</string>
+    <string name="utils_pinnedDiscussions">ปักหมุดไว้</string>
+    <string name="utils_discussionUnpinned">การพูดคุย</string>
+    <string name="utils_emptyDiscussions">ไม่มีการพูดคุยสำหรับแสดงในกลุ่มย่อยนี้</string>
+    <string name="utils_description">รายละเอียด</string>
+    <string name="utils_allowThreadedReplies">อนุญาตการตอบกลับแบบต่อเนื่อง</string>
+    <string name="utils_usersMustPost">ผู้เรียนจะต้องโพสต์ก่อนดูการตอบกลับ</string>
+    <string name="utils_discussionsClosed">ปิดสำหรับแสดงความเห็น</string>
+    <string name="utils_discussionsOpen">เปิดสำหรับแสดงความเห็น</string>
+    <string name="utils_discussionsPin">ปักหมุด</string>
+    <string name="utils_discussionsUnpin">เลิกปักหมุด</string>
+    <string name="utils_discussionsOptions">ตัวเลือก</string>
+    <string name="utils_discussionsDeleteTitle">ลบการพูดคุยหรือไม่</string>
+    <string name="utils_discussionsDelete">ลบการพูดคุย</string>
+    <string name="utils_discussionsDeleteMessage">นี่จะเป็นการลบการพูดคุยและชุดข้อความติดต่อทั้งหมด</string>
+    <string name="utils_discussionSentSuccess">ตอบกลับการพูดคุยเสร็จสิ้น</string>
+    <string name="utils_discussionUpdateSuccess">แก้ไขการพูดคุยเสร็จสิ้น</string>
+    <string name="utils_discussionSentEmpty">การตอบกลับการพูดคุยปล่อยว่างไม่ได้</string>
+    <string name="utils_discussionSentFailure">ไม่สามารถส่งการตอบกลับการพูดคุยได้ในตอนนี้</string>
+    <string name="utils_createDiscussion">การพูดคุยใหม่</string>
+    <string name="utils_editDiscussion">แก้ไขการพูดคุย</string>
+    <string name="utils_discussionDetails">รายละเอียดการพูดคุย</string>
+    <string name="utils_discussionSuccessfullyUpdated">อัพเดตการพูดคุยเสร็จสิ้น</string>
+    <string name="utils_saving">กำลังบันทึก</string>
+    <string name="utils_discussionSuccessfullyCreated">จัดทำการพูดคุยเสร็จสิ้น</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">ไม่สามารถเพิ่มเอกสารแนบไปยังการพูดคุยนี้ กรุณาตรวจสอบโควต้าไฟล์ของคุณแล้วลองใหม่อีกครั้ง</string>
+    <string name="utils_noTitle">ไม่มีชื่อ</string>
+    <string name="utils_discussionsReplies_Title">การตอบกลับ</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">ตัวเลือกเพิ่มเติม</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">โพสต์ล่าสุด %s</string>
+    <string name="utils_postedOnDate">โพสต์เมื่อ %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">การตอบกลับจะแสดงเฉพาะกับผู้ที่โพสต์การตอบกลับอย่างน้อยหนึ่งรายการ</string>
+    <string name="utils_createAnnouncementDelayPosting">หน่วงการโพสต์</string>
+    <string name="utils_postAt">โพสต์เมื่อ</string>
+    <string name="utils_postDate">วันที่โพสต์</string>
+    <string name="utils_postTime">เวลาโพสต์</string>
+    <string name="utils_editAnnouncementTitle">แก้ไขประกาศแจ้ง</string>
+    <string name="utils_createAnnouncementTitle">ประกาศใหม่</string>
+    <string name="utils_announcementDetails">รายละเอียดประกาศแจ้ง</string>
+    <string name="utils_createAnnouncementNoDescription">ต้องระบุรายละเอียด</string>
+    <string name="utils_errorSavingAnnouncement">เกิดข้อผิดพลาดขณะพยายามบันทึกประกาศแจ้งนี้ ลองใหม่อีกครั้ง</string>
+    <string name="utils_announcementSuccessfullyUpdated">อัพเดตประกาศแจ้งเสร็จสิ้น</string>
+    <string name="utils_announcementSuccessfullyCreated">จัดทำประกาศแจ้งเสร็จสิ้น</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s รายการที่ไม่ได้อ่าน</item>
+        <item quantity="other">%s รายการที่ไม่ได้อ่าน</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">เพิ่มเอกสารแนบ</item>
+        <item quantity="one">เพิ่มเอกสารแนบ</item>
+        <item quantity="other">เพิ่มเอกสารแนบ</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">วันที่ปลดล็อคจะอยู่หลังจากวันครบกำหนดไม่ได้</string>
+    <string name="utils_lockBeforeDueDateError">วันที่ล็อคจะอยู่ก่อนวันครบกำหนดไม่ได้</string>
+    <string name="utils_lockAfterUnlockError">วันที่ล็อคจะอยู่ก่อนวันที่ปลดล็อคไม่ได้</string>
+    <string name="utils_assigneeBlankError">ผู้รับมอบจะปล่อยว่างไม่ได้</string>
+    <string name="utils_assignTo">กำหนดให้กับ</string>
+    <string name="utils_availableFrom">ใช้ได้จาก</string>
+    <string name="utils_availableTo">พร้อมสำหรับ</string>
+    <string name="utils_availableFromDate">ใช้ได้จากวันที่</string>
+    <string name="utils_availableFromTime">ใช้ได้จากเวลา</string>
+    <string name="utils_availableToDate">ใช้ได้จนถึงวันที่</string>
+    <string name="utils_availableToTime">ใช้ได้จนถึงเวลา</string>
+    <string name="utils_dueDate">วันครบกำหนด</string>
+    <string name="utils_dueTime">กำหนดเวลา</string>
+    <string name="utils_addNew">เพิ่มรายการใหม่</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">ดาวน์โหลดเอกสารแนบ</string>
+    <string name="utils_removeAttachment">ลบเอกสารแนบ</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">ดำเนินการต่อโดยไม่บันทึกหรือไม่</string>
+    <string name="utils_continueWithoutSavingMessage">แน่ใจว่าต้องการดำเนินการต่อโดยไม่บันทึกหรือไม่</string>
+    <string name="utils_continueUnsaved">ดำเนินการต่อ</string>
+    <string name="utils_exitWithoutSavingTitle">ออกโดยไม่บันทึกหรือไม่</string>
+    <string name="utils_exitWithoutSavingMessage">แน่ใจว่าต้องการออกโดยไม่บันทึกหรือไม่</string>
+    <string name="utils_exitUnsaved">ออก</string>
+    <string name="utils_cancel">ยกเลิก</string>
+
+    <string name="utils_contentDescriptionFiles">ไอคอนไฟล์</string>
+    <string name="utils_turn_in">ส่งมอบ</string>
+    <string name="utils_upload">อัพโหลด</string>
+    <string name="utils_okay">โอเค</string>
+    <string name="utils_loadingFilesIndeterminate">กำลังโหลดไฟล์&#8230;</string>
+    <string name="utils_allowedExtensions">นามสกุลที่ใช้ได้:&#160;</string>
+    <string name="utils_extensionNotAllowed">ไม่อนุญาตประเภทไฟล์ที่เลือก</string>
+    <string name="utils_errorUploadingFile">เกิดข้อผิดพลาดขณะอัพโหลดไฟล์ของคุณ กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+    <string name="utils_filesUploadedSuccessfully">อัพโหลดไฟล์เสร็จสิ้น</string>
+    <string name="utils_uploadingFiles">อัพโหลดไฟล์&#8230;</string>
+    <string name="utils_uploadingFile">กำลังอัพโหลดไฟล์&#8230;</string>
+    <string name="utils_noApps">อุปกรณ์ของคุณไม่มีแอพพลิเคชั่นที่ติดตั้งไว้ที่สามารถจัดการไฟล์นี้</string>
+    <string name="utils_errorGettingPhoto">มีข้อผิดพลาดในการสืบค้นภาพ กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">ไฟล์บางส่วนมีนามสกุลที่ไม่อนุญาต</string>
+    <string name="utils_fileUploadNotSupported">คุณไม่สามารถอัพโหลดไฟล์ไปยังภารกิจที่เลือก</string>
+    <string name="utils_noFilesUploaded">คุณไม่ได้เลือกไฟล์ใด ๆ</string>
+    <string name="utils_attachments">เอกสารแนบ</string>
+    <string name="utils_uploadTo">อัพโหลดไปยัง </string>
+    <string name="utils_uploadToCanvas">อัพโหลดไป Canvas</string>
+    <string name="utils_uploadMyFiles">ไฟล์ของฉัน</string>
+    <string name="utils_uploadCourseFiles">ไฟล์บทเรียน</string>
+    <string name="utils_uploadGroupFiles">ไฟล์ของกลุ่ม</string>
+    <string name="utils_uploadToSubmissionComment">อัพโหลดไปยังความเห็นสำหรับผลงานจัดส่ง</string>
+    <string name="utils_attachFile">แนบไฟล์</string>
+    <string name="utils_with">กับ</string>
+
+    <string name="notificationPrimaryInboxTitle">การแจ้งข้อมูลของ Canvas</string>
+    <string name="notificationChannelNamePrimary">การแจ้งข้อมูลทั่วไปของ Canvas</string>
+    <string name="notificationChannelDescriptionPrimary">การกำหนดค่าการแจ้งข้อมูลเพิ่มเติมสามารถดำเนินการได้จากหัวข้อค่าปรับแต่งการแจ้งข้อมูลของ Canvas</string>
+    <plurals name="notificationGroupContent">
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
+        <item quantity="other">%d การแจ้งข้อมูลใหม่</item>
+    </plurals>
+
+    <string name="copyLinkAddress">คัดลอกที่อยู่ลิงค์</string>
+    <string name="copyLink">คัดลอกลิงค์</string>
+    <string name="linkCopied">คัดลอกลิงค์แล้ว</string>
+    <string name="link">ลิงค์</string>
+    <string name="fileExists">มีไฟล์อยู่</string>
+    <string name="replace">แทนที่</string>
+    <string name="shareLink">แชร์ลิงค์</string>
+
+    <string name="utils_launchExternalTool">เรียกใช้ชุดเครื่องมือจากภายนอก</string>
+    <string name="utils_externalToolTitle">เครื่องมือจากภายนอก</string>
+    <string name="utils_placeholderTitle">เครื่องมือจากภายนอก</string>
+    <string name="utils_placeholderDescription">เยี่ยมชมบัญชีเว็บ Canvas ของคุณเพื่อแก้ไขเครื่องมือจากภายนอกนี้</string>
+    <string name="utils_unableToViewInBrowser">เราไม่พบแอพจากภายนอกสำหรับเปิดดูเครื่องมือ LTI นี้</string>
+
+    <string name="utils_unsupportedFileMessage">ไม่สามารถแสดงไฟล์ได้ ใช้ปุ่มด้านล่างเพื่อเปิดไฟล์โดยใช้แอพอื่นในอุปกรณ์ของคุณ</string>
+    <string name="utils_openWithAnotherApp">เปิดด้วย...</string>
+    <string name="utils_couldNotPlayFormat">ไม่รองรับรูปแบบสื่อ</string>
+    <string name="utils_fullscreen">เต็มหน้าจอ</string>
+
+    <string name="utils_dataUsageWarningTitle">แจ้งเตือนการใช้ข้อมูล</string>
+    <string name="utils_dataUsageWarningMessage">การดำเนินการนี้อาจต้องใช้ข้อมูลเป็นจำนวนมาก และอาจทำให้มีค่าใช้จ่ายเพิ่มเติม ต้องการดำเนินการต่อหรือไม่</string>
+    <string name="utils_doNotShowMessageAgain">ไม่ต้องแสดงข้อความนี้อีก</string>
+
+    <string name="utils_no_data_connection">กรุณาตรวจสอบการเชื่อมต่อข้อมูลของคุณและลองใหม่อีกครั้ง</string>
+    <string name="utils_playMedia">เปิดสื่อ</string>
+    <string name="utils_tryAgain">ลองใหม่อีกครั้ง</string>
+    <string name="image_uploading">กำลังอัพโหลดภาพ...</string>
+    <string name="image_upload_error">ข้อผิดพลาดการอัพโหลดภาพ</string>
+    <string name="retry">ลองใหม่</string>
+    <string name="search">ค้นหา</string>
+    <string name="searchAssignmentsHint">ค้นหาภารกิจ</string>
+    <string name="searchAnnouncementsHint">ค้นหาประกาศ</string>
+    <string name="searchDiscussionsHint">ค้นหาการพูดคุย</string>
+    <string name="searchPagesHint">ค้นหาเพจ</string>
+    <string name="searchQuizzesHint">ค้นหาแบบทดสอบ</string>
+    <string name="noItemsMatchingQuery">ไม่มีรายการที่ตรงกัน \"%s\"</string>
+
+    <string name="selected">เลือกแล้ว</string>
+
+    <string name="notificationChannelNameInAppUpdate">การแจ้งข้อมูลอัพเดตแอพ</string>
+    <string name="notificationChannelDescriptionInAppUpdate">การแจ้งข้อมูลจาก Canvas สำหรับข้อมูลอัพเดตในแอพ</string>
+    <string name="appUpdateReadyTitle">แอพพร้อมสำหรับการอัพเดต</string>
+    <string name="appUpdateReadyDescription">รีสตาร์ทแอพเพื่อติดตั้งเวอร์ชั่นใหม่</string>
+
+</resources>
