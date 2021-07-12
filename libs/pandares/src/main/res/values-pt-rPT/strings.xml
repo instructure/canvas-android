@@ -1143,4 +1143,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Retirar tudo do painel</string>
     <string name="a11y_content_description_add_to_dashboard">Adicionar ao painel</string>
     <string name="a11y_content_description_add_all_to_dashboard">Adicionar tudo ao painel</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Conta</string>
+    <string name="dashboardTabHomeroom">Casa de família</string>
+    <string name="dashboardTabSchedule">Cronograma</string>
+    <string name="dashboardTabGrades">Classificações</string>
+    <string name="dashboardTabResources">Recursos</string>
+    <string name="homeroomWelcomeMessage">Bem-vindo, %1$s!</string>
+    <string name="homeroomMySubjects">Minhas Disciplinas</string>
+
+    <string name="viewPreviousAnnouncements">Ver Anúncios Anteriores</string>
+    <string name="homeroomError">Falha no carregamento da sala de estar</string>
+    <string name="homeroomRefreshFail">Falha ao atualizar a sala de estar</string>
+
+
+    <string name="nothingDueToday">Nada Devido Hoje</string>
+    <string name="dueToday">%1$s devido hoje</string>
+    <string name="missing">%1$s em falta</string>
+    <string name="homeroomEmptyTitle">Bem-vindo!</string>
+    <string name="homeroomEmptyMessage">Os seus assuntos aparecem aqui.</string>
+    <string name="homeroomNoSubjects">Atualmente, não tem assuntos.</string>
+
+
+    <string name="open_alternate_view">Abrir uma vista alternativa mais acessível</string>
+    <string name="a11y_content_description_message_recipients">Destinatários</string>
+    <string name="a11y_content_description_inbox_subject">Assunto</string>
+    <string name="a11y_content_description_inbox_course_spinner">Seleccione uma disciplina, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">As respostas deste aluno são ocultas porque esta tarefa é anónima.</string>
+
+    <string name="studentAnnotationUnsupported">Anotação do aluno (Sem suporte)</string>
+    <string name="studentAnnotationUnsupportedDescription">A anotação do aluno não é actualmente suportada em telemóvel.</string>
+    <string name="unsupportedSubmissionType">Tipo de apresentação não suportada</string>
+    <string name="studentAnnotationUnsupportedMessage">A submissão não pode ser exibida, porque a Anotação do aluno não é atualmente suportada em telemóvel.</string>
 </resources>

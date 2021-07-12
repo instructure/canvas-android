@@ -228,7 +228,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas-lärare</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas-omröstningar</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -427,5 +426,10 @@
     <string name="noItemsMatchingQuery">Inga objekt matchar \"%s\"</string>
 
     <string name="selected">Vald</string>
+
+    <string name="notificationChannelNameInAppUpdate">Aviseringar om appuppdateringar</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas-aviseringar för uppdateringar i appen.</string>
+    <string name="appUpdateReadyTitle">Appen är klar för uppdatering</string>
+    <string name="appUpdateReadyDescription">Starta om appen för att installera den nya versionen</string>
 
 </resources>

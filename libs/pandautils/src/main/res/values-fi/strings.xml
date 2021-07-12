@@ -225,7 +225,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas-kyselyt</string>
     <string name="utils_speedgrader">SpeedGrader</string>
 
     <!-- Rating Dialog -->
@@ -424,5 +423,10 @@
     <string name="noItemsMatchingQuery">Ei täsmääviä kohteita \"%s\" kanssa</string>
 
     <string name="selected">Valittu</string>
+
+    <string name="notificationChannelNameInAppUpdate">Sovelluspäivitysten ilmoitukset</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas-ilmoitukset sovelluksen sisäisille päivityksille.</string>
+    <string name="appUpdateReadyTitle">Sovellus valmis päivitettäväksi</string>
+    <string name="appUpdateReadyDescription">Käynnistä sovellus uudelleen asentaaksesi uusi versio</string>
 
 </resources>

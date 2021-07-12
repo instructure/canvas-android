@@ -56,6 +56,7 @@
     <string name="canvasAPI_onlineURL">Verkkosivuston URL</string>
     <string name="canvasAPI_mediaRecording">Median nauhoitus</string>
     <string name="canvasAPI_attendance">Osallistuminen</string>
+    <string name="canvasAPI_studentAnnotation">Opiskelijan jättämä huomautus</string>
     <string name="quiz_scoring_policy_highest">Korkein</string>
     <string name="quiz_scoring_policy_average">Keskimääräinen</string>
     <string name="quiz_scoring_policy_latest">Viimeisin</string>

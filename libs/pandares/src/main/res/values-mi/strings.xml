@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Kaore ngā kōnae e kitea</string>
     <string name="searchFilesHint">Rapu ngā kōnae</string>
     <string name="fileSearchInstructions">Whakauruhia he kupu rapu me te toru neke atu rānei o nga pūāhua</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Kua tīpakohia: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Taipitopito whakataunga</string>
     <string name="submission_types">Ngā momo tāpaetanga</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Ūpoko i tohua: %s</string>
     <string name="content_description_chosen_body">Tinana i tohua: %s</string>
     <string name="content_description_chosen_feet">Waewae i tohua: %s</string>
@@ -1165,4 +1164,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Tangohia katoa mai papatohu</string>
     <string name="a11y_content_description_add_to_dashboard">Tāpiri ki papatohu</string>
     <string name="a11y_content_description_add_all_to_dashboard">Tāpiri katoa ki papatohu</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Pūkete</string>
+    <string name="dashboardTabHomeroom">Kainga rūma</string>
+    <string name="dashboardTabSchedule">Hōtaka</string>
+    <string name="dashboardTabGrades">Ngā Kōeke</string>
+    <string name="dashboardTabResources">Rauemi</string>
+    <string name="homeroomWelcomeMessage">Haere mai %1$s!</string>
+    <string name="homeroomMySubjects">Aku Kaupapa</string>
+    <string name="viewPreviousAnnouncements">Titiro ngā Pānuitanga o muri</string>
+    <string name="homeroomError">I rahua te uta i te Kaingarūma</string>
+    <string name="homeroomRefreshFail">I rahua ki te whakahou te Kaingaruma</string>
+
+    <string name="nothingDueToday">Kaore e Tika ana mō tēnei rā</string>
+    <string name="dueToday">%1$s e tika ana mo tēnei rā</string>
+    <string name="missing">%1$s e ngaro ana</string>
+    <string name="homeroomEmptyTitle">Nau Mai!</string>
+    <string name="homeroomEmptyMessage">Ka kitea ō marau i konei.</string>
+    <string name="homeroomNoSubjects">Kaore koe e whiwhi marau i tēnei wā.</string>
+
+
+    <string name="open_alternate_view">Huaki he wāhanga whakauru ngāwari mo tētahi tiro atu</string>
+
+    <string name="a11y_content_description_message_recipients">Ngā Kaiwhiwhi</string>
+    <string name="a11y_content_description_inbox_subject">Kaupapa</string>
+    <string name="a11y_content_description_inbox_course_spinner">Tīpako he akoranga, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Kei te hunahia ngā whakautu a tēnei ākonga no te mea he ingoamuna tēnei whakataunga.</string>
+
+    <string name="studentAnnotationUnsupported">Ākonga Tuhipoka (Kaore e tautokotia)</string>
+    <string name="studentAnnotationUnsupportedDescription">Ākonga Tuhipoka kaore i te tautokotia i tēnei wā i runga i te waea haerere.</string>
+    <string name="unsupportedSubmissionType">Kaore i Tautokotia tēnei Momo Tapaetanga</string>
+    <string name="studentAnnotationUnsupportedMessage">Kaore e taea te whakaatu atu i te tāpaetanga no te mea Ākonga Tuhipoka kaore i te tautokotia i tēnei wā i runga i te waea haerere.</string>
 </resources>

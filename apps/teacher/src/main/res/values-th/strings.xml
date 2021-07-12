@@ -1,0 +1,903 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">ค่าปรับตั้ง</string>
+    <string name="tab_week">สัปดาห์</string>
+    <string name="tab_inbox">กล่องจดหมาย</string>
+    <string name="tab_details">รายละเอียด</string>
+    <string name="tab_questions">คำถาม</string>
+    <string name="tab_submissions">ผลงานจัดส่ง</string>
+    <string name="tab_assignments">ภารกิจ</string>
+    <string name="tab_profile">โพรไฟล์</string>
+    <string name="tab_people">บุคคล</string>
+    <string name="tab_quizzes">คำถาม</string>
+    <string name="tab_discussions">การอภิปราย</string>
+    <string name="tab_announcements">ประกาศ</string>
+    <string name="tab_attendance">การเข้าร่วม</string>
+    <string name="tab_pages">เพจ</string>
+    <string name="tab_todo">สิ่งที่ต้องดำเนินการ</string>
+    <string name="content_description_school_logo">โลโก้สถานศึกษา</string>
+    <string name="search_guides">ค้นหาคู่มือ Canvas</string>
+    <string name="canvas_guides">คู่มือ Canvas</string>
+    <string name="search_guides_icon">ไอคอนสำหรับคู่มือ Canvas</string>
+    <string name="search_guides_details">คำตอบสำหรับคำถามที่พบบ่อย</string>
+    <string name="report_problem">แจ้งปัญหา</string>
+    <string name="report_problem_icon"> ไอคอนสำหรับแจ้งปัญหา</string>
+    <string name="report_problem_details">หากแอพทำงานผิดปกติ กรุณาแจ้งให้เราทราบ</string>
+    <string name="request_feature">แจ้งขอคุณสมบัติการทำงาน</string>
+    <string name="request_feature_icon">ไอคอนสำหรับแจ้งขอคุณสมบัติการทำงาน</string>
+    <string name="request_feature_details">แจ้งให้เราทราบข้อคิดเห็นของคุณในการปรับปรุงแอพ</string>
+    <string name="share_your_love">แบ่งปันความชื่นชอบที่คุณมีเกี่ยวกับแอพ</string>
+    <string name="share_your_love_details">บอกให้เราทราบเกี่ยวกับส่วนที่คุณชอบมากที่สุดเกี่ยวกับแอพ</string>
+    <string name="masquerade">การสวมบทบาท</string>
+    <string name="issue_with_teacher_app">ปัญหากับแอพ Teacher [Android]</string>
+    <string name="no_items_to_display_short">ไม่มีรายการ</string>
+    <string name="rate_the_app">ให้คะแนนแอพ</string>
+    <string name="rate_the_app_icon">ไอคอนสำหรับให้คะแนนแอพ</string>
+    <string name="teacher_log_out">ล็อกเอาท์</string>
+    <string name="teacher_switch_user">สลับผู้ใช้</string>
+    <string name="under_construction">อยู่ระหว่างจัดทำ</string>
+    <string name="toolbar_event">เหตุการณ์</string>
+    <string name="location">ตำแหน่ง</string>
+    <string name="event_date">วันที่จัดกิจกรรม</string>
+    <string name="course">บทเรียน</string>
+    <string name="profile">โพรไฟล์</string>
+    <string name="share">แชร์</string>
+    <string name="share_with">แชร์กับ&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">เปิดแถบรายการสืบค้น</string>
+    <string name="navigation_drawer_close">ปิดแถบรายการสืบค้น</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">(ไม่มีหัวเรื่อง)</string>
+    <string name="compose_message">เขียนข้อความ</string>
+    <string name="newMessage">ข้อความใหม่</string>
+    <string name="courses">บทเรียน</string>
+    <string name="compose_message_no_ellipsis">เขียนข้อความ</string>
+    <string name="send">ส่ง</string>
+    <string name="attachment">เอกสารแนบ</string>
+    <string name="attachments">เอกสารแนบ</string>
+    <string name="not_available_offline">ฟังก์ชั่นไม่พร้อมใช้งานขณะออฟไลน์</string>
+    <string name="empty_message">ข้อความนี้ปล่อยว่างไม่ได้</string>
+    <string name="message_has_no_recipients">ข้อความนี้ไม่มีผู้รับในปัจจุบัน</string>
+    <string name="course_spinner_title">บทเรียน:</string>
+    <string name="reply_to_message">ตอบกลับ</string>
+    <string name="forward_message">ส่งต่อข้อความ</string>
+    <string name="label_to">ถึง</string>
+    <string name="label_course">บทเรียน</string>
+    <string name="label_subject">วิชา</string>
+
+    <string name="common_send">ส่ง</string>
+    <string name="common_edit">แก้ไข</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">แนวคิดสำหรับแอพ Teacher [Android]</string>
+    <string name="understand_request">ข้อมูลต่อไปนี้จะช่วยให้เราเข้าใจเกี่ยวกับแนวคิดของคุณได้ดียิ่งขึ้น:</string>
+    <string name="send_mail">ส่งอีเมล&#8230;</string>
+
+    <string name="color_1">แดง</string>
+    <string name="color_2">ฮอตพิงค์</string>
+    <string name="color_3">ลาเวนเดอร์</string>
+    <string name="color_4">ไวโอเล็ต</string>
+    <string name="color_5">ม่วง</string>
+    <string name="color_6">สเลท</string>
+    <string name="color_7">น้ำเงิน</string>
+    <string name="color_8">ฟ้า</string>
+    <string name="color_9">เขียว</string>
+    <string name="color_10">ชาร์ทรูส</string>
+    <string name="color_11">เหลือง</string>
+    <string name="color_12">ทอง</string>
+    <string name="color_13">ส้ม</string>
+    <string name="color_14">ชมพู</string>
+    <string name="color_15">เทา</string>
+
+    <string name="attachment_icon">ไอคอนเอกสารแนบ</string>
+    <string name="star_icon">ไอคอนดาว</string>
+    <string name="monologue">โมโนล็อก</string>
+
+    <string name="create_announcement_topic_title_hint">ชื่อหัวข้อ</string>
+    <string name="post_date">วันที่โพสต์</string>
+    <string name="announcement">ประกาศ</string>
+    <string name="create_announcement_title">ประกาศใหม่</string>
+    <string name="create_announcement_no_description">ต้องระบุรายละเอียด</string>
+    <string name="announcementDetails">รายละเอียดประกาศแจ้ง</string>
+
+    <string name="no_title">ไม่มีชื่อ</string>
+    <string name="announcement_create_success">จัดทำประกาศแล้ว!</string>
+    <string name="announcement_create_fail">ไม่สามารถจัดทำประกาศได้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
+    <string name="create_announcement_delay_posting">หน่วงการโพสต์</string>
+
+    <string name="discussion">การพูดคุย</string>
+
+    <string name="sunday">อาทิตย์</string>
+    <string name="monday">จันทร์</string>
+    <string name="tuesday">อังคาร</string>
+    <string name="wednesday">พุธ</string>
+    <string name="thursday">พฤหัสบดี</string>
+    <string name="friday">ศุกร์</string>
+    <string name="saturday">เสาร์</string>
+
+    <string name="add_attachment">เพิ่มเอกสารแนบ</string>
+    <string name="content_description_files">ไอคอนไฟล์</string>
+    <string name="next">ถัดไป</string>
+    <string name="upload_to_cnavas">อัพโหลดไป Canvas</string>
+    <string name="upload_my_files">ไฟล์ของฉัน</string>
+    <string name="upload_course_files">ไฟล์บทเรียน</string>
+    <string name="upload_to">อัพโหลดไปยัง</string>
+    <string name="message_attachments">เอกสารแนบข้อความ</string>
+    <string name="with">กับ</string>
+    <string name="discussion_attachment">แนบไฟล์</string>
+    <string name="select_files_or_photos">เลือกไฟล์หรือภาพ</string>
+    <string name="uploading_files">อัพโหลดไฟล์&#8230;</string>
+    <string name="no_attachment">(ไม่มีเอกสารแนบ)</string>
+    <string name="creating_announcement">กำลังจัดทำประกาศแจ้ง&#8230;</string>
+
+    <string name="copy_email">คัดลอกอีเมลแอดเดรส</string>
+    <string name="all_grading_periods">ระยะเวลาการให้เกรดทั้งหมด</string>
+    <string name="no_submissions">ไม่มีผลงานจัดส่ง</string>
+    <string name="all_submissions_graded">ให้เกรดผลงานจัดส่งทั้งหมดแล้ว</string>
+    <string name="icon">ไอคอน</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="one">%d ผลงานจัดส่งที่ต้องให้เกรด</item>
+        <item quantity="other">%d ผลงานจัดส่งที่ต้องให้เกรด</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="one">มี %d ผู้ได้รับมอบหมายที่ไม่มีเกรด</item>
+        <item quantity="other">มี %d ผู้ได้รับมอบหมายที่ไม่มีเกรด</item>
+    </plurals>
+
+    <string name="inbox_empty_title">ไม่มีข้อความ</string>
+    <string name="inbox_empty_starred_title">ไม่มีข้อความที่ดาวไว้</string>
+    <string name="inbox_empty_message">กดเลือก \"+\" เพื่อจัดทำการพูดคุยใหม่</string>
+    <string name="inbox_empty_starred_message">ให้ดาวข้อความโดยกดดาวที่ข้อความ</string>
+
+    <string name="reply">ตอบกลับ</string>
+    <string name="replyAll">ตอบกลับทั้งหมด</string>
+    <string name="forward">ส่งต่อ</string>
+    <string name="star">ดาว</string>
+    <string name="archive">จัดเก็บแยก</string>
+    <string name="delete">ลบ</string>
+    <string name="message">ข้อความ</string>
+    <string name="unarchive">ยกเลิกการจัดเก็บแยก</string>
+    <string name="message_options">ตัวเลือกข้อความ</string>
+    <string name="markAsUnread">กำกับว่ายังไม่ได้อ่าน</string>
+    <string name="message_delete_warning">แน่ใจว่าต้องการลบสำเนาข้อความนี้ของคุณหรือไม่ การดำเนินการนี้ไม่สามารถยกเลิกได้</string>
+    <string name="conversation_delete_warning">แน่ใจว่าต้องการลบสำเนาการพูดคุยนี้ของคุณหรือไม่ การดำเนินการนี้ไม่สามารถยกเลิกได้</string>
+    <string name="error_conversation_generic">ไม่สามารถดำเนินการในส่วนนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
+    <string name="message_archived">จัดเก็บข้อความแยกแล้ว</string>
+    <string name="message_unarchived">เลิกจัดเก็บข้อความแยกแล้ว</string>
+    <string name="message_deleted">ลบข้อความแล้ว</string>
+    <string name="select_recipients">เลือกผู้รับ</string>
+    <string name="entire_group_selected">กลุ่มที่เลือกทั้งหมด</string>
+    <string name="no_users_in_group">ไม่มีผู้ใช้ในกลุ่ม</string>
+
+    <string name="published">เผยแพร่แล้ว</string>
+    <string name="not_published">ไม่ได้เผยแพร่</string>
+    <string name="published_content_description">เครื่องหมายกำกับที่เผยแพร่</string>
+    <string name="points_with_value">คะแนน</string>
+    <string name="point_with_value">คะแนน</string>
+    <string name="no_due_date">ไม่มีวันครบกำหนด</string>
+    <string name="due_date">วันครบกำหนด</string>
+
+    <string name="view_replies">ดูการตอบกลับ</string>
+    <string name="view_discussion">ดูการพูดคุย</string>
+
+    <string name="edit">แก้ไข</string>
+    <string name="save">บันทึก</string>
+    <string name="successfully_updated_assignment">อัพเดตภารกิจเสร็จสิ้น</string>
+    <string name="successfully_updated_quiz">อัพเดตแบบทดสอบเสร็จสิ้น</string>
+    <string name="failure_updating_assignment">มีบางอย่างผิดพลาดในการอัพเดตภารกิจ ลองใหม่อีกครั้ง</string>
+    <string name="failure_deleting_assignment">มีบางอย่างผิดพลาดในการลบภารกิจ ลองใหม่อีกครั้ง</string>
+    <string name="cant_unpublish">ไม่สามารถเลิกเผยแพร่ได้หากมีผลงานจัดส่งจากผู้เรียน</string>
+    <string name="messages">ข้อความ</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="one">+ %d ข้อความ</item>
+        <item quantity="other">+ %d ข้อความ</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="one">%d ผลงานจัดส่งที่ต้องให้เกรด</item>
+        <item quantity="other">%d ผลงานจัดส่งที่ต้องให้เกรด</item>
+    </plurals>
+
+    <string name="delete_assignment_message">แน่ใจว่าต้องการลบภารกิจนี้หรือไม่</string>
+
+    <string name="max_count">99+</string>
+    <string name="message_student">ส่งข้อความถึงผู้เรียน</string>
+
+    <string name="message_these_students">ส่งข้อความถึงผู้เรียนเหล่านี้</string>
+    <string name="submission_status_missing">ขาดหาย</string>
+    <string name="submission_status_late">ล่าช้า</string>
+    <string name="submission_status_submitted">จัดส่งแล้ว</string>
+    <string name="submission_status_not_submitted">ยังไม่ได้จัดส่ง</string>
+    <string name="submission_status_excused">ได้รับการยกเว้น</string>
+    <string name="last_login_format">ล็อกอินล่าสุด: %s</string>
+
+    <string name="turnOnAnonymousGrading">เปิดการให้เกรดแบบไม่เปิดเผยตัว</string>
+    <string name="turnOffAnonymousGrading">ปิดการให้เกรดแบบไม่เปิดเผยตัว</string>
+    <string name="anonymousGradingLabel">การให้เกรดแบบไม่เปิดเผยตัว</string>
+    <string name="anonymousStudentLabel">ผู้เรียน</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">คุณสมบัติการใช้งานที่จะจัดให้เร็ว ๆ นี้</string>
+
+    <string-array name="submission_filters">
+        <item>ผลงานจัดส่งทั้งหมด</item>
+        <item>ผลงานจัดส่งล่าช้า</item>
+        <item>ผลงานจัดส่งที่ขาดหายไป</item>
+        <item>เกรดสูง</item>
+        <item>เกรดต่ำ</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>ตามชื่อ</item>
+        <item>เกรดสูงไปต่ำ</item>
+        <item>เกรดต่ำไปสูง</item>
+    </string-array>
+
+    <string name="content_description_course_tab">แท็บบทเรียน</string>
+    <string name="content_description_inbox_tab">แท็บกล่องจดหมาย</string>
+    <string name="content_description_profile_tab">แท็บโพรไฟล์</string>
+    <string name="close">ปิด</string>
+    <string name="no_course_selected">กรุณาเลือกบทเรียน</string>
+    <string name="discussion_reply_to_entry">ตอบกลับการพูดคุย</string>
+    <string name="announcement_reply_to_entry">ตอบกลับประกาศแจ้ง</string>
+    <string name="error_text_missing">เพิ่มข้อความเพื่อส่งข้อความ</string>
+    <string name="error_sending_message">ไม่สามารถส่งข้อความนี้ได้ กดเพื่อลองใหม่อีกครั้ง</string>
+    <string name="message_sent_successfully">ส่งข้อความเสร็จสิ้น</string>
+    <string name="error_occurred">เกิดข้อผิดพลาดที่ไม่คาดคิด</string>
+    <string name="no_assignments_with_file_upload">บทเรียนนี้ไม่มีภารกิจที่อนุญาตให้อัพโหลดไฟล์</string>
+    <string name="extension_not_allowed">ไม่อนุญาตประเภทไฟล์ที่เลือก</string>
+    <string name="allowed_extensions">นามสกุลที่ใช้ได้:&#160;</string>
+    <string name="files_uploaded_successfully">อัพโหลดไฟล์เสร็จสิ้น</string>
+    <string name="error_uploading_file">เกิดข้อผิดพลาดขณะอัพโหลดไฟล์ของคุณ กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+    <string name="uploading_file">กำลังอัพโหลดไฟล์&#8230;</string>
+    <string name="no_apps">อุปกรณ์ของคุณไม่มีแอพพลิเคชั่นที่ติดตั้งไว้ที่สามารถจัดการไฟล์นี้</string>
+    <string name="turn_in">ส่งมอบ</string>
+    <string name="error_getting_photo">มีข้อผิดพลาดในการสืบค้นภาพ กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+    <string name="loading_files_indeterminate">กำลังโหลดไฟล์&#8230;</string>
+    <string name="no_files_uploaded">คุณไม่ได้เลือกไฟล์ใด ๆ</string>
+    <string name="file_upload_not_supported">คุณไม่สามารถอัพโหลดไฟล์ไปยังภารกิจที่เลือก</string>
+    <string name="one_or_more_extension_not_allowed">ไฟล์บางส่วนมีนามสกุลที่ไม่อนุญาต</string>
+
+    <string name="inbox_all">กล่องจดหมาย</string>
+    <string name="inbox_unread">ไม่ได้อ่าน</string>
+    <string name="inbox_starred">ให้ดาวแล้ว</string>
+    <string name="inbox_sent">ส่งแล้ว</string>
+    <string name="inbox_archived">จัดเก็บแยกแล้ว</string>
+    <string name="inbox_all_messages">ทั้งหมด</string>
+    <string name="uploading_file_num" formatted="false">กำลังอัพโหลด %d จาก %d</string>
+    <string name="page_not_found">ไม่พบหน้าเอกสาร</string>
+    <string name="no_connection">ไม่มีการต่อเชื่อม</string>
+    <string name="unauthorized_access">คุณไม่ได้รับอนุญาตให้สืบค้น คุณไม่มีสิทธิ์อนุญาตหรือคุณยังไม่สามารถเข้าถึงได้ (เช่น บทเรียนยังไม่ได้เริ่มต้น)</string>
+    <string name="server_error">เกิดข้อผิดพลาดกับเซิร์ฟเวอร์</string>
+    <string name="error_loading_files">เกิดข้อผิดพลาดขณะโหลดไฟล์ของคุณ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณและลองใหม่อีกครั้ง</string>
+    <string name="files_submitted_successfully">จัดส่งไฟล์เสร็จสิ้น</string>
+    <string name="no_data_connection">กรุณาตรวจสอบการเชื่อมต่อข้อมูลของคุณและลองใหม่อีกครั้ง</string>
+    <string name="teacher_logout_warning">แน่ใจว่าต้องการล็อกเอาท์หรือไม่</string>
+    <string name="teacher_yes">ใช่</string>
+    <string name="teacher_no">ไม่</string>
+    <string name="teacher_sending">กำลังส่ง&#8230;</string>
+    <string name="teacher_cancel">ยกเลิก</string>
+    <string name="teacher_okay">โอเค</string>
+    <string name="teacher_upload">อัพโหลด</string>
+    <string name="settings">ค่าปรับตั้ง</string>
+    <string name="edit_courses">แก้ไขบทเรียน</string>
+    <string name="start_annotating">เริ่มการทำหมายเหตุกำกับ</string>
+    <string name="empty_speedgrader_content">มุมมอง Speedgrader ว่างเปล่า ต้องกำหนดรูปแบบ</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">ค่าปรับตั้งบทเรียน</string>
+    <string name="course_name">ชื่อบทเรียน</string>
+    <string name="set_home_to">ตั้งค่า “โฮม” เป็น...</string>
+    <string name="course_activity_stream">สตรีมกิจกรรมสำหรับบทเรียน</string>
+    <string name="pages_front_page">หน้าเพจ หน้าแรก</string>
+    <string name="frontPage">หน้าแรก</string>
+    <string name="course_modules">หน่วยการเรียนบทเรียน</string>
+    <string name="assignments_list">รายการภารกิจ</string>
+    <string name="syllabus">หลักสูตร</string>
+    <!--End Course Settings-->
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">วันครบกำหนดหลายรายการ</string>
+    <string name="everyone">ทุกคน</string>
+    <string name="everyone_else">คนอื่น ๆ ทั้งหมด</string>
+    <string name="unknown_student">ผู้เรียนที่ไม่รู้จัก</string>
+    <string name="closed">ปิดแล้ว</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">ครบกำหนด %1s เมื่อ %2s</string>
+    <string name="last_post" formatted="false">โพสต์ล่าสุด %s</string>
+    <string name="submission_types">ประเภทการจัดส่ง</string>
+    <string name="full_due_date_details">รายละเอียดวันครบกำหนดทั้งหมด</string>
+    <string name="availability_label">ความพร้อม:</string>
+    <string name="available_to_label">พร้อมสำหรับ:</string>
+    <string name="available_from_label">ใช้ได้จาก</string>
+    <string name="due_for_label">สำหรับ:</string>
+    <string name="due_label">ครบกำหนด:</string>
+    <string name="details_available_to_label">พร้อมสำหรับ</string>
+    <string name="details_available_from_label">ใช้ได้จาก</string>
+    <string name="details_due_for_label">สำหรับ</string>
+    <string name="due_date_header_label">ครบกำหนด</string>
+    <string name="assignment_details">รายละเอียดภารกิจ</string>
+    <string name="no_content">ไม่มีเนื้อหา</string>
+    <string name="submissions">ผลงานจัดส่ง</string>
+    <string name="no_assignment_description_filler">ช่วยเหลือผู้เรียนของคุณสำหรับภารกิจนี้โดยการเพิ่มคำแนะนำเข้าไป</string>
+    <string name="no_quiz_description_filler">ช่วยเหลือผู้เรียนของคุณสำหรับแบบทดสอบนี้โดยการเพิ่มคำแนะนำเข้าไป</string>
+    <string name="page_title_due_dates">วันครบกำหนด</string>
+    <string name="edit_assignment">แก้ไขภารกิจ</string>
+    <string name="edit_quiz">แก้ไขแบบทดสอบ</string>
+    <string name="title">ชื่อ</string>
+    <string name="description">รายละเอียด</string>
+    <string name="grade_total">เกรดทั้งหมด</string>
+    <string name="grade">เกรด</string>
+    <string name="enter_grade">กรอกเกรด</string>
+    <string name="override">บอกล้าง</string>
+    <string name="calculated_by_rubric">คำนวณโดยใช้เกณฑ์การให้คะแนน</string>
+    <string name="customize_grade">ปรับแต่งเกรด</string>
+    <string name="out_of_points">จาก %1$s</string>
+    <string name="gpa">GPA</string>
+    <string name="letter_grade">เกรดแบบตัวอักษร</string>
+    <string name="excuse_student">ยกเว้นผู้เรียน</string>
+    <string name="excuseGroup">ยกเว้นกลุ่ม</string>
+    <string name="complete_grade">เสร็จสิ้น</string>
+    <string name="incomplete_grade">ไม่เสร็จสิ้น</string>
+    <string name="not_graded">ไม่ได้ลงเกรด</string>
+    <string name="excused">ได้รับการยกเว้น</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s จาก %2$s</string>
+    <string name="publish">เผยแพร่</string>
+    <string name="error_saving_assignment">เกิดข้อผิดพลาดขณะพยายามบันทึกภารกิจนี้ ลองใหม่อีกครั้ง</string>
+    <string name="error_saving_quiz">เกิดข้อผิดพลาดขณะพยายามบันทึกแบบทดสอบนี้ ลองใหม่อีกครั้ง</string>
+    <string name="assignment_name_must_be_set">จะต้องระบุชื่อภารกิจ</string>
+    <string name="announcement_name_must_be_set">จะต้องระบุชื่อประกาศแจ้ง</string>
+    <string name="quiz_title_must_be_set">จะต้องกำหนดชื่อแบบทดสอบ</string>
+    <string name="assignment_points_must_be_set">จะต้องกำหนดคะแนนภารกิจ</string>
+    <string name="assignment_points_must_be_a_number">คะแนนที่ทำได้จะต้องเป็นตัวเลข</string>
+    <string name="quiz_points_must_be_set">จะต้องกำหนดคะแนนแบบทดสอบ</string>
+    <string name="assignee_type_course_sections">กลุ่มย่อยบทเรียน</string>
+    <string name="assignee_type_groups">กลุ่ม</string>
+    <string name="assignee_type_students">ผู้เรียน</string>
+    <string name="page_title_add_assignees">เพิ่มผู้รับมอบหมาย</string>
+    <string name="assign_to">กำหนดให้กับ</string>
+    <string name="available_from">ใช้ได้จาก</string>
+    <string name="available_to">พร้อมสำหรับ</string>
+    <string name="unlock_after_due_date_error">วันที่ปลดล็อคจะอยู่หลังจากวันครบกำหนดไม่ได้</string>
+    <string name="lock_before_due_date_error">วันที่ล็อคจะอยู่ก่อนวันครบกำหนดไม่ได้</string>
+    <string name="lock_after_unlock_error">วันที่ล็อคจะอยู่ก่อนวันที่ปลดล็อคไม่ได้</string>
+    <string name="assignee_blank_error">ผู้รับมอบจะปล่อยว่างไม่ได้</string>
+    <string name="remove">ลบ</string>
+    <string name="add_due_date">เพิ่มวันครบกำหนด</string>
+    <string name="full_submission_details">รายละเอียดผลงานจัดส่งทั้งหมด</string>
+    <string name="graded">ให้เกรดแล้ว</string>
+    <string name="needsGrading">ต้องให้เกรด</string>
+    <string name="not_submitted">ไม่ได้จัดส่ง</string>
+    <string name="a11y_viewSubmissionAction">ดูรายละเอียดผลงานจัดส่ง</string>
+    <string name="content_description_submission_donut_graded" formatted="false">ให้เกรดแล้ว, %s จาก %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">ต้องให้เกรด, %s จาก %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">ไม่ได้จัดส่ง, %s จาก %s</string>
+    <string name="display_grade_as">แสดงเกรดเป็น&#8230;</string>
+    <string name="percentage">เปอร์เซ็นต์</string>
+    <string name="complete_incomplete">เสร็จสิ้น/ไม่เสร็จสิ้น</string>
+    <string name="points">คะแนน</string>
+    <string name="gpa_scale">คะแนน GPA</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">ไม่ใช่ผู้สอนใช่หรือไม่</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">แอพอื่น ๆ บางส่วนของเราอาจเหมาะสมมากกว่า กดเลือกหนึ่งรายการเพื่อไปยัง Play Store</string>
+
+    <string name="sg_tab_grade">เกรด</string>
+    <string name="sg_tab_comments">ความเห็น</string>
+    <string name="sg_tab_files">ไฟล์</string>
+    <string name="sg_tab_files_w_counter">ไฟล์ (%d)</string>
+    <string name="filter_submissions">กรองผลงานจัดส่ง</string>
+    <string name="all_submissions">ผลงานจัดส่งทั้งหมด</string>
+    <string name="submitted_late">จัดส่งล่าช้า</string>
+    <string name="havent_submitted_yet">ยังไม่ได้จัดส่ง</string>
+    <string name="havent_been_graded">ยังไม่ได้ให้เกรด</string>
+    <string name="scored_less_than">ได้คะแนนต่ำกว่า&#8230;</string>
+    <string name="scored_more_than">ได้คะแนนมากกว่า&#8230;</string>
+    <string name="scored_less_than_value">ได้คะแนนน้อยกว่า %s</string>
+    <string name="scored_more_than_value">ได้คะแนนมากกว่า %s</string>
+    <string name="add_comment">เพิ่มความเห็น</string>
+    <string name="editComment">แก้ไขความเห็น</string>
+    <string name="deleteComment">ลบความเห็น</string>
+    <string name="deleteAnnotation">ลบหมายเหตุกำกับ</string>
+    <string name="deleteCommentConfirmation">แน่ใจว่าต้องการลบความเห็นนี้หรือไม่</string>
+    <string name="rubric_view_long_description">ดูรายละเอียดแบบยาว</string>
+    <string name="rubric">เกณฑ์การให้คะแนน</string>
+    <string name="enter_custom_value">กรอกค่ากำหนดเอง</string>
+    <string name="success_saving_rubric_assessment">บันทึกภารกิจตามเกณฑ์การให้คะแนนแล้ว</string>
+    <string name="error_saving_rubric_assessment">เกิดข้อผิดพลาดขณะบันทึกการประเมินตามเกณฑ์การให้คะแนน กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s จาก %2$s</string>
+    <string name="criterion_rating_customize_score">แก้ไขคะแนน</string>
+    <string name="edit_criterion_comment">แก้ไขความเห็นตามเกณฑ์</string>
+    <string name="sendMessageToHint">ข้อความ %s</string>
+    <string name="save_comment">บันทึกความเห็น</string>
+    <string name="cancel_editing_comment">ยกเลิกการแก้ไขความเห็น</string>
+    <string name="skip">ข้าม</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">คะแนนกำหนดเอง %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">"%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="one">จาก %s คะแนน</item>
+        <item quantity="other">จาก %s คะแนน</item>
+    </plurals>
+
+    <string name="tab_courses">บทเรียน</string>
+    <string name="course_options">ตัวเลือกบทเรียน</string>
+    <string name="edit_favorite_courses">แก้ไขบทเรียนโปรด</string>
+    <string name="feedback_form">แบบฟอร์มรับข้อมูลตอบกลับ</string>
+    <string name="see_all">ดูทั้งหมด</string>
+    <string name="all_courses">บทเรียนทั้งหมด</string>
+    <string name="welcome">ยินดีต้อนรับ!</string>
+    <string name="empty_course_list_message">เพิ่มบทเรียนโปรดของคุณสักเล็กน้อยเพื่อให้นี่เป็นหน้าหลักของคุณ</string>
+    <string name="add_courses">เพิ่มบทเรียน</string>
+    <string name="unable_to_add_course_to_favorites">ไม่สามารถเพิ่มบทเรียนนี้ไปยังเมนูบทเรียนได้ในตอนนี้</string>
+    <string name="grading_periods_filter">ตัวกรองระยะเวลาการให้เกรด</string>
+    <string name="assignments">ภารกิจ</string>
+    <string name="clear_filter">ล้างตัวกรอง</string>
+    <string name="due">ครบกำหนด %1$s</string>
+    <string name="updated">อัพเดต %1$s แล้ว</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="one">%s ต้องให้เกรด</item>
+        <item quantity="other">%s ต้องให้เกรด</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="one">ต้องให้เกรด</item>
+        <item quantity="other">ต้องให้เกรด</item>
+    </plurals>
+    <string name="at">เมื่อ</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s คะแนน</item>
+        <item quantity="other">%s คะแนน</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s คะแนน</item>
+        <item quantity="other">%s คะแนน</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="one">%d คน</item>
+        <item quantity="other">%d คน</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="one">%d กลุ่ม</item>
+        <item quantity="other">%d กลุ่ม</item>
+    </plurals>
+    <string name="cmp_closed">ปิดแล้ว</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">รายการโปรด</string>
+    <string name="content_description_not_favorite">ไม่ใช่รายการโปรด</string>
+    <string name="edit_nickname">แก้ไขชื่อเล่น</string>
+    <string name="edit_course_color">แก้ไขสีบทเรียน</string>
+    <string name="edit_course_nickname">แก้ไขชื่อเล่นบทเรียน</string>
+
+    <string name="colorPickerDialogTitle">สีบทเรียน</string>
+    <string name="colorPickerDialogMessage">นี่เป็นค่าปรับตั้งสีส่วนตัวของคุณ เฉพาะคุณเท่านั้นที่จะเห็นสีนี้สำหรับบทเรียนนี้</string>
+    <string name="colorPickerError">ระบุสีบทเรียนไม่ได้ในตอนนี้</string>
+
+    <string name="contentDescriptionColorCottonCandy">ชมพู</string>
+    <string name="contentDescriptionColorBarbie">ฮอตพิงค์</string>
+    <string name="contentDescriptionColorBarneyPurple">ไวโอเล็ต</string>
+    <string name="contentDescriptionColorEggplant">ม่วง</string>
+    <string name="contentDescriptionColorUltramarine">น้ำเงินเข้ม</string>
+    <string name="contentDescriptionColorOcean11">น้ำเงิน</string>
+    <string name="contentDescriptionColorCyan">ฟ้า</string>
+    <string name="contentDescriptionColorAquaMarine"> อะควอบลู</string>
+    <string name="contentDescriptionColorEmeraldGreen">เอมเมอรัลด์กรีน</string>
+    <string name="contentDescriptionColorFreshCutLawn">เขียว</string>
+    <string name="contentDescriptionColorChartreuse">ชาร์ทรูส</string>
+    <string name="contentDescriptionColorSunFlower">เหลือง</string>
+    <string name="contentDescriptionColorTangerine">ส้ม</string>
+    <string name="contentDescriptionColorBloodOrange">ดาร์คออเรนจ์</string>
+    <string name="contentDescriptionColorSriracha">แดง</string>
+    <string name="launch_link_in_external_browser">เรียกใช้ลิงค์ในเบราเซอร์จากภายนอก</string>
+    <string name="contentDescriptionSelectedFile">ไฟล์ที่เลือก</string>
+    <string name="contentDescriptionFileIcon">ไอคอนไฟล์</string>
+    <string name="contentDescriptionExpandPage">ขยายหน้าเพจ</string>
+    <string name="contentDescriptionCollapsePage">ย่อหน้าเพจ</string>
+    <string name="noInternetConnectionTitle">ไม่มีการเชื่อมต่ออินเทอร์เน็ต</string>
+    <string name="noInternetConnectionMessage">การดำเนินการนี้ต้องมีการเชื่อมต่ออินเทอร์เน็ต</string>
+
+    <string name="emptyDetailsMessage">กดที่รายการเพื่อดูรายละเอียด</string>
+
+    <string name="assignmentQuizzes">แบบทดสอบสำหรับภารกิจ</string>
+    <string name="practiceQuizzes">แบบทดสอบฝึกหัด</string>
+    <string name="gradedSurveys">แบบสำรวจที่ลงเกรดแล้ว</string>
+    <string name="surveys">แบบสอบถาม</string>
+    <string name="editQuiz">แก้ไขรายละเอียดแบบทดสอบ</string>
+    <string name="requireAccessCode">ต้องมีรหัสใช้งาน</string>
+    <string name="accessCode">รหัสใช้งาน</string>
+    <string name="mustHaveAccessCode">กรอกรหัสใช้งานหรือไม่กำหนดให้ต้องกรอกรหัสใช้งาน</string>
+    <string name="errorSavingQuiz">เกิดข้อผิดพลาดขณะพยายามบันทึกแบบทดสอบนี้ ลองใหม่อีกครั้ง</string>
+    <string name="successfullyUpdatedQuiz">อัพเดตแบบทดสอบเสร็จสิ้น</string>
+    <string name="quizType">ประเภทแบบทดสอบ</string>
+
+    <string name="practiceQuiz">แบบฝึกหัด</string>
+    <string name="gradedQuiz">แบบทดสอบที่ลงเกรดแล้ว</string>
+    <string name="gradedSurvey">แบบสำรวจที่ลงเกรดแล้ว</string>
+    <string name="ungradedSurvey">แบบสำรวจที่ไม่ได้ลงเกรด</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">ไม่ได้ใช้</string>
+
+    <string name="quizStatusComplete">เสร็จสิ้น</string>
+    <string name="quizStatusPendingReview">รอการพิจารณา</string>
+    <string name="quizStatusInProgress">กำลังดำเนินการ</string>
+    <string name="quizStatusNotStarted">ไม่ได้เริ่มต้น</string>
+
+
+    <string name="quiz_settings_label_quiz_type">ประเภทแบบทดสอบ:</string>
+    <string name="quiz_settings_label_assignment_group">กลุ่มภารกิจ:</string>
+    <string name="quiz_settings_label_shuffle_answers">สลับคำตอบ:</string>
+    <string name="quiz_settings_label_multiple_attempts">ทำได้หลายครั้ง:</string>
+    <string name="quiz_settings_label_time_limit">เกณฑ์เวลา:</string>
+    <string name="quiz_settings_label_score_to_keep">คะแนนที่จะเก็บ:</string>
+    <string name="quiz_settings_label_attempts">ครั้งที่:</string>
+    <string name="quiz_settings_label_view_responses">ดูคำตอบ:</string>
+    <string name="quiz_settings_label_show_correct_answers">แสดงคำตอบที่ถูกต้อง:</string>
+    <string name="quiz_settings_label_one_question_at_a_time">ทีละคำถาม:</string>
+    <string name="quiz_settings_label_ip_filter">ตัวกรอง IP:</string>
+    <string name="quiz_settings_label_points">คะแนน:</string>
+    <string name="quiz_settings_label_access_code">รหัสใช้งาน:</string>
+    <string name="quiz_settings_label_anonymous_submissions">ผลงานจัดส่งแบบไม่เปิดเผยตัว:</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">ล็อคคำถามหลังตอบ:</string>
+
+    <string name="quizPreview">แสดงตัวอย่างแบบทดสอบ</string>
+    <string name="preview_quiz">แสดงตัวอย่างแบบทดสอบ</string>
+    <string name="quiz_details">รายละเอียดแบบทดสอบ</string>
+    <string name="submission_versions">เวอร์ชั่นผลงานจัดส่ง</string>
+    <string name="speedgrader_student_no_submissions">ผู้เรียนรายนี้ไม่มีผลงานจัดส่งสำหรับภารกิจนี้</string>
+    <string name="speedgrader_group_no_submissions">กลุ่มนี้ไม่มีผลงานจัดส่งสำหรับภารกิจนี้</string>
+    <string name="speedgrader_unsupported_type">ประเภทผลงานจัดส่งที่ไม่รองรับ</string>
+    <string name="unlimited">ไม่จำกัด</string>
+    <string name="practice_quiz">แบบฝึกหัด</string>
+    <string name="graded_quiz">แบบทดสอบที่ลงเกรดแล้ว</string>
+    <string name="graded_survey">แบบสำรวจที่ลงเกรดแล้ว</string>
+    <string name="ungraded_survey">แบบสำรวจที่ไม่ได้ลงเกรด</string>
+    <string name="no_time_limit">ไม่มีจำกัดเวลา</string>
+    <string name="immediately">ทันที</string>
+    <string name="quiz_details_no_points_assigned">ไม่ได้ระบุคะแนน</string>
+
+    <string name="quiz_details_from_to">จาก %1$s ถึง %2$s</string>
+    <string name="quiz_details_after">หลังจาก %1$s</string>
+    <string name="quiz_details_until">จนถึง %1$s</string>
+    <string name="filterPointsMustBeSet">ระบุค่า</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="one">%d คำถาม</item>
+        <item quantity="other">%d คำถาม</item>
+    </plurals>
+
+    <string name="discussion_details">รายละเอียดการพูดคุย</string>
+    <string name="discussions_pinned">ปักหมุดไว้</string>
+    <string name="discussions_unpinned">การพูดคุย</string>
+    <string name="discussions_closed">ปิดสำหรับแสดงความเห็น</string>
+    <string name="discussions_open">เปิดสำหรับแสดงความเห็น</string>
+    <string name="discussions_pin">ปักหมุด</string>
+    <string name="discussions_unpin">เลิกปักหมุด</string>
+    <string name="contentDescriptionDiscussionsOverflow">ตัวเลือกเพิ่มเติม</string>
+    <string name="discussions_options">ตัวเลือก</string>
+    <string name="discussions_replies" formatted="false">%s การตอบกลับ</string>
+    <string name="discussions_unread" formatted="false">%s รายการที่ไม่ได้อ่าน</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">แน่ใจว่าต้องการลบการตอบกลับนี้หรือไม่</string>
+    <string name="discussions_replies_title">การตอบกลับ</string>
+    <string name="discussions_reply">ตอบกลับ</string>
+    <string name="discussions_edit">แก้ไข</string>
+    <string name="discussions_forbidden">การตอบกลับจะแสดงเฉพาะกับผู้ที่โพสต์การตอบกลับอย่างน้อยหนึ่งรายการ</string>
+    <string name="discussions_delete">ลบการพูดคุย</string>
+    <string name="discussions_delete_title">ลบการพูดคุยหรือไม่</string>
+    <string name="discussions_delete_message">นี่จะเป็นการลบการพูดคุยและชุดข้อความติดต่อทั้งหมด</string>
+
+    <string name="dataUsageWarningTitle">แจ้งเตือนการใช้ข้อมูล</string>
+    <string name="dataUsageWarningMessage">การดำเนินการนี้อาจต้องใช้ข้อมูลเป็นจำนวนมาก และอาจทำให้มีค่าใช้จ่ายเพิ่มเติม ต้องการดำเนินการต่อหรือไม่</string>
+    <string name="doNotShowMessageAgain">ไม่ต้องแสดงข้อความนี้อีก</string>
+    <string name="playMedia">เปิดสื่อ</string>
+    <string name="submissionIsMediaFile">ผลงานจัดส่งนี้เป็นไฟล์สื่อ</string>
+    <string name="tryAgain">ลองใหม่อีกครั้ง</string>
+    <string name="couldNotPlayFormat">ไม่รองรับรูปแบบสื่อ</string>
+    <string name="openWithAnotherApp">เปิดด้วย...</string>
+
+    <string name="speedgraderCommentAddedSubmission">จัดส่งภารกิจแล้ว กดเลือกเพื่อดู</string>
+    <string name="speedgraderCommentSubmittedFiles">ไฟล์ที่จัดส่ง:</string>
+    <string name="no_submission_comments">ไม่มีความเห็นสำหรับผลงานจัดส่ง</string>
+    <string name="mediaUploadAudio">อัพโหลดสื่อ - เสียง</string>
+    <string name="mediaUploadVideo">อัพโหลดสื่อ - ภาพ</string>
+    <string name="speedgraderCommentQuizAttempt">การดำเนินการ %d</string>
+    <string name="speedGraderTextSubmission">การส่งข้อความ</string>
+    <string name="speedGraderExternalToolSubmission">การจัดส่งผ่านเครื่องมือจากภายนอก</string>
+    <string name="speedGraderDiscussionSubmission">การจัดส่งการพูดคุย</string>
+    <string name="speedGraderQuizSubmission">การส่งแบบทดสอบ</string>
+    <string name="speedGraderMediaFile">ไฟล์สื่อ</string>
+    <string name="submissionTypeAudio">เสียง</string>
+    <string name="submissionTypeVideo">วิดีโอ</string>
+    <string name="speedGraderUrlSubmission">การจัดส่ง URL</string>
+
+    <string name="unsupportedFileMessage">ไม่สามารถแสดงไฟล์ได้ ใช้ปุ่มด้านล่างเพื่อเปิดไฟล์โดยใช้แอพอื่นในอุปกรณ์ของคุณ</string>
+    <string name="speedGraderNoneMessage">ภารกิจนี้ไม่อนุญาตให้มีผลงานจัดส่ง</string>
+    <string name="speedGraderOnPaperMessage">ภารกิจนี้อนุญาตเฉพาะผลงานจัดส่งแบบเอกสาร</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">ผลงานจัดส่งนี้เป็น URL ไปยังหน้าเพจภายนอก หน้าเพจนี้อาจเปลี่ยนแปลงหลังจากที่มีการจัดส่งในครั้งแรก</string>
+    <string name="speedGraderOpenUrl">เปิด URL</string>
+    <string name="annotationError">ข้อผิดพลาดในการทำหมายเหตุกำกับ</string>
+    <string name="annotationDialogMessage">ลบหมายเหตุกำกับจากต้นทางอื่นแล้ว</string>
+
+    <string name="selectCourse">เลือกบทเรียน</string>
+
+    <string name="sendIndividualMessage">ส่งข้อความเฉพาะรายไปยังผู้รับแต่ละคน</string>
+
+    <string name="filterInbox">กล่องจดหมายตัวกรอง</string>
+    <string name="selectCanvasContext">เลือกบทเรียนหรือกลุ่ม</string>
+
+    <string name="contentDescription_back">ย้อนกลับ</string>
+
+    <string name="discussion_update_success">แก้ไขการพูดคุยเสร็จสิ้น</string>
+    <string name="discussion_update_empty">ข้อความการพูดคุยปล่อยว่างไม่ได้</string>
+    <string name="discussion_update_failure">แก้ไขการพูดคุยในตอนนี้ไม่ได้</string>
+    <string name="discussion_sent_success">ตอบกลับการพูดคุยเสร็จสิ้น</string>
+    <string name="discussion_sent_empty">การตอบกลับการพูดคุยปล่อยว่างไม่ได้</string>
+    <string name="discussion_sent_failure">ไม่สามารถส่งการตอบกลับการพูดคุยได้ในตอนนี้</string>
+    <string name="discussion_first_to_respond">เป็นคนแรกที่ตอบกลับโดยการเพิ่มการตอบกลับเข้าไป</string>
+    <string name="addMorePeopleToMessage">เพิ่มผู้รับอื่น ข้อความที่ส่งถึงตัวคุณเองไม่สามารถจัดส่งได้</string>
+    <string name="tutorialSwipeMessage">กวาดนิ้วไปทางซ้ายหรือขวาเพื่อดูผู้เรียนรายอื่น</string>
+    <string name="tutorialRubricMessage">กดค้างที่ตัวเลขเพื่อดูรายละเอียด</string>
+
+    <string name="viewQuizSubmission">ดูผลงานจัดส่ง</string>
+    <string name="gradeQuizSubmission">การส่งเกรด</string>
+    <string name="comment">ความเห็น</string>
+    <string name="messageStudentsWho">ส่งข้อความถึงผู้เรียนที่&#8230;</string>
+
+    <string name="on">ที่</string>
+
+    <string name="createDiscussion">การพูดคุยใหม่</string>
+    <string name="options">ตัวเลือก</string>
+    <string name="subscribe">สมัครบริการ</string>
+    <string name="allowThreadedReplies">อนุญาตการตอบกลับแบบต่อเนื่อง</string>
+    <string name="usersMustPost">ผู้ใช้จะต้องโพสต์ก่อนดูการตอบกลับ</string>
+    <string name="allowUserComments">อนุญาตให้ผู้ใช้แสดงความเห็น</string>
+    <string name="discussionTitleMustBeSet">จะต้องระบุชื่อการพูดคุย</string>
+    <string name="discussionSuccessfullyCreated">จัดทำการพูดคุยเสร็จสิ้น</string>
+    <string name="errorCreatingDiscussion">เกิดข้อผิดพลาดขณะจัดทำการพูดคุยนี้ ลองใหม่อีกครั้ง</string>
+    <string name="editDiscussion">แก้ไขการพูดคุย</string>
+    <string name="discussionSuccessfullyUpdated">อัพเดตการพูดคุยเสร็จสิ้น</string>
+    <string name="input_text">กรอกข้อความ</string>
+    <string name="announcementSuccessfullyCreated">จัดทำประกาศแจ้งเสร็จสิ้น</string>
+    <string name="errorSavingAnnouncement">เกิดข้อผิดพลาดขณะพยายามบันทึกประกาศแจ้งนี้ ลองใหม่อีกครั้ง</string>
+    <string name="editAnnouncementTitle">แก้ไขประกาศแจ้ง</string>
+    <string name="announcementSuccessfullyUpdated">อัพเดตประกาศแจ้งเสร็จสิ้น</string>
+    <string name="announcementDeleted">ลบประกาศแล้ว</string>
+    <string name="postAt">โพสต์เมื่อ</string>
+    <string name="errorDeletingAnnouncement">เกิดข้อผิดพลาดขณะพยายามลบประกาศแจ้งนี้ ลองใหม่อีกครั้ง</string>
+    <string name="deleteAnnouncementDialogTitle">ลบประกาศหรือไม่</string>
+    <string name="deleteAnnouncementDialogMessage">แน่ใจว่าต้องการลบประกาศนี้หรือไม่</string>
+    <string name="deleteAnnouncement">ลบประกาศ</string>
+    <string name="annotationErrorOccurred">เกิดข้อผิดพลาดขณะโหลดหมายเหตุกำกับ</string>
+
+    <string name="account">บัญชี</string>
+    <string name="changeUser">เปลี่ยนผู้ใช้</string>
+    <string name="general">ทั่วไป</string>
+    <string name="sendFeedback">ส่งความเห็น</string>
+    <string name="rateOnTheAppStore">ให้คะแนนใน App Store</string>
+    <string name="privacyPolicy">นโยบายความเป็นส่วนตัว</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">เงื่อนไขการใช้งาน</string>
+    <string name="searchGuides">ค้นหาคู่มือ Canvas</string>
+    <string name="searchGuidesDetails">ค้นหาคำตอบสำหรับคำถามที่พบทั่วไป</string>
+    <string name="reportProblem">แจ้งปัญหา</string>
+    <string name="reportProblemDetails">หากแอพทำงานผิดปกติ กรุณาแจ้งให้เราทราบ</string>
+    <string name="requestFeature">แจ้งขอคุณสมบัติการทำงาน</string>
+    <string name="requestFeatureDetails">มีข้อเสนอในการปรับปรุงแอพหรือไม่</string>
+    <string name="shareYourLove">แบ่งปันความชื่นชอบที่คุณมีเกี่ยวกับแอพ</string>
+    <string name="shareYourLoveDetails">บอกให้เราทราบเกี่ยวกับส่วนที่คุณชอบมากที่สุดเกี่ยวกับแอพ</string>
+    <string name="canvasGuides">คู่มือ Canvas</string>
+    <string name="featureSubject">แนวคิดสำหรับ Canvas Teacher [Android]</string>
+    <string name="understandRequest">ข้อมูลต่อไปนี้จะช่วยให้เราเข้าใจเกี่ยวกับแนวคิดของคุณได้ดียิ่งขึ้น:</string>
+    <string name="sendMail">ส่งอีเมล&#8230;</string>
+    <string name="editProfile">แก้ไขโพรไฟล์</string>
+    <string name="name">ชื่อ</string>
+    <string name="bio">ประวัติ</string>
+    <string name="profileEditSuccess">อัพเดตโพรไฟล์แล้ว</string>
+    <string name="profileEditFailure">ไม่สามารถอัพเดตโพรไฟล์</string>
+    <string name="takePhoto">ถ่ายภาพ</string>
+    <string name="choosePhotoFromGallery">เลือกภาพจากแกลเลอรี่</string>
+    <string name="fileNotFound">ไม่พบไฟล์</string>
+    <string name="version" formatted="false">เวอร์ชั่น %s</string>
+    <string name="fullVersion">เวอร์ชั่น %s (%d)</string>
+    <string name="tap_to_view_submissions_list">กดเลือกเพื่อดูรายการผลงานจัดส่ง</string>
+    <string name="assignmentDescriptionContentDescription">รายละเอียดภารกิจ</string>
+    <string name="quizDescriptionContentDescription">รายละเอียดแบบทดสอบ</string>
+    <string name="removeDueDate">ลบวันครบกำหนด</string>
+    <string name="removeDueDateMessage">นี่เป็นการลบวันครบกำหนดและผู้รับมอบที่เกี่ยวข้องทั้งหมด</string>
+    <string name="email">อีเมล</string>
+    <string name="fullscreen">เต็มหน้าจอ</string>
+    <string name="addNew">เพิ่มรายการใหม่</string>
+    <string name="sendMessage">ส่งข้อความ</string>
+    <string name="addMessage">เพิ่มข้อความ</string>
+    <string name="messageThisStudent">ส่งข้อความถึงผู้เรียนนี้</string>
+    <string name="scrollInstructions">เลื่อนรายการเพื่อดูรายละเอียดทั้งหมด</string>
+    <string name="dueTime">กำหนดเวลา</string>
+    <string name="available_from_date">ใช้ได้จากวันที่</string>
+    <string name="available_from_time">ใช้ได้จากเวลา</string>
+    <string name="available_to_date">ใช้ได้จนถึงวันที่</string>
+    <string name="available_to_time">ใช้ได้จนถึงเวลา</string>
+    <string name="addDescription">เพิ่มรายละเอียด</string>
+    <string name="post_time">เวลาโพสต์</string>
+    <string name="allPeople">ทุกคน</string>
+    <string name="loading">กำลังโหลด</string>
+    <string name="saving">กำลังบันทึก</string>
+    <string name="sendingSimple">กำลังส่ง</string>
+    <string name="uploading">กำลังอัพโหลด</string>
+    <string name="retry">ลองใหม่</string>
+    <string name="error_loading_submission">มีปัญหาในการโหลดผลงานจัดส่งนี้</string>
+    <string name="search">ค้นหา</string>
+    <string name="filterPeople">กรองบุคคล</string>
+    <string name="loadMore">โหลดเพิ่มเติม</string>
+    <string name="latestStudentActivityAtFormatted">กิจกรรมล่าสุดใน %1$s จาก %2$s</string>
+    <string name="errorLoadingStudentContextCard">ไม่สามารถโหลดรายละเอียดสำหรับผู้ใช้รายนี้</string>
+    <string name="enrollmentTypeStudent">ผู้เรียน</string>
+    <string name="enrollmentTypeTeacher">ผู้สอน</string>
+    <string name="enrollmentTypeObserver">ผู้สังเกตการณ์</string>
+    <string name="enrollmentTypeTeachingAssistant">TA</string>
+    <string name="enrollmentTypeDesigner">ผู้ออกแบบ</string>
+    <string name="enrollmentTypeUnknown">ไม่ทราบ</string>
+    <string name="unableToLoadAttendance">ไม่สามารถโหลดการตรวจนับได้ในตอนนี้</string>
+    <string name="markRemainingAsPresent">กำลังที่เหลือว่ามา</string>
+    <string name="markAllAsPresent">กำกับทั้งหมดว่ามา</string>
+    <string name="calendar">ปฏิทิน</string>
+    <string name="filterSections">กรองกลุ่มย่อย</string>
+    <string name="addVideoComment">เพิ่มความเห็นแบบวิดีโอ</string>
+    <string name="addAudioComment">เพิ่มความเห็นแบบเสียง</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d ชั่วโมง %2$d นาทีและ %3$d วินาที</string>
+    <string name="recordingTimerSpeechDivider">%1$s จาก %2$s</string>
+    <string name="replay">เล่นซ้ำ</string>
+    <string name="stop">หยุด</string>
+    <string name="startRecordingAudio">เริ่มบันทึกเสียง</string>
+    <string name="stopRecordingAudio">หยุดบันทึกเสียง</string>
+    <string name="startRecordingVideo">เริ่มบันทึกวิดีโอ</string>
+    <string name="stopRecordingVideo">หยุดบันทึกวิดีโอ</string>
+    <string name="closeRecordingView">ปิดมุมมองการบันทึก</string>
+    <string name="deleteRecording">ลบผลงานบันทึก</string>
+    <string name="videoCommentReplay">เล่นความเห็นแบบวิดีโอซ้ำ</string>
+    <string name="addMediaComment">เพิ่มความเห็นแบบสื่อมีเดีย</string>
+    <string name="copyrightHolder">ผู้ถือลิขสิทธิ์</string>
+    <string name="access">การใช้งาน</string>
+    <string name="usageRights">สิทธิ์การใช้</string>
+    <string name="deleteFile">ลบไฟล์</string>
+    <string name="holdCopyright">ฉันถือลิขสิทธิ์</string>
+    <string name="havePermission">ฉันได้รับอนุญาตให้ใช้ไฟล์</string>
+    <string name="publicDomain">ไฟล์โดเมนสาธารณะ</string>
+    <string name="fairUse">ข้อยกเว้นการใช้งานที่เหมาะสม</string>
+    <string name="creativeCommons">ไฟล์ใช้งานร่วมเพื่อการสร้างสรรค์</string>
+    <string name="editFile">แก้ไขไฟล์</string>
+    <string name="deleteFolder">ลบโฟลเดอร์</string>
+    <string name="editFolder">แก้ไขโฟลเดอร์</string>
+    <string name="deleteFileMessage">แน่ใจว่าต้องการลบไฟล์นี้หรือไม่</string>
+    <string name="deleteFolderMessage">แน่ใจว่าต้องการลบโฟลเดอร์นี้หรือไม่ เนื้อหาทั้งหมดในโฟลเดอร์นี้จะถูกลบไปด้วย</string>
+    <string name="newFolder">โฟลเดอร์ใหม่</string>
+    <string name="createAFolder">จัดทำโฟลเดอร์</string>
+    <string name="createFolder">จัดทำโฟลเดอร์</string>
+    <string name="createAFile">อัพโหลดไฟล์</string>
+    <string name="createFileFolderFabContentDesc">แสดงปุ่ม จัดทำไฟล์ และ จัดทำโฟลเดอร์</string>
+    <string name="hideCreateFileFolderFabContentDesc">ซ่อนปุ่ม จัดทำไฟล์ และ จัดทำโฟลเดอร์</string>
+    <string name="unpublish">เลิกเผยแพร่</string>
+    <string name="restrictedAccess">การใช้งานแบบจำกัด</string>
+    <string name="restricted">หวงห้าม</string>
+    <string name="hidden">ซ่อนไว้ ไฟล์ภายในจะใช้ได้ผ่านลิงค์</string>
+    <string name="studentsWithLink">เฉพาะผู้เรียนที่มีลิงค์เท่านั้น ไม่สามารถเรียกค้นจากไฟล์สำหรับผู้เรียน</string>
+    <string name="scheduleAvailability">กำหนดเวลาความพร้อมของผู้เรียน</string>
+    <string name="folderCreationError">เกิดข้อผิดพลาดขณะจัดทำโฟลเดอร์</string>
+
+    <string name="setAsFrontPage">กำหนดเป็นหน้าแรก</string>
+    <string name="canEdit">สามารถแก้ไขได้</string>
+    <string name="pageDetails">รายละเอียดหน้าเพจ</string>
+    <string name="pageSuccessfullyUpdated">อัพเดตหน้าเพจเสร็จสิ้น</string>
+    <string name="pageSuccessfullyCreated">จัดทำหน้าเพจเสร็จสิ้น</string>
+    <string name="editPageTitle">แก้ไขเพจ</string>
+    <string name="createPageTitle">จัดทำเพจ</string>
+    <string name="pageTitleMustBeSet">ต้องระบุชื่อเพจ</string>
+    <string name="pageDeleteTitle">ลบเพจหรือไม่</string>
+    <string name="pageDelete">ลบเพจ</string>
+    <string name="pageDeleteMessage">นี่เป็นการลบเพจนี้ การดำเนินการนี้ไม่สามารถยกเลิกได้</string>
+    <string name="errorSavingPage">เกิดข้อผิดพลาดขณะพยายามบันทึกเพจนี้ ลองใหม่อีกครั้ง</string>
+    <string name="frontPageUnpublishedError">เพจจะเป็นหน้าเพจแรกและไม่เผยแพร่ไม่ได้</string>
+
+    <string name="onlyTeachers">เฉพาะผู้สอน</string>
+    <string name="teachersAndStudents">ผู้สอนและผู้เรียน</string>
+    <string name="anyone">ทุกคน</string>
+    <string name="groupMembers">เฉพาะสมาชิก</string>
+    <string name="license">การอนุญาต</string>
+    <string name="availableFromAfterTo">วันที่สิ้นสุดความพร้อมต้องอยู่หลังจากวันที่เริ่มต้น</string>
+    <string name="errorDeletingFile">เกิดข้อผิดพลาดขณะลบไฟล์นี้</string>
+    <string name="errorDeletingFolder">เกิดข้อผิดพลาดขณะลบโฟลเดอร์นี้</string>
+    <string name="errorUpdatingFile">เกิดข้อผิดพลาดขณะอัพเดตไฟล์นี้</string>
+    <string name="errorUpdatingFolder">เกิดข้อผิดพลาดขณะอัพเดตโฟลเดอร์นี้</string>
+
+    <string name="toDoEmpty">ไม่มีการดำเนินการใด ๆ อีก!\n ขอให้มีความสุข</string>
+    <string name="toDoNoSubmissions">ไม่มีผลงานจัดส่งที่จะให้คะแนนสำหรับภารกิจนี้</string>
+    <string name="errorToDoRouteFailed">เกิดข้อผิดพลาดขณะพยายามดูรายการที่ต้องทำนี้</string>
+    <string name="errorIsDesigner">ส่วนการลงทะเบียนของผู้ออกแบบไม่สามารถดูในส่วนนี้ได้</string>
+
+    <string name="sections">กลุ่มย่อย</string>
+    <string name="filterBy">กรอกจาก&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">สำหรับ %s</string>
+    <string name="filterBySection">กรองจากกลุ่มย่อย</string>
+    <string name="filterSubmissionsLowercase">กรองผลงานจัดส่ง</string>
+    <string name="latePenalty">โทษปรับล่าช้า</string>
+    <string name="finalGrade">เกรดสรุป</string>
+    <string name="moderatedGradingUnsupported">การให้เกรดแบบมีการปรับประสานไม่รองรับในปัจจุบันใน SpeedGrader ผ่านอุปกรณ์พกพา</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s คะแนน</item>
+        <item quantity="other">-%s คะแนน</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s คะแนน</item>
+        <item quantity="other">-%s คะแนน</item>
+    </plurals>
+    <string name="todoUnreadCount">สิ่งที่ต้องทำ %d ที่ไม่ได้อ่าน</string>
+    <string name="profileSettings">ค่าปรับตั้งโพรไฟล์</string>
+    <string name="downloadingFile">กำลังดาวน์โหลดไฟล์&#8230;</string>
+    <string name="fileDownloadedSuccessfully">ดาวน์โหลดไฟล์เสร็จสิ้น</string>
+    <string name="tapToView">กดเลือกเพื่อดู</string>
+    <string name="errorDownloadingFile">เกิดข้อผิดพลาดขณะดาวน์โหลดไฟล์ของคุณ กรุณาลองใหม่อีกครั้งในภายหลัง</string>
+
+    <string name="postTo">โพสต์ไฟยัง</string>
+    <string name="allSections">กลุ่มย่อยทั้งหมด</string>
+
+    <string name="gauge">เกจวัด</string>
+    <string name="ltiLaunchFailure">ไม่สามารถโหลดเครื่องมือ LTI นี้ได้ในตอนนี้</string>
+    <string name="downloading">กำลังดาวน์โหลด...</string>
+
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">อัพเดตหลักสูตรเสร็จสิ้น</string>
+    <string name="errorSavingSyllabus">เกิดข้อผิดพลาดขณะพยายามบันทึกหลักสูตรนี้ ลองใหม่อีกครั้ง</string>
+    <string name="editSyllabusTitle">แก้ไขหลักสูตร</string>
+    <string name="editSyllabusContent">ข้อมูล</string>
+    <string name="editSyllabusDetails">รายละเอียด</string>
+    <string name="editSyllabusShowCourseSummary">แสดงสรุปบทเรียน</string>
+    <string name="editSyllabusContentAccessibilityLabel">เนื้อหาหลักสูตร</string>
+    <string name="no_grade">ไม่มีเกรด</string>
+    <string name="excuse">ยกเว้น</string>
+    <string name="speed_grader_overgraded_by">ให้เกรดเกินโดย %s</string>
+
+</resources>

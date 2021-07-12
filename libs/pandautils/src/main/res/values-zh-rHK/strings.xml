@@ -227,7 +227,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas 教師</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">Speedgrader（快速評分器）</string>
 
     <!-- Rating Dialog -->
@@ -422,5 +421,10 @@
     <string name="searchQuizzesHint">搜尋測驗</string>
     <string name="noItemsMatchingQuery">沒有吻合的項目 \"%s\"</string>
     <string name="selected">已選擇</string>
+
+    <string name="notificationChannelNameInAppUpdate">應用程式更新通知</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas 的應用程式內更新通知</string>
+    <string name="appUpdateReadyTitle">應用程式準備好更新</string>
+    <string name="appUpdateReadyDescription">重新啟動應用程式以安裝新版本</string>
 
 </resources>

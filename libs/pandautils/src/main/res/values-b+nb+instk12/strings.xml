@@ -226,7 +226,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas lærer</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas avstemninger</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -424,5 +423,10 @@
     <string name="noItemsMatchingQuery">Ingen matchende punkter  \"%s\"</string>
 
     <string name="selected">Valgt</string>
+
+    <string name="notificationChannelNameInAppUpdate">Varslinger om app-oppdatering</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas-varslinger for oppdateringer i appen</string>
+    <string name="appUpdateReadyTitle">Appen er klar til å oppdateres</string>
+    <string name="appUpdateReadyDescription">Start appen på nytt for å installere den nye versjonen</string>
 
 </resources>

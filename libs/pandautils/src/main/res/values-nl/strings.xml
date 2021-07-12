@@ -227,7 +227,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas-docent</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas-polls</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -425,5 +424,10 @@
     <string name="searchQuizzesHint">Toetsen zoeken</string>
     <string name="noItemsMatchingQuery">Er komen geen items overeen met \"%s\"</string>
     <string name="selected">Geselecteerd</string>
+
+    <string name="notificationChannelNameInAppUpdate">Meldingen voor app-update</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas-meldingen voor in-app updates.</string>
+    <string name="appUpdateReadyTitle">App klaar voor update</string>
+    <string name="appUpdateReadyDescription">Start de app opnieuw om de nieuwe versie te installeren</string>
 
 </resources>
