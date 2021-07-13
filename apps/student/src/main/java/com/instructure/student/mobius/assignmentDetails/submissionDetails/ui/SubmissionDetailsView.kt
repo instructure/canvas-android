@@ -41,8 +41,8 @@ import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
-import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.fragment.ViewImageFragment
+import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.*
@@ -95,6 +95,10 @@ class SubmissionDetailsView(
         drawerViewPager.adapter = drawerPagerAdapter
         configureDrawerTabLayout()
         configureSlidingPanelHeight()
+
+        if (isAccessibilityEnabled(context)) {
+            slidingUpPanelLayout?.anchorPoint = 1.0f
+        }
     }
 
     private fun configureDrawerTabLayout() {
@@ -287,6 +291,7 @@ class SubmissionDetailsView(
             SubmissionDetailsContentType.NoneContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions,  subtitle = R.string.noneContentMessage)
             SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions, subtitle = R.string.onPaperContentMessage)
             SubmissionDetailsContentType.LockedContent -> SubmissionMessageFragment.newInstance(title = R.string.submissionDetailsAssignmentLocked, subtitle = R.string.could_not_route_locked)
+            SubmissionDetailsContentType.StudentAnnotationContent -> SubmissionMessageFragment.newInstance(title = R.string.unsupportedSubmissionType, message = R.string.studentAnnotationUnsupportedMessage)
             is SubmissionDetailsContentType.UnsupportedContent -> {
                 // Users shouldn't get here, but we'll handle the case and send up some analytics if they do
                 val bundle = Bundle().apply {

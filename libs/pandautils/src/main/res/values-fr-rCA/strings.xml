@@ -227,7 +227,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Enseignant Canvas</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Enquêtes Canvas</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -425,5 +424,10 @@
     <string name="searchQuizzesHint">Rechercher des questionnaires</string>
     <string name="noItemsMatchingQuery">Aucun élément ne correspond à \"%s\"</string>
     <string name="selected">Sélectionné</string>
+
+    <string name="notificationChannelNameInAppUpdate">Notification de mise à jour de l’application</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Notifications Canvas pour les mises à jour intégrées à l\'application.</string>
+    <string name="appUpdateReadyTitle">Application prête à être mise à jour</string>
+    <string name="appUpdateReadyDescription">Redémarrez l\'application pour installer la nouvelle version</string>
 
 </resources>

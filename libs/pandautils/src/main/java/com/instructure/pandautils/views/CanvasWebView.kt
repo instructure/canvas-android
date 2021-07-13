@@ -488,7 +488,8 @@ class CanvasWebView @JvmOverloads constructor(
         var formatted = applyWorkAroundForDoubleSlashesAsUrlSource(html)
         formatted = addProtocolToLinks(formatted)
         formatted = checkForMathTags(formatted)
-        val htmlWrapper = getAssetsFile(context, "html_wrapper.html")
+        val htmlWrapperFileName = if (ApiPrefs.canvasForElementary) "html_wrapper_k5.html" else "html_wrapper.html"
+        val htmlWrapper = getAssetsFile(context, htmlWrapperFileName)
         return htmlWrapper
             .replace("{\$CONTENT$}", formatted)
             .replace("{\$TITLE$}", title ?: "")

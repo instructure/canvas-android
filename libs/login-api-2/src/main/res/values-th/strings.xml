@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">สวัสดี!</string>
+    <string name="action_settings">ค่าปรับตั้ง</string>
+    <string name="mobileVerifyGeneral">แอพนี้ไม่ได้รับอนุญาตให้ใช้งาน</string>
+    <string name="mobileVerifyDomainUnauthorized">เซิร์ฟเวอร์ที่คุณกรอกไม่ได้รับอนุญาตสำหรับแอพนี้</string>
+    <string name="mobileVerifyUserAgentUnauthorized">ระบบตัวแทนของผู้ใช้สำหรับแอพนี้ไม่ได้รับอนุญาต</string>
+    <string name="mobileVerifyUnknownError">เราไม่สามารถยืนยันเซิร์ฟเวอร์สำหรับใช้กับแอพนี้</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">เกิดข้อผิดพลาดที่ไม่คาดคิด</string>
+    <string name="pageNotFound">ไม่พบหน้าเอกสาร</string>
+    <string name="confirm">ยืนยัน</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="help">ความช่วยเหลือ</string>
+    <string name="enterURL">กรอก Canvas URL ของคุณ:</string>
+    <string name="signIntoCanvasNetwork">กำลังพยายามเข้าไปยังเครือข่าย Canvas</string>
+    <string name="remove">ลบ</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ID ผู้ใช้</string>
+    <string name="domain">โดเมน</string>
+    <string name="actAsUser">ดำเนินการในฐานะผู้ใช้</string>
+    <string name="stopActAsUser">หยุดดำเนินการในฐานะผู้ใช้</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">ลบผู้ใช้นี้หรือไม่</string>
+    <string name="removedForever">คุณจะต้องลงชื่อเข้าใช้ในฐานะผู้ใช้นี้อีกเพื่อสืบค้นเนื้อหาที่เกี่ยวข้อง</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">โลโก้ Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: เปิด</string>
+    <string name="canvasLoginOff">Canvas_Login: ปิด</string>
+    <string name="siteAdminLogin">การล็อกอินของผู้ดูแลไซต์: เปิด</string>
+
+    <string name="username">ชื่อผู้ใช้</string>
+    <string name="password">รหัสผ่าน</string>
+    <string name="authenticationRequired">ต้องมีการตรวจรับรอง</string>
+    <string name="invalidEmailPassword">อีเมลหรือรหัสผ่านไม่ถูกต้อง</string>
+    <string name="login">ล็อกอิน</string>
+    <string name="logout">ล็อกเอาท์</string>
+    <string name="matchingSchools">กำลังเทียงเคียงสถานศึกษา</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">แน่ใจว่าต้องการออกจากระบบหรือไม่</string>
+    <string name="logout_yes">ใช่</string>
+    <string name="logout_no">ไม่</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">ใกล้กับคุณ</string>
+    <string name="loginCanvasNetwork">เครือข่าย Canvas</string>
+    <string name="loginRightBehindYou">ด้านหลังคุณ</string>
+    <string name="loginCanvasHelp">ไม่เห็นสถานศึกษาของคุณใช่หรือไม่ กรอก URL สถานศึกษาหรือกดที่นี่เพื่อขอความช่วยเหลือ</string>
+    <string name="loginCanvasHelpWithUser">กรอก URL สถานศึกษาหรือกดที่นี่เพื่อขอความช่วยเหลือ</string>
+    <string name="loginHint">ค้นหาสถานศึกษาหรือพื้นที่ของคุณ</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">แจ้งปัญหา</string>
+    <string name="errorReportSubject">วิชา</string>
+    <string name="errorReportDescription">รายละเอียด</string>
+    <string name="errorReportSend">ส่ง</string>
+    <string name="errorReportThankyou">ขอขอบคุณที่แจ้งปัญหาของคุณกับทีมงานให้บริการของเรา  คุณจะได้รับการยืนยันและข้อมูลอัพเดตทางอีเมล</string>
+    <string name="errorReportSeverityText">สิ่งนี้มีผลกับคุณอย่างไร</string>
+    <string name="errorSeverityCasualQuestion">แค่คำถาม ความเห็น แนวคิดหรือข้อเสนอแนะทั่ว ๆ ไป...</string>
+    <string name="errorSeverityNeedHelp">ฉันต้องการความช่วยเหลือ แต่ไม่เร่งด่วนอะไร</string>
+    <string name="errorSeveritySomethingsBroken">มีบางอย่างไม่ถูกต้อง แต่ฉันสามารถแก้ไขได้</string>
+    <string name="errorSeverityCantGetThingsDone">ฉันไม่สามารถดำเนินการใด ๆ ได้จนกว่าจะได้รับการติดต่อกลับจากคุณ</string>
+    <string name="errorSeverityExtremelyCritical">กรณีฉุกเฉินอย่างยิ่ง!!</string>
+
+    <string name="errorReportEmailAddress">อีเมลแอดเดรส</string>
+    <string name="errorReportUnknown">ไม่ทราบ</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 ไมล์ (1.6 กม.)</string>
+    <string name="oneMile">1 ไมล์ (1.6 กม.)</string>
+    <string name="miles">ไมล์</string>
+    <string name="kilometers">กม.</string>
+    <!-- String for submitting tickets -->
+    <string name="device">อุปกรณ์</string>
+    <string name="osVersion">เวอร์ชั่น OS</string>
+
+    <string name="previousLoginTitle">การล็อกอินก่อนหน้า</string>
+    <string name="findMySchool">ค้นหาสถานศึกษาของฉัน</string>
+    <string name="loginWithQRCode">รหัส QR</string>
+    <string name="locateQRCode">ระบุตำแหน่งรหัส QR</string>
+    <string name="qrCodeExplanation">คุณจะพบรหัส QR ในเว็บจากโพรไฟล์บัญชีของคุณ คลิกที่ “QR สำหรับล็อกอินผ่านอุปกรณ์พกพา” จากรายการ</string>
+    <string name="qrCodeScanningPrompt">สแกนรหัส QR จาก Canvas เพื่อล็อกอิน</string>
+    <string name="loginWithQRCodeError">มีข้อผิดพลาดในการล็อกอิน กรุณาจัดทำรหัส QR อื่นและลองใหม่อีกครั้ง</string>
+    <string name="invalidQRCodeError">กรุณาสแกนรหัส QR ที่จัดทำโดย Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">ภาพหน้าจอแสดงตำแหน่งการจัดทำรหัส QR ในเบราเซอร์</string>
+    <string name="whatsYourSchoolName">ชื่อสถานศึกษาของคุณคืออะไร</string>
+    <string name="next">ถัดไป</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">ลบผู้ใช้ก่อนหน้า</string>
+    <string name="accountDomainFooter">ไม่พบโรงเรียนของคุณ ลองพิมพ์ URL เต็มของสถานศึกษา</string>
+    <string name="accountDomainFooterLink">กดเลือกที่นี่เพื่อรับความช่วยเหลือ</string>
+
+    <string name="login_noInternetConnectionTitle">ไม่มีการเชื่อมต่ออินเทอร์เน็ต</string>
+    <string name="login_noInternetConnectionMessage">การดำเนินการนี้ต้องมีการเชื่อมต่ออินเทอร์เน็ต</string>
+    <string name="empty_feedback">ต้องระบุหัวเรื่องและรายละเอียดเพื่อส่งข้อเสนอแนะ</string>
+    <string name="versionNum">เลขเวอร์ชั่น</string>
+    <string name="scrollInstructions">เลื่อนรายการเพื่อดูรายละเอียดทั้งหมด</string>
+
+    <string name="masqueradeErrorUserId">คุณจะต้องกรอก id ผู้ใช้</string>
+    <string name="masqueradeErrorDomain">คุณจะต้องกรอกโดเมนที่ถูกต้อง</string>
+    <string name="masqueradeError">มีข้อผิดพลาดในการดำเนินการในฐานะผู้ใช้</string>
+    <string name="masqueradeInfo">\"ดำเนินการในฐานะ\" เป็นการล็อกอินในฐานะผู้ใช้รายนี้โดยไม่ใช้รหัสผ่าน คุณสามารถดำเนินการใด ๆ ก็ได้เสมือนเป็นผู้ใช้รายนี้ และผู้ใช้อื่น ๆ จะเข้าใจว่าผู้ใช้รายนี้เป็นผู้ดำเนินการ อย่างไรก็ตาม บันทึกประวัติจะมีจัดทำไว้เพื่อแจ้งว่าคุณเป็นบุคคลที่ดำเนินการในนามของผู้ใช้รายนี้</string>
+    <string name="masqueradingAs">กำลังกำลังดำเนินการในฐานะ %s</string>
+    <string name="stopActingAsTitle">หยุด ดำเนินการในฐานะ...</string>
+    <string name="stopActingAsMessage">คุณจะหยุดดำเนินการในฐานะ %s และกลับไปที่บัญชีของคุณ</string>
+    <string name="weMadeChanges">เราทำการเปลี่ยนแปลงไว้เล็กน้อย</string>
+    <string name="whatsNewText">ดูรายการใหม่</string>
+</resources>

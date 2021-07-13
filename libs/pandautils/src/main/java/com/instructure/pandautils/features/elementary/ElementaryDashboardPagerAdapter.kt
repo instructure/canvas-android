@@ -44,4 +44,8 @@ class ElementaryDashboardPagerAdapter(
     override fun getCount(): Int {
         return fragments.size
     }
+
+    fun refreshHomeroomAssignments() {
+        (fragments[0] as? HomeroomFragment)?.refreshAssignmentStatus()
+    }
 }

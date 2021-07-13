@@ -1157,4 +1157,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Ta bort alla från översikten</string>
     <string name="a11y_content_description_add_to_dashboard">Lägg till i översikten</string>
     <string name="a11y_content_description_add_all_to_dashboard">Lägga till alla i översikten</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Konto</string>
+    <string name="dashboardTabHomeroom">Hemrum</string>
+    <string name="dashboardTabSchedule">Schema</string>
+    <string name="dashboardTabGrades">Bedömningar</string>
+    <string name="dashboardTabResources">Resurser</string>
+    <string name="homeroomWelcomeMessage">Välkommen %1$s!</string>
+    <string name="homeroomMySubjects">Mina ämnen</string>
+
+    <string name="viewPreviousAnnouncements">Visa tidigare meddelanden</string>
+    <string name="homeroomError">Det gick inte att läsa in fjärrundervisningsrummet.</string>
+    <string name="homeroomRefreshFail">Det gick inte att uppdatera fjärrundervisningsrummet.</string>
+
+
+    <string name="nothingDueToday">Inget måste lämnas in i dag</string>
+    <string name="dueToday">%1$s förfaller i dag</string>
+    <string name="missing">%1$s saknas</string>
+    <string name="homeroomEmptyTitle">Välkommen!</string>
+    <string name="homeroomEmptyMessage">Dina ämnen visas här.</string>
+    <string name="homeroomNoSubjects">Du har inga ämnen för närvarande.</string>
+
+
+    <string name="open_alternate_view">Öppna en mer tillgänglig alternativ vy</string>
+    <string name="a11y_content_description_message_recipients">Mottagare</string>
+    <string name="a11y_content_description_inbox_subject">Ämne</string>
+    <string name="a11y_content_description_inbox_course_spinner">Välj en kurs, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Den här elevens svar är dolda eftersom uppgiften är anonym.</string>
+
+    <string name="studentAnnotationUnsupported">Elevnotering (stöds inte)</string>
+    <string name="studentAnnotationUnsupportedDescription">Elevnotering stöds för närvarande inte på mobila enheter.</string>
+    <string name="unsupportedSubmissionType">Inlämningstyp som inte stöds</string>
+    <string name="studentAnnotationUnsupportedMessage">Inlämningen kan inte visas eftersom elevnotering inte stöds på mobila enheter.</string>
 </resources>

@@ -33,7 +33,11 @@ class TypefaceBehavior(private val context: Context) {
 
     private var systemDefaults = emptyMap<String, Typeface>()
 
+    private var fontOverriden = false
+
     fun overrideFont() {
+        if (fontOverriden) return
+
         try {
             val fontMap = typefaceMap.mapValues { Typeface.createFromAsset(context.assets, it.value) }
             val staticField: Field = Typeface::class.java
@@ -45,6 +49,7 @@ class TypefaceBehavior(private val context: Context) {
             systemDefaults = typefaceMap.mapValues { systemMap[it.key] as Typeface }
             updatedSystemMap.putAll(fontMap)
             staticField.set(null, updatedSystemMap)
+            fontOverriden = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -60,6 +65,7 @@ class TypefaceBehavior(private val context: Context) {
             updatedSystemMap.putAll(systemMap)
             updatedSystemMap.putAll(systemDefaults)
             staticField.set(null, updatedSystemMap)
+            fontOverriden = false
         } catch (e: Exception) {
             e.printStackTrace()
         }

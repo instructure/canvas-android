@@ -14,22 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.di
+package com.instructure.student.ui.pages
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.student.mobius.elementary.StudentHomeroomRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import com.instructure.espresso.page.BasePage
+import com.instructure.student.R
 
-@Module
-@InstallIn(FragmentComponent::class)
-class HomeroomModule {
-
-    @Provides
-    fun provideHomeroomRouter(activity: FragmentActivity): HomeroomRouter {
-        return StudentHomeroomRouter(activity)
-    }
+class SchedulePage : BasePage(R.id.schedulePage) {
 }

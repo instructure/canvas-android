@@ -17,6 +17,8 @@
 package com.instructure.pandautils.features.elementary.homeroom
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>) {
@@ -25,11 +27,21 @@ data class HomeroomViewData(val greetingMessage: String, val announcements: List
 
 data class AnnouncementViewData(val courseName: String, val title: String, val htmlContent: String)
 
-data class CourseCardViewData(val courseName: String)
+data class CourseCardViewData(
+    val courseName: String,
+    val assignmentsDueText: String,
+    val assignmentsMissingText: String,
+    val announcementText: String,
+    val courseColor: String,
+    val imageUrl: String)
 
 sealed class HomeroomAction {
     data class OpenAnnouncements(val canvasContext: CanvasContext) : HomeroomAction()
     data class LtiButtonPressed(val url: String) : HomeroomAction()
     object ShowRefreshError : HomeroomAction()
     object AnnouncementViewsReady : HomeroomAction()
+    data class OpenAnnouncementDetails(val course: Course, val announcement: DiscussionTopicHeader) : HomeroomAction()
+    data class OpenCourse(val course: Course) : HomeroomAction()
+    data class OpenAssignments(val course: Course) : HomeroomAction()
+    object UpdateColors : HomeroomAction()
 }

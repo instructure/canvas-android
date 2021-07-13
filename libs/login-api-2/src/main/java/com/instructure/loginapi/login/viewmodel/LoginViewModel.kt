@@ -20,6 +20,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,16 +33,30 @@ import javax.inject.Inject
  * If we would have all the logic in MVVM we could have 3 separate ViewModels for both 3 Activities.
  */
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val featureFlagProvider: FeatureFlagProvider) : ViewModel() {
+class LoginViewModel @Inject constructor(private val featureFlagProvider: FeatureFlagProvider, private val userManager: UserManager) : ViewModel() {
 
     private val canvasForElementaryResult = MutableLiveData<Event<Boolean>>()
 
-    fun checkCanvasForElementaryFeature(errorFallback: Boolean = false): LiveData<Event<Boolean>> {
+    private val tokenValidationResult = MutableLiveData<Event<Boolean>>()
+
+    fun checkCanvasForElementaryFeature(): LiveData<Event<Boolean>> {
         viewModelScope.launch {
-            val canvasForElementaryFlag = featureFlagProvider.getCanvasForElementaryFlag(errorFallback)
+            val canvasForElementaryFlag = featureFlagProvider.getCanvasForElementaryFlag()
             canvasForElementaryResult.postValue(Event(canvasForElementaryFlag))
         }
 
         return canvasForElementaryResult
+    }
+
+    fun checkIfTokenIsValid(): LiveData<Event<Boolean>> {
+        viewModelScope.launch {
+            try {
+                userManager.getSelfAsync(true).await().dataOrThrow
+                tokenValidationResult.postValue(Event(true))
+            } catch (e: Exception) {
+                tokenValidationResult.postValue(Event(false))
+            }
+        }
+        return tokenValidationResult
     }
 }

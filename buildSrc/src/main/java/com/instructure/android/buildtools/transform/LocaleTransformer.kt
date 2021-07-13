@@ -27,10 +27,12 @@ import javassist.CtField
 import javassist.CtNewMethod
 import javassist.expr.ExprEditor
 import javassist.expr.MethodCall
+import org.gradle.api.Project
 import java.io.File
+import java.io.IOException
 import kotlin.system.exitProcess
 
-class LocaleTransformer : ClassTransformer() {
+class LocaleTransformer(private val project: Project) : ClassTransformer() {
 
     override val transformName = "LocaleTransformer"
 
@@ -91,13 +93,9 @@ class LocaleTransformer : ClassTransformer() {
      * Scans for available translations and adds supported language tags to LocaleUtils
      */
     private fun CtClass.transformLocaleUtils() {
-        val configLocations = listOf(
-            File("translations/projects.json").canonicalFile,
-            File("../translations/projects.json").canonicalFile,
-            File("../../translations/projects.json").canonicalFile
-        )
-        val translationsFile = configLocations.find { it.exists() }
-        if (translationsFile == null) {
+        val translationsFile = try {
+            File(project.projectDir, "../../translations/projects.json").canonicalFile
+        } catch (e: IOException) {
             println("\nUnable to find translation project config file (translations/projects.json)")
             println("Exiting...")
             Thread.sleep(1000) // Allow time to print message

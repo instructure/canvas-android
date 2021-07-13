@@ -277,6 +277,9 @@ class AssignmentDetailsView(
                 // The LTI info shouldn't be null if we are showing the Studio upload option
                 showStudioUploadView(assignment, ltiToolUrl!!, ltiToolName!!)
             }
+            setupDialogRow(dialog, dialog.submissionEntryStudentAnnotation, visibilities.studentAnnotation) {
+                showStudentAnnotationView(assignment.htmlUrl ?: "")
+            }
         }
         dialog.show()
     }
@@ -396,6 +399,12 @@ class AssignmentDetailsView(
     private fun showStudioUploadView(assignment: Assignment, ltiUrl: String, studioLtiToolName: String) {
         logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
         RouteMatcher.route(context, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
+    }
+
+    fun showStudentAnnotationView(assignmentUrl: String) {
+        logEvent(AnalyticsEventConstants.SUBMIT_STUDENT_ANNOTATION_SELECTED)
+        RouteMatcher.route(context,
+            UnsupportedFeatureFragment.makeRoute(canvasContext, unsupportedDescription = context.getString(R.string.studentAnnotationUnsupportedDescription), url = assignmentUrl))
     }
 
     fun showQuizOrDiscussionView(url: String) {

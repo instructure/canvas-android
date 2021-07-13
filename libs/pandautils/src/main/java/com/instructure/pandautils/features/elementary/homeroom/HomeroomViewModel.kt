@@ -29,11 +29,12 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel
-import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
+import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementItemViewModel
+import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardItemViewModel
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
@@ -48,7 +49,9 @@ class HomeroomViewModel @Inject constructor(
     private val courseManager: CourseManager,
     private val announcementManager: AnnouncementManager,
     private val htmlContentFormatter: HtmlContentFormatter,
-    private val oAuthManager: OAuthManager
+    private val oAuthManager: OAuthManager,
+    private val colorKeeper: ColorKeeper,
+    private val courseCardCreator: CourseCardCreator
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -62,6 +65,10 @@ class HomeroomViewModel @Inject constructor(
     val events: LiveData<Event<HomeroomAction>>
         get() = _events
     private val _events = MutableLiveData<Event<HomeroomAction>>()
+
+    var shouldUpdateAnnouncements: Boolean = true
+
+    private var dashboardCourses: List<Course> = emptyList()
 
     init {
         loadInitialData()
@@ -78,18 +85,39 @@ class HomeroomViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val courses = courseManager.getCoursesAsync(forceNetwork).await()
+                val dashboardCards = courseManager.getDashboardCoursesAsync(forceNetwork).await()
 
+                val coursesMap = courses.dataOrThrow
+                    .filter { !it.homeroomCourse }
+                    .associateBy { it.id }
+
+                dashboardCourses = dashboardCards.dataOrThrow.mapNotNull { coursesMap[it.id] }
                 val homeroomCourses = courses.dataOrThrow.filter { it.homeroomCourse }
 
+                courses.dataOrThrow.forEach {
+                    colorKeeper.addToCache(it.contextId, getCourseColor(it))
+                }
+
                 val announcementsData = homeroomCourses
-                    .map { announcementManager.getAnnouncementsAsync(it, forceNetwork) }
+                    .map { announcementManager.getLatestAnnouncementAsync(it, forceNetwork) }
                     .awaitAll()
 
                 val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)
-                val courseCards = createDummyCourses()
+                val courseViewModels = if (dashboardCourses.isNotEmpty()) {
+                    createCourseCards(dashboardCourses, forceNetwork)
+                } else {
+                    emptyList()
+                }
 
-                _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseCards))
-                _state.postValue(ViewState.Success)
+                val viewData = HomeroomViewData(greetingString, announcementViewModels, courseViewModels)
+                shouldUpdateAnnouncements = true
+                _data.postValue(viewData)
+
+                if (viewData.isEmpty()) {
+                    _state.postValue(ViewState.Empty(R.string.homeroomEmptyTitle, R.string.homeroomEmptyMessage, R.drawable.ic_panda_super))
+                } else {
+                    _state.postValue(ViewState.Success)
+                }
             } catch (e: Exception) {
                 if (_data.value == null || _data.value?.isEmpty() == true) {
                     _state.postValue(ViewState.Error(resources.getString(R.string.homeroomError)))
@@ -101,17 +129,29 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementViewModel> {
+    private suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean, updateAssignments: Boolean = false): List<CourseCardItemViewModel> {
+        return courseCardCreator.createCourseCards(dashboardCourses, forceNetwork, updateAssignments, _events)
+    }
+
+    private fun getCourseColor(course: Course): String {
+        return if (!course.courseColor.isNullOrEmpty()) {
+            course.courseColor!!
+        } else {
+            ColorApiHelper.K5_DEFAULT_COLOR
+        }
+    }
+
+    private suspend fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementItemViewModel> {
         return homeroomCourses
             .mapIndexed { index, course -> createAnnouncementViewModel(course, announcementsData[index].dataOrNull?.firstOrNull()) }
             .filterNotNull()
     }
 
-    private suspend fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementViewModel? {
+    private suspend fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementItemViewModel? {
         return if (announcement != null) {
             val htmlWithIframes = htmlContentFormatter.formatHtmlWithIframes(announcement.message
                 ?: "")
-            AnnouncementViewModel(
+            AnnouncementItemViewModel(
                 AnnouncementViewData(course.name, announcement.title ?: "", htmlWithIframes),
                 { _events.postValue(Event(HomeroomAction.OpenAnnouncements(course))) },
                 ::ltiButtonPressed
@@ -145,11 +185,6 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    // TODO Courses will be implemented in a separate ticket
-    private fun createDummyCourses(): List<ItemViewModel> {
-        return (1..10).map { CourseCardViewModel(CourseCardViewData("Course: $it")) }
-    }
-
     fun refresh() {
         _state.postValue(ViewState.Refresh)
         loadData(true)
@@ -157,5 +192,27 @@ class HomeroomViewModel @Inject constructor(
 
     fun onAnnouncementViewsReady() {
         _events.postValue(Event(HomeroomAction.AnnouncementViewsReady))
+    }
+
+    fun refreshAssignmentsStatus() {
+        _state.postValue(ViewState.Refresh)
+
+        viewModelScope.launch {
+            try {
+                val courseViewModels = createCourseCards(dashboardCourses, false, updateAssignments = true)
+                val viewData = _data.value
+
+                shouldUpdateAnnouncements = false
+                _data.postValue(HomeroomViewData(
+                    viewData?.greetingMessage ?: "",
+                    viewData?.announcements ?: emptyList(),
+                    courseViewModels))
+
+                _state.postValue(ViewState.Success)
+            } catch (e: Exception) {
+                _state.postValue(ViewState.Error())
+                _events.postValue(Event(HomeroomAction.ShowRefreshError))
+            }
+        }
     }
 }

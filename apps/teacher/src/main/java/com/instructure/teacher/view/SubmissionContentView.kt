@@ -85,8 +85,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import java.util.ArrayList
-import java.util.Locale
+import java.util.*
 
 @SuppressLint("ViewConstructor")
 class SubmissionContentView(
@@ -181,6 +180,10 @@ class SubmissionContentView(
         mBottomViewPager = bottomViewPager.apply { id = View.generateViewId() }
 
         initializeSubmissionView()
+
+        if (isAccessibilityEnabled(context)) {
+            slidingUpPanelLayout?.anchorPoint = 1.0f
+        }
     }
 
     override fun onAttachedToWindow() {
@@ -318,34 +321,43 @@ class SubmissionContentView(
                     MediaContent(
                             uri = Uri.parse(it.url),
                             contentType = it.contentType ?: "",
-                            displayName = it.displayName
+                        displayName = it.displayName
                     )
                 } ?: UnsupportedContent
 
-            // File uploads
+                // File uploads
                 SubmissionType.ONLINE_UPLOAD -> getAttachmentContent(submission.attachments[0])
 
-            // URL Submission
+                // URL Submission
                 SubmissionType.ONLINE_URL -> UrlContent(submission.url!!, submission.attachments.firstOrNull()?.url)
 
-            // Quiz Submission
-                SubmissionType.ONLINE_QUIZ -> QuizContent(
-                        mCourse.id,
-                        mAssignment.id,
-                        submission.userId,
-                        submission.previewUrl ?: "",
-                        QuizSubmission.parseWorkflowState(submission.workflowState!!) == QuizSubmission.WorkflowState.PENDING_REVIEW
-                )
+                // Quiz Submission
+                SubmissionType.ONLINE_QUIZ -> handleQuizSubmissionType(submission)
 
-            // Discussion Submission
+                // Discussion Submission
                 SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submission.previewUrl)
 
-            // Unsupported type
+                // Unsupported type
                 else -> UnsupportedContent
             }
         }
-        (mBottomViewPager.adapter as? BottomSheetPagerAdapter)?.refreshFilesTabCount(submission?.attachments?.size ?: 0)
+        (mBottomViewPager.adapter as? BottomSheetPagerAdapter)?.refreshFilesTabCount(submission?.attachments?.size
+            ?: 0)
         setGradeableContent(content)
+    }
+
+    private fun handleQuizSubmissionType(submission: Submission): GradeableContent {
+        return if (mAssignment.anonymousGrading) {
+            AnonymousSubmissionContent
+        } else {
+            QuizContent(
+                mCourse.id,
+                mAssignment.id,
+                submission.userId,
+                submission.previewUrl ?: "",
+                QuizSubmission.parseWorkflowState(submission.workflowState!!) == QuizSubmission.WorkflowState.PENDING_REVIEW
+            )
+        }
     }
 
     private fun getAttachmentContent(attachment: Attachment): GradeableContent {
@@ -353,7 +365,7 @@ class SubmissionContentView(
         if (type == "*/*") {
             val fileExtension = attachment.filename?.substringAfterLast(".") ?: ""
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension)
-                    ?: MimeTypeMap.getFileExtensionFromUrl(attachment.url)
+                ?: MimeTypeMap.getFileExtensionFromUrl(attachment.url)
                     ?: type
         }
         return when {
@@ -545,6 +557,7 @@ class SubmissionContentView(
             is ExternalToolContent -> setFragment(SpeedGraderLtiSubmissionFragment.newInstance(content))
             is OnPaperContent -> showMessageFragment(R.string.speedGraderOnPaperMessage)
             is DiscussionContent -> setFragment(SimpleWebViewFragment.newInstance(content.previewUrl!!))
+            is AnonymousSubmissionContent -> showMessageFragment(R.string.speedGraderAnonymousSubmissionMessage)
         }.exhaustive
     }
 
@@ -599,7 +612,7 @@ class SubmissionContentView(
                         SlidingUpPanelLayout.PanelState.ANCHORED -> {
                             submissionVersionsButton?.isClickable = true
                             postPanelEvent(newState, 0.5f)
-                            contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+                            contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                         }
                         SlidingUpPanelLayout.PanelState.EXPANDED -> {
                             submissionVersionsButton?.isClickable = false
@@ -927,6 +940,7 @@ class DiscussionContent(val previewUrl: String?) : GradeableContent()
 class MediaCommentDialogClosedEvent
 class AudioPermissionGrantedEvent(val assigneeId: Long)
 class VideoPermissionGrantedEvent(val assigneeId: Long)
+object AnonymousSubmissionContent : GradeableContent()
 
 
 class QuizContent(

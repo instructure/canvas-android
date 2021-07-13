@@ -21,7 +21,7 @@
     <data>
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel" />
+            type="com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementItemViewModel" />
     </data>
 
     <LinearLayout
@@ -65,6 +65,7 @@
             app:onLtiButtonPressed="@{(url) -> itemViewModel.onLtiButtonPressed(url)}"/>
 
         <TextView
+            android:id="@+id/viewPreviousAnnouncements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/defaultActionColor"

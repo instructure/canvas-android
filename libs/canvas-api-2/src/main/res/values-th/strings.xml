@@ -1,0 +1,80 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">คุณจะต้องดำเนินการก่อน:</string>
+    <string name="unlockedAt">จะถูกปลดล็อคเมื่อ:</string>
+    <string name="goToModules">ไปที่หน่วยการเรียน</string>
+
+    <!--Events-->
+    <string name="Starts">เริ่ม</string>
+    <string name="Ends">สิ้นสุด</string>
+    <string name="allDayEvent">กิจกรรมแบบใช้เวลาทั้งวัน</string>
+    <string name="at">เมื่อ</string>
+    <string name="to">ถึง</string>
+
+    <!--StreamItems-->
+    <string name="Message">ข้อความ</string>
+    <string name="Loading">กำลังโหลด&#8230;</string>
+    <string name="Deleted">ลบแล้ว</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">ออนไลน์</string>
+    <string name="canvasAPI_onPaper">เอกสาร</string>
+    <string name="canvasAPI_discussion">การพูดคุย</string>
+    <string name="canvasAPI_quiz">แบบทดสอบ</string>
+    <string name="canvasAPI_externalTool">เครื่องมือจากภายนอก</string>
+    <string name="canvasAPI_none">ไม่มีผลงานจัดส่ง</string>
+
+    <string name="canvasAPI_passFail">ผ่าน ไม่ผ่าน</string>
+    <string name="canvasAPI_percent">เปอร์เซ็นต์</string>
+    <string name="canvasAPI_letterGrade">เกรดแบบตัวอักษร</string>
+    <string name="canvasAPI_points">คะแนน</string>
+    <string name="canvasAPI_gpaScale">คะแนน GPA</string>
+    <string name="canvasAPI_notGraded">ไม่ได้ลงเกรด</string>
+
+    <string name="canvasAPI_onlineQuiz">แบบทดสอบ</string>
+    <string name="canvasAPI_discussionTopic">หัวข้อการพูดคุย</string>
+    <string name="canvasAPI_onlineUpload">การอัพโหลดไฟล์ </string>
+    <string name="canvasAPI_onlineTextEntry">การกรอกข้อความ</string>
+    <string name="canvasAPI_onlineURL">URL เว็บไซต์</string>
+    <string name="canvasAPI_mediaRecording">การบันทึกสื่อมีเดีย</string>
+    <string name="canvasAPI_attendance">การเข้าร่วม</string>
+    <string name="canvasAPI_studentAnnotation">หมายเหตุกำกับสำหรับผู้เรียน</string>
+    <string name="quiz_scoring_policy_highest">สูงสุด</string>
+    <string name="quiz_scoring_policy_average">เฉลี่ย</string>
+    <string name="quiz_scoring_policy_latest">ล่าสุด</string>
+    <string name="no">ไม่</string>
+    <string name="always">ทุกครั้ง</string>
+    <string name="graded_quiz">แบบทดสอบที่ลงเกรดแล้ว</string>
+    <string name="practice_quiz">แบบฝึกหัด</string>
+    <string name="graded_survey">แบบสำรวจที่ลงเกรดแล้ว</string>
+    <string name="ungraded_survey">แบบสำรวจที่ไม่ได้ลงเกรด</string>
+    <string name="andMore">\u0020และอีก %d รายการ</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">ผู้เรียน</string>
+    <string name="enrollmentTypeTeacher">ผู้สอน</string>
+    <string name="enrollmentTypeObserver">ผู้สังเกตการณ์</string>
+    <string name="enrollmentTypeTeachingAssistant">TA</string>
+    <string name="enrollmentTypeDesigner">ผู้ออกแบบ</string>
+    <string name="enrollmentTypeUnknown">ไม่ทราบ</string>
+
+</resources>

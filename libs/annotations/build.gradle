@@ -81,13 +81,16 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
+
+    configurations.all {
+        resolutionStrategy.force 'com.getkeepsafe.relinker:relinker:1.4.3'
+    }
 }
 
 
 repositories {
     google()
-    jcenter()
-    maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
+    mavenCentral()
     maven {
         credentials {
             username pspdfMavenUser
@@ -114,4 +117,7 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_RECYCLERVIEW
+
+    // This dependency is needed for PSPDFKit, because they use the 1.4.1 version, which cannot be found on Maven Central
+    implementation 'com.getkeepsafe.relinker:relinker:1.4.3'
 }

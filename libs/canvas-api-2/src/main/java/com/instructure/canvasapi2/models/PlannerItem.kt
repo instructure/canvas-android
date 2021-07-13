@@ -15,7 +15,6 @@
  */
 package com.instructure.canvasapi2.models
 
-import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
@@ -44,7 +43,10 @@ data class PlannerItem (
     val plannableDate: Date,
 
     @SerializedName("html_url")
-    val htmlUrl: String?
+    val htmlUrl: String?,
+
+    @SerializedName("submissions")
+    val submissionState: SubmissionState?
 ) {
 
     val canvasContext: CanvasContext

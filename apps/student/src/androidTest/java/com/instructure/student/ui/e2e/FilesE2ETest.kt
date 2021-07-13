@@ -41,12 +41,14 @@ import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.ui.utils.uploadTextFile
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.io.File
 import java.io.FileWriter
 
 // Tests that files (assignment uploads, assignment comment attachments, discussion attachments)
 // are properly displayed
+@HiltAndroidTest
 class FilesE2ETest: StudentTest() {
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

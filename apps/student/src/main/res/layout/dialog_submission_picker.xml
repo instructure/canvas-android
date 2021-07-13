@@ -121,4 +121,24 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/submissionEntryStudentAnnotation"
+        style="@style/SubmissionPickerDialogItem"
+        tools:ignore="UseCompoundDrawables"
+        tools:visibility="visible">
+
+        <ImageView
+            style="@style/SubmissionPickerDialogIcon"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_student_annotation"/>
+
+        <TextView
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/studentAnnotationUnsupported"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -126,6 +126,7 @@ fun getSubmissionTypesVisibilities(assignment: Assignment, isStudioEnabled: Bool
             Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> visibilities.textEntry = true
             Assignment.SubmissionType.ONLINE_URL -> visibilities.urlEntry = true
             Assignment.SubmissionType.MEDIA_RECORDING -> visibilities.mediaRecording = true
+            Assignment.SubmissionType.STUDENT_ANNOTATION -> visibilities.studentAnnotation = true
         }
     }
 

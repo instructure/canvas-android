@@ -34,7 +34,9 @@ data class Section(
         val endAt: String? = null,
         val students: List<User>? = arrayListOf(),
         @SerializedName("total_students")
-        val totalStudents: Int = 0
+        val totalStudents: Int = 0,
+        @SerializedName("restrict_enrollments_to_section_dates")
+        val restrictEnrollmentsToSectionDates: Boolean = false
 ) : CanvasContext() {
     override val comparisonString get() = name
     override val type get() = CanvasContext.Type.SECTION

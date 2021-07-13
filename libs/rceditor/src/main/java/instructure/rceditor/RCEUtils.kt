@@ -33,9 +33,6 @@ internal object RCEUtils {
     //<span style=";"></span>
     private const val SPAN_REGEX = "<span\\s*style=\"\\s*;\">\\s*</span>"
 
-    //<span style="color: #1482c8;"></span>
-    private const val HEX_COMMA_REGEX = "#([A-Fa-f0-9]{3,8});"
-
     fun colorIt(color: Int, view: ImageView) {
         val drawable = view.drawable ?: return
         drawable.mutate().colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
@@ -88,22 +85,6 @@ internal object RCEUtils {
         }
     }
 
-    private fun workaroundInvalidHex(html: String): String? {
-        return try {
-            val pattern = Pattern.compile(HEX_COMMA_REGEX)
-            val action = pattern.matcher(html)
-            val sb = StringBuffer(html.length)
-            while (action.find()) {
-                val cleanValue = action.group().replace(";", "")
-                action.appendReplacement(sb, Matcher.quoteReplacement(cleanValue))
-            }
-            action.appendTail(sb)
-            sb.toString()
-        } catch (e: Exception) {
-            null
-        }
-    }
-
     /**
      * When we do a PUT on the HTML there is often small things that'll cause the HTML to be invalid by the server and
      * replaced by "&nbsp;". In order to avoid content getting nuked we use these workarounds. It is possible that
@@ -115,7 +96,6 @@ internal object RCEUtils {
         html ?: return null
         var validated: String = workaroundRbg2Hex(html) ?: return null
         validated = workaroundInvalidSpan(validated) ?: return null
-        validated = workaroundInvalidHex(validated) ?: return null
         return validated
     }
 

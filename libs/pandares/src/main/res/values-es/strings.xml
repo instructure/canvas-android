@@ -1158,4 +1158,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Eliminar todo del Tablero</string>
     <string name="a11y_content_description_add_to_dashboard">Agregar al Tablero</string>
     <string name="a11y_content_description_add_all_to_dashboard">Agregar todo al Tablero</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Cuenta</string>
+    <string name="dashboardTabHomeroom">Aula principal</string>
+    <string name="dashboardTabSchedule">Planificación</string>
+    <string name="dashboardTabGrades">Calificaciones</string>
+    <string name="dashboardTabResources">Recursos</string>
+    <string name="homeroomWelcomeMessage">¡Le damos la bienvenida, %1$s!</string>
+    <string name="homeroomMySubjects">Mis temas</string>
+
+    <string name="viewPreviousAnnouncements">Ver anuncios previos</string>
+    <string name="homeroomError">No se pudo cargar el Aula principal (Homeroom)</string>
+    <string name="homeroomRefreshFail">No se pudo actualizar el Aula principal (Homeroom)</string>
+
+
+    <string name="nothingDueToday">Nada con fecha límite el día de hoy</string>
+    <string name="dueToday">%1$s tiene fecha límite el día de hoy</string>
+    <string name="missing">%1$s faltante</string>
+    <string name="homeroomEmptyTitle">¡Bienvenido!</string>
+    <string name="homeroomEmptyMessage">Sus materias se muestran aquí.</string>
+    <string name="homeroomNoSubjects">No tiene materias actualmente.</string>
+
+
+    <string name="open_alternate_view">Abrir una vista alternativa más accesible</string>
+    <string name="a11y_content_description_message_recipients">Destinatarios</string>
+    <string name="a11y_content_description_inbox_subject">Asunto</string>
+    <string name="a11y_content_description_inbox_course_spinner">Seleccione un curso, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Las respuestas del estudiante están ocultas porque esta tarea es anónima.</string>
+
+    <string name="studentAnnotationUnsupported">Anotación del estudiante (no admitida)</string>
+    <string name="studentAnnotationUnsupportedDescription">La anotación del estudiante actualmente no se admite en el móvil.</string>
+    <string name="unsupportedSubmissionType">Tipo de entrega no admitida</string>
+    <string name="studentAnnotationUnsupportedMessage">La entrega no se puede mostrar porque la Anotación del estudiante actualmente no se admite en el móvil.</string>
 </resources>

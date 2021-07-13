@@ -34,11 +34,11 @@ class ElementaryNavigationBehavior() : NavigationBehavior {
 
     override val homeFragmentClass: Class<out ParentFragment> = ElementaryDashboardFragment::class.java
 
-    override val visibleNavigationMenuItems: Set<NavigationMenuItem> = emptySet()
+    override val visibleNavigationMenuItems: Set<NavigationMenuItem> = setOf(NavigationMenuItem.FILES, NavigationMenuItem.SETTINGS)
 
     override val visibleOptionsMenuItems: Set<OptionsMenuItem> = emptySet()
 
-    override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.ACCOUNT, AccountMenuItem.HELP, AccountMenuItem.LOGOUT)
+    override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.HELP, AccountMenuItem.CHANGE_USER, AccountMenuItem.LOGOUT)
 
     override val shouldOverrideFont: Boolean
         get() = true

@@ -54,6 +54,7 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.toast
@@ -81,11 +82,15 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(), InitActivityView,
     CoursesFragment.CourseListCallback, AllCoursesFragment.CourseBrowserCallback, InitActivityInteractions,
     MasqueradingDialog.OnMasqueradingSet, ErrorReportDialog.ErrorReportDialogResultListener {
+
+    @Inject
+    lateinit var updateManager: UpdateManager
 
     private var selectedTab = 0
     private var drawerItemSelectedJob: Job? = null
@@ -163,6 +168,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         }
 
         RatingDialog.showRatingDialog(this, com.instructure.pandautils.utils.AppType.TEACHER)
+
+        updateManager.checkForInAppUpdate(this)
     }
 
     override fun onNewIntent(intent: Intent?) {
