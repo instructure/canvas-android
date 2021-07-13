@@ -33,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="24dp"
-        android:foregroundTint="@color/lightGray"
         android:padding="2dp"
         app:borderColor="@{Color.parseColor(itemViewModel.data.courseColor)}">
 
@@ -41,6 +40,7 @@
             android:id="@+id/courseName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
             android:drawableEnd="@{itemViewModel.data.openable ? @drawable/ic_open_arrow : null}"
             android:gravity="center_vertical"
             android:lineSpacingExtra="2sp"

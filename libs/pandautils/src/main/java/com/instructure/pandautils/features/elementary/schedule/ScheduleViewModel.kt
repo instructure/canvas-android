@@ -23,10 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.PlannableType
-import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.exhaustive
@@ -58,8 +55,9 @@ class ScheduleViewModel @Inject constructor(
         private val plannerManager: PlannerManager,
         private val courseManager: CourseManager,
         private val assignmentManager: AssignmentManager,
-        private val announcementManager: AnnouncementManager) : ViewModel() {
+        private val todoManager: ToDoManager) : ViewModel() {
 
+    private lateinit var userToDoMap: Map<Long, ToDo>
     private lateinit var assignmentMap: Map<Long?, Assignment?>
     private lateinit var plannerItems: List<PlannerItem>
     private lateinit var coursesMap: Map<Long, Course>
@@ -96,7 +94,7 @@ class ScheduleViewModel @Inject constructor(
 
             assignmentMap = plannerItems
                     .filter { it.courseId != null }
-                    .map { assignmentManager.getAssignmentAsync(it.plannable.id, it.courseId!!, true) }
+                    .map { assignmentManager.getAssignmentAsync(it.plannable.assignmentId ?: it.plannable.id, it.courseId!!, true) }
                     .awaitAll()
                     .map { it.dataOrNull }
                     .associateBy { it?.id }
@@ -161,9 +159,12 @@ class ScheduleViewModel @Inject constructor(
                     }
             )
             ScheduleCourseItemViewModel(
-                    scheduleViewData,
-                    {}
-            )
+                    scheduleViewData
+            ) {
+                it.key?.let { course ->
+                    _events.postValue(Event(ScheduleAction.OpenCourse(course)))
+                }
+            }
         }
 
         return if (courseViewModels.isEmpty()) {
@@ -177,7 +178,7 @@ class ScheduleViewModel @Inject constructor(
 
     private fun createChips(plannerItem: PlannerItem): List<SchedulePlannerItemTagItemViewModel> {
         val chips = mutableListOf<PlannerItemTag>()
-        val assignment = assignmentMap[plannerItem.plannable.id]
+        val assignment = assignmentMap[plannerItem.plannable.assignmentId ?: plannerItem.plannable.id]
 
         if (assignment != null) {
             if (assignment.submission?.isGraded == true && assignment.submission?.excused == false) {
@@ -219,12 +220,30 @@ class ScheduleViewModel @Inject constructor(
                         getTypeForPlannerItem(plannerItem),
                         getPointsText(plannerItem.plannable.pointsPossible),
                         getDueText(plannerItem),
-                        plannerItem.htmlUrl != null,
+                        true,
                         createChips(plannerItem)
                 ),
                 {},
-                {}
+                { openPlannable(plannerItem) }
         )
+    }
+
+    private fun openPlannable(plannerItem: PlannerItem) {
+        when (plannerItem.plannableType) {
+            PlannableType.ASSIGNMENT -> _events.postValue(Event(ScheduleAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.id)))
+            PlannableType.CALENDAR_EVENT -> _events.postValue(Event(ScheduleAction.OpenCalendarEvent(plannerItem.canvasContext, plannerItem.plannable.id)))
+            PlannableType.DISCUSSION_TOPIC -> _events.postValue(Event(ScheduleAction.OpenDiscussion(plannerItem.canvasContext, plannerItem.plannable.id, plannerItem.plannable.title)))
+            PlannableType.QUIZ -> {
+                if (plannerItem.plannable.assignmentId != null) {
+                    // This is a quiz assignment, go to the assignment page
+                    _events.postValue(Event(ScheduleAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.id)))
+                } else {
+                    var htmlUrl = plannerItem.htmlUrl.orEmpty()
+                    if (htmlUrl.startsWith('/')) htmlUrl = ApiPrefs.fullDomain + htmlUrl
+                    _events.postValue(Event(ScheduleAction.OpenQuiz(plannerItem.canvasContext, htmlUrl)))
+                }
+            }
+        }
     }
 
     private fun getTypeForPlannerItem(plannerItem: PlannerItem): PlannerItemType {

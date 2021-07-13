@@ -16,10 +16,9 @@
 
 package com.instructure.pandautils.features.elementary.schedule
 
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+import androidx.annotation.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemTagItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemViewModel
@@ -81,5 +80,10 @@ enum class PlannerItemTag(@StringRes val text: Int, @ColorRes val color: Int) {
 }
 
 sealed class ScheduleAction {
-
+    data class OpenCourse(val course: Course) : ScheduleAction()
+    data class OpenAssignment(val canvasContext: CanvasContext, val assignmentId: Long) : ScheduleAction()
+    data class OpenCalendarEvent(val canvasContext: CanvasContext, val scheduleItemId: Long) : ScheduleAction()
+    data class InternalRoute(val url: String) : ScheduleAction()
+    data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String) : ScheduleAction()
+    data class OpenDiscussion(val canvasContext: CanvasContext, val id: Long, val title: String) : ScheduleAction()
 }

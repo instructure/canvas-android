@@ -41,8 +41,10 @@
             android:id="@+id/titleLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:minHeight="80dp"
             android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:minHeight="80dp"
+            android:onClick="@{() -> itemViewModel.data.openable ? itemViewModel.onHeaderClick.invoke() : null}"
             app:layout_constraintEnd_toStartOf="@+id/plannerItems">
 
             <TextView
@@ -51,10 +53,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:lineSpacingExtra="2sp"
-                android:onClick="@{() -> itemViewModel.data.openable ? itemViewModel.onHeaderClick.invoke() : null}"
                 android:paddingStart="15dp"
-                android:paddingEnd="0dp"
                 android:paddingTop="4dp"
+                android:paddingEnd="0dp"
                 android:paddingBottom="4dp"
                 android:text="@{itemViewModel.data.courseName}"
                 android:textAllCaps="true"
@@ -68,6 +69,8 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginStart="1.5dp"
+                android:layout_marginBottom="1.5dp"
                 android:background="@{Color.parseColor(itemViewModel.data.courseColor)}"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{itemViewModel.data.imageUrl}"
@@ -75,8 +78,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/courseName"
-                android:layout_marginBottom="1.5dp"
-                android:layout_marginStart="1.5dp"
                 app:overlayColor="@{Color.parseColor(itemViewModel.data.courseColor)}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -90,10 +91,10 @@
             android:id="@+id/plannerItems"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:orientation="vertical"
-            app:itemViewModels="@{itemViewModel.data.plannerItems}"
             android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"/>
+            android:layout_weight="3"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            app:itemViewModels="@{itemViewModel.data.plannerItems}" />
     </LinearLayout>
 </layout>

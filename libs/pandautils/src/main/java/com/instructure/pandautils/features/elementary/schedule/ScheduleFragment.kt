@@ -22,20 +22,47 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentScheduleBinding
+import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
 
+    @Inject
+    lateinit var homeroomRouter: HomeroomRouter
+
     private val viewModel: ScheduleViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentScheduleBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        viewModel.events.observe(viewLifecycleOwner, { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
+
         return binding.root
+    }
+
+    private fun handleAction(action: ScheduleAction) {
+        when (action) {
+            is ScheduleAction.OpenCourse -> homeroomRouter.openCourse(action.course)
+            is ScheduleAction.OpenAssignment -> homeroomRouter.openAssignment(action.canvasContext, action.assignmentId)
+            is ScheduleAction.OpenCalendarEvent -> homeroomRouter.openCalendarEvent(action.canvasContext, action.scheduleItemId)
+            is ScheduleAction.OpenQuiz -> {
+                if (homeroomRouter.canRouteInternally(action.htmlUrl)) {
+                    homeroomRouter.openQuiz(action.canvasContext, action.htmlUrl)
+                }
+            }
+            is ScheduleAction.OpenDiscussion -> {
+                homeroomRouter.openDiscussion(action.canvasContext, action.id, action.title)
+            }
+        }
     }
 
     companion object {
