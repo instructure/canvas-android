@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.elementary.schedule
 
 import android.content.res.Resources
-import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,11 +25,8 @@ import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomAction
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomViewData
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -42,7 +38,6 @@ import com.instructure.pandautils.utils.isSameDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import org.threeten.bp.DateTimeUtils
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,12 +45,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
-        private val apiPrefs: ApiPrefs,
         private val resources: Resources,
         private val plannerManager: PlannerManager,
         private val courseManager: CourseManager,
-        private val assignmentManager: AssignmentManager) : ViewModel() {
+        private val assignmentManager: AssignmentManager,
+        private val userManager: UserManager) : ViewModel() {
 
+    private lateinit var missingSubmissions: List<Assignment>
     private lateinit var assignmentMap: Map<Long?, Assignment?>
     private lateinit var plannerItems: List<PlannerItem>
     private lateinit var coursesMap: Map<Long, Course>
@@ -102,6 +98,8 @@ class ScheduleViewModel @Inject constructor(
                     .map { it.dataOrNull }
                     .associateBy { it?.id }
 
+            missingSubmissions = userManager.getAllMissingSubmissionsAsync(true).await().dataOrNull.orEmpty()
+
             val itemViewModels = mutableListOf<ItemViewModel>()
             for (i in 0..6) {
                 val calendar = Calendar.getInstance()
@@ -129,7 +127,19 @@ class ScheduleViewModel @Inject constructor(
         items.add(createDayHeader(date))
         items.addAll(createCourseItems(date))
 
+        if (date.isSameDay(Date()) && missingSubmissions.isNotEmpty()) {
+            items.add(createMissingItems())
+        }
+
         return items
+    }
+
+    private fun createMissingItems(): ScheduleMissingItemsHeaderItemViewModel {
+        val items = mutableListOf<ItemViewModel>()
+        val missingItems = missingSubmissions.map {
+
+        }
+        return ScheduleMissingItemsHeaderItemViewModel(items = emptyList())
     }
 
     private fun createDayHeader(date: Date): ScheduleDayHeaderItemViewModel {
@@ -240,7 +250,7 @@ class ScheduleViewModel @Inject constructor(
 
     private fun updatePlannerOverride(plannerItem: PlannerItem, itemViewModel: SchedulePlannerItemViewModel, markedAsDone: Boolean) {
         if (itemViewModel.completed == markedAsDone) return
-        
+
         viewModelScope.launch {
             itemViewModel.apply {
                 completed = markedAsDone

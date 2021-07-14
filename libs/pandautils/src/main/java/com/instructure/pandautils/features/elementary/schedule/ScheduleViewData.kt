@@ -68,7 +68,9 @@ enum class ScheduleItemViewModelType(val viewType: Int) {
     COURSE(1),
     DAY_HEADER(2),
     PLANNER_ITEM(3),
-    EMPTY(4)
+    EMPTY(4),
+    MISSING_HEADER(5),
+    MISSING_ITEM(6)
 }
 
 enum class PlannerItemTag(@StringRes val text: Int, @ColorRes val color: Int) {

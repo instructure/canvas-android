@@ -446,6 +446,8 @@
     <string name="schedule_calendar_event_due_text">At %s</string>
     <string name="schedule_todo_due_text">To Do: %s</string>
     <string name="schedule_due_text">Due: %s</string>
+    <string name="show_missing_items_title">Show %d missing items</string>
+    <string name="hide_missing_items_title">Hide %d missing items</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s pt</item>
         <item quantity="one">%s pt</item>
