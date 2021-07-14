@@ -232,9 +232,42 @@ class ScheduleViewModel @Inject constructor(
                         isPlannableOpenable(plannerItem),
                         createChips(plannerItem)
                 ),
-                {},
+                plannerItem.plannerOverride?.markedComplete ?: false,
+                { scheduleItemViewModel, markedAsDone -> updatePlannerOverride(plannerItem, scheduleItemViewModel, markedAsDone) },
                 { openPlannable(plannerItem) }
         )
+    }
+
+    private fun updatePlannerOverride(plannerItem: PlannerItem, itemViewModel: SchedulePlannerItemViewModel, markedAsDone: Boolean) {
+        if (itemViewModel.completed == markedAsDone) return
+        
+        viewModelScope.launch {
+            itemViewModel.apply {
+                completed = markedAsDone
+                notifyChange()
+            }
+            try {
+                if (plannerItem.plannerOverride == null) {
+                    val plannerOverride = PlannerOverride(
+                            plannableType = plannerItem.plannableType,
+                            plannableId = plannerItem.plannable.id,
+                            markedComplete = markedAsDone
+                    )
+                    val createdOverride = plannerManager.createPlannerOverrideAsync(true, plannerOverride).await().dataOrThrow
+                    plannerItem.plannerOverride = createdOverride
+                } else {
+                    val updatedOverride = plannerManager.updatePlannerOverrideAsync(true, markedAsDone, plannerItem.plannerOverride?.id!!).await().dataOrThrow
+                    plannerItem.plannerOverride = updatedOverride
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                itemViewModel.apply {
+                    completed = !markedAsDone
+                    notifyChange()
+                }
+            }
+        }
+
     }
 
     private fun openPlannable(plannerItem: PlannerItem) {

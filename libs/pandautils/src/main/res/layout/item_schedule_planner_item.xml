@@ -31,6 +31,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,7 +40,8 @@
             android:background="?android:selectableItemBackground"
             android:onClick="@{() -> itemViewModel.data.openable ? itemViewModel.open.invoke() : null}"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingBottom="8dp"
+            android:animateLayoutChanges="true">
 
             <CheckBox
                 android:id="@+id/checkbox"
@@ -47,6 +49,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:buttonTint="@color/schedule_checkbox_color_selector"
+                android:checked="@{itemViewModel.completed}"
+                android:onCheckedChanged="@{(checkbox, checked) -> itemViewModel.markAsDone.invoke(itemViewModel, checked)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -83,6 +87,14 @@
                     android:textColor="@color/canvasTextDark"
                     android:textSize="17sp"
                     tools:text="Causes of the Revolutionary War I." />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/schedule_marked_as_done"
+                    android:textColorHighlight="@color/textLightGray"
+                    android:textSize="12sp"
+                    android:visibility="@{itemViewModel.completed ? View.VISIBLE : View.GONE}" />
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:layout_width="match_parent"

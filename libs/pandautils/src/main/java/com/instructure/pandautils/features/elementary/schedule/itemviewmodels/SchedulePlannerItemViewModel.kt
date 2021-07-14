@@ -16,6 +16,8 @@
 
 package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.ScheduleItemViewModelType
 import com.instructure.pandautils.features.elementary.schedule.SchedulePlannerItemData
@@ -23,9 +25,10 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 
 class SchedulePlannerItemViewModel(
         val data: SchedulePlannerItemData,
-        val markAsDone: () -> Unit,
+        @get:Bindable var completed: Boolean,
+        val markAsDone: (itemViewModel: SchedulePlannerItemViewModel, done: Boolean) -> Unit,
         val open: () -> Unit
-) : ItemViewModel {
+) : ItemViewModel, BaseObservable() {
     override val layoutId: Int = R.layout.item_schedule_planner_item
 
     override val viewType: Int = ScheduleItemViewModelType.PLANNER_ITEM.viewType

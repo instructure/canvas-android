@@ -49,7 +49,7 @@ data class PlannerItem (
     val submissionState: SubmissionState?,
 
     @SerializedName("planner_override")
-    val plannerOverride: PlannerOverride? = null
+    var plannerOverride: PlannerOverride? = null
 ) {
 
     val canvasContext: CanvasContext
