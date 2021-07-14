@@ -25,6 +25,7 @@ import androidx.fragment.app.viewModels
 import com.instructure.pandautils.databinding.FragmentScheduleBinding
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_schedule.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -61,6 +62,9 @@ class ScheduleFragment : Fragment() {
             }
             is ScheduleAction.OpenDiscussion -> {
                 homeroomRouter.openDiscussion(action.canvasContext, action.id, action.title)
+            }
+            is ScheduleAction.JumpToToday -> {
+                scheduleRecyclerView.scrollToPosition(action.position)
             }
         }
     }

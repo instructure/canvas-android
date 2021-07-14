@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.elementary.schedule
 import androidx.annotation.*
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemTagItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemViewModel
@@ -83,7 +84,7 @@ sealed class ScheduleAction {
     data class OpenCourse(val course: Course) : ScheduleAction()
     data class OpenAssignment(val canvasContext: CanvasContext, val assignmentId: Long) : ScheduleAction()
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val scheduleItemId: Long) : ScheduleAction()
-    data class InternalRoute(val url: String) : ScheduleAction()
     data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String) : ScheduleAction()
     data class OpenDiscussion(val canvasContext: CanvasContext, val id: Long, val title: String) : ScheduleAction()
+    data class JumpToToday(val position: Int) : ScheduleAction()
 }

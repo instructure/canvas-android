@@ -54,13 +54,13 @@ class ScheduleViewModel @Inject constructor(
         private val resources: Resources,
         private val plannerManager: PlannerManager,
         private val courseManager: CourseManager,
-        private val assignmentManager: AssignmentManager,
-        private val todoManager: ToDoManager) : ViewModel() {
+        private val assignmentManager: AssignmentManager) : ViewModel() {
 
-    private lateinit var userToDoMap: Map<Long, ToDo>
     private lateinit var assignmentMap: Map<Long?, Assignment?>
     private lateinit var plannerItems: List<PlannerItem>
     private lateinit var coursesMap: Map<Long, Course>
+
+    private var todayPos = 0
 
     val state: LiveData<ViewState>
         get() = _state
@@ -94,7 +94,10 @@ class ScheduleViewModel @Inject constructor(
 
             assignmentMap = plannerItems
                     .filter { it.courseId != null }
-                    .map { assignmentManager.getAssignmentAsync(it.plannable.assignmentId ?: it.plannable.id, it.courseId!!, true) }
+                    .map {
+                        assignmentManager.getAssignmentAsync(it.plannable.assignmentId
+                                ?: it.plannable.id, it.courseId!!, true)
+                    }
                     .awaitAll()
                     .map { it.dataOrNull }
                     .associateBy { it?.id }
@@ -106,14 +109,19 @@ class ScheduleViewModel @Inject constructor(
                 calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) + i)
                 val date = calendar.time
 
+                if (date.isSameDay(Date())) {
+                    todayPos = itemViewModels.size
+                }
+
                 itemViewModels.addAll(createCourseItemsForDate(date))
             }
             _data.postValue(ScheduleViewData(itemViewModels))
+            jumpToToday()
         }
     }
 
     fun jumpToToday() {
-
+        _events.postValue(Event(ScheduleAction.JumpToToday(todayPos)))
     }
 
     private fun createCourseItemsForDate(date: Date): List<ItemViewModel> {
@@ -178,7 +186,8 @@ class ScheduleViewModel @Inject constructor(
 
     private fun createChips(plannerItem: PlannerItem): List<SchedulePlannerItemTagItemViewModel> {
         val chips = mutableListOf<PlannerItemTag>()
-        val assignment = assignmentMap[plannerItem.plannable.assignmentId ?: plannerItem.plannable.id]
+        val assignment = assignmentMap[plannerItem.plannable.assignmentId
+                ?: plannerItem.plannable.id]
 
         if (assignment != null) {
             if (assignment.submission?.isGraded == true && assignment.submission?.excused == false) {
@@ -220,7 +229,7 @@ class ScheduleViewModel @Inject constructor(
                         getTypeForPlannerItem(plannerItem),
                         getPointsText(plannerItem.plannable.pointsPossible),
                         getDueText(plannerItem),
-                        true,
+                        isPlannableOpenable(plannerItem),
                         createChips(plannerItem)
                 ),
                 {},
@@ -243,6 +252,16 @@ class ScheduleViewModel @Inject constructor(
                     _events.postValue(Event(ScheduleAction.OpenQuiz(plannerItem.canvasContext, htmlUrl)))
                 }
             }
+            PlannableType.ANNOUNCEMENT -> _events.postValue(Event(ScheduleAction.OpenDiscussion(plannerItem.canvasContext, plannerItem.plannable.id, plannerItem.plannable.title)))
+            else -> Unit
+        }
+    }
+
+    private fun isPlannableOpenable(plannerItem: PlannerItem): Boolean {
+        return when (plannerItem.plannableType) {
+            PlannableType.PLANNER_NOTE -> false
+            PlannableType.CALENDAR_EVENT -> true
+            else -> plannerItem.courseId != null
         }
     }
 

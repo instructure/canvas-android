@@ -16,8 +16,6 @@
  */
 package com.instructure.pandautils.binding
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -31,13 +29,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.instructure.pandautils.BR
-import com.instructure.pandautils.features.elementary.schedule.PlannerItemTag
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
 import java.net.URLDecoder

@@ -55,6 +55,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:gravity="bottom"
+            android:minHeight="48dp"
             android:onClick="@{() -> itemViewModel.onTodayClick.invoke()}"
             android:text="@string/today"
             android:textColor="@color/canvasDefaultAccent"
