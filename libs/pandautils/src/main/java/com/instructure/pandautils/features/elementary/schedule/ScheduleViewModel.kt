@@ -112,8 +112,8 @@ class ScheduleViewModel @Inject constructor(
                                     ?: it.plannable.id, it.courseId!!, true)
                         }
                         .awaitAll()
-                        .map { it.dataOrThrow }
-                        .associateBy { it.id }
+                        .map { it.dataOrNull }
+                        .associateBy { it?.id }
 
                 missingSubmissions = userManager.getAllMissingSubmissionsAsync(true).await().dataOrNull.orEmpty()
 
