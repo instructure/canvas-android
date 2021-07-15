@@ -57,6 +57,7 @@ class ScheduleViewModel @Inject constructor(
     private lateinit var coursesMap: Map<Long, Course>
 
     private var todayPos = 0
+    private val simpleDateFormat = SimpleDateFormat("hh:mm aa", Locale.getDefault())
 
     val state: LiveData<ViewState>
         get() = _state
@@ -135,11 +136,30 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun createMissingItems(): ScheduleMissingItemsHeaderItemViewModel {
-        val items = mutableListOf<ItemViewModel>()
         val missingItems = missingSubmissions.map {
-
+            ScheduleMissingItemViewModel(
+                    data = ScheduleMissingItemData(
+                            it.name,
+                            it.dueDate?.let { resources.getString(R.string.schedule_due_text, simpleDateFormat.format(it)) },
+                            getPointsText(it.pointsPossible),
+                            if (it.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
+                            coursesMap[it.courseId]?.name,
+                            getCourseColor(coursesMap[it.courseId])
+                    ),
+                    open = {
+                        val course = coursesMap[it.courseId]
+                        if (course != null) {
+                            if (it.discussionTopicHeader != null) {
+                                _events.postValue(Event(ScheduleAction.OpenDiscussion(course, it.discussionTopicHeader!!.id, it.discussionTopicHeader!!.title
+                                        ?: "")))
+                            } else {
+                                _events.postValue(Event(ScheduleAction.OpenAssignment(course, it.id)))
+                            }
+                        }
+                    }
+            )
         }
-        return ScheduleMissingItemsHeaderItemViewModel(items = emptyList())
+        return ScheduleMissingItemsHeaderItemViewModel(items = missingItems)
     }
 
     private fun createDayHeader(date: Date): ScheduleDayHeaderItemViewModel {
@@ -327,7 +347,6 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun getDueText(plannerItem: PlannerItem): String {
-        val simpleDateFormat = SimpleDateFormat("hh:mm aa", Locale.getDefault())
         return when (plannerItem.plannableType) {
             PlannableType.CALENDAR_EVENT -> resources.getString(R.string.schedule_calendar_event_due_text, simpleDateFormat.format(plannerItem.plannableDate))
             PlannableType.PLANNER_NOTE -> resources.getString(R.string.schedule_todo_due_text, simpleDateFormat.format(plannerItem.plannableDate))

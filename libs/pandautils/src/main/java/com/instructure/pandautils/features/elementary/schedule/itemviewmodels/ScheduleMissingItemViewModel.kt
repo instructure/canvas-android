@@ -18,9 +18,13 @@ package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.ScheduleItemViewModelType
+import com.instructure.pandautils.features.elementary.schedule.ScheduleMissingItemData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class ScheduleMissingItemViewModel : ItemViewModel {
+class ScheduleMissingItemViewModel(
+        val data: ScheduleMissingItemData,
+        val open: () -> Unit
+) : ItemViewModel {
     override val layoutId: Int = R.layout.item_schedule_missing_item
     override val viewType: Int = ScheduleItemViewModelType.MISSING_ITEM.viewType
 }

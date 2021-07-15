@@ -53,6 +53,15 @@ data class SchedulePlannerItemTag(
         @ColorInt val color: Int
 )
 
+data class ScheduleMissingItemData(
+        val title: String?,
+        val dueString: String?,
+        val points: String?,
+        val type: PlannerItemType,
+        val courseName: String?,
+        val courseColor: String
+)
+
 enum class PlannerItemType(@DrawableRes val iconRes: Int) {
     ANNOUNCEMENT(R.drawable.ic_announcement),
     ASSIGNMENT(R.drawable.ic_assignment),
