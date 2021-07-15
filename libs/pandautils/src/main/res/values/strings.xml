@@ -448,6 +448,7 @@
     <string name="schedule_due_text">Due: %s</string>
     <string name="show_missing_items_title">Show %d missing items</string>
     <string name="hide_missing_items_title">Hide %d missing items</string>
+    <string name="schedule_error_message">Unable to fetch your schedule</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s pt</item>
         <item quantity="one">%s pt</item>

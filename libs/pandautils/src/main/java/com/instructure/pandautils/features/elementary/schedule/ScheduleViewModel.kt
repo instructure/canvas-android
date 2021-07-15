@@ -72,55 +72,71 @@ class ScheduleViewModel @Inject constructor(
     private val _events = MutableLiveData<Event<ScheduleAction>>()
 
     init {
-        viewModelScope.launch {
-            val startDate = Date()
-            val weekStart = DateHelper.getLastSunday(startDate)
+        _state.postValue(ViewState.Loading)
+        getData()
+        jumpToToday()
+    }
 
-            val courses = courseManager.getCoursesAsync(true).await()
-            coursesMap = courses.dataOrThrow
-                    .filter { !it.homeroomCourse }
-                    .associateBy { it.id }
-
-            plannerItems = plannerManager.getPlannerItemsAsync(
-                    true,
-                    weekStart.toApiString(),
-                    DateHelper.getNextSaturday(startDate).toApiString())
-                    .await()
-                    .dataOrNull
-                    .orEmpty()
-
-            assignmentMap = plannerItems
-                    .filter { it.courseId != null }
-                    .map {
-                        assignmentManager.getAssignmentAsync(it.plannable.assignmentId
-                                ?: it.plannable.id, it.courseId!!, true)
-                    }
-                    .awaitAll()
-                    .map { it.dataOrNull }
-                    .associateBy { it?.id }
-
-            missingSubmissions = userManager.getAllMissingSubmissionsAsync(true).await().dataOrNull.orEmpty()
-
-            val itemViewModels = mutableListOf<ItemViewModel>()
-            for (i in 0..6) {
-                val calendar = Calendar.getInstance()
-                calendar.time = weekStart
-                calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) + i)
-                val date = calendar.time
-
-                if (date.isSameDay(Date())) {
-                    todayPos = itemViewModels.size
-                }
-
-                itemViewModels.addAll(createCourseItemsForDate(date))
-            }
-            _data.postValue(ScheduleViewData(itemViewModels))
-            jumpToToday()
-        }
+    fun refresh() {
+        _state.postValue(ViewState.Refresh)
+        getData()
     }
 
     fun jumpToToday() {
         _events.postValue(Event(ScheduleAction.JumpToToday(todayPos)))
+    }
+
+    private fun getData() {
+        viewModelScope.launch {
+            try {
+                val startDate = Date()
+                val weekStart = DateHelper.getLastSunday(startDate)
+
+                val courses = courseManager.getCoursesAsync(true).await()
+                coursesMap = courses.dataOrThrow
+                        .filter { !it.homeroomCourse }
+                        .associateBy { it.id }
+
+                plannerItems = plannerManager.getPlannerItemsAsync(
+                        true,
+                        weekStart.toApiString(),
+                        DateHelper.getNextSaturday(startDate).toApiString())
+                        .await()
+                        .dataOrNull
+                        .orEmpty()
+
+                assignmentMap = plannerItems
+                        .filter { it.courseId != null }
+                        .map {
+                            assignmentManager.getAssignmentAsync(it.plannable.assignmentId
+                                    ?: it.plannable.id, it.courseId!!, true)
+                        }
+                        .awaitAll()
+                        .map { it.dataOrThrow }
+                        .associateBy { it.id }
+
+                missingSubmissions = userManager.getAllMissingSubmissionsAsync(true).await().dataOrNull.orEmpty()
+
+                val itemViewModels = mutableListOf<ItemViewModel>()
+                for (i in 0..6) {
+                    val calendar = Calendar.getInstance()
+                    calendar.time = weekStart
+                    calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) + i)
+                    val date = calendar.time
+
+                    if (date.isSameDay(Date())) {
+                        todayPos = itemViewModels.size
+                    }
+
+                    itemViewModels.addAll(createCourseItemsForDate(date))
+                }
+                _data.postValue(ScheduleViewData(itemViewModels))
+                _state.postValue(ViewState.Success)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _state.postValue(ViewState.Error(resources.getString(R.string.schedule_error_message)))
+            }
+        }
     }
 
     private fun createCourseItemsForDate(date: Date): List<ItemViewModel> {

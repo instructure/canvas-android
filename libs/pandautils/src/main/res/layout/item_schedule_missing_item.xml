@@ -24,6 +24,8 @@
             type="com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemViewModel" />
 
         <import type="android.graphics.Color" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,10 +66,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:text="@{itemViewModel.data.title}"
             android:textColor="@color/canvasTextDark"
             android:textSize="17sp"
             app:layout_constraintBottom_toTopOf="@+id/courseName"
+            app:layout_constraintEnd_toStartOf="@+id/detailsLayout"
             app:layout_constraintStart_toEndOf="@id/typeIcon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Attributes of Polygons" />
@@ -87,7 +91,40 @@
             tools:text="Math"
             tools:textColor="@color/colorBloodOrange" />
 
+        <LinearLayout
+            android:id="@+id/detailsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/openArrow"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@{String.valueOf(itemViewModel.data.points)}"
+                android:textColor="@color/canvasTextDark"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:visibility="@{itemViewModel.data.points != null ? View.VISIBLE : View.GONE}"
+                tools:text="5 pts" />
+
+            <TextView
+                android:id="@+id/dueDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{itemViewModel.data.dueString}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/openArrow"
+                app:layout_constraintTop_toBottomOf="@id/points"
+                tools:text="Due 11:59 PM" />
+        </LinearLayout>
+
         <ImageView
+            android:id="@+id/openArrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_open_arrow"
