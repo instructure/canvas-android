@@ -33,6 +33,8 @@ import com.instructure.pandautils.features.elementary.homeroom.HomeroomViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleCourseItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayHeaderItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleEmptyItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemsHeaderItemViewModel
+import com.instructure.pandautils.mvvm.Event
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -93,8 +95,370 @@ class ScheduleViewModelTest {
     }
 
     @Test
+    fun `Open actions map correctly`() {
+        val course = Course(id = 1)
+
+        val assignments = listOf(
+                createAssignment(1, courseId = 1, createSubmission(id = 1, grade = null, late = true, excused = false)),
+                createAssignment(2, courseId = 1, createSubmission(id = 2, grade = "8", late = false, excused = false)),
+                createAssignment(3, courseId = 1, createSubmission(id = 3, grade = null, late = false, excused = false), discussionTopicHeader = createDiscussionTopicHeader(5, 4)),
+                createAssignment(4, courseId = 1, createSubmission(id = 4, grade = "80%", late = true, excused = true), discussionTopicHeader = createDiscussionTopicHeader(6, 8))
+        )
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        val assignmentDeferred: Deferred<DataResult<Assignment>> = mockk()
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns assignmentDeferred
+        coEvery {
+            listOf(
+                    assignmentDeferred,
+                    assignmentDeferred,
+                    assignmentDeferred,
+                    assignmentDeferred).awaitAll()
+        } returns assignments.map { DataResult.Success(it) }
+
+        val plannerItems = listOf(
+                createPlannerItem(courseId = course.id, assignmentId = 1, PlannableType.ASSIGNMENT, true, false, Date()),
+                createPlannerItem(courseId = course.id, assignmentId = 2, PlannableType.QUIZ, true, false, Date()),
+                createPlannerItem(courseId = course.id, assignmentId = 3, PlannableType.ANNOUNCEMENT, true, false, Date()),
+                createPlannerItem(courseId = course.id, assignmentId = 4, PlannableType.DISCUSSION_TOPIC, true, false, Date()),
+        )
+
+        every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(plannerItems)
+        }
+
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val courseItemViewModel = viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+
+        courseItemViewModel.onHeaderClick.invoke()
+        assertEquals(ScheduleAction.OpenCourse(course), viewModel.events.value?.getContentIfNotHandled())
+
+        val assignment = courseItemViewModel.data.plannerItems.find { it.data.type == PlannerItemType.ASSIGNMENT }
+        assignment?.open?.invoke()
+        assertEquals(ScheduleAction.OpenAssignment(plannerItems[0].canvasContext, assignments[0].id), viewModel.events.value?.getContentIfNotHandled())
+
+        val quiz = courseItemViewModel.data.plannerItems.find { it.data.type == PlannerItemType.QUIZ }
+        quiz?.open?.invoke()
+        assertEquals(ScheduleAction.OpenAssignment(plannerItems[1].canvasContext, assignments[1].id), viewModel.events.value?.getContentIfNotHandled())
+
+        val announcement = courseItemViewModel.data.plannerItems.find { it.data.type == PlannerItemType.ANNOUNCEMENT }
+        announcement?.open?.invoke()
+        assertEquals(ScheduleAction.OpenDiscussion(plannerItems[2].canvasContext, plannerItems[2].plannable.id, plannerItems[2].plannable.title), viewModel.events.value?.getContentIfNotHandled())
+
+        val discussion = courseItemViewModel.data.plannerItems.find { it.data.type == PlannerItemType.DISCUSSION }
+        discussion?.open?.invoke()
+        assertEquals(ScheduleAction.OpenDiscussion(plannerItems[3].canvasContext, plannerItems[3].plannable.id, plannerItems[3].plannable.title), viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Today button only visible for the other days`() {
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val headerItems = viewModel.data.value?.itemViewModels?.filterIsInstance<ScheduleDayHeaderItemViewModel>()
+        assertEquals(6, headerItems?.count { it.todayVisible })
+
+        val todayIndex = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1)
+        assertEquals(false, headerItems?.get(todayIndex)?.todayVisible)
+    }
+
+    @Test
+    fun `Missing items set up correctly`() {
+        val courses = listOf(Course(id = 1, name = "Course 1"),
+                Course(id = 2, name = "Course 2"))
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        val missingItems = listOf(
+                createAssignment(1, courseId = 1, createSubmission(id = 1, grade = null, late = false, excused = false), name = "Assignment 1"),
+                createAssignment(2, courseId = 2, createSubmission(id = 2, grade = null, late = false, excused = false), name = "Assignment 2")
+        )
+
+        every { userManager.getAllMissingSubmissionsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(missingItems)
+        }
+
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val missingItemHeader = viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsHeaderItemViewModel } as ScheduleMissingItemsHeaderItemViewModel
+        assertEquals(2, missingItemHeader.items.size)
+
+        val firstMissingItem = missingItemHeader.items[0]
+        assertEquals("Assignment 1", firstMissingItem.data.title)
+        assertEquals("Course 1", firstMissingItem.data.courseName)
+
+        val secondMissingItem = missingItemHeader.items[1]
+        assertEquals("Assignment 2", secondMissingItem.data.title)
+        assertEquals("Course 2", secondMissingItem.data.courseName)
+    }
+
+    @Test
+    fun `Missing item header changes state correctly`() {
+        val course = Course(id = 1)
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        val missingItems = listOf(
+                createAssignment(1, courseId = 1, createSubmission(id = 1, grade = null, late = false, excused = false)),
+                createAssignment(2, courseId = 1, createSubmission(id = 2, grade = null, late = false, excused = false))
+        )
+
+        every { userManager.getAllMissingSubmissionsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(missingItems)
+        }
+
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        assertEquals(1, viewModel.data.value?.itemViewModels?.count { it is ScheduleMissingItemsHeaderItemViewModel })
+        val missingItemHeader = viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsHeaderItemViewModel } as ScheduleMissingItemsHeaderItemViewModel
+        assertEquals(true, missingItemHeader.collapsed)
+        missingItemHeader.toggleItems()
+        assertEquals(false, missingItemHeader.collapsed)
+    }
+
+    @Test
+    fun `Only one missing item header is found`() {
+        val course = Course(id = 1)
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        val missingItems = listOf(
+                createAssignment(1, courseId = 1, createSubmission(id = 1, grade = null, late = false, excused = false)),
+                createAssignment(2, courseId = 1, createSubmission(id = 2, grade = null, late = false, excused = false))
+        )
+
+        every { userManager.getAllMissingSubmissionsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(missingItems)
+        }
+
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        assertEquals(1, viewModel.data.value?.itemViewModels?.count { it is ScheduleMissingItemsHeaderItemViewModel })
+    }
+
+    @Test
+    fun `Missing items are not visible if there are none`() {
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        assertEquals(14, viewModel.data.value?.itemViewModels?.size)
+        assertEquals(null, viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsHeaderItemViewModel })
+    }
+
+    @Test
+    fun `Courses map correctly`() {
+        val courses = listOf(Course(id = 1, name = "Course 1"),
+                Course(id = 2, name = "Course 2"))
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        val assignments = listOf(
+                createAssignment(1, courseId = 1, createSubmission(id = 1, grade = null, late = false, excused = false)),
+                createAssignment(2, courseId = 2, createSubmission(id = 2, grade = null, late = false, excused = false))
+        )
+
+        val assignmentDeferred: Deferred<DataResult<Assignment>> = mockk()
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns assignmentDeferred
+        coEvery {
+            listOf(assignmentDeferred,
+                    assignmentDeferred).awaitAll()
+        } returns assignments.map { DataResult.Success(it) }
+
+
+        val plannerItems = listOf(
+                createToDoItem(1, "To Do item"),
+                createPlannerItem(1, 1, PlannableType.ASSIGNMENT, true, false, Date()),
+                createPlannerItem(2, 2, PlannableType.ASSIGNMENT, true, false, Date())
+        )
+
+        every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(plannerItems)
+        }
+
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        assertEquals(3, viewModel.data.value?.itemViewModels?.count { it is ScheduleCourseItemViewModel })
+
+        val courseItemViewModels = viewModel.data.value?.itemViewModels?.filterIsInstance<ScheduleCourseItemViewModel>()
+        val firstCourseItemViewModel = courseItemViewModels?.find { it.data.courseName == "Course 1" }
+        assertEquals(true, firstCourseItemViewModel?.data?.openable)
+        assertEquals(1, firstCourseItemViewModel?.data?.plannerItems?.size)
+        assertEquals("Plannable 1", firstCourseItemViewModel?.data?.plannerItems?.get(0)?.data?.title)
+        assertEquals(true, firstCourseItemViewModel?.data?.plannerItems?.get(0)?.data?.openable)
+
+        val secondCourseItemViewModel = courseItemViewModels?.find { it.data.courseName == "Course 2" }
+        assertEquals(true, secondCourseItemViewModel?.data?.openable)
+        assertEquals(1, secondCourseItemViewModel?.data?.plannerItems?.size)
+        assertEquals("Plannable 2", secondCourseItemViewModel?.data?.plannerItems?.get(0)?.data?.title)
+        assertEquals(true, secondCourseItemViewModel?.data?.plannerItems?.get(0)?.data?.openable)
+
+        val todoCourseItemViewModel = courseItemViewModels?.find { it.data.courseName == "To Do" }
+        assertEquals(false, todoCourseItemViewModel?.data?.openable)
+        assertEquals(1, todoCourseItemViewModel?.data?.plannerItems?.size)
+        assertEquals("To Do item", todoCourseItemViewModel?.data?.plannerItems?.get(0)?.data?.title)
+        assertEquals(false, todoCourseItemViewModel?.data?.plannerItems?.get(0)?.data?.openable)
+    }
+
+    @Test
+    fun `Mark item as done error`() {
+        val course = Course(id = 1)
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        val assignments = listOf(
+                createAssignment(1, courseId = 1, createSubmission(id = 1, grade = null, late = false, excused = false))
+        )
+
+        val assignmentDeferred: Deferred<DataResult<Assignment>> = mockk()
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns assignmentDeferred
+        coEvery {
+            listOf(assignmentDeferred).awaitAll()
+        } returns assignments.map { DataResult.Success(it) }
+
+        val plannerItems = listOf(
+                createPlannerItem(courseId = course.id, assignmentId = 1, PlannableType.ASSIGNMENT, true, false, Date())
+        )
+
+        every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(plannerItems)
+        }
+
+        every { plannerManager.createPlannerOverrideAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail()
+        }
+
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val courseItemViewModel = viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+
+        assertEquals(true, courseItemViewModel.data.openable)
+
+        assertEquals(1, courseItemViewModel.data.plannerItems.size)
+        val plannerItemViewModel = courseItemViewModel.data.plannerItems[0]
+
+        assertEquals(false, plannerItemViewModel.completed)
+        plannerItemViewModel.markAsDone.invoke(plannerItemViewModel, true)
+        assertEquals(false, plannerItemViewModel.completed)
+    }
+
+    @Test
+    fun `Update item as not done`() {
+        val course = Course(id = 1)
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        val assignments = listOf(
+                createAssignment(1, courseId = 1, createSubmission(id = 1, grade = null, late = false, excused = false))
+        )
+
+        val assignmentDeferred: Deferred<DataResult<Assignment>> = mockk()
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns assignmentDeferred
+        coEvery {
+            listOf(assignmentDeferred).awaitAll()
+        } returns assignments.map { DataResult.Success(it) }
+
+        val plannerItems = listOf(
+                createPlannerItem(courseId = course.id, assignmentId = 1, PlannableType.ASSIGNMENT, true, false, Date(), createPlannerOverride(1, PlannableType.ASSIGNMENT, 1, true))
+        )
+
+        every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(plannerItems)
+        }
+
+        every { plannerManager.updatePlannerOverrideAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(createPlannerOverride(1, PlannableType.ASSIGNMENT, 1, false))
+        }
+
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val courseItemViewModel = viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+
+        assertEquals(true, courseItemViewModel.data.openable)
+
+        assertEquals(1, courseItemViewModel.data.plannerItems.size)
+        val plannerItemViewModel = courseItemViewModel.data.plannerItems[0]
+
+        assertEquals(true, plannerItemViewModel.completed)
+        plannerItemViewModel.markAsDone.invoke(plannerItemViewModel, false)
+        assertEquals(false, plannerItemViewModel.completed)
+    }
+
+    @Test
     fun `Mark item as done`() {
-        
+        val course = Course(id = 1)
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        val assignments = listOf(
+                createAssignment(1, courseId = 1, createSubmission(id = 1, grade = null, late = false, excused = false))
+        )
+
+        val assignmentDeferred: Deferred<DataResult<Assignment>> = mockk()
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns assignmentDeferred
+        coEvery {
+            listOf(assignmentDeferred).awaitAll()
+        } returns assignments.map { DataResult.Success(it) }
+
+        val plannerItems = listOf(
+                createPlannerItem(courseId = course.id, assignmentId = 1, PlannableType.ASSIGNMENT, true, false, Date())
+        )
+
+        every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(plannerItems)
+        }
+
+        every { plannerManager.createPlannerOverrideAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(createPlannerOverride(1, PlannableType.ASSIGNMENT, 1, true))
+        }
+
+        viewModel = ScheduleViewModel(resources, plannerManager, courseManager, assignmentManager, userManager)
+
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val courseItemViewModel = viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+
+        assertEquals(true, courseItemViewModel.data.openable)
+
+        assertEquals(1, courseItemViewModel.data.plannerItems.size)
+        val plannerItemViewModel = courseItemViewModel.data.plannerItems[0]
+
+        assertEquals(false, plannerItemViewModel.completed)
+        plannerItemViewModel.markAsDone.invoke(plannerItemViewModel, true)
+        assertEquals(true, plannerItemViewModel.completed)
     }
 
     @Test
@@ -295,9 +659,13 @@ class ScheduleViewModelTest {
 
     }
 
-    private fun createPlannerItem(courseId: Long, assignmentId: Long, plannableType: PlannableType, submitted: Boolean, missing: Boolean, date: Date): PlannerItem {
+    private fun createPlannerItem(courseId: Long, assignmentId: Long, plannableType: PlannableType, submitted: Boolean, missing: Boolean, date: Date, plannerOverride: PlannerOverride? = null): PlannerItem {
         val plannable = Plannable(id = assignmentId, title = "Plannable $assignmentId", courseId, null, null, null, date, assignmentId)
-        return PlannerItem(courseId, null, null, null, null, plannableType, plannable, date, null, SubmissionState(submitted, missing))
+        return PlannerItem(courseId, null, null, null, null, plannableType, plannable, date, null, SubmissionState(submitted, missing), plannerOverride = plannerOverride)
+    }
+
+    private fun createPlannerOverride(id: Long, plannableType: PlannableType, plannableId: Long, markedAsComplete: Boolean): PlannerOverride {
+        return PlannerOverride(id = id, plannableType = plannableType, plannableId = plannableId, markedComplete = markedAsComplete)
     }
 
     private fun createAssignment(id: Long, courseId: Long, submission: Submission? = null, discussionTopicHeader: DiscussionTopicHeader? = null, name: String? = null): Assignment {
