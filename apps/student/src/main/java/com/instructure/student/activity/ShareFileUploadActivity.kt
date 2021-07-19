@@ -39,6 +39,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StorageQuotaExceededError
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -131,6 +132,7 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
     private fun getCourses() {
         loadCoursesJob = tryWeave {
             val courses = awaitApi<List<Course>> { CourseManager.getCourses(true, it) }
+                .filter { it.isNotDeleted() }
             if (courses.isNotEmpty()) {
                 this@ShareFileUploadActivity.courses = ArrayList(courses)
                 if (uploadFileSourceFragment == null) showDestinationDialog()

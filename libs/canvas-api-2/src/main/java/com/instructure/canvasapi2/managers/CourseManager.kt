@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.postmodels.UpdateCourseWrapper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import kotlinx.coroutines.Deferred
 import java.io.IOException
@@ -311,7 +312,7 @@ object CourseManager {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         val data = CourseAPI.getCoursesSynchronously(adapter, params)
-        return data ?: ArrayList()
+        return data?.filter { it.isNotDeleted() } ?: ArrayList()
     }
 
     fun createCourseMap(courses: List<Course>?): Map<Long, Course> = courses?.associateBy { it.id } ?: emptyMap()
