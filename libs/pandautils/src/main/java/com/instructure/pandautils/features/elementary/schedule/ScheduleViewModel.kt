@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
 import com.instructure.pandautils.mvvm.Event
@@ -40,6 +41,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -121,7 +124,7 @@ class ScheduleViewModel @Inject constructor(
                 for (i in 0..6) {
                     val calendar = Calendar.getInstance()
                     calendar.time = weekStart
-                    calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) + i)
+                    calendar.roll(Calendar.DAY_OF_MONTH, i)
                     val date = calendar.time
 
                     if (date.isSameDay(Date())) {
@@ -204,7 +207,7 @@ class ScheduleViewModel @Inject constructor(
 
         val courseViewModels = coursePlannerMap.entries.map {
             val scheduleViewData = ScheduleCourseViewData(
-                    it.key?.name ?: "To Do",
+                    it.key?.name ?: resources.getString(R.string.schedule_todo_title),
                     it.key != null,
                     getCourseColor(it.key),
                     it.key?.imageUrl ?: "",
@@ -353,6 +356,7 @@ class ScheduleViewModel @Inject constructor(
             PlannableType.CALENDAR_EVENT -> PlannerItemType.CALENDAR_EVENT
             PlannableType.DISCUSSION_TOPIC -> PlannerItemType.DISCUSSION
             PlannableType.PLANNER_NOTE -> PlannerItemType.TO_DO
+            PlannableType.TODO -> PlannerItemType.TO_DO
         }
     }
 

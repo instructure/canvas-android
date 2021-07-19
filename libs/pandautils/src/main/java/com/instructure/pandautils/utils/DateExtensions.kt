@@ -46,7 +46,7 @@ fun Date.isNextDay(date: Date?): Boolean {
     if (date == null) return false
     val calendar = Calendar.getInstance()
     calendar.time = date
-    calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) + 1)
+    calendar.roll(Calendar.DAY_OF_YEAR, true)
     return calendar.time.isSameDay(this)
 }
 
@@ -54,6 +54,6 @@ fun Date.isPreviousDay(date: Date?): Boolean {
     if (date == null) return false
     val calendar = Calendar.getInstance()
     calendar.time = date
-    calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) - 1)
+    calendar.roll(Calendar.DAY_OF_YEAR, false)
     return calendar.time.isSameDay(this)
 }

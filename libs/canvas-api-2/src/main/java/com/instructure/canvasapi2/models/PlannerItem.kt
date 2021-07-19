@@ -79,5 +79,7 @@ enum class PlannableType {
     @SerializedName("planner_note")
     PLANNER_NOTE,
     @SerializedName("calendar_event")
-    CALENDAR_EVENT
+    CALENDAR_EVENT,
+    @SerializedName("todo")
+    TODO
 }
