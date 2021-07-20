@@ -145,7 +145,7 @@ class GradesViewModel @Inject constructor(
     }
 
     private fun createGradeText(score: Double?, grade: String?): String {
-        return if (grade != null) {
+        return if (!grade.isNullOrEmpty()) {
             grade
         } else {
             val currentScoreRounded = score?.roundToInt()
