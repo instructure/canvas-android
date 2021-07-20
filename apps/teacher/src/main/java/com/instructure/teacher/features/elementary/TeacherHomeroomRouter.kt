@@ -43,4 +43,6 @@ class TeacherHomeroomRouter : HomeroomRouter {
     override fun updateColors() = Unit
 
     override fun openQuiz(canvasContext: CanvasContext, htmlUrl: String) = Unit
+
+    override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long, discussionTitle: String) = Unit
 }
