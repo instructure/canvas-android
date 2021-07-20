@@ -55,10 +55,8 @@
     <string name="attemptsUsedLabel">Ceisiadau wedi’u Defnyddio</string>
     <string name="noAttemptsLeft">Dim ceisiadau ar ôl</string>
     <string name="resubmitAssignment">Ailgyflwyno Aseiniad</string>
-
     <string name="launchingExternalTool">Lansio Adnodd Allanol</string>
     <string name="launchExternalTool">Lansio Adnodd Allanol</string>
-
     <string name="preview">Rhagolwg</string>
     <string name="submissionUploadFailedMessage">Wedi methu llwytho un neu ragor o ffeiliau. Gwiriwch eich cysylltiad rhyngrwyd a rhoi cynnig arall ar gyflwyno.</string>
     <string name="submissionUploadByteProgress">%1$s o %2$s</string>
@@ -69,19 +67,20 @@
     <string name="submissionDeleted">Wedi Dileu Cyflwyniad</string>
     <string name="missingSubmissionLabel">Ar goll</string>
     <string name="gradedSubmissionLabel">Wedi graddio</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Does dim rhagolwg ar gael ar gyfer URL sy\'n defnyddio \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Rhowch URL dilys</string>
     <string name="enterAUrlHereForYourSubmission">Rhowch URL yma ar gyfer eich cyflwyniad</string>
     <string name="addFileFabContentDesc">Dangos Ychwanegu Opsiynau Ffeiliau</string>
     <string name="recordAudio">Recordio Sain</string>
-
     <string name="recordVideo">Recordio Fideo</string>
-
     <string name="a11y_textSubmissionEditor">Golygydd Cyflwyno Testun</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Ysgrifennwch&#8230;</string>
     <string name="textSubmissionFailureMessage">Aeth rhywbeth o’i le wrth lwytho\'r cyflwyniad i fyny. Cyflwyno eto.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Cyflwyniad</string>
     <string name="submissionVersions">Fersiynau o’r Cyflwyniad</string>
@@ -104,6 +103,7 @@
     <string name="speedGraderExternalToolMessage">Mae’r aseiniad hwn yn cysylltu ag adnodd allanol ar gyfer cyflwyniadau.</string>
     <string name="openTool">Agor Adnodd</string>
     <string name="a11y_submissionText">Testun cyflwyniad</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Allan o %s pwynt</string>
     <string name="outOfPointsAbbreviatedFormatted">Allan o %s pwynt</string>
@@ -115,10 +115,12 @@
     <string name="scoreStatisticsLow">Isel: %s</string>
     <string name="scoreStatisticsMean">Cymedr: %s</string>
     <string name="scoreStatisticsHigh">Uchel: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Sgôr personol</string>
     <string name="rubricEmptyMessage">Does dim cyfarwyddyd sgorio ar gyfer yr aseiniad hwn</string>
     <string name="rubricViewLongDescription">Gweld disgrifiad hir</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">Wrthi\'n llwytho ffeil %1$d o %2$d i fyny</string>
     <string name="assignmentSubmissionCommentUpload">Wrthi\'n llwytho sylw i fyny ar gyfer %s</string>
@@ -138,6 +140,7 @@
     <string name="commentSubmissionTypeMediaFile">Ffeil Gyfryngau</string>
     <string name="commentSubmissionTypeAudio">Sain</string>
     <string name="commentSubmissionTypeVideo">Fideo</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Fersiwn:</string>
 
@@ -187,6 +190,8 @@
     <string name="submissionDetailsDueAt">Erbyn %1$s am %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Wedi Cloi</string>
     <string name="assignments">Aseiniadau</string>
@@ -205,15 +210,17 @@
     <string name="a11y_sortByTypeButton">Trefnu’r botwm aseiniadau, trefnu yn ôl math</string>
     <string name="a11y_assignmentsSortedByTime">Aseiniadau wedi’u trefnu yn ôl amser</string>
     <string name="a11y_assignmentsSortedByType">Aseiniadau wedi’u trefnu yn ôl math</string>
+
     <!-- Assignment editing -->
     <string name="points">Pwynt\u0020</string>
     <string name="save">Cadw</string>
     <string name="cancel">Canslo</string>
+
     <!-- Discussions -->
     <string name="forbidden">Dim ond y rheini sydd wedi cyflwyno o leiaf un ateb sy’n gallu gweld yr atebion.</string>
-
     <string name="fileCurrentlyLocked">Mae’r ffeil hon wedi’i chloi ar hyn o bryd</string>
     <string name="a11y_discussionReplyEditor">Golygydd Ateb Trafodaeth</string>
+
     <!-- Events -->
     <string name="Starts">Yn dechrau</string>
     <string name="Ends">Yn gorffen</string>
@@ -232,8 +239,6 @@
     <string name="whatIfDialogText">Sgôr "Beth-os"</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s allan o %2$s pwynt, %3$s</string>
-
-
     <string name="inbox">Blwch Derbyn</string>
     <string name="unread">Heb ddarllen</string>
     <string name="archived">Archifwyd</string>
@@ -399,8 +404,8 @@
     <string name="students">Myfyrwyr</string>
     <string name="observers">Arsyllwyr</string>
     <string name="syllabusMissing">Nid oes maes llafur wedi’i ychwanegu.</string>
-
     <string name="syllabusEventsError">Gwall wrth lwytho’ch modiwlau.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Dewis Derbynnydd neu Dderbynwyr.</string>
     <string name="messageHasNoRecipients">Does gan y neges hon ddim derbynwyr ar hyn o bryd.</string>
@@ -426,6 +431,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Wedi dileu</string>
+
     <string name="loadingCanvas">Llwytho Cynnwys Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -442,9 +448,11 @@
     <string name="stopMasquerading">Stopio Gweithredu fel Defnyddiwr</string>
     <string name="userId">ID Defnyddiwr</string>
     <string name="masqueradeFail">Gwall wrth geisio gweithredu fel y defnyddiwr</string>
+
     <string name="emptyId">Does dim modd i’r ID fod yn wag</string>
 
     <string name="goToQuiz">Mynd i’r Cwis</string>
+
     <string name="quizzes">Cwisiau</string>
 
     <string name="lastDiscussionPost">Post diwethaf</string>
@@ -502,9 +510,9 @@
     <string name="unlockedAt">Bydd yn cael ei ddatgloi:</string>
     <string name="goToModules">Mynd i’r Modiwlau</string>
     <string name="markDone">Marcio eu bod wedi’u gwneud</string>
-
     <string name="moduleItemNotFound">Heb ddod o hyd i’r Eitem Modiwl</string>
     <string name="errorLoadingModules">Gwall wrth lwytho’ch modiwlau.</string>
+
     <string name="help">Help</string>
     <string name="instructor_question">Cwestiwn gan Addysgwr</string>
     <string name="link">Dolen</string>
@@ -520,11 +528,11 @@
     <string name="textEntry">Cofnod Testun</string>
     <string name="onlineURL">URL Ar-lein</string>
     <string name="oneFileOnly">Dydy’r cyflwyniad hwn ond yn derbyn llwytho un ffeil i fyny</string>
-
-
     <string name="websiteEntry">Ychwanegu Cofnod Gwefan</string>
     <string name="mediaRecordingEntry">Recordiadau ar Gyfryngau</string>
     <string name="submit">Cyflwyno</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Cynnydd heb ei gadw</string>
     <string name="informationLost">Bydd gwybodaeth sydd heb ei chadw yn cael ei cholli. Ydych chi am barhau?</string>
@@ -539,6 +547,7 @@
     <!-- Submission Details Strings -->
     <string name="next">Nesaf</string>
     <string name="addComment">Ychwanegu sylw&#8230;</string>
+
     <string name="home">Hafan</string>
     <string name="Notifications">Hysbysiadau</string>
 
@@ -568,6 +577,8 @@
     <string name="clickToViewSubmission">Cymerwyd ciplun o’r wefan wrth i chi ei chyflwyno. Tapiwch a dal y ddelwedd isod i agor neu lwytho’r ddelwedd lawn i lawr.</string>
     <string name="urlSubmissionNoPreview">Roedd y cyflwyniad hwn yn URL i dudalen allanol. Cofiwch efallai bod y dudalen hon wedi newid ers y cyflwyniad gwreiddiol.</string>
     <string name="contentDescriptionPreviewImage">Rhagolwg o’r URL a gyflwynwyd</string>
+
+
     <string name="isNotSupportedFeature">Does dim modd delio â %1$s.</string>
     <string name="isNotSupported">Does dim modd delio â’r ddolen.</string>
     <string name="openInBrowser">Agor mewn Porwr</string>
@@ -583,15 +594,19 @@
     <string name="panda_fact_string">Ffaith Panda:&#160;</string>
     <string name="remove">Tynnu</string>
     <string name="founders">Sylfaenwyr</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Polisi Preifatrwydd</string>
     <string name="termsOfUse">Telerau Defnyddio</string>
     <string name="canvasOnGithub">Canvas ar GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Cwisiau Aseiniad</string>
     <string name="practiceQuizzes">Cwisiau Ymarfer</string>
     <string name="gradedSurveys">Arolygon wedi’u Graddio</string>
     <string name="surveys">Arolygon</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tasgau i’w Gwneud</string>
     <string name="gradesWidgetTitle">Graddau</string>
@@ -637,12 +652,12 @@
     <string name="profileSettings">Gosodiadau Proffil</string>
     <string name="accountPreferences">Blaenoriaethau Cyfrif</string>
     <string name="pinAndFingerprint">PIN ac ôl-bys</string>
-
     <string name="pairWithObserver">Paru ag Arsyllwr</string>
     <string name="pairWithObserverDetails">Cael eich rhiant i sganio’r cod QR hwn o ap Canvas Parent i baru â chi. Bydd y cod hwn yn dod i ben mewn saith diwrnod, neu ar ôl cael ei ddefnyddio un waith.</string>
     <string name="pairingCodeLabel">Cod Paru:\u0020</string>
     <string name="pairingCodeErrorTitle">Gwall Cod Paru</string>
     <string name="pairingCodeErrorDescription">Doedd dim modd nôl cod paru Dim ond myfyrwyr sy’n gallu delio â\'r nodwedd hon.</string>
+
     <string name="launchSpeedgrader">Agor SpeedGrader</string>
 
     <string name="search_todo">Rhestr tasgau i’w gwneud</string>
@@ -713,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Medrydd</string>
-
     <string name="content_description_speed_grader_slider">Llithrydd graddau</string>
+
     <string name="createNewCalendarEvent">Creu Digwyddiad Newydd</string>
     <string name="enableFunMode">Diffodd pandas</string>
 
@@ -801,6 +816,7 @@
     <string name="notification_desc_recording_ready">Cael gwybod pan fydd recordiad cynhadledd yn barod.</string>
 
     <string name="unlimited">Diderfyn</string>
+
     <string name="question">Cwestiwn</string>
     <plurals name="question_count">
         <item quantity="one">%d cwestiwn</item>
@@ -811,16 +827,17 @@
         <item quantity="one">%s pwynt</item>
         <item quantity="other">%s pwynt</item>
     </plurals>
+
     <string name="timeLimit">Terfyn Amser</string>
     <string name="newPushNotifications">%1$s Hysbysiadau Newydd</string>
     <string name="like">yn hoffi</string>
     <string name="likeEntryLabel">Dechrau Cofnod</string>
     <string name="likes">yn hoffi</string>
-
     <plurals name="likeCountLabel">
         <item quantity="one">%s yn hoffi</item>
         <item quantity="other">%s yn hoffi</item>
     </plurals>
+
     <string name="color_1">Coch</string>
     <string name="color_2">Pinc Llachar</string>
     <string name="color_3">Lafant</string>
@@ -879,6 +896,7 @@
     <string name="editDashboard">Golygu Dangosfwrdd</string>
     <string name="editDashboardDescriptor">Dewiswch y cyrsiau yr hoffech eu gweld ar y Dangosfwrdd</string>
     <string name="a11y_editYourCourseList">Golygu eich rhestr cyrsiau</string>
+
     <string name="dashboard">Dangosfwrdd</string>
     <string name="previous">Blaenorol</string>
     <string name="pageNum" formatted="false">Tudalen %d o %d</string>
@@ -906,8 +924,8 @@
     <string name="tapToViewAnnouncement">Tapiwch i weld y cyhoeddiad</string>
     <string name="acceptCourseInvitation">Derbyn</string>
     <string name="declineCourseInvitation">Gwrthod</string>
-
     <string name="outOf">allan o</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
     <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
@@ -968,6 +986,7 @@
     <string name="unableToViewInBrowser">Does dim modd dod o hyd i ap allanol i weld yr adnodd LTI hwn.</string>
 
     <string name="commentUpload">Llwytho sylw i fyny</string>
+
     <string name="frontPage">Tudalen Flaen</string>
     <string name="editPage">Golygu Tudalen</string>
     <string name="description">Disgrifiad</string>
@@ -980,10 +999,10 @@
     <string name="conferencesNotSupported">Does dim modd delio â chynadleddau ar ffonau symudol eto.</string>
     <string name="filePreviewContentDescription">Delwedd Rhagolwg o Ffeil</string>
     <string name="pdfError">Gwall wrth geisio llwytho’r PDF hwn.</string>
-
     <string name="featureNotAllowedInStudentView">Sori! Does dim modd defnyddio’r nodwedd hon yn y modd myfyriwr.</string>
     <string name="nothingToSeeHere">Dim i’w weld yma</string>
     <string name="unsupportedFeature">Nodwedd Does Dim Modd Delio â Hi</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Ychwanegu Myfyriwr</string>
     <string name="addChildSubTitle">Rhowch y cod paru myfyriwr a roddwyd i chi.</string>
@@ -991,6 +1010,7 @@
     <string name="addChildErrorMessage">Wedi methu paru. Gwnewch yn siŵr bod eich cod paru yn gywir ac o fewn terfyn amser ar gyfer ei ddefnyddio.</string>
     <string name="gradeComplete">Cwblhau</string>
     <string name="gradeIncomplete">Heb Gwblhau</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Postio Gosodiadau</string>
     <string name="postGradesTab">Postio Graddau</string>
@@ -1021,9 +1041,9 @@
     <string name="gradeAfterPosting">Gradd ar ôl postio</string>
     <string name="gradeOverride">Disodli gradd</string>
     <string name="currentGrade">Gradd bresennol </string>
-
     <string name="opensInCanvasStudent">Yn agor ym Myfyriwr Canvas</string>
     <string name="tab_student_view">Gwedd Myfyriwr</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Dewis pen: %s</string>
@@ -1078,7 +1098,6 @@
 
     <string name="addVideoComment">Ychwanegu sylw fideo</string>
     <string name="addAudioComment">Ychwanegu sylw sain</string>
-
     <string name="audioRecordingError">Gwall annisgwyl wrth geisio recordio sain.</string>
     <string name="videoRecordingError">Gwall annisgwyl wrth geisio recordio fideo.</string>
 
@@ -1097,6 +1116,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Munud</item>
         <item quantity="other">%s Munud</item>
@@ -1117,6 +1137,7 @@
     <string name="conferenceDetails">Manylion Cynhadledd</string>
     <string name="recordings">Recordiad</string>
     <string name="conferenceInProgress">Cynhadledd ar waith</string>
+
     <string name="a11y_criterion_content_description">Sgoriau maen prawf %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">rhagor o wybodaeth</string>
@@ -1143,4 +1164,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Tynnu’r cyfan o’r dangosfwrdd</string>
     <string name="a11y_content_description_add_to_dashboard">Ychwanegu at y dangosfwrdd</string>
     <string name="a11y_content_description_add_all_to_dashboard">Ychwanegu’r cyfan at y dangosfwrdd</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Cyfrif</string>
+    <string name="dashboardTabHomeroom">Ystafell hafan</string>
+    <string name="dashboardTabSchedule">Amserlen</string>
+    <string name="dashboardTabGrades">Graddau</string>
+    <string name="dashboardTabResources">Adnoddau</string>
+    <string name="homeroomWelcomeMessage">Croeso, %1$s!</string>
+    <string name="homeroomMySubjects">Fy Mhynciau</string>
+    <string name="viewPreviousAnnouncements">Gweld Cyhoeddiadau Blaenorol</string>
+    <string name="homeroomError">Wedi methu llwytho Homeroom</string>
+    <string name="homeroomRefreshFail">Wedi methu adnewyddu Homeroom</string>
+
+    <string name="nothingDueToday">Dim byd i fod i mewn heddiw</string>
+    <string name="dueToday">%1$s i fod i mewn heddiw</string>
+    <string name="missing">%1$s ar goll</string>
+    <string name="homeroomEmptyTitle">Croeso!</string>
+    <string name="homeroomEmptyMessage">Mae eich pynciau’n ymddangos yma.</string>
+    <string name="homeroomNoSubjects">Does gennych chi ddim pynciau ar hyn o bryd.</string>
+
+
+    <string name="open_alternate_view">Agor gwedd arall fwy hygyrch</string>
+
+    <string name="a11y_content_description_message_recipients">Derbynwyr</string>
+    <string name="a11y_content_description_inbox_subject">Pwnc</string>
+    <string name="a11y_content_description_inbox_course_spinner">Dewiswch gwrs, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Mae atebion y myfyriwr hwn wedi’u cuddio gan fod yr aseiniad hwn yn ddienw.</string>
+
+    <string name="studentAnnotationUnsupported">Anodiad gan Fyfyriwr (Anghydnaws)</string>
+    <string name="studentAnnotationUnsupportedDescription">Does dim modd delio ag anodiadau gan fyfyrwyr ar ddyfeisiau symudol ar hyn o bryd.</string>
+    <string name="unsupportedSubmissionType">Math o Gyflwyniad Anghydnaws</string>
+    <string name="studentAnnotationUnsupportedMessage">Does dim modd dangos y cyflwyniad, oherwydd does dim modd delio ag anodiadau gan fyfyrwyr ar ddyfeisiau symudol ar hyn o bryd.</string>
 </resources>

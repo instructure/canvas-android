@@ -55,10 +55,8 @@
     <string name="attemptsUsedLabel">Brugte forsøg</string>
     <string name="noAttemptsLeft">Ingen forsøg tilbage</string>
     <string name="resubmitAssignment">Gen-indsend opgave</string>
-
     <string name="launchingExternalTool">Starter eksternt værktøj ...</string>
     <string name="launchExternalTool">Start eksternt værktøj</string>
-
     <string name="preview">Eksempel</string>
     <string name="submissionUploadFailedMessage">En eller flere filer kunne ikke uploades. Kontroller din internetforbindelse, og prøv igen for at aflevere.</string>
     <string name="submissionUploadByteProgress">%1$s af %2$s</string>
@@ -69,19 +67,20 @@
     <string name="submissionDeleted">Aflevering er slettet</string>
     <string name="missingSubmissionLabel">Mangler</string>
     <string name="gradedSubmissionLabel">Bedømt</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Der findes ingen forhåndsvisning for URL’er, der bruger \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Indtast venligst en gyldig URL</string>
     <string name="enterAUrlHereForYourSubmission">Indtast en URL for din aflevering her</string>
     <string name="addFileFabContentDesc">Vis indstillinger for Tilføj fil</string>
     <string name="recordAudio">Optage audio</string>
-
     <string name="recordVideo">Optag video</string>
-
     <string name="a11y_textSubmissionEditor">Redigeringsværktøj til aflevering af tekst</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
     <string name="textSubmissionFailureMessage">Der gik noget galt ved upload af afleveringen. Aflever igen.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Aflevering</string>
     <string name="submissionVersions">Afleveringsversioner</string>
@@ -104,6 +103,7 @@
     <string name="speedGraderExternalToolMessage">Denne opgave henviser til et eksternt værktøj til aflevering.</string>
     <string name="openTool">Åbn værktøj</string>
     <string name="a11y_submissionText">Afleveringstekst</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Ud af %s point</string>
     <string name="outOfPointsAbbreviatedFormatted">Ud af %s point</string>
@@ -115,10 +115,12 @@
     <string name="scoreStatisticsLow">Lav: %s</string>
     <string name="scoreStatisticsMean">Middel: %s</string>
     <string name="scoreStatisticsHigh">Høj: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Brugerdefineret resultat</string>
     <string name="rubricEmptyMessage">Der er ingen rubrik til denne opgave</string>
     <string name="rubricViewLongDescription">Se lang beskrivelse</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">Uploader fil %1$d af %2$d</string>
     <string name="assignmentSubmissionCommentUpload">Uploader kommentar til %s</string>
@@ -138,6 +140,7 @@
     <string name="commentSubmissionTypeMediaFile">Mediefil</string>
     <string name="commentSubmissionTypeAudio">Lyd</string>
     <string name="commentSubmissionTypeVideo">Video</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -187,6 +190,8 @@
     <string name="submissionDetailsDueAt">Forfalder d. %1$s kl. %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Låst</string>
     <string name="assignments">Opgaver</string>
@@ -205,15 +210,17 @@
     <string name="a11y_sortByTypeButton">Knappen Sorter opgaver, sorter efter type</string>
     <string name="a11y_assignmentsSortedByTime">Opgaver sorteret efter tid</string>
     <string name="a11y_assignmentsSortedByType">Opgaver sorteret efter type</string>
+
     <!-- Assignment editing -->
     <string name="points">Point\u0020</string>
     <string name="save">Gem</string>
     <string name="cancel">Annullér</string>
+
     <!-- Discussions -->
     <string name="forbidden">Svar er kun synlige for dem, der har lagt mindst ét svar ud.</string>
-
     <string name="fileCurrentlyLocked">Filen er låst på nuværende tidspunkt</string>
     <string name="a11y_discussionReplyEditor">Redigeringsværktøj til diskussionssvar</string>
+
     <!-- Events -->
     <string name="Starts">Starter</string>
     <string name="Ends">Slutter</string>
@@ -232,8 +239,6 @@
     <string name="whatIfDialogText">Hvad-nu-hvis score</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s ud af %2$s point, %3$s</string>
-
-
     <string name="inbox">Indbakke</string>
     <string name="unread">Ulæst</string>
     <string name="archived">Arkiveret</string>
@@ -399,8 +404,8 @@
     <string name="students">Studerende</string>
     <string name="observers">Observatører</string>
     <string name="syllabusMissing">En fagplan er ikke blevet tildelt</string>
-
     <string name="syllabusEventsError">Der opstod en fejl under indlæsning af dine moduler.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Vælg modtager(-e)</string>
     <string name="messageHasNoRecipients">Denne besked har for øjeblikket ingen modtagere.</string>
@@ -426,6 +431,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Slettet</string>
+
     <string name="loadingCanvas">Indlæser Canvas-indhold&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -442,9 +448,11 @@
     <string name="stopMasquerading">Hold op med at fungere som bruger</string>
     <string name="userId">Bruger-id</string>
     <string name="masqueradeFail">Der opstod en fejl ved at fungere som bruger</string>
+
     <string name="emptyId">ID kan ikke være tomt</string>
 
     <string name="goToQuiz">Gå til Quiz</string>
+
     <string name="quizzes">Test</string>
 
     <string name="lastDiscussionPost">Sidste indlæg</string>
@@ -503,8 +511,8 @@
     <string name="goToModules">Gå til moduler</string>
     <string name="markDone">Marker som færdig</string>
     <string name="moduleItemNotFound">Modulelement ikke fundet</string>
-
     <string name="errorLoadingModules">Der opstod en fejl under indlæsning af dine moduler.</string>
+
     <string name="help">Hjælp</string>
     <string name="instructor_question">Instruktør spørgsmål</string>
     <string name="link">Link</string>
@@ -520,11 +528,11 @@
     <string name="textEntry">Tekstindlæg</string>
     <string name="onlineURL">Online URL</string>
     <string name="oneFileOnly">Denne indseldelse accepterer kun én filoverførsel</string>
-
-
     <string name="websiteEntry">Tilføj indtastning på websted</string>
     <string name="mediaRecordingEntry">Medieoptagelser</string>
     <string name="submit">Aflever</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Ikke gemt fremgang</string>
     <string name="informationLost">Ikke-gemte oplysninger vil gå tabt. Vil du fortsætte?</string>
@@ -539,6 +547,7 @@
     <!-- Submission Details Strings -->
     <string name="next">Næste</string>
     <string name="addComment">Tilføj en kommentar&#8230;</string>
+
     <string name="home">Startside</string>
     <string name="Notifications">Notifikationer</string>
 
@@ -568,6 +577,8 @@
     <string name="clickToViewSubmission">Et snapshot af websiden blev taget mens du indsendte den. Tryk og hold billedet nedenfor for at åbne eller download hele billedet.</string>
     <string name="urlSubmissionNoPreview">Afleveringen var en URL til en ekstern side. Husk på, at denne side eventuelt er blevet ændret, siden den oprindelige aflevering fandt sted.</string>
     <string name="contentDescriptionPreviewImage">Forhåndvisning af indsendt url</string>
+
+
     <string name="isNotSupportedFeature">%1$s understøttes ikke.</string>
     <string name="isNotSupported">Dette link er ikke understøttet.</string>
     <string name="openInBrowser">Åbn i browser</string>
@@ -583,15 +594,19 @@
     <string name="panda_fact_string">Fakta om Panda:&#160;</string>
     <string name="remove">Fjern</string>
     <string name="founders">Grundlæggere</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Datapolitik</string>
     <string name="termsOfUse">Betingelser for brug</string>
     <string name="canvasOnGithub">Canvas på GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Opgavetest</string>
     <string name="practiceQuizzes">Øvelsestest</string>
     <string name="gradedSurveys">Bedømte spørgeundersøgelse</string>
     <string name="surveys">Spørgeundersøgelser</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Opgaveliste</string>
     <string name="gradesWidgetTitle">Karakterer</string>
@@ -637,12 +652,12 @@
     <string name="profileSettings">Profilindstillinger</string>
     <string name="accountPreferences">Kontoindstillinger</string>
     <string name="pinAndFingerprint">Pinkode og fingeraftryk</string>
-
     <string name="pairWithObserver">Par med observatør</string>
     <string name="pairWithObserverDetails">Bed din forælder om at scanne denne QR-kode fra Canvas Parent-appen for at parre til din konto. Denne kode udløber om 7 dage eller efter en brug.</string>
     <string name="pairingCodeLabel">Parringskode:\u0020</string>
     <string name="pairingCodeErrorTitle">Parringskodefejl</string>
     <string name="pairingCodeErrorDescription">Kan ikke hente en parringskode. Denne funktion understøttes kun for studerende.</string>
+
     <string name="launchSpeedgrader">Åbn SpeedGrader</string>
 
     <string name="search_todo">at gøre at gøre at gøre at gøre liste</string>
@@ -713,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-
     <string name="content_description_speed_grader_slider">Karakter-skyder</string>
+
     <string name="createNewCalendarEvent">Opret ny begivenhed</string>
     <string name="enableFunMode">Deaktiver  Panadas</string>
 
@@ -801,6 +816,7 @@
     <string name="notification_desc_recording_ready">Få besked, når en konferenceoptagelse er klar.</string>
 
     <string name="unlimited">Ubegrænset</string>
+
     <string name="question">Spørgsmål</string>
     <plurals name="question_count">
         <item quantity="one">%d spørgsmål</item>
@@ -811,16 +827,17 @@
         <item quantity="one">%s point</item>
         <item quantity="other">%s point</item>
     </plurals>
+
     <string name="timeLimit">Tidsbegrænsning</string>
     <string name="newPushNotifications">%1$s nye meddelelser</string>
     <string name="like">lide</string>
     <string name="likeEntryLabel">Synes godt om post</string>
     <string name="likes">likes</string>
-
     <plurals name="likeCountLabel">
         <item quantity="one">%s like</item>
         <item quantity="other">%s likes</item>
     </plurals>
+
     <string name="color_1">Rød</string>
     <string name="color_2">Hot pink</string>
     <string name="color_3">Lyselilla</string>
@@ -879,6 +896,7 @@
     <string name="editDashboard">Rediger oversigt</string>
     <string name="editDashboardDescriptor">Vælg, hvilke fag du vil se i oversigten</string>
     <string name="a11y_editYourCourseList">Rediger din fagliste</string>
+
     <string name="dashboard">Oversigt</string>
     <string name="previous">Forrige</string>
     <string name="pageNum" formatted="false">Side %d af %d</string>
@@ -906,8 +924,8 @@
     <string name="tapToViewAnnouncement">Tryk for at vise besked</string>
     <string name="acceptCourseInvitation">Acceptér</string>
     <string name="declineCourseInvitation">Afvis</string>
-
     <string name="outOf">ud af</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Der er ingen filer associeret med dette fag.</string>
     <string name="noFilesSubtextGroup">Der er ingen filer associeret med denne gruppe.</string>
@@ -968,6 +986,7 @@
     <string name="unableToViewInBrowser">Vi kan ikke finde en ekstern app til at se dette LTI-værktøj.</string>
 
     <string name="commentUpload">Kommentar-upload</string>
+
     <string name="frontPage">Forside</string>
     <string name="editPage">Rediger side</string>
     <string name="description">Beskrivelse</string>
@@ -980,10 +999,10 @@
     <string name="conferencesNotSupported">Konferencer understøttes endnu ikke på mobil.</string>
     <string name="filePreviewContentDescription">Forhåndsvisning af fil-billede</string>
     <string name="pdfError">Der opstod en fejl ved forsøg på at indlæse denne PDF.</string>
-
     <string name="featureNotAllowedInStudentView">Det er vi kede af! Denne funktion er ikke tilladt i visning for studerende.</string>
     <string name="nothingToSeeHere">Intet at se her.</string>
     <string name="unsupportedFeature">Ikke-understøttet funktion</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Tilføj studerende</string>
     <string name="addChildSubTitle">Indtast den studerendes parringskode, der er blevet givet til dig.</string>
@@ -991,6 +1010,7 @@
     <string name="addChildErrorMessage">Parring mislykkedes. Sørg for, at din parringskode er korrekt og ikke udløbet.</string>
     <string name="gradeComplete">Fuldført</string>
     <string name="gradeIncomplete">Ufuldstændig</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Slå karakterer op - indstillinger</string>
     <string name="postGradesTab">Slå karakterer op</string>
@@ -1021,9 +1041,9 @@
     <string name="gradeAfterPosting">Karakter efter opslag</string>
     <string name="gradeOverride">Tilsidesættelse af karakter </string>
     <string name="currentGrade">Nuværende karakter </string>
-
     <string name="opensInCanvasStudent">Åbner i Canvas for studerende</string>
     <string name="tab_student_view">Visning for studerende</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valgt hoved: %s</string>
@@ -1078,7 +1098,6 @@
 
     <string name="addVideoComment">Tilføj en videokommentar</string>
     <string name="addAudioComment">Tilføj en lydkommentar</string>
-
     <string name="audioRecordingError">Der opstod en uventet fejl under forsøg på at optage lyd.</string>
     <string name="videoRecordingError">Der opstod en uventet fejl under forsøg på at optage video.</string>
 
@@ -1097,6 +1116,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
         <item quantity="other">%s minutter</item>
@@ -1117,6 +1137,7 @@
     <string name="conferenceDetails">Konferencedetaljer</string>
     <string name="recordings">Optagelser</string>
     <string name="conferenceInProgress">Konference i gang</string>
+
     <string name="a11y_criterion_content_description">Kriteriebedømmelse %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">yderligere oplysninger</string>
@@ -1143,4 +1164,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Fjern alt fra oversigten</string>
     <string name="a11y_content_description_add_to_dashboard">Tilføj til oversigten</string>
     <string name="a11y_content_description_add_all_to_dashboard">Føj alle til oversigten</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Konto</string>
+    <string name="dashboardTabHomeroom">Klasselokale</string>
+    <string name="dashboardTabSchedule">Planlæg</string>
+    <string name="dashboardTabGrades">Karakterer</string>
+    <string name="dashboardTabResources">Ressourcer</string>
+    <string name="homeroomWelcomeMessage">Velkommen %1$s!</string>
+    <string name="homeroomMySubjects">Mine emner</string>
+    <string name="viewPreviousAnnouncements">Se tidligere beskeder</string>
+    <string name="homeroomError">Kunne ikke indlæse Homeroom</string>
+    <string name="homeroomRefreshFail">Kunne ikke opdatere Homeroom</string>
+
+    <string name="nothingDueToday">Intet forfalder i dag</string>
+    <string name="dueToday">%1$s forfalder i dag</string>
+    <string name="missing">%1$s mangler</string>
+    <string name="homeroomEmptyTitle">Velkommen!</string>
+    <string name="homeroomEmptyMessage">Dine emner vises her.</string>
+    <string name="homeroomNoSubjects">Du har i øjeblikket ingen emner.</string>
+
+
+    <string name="open_alternate_view">Åbn en mere tilgængelig alternativ visning</string>
+
+    <string name="a11y_content_description_message_recipients">Modtagere</string>
+    <string name="a11y_content_description_inbox_subject">Emne</string>
+    <string name="a11y_content_description_inbox_course_spinner">Vælg et fag, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Den studerendes svar er skjult, fordi denne opgave er anonym.</string>
+
+    <string name="studentAnnotationUnsupported">Studerendes anmærkninger (ikke understøttet)</string>
+    <string name="studentAnnotationUnsupportedDescription">Studerendes anmærkninger understøttes i øjeblikket ikke på mobil.</string>
+    <string name="unsupportedSubmissionType">Ikke-understøttet afleveringsform</string>
+    <string name="studentAnnotationUnsupportedMessage">Aflevering kan ikke vises, fordi studerendes anmærkninger i øjeblikket ikke understøttes på mobil.</string>
 </resources>

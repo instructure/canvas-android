@@ -1129,4 +1129,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">全部从控制面板删除</string>
     <string name="a11y_content_description_add_to_dashboard">添加到控制面板</string>
     <string name="a11y_content_description_add_all_to_dashboard">全部添加到控制面板</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">帐户</string>
+    <string name="dashboardTabHomeroom">指导教室</string>
+    <string name="dashboardTabSchedule">计划</string>
+    <string name="dashboardTabGrades">评分</string>
+    <string name="dashboardTabResources">资源</string>
+    <string name="homeroomWelcomeMessage">欢迎您，%1$s！</string>
+    <string name="homeroomMySubjects">我的主题</string>
+
+    <string name="viewPreviousAnnouncements">查看以前的公告</string>
+    <string name="homeroomError">无法加载 Homeroom</string>
+    <string name="homeroomRefreshFail">无法刷新 Homeroom</string>
+
+
+    <string name="nothingDueToday">没有今天到期的项目</string>
+    <string name="dueToday">%1$s个今天到期</string>
+    <string name="missing">%1$s个缺失</string>
+    <string name="homeroomEmptyTitle">欢迎！</string>
+    <string name="homeroomEmptyMessage">您的科目显示在这里。</string>
+    <string name="homeroomNoSubjects">您目前没有科目。</string>
+
+
+    <string name="open_alternate_view">打开一个更加方便访问的备选视图</string>
+    <string name="a11y_content_description_message_recipients">收件人</string>
+    <string name="a11y_content_description_inbox_subject">主题</string>
+    <string name="a11y_content_description_inbox_course_spinner">选择课程 %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">该学生的回答已隐藏，因为该作业已匿名。</string>
+
+    <string name="studentAnnotationUnsupported">学生注释（不支持）</string>
+    <string name="studentAnnotationUnsupportedDescription">目前在移动设备上不支持学生注释。</string>
+    <string name="unsupportedSubmissionType">不受支持的提交项类型</string>
+    <string name="studentAnnotationUnsupportedMessage">无法显示提交项，因为目前在移动设备上不支持学生注释。</string>
 </resources>

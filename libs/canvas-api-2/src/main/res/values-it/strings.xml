@@ -57,6 +57,7 @@
     <string name="canvasAPI_onlineURL">URL sito web</string>
     <string name="canvasAPI_mediaRecording">Registrazione multimediale</string>
     <string name="canvasAPI_attendance">Frequenza</string>
+    <string name="canvasAPI_studentAnnotation">Annotazione studente</string>
     <string name="quiz_scoring_policy_highest">Massimo</string>
     <string name="quiz_scoring_policy_average">Media</string>
     <string name="quiz_scoring_policy_latest">Più recente</string>

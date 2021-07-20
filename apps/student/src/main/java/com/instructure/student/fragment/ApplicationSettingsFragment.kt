@@ -99,15 +99,24 @@ class ApplicationSettingsFragment : ParentFragment() {
 
         about.onClick {
             AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.about)
-                    .setView(R.layout.dialog_about)
-                    .show()
-                    .apply {
-                        domain.text = ApiPrefs.domain
-                        loginId.text = ApiPrefs.user!!.loginId
-                        email.text = ApiPrefs.user!!.email ?: ApiPrefs.user!!.primaryEmail
-                        version.text = "${getString(R.string.canvasVersionNum)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-                    }
+                .setTitle(R.string.about)
+                .setView(R.layout.dialog_about)
+                .show()
+                .apply {
+                    domain.text = ApiPrefs.domain
+                    loginId.text = ApiPrefs.user!!.loginId
+                    email.text = ApiPrefs.user!!.email ?: ApiPrefs.user!!.primaryEmail
+                    version.text = "${getString(R.string.canvasVersionNum)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+                }
+        }
+
+        if (ApiPrefs.canvasForElementary) {
+            elementaryViewSwitch.isChecked = ApiPrefs.elementaryDashboardEnabledOverride
+            elementaryViewLayout.setVisible()
+            ViewStyler.themeSwitch(requireContext(), elementaryViewSwitch, ThemePrefs.brandColor)
+            elementaryViewSwitch.setOnCheckedChangeListener { _, isChecked ->
+                ApiPrefs.elementaryDashboardEnabledOverride = isChecked
+            }
         }
 
         if (BuildConfig.DEBUG) {

@@ -1129,4 +1129,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">全部從控制面板移除</string>
     <string name="a11y_content_description_add_to_dashboard">添加到控制面板中</string>
     <string name="a11y_content_description_add_all_to_dashboard">全部添加到控制面板中</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">帳戶</string>
+    <string name="dashboardTabHomeroom">主教室</string>
+    <string name="dashboardTabSchedule">排程</string>
+    <string name="dashboardTabGrades">成績</string>
+    <string name="dashboardTabResources">資源</string>
+    <string name="homeroomWelcomeMessage">歡迎，%1$s！</string>
+    <string name="homeroomMySubjects">我的主題</string>
+
+    <string name="viewPreviousAnnouncements">檢視之前的通告</string>
+    <string name="homeroomError">未能載入主教室</string>
+    <string name="homeroomRefreshFail">未能重新整理主教室</string>
+
+
+    <string name="nothingDueToday">今天沒有任何內容截止</string>
+    <string name="dueToday">%1$s 今天截止</string>
+    <string name="missing">%1$s 缺失</string>
+    <string name="homeroomEmptyTitle">歡迎！</string>
+    <string name="homeroomEmptyMessage">您的主題在此顯示。</string>
+    <string name="homeroomNoSubjects">您目前沒有任何主題。</string>
+
+
+    <string name="open_alternate_view">開啟更容易存取的替代視圖</string>
+    <string name="a11y_content_description_message_recipients">收件人</string>
+    <string name="a11y_content_description_inbox_subject">主題</string>
+    <string name="a11y_content_description_inbox_course_spinner">選擇課程，%s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">這名學生的回覆已隱藏，因為此作業為匿名狀態。</string>
+
+    <string name="studentAnnotationUnsupported">學生註釋（不支援）</string>
+    <string name="studentAnnotationUnsupportedDescription">流動電話目前不支援學生註釋。</string>
+    <string name="unsupportedSubmissionType">不支援提交項目類型</string>
+    <string name="studentAnnotationUnsupportedMessage">提交項目無法顯示，因為流動電話目前不支援學生註釋。</string>
 </resources>

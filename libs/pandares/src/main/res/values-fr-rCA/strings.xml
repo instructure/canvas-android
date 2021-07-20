@@ -1143,4 +1143,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Tout retirer du tableau de bord</string>
     <string name="a11y_content_description_add_to_dashboard">Ajouter au tableau de bord</string>
     <string name="a11y_content_description_add_all_to_dashboard">Tout ajouter au tableau de bord</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Compte</string>
+    <string name="dashboardTabHomeroom">Classe titulaire</string>
+    <string name="dashboardTabSchedule">Calendrier</string>
+    <string name="dashboardTabGrades">Notes</string>
+    <string name="dashboardTabResources">Ressources</string>
+    <string name="homeroomWelcomeMessage">Bienvenue, %1$s!</string>
+    <string name="homeroomMySubjects">Mes Objets</string>
+
+    <string name="viewPreviousAnnouncements">Voir les annonces précédentes</string>
+    <string name="homeroomError">Échec lors du chargement de la classe titulaire</string>
+    <string name="homeroomRefreshFail">Échec lord de l\'actualisation de la classe titulaire</string>
+
+
+    <string name="nothingDueToday">Rien n’est dû aujourd’hui</string>
+    <string name="dueToday">%1$s dû aujourd’hui</string>
+    <string name="missing">%1$s manquant</string>
+    <string name="homeroomEmptyTitle">Bienvenue!</string>
+    <string name="homeroomEmptyMessage">Vos sujets apparaissent ici.</string>
+    <string name="homeroomNoSubjects">Vous n’avez actuellement aucun sujet.</string>
+
+
+    <string name="open_alternate_view">Ouvrir une vue alternative plus accessible</string>
+    <string name="a11y_content_description_message_recipients">Destinataires</string>
+    <string name="a11y_content_description_inbox_subject">Objet</string>
+    <string name="a11y_content_description_inbox_course_spinner">Sélectionner un cours, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Les réponses de cet étudiant sont masquées du fait que cette tâche est anonyme.</string>
+
+    <string name="studentAnnotationUnsupported">Annotation d’étudiant (non pris en charge)</string>
+    <string name="studentAnnotationUnsupportedDescription">L’annotation d’étudiant n’est actuellement pas prise en charge sur les mobiles.</string>
+    <string name="unsupportedSubmissionType">Type d’envoi non pris en charge</string>
+    <string name="studentAnnotationUnsupportedMessage">L’envoi ne peut pas être affiché, car l’annotation d’étudiant n’est actuellement pas prise en charge sur mobile.</string>
 </resources>

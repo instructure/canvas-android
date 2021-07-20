@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Ni najdenih datotek.</string>
     <string name="searchFilesHint">Poišči datoteke</string>
     <string name="fileSearchInstructions">Vnesite iskalno besedo s tremi ali več znaki.</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Izbrano: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Podrobnosti o nalogi</string>
     <string name="submission_types">Vrste oddaj</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Izbrana glava: %s</string>
     <string name="content_description_chosen_body">Izbrano telo: %s</string>
     <string name="content_description_chosen_feet">Izbrane noge: %s</string>
@@ -1165,4 +1164,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Odstrani vse z nadzorne plošče</string>
     <string name="a11y_content_description_add_to_dashboard">Dodaj na nadzorno ploščo</string>
     <string name="a11y_content_description_add_all_to_dashboard">Dodaj vse na nadzorno ploščo</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Račun</string>
+    <string name="dashboardTabHomeroom">Matični</string>
+    <string name="dashboardTabSchedule">Urnik</string>
+    <string name="dashboardTabGrades">Ocene</string>
+    <string name="dashboardTabResources">Viri</string>
+    <string name="homeroomWelcomeMessage">Dobrodošli, %1$s!</string>
+    <string name="homeroomMySubjects">Moji kratki opisi predmetov</string>
+
+    <string name="viewPreviousAnnouncements">Prikaži predhodna obvestila</string>
+    <string name="homeroomError">Nalaganje matičnega razreda ni uspelo</string>
+    <string name="homeroomRefreshFail">Osveževanje matičnega razreda ni uspelo</string>
+
+
+    <string name="nothingDueToday">Danes nič ne poteče</string>
+    <string name="dueToday">%1$s poteče danes</string>
+    <string name="missing">%1$s manjka</string>
+    <string name="homeroomEmptyTitle">Dobrodošli.</string>
+    <string name="homeroomEmptyMessage">Vaši predmeti se prikažejo tukaj.</string>
+    <string name="homeroomNoSubjects">Trenutno nimate premetov.</string>
+
+
+    <string name="open_alternate_view">Odpri dostopnejši alternativni pogled</string>
+    <string name="a11y_content_description_message_recipients">Prejemniki</string>
+    <string name="a11y_content_description_inbox_subject">Zadeva</string>
+    <string name="a11y_content_description_inbox_course_spinner">Izberite predmet, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Odgovori tega študenta so skriti, ker je ta naloga anonimna.</string>
+
+    <string name="studentAnnotationUnsupported">Opomba študenta (ni podprto)</string>
+    <string name="studentAnnotationUnsupportedDescription">Opomba študenta v mobilnem prikazu trenutno ni podprta.</string>
+    <string name="unsupportedSubmissionType">Nepodprta vrsta oddaje</string>
+    <string name="studentAnnotationUnsupportedMessage">Oddaje ni mogoče prikazati, ker funkcija Opomba študenta v mobilnem prikazu trenutno ni podprta.</string>
 </resources>
