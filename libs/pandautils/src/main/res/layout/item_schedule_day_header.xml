@@ -58,6 +58,7 @@
             android:background="?android:selectableItemBackground"
             android:gravity="bottom"
             android:minHeight="48dp"
+            android:minWidth="48dp"
             android:onClick="@{() -> itemViewModel.onTodayClick.invoke()}"
             android:text="@string/today"
             android:textColor="@color/canvasDefaultAccent"
