@@ -748,7 +748,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun addAccessibilityButton() {
-        if (isAccessibilityEnabled() && discussionTopicHeader.htmlUrl != null) {
+        if (isAccessibilityEnabled(requireContext()) && discussionTopicHeader.htmlUrl != null) {
             alternateViewButton.visibility = View.VISIBLE
             alternateViewButton.setOnClickListener {
                 RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(canvasContext, discussionTopicHeader.htmlUrl!!, authenticate = true, shouldRouteInternally = false, allowRoutingTheSameUrlInternally = false, isUnsupportedFeature = false, allowUnsupportedRouting = false))
@@ -756,10 +756,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun isAccessibilityEnabled(): Boolean {
-        val am: AccessibilityManager? = requireContext().getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
-        return am?.isEnabled ?: false && am?.isTouchExplorationEnabled ?: false
-    }
     //endregion Functionality
 
     // region Bus Events

@@ -28,8 +28,10 @@ import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.espresso.randomString
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class SpeedGraderCommentsPageTest : TeacherTest() {
 
     // Just good enough to mock the *representation* of a file, not to mock the file itself.

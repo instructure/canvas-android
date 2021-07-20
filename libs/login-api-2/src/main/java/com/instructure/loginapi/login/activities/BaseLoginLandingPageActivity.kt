@@ -184,8 +184,9 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                         }
 
                         ApiPrefs.token = user.token
+                        ApiPrefs.canvasForElementary = user.canvasForElementary
 
-                        startApp(user.canvasForElementary)
+                        startApp()
                     }
 
                     override fun onRemovePreviousUserClick(user: SignedInUser, position: Int) {
@@ -217,8 +218,8 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     /**
      * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
      */
-    protected open fun startApp(canvasForElementaryOfflineFallback: Boolean) {
-        viewModel.checkCanvasForElementaryFeature(canvasForElementaryOfflineFallback).observe(this, Observer { event: Event<Boolean>? ->
+    protected open fun startApp() {
+        viewModel.checkCanvasForElementaryFeature().observe(this, Observer { event: Event<Boolean>? ->
             event?.getContentIfNotHandled()?.let { result: Boolean ->
                 val intent = launchApplicationMainActivityIntent()
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

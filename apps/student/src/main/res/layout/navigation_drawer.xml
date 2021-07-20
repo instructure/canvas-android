@@ -278,24 +278,6 @@
                 android:background="@color/dividerColor" />
 
             <LinearLayout
-                android:id="@+id/navigationDrawerAccount"
-                style="@style/NavigationDrawerItem"
-                tools:ignore="UseCompoundDrawables">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_user" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/navDrawerAccount"
-                    android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/navigationDrawerItem_help"
                 style="@style/NavigationDrawerItem"
                 tools:ignore="UseCompoundDrawables">

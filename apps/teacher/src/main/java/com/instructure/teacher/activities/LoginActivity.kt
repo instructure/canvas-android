@@ -24,14 +24,16 @@ import android.os.Bundle
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
+import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
-import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
+import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.getColorCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,6 +65,10 @@ class LoginActivity : BaseLoginInitActivity() {
         startActivity(intent)
     }
 
+    override fun logout() {
+        TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()
+    }
+
     companion object {
         fun createIntent(context: Context): Intent {
             val intent = Intent(context, LoginActivity::class.java)
@@ -71,7 +77,7 @@ class LoginActivity : BaseLoginInitActivity() {
         }
 
         fun createLaunchApplicationMainActivityIntent(context: Context, extras: Bundle?): Intent {
-            PushNotificationRegistrationService.scheduleJob(context, ApiPrefs.isMasquerading)
+            PushNotificationRegistrationWorker.scheduleJob(context, ApiPrefs.isMasquerading)
 
             return SplashActivity.createIntent(context, extras)
         }

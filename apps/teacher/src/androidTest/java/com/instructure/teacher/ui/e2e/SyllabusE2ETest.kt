@@ -10,8 +10,10 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.ui.utils.*
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class SyllabusE2ETest : TeacherTest() {
     override fun displaysPageObjects() = Unit
 

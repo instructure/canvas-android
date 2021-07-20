@@ -1185,4 +1185,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Удалить все информационной панели</string>
     <string name="a11y_content_description_add_to_dashboard">Добавить на информационную панель</string>
     <string name="a11y_content_description_add_all_to_dashboard">Добавить все на информационную панель</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Учетная запись</string>
+    <string name="dashboardTabHomeroom">«Домашняя комната»</string>
+    <string name="dashboardTabSchedule">Расписание</string>
+    <string name="dashboardTabGrades">Оценки</string>
+    <string name="dashboardTabResources">Ресурсы</string>
+    <string name="homeroomWelcomeMessage">Добро пожаловать, %1$s!</string>
+    <string name="homeroomMySubjects">Мои темы</string>
+
+    <string name="viewPreviousAnnouncements">Просмотреть предыдущие объявления</string>
+    <string name="homeroomError">Не удалось загрузить «Домашнюю комнату»</string>
+    <string name="homeroomRefreshFail">Не удалось обновить «Домашнюю комнату»</string>
+
+
+    <string name="nothingDueToday">Сегодня ничего сдавать не нужно</string>
+    <string name="dueToday">Срок сдачи %1$s — сегодня</string>
+    <string name="missing">%1$s отсутствует</string>
+    <string name="homeroomEmptyTitle">Добро пожаловать!</string>
+    <string name="homeroomEmptyMessage">Ваши темы будут отображаться здесь.</string>
+    <string name="homeroomNoSubjects">В настоящее время у вас нет тем.</string>
+
+
+    <string name="open_alternate_view">Откройте более доступный альтернативный вид</string>
+    <string name="a11y_content_description_message_recipients">Получатели</string>
+    <string name="a11y_content_description_inbox_subject">Тема</string>
+    <string name="a11y_content_description_inbox_course_spinner">Выбрать курс, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Ответы студентов скрыты, поскольку это задание анонимно.</string>
+
+    <string name="studentAnnotationUnsupported">Аннотация учащегося (не поддерживается)</string>
+    <string name="studentAnnotationUnsupportedDescription">В настоящее время функция Аннотация учащегося не поддерживается на мобильных устройствах.</string>
+    <string name="unsupportedSubmissionType">Неподдерживаемый тип отправки</string>
+    <string name="studentAnnotationUnsupportedMessage">Невозможно отобразить отправку, так как Аннотация учащегося в настоящее время не поддерживается на мобильном устройстве.</string>
 </resources>

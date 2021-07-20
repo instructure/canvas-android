@@ -21,8 +21,10 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class SpeedGraderFilesPageTest : TeacherTest() {
 
     // Just good enough to mock the *representation* of a file, not to mock the file itself.

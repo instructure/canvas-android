@@ -46,7 +46,7 @@ class QuizDetailsPresenter(val mCourse: Course, var mQuiz: Quiz) : FragmentPrese
                 }
 
                 // check to see if we need to get the assignment
-                if (mQuiz.quizType == "assignment" && mQuiz._assignment == null && mQuiz.assignmentId > 0) {
+                if (mQuiz.isGradeable && mQuiz._assignment == null && mQuiz.assignmentId > 0) {
                     //now get the assignment
                     val assignment = awaitApi<Assignment> { AssignmentManager.getAssignment(mQuiz.assignmentId, mCourse.id, forceNetwork, it) }
                     mQuiz._assignment = assignment

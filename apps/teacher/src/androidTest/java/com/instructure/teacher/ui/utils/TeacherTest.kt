@@ -26,8 +26,10 @@ import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.*
+import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
+import org.junit.Rule
 
 abstract class TeacherTest : CanvasTest() {
 
@@ -35,6 +37,9 @@ abstract class TeacherTest : CanvasTest() {
             = TeacherActivityTestRule(LoginActivity::class.java)
 
     override val isTesting = BuildConfig.IS_TESTING
+
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
 
     /**
      * Required for auto complete of page objects within tests

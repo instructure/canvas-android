@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
 import com.instructure.pandautils.models.PushNotification
-import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 
 abstract class PushExternalReceiver : FirebaseMessagingService() {
     abstract fun getAppColor(): Int
@@ -37,7 +37,7 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
     abstract fun getStartingActivityClass(): Class<out Activity>
 
     override fun onNewToken(token: String) {
-        PushNotificationRegistrationService.scheduleJob(applicationContext, ApiPrefs.isMasquerading)
+        PushNotificationRegistrationWorker.scheduleJob(applicationContext, ApiPrefs.isMasquerading)
     }
 
     override fun onMessageReceived(message: RemoteMessage) {

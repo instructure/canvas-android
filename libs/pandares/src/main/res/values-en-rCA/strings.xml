@@ -1165,4 +1165,35 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Remove all from dashboard</string>
     <string name="a11y_content_description_add_to_dashboard">Add to dashboard</string>
     <string name="a11y_content_description_add_all_to_dashboard">Add all to dashboard</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Account</string>
+    <string name="dashboardTabHomeroom">Homeroom</string>
+    <string name="dashboardTabSchedule">Schedule</string>
+    <string name="dashboardTabGrades">Grades</string>
+    <string name="dashboardTabResources">Resources</string>
+    <string name="homeroomWelcomeMessage">Welcome, %1$s!</string>
+    <string name="homeroomMySubjects">My Subjects</string>
+    <string name="viewPreviousAnnouncements">View Previous Announcements</string>
+    <string name="homeroomError">Failed to load Homeroom</string>
+    <string name="homeroomRefreshFail">Failed to refresh Homeroom</string>
+    <string name="nothingDueToday">Nothing Due Today</string>
+    <string name="dueToday">%1$s due today</string>
+    <string name="missing">%1$s missing</string>
+    <string name="homeroomEmptyTitle">Welcome!</string>
+    <string name="homeroomEmptyMessage">Your subjects show up here.</string>
+    <string name="homeroomNoSubjects">You currently have no subjects.</string>
+
+    <string name="open_alternate_view">Open a more accessible alternative view</string>
+
+    <string name="a11y_content_description_message_recipients">Recipients</string>
+    <string name="a11y_content_description_inbox_subject">Subject</string>
+    <string name="a11y_content_description_inbox_course_spinner">Select a course, %s</string>
+
+    <string name="speedGraderAnonymousSubmissionMessage">This student\'s responses are hidden because this assignment is anonymous.</string>
+
+    <string name="studentAnnotationUnsupported">Student Annotation (Unsupported)</string>
+    <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently not supported on mobile.</string>
+    <string name="unsupportedSubmissionType">Unsupported Submission Type</string>
+    <string name="studentAnnotationUnsupportedMessage">Submission cannot be displayed, because Student Annotation is currently not supported on mobile.</string>
 </resources>

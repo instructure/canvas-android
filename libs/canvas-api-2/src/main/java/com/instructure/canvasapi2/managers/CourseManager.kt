@@ -32,7 +32,6 @@ import kotlinx.coroutines.Deferred
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.jvm.Throws
 
 object CourseManager {
 
@@ -93,6 +92,8 @@ object CourseManager {
     }
 
     fun getCoursesWithConcludedAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithConcluded(forceNetwork, it) }
+
+    fun getDashboardCoursesAsync(forceNetwork: Boolean) = apiAsync<List<DashboardCard>> { getDashboardCourses(forceNetwork, it) }
 
     fun getDashboardCourses(forceNetwork: Boolean, callback: StatusCallback<List<DashboardCard>>) {
         val adapter = RestBuilder(callback)

@@ -16,15 +16,19 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
@@ -32,6 +36,7 @@ import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.SpacesItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_homeroom.*
 import kotlinx.android.synthetic.main.item_announcement.view.*
@@ -44,6 +49,8 @@ class HomeroomFragment : Fragment() {
     lateinit var homeroomRouter: HomeroomRouter
 
     private val viewModel: HomeroomViewModel by viewModels()
+
+    private var updateAssignments = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentHomeroomBinding.inflate(inflater, container, false)
@@ -59,12 +66,50 @@ class HomeroomFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val spacing = resources.getDimension(R.dimen.homeroomCardSpacing)
+        val decoration = SpacesItemDecoration(spacing.toInt())
+        coursesRecyclerView.addItemDecoration(decoration)
+        setUpRecyclerViewSpan()
+    }
+
+    private fun setUpRecyclerViewSpan() {
+
+        view?.viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+
+                val spacing = resources.getDimension(R.dimen.homeroomCardSpacing)
+                val cardRequiredSpace = resources.getDimension(R.dimen.homeroomCardMinRequiredSpace)
+                val width = view?.width ?: 0
+
+                val calculatedSpan = (width - spacing * 4) / cardRequiredSpace
+
+                val span = if (calculatedSpan < 2) 1 else 2
+
+                (coursesRecyclerView.layoutManager as GridLayoutManager).spanCount = span
+            }
+
+        })
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        setUpRecyclerViewSpan()
+    }
+
     private fun handleAction(action: HomeroomAction) {
         when (action) {
             is HomeroomAction.OpenAnnouncements -> homeroomRouter.openAnnouncements(action.canvasContext)
             is HomeroomAction.LtiButtonPressed -> DiscussionUtils.launchIntent(requireContext(), action.url)
             HomeroomAction.ShowRefreshError -> toast(R.string.homeroomRefreshFail)
             HomeroomAction.AnnouncementViewsReady -> setupWebViews()
+            is HomeroomAction.OpenCourse -> homeroomRouter.openCourse(action.course)
+            is HomeroomAction.OpenAssignments -> openAssignments(action.course)
+            is HomeroomAction.OpenAnnouncementDetails -> homeroomRouter.openAnnouncementDetails(action.course, action.announcement)
+            HomeroomAction.UpdateColors -> homeroomRouter.updateColors()
         }
     }
 
@@ -98,6 +143,18 @@ class HomeroomFragment : Fragment() {
         }
 
         announcementWebView.addVideoClient(requireActivity())
+    }
+
+    private fun openAssignments(course: Course) {
+        updateAssignments = true
+        homeroomRouter.openAssignments(course)
+    }
+
+    fun refreshAssignmentStatus() {
+        if (updateAssignments) {
+            viewModel.refreshAssignmentsStatus()
+            updateAssignments = false
+        }
     }
 
     companion object {

@@ -25,6 +25,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'dagger.hilt.android.plugin'
 
+def updatePriority = 0
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
@@ -42,11 +43,11 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 41
-        versionName = '1.13.1'
+        versionCode = 42
+        versionName = '1.14.0'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
-        testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
+        testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
         /* BuildConfig fields */
@@ -173,7 +174,7 @@ android {
             new ProjectTransformer(
                     android,
                     new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
-                    new LocaleTransformer()
+                    new LocaleTransformer(project)
             )
     )
 
@@ -189,11 +190,6 @@ android {
     buildFeatures {
         dataBinding true
     }
-}
-
-repositories {
-    jcenter()
-    maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
 }
 
 androidExtensions {
@@ -257,7 +253,7 @@ dependencies {
     implementation Libs.PHOTO_VIEW
 
     /* Flexbox Layout */
-    implementation 'com.google.android:flexbox:1.1.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1'
 
     /* Support libs */
@@ -276,9 +272,6 @@ dependencies {
     implementation Libs.FIREBASE_MESSAGING
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
-
     /* AAC */
     implementation Libs.VIEW_MODEL
     implementation Libs.LIVE_DATA
@@ -289,6 +282,10 @@ dependencies {
     /* DI */
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
+    androidTestImplementation Libs.HILT_TESTING
+    kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
+
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
 }
 
 apply plugin: 'com.google.gms.google-services'
@@ -315,6 +312,36 @@ if (coverageEnabled) {
         // project.buildDir is /canvas-android/apps/teacher/build
         sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
         executionData.setFrom fileTree(dir: "results", includes: ['**/*.ec'])
+
+        reports {
+            // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
+            html.enabled true
+            csv.enabled  false
+            xml.enabled  false
+        }
+    }
+
+    task combinedJacoco(type: JacocoReport) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports for FTL + unit tests."
+
+        def productFlavor = 'qa'
+        def buildType = 'debug'
+
+        classDirectories.setFrom fileTree(
+                dir: "${project.buildDir}/tmp/kotlin-classes/qaDebug",
+                excludes: ['**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/*$ViewBinder*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*'],
+                //includes: ['**/com/instructure/*']
+        )
+
+        // project.buildDir is /canvas-android/apps/teacher/build
+        sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
+        executionData.setFrom fileTree(dir: ".", includes: ['results/**/*.ec', '**/testQaDebugUnitTest.exec'])
 
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/

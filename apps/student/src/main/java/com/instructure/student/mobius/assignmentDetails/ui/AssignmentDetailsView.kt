@@ -97,8 +97,10 @@ class AssignmentDetailsView(
             constraintSet.clone(constraintParent)
             constraintSet.clear(submitButton.id, ConstraintSet.BOTTOM)
             constraintSet.clear(swipeRefreshLayout.id, ConstraintSet.TOP)
+            constraintSet.clear(swipeRefreshLayout.id, ConstraintSet.BOTTOM)
             constraintSet.connect(submitButton.id, ConstraintSet.TOP, toolbar.id, ConstraintSet.BOTTOM)
             constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.TOP, submitButton.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
             constraintSet.applyTo(constraintParent)
         }
     }
@@ -275,6 +277,9 @@ class AssignmentDetailsView(
                 // The LTI info shouldn't be null if we are showing the Studio upload option
                 showStudioUploadView(assignment, ltiToolUrl!!, ltiToolName!!)
             }
+            setupDialogRow(dialog, dialog.submissionEntryStudentAnnotation, visibilities.studentAnnotation) {
+                showStudentAnnotationView(assignment.htmlUrl ?: "")
+            }
         }
         dialog.show()
     }
@@ -394,6 +399,12 @@ class AssignmentDetailsView(
     private fun showStudioUploadView(assignment: Assignment, ltiUrl: String, studioLtiToolName: String) {
         logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
         RouteMatcher.route(context, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
+    }
+
+    fun showStudentAnnotationView(assignmentUrl: String) {
+        logEvent(AnalyticsEventConstants.SUBMIT_STUDENT_ANNOTATION_SELECTED)
+        RouteMatcher.route(context,
+            UnsupportedFeatureFragment.makeRoute(canvasContext, unsupportedDescription = context.getString(R.string.studentAnnotationUnsupportedDescription), url = assignmentUrl))
     }
 
     fun showQuizOrDiscussionView(url: String) {

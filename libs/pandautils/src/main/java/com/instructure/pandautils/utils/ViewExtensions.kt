@@ -380,11 +380,20 @@ fun View.onClickWithRequireNetwork(clickListener: (v: View) -> Unit) = onClick {
  */
 @JvmName("setCourseImage")
 fun ImageView?.setCourseImage(course: Course?, courseColor: Int, applyColor: Boolean) {
+    this.setCourseImage(course?.imageUrl, courseColor, applyColor)
+}
+
+/**
+ * Attempts to download and set the course image on this ImageView. The image will be center cropped,
+ * desaturated, and overlaid with the specified color at 75% opacity.
+ */
+@JvmName("setCourseImage")
+fun ImageView?.setCourseImage(imageUrl: String?, courseColor: Int, applyColor: Boolean) {
     if (this == null) return
-    if (!course?.imageUrl.isNullOrBlank()) {
+    if (!imageUrl.isNullOrBlank()) {
         val requestOptions = RequestOptions().apply {
             if (applyColor) {
-                signature(ObjectKey("${course!!.imageUrl}:$courseColor")) // Use unique signature per url-color combo
+                signature(ObjectKey("${imageUrl}:$courseColor")) // Use unique signature per url-color combo
                 transform(CourseImageTransformation(courseColor))
             } else {
                 transform(CenterCrop())
@@ -392,7 +401,7 @@ fun ImageView?.setCourseImage(course: Course?, courseColor: Int, applyColor: Boo
             placeholder(ColorDrawable(courseColor))
         }
         Glide.with(context)
-            .load(course!!.imageUrl)
+            .load(imageUrl)
             .apply(requestOptions)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(this)

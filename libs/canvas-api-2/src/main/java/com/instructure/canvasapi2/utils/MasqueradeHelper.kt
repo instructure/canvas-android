@@ -149,9 +149,8 @@ object MasqueradeHelper {
     private suspend fun getCanvasForElementaryFlag(): Boolean {
         val k5enabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
         return if (k5enabled) {
-            val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
-            val featureFlags = featureFlagResult.dataOrThrow
-            featureFlags.canvasForElementary
+            val userResult = UserManager.getSelfAsync(false).await()
+            userResult.dataOrThrow.k5User
         } else {
             false
         }

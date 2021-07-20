@@ -45,7 +45,9 @@ data class User(
         val locale: String? = null,
         @SerializedName("effective_locale")
         val effective_locale: String? = null,
-        val pronouns: String? = null
+        val pronouns: String? = null,
+        @SerializedName("k5_user")
+        val k5User: Boolean = false
 ) : CanvasContext() {
     override val comparisonString get() = name
     override val type get() = CanvasContext.Type.USER

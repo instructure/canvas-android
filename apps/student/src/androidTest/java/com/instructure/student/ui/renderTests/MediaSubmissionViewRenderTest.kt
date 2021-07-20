@@ -31,9 +31,11 @@ import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.MediaSubmissionViewFragment
 import com.instructure.student.ui.pages.renderPages.MediaSubmissionViewRenderPage
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class MediaSubmissionViewRenderTest : StudentRenderTest() {
 

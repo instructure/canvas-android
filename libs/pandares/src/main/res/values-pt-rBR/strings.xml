@@ -1157,4 +1157,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Remover todos do painel</string>
     <string name="a11y_content_description_add_to_dashboard">Adicionar ao painel</string>
     <string name="a11y_content_description_add_all_to_dashboard">Adicionar todos ao painel</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Conta</string>
+    <string name="dashboardTabHomeroom">Sala de aula</string>
+    <string name="dashboardTabSchedule">Cronograma</string>
+    <string name="dashboardTabGrades">Notas</string>
+    <string name="dashboardTabResources">Recursos</string>
+    <string name="homeroomWelcomeMessage">Bem-vindo, %1$s!</string>
+    <string name="homeroomMySubjects">Minhas disciplinas</string>
+
+    <string name="viewPreviousAnnouncements">Exibir anúncios anteriores</string>
+    <string name="homeroomError">Falha em carregar o Homeroom</string>
+    <string name="homeroomRefreshFail">Falha em atualizar o Homeroom</string>
+
+
+    <string name="nothingDueToday">Nada com prazo vencendo hoje</string>
+    <string name="dueToday">%1$s vence hoje</string>
+    <string name="missing">%1$s ausente</string>
+    <string name="homeroomEmptyTitle">Bem-vindo(a)!</string>
+    <string name="homeroomEmptyMessage">Suas disciplinas aparecem aqui.</string>
+    <string name="homeroomNoSubjects">Você atualmente não tem disciplinas.</string>
+
+
+    <string name="open_alternate_view">Abra uma exibição alternativa mais acessível</string>
+    <string name="a11y_content_description_message_recipients">Recipientes</string>
+    <string name="a11y_content_description_inbox_subject">Assunto</string>
+    <string name="a11y_content_description_inbox_course_spinner">Selecionar um curso, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">As respostas deste aluno estão ocultas porque esta tarefa é anônima.</string>
+
+    <string name="studentAnnotationUnsupported">Anotação do aluno (não compatível)</string>
+    <string name="studentAnnotationUnsupportedDescription">Atualmente, a anotação do aluno não é compatível com dispositivos móveis.</string>
+    <string name="unsupportedSubmissionType">Tipo de envio não suportado</string>
+    <string name="studentAnnotationUnsupportedMessage">O envio não pode ser exibido, porque a Anotação do Aluno não é compatível com dispositivos móveis.</string>
 </resources>

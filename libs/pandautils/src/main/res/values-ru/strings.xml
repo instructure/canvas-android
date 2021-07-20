@@ -227,7 +227,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Преподаватель Canvas</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Опросы Canvas</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -433,5 +432,10 @@
     <string name="searchQuizzesHint">Поиск тестов</string>
     <string name="noItemsMatchingQuery">Нет совпадений по элементам \"%s\"</string>
     <string name="selected">Выбрано</string>
+
+    <string name="notificationChannelNameInAppUpdate">Уведомления об обновлениях приложения</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Уведомления Canvas для обновлений в приложении.</string>
+    <string name="appUpdateReadyTitle">Приложение готово к обновлению</string>
+    <string name="appUpdateReadyDescription">Перезапустите приложение, чтобы установить новую версию</string>
 
 </resources>

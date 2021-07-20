@@ -355,13 +355,11 @@ class InboxComposeMessageFragment : ParentFragment() {
 
     private fun sendMessage(selectedRecipients: List<Recipient>, message: String) {
 
-        // Encode the message here, tell the api not to encode it
-        val formattedMessage = URLEncoder.encode(message, "UTF-8")
         sendCall = tryWeave {
             val attachmentIds = attachments.map { it.id }.toLongArray()
             val recipientIds = selectedRecipients.mapNotNull { it.stringId }
             val conversation = awaitApi<Conversation> {
-                InboxManager.addMessage(conversation?.id ?: 0, formattedMessage, recipientIds, includedMessageIds, attachmentIds, conversation?.contextCode, it)
+                InboxManager.addMessage(conversation?.id ?: 0, message, recipientIds, includedMessageIds, attachmentIds, conversation?.contextCode, it)
             }
             messageSuccess(conversation)
         } catch {
@@ -372,13 +370,11 @@ class InboxComposeMessageFragment : ParentFragment() {
 
     private fun createConversation(selectedRecipients: List<Recipient>, message: String, subject: String, contextId: String, isBulk: Boolean) {
         sendCall?.cancel()
-        val formattedMessage = URLEncoder.encode(message, "UTF-8")
-        val formattedSubject = URLEncoder.encode(subject, "UTF-8")
         sendCall = tryWeave {
             val attachmentIds = attachments.map { it.id }.toLongArray()
             val recipientIds = selectedRecipients.mapNotNull { it.stringId }
             val conversation = awaitApi<List<Conversation>> {
-                InboxManager.createConversation(recipientIds, formattedMessage, formattedSubject, contextId, attachmentIds, isBulk, it)
+                InboxManager.createConversation(recipientIds, message, subject, contextId, attachmentIds, isBulk, it)
             }.first()
             messageSuccess(conversation)
         } catch { error ->

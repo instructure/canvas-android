@@ -14,13 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.elementary.homeroom.itemviewmodels
+package com.instructure.student.ui.pages
 
-import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.CourseCardViewData
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.espresso.page.BasePage
+import com.instructure.student.R
 
-class CourseCardViewModel(val data: CourseCardViewData) : ItemViewModel {
-
-    override val layoutId: Int = R.layout.item_course_card
+class GradesPage : BasePage(R.id.gradesPage) {
 }

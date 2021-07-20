@@ -24,12 +24,10 @@ import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.isTablet
-import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.util.FeatureFlagPrefs
 import kotlinx.android.synthetic.main.fragment_course_grid.toolbar
 import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
@@ -49,6 +47,13 @@ class ElementaryDashboardFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (!FeatureFlagPrefs.showInProgressK5Tabs) {
+            dashboardTabLayout.removeTabAt(3)
+            dashboardTabLayout.removeTabAt(2)
+            dashboardTabLayout.removeTabAt(1)
+        }
+
         dashboardPager.adapter = ElementaryDashboardPagerAdapter(canvasContext, childFragmentManager)
         dashboardTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) = Unit
@@ -62,6 +67,13 @@ class ElementaryDashboardFragment : ParentFragment() {
             }
 
         })
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (dashboardPager?.adapter as? ElementaryDashboardPagerAdapter)?.refreshHomeroomAssignments()
+        }
     }
 
     companion object {

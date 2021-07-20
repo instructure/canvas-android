@@ -1157,4 +1157,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Poista widget koontinäytöstä</string>
     <string name="a11y_content_description_add_to_dashboard">Lisää koontinäytölle</string>
     <string name="a11y_content_description_add_all_to_dashboard">Lisää kaikki koontinäyttöön</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Tili</string>
+    <string name="dashboardTabHomeroom">Homeroom</string>
+    <string name="dashboardTabSchedule">Aikataulu</string>
+    <string name="dashboardTabGrades">Arvosanat</string>
+    <string name="dashboardTabResources">Resurssit</string>
+    <string name="homeroomWelcomeMessage">Tervetuloa, %1$s!</string>
+    <string name="homeroomMySubjects">Omat aiheet</string>
+
+    <string name="viewPreviousAnnouncements">Näytä edelliset ilmoitukset</string>
+    <string name="homeroomError">Homeroomin lataus epäonnistui</string>
+    <string name="homeroomRefreshFail">Homeroomin päivitys epäonnistui</string>
+
+
+    <string name="nothingDueToday">Tänään ei eräänny mitään</string>
+    <string name="dueToday">%1$s erääntyy tänään</string>
+    <string name="missing">%1$s puuttuu</string>
+    <string name="homeroomEmptyTitle">Tervetuloa!</string>
+    <string name="homeroomEmptyMessage">Aiheesi näkyvät täällä.</string>
+    <string name="homeroomNoSubjects">Sinulla ei tällä hetkellä ole aiheita.</string>
+
+
+    <string name="open_alternate_view">Avaa lähestyttävämpi vaihtoehtoinen näkymä</string>
+    <string name="a11y_content_description_message_recipients">Vastaanottajat</string>
+    <string name="a11y_content_description_inbox_subject">Aihe</string>
+    <string name="a11y_content_description_inbox_course_spinner">Valitse kurssi, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Tämän opiskelijan vastaukset on kätketty, koska tehtävä on nimetön.</string>
+
+    <string name="studentAnnotationUnsupported">Opiskelijan huomautusasiakirjat (tukematon)</string>
+    <string name="studentAnnotationUnsupportedDescription">Opiskelijan huomautuksia ei tällä hetkellä tueta matkapuhelimessa.</string>
+    <string name="unsupportedSubmissionType">Lähetystyyppiä ei tueta</string>
+    <string name="studentAnnotationUnsupportedMessage">Lähetystä ei voida näyttää, koska opiskelijan huomautuksia ei tällä hetkellä tueta matkapuhelimessa.</string>
 </resources>

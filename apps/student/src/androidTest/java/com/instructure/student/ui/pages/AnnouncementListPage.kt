@@ -14,22 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.di
+package com.instructure.student.ui.pages
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.teacher.features.elementary.TeacherHomeroomRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.matchers.WaitForViewMatcher
+import com.instructure.espresso.page.*
+import com.instructure.student.R
 
-@Module
-@InstallIn(FragmentComponent::class)
-class HomeroomModule {
+class AnnouncementListPage : BasePage(R.id.discussionListPage) {
 
-    @Provides
-    fun provideHomeroomRouter(): HomeroomRouter {
-        return TeacherHomeroomRouter()
+    fun assertToolbarTitle() {
+        WaitForViewMatcher.waitForView(withParent(R.id.discussionListToolbar) + withText(R.string.announcements)).assertDisplayed()
+    }
+
+    fun assertAnnouncementTitleVisible(title: String) {
+        onView(withText(title) + isDisplayed()).assertDisplayed()
     }
 }

@@ -228,7 +228,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">SpeedGrader</string>
 
     <!-- Rating Dialog -->
@@ -427,5 +426,10 @@
     <string name="noItemsMatchingQuery">No hi ha cap element que coincideixi \"%s\"</string>
 
     <string name="selected">Seleccionat</string>
+
+    <string name="notificationChannelNameInAppUpdate">Notificacions d’actualitzacions de l’aplicació</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Notificació de Canvas d’actualitzacions de l’aplicació.</string>
+    <string name="appUpdateReadyTitle">Tot és a punt per fer l’actualització de l’aplicació</string>
+    <string name="appUpdateReadyDescription">Reinicieu l’aplicació per instal·lar la versió nova</string>
 
 </resources>

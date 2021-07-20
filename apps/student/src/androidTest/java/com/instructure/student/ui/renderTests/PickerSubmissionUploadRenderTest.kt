@@ -38,9 +38,11 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.Pic
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerVisibilities
 import com.instructure.student.ui.pages.renderPages.PickerSubmissionUploadRenderPage
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class PickerSubmissionUploadRenderTest : StudentRenderTest() {
 

@@ -26,6 +26,7 @@ apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'dagger.hilt.android.plugin'
 
+def updatePriority = 0
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
@@ -58,12 +59,12 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 227
-        versionName = '6.11.1'
+        versionCode = 228
+        versionName = '6.12.0'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
-        testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
+        testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
         buildConfigField "boolean", "IS_TESTING", "false"
 
@@ -213,7 +214,7 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
-                    new LocaleTransformer(),
+                    new LocaleTransformer(project),
                     new FlutterA11yOffsetTransformer(),
                     new FlutterTextureDisconnectFix()
             )
@@ -230,6 +231,10 @@ android {
 
     buildFeatures {
         dataBinding true
+    }
+
+    hilt {
+        enableTransformForLocalTests = true
     }
 }
 
@@ -310,9 +315,6 @@ dependencies {
     implementation Libs.PLAY_CORE
     implementation Libs.PLAY_CORE_KTX
 
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
-
     /* Database */
     implementation "com.squareup.sqldelight:android-driver:1.4.3"
 
@@ -330,6 +332,10 @@ dependencies {
     /* DI */
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
+    androidTestImplementation Libs.HILT_TESTING
+    kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
+
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
 
     implementation "com.google.firebase:firebase-crashlytics-ndk:17.2.1"
 }

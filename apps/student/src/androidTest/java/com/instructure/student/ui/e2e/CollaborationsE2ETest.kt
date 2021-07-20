@@ -9,6 +9,7 @@ import com.instructure.student.ui.pages.CollaborationsPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 /**
@@ -16,6 +17,7 @@ import org.junit.Test
  * We make no attempt to actually start a collaboration.
  * This test could break if changes are made to the web page that we bring up.
  */
+@HiltAndroidTest
 class CollaborationsE2ETest: StudentTest() {
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

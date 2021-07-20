@@ -25,14 +25,21 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.espresso.ScreenshotTestRule
 import com.instructure.espresso.swipeRight
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.*
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.processor.internal.aggregateddeps.AggregatedDeps
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.junit.Before
+import org.junit.Rule
+import org.junit.rules.RuleChain
+import org.junit.rules.TestRule
 import java.io.File
 
 abstract class StudentTest : CanvasTest() {
@@ -41,6 +48,9 @@ abstract class StudentTest : CanvasTest() {
         StudentActivityTestRule(LoginActivity::class.java)
 
     lateinit var originalActivity : Activity
+
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
 
     // Sometimes activityRule.activity can get nulled out over time, probably as we
     // navigate away from the original login screen.  Capture the activity here so
@@ -56,6 +66,7 @@ abstract class StudentTest : CanvasTest() {
      * Required for auto complete of page objects within tests
      */
     val annotationCommentListPage = AnnotationCommentListPage()
+    val announcementListPage = AnnouncementListPage()
     val assignmentDetailsPage = AssignmentDetailsPage()
     val assignmentListPage = AssignmentListPage()
     val bookmarkPage = BookmarkPage()
@@ -97,6 +108,11 @@ abstract class StudentTest : CanvasTest() {
     val syllabusPage = SyllabusPage()
     val todoPage = TodoPage()
     val urlSubmissionUploadPage = UrlSubmissionUploadPage()
+    val elementaryDashboardPage = ElementaryDashboardPage()
+    val homeroomPage = HomeroomPage()
+    val schedulePage = SchedulePage()
+    val gradesPage = GradesPage()
+    val resourcesPage = ResourcesPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

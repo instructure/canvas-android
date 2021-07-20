@@ -199,6 +199,8 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
 
                 // Discussion Submission
                 Assignment.SubmissionType.DISCUSSION_TOPIC -> SubmissionDetailsContentType.DiscussionContent(submission.previewUrl)
+
+                Assignment.SubmissionType.STUDENT_ANNOTATION -> SubmissionDetailsContentType.StudentAnnotationContent
                 else -> SubmissionDetailsContentType.UnsupportedContent(assignment?.id ?: -1)
             }
         }

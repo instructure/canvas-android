@@ -49,5 +49,5 @@ enum class OptionsMenuItem {
 }
 
 enum class AccountMenuItem {
-    ACCOUNT, HELP, CHANGE_USER, LOGOUT
+    HELP, CHANGE_USER, LOGOUT
 }

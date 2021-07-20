@@ -1136,4 +1136,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">ダッシュボードすべてから削除</string>
     <string name="a11y_content_description_add_to_dashboard">ダッシュボードに追加</string>
     <string name="a11y_content_description_add_all_to_dashboard">ダッシュ​​ボードにすべてを追加</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">アカウント</string>
+    <string name="dashboardTabHomeroom">ホームルーム</string>
+    <string name="dashboardTabSchedule">スケジュール</string>
+    <string name="dashboardTabGrades">成績</string>
+    <string name="dashboardTabResources">リソース</string>
+    <string name="homeroomWelcomeMessage">ようこそ、%1$sさん！</string>
+    <string name="homeroomMySubjects">マイ教科</string>
+
+    <string name="viewPreviousAnnouncements">前の通知を表示する</string>
+    <string name="homeroomError">ホームルーム読み込みに失敗</string>
+    <string name="homeroomRefreshFail">ホームルーム更新に失敗</string>
+
+
+    <string name="nothingDueToday">今日が期限のものなし</string>
+    <string name="dueToday">%1$s 今日が期限</string>
+    <string name="missing">%1$s 欠如</string>
+    <string name="homeroomEmptyTitle">どういたしまして！</string>
+    <string name="homeroomEmptyMessage">あなたの科目はここに表示されます。</string>
+    <string name="homeroomNoSubjects">現在、科目はありません。</string>
+
+
+    <string name="open_alternate_view">よりアクセスしやすい代替ビューを開く</string>
+    <string name="a11y_content_description_message_recipients">受信者</string>
+    <string name="a11y_content_description_inbox_subject">件名</string>
+    <string name="a11y_content_description_inbox_course_spinner">コースを選択する、%s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">この課題は匿名であるため、この学生の応答は表示されません。</string>
+
+    <string name="studentAnnotationUnsupported">学生の注釈（サポートされていません）</string>
+    <string name="studentAnnotationUnsupportedDescription">現在、学生の注釈はモバイルではサポートされていません。</string>
+    <string name="unsupportedSubmissionType">サポートされていない提出タイプ</string>
+    <string name="studentAnnotationUnsupportedMessage">現在、学生の注釈はモバイルでサポートされていないため、提出物を表示できません。</string>
 </resources>

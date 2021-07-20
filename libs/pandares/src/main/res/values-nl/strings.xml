@@ -1143,4 +1143,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Alles verwijderen uit Dashboard</string>
     <string name="a11y_content_description_add_to_dashboard">Toevoegen aan Dashboard</string>
     <string name="a11y_content_description_add_all_to_dashboard">Alles toevoegen aan Dashboard</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Account</string>
+    <string name="dashboardTabHomeroom">Klas</string>
+    <string name="dashboardTabSchedule">Planning</string>
+    <string name="dashboardTabGrades">Cijfers</string>
+    <string name="dashboardTabResources">Hulpbronnen</string>
+    <string name="homeroomWelcomeMessage">Welkom, %1$s!</string>
+    <string name="homeroomMySubjects">Mijn onderwerpen</string>
+
+    <string name="viewPreviousAnnouncements">Vorige aankondigingen bekijken</string>
+    <string name="homeroomError">Laden van klas mislukt</string>
+    <string name="homeroomRefreshFail">Verversen van klas mislukt</string>
+
+
+    <string name="nothingDueToday">Vandaag niets in te leveren</string>
+    <string name="dueToday">%1$s vandaag in te leveren</string>
+    <string name="missing">%1$s ontbreekt</string>
+    <string name="homeroomEmptyTitle">Welkom!</string>
+    <string name="homeroomEmptyMessage">Je vakken worden hier getoond.</string>
+    <string name="homeroomNoSubjects">Je hebt momenteel geen vakken.</string>
+
+
+    <string name="open_alternate_view">Open een meer toegankelijke alternatieve weergave</string>
+    <string name="a11y_content_description_message_recipients">Geadresseerden</string>
+    <string name="a11y_content_description_inbox_subject">Vak</string>
+    <string name="a11y_content_description_inbox_course_spinner">Selecteer een cursus, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">De antwoorden van deze cursist zijn verborgen omdat deze opdracht anoniem is.</string>
+
+    <string name="studentAnnotationUnsupported">Cursistaantekening (niet ondersteund)</string>
+    <string name="studentAnnotationUnsupportedDescription">Cursistaantekening wordt momenteel niet ondersteund op mobiel apparaat.</string>
+    <string name="unsupportedSubmissionType">Niet-ondersteund inleveringstype</string>
+    <string name="studentAnnotationUnsupportedMessage">Inlevering kan niet worden weergegeven omdat cursistaantekening momenteel niet wordt ondersteund op mobiel apparaat.</string>
 </resources>

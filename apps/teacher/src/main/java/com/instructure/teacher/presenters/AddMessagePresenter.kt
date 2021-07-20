@@ -97,9 +97,7 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
         // Assemble list of recipient IDs
         val recipientIds = selectedRecipients.mapNotNull { it.stringId }
 
-        val encodedMessage = URLEncoder.encode(message, "UTF-8")
-        val encodedSubject = URLEncoder.encode(subject, "UTF-8")
-        InboxManager.createConversation(recipientIds, encodedMessage, encodedSubject, contextId, attachmentIDs, isBulk, mCreateConversationCallback)
+        InboxManager.createConversation(recipientIds, message, subject, contextId, attachmentIDs, isBulk, mCreateConversationCallback)
     }
 
     fun sendMessage(selectedRecipients: List<Recipient>, message: String) {
@@ -122,8 +120,7 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
         }
 
         // Send message
-        val encodedMessage = URLEncoder.encode(message, "UTF-8")
-        InboxManager.addMessage(conversation?.id ?: 0, encodedMessage, recipientIds, messageIds, attachmentIDs, conversation?.contextCode, mAddConversationCallback)
+        InboxManager.addMessage(conversation?.id ?: 0, message, recipientIds, messageIds, attachmentIDs, conversation?.contextCode, mAddConversationCallback)
     }
 
     private val mAddConversationCallback = object : StatusCallback<Conversation>() {

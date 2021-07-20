@@ -22,8 +22,10 @@ import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedAssignments
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class StudentContextPageTest : TeacherTest() {
 
     @Test

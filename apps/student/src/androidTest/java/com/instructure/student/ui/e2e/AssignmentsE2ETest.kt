@@ -36,9 +36,11 @@ import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.ui.utils.uploadTextFile
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
 
+@HiltAndroidTest
 class AssignmentsE2ETest: StudentTest() {
     override fun displaysPageObjects() = Unit
 

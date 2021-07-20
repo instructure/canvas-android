@@ -27,8 +27,10 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.teacher.ui.utils.*
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class PeopleE2ETest: TeacherTest() {
     override fun displaysPageObjects() = Unit
 

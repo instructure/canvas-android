@@ -228,7 +228,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas kennari</string>
     <string name="utils_canvasParent">Canvas-móðurskrá</string>
-    <string name="utils_polls">Canvas kannanir</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -427,5 +426,10 @@
     <string name="noItemsMatchingQuery">Engin atriði passa við \"%s\"</string>
 
     <string name="selected">Valið</string>
+
+    <string name="notificationChannelNameInAppUpdate">Tilkynningar um uppfærslu smáforrits</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas tilkynningar vegna uppfærslu í smáforriti.</string>
+    <string name="appUpdateReadyTitle">Smáforrit tilbúið til uppfærslu</string>
+    <string name="appUpdateReadyDescription">Endurræstu smáforritið til að setja upp nýja útgáfu</string>
 
 </resources>

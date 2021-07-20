@@ -39,10 +39,12 @@ import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellVi
 import com.instructure.student.ui.pages.renderPages.SubmissionRubricRenderPage
 import com.instructure.student.ui.utils.assertFontSizeSP
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers.not
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class SubmissionRubricRenderTest : StudentRenderTest() {
 

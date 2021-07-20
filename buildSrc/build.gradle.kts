@@ -16,7 +16,7 @@
  */
 repositories {
     google()
-    jcenter()
+    mavenCentral()
 }
 
 val agpVersion= "4.0.2"

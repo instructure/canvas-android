@@ -34,6 +34,7 @@ import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
@@ -41,6 +42,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
 
+@HiltAndroidTest
 class PdfInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
