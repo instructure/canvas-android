@@ -1190,6 +1190,7 @@
     <string name="failedToLoadGradesForGradingPeriod">Failed to load grades for grading period</string>
     <string name="failedToRefreshGrades">Failed to refresh grades</string>
     <string name="noGradesToDisplay">No grades to display</string>
+    <string name="notGraded">Not Graded</string>
 
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 

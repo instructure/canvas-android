@@ -122,13 +122,14 @@ class GradesViewModel @Inject constructor(
     private fun createGradeRowViewModels(courses: List<Course>): List<GradeRowItemViewModel> {
         return courses
             .map {
+                val enrollment = it.enrollments?.first()
                 GradeRowItemViewModel(GradeRowViewData(
                     it.id,
                     it.name,
                     getCourseColor(it),
                     it.imageUrl ?: "",
-                    it.enrollments?.first()?.computedCurrentScore,
-                    createGradeText(it.enrollments?.first()?.computedCurrentScore, it.enrollments?.first()?.computedCurrentGrade))
+                    enrollment?.computedCurrentScore,
+                    createGradeText(enrollment?.computedCurrentScore, enrollment?.computedCurrentGrade, enrollment?.currentGradingPeriodId ?: 0L != 0L))
                 ) { gradeRowClicked(it) }
             }
     }
@@ -144,15 +145,15 @@ class GradesViewModel @Inject constructor(
         return GradesViewData(items)
     }
 
-    private fun createGradeText(score: Double?, grade: String?): String {
+    private fun createGradeText(score: Double?, grade: String?, notGraded: Boolean = true): String {
         return if (!grade.isNullOrEmpty()) {
             grade
         } else {
             val currentScoreRounded = score?.roundToInt()
-            if (currentScoreRounded != null) {
-                "$currentScoreRounded%"
-            } else {
-                "--"
+            when {
+                currentScoreRounded != null -> "$currentScoreRounded%"
+                notGraded -> resources.getString(R.string.notGraded)
+                else -> "--"
             }
         }
     }
