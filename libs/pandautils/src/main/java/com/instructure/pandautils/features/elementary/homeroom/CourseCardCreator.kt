@@ -21,10 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.PlannerManager
 import com.instructure.canvasapi2.managers.UserManager
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardItemViewModel
@@ -32,8 +29,6 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.ColorApiHelper
 import kotlinx.coroutines.awaitAll
 import org.threeten.bp.LocalDate
-
-private const val PLANNABLE_TYPE_ASSIGNMENT = "assignment"
 
 class CourseCardCreator(
     private val plannerManager: PlannerManager,
@@ -101,7 +96,7 @@ class CourseCardCreator(
     }
 
     private fun isNotSubmittedAssignment(it: PlannerItem) =
-        it.courseId != null && it.submissionState?.submitted == false && it.plannableType == PLANNABLE_TYPE_ASSIGNMENT && it.submissionState?.missing == false
+        it.courseId != null && it.submissionState?.submitted == false && it.plannableType == PlannableType.ASSIGNMENT && it.submissionState?.missing == false
 
     private fun createDueTextForCourse(dueCount: Int): String {
         return if (dueCount == 0) {

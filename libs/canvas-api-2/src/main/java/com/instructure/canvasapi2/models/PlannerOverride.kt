@@ -22,6 +22,14 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PlannerOverride(
-    @SerializedName("dismissed")
-    val dismissed: Boolean = false
+        @SerializedName("id")
+        val id: Long? = null,
+        @SerializedName("plannable_type")
+        val plannableType: PlannableType,
+        @SerializedName("plannable_id")
+        val plannableId: Long,
+        @SerializedName("dismissed")
+        val dismissed: Boolean = false,
+        @SerializedName("marked_complete")
+        val markedComplete: Boolean = false
 ) : Parcelable

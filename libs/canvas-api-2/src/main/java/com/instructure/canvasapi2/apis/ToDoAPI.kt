@@ -70,4 +70,8 @@ object ToDoAPI {
         }
     }
 
+    fun getCourseTodos(canvasContext: CanvasContext, adapter: RestBuilder, params: RestParams, callback: StatusCallback<List<ToDo>>) {
+        callback.addCall(adapter.build(ToDosInterface::class.java, params).getCourseTodos(canvasContext.id)).enqueue(callback)
+    }
+
 }

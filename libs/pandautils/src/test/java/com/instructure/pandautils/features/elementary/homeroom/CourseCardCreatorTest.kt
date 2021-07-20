@@ -131,13 +131,13 @@ class CourseCardCreatorTest {
         val courses = listOf(Course(id = 1), Course(id = 2))
 
         val plannerItems = listOf(
-            createPlannerItem(1, "assignment", false, false),
-            createPlannerItem(1, "todo", false, false),
-            createPlannerItem(1, "assignment", false, true),
-            createPlannerItem(1, "assignment", true, false),
-            createPlannerItem(2, "assignment", false, false),
-            createPlannerItem(2, "assignment", false, false),
-            createPlannerItem(3, "assignment", false, false),
+            createPlannerItem(1, PlannableType.ASSIGNMENT, false, false),
+            createPlannerItem(1, PlannableType.TODO, false, false),
+            createPlannerItem(1, PlannableType.ASSIGNMENT, false, true),
+            createPlannerItem(1, PlannableType.ASSIGNMENT, true, false),
+            createPlannerItem(2, PlannableType.ASSIGNMENT, false, false),
+            createPlannerItem(2, PlannableType.ASSIGNMENT, false, false),
+            createPlannerItem(3, PlannableType.ASSIGNMENT, false, false),
         )
 
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
@@ -165,10 +165,10 @@ class CourseCardCreatorTest {
         val courses = listOf(Course(id = 1))
 
         val plannerItems = listOf(
-            createPlannerItem(1, "todo", false, false),
-            createPlannerItem(1, "assignment", false, true),
-            createPlannerItem(1, "assignment", true, false),
-            createPlannerItem(2, "assignment", false, false),
+            createPlannerItem(1, PlannableType.TODO, false, false),
+            createPlannerItem(1, PlannableType.ASSIGNMENT, false, true),
+            createPlannerItem(1, PlannableType.ASSIGNMENT, true, false),
+            createPlannerItem(2, PlannableType.ASSIGNMENT, false, false),
         )
 
         every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
@@ -193,8 +193,8 @@ class CourseCardCreatorTest {
         val assignments = listOf(
             Assignment(id = 1, courseId = 1),
             Assignment(id = 2, courseId = 2),
-            Assignment(id = 3, courseId = 1, plannerOverride = PlannerOverride(false)),
-            Assignment(id = 4, courseId = 1, plannerOverride = PlannerOverride(true)))
+            Assignment(id = 3, courseId = 1, plannerOverride = PlannerOverride(plannableId = 3, plannableType = PlannableType.ASSIGNMENT, dismissed = false)),
+            Assignment(id = 4, courseId = 1, plannerOverride = PlannerOverride(plannableId = 4, plannableType = PlannableType.ASSIGNMENT, dismissed = true)))
         every { userManager.getAllMissingSubmissionsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(assignments)
         }
@@ -216,7 +216,7 @@ class CourseCardCreatorTest {
 
         val assignments = listOf(
             Assignment(id = 1, courseId = 2),
-            Assignment(id = 4, courseId = 1, plannerOverride = PlannerOverride(true)))
+            Assignment(id = 4, courseId = 1, plannerOverride = PlannerOverride(plannableId = 4, plannableType = PlannableType.ASSIGNMENT, dismissed = true)))
         every { userManager.getAllMissingSubmissionsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(assignments)
         }
@@ -242,7 +242,7 @@ class CourseCardCreatorTest {
         assertEquals("#394B58", courseCards[0].data.courseColor)
     }
 
-    private fun createPlannerItem(courseId: Long, plannableType: String, submitted: Boolean, missing: Boolean): PlannerItem {
+    private fun createPlannerItem(courseId: Long, plannableType: PlannableType, submitted: Boolean, missing: Boolean): PlannerItem {
         val plannable = mockk<Plannable>()
         return PlannerItem(courseId, null, null, null, null, plannableType, plannable, Date(), null, SubmissionState(submitted, missing))
     }

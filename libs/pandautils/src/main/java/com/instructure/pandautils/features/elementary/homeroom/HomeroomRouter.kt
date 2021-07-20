@@ -34,7 +34,15 @@ interface HomeroomRouter {
 
     fun openAssignments(course: Course)
 
+    fun openAssignment(canvasContext: CanvasContext, assignmentId: Long)
+
+    fun openCalendarEvent(canvasContext: CanvasContext, scheduleItemId: Long)
+
     fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader)
 
     fun updateColors()
+
+    fun openQuiz(canvasContext: CanvasContext, htmlUrl: String)
+
+    fun openDiscussion(canvasContext: CanvasContext, discussionId: Long, discussionTitle: String)
 }

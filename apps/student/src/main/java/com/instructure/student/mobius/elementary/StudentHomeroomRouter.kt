@@ -23,10 +23,8 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.fragment.AnnouncementListFragment
-import com.instructure.student.fragment.AssignmentListFragment
-import com.instructure.student.fragment.CourseBrowserFragment
-import com.instructure.student.fragment.DiscussionDetailsFragment
+import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRouter {
@@ -56,11 +54,27 @@ class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRo
         RouteMatcher.route(activity, AssignmentListFragment.makeRoute(course))
     }
 
+    override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) {
+        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId))
+    }
+
+    override fun openCalendarEvent(canvasContext: CanvasContext, scheduleItemId: Long) {
+        RouteMatcher.route(activity, CalendarEventFragment.makeRoute(canvasContext, scheduleItemId))
+    }
+
     override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) {
         RouteMatcher.route(activity, DiscussionDetailsFragment.makeRoute(course, announcement))
     }
 
     override fun updateColors() {
         FlutterComm.sendUpdatedTheme()
+    }
+
+    override fun openQuiz(canvasContext: CanvasContext, htmlUrl: String) {
+        RouteMatcher.route(activity, BasicQuizViewFragment.makeRoute(canvasContext, htmlUrl))
+    }
+
+    override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long, discussionTitle: String) {
+        RouteMatcher.route(activity, DiscussionDetailsFragment.makeRoute(canvasContext, discussionId, title = discussionTitle))
     }
 }

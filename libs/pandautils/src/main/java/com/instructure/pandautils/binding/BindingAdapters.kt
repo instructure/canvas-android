@@ -16,11 +16,14 @@
  */
 package com.instructure.pandautils.binding
 
-import android.util.Log
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -32,6 +35,7 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setCourseImage
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
 import java.net.URLDecoder
@@ -122,5 +126,22 @@ fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: 
     if (overlayColor != null) {
         imageView.setCourseImage(imageUrl, overlayColor, true)
     }
+}
+
+@BindingAdapter(value = ["borderColor", "borderWidth", "backgroundColor", "borderCornerRadius"], requireAll = false)
+fun addBorderToContainer(view: View, borderColor: Int?, borderWidth: Int?, backgroundColor: Int?, borderCornerRadius: Int?) {
+    val border = GradientDrawable()
+    val background = backgroundColor ?: 0xffffff
+    val strokeColor = borderColor
+            ?: 0x000000
+    border.setColor(background)
+    border.setStroke(borderWidth?.toPx ?: 2.toPx, strokeColor)
+    border.cornerRadius = borderCornerRadius?.toPx?.toFloat() ?: 4.toPx.toFloat()
+    view.background = border
+}
+
+@BindingAdapter("imageRes")
+fun bindImageResource(imageView: ImageView, @DrawableRes imageRes: Int) {
+    imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
 }
 
