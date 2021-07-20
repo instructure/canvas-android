@@ -68,7 +68,7 @@ class GradesViewModel @Inject constructor(
 
     private fun loadInitialData() {
         _state.postValue(ViewState.Loading)
-        loadData(true)
+        loadData(false)
     }
 
     private fun loadData(forceNetwork: Boolean, previouslySelectedGradingPeriod: GradingPeriod? = null) {
@@ -171,7 +171,12 @@ class GradesViewModel @Inject constructor(
 
     fun refresh() {
         _state.postValue(ViewState.Refresh)
-        loadData(true)
+        val gradingPeriodId = gradingPeriodsViewModel?.selectedGradingPeriod?.id ?: CURRENT_GRADING_PERIOD_ID
+        if (gradingPeriodId == CURRENT_GRADING_PERIOD_ID) {
+            loadData(true)
+        } else {
+            loadDataForGradingPeriod(gradingPeriodId, null, true)
+        }
     }
 
     fun gradingPeriodSelected(gradingPeriod: GradingPeriod) {
@@ -182,17 +187,17 @@ class GradesViewModel @Inject constructor(
 
             _state.postValue(ViewState.Refresh)
             if (gradingPeriod.id == CURRENT_GRADING_PERIOD_ID) {
-                loadData(true, previouslySelectedGradingPeriod)
+                loadData(false, previouslySelectedGradingPeriod)
             } else {
-                loadDataForGradingPeriod(gradingPeriod.id, previouslySelectedGradingPeriod)
+                loadDataForGradingPeriod(gradingPeriod.id, previouslySelectedGradingPeriod, false)
             }
         }
     }
 
-    private fun loadDataForGradingPeriod(id: Long, previouslySelectedGradingPeriod: GradingPeriod?) {
+    private fun loadDataForGradingPeriod(id: Long, previouslySelectedGradingPeriod: GradingPeriod?, forceNetwork: Boolean) {
         viewModelScope.launch {
             try {
-                val enrollments = enrollmentManager.getEnrollmentsForGradingPeriodAsync(id, true).await().dataOrThrow
+                val enrollments = enrollmentManager.getEnrollmentsForGradingPeriodAsync(id, forceNetwork).await().dataOrThrow
 
                 val gradeRowItems = createGradeRowsForGradingPeriod(enrollments)
                 val viewData = createViewData(gradeRowItems)
