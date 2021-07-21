@@ -1183,6 +1183,8 @@
     <string name="homeroomEmptyTitle">Welcome!</string>
     <string name="homeroomEmptyMessage">Your subjects show up here.</string>
     <string name="homeroomNoSubjects">You currently have no subjects.</string>
+    <string name="settingsElementaryView">Elementary View</string>
+    <string name="settingsElementaryViewSubtitle">Requires app restart</string>
     <string name="gradesSelect">Select</string>
     <string name="selectGradingPeriod">Select Grading Period</string>
     <string name="currentGradingPeriod">Current Grading Period</string>

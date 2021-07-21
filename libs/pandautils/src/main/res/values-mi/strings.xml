@@ -226,7 +226,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Kaiako</string>
     <string name="utils_canvasParent">Canvas Matua</string>
-    <string name="utils_polls">Ngā Canvas Pōti</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -424,5 +423,10 @@
     <string name="noItemsMatchingQuery">Kaore ngā tuemi e orite ana \"%s\"</string>
 
     <string name="selected">Kua tīpakohia</string>
+
+    <string name="notificationChannelNameInAppUpdate">Taupānga whakahou whakamōhiotanga</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas – ngā whakamōhiotanga mō roto taupānga whakahoutanga</string>
+    <string name="appUpdateReadyTitle">Taupānga kua reri mo te whakahou</string>
+    <string name="appUpdateReadyDescription">Tīmata anō te taupānga ki te whakauru te wāhanga hou</string>
 
 </resources>

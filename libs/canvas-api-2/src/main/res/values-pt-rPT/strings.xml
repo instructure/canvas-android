@@ -56,6 +56,7 @@
     <string name="canvasAPI_onlineURL">URL do Website</string>
     <string name="canvasAPI_mediaRecording">Gravação de mídia</string>
     <string name="canvasAPI_attendance">Presença</string>
+    <string name="canvasAPI_studentAnnotation">Anotação de aluno</string>
     <string name="quiz_scoring_policy_highest">Mais alto</string>
     <string name="quiz_scoring_policy_average">Média</string>
     <string name="quiz_scoring_policy_latest">Mais recente</string>

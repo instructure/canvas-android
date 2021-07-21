@@ -56,6 +56,7 @@
     <string name="canvasAPI_onlineURL">Webside URL</string>
     <string name="canvasAPI_mediaRecording">Medieoptagelse</string>
     <string name="canvasAPI_attendance">Tilstedeværelse</string>
+    <string name="canvasAPI_studentAnnotation">Studerendes anmærkning</string>
     <string name="quiz_scoring_policy_highest">Højeste</string>
     <string name="quiz_scoring_policy_average">Gennemsnitlig</string>
     <string name="quiz_scoring_policy_latest">Seneste</string>

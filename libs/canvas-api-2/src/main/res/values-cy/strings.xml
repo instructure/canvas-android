@@ -56,6 +56,7 @@
     <string name="canvasAPI_onlineURL">URL Gwefan</string>
     <string name="canvasAPI_mediaRecording">Recordio Cyfryngau</string>
     <string name="canvasAPI_attendance">Presenoldeb</string>
+    <string name="canvasAPI_studentAnnotation">Anodiad gan Fyfyriwr</string>
     <string name="quiz_scoring_policy_highest">Uchaf</string>
     <string name="quiz_scoring_policy_average">Cyfartaledd</string>
     <string name="quiz_scoring_policy_latest">Diweddaraf</string>

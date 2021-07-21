@@ -1143,4 +1143,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Elimine tout nan tablo</string>
     <string name="a11y_content_description_add_to_dashboard">Ajoute nan tablo</string>
     <string name="a11y_content_description_add_all_to_dashboard">Ajoute tout nan tablo</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Kont</string>
+    <string name="dashboardTabHomeroom">Sal kou</string>
+    <string name="dashboardTabSchedule">Orè</string>
+    <string name="dashboardTabGrades">Nòt</string>
+    <string name="dashboardTabResources">Resous</string>
+    <string name="homeroomWelcomeMessage">Byenvini, %1$s!</string>
+    <string name="homeroomMySubjects">Sijè Pa m</string>
+
+    <string name="viewPreviousAnnouncements">Afiche Ansyen Anons</string>
+    <string name="homeroomError">Echèk chajman Sal akèy</string>
+    <string name="homeroomRefreshFail">Echèk pou rafrechi Sal akèy</string>
+
+
+    <string name="nothingDueToday">Pa gen Anyen ki gen Delè pou Jodi a</string>
+    <string name="dueToday">%1$s delè jodi a</string>
+    <string name="missing">%1$s manke</string>
+    <string name="homeroomEmptyTitle">Bienveni!</string>
+    <string name="homeroomEmptyMessage">Matyè ou yo afiche la a.</string>
+    <string name="homeroomNoSubjects">Pou kounye a ou pa gen matyè.</string>
+
+
+    <string name="open_alternate_view">Ouvri yon lòt afichaj ki pi aksesib</string>
+    <string name="a11y_content_description_message_recipients">Destinatè</string>
+    <string name="a11y_content_description_inbox_subject">Sijè</string>
+    <string name="a11y_content_description_inbox_course_spinner">Seleksyone yon kou, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Repons elèv sa a kache paske devwa sa a anonim.</string>
+
+    <string name="studentAnnotationUnsupported">Nòt Elèv (Pa sipòte)</string>
+    <string name="studentAnnotationUnsupportedDescription">Nòt Elèv yo pa disponib sou mobil.</string>
+    <string name="unsupportedSubmissionType">Tip Soumisyon Pa Sipòte</string>
+    <string name="studentAnnotationUnsupportedMessage">Soumisyon an pa kapab afiche paske Nòt Elèv yo pa disponib sou mobil.</string>
 </resources>

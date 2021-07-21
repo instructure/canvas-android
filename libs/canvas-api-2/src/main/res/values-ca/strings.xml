@@ -57,6 +57,7 @@
     <string name="canvasAPI_onlineURL">URL del lloc web</string>
     <string name="canvasAPI_mediaRecording">Enregistrament multimèdia</string>
     <string name="canvasAPI_attendance">Assistència</string>
+    <string name="canvasAPI_studentAnnotation">Anotació de l\'estudiant</string>
     <string name="quiz_scoring_policy_highest">Superior</string>
     <string name="quiz_scoring_policy_average">Mitjà</string>
     <string name="quiz_scoring_policy_latest">El més recent</string>

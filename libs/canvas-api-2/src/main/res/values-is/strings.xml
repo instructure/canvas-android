@@ -57,6 +57,7 @@
     <string name="canvasAPI_onlineURL">Slóð vefsvæðis</string>
     <string name="canvasAPI_mediaRecording">Upptaka á miðli</string>
     <string name="canvasAPI_attendance">Mæting</string>
+    <string name="canvasAPI_studentAnnotation">Athugasemd nemanda</string>
     <string name="quiz_scoring_policy_highest">Hæst</string>
     <string name="quiz_scoring_policy_average">Meðaltal</string>
     <string name="quiz_scoring_policy_latest">Nýjast</string>

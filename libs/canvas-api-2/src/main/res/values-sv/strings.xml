@@ -56,6 +56,7 @@
     <string name="canvasAPI_onlineURL">Webbplatslänk</string>
     <string name="canvasAPI_mediaRecording">Mediainspelning</string>
     <string name="canvasAPI_attendance">Närvaro</string>
+    <string name="canvasAPI_studentAnnotation">Studentnotering</string>
     <string name="quiz_scoring_policy_highest">Högsta</string>
     <string name="quiz_scoring_policy_average">Genomsnittligt</string>
     <string name="quiz_scoring_policy_latest">Senaste</string>

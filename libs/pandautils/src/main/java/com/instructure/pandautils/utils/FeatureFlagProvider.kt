@@ -34,7 +34,7 @@ class FeatureFlagProvider(
                 val userResult = userManager.getSelfAsync(false).await()
                 val canvasForElementary = userResult.dataOrThrow.k5User
                 apiPrefs.canvasForElementary = canvasForElementary
-                canvasForElementary
+                canvasForElementary && apiPrefs.elementaryDashboardEnabledOverride
             } else {
                 false
             }

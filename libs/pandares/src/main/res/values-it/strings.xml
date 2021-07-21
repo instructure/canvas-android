@@ -1157,4 +1157,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Rimuovi tutto dalla dashboard</string>
     <string name="a11y_content_description_add_to_dashboard">Aggiungi alla dashboard</string>
     <string name="a11y_content_description_add_all_to_dashboard">Aggiungi tutto alla dashboard</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Account</string>
+    <string name="dashboardTabHomeroom">Homeroom</string>
+    <string name="dashboardTabSchedule">Programma</string>
+    <string name="dashboardTabGrades">Voti</string>
+    <string name="dashboardTabResources">Risorse</string>
+    <string name="homeroomWelcomeMessage">Benvenuto %1$s!</string>
+    <string name="homeroomMySubjects">Le mie materie</string>
+
+    <string name="viewPreviousAnnouncements">Visualizza annunci precedenti</string>
+    <string name="homeroomError">Impossibile caricare homeroom</string>
+    <string name="homeroomRefreshFail">Impossibile aggiornare homeroom</string>
+
+
+    <string name="nothingDueToday">Niente in scadenza oggi</string>
+    <string name="dueToday">%1$s in scadenza oggi</string>
+    <string name="missing">%1$s mancante</string>
+    <string name="homeroomEmptyTitle">Benvenuto!</string>
+    <string name="homeroomEmptyMessage">Le materie sono visualizzate qui.</string>
+    <string name="homeroomNoSubjects">Attualmente non hai materie.</string>
+
+
+    <string name="open_alternate_view">Apri una vista alternativa più accessibile</string>
+    <string name="a11y_content_description_message_recipients">Destinatari</string>
+    <string name="a11y_content_description_inbox_subject">Oggetto</string>
+    <string name="a11y_content_description_inbox_course_spinner">Seleziona un corso, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Le risposte di questo studente sono nascoste perché questo compito è anonimo.</string>
+
+    <string name="studentAnnotationUnsupported">Annotazione studente (non supportata)</string>
+    <string name="studentAnnotationUnsupportedDescription">L’annotazione studente non è attualmente supportata sui dispositivi mobili.</string>
+    <string name="unsupportedSubmissionType">Tipo di consegna non supportato</string>
+    <string name="studentAnnotationUnsupportedMessage">Impossibile visualizzare consegna perché l’annotazione studente non è attualmente supportata sui dispositivi mobili.</string>
 </resources>

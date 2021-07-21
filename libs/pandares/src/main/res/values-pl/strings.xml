@@ -1185,4 +1185,36 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Usuń wszystko z panelu nawigacyjnego</string>
     <string name="a11y_content_description_add_to_dashboard">Dodaj do panelu nawigacyjnego</string>
     <string name="a11y_content_description_add_all_to_dashboard">Dodaj wszystko do panelu nawigacyjnego</string>
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Konto</string>
+    <string name="dashboardTabHomeroom">Pokój główny</string>
+    <string name="dashboardTabSchedule">Harmonogram</string>
+    <string name="dashboardTabGrades">Oceny</string>
+    <string name="dashboardTabResources">Zasoby</string>
+    <string name="homeroomWelcomeMessage">Witamy, %1$s!</string>
+    <string name="homeroomMySubjects">Moje tematy</string>
+
+    <string name="viewPreviousAnnouncements">Wyświetl poprzednie ogłoszenia</string>
+    <string name="homeroomError">Nie udało się załadować pokoju głównego</string>
+    <string name="homeroomRefreshFail">Nie udało się odświeżyć pokoju głównego</string>
+
+
+    <string name="nothingDueToday">Brak elementów z dzisiejszym terminem</string>
+    <string name="dueToday">%1$s z terminem dzisiaj</string>
+    <string name="missing">Brak %1$s</string>
+    <string name="homeroomEmptyTitle">Witamy!</string>
+    <string name="homeroomEmptyMessage">Twoje tematy pojawią się tutaj.</string>
+    <string name="homeroomNoSubjects">Nie masz obecnie żadnych tematów.</string>
+
+
+    <string name="open_alternate_view">Otwórz alternatywny widok z ułatwieniami dostępu</string>
+    <string name="a11y_content_description_message_recipients">Odbiorcy</string>
+    <string name="a11y_content_description_inbox_subject">Temat</string>
+    <string name="a11y_content_description_inbox_course_spinner">Wybierz kurs, %s</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Odpowiedzi tego uczestnika są ukryte, ponieważ to zadanie jest anonimowe.</string>
+
+    <string name="studentAnnotationUnsupported">Adnotacja uczestnika (nieobsługiwana)</string>
+    <string name="studentAnnotationUnsupportedDescription">Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
+    <string name="unsupportedSubmissionType">Nieobsługiwany typ zgłoszenia</string>
+    <string name="studentAnnotationUnsupportedMessage">Przesyłki nie można wyświetlić, ponieważ Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
 </resources>
