@@ -115,9 +115,10 @@ class GradesViewModelTest {
         val course1 = createCourseWithGrades(1, "Course with Grade", "", "www.1.com", 90.0, "A")
         val course2 = createCourseWithGrades(2, "Course with Score", "#123456", "www.1.com", 75.6, "")
         val course3 = createCourseWithGrades(3, "Course without scores", "#456789", "www.1.com", null, null)
+        val course4 = createCourseWithGrades(4, "Hide Final Grades", "#456789", "www.1.com", 50.0, "C", hideFinalGrades = true)
 
         every { courseManager.getCoursesWithGradesAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(listOf(course1, course2, course3))
+            coEvery { await() } returns DataResult.Success(listOf(course1, course2, course3, course4))
         }
 
         // When
@@ -126,21 +127,24 @@ class GradesViewModelTest {
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
-        assertEquals(3, viewModel.data.value!!.items.size) // We only expect 3 items here, because we don't have the grading period selector
+        assertEquals(4, viewModel.data.value!!.items.size) // We only expect 4 items here, because we don't have the grading period selector
 
         val gradeRows = viewModel.data.value!!.items.map { it as GradeRowItemViewModel }
 
         val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", ColorApiHelper.K5_DEFAULT_COLOR, "www.1.com", 90.0, "A")
         val expectedGradeRow2 = GradeRowViewData(2, "Course with Score", "#123456", "www.1.com", 75.6, "76%")
         val expectedGradeRow3 = GradeRowViewData(3, "Course without scores", "#456789", "www.1.com", null, "--")
+        val expectedGradeRow4 = GradeRowViewData(4, "Hide Final Grades", "#456789", "www.1.com", 0.0, "--")
 
         assertEquals(expectedGradeRow1, gradeRows[0].data)
         assertEquals(expectedGradeRow2, gradeRows[1].data)
         assertEquals(expectedGradeRow3, gradeRows[2].data)
+        assertEquals(expectedGradeRow4, gradeRows[3].data)
 
         assertEquals(0.9f, gradeRows[0].percentage)
         assertEquals(0.756f, gradeRows[1].percentage)
         assertEquals(0.0f, gradeRows[2].percentage)
+        assertEquals(0.0f, gradeRows[3].percentage)
     }
 
     @Test
@@ -337,8 +341,24 @@ class GradesViewModelTest {
 
     private fun createViewModel() = GradesViewModel(courseManager, resources, enrollmentManager)
 
-    private fun createCourseWithGrades(id: Long, name: String, color: String, imageUrl: String, score: Double?, grade: String?, gradingPeriods: List<GradingPeriod>? = null): Course {
+    private fun createCourseWithGrades(
+        id: Long,
+        name: String,
+        color: String,
+        imageUrl: String,
+        score: Double?,
+        grade: String?,
+        gradingPeriods: List<GradingPeriod>? = null,
+        hideFinalGrades: Boolean = false
+    ): Course {
         val enrollment = Enrollment(id = 123, computedCurrentScore = score, computedCurrentGrade = grade)
-        return Course(id = id, name = name, courseColor = color, imageUrl = imageUrl, enrollments = mutableListOf(enrollment), gradingPeriods = gradingPeriods)
+        return Course(
+            id = id,
+            name = name,
+            courseColor = color,
+            imageUrl = imageUrl,
+            enrollments = mutableListOf(enrollment),
+            gradingPeriods = gradingPeriods,
+            hideFinalGrades = hideFinalGrades)
     }
 }

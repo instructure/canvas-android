@@ -128,8 +128,8 @@ class GradesViewModel @Inject constructor(
                     it.name,
                     getCourseColor(it),
                     it.imageUrl ?: "",
-                    enrollment?.computedCurrentScore,
-                    createGradeText(enrollment?.computedCurrentScore, enrollment?.computedCurrentGrade, enrollment?.currentGradingPeriodId ?: 0L != 0L))
+                    if (it.hideFinalGrades) 0.0 else enrollment?.computedCurrentScore,
+                    createGradeText(enrollment?.computedCurrentScore, enrollment?.computedCurrentGrade, it.hideFinalGrades, enrollment?.currentGradingPeriodId ?: 0L != 0L))
                 ) { gradeRowClicked(it) }
             }
     }
@@ -145,15 +145,17 @@ class GradesViewModel @Inject constructor(
         return GradesViewData(items)
     }
 
-    private fun createGradeText(score: Double?, grade: String?, notGraded: Boolean = true): String {
-        return if (!grade.isNullOrEmpty()) {
-            grade
-        } else {
-            val currentScoreRounded = score?.roundToInt()
-            when {
-                currentScoreRounded != null -> "$currentScoreRounded%"
-                notGraded -> resources.getString(R.string.notGraded)
-                else -> "--"
+    private fun createGradeText(score: Double?, grade: String?, hideFinalGrades: Boolean, notGraded: Boolean = true): String {
+        return when {
+            hideFinalGrades -> "--"
+            !grade.isNullOrEmpty() -> grade
+            else -> {
+                val currentScoreRounded = score?.roundToInt()
+                when {
+                    currentScoreRounded != null -> "$currentScoreRounded%"
+                    notGraded -> resources.getString(R.string.notGraded)
+                    else -> "--"
+                }
             }
         }
     }
@@ -230,7 +232,7 @@ class GradesViewModel @Inject constructor(
             getCourseColor(course),
             course.imageUrl ?: "",
             enrollment?.grades?.currentScore,
-            createGradeText(enrollment?.grades?.currentScore, enrollment?.grades?.currentGrade))
+            createGradeText(enrollment?.grades?.currentScore, enrollment?.grades?.currentGrade, course.hideFinalGrades))
 
         return GradeRowItemViewModel(gradeRowViewData) { gradeRowClicked(course) }
     }
