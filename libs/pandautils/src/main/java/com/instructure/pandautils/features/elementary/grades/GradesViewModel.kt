@@ -113,7 +113,7 @@ class GradesViewModel @Inject constructor(
         return if (gradingPeriods.isNotEmpty()) {
             val currentGradingPeriod = GradingPeriod(CURRENT_GRADING_PERIOD_ID, resources.getString(R.string.currentGradingPeriod))
             val allGradingPeriods = listOf(currentGradingPeriod).plus(gradingPeriods)
-            GradingPeriodSelectorItemViewModel(_events, allGradingPeriods, currentGradingPeriod)
+            GradingPeriodSelectorItemViewModel(_events, allGradingPeriods, currentGradingPeriod, resources)
         } else {
             null
         }
@@ -123,13 +123,14 @@ class GradesViewModel @Inject constructor(
         return courses
             .map {
                 val enrollment = it.enrollments?.first()
-                GradeRowItemViewModel(GradeRowViewData(
-                    it.id,
-                    it.name,
-                    getCourseColor(it),
-                    it.imageUrl ?: "",
-                    if (it.hideFinalGrades) 0.0 else enrollment?.computedCurrentScore,
-                    createGradeText(enrollment?.computedCurrentScore, enrollment?.computedCurrentGrade, it.hideFinalGrades, enrollment?.currentGradingPeriodId ?: 0L != 0L))
+                GradeRowItemViewModel(resources,
+                    GradeRowViewData(
+                        it.id,
+                        it.name,
+                        getCourseColor(it),
+                        it.imageUrl ?: "",
+                        if (it.hideFinalGrades) 0.0 else enrollment?.computedCurrentScore,
+                        createGradeText(enrollment?.computedCurrentScore, enrollment?.computedCurrentGrade, it.hideFinalGrades, enrollment?.currentGradingPeriodId ?: 0L != 0L))
                 ) { gradeRowClicked(it) }
             }
     }
@@ -234,6 +235,6 @@ class GradesViewModel @Inject constructor(
             enrollment?.grades?.currentScore,
             createGradeText(enrollment?.grades?.currentScore, enrollment?.grades?.currentGrade, course.hideFinalGrades))
 
-        return GradeRowItemViewModel(gradeRowViewData) { gradeRowClicked(course) }
+        return GradeRowItemViewModel(resources, gradeRowViewData) { gradeRowClicked(course) }
     }
 }

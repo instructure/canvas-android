@@ -19,6 +19,7 @@ package com.instructure.pandautils.binding
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -130,5 +131,15 @@ fun bindConstraintWidthPercentage(view: View, percentage: Float) {
     val params = view.layoutParams as ConstraintLayout.LayoutParams
     params.matchConstraintPercentWidth = percentage
     view.layoutParams = params
+}
+
+@BindingAdapter("accessibilityClickDescription")
+fun bindAccesibilityDelegate(view: View, clickDescription: String) {
+    view.accessibilityDelegate = object : View.AccessibilityDelegate() {
+        override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfo?) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+            info?.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, clickDescription))
+        }
+    }
 }
 

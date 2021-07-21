@@ -16,12 +16,14 @@
  */
 package com.instructure.pandautils.features.elementary.grades.itemviewmodels
 
+import android.content.res.Resources
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.grades.GradeRowViewData
 import com.instructure.pandautils.features.elementary.grades.GradesItemViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class GradeRowItemViewModel(
+    private val resources: Resources,
     val data: GradeRowViewData,
     val onRowClicked: () -> Unit
 ) : ItemViewModel {
@@ -29,6 +31,15 @@ class GradeRowItemViewModel(
     override val layoutId: Int = R.layout.item_grade_row
 
     override val viewType: Int = GradesItemViewType.GRADE_ROW.viewType
+
+    val gradeContentDescription: String
+        get() {
+            return if (data.gradeText == "--") {
+                resources.getString(R.string.a11y_gradesNotAvailableContentDescription)
+            } else {
+                data.gradeText
+            }
+        }
 
     val percentage: Float
         get() {

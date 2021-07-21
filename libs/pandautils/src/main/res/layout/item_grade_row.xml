@@ -121,6 +121,7 @@
             android:textSize="17sp"
             android:textColor="@color/defaultTextDark"
             android:text="@{itemViewModel.data.gradeText}"
+            android:contentDescription="@{itemViewModel.gradeContentDescription}"
             app:layout_constraintTop_toBottomOf="@id/progressLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="90%" />

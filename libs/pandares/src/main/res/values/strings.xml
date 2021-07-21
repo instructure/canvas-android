@@ -1191,6 +1191,8 @@
     <string name="failedToRefreshGrades">Failed to refresh grades</string>
     <string name="noGradesToDisplay">No grades to display</string>
     <string name="notGraded">Not Graded</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Change grading period</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Grades not available</string>
 
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 
