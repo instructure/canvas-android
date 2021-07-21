@@ -16,9 +16,8 @@
  */
 package com.instructure.teacher.di.elementary
 
-import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.teacher.features.elementary.TeacherHomeroomRouter
+import com.instructure.teacher.features.elementary.homeroom.TeacherHomeroomRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

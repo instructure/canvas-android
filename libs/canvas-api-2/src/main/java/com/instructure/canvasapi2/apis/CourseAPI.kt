@@ -104,6 +104,9 @@ object CourseAPI {
 
         @GET("courses/{courseId}/rubrics/{rubricId}")
         fun getRubricSettings(@Path("courseId") courseId: Long, @Path("rubricId") rubricId: Long): Call<RubricSettings>
+
+        @GET("users/self/courses?include[]=total_scores&include[]=current_grading_period_scores&include[]=grading_periods&include[]=course_image&enrollment_state=active")
+        fun getFirstPageCoursesWithGrades(): Call<List<Course>>
     }
 
     @Throws(IOException::class)
@@ -240,5 +243,9 @@ object CourseAPI {
 
     fun getRubricSettings(courseId: Long, rubricId: Long, adapter: RestBuilder, callback: StatusCallback<RubricSettings>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).getRubricSettings(courseId, rubricId)).enqueue(callback)
+    }
+
+    fun getFirstPageCoursesWithGrades(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).getFirstPageCoursesWithGrades()).enqueue(callback)
     }
 }

@@ -14,22 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.di.elementary
+package com.instructure.pandautils.features.elementary.grades
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.student.mobius.elementary.homeroom.StudentHomeroomRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import com.instructure.canvasapi2.models.Course
 
-@Module
-@InstallIn(FragmentComponent::class)
-class HomeroomModule {
+interface GradesRouter {
 
-    @Provides
-    fun provideHomeroomRouter(activity: FragmentActivity): HomeroomRouter {
-        return StudentHomeroomRouter(activity)
-    }
+    fun openCourseGrades(course: Course)
 }
