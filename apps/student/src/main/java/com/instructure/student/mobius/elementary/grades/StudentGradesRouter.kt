@@ -14,22 +14,18 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.di.elementary
+package com.instructure.student.mobius.elementary.grades
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.student.mobius.elementary.homeroom.StudentHomeroomRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.features.elementary.grades.GradesRouter
+import com.instructure.student.fragment.GradesListFragment
+import com.instructure.student.router.RouteMatcher
 
-@Module
-@InstallIn(FragmentComponent::class)
-class HomeroomModule {
+class StudentGradesRouter(private val activity: FragmentActivity) : GradesRouter {
 
-    @Provides
-    fun provideHomeroomRouter(activity: FragmentActivity): HomeroomRouter {
-        return StudentHomeroomRouter(activity)
+    override fun openCourseGrades(course: Course) {
+        val route = GradesListFragment.makeRoute(course)
+        RouteMatcher.route(activity, route)
     }
 }

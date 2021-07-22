@@ -1185,6 +1185,16 @@
     <string name="homeroomNoSubjects">You currently have no subjects.</string>
     <string name="settingsElementaryView">Elementary View</string>
     <string name="settingsElementaryViewSubtitle">Requires app restart</string>
+    <string name="gradesSelect">Select</string>
+    <string name="selectGradingPeriod">Select Grading Period</string>
+    <string name="currentGradingPeriod">Current Grading Period</string>
+    <string name="failedToLoadGrades">Failed to load grades</string>
+    <string name="failedToLoadGradesForGradingPeriod">Failed to load grades for grading period</string>
+    <string name="failedToRefreshGrades">Failed to refresh grades</string>
+    <string name="noGradesToDisplay">No grades to display</string>
+    <string name="notGraded">Not Graded</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Change grading period</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Grades not available</string>
 
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 
