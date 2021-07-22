@@ -43,8 +43,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="?android:selectableItemBackground"
+            android:clickable="@{itemViewModel.data.openable}"
             android:minHeight="80dp"
-            android:onClick="@{() -> itemViewModel.data.openable ? itemViewModel.onHeaderClick.invoke() : null}"
+            android:onClick="@{() -> itemViewModel.onHeaderClick.invoke()}"
             app:layout_constraintEnd_toStartOf="@+id/plannerItems">
 
             <TextView

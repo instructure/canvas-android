@@ -34,11 +34,17 @@
         android:animateLayoutChanges="true"
         android:orientation="vertical">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/lightGray" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:onClick="@{() -> itemViewModel.data.openable ? itemViewModel.open.invoke() : null}"
+            android:clickable="@{itemViewModel.data.openable}"
+            android:onClick="@{() -> itemViewModel.open.invoke()}"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:animateLayoutChanges="true">
@@ -100,6 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:visibility="@{itemViewModel.data.chips.size() == 0 ? View.GONE : View.VISIBLE}"
                     app:flexWrap="wrap"
                     app:itemViewModels="@{itemViewModel.data.chips}" />
             </LinearLayout>
@@ -147,10 +154,5 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lightGray" />
     </LinearLayout>
 </layout>

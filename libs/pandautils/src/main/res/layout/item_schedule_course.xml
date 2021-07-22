@@ -42,10 +42,11 @@
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:drawableEnd="@{itemViewModel.data.openable ? @drawable/ic_open_arrow : null}"
+            android:clickable="@{itemViewModel.data.openable}"
             android:gravity="center_vertical"
             android:lineSpacingExtra="2sp"
             android:minHeight="48dp"
-            android:onClick="@{() -> itemViewModel.data.openable ? itemViewModel.onHeaderClick.invoke() : null}"
+            android:onClick="@{() -> itemViewModel.onHeaderClick.invoke()}"
             android:paddingStart="15dp"
             android:paddingEnd="0dp"
             android:text="@{itemViewModel.data.courseName}"
@@ -58,19 +59,12 @@
             tools:drawableEnd="@drawable/ic_open_arrow"
             tools:text="History of the American Revolution" />
 
-        <View
-            android:id="@+id/separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lightGray"
-            app:layout_constraintTop_toBottomOf="@id/courseName" />
-
         <LinearLayout
             android:id="@+id/plannerItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:itemViewModels="@{itemViewModel.data.plannerItems}"
-            app:layout_constraintTop_toBottomOf="@id/separator" />
+            app:layout_constraintTop_toBottomOf="@id/courseName" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
