@@ -234,27 +234,4 @@ object DateHelper {
         return calendar.time
     }
 
-    /**
-     * Returns the last Sunday from the given date
-     * @param date
-     * @return The last Sunday
-     */
-    fun getLastSunday(date: Date): Date {
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.add(Calendar.DAY_OF_WEEK, -(calendar.get(Calendar.DAY_OF_WEEK) - 1))
-        return calendar.time
-    }
-
-    /**
-     * Returns the next Saturday from the given date
-     * @param date
-     * @return The next Saturday
-     */
-    fun getNextSaturday(date: Date): Date {
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - calendar.get(Calendar.DAY_OF_WEEK))
-        return calendar.time
-    }
 }

@@ -57,3 +57,17 @@ fun Date.isPreviousDay(date: Date?): Boolean {
     calendar.roll(Calendar.DAY_OF_YEAR, false)
     return calendar.time.isSameDay(this)
 }
+
+fun Date.getLastSunday(): Date {
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar.add(Calendar.DAY_OF_WEEK, -(calendar.get(Calendar.DAY_OF_WEEK) - 1))
+    return calendar.time
+}
+
+fun Date.getNextSaturday(): Date {
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - calendar.get(Calendar.DAY_OF_WEEK))
+    return calendar.time
+}

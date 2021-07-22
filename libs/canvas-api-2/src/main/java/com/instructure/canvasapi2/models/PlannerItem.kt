@@ -48,6 +48,9 @@ data class PlannerItem (
     @SerializedName("submissions")
     val submissionState: SubmissionState?,
 
+    @SerializedName("new_activity")
+    val newActivity: Boolean?,
+
     @SerializedName("planner_override")
     var plannerOverride: PlannerOverride? = null
 ) {

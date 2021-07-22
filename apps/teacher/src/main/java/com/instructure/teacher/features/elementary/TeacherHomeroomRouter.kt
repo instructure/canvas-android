@@ -34,15 +34,7 @@ class TeacherHomeroomRouter : HomeroomRouter {
 
     override fun openAssignments(course: Course) = Unit
 
-    override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) = Unit
-
-    override fun openCalendarEvent(canvasContext: CanvasContext, scheduleItemId: Long) = Unit
-
     override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) = Unit
 
     override fun updateColors() = Unit
-
-    override fun openQuiz(canvasContext: CanvasContext, htmlUrl: String) = Unit
-
-    override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long, discussionTitle: String) = Unit
 }

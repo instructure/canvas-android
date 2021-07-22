@@ -54,27 +54,11 @@ class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRo
         RouteMatcher.route(activity, AssignmentListFragment.makeRoute(course))
     }
 
-    override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) {
-        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId))
-    }
-
-    override fun openCalendarEvent(canvasContext: CanvasContext, scheduleItemId: Long) {
-        RouteMatcher.route(activity, CalendarEventFragment.makeRoute(canvasContext, scheduleItemId))
-    }
-
     override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) {
         RouteMatcher.route(activity, DiscussionDetailsFragment.makeRoute(course, announcement))
     }
 
     override fun updateColors() {
         FlutterComm.sendUpdatedTheme()
-    }
-
-    override fun openQuiz(canvasContext: CanvasContext, htmlUrl: String) {
-        RouteMatcher.route(activity, BasicQuizViewFragment.makeRoute(canvasContext, htmlUrl))
-    }
-
-    override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long, discussionTitle: String) {
-        RouteMatcher.route(activity, DiscussionDetailsFragment.makeRoute(canvasContext, discussionId, title = discussionTitle))
     }
 }

@@ -244,6 +244,6 @@ class CourseCardCreatorTest {
 
     private fun createPlannerItem(courseId: Long, plannableType: PlannableType, submitted: Boolean, missing: Boolean): PlannerItem {
         val plannable = mockk<Plannable>()
-        return PlannerItem(courseId, null, null, null, null, plannableType, plannable, Date(), null, SubmissionState(submitted, missing))
+        return PlannerItem(courseId, null, null, null, null, plannableType, plannable, Date(), null, SubmissionState(submitted, missing), false)
     }
 }

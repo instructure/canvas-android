@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.databinding.FragmentScheduleBinding
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import javax.inject.Inject
@@ -32,7 +31,7 @@ import javax.inject.Inject
 class ScheduleFragment : Fragment() {
 
     @Inject
-    lateinit var homeroomRouter: HomeroomRouter
+    lateinit var scheduleRouter: ScheduleRouter
 
     private val viewModel: ScheduleViewModel by viewModels()
 
@@ -52,16 +51,17 @@ class ScheduleFragment : Fragment() {
 
     private fun handleAction(action: ScheduleAction) {
         when (action) {
-            is ScheduleAction.OpenCourse -> homeroomRouter.openCourse(action.course)
-            is ScheduleAction.OpenAssignment -> homeroomRouter.openAssignment(action.canvasContext, action.assignmentId)
-            is ScheduleAction.OpenCalendarEvent -> homeroomRouter.openCalendarEvent(action.canvasContext, action.scheduleItemId)
+            is ScheduleAction.OpenCourse -> scheduleRouter.openCourse(action.course)
+            is ScheduleAction.OpenAssignment -> scheduleRouter.openAssignment(action.canvasContext, action.assignmentId)
+            is ScheduleAction.OpenCalendarEvent -> scheduleRouter.openCalendarEvent(
+                action.canvasContext,
+                action.scheduleItemId
+            )
             is ScheduleAction.OpenQuiz -> {
-                if (homeroomRouter.canRouteInternally(action.htmlUrl)) {
-                    homeroomRouter.openQuiz(action.canvasContext, action.htmlUrl)
-                }
+                scheduleRouter.openQuiz(action.canvasContext, action.htmlUrl)
             }
             is ScheduleAction.OpenDiscussion -> {
-                homeroomRouter.openDiscussion(action.canvasContext, action.id, action.title)
+                scheduleRouter.openDiscussion(action.canvasContext, action.id, action.title)
             }
             is ScheduleAction.JumpToToday -> {
                 scheduleRecyclerView.scrollToPosition(action.position)
