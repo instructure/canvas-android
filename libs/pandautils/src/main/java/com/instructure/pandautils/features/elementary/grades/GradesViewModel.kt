@@ -113,7 +113,8 @@ class GradesViewModel @Inject constructor(
         return if (gradingPeriods.isNotEmpty()) {
             val currentGradingPeriod = GradingPeriod(CURRENT_GRADING_PERIOD_ID, resources.getString(R.string.currentGradingPeriod))
             val allGradingPeriods = listOf(currentGradingPeriod).plus(gradingPeriods)
-            GradingPeriodSelectorItemViewModel(_events, allGradingPeriods, currentGradingPeriod, resources)
+            GradingPeriodSelectorItemViewModel(allGradingPeriods, currentGradingPeriod, resources)
+            { index -> _events.postValue(Event(GradesAction.OpenGradingPeriodsDialog(allGradingPeriods, index))) }
         } else {
             null
         }
