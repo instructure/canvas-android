@@ -67,6 +67,11 @@ object ApiModule {
     }
 
     @Provides
+    fun provideEnrollmentManager(): EnrollmentManager {
+        return EnrollmentManager
+    }
+
+    @Provides
     @Singleton
     fun provideHelpLinksApi(): HelpLinksAPI {
         return HelpLinksAPI

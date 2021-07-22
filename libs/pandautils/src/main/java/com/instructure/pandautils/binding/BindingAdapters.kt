@@ -20,10 +20,12 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -139,9 +141,26 @@ fun addBorderToContainer(view: View, borderColor: Int?, borderWidth: Int?, backg
     border.cornerRadius = borderCornerRadius?.toPx?.toFloat() ?: 4.toPx.toFloat()
     view.background = border
 }
+@BindingAdapter("layout_constraintWidth_percent")
+fun bindConstraintWidthPercentage(view: View, percentage: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    params.matchConstraintPercentWidth = percentage
+    view.layoutParams = params
+}
 
 @BindingAdapter("imageRes")
 fun bindImageResource(imageView: ImageView, @DrawableRes imageRes: Int) {
     imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
+}
+
+
+@BindingAdapter("accessibilityClickDescription")
+fun bindAccesibilityDelegate(view: View, clickDescription: String) {
+    view.accessibilityDelegate = object : View.AccessibilityDelegate() {
+        override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfo?) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+            info?.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, clickDescription))
+        }
+    }
 }
 
