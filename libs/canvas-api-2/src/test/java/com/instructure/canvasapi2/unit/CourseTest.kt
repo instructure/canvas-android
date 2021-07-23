@@ -562,6 +562,4 @@ class CourseTest {
 
         assertTrue(course.isBetweenValidDateRange())
     }
-
-
 }
