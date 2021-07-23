@@ -18,9 +18,12 @@ package com.instructure.pandautils.binding
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -121,6 +124,23 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
 fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: Int?) {
     if (overlayColor != null) {
         imageView.setCourseImage(imageUrl, overlayColor, true)
+    }
+}
+
+@BindingAdapter("layout_constraintWidth_percent")
+fun bindConstraintWidthPercentage(view: View, percentage: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    params.matchConstraintPercentWidth = percentage
+    view.layoutParams = params
+}
+
+@BindingAdapter("accessibilityClickDescription")
+fun bindAccesibilityDelegate(view: View, clickDescription: String) {
+    view.accessibilityDelegate = object : View.AccessibilityDelegate() {
+        override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfo?) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+            info?.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, clickDescription))
+        }
     }
 }
 

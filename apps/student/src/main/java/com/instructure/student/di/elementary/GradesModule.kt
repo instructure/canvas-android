@@ -17,8 +17,8 @@
 package com.instructure.student.di.elementary
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.student.mobius.elementary.homeroom.StudentHomeroomRouter
+import com.instructure.pandautils.features.elementary.grades.GradesRouter
+import com.instructure.student.mobius.elementary.grades.StudentGradesRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,10 +26,10 @@ import dagger.hilt.android.components.FragmentComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class HomeroomModule {
+class GradesModule {
 
     @Provides
-    fun provideHomeroomRouter(activity: FragmentActivity): HomeroomRouter {
-        return StudentHomeroomRouter(activity)
+    fun provideGradesRouter(activity: FragmentActivity): GradesRouter {
+        return StudentGradesRouter(activity)
     }
 }

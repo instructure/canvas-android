@@ -323,4 +323,20 @@ object CourseManager {
         CourseAPI.getRubricSettings(courseId, rubricId, adapter, callback, params)
     }
 
+    fun getCoursesWithGradesAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithGrades(forceNetwork, it) }
+
+    private fun getCoursesWithGrades(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
+                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CourseAPI.getFirstPageCoursesWithGrades(adapter, callback, params)
+    }
+
 }
