@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.isNotDeleted
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -563,4 +562,6 @@ class CourseTest {
 
         assertTrue(course.isBetweenValidDateRange())
     }
+
+
 }
