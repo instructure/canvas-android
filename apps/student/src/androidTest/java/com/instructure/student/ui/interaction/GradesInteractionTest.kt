@@ -31,6 +31,7 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import com.instructure.student.R
+import com.instructure.student.util.FeatureFlagPrefs
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -116,6 +117,7 @@ class GradesInteractionTest : StudentTest() {
         // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
         Thread.sleep(3000)
         RemoteConfigPrefs.putString(RemoteConfigParam.K5_DESIGN.rc_name, "true")
+        FeatureFlagPrefs.showInProgressK5Tabs = true
 
         return MockCanvas.init(
             studentCount = 1,
