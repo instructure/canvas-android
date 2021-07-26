@@ -59,7 +59,7 @@
             />
 
         <TextView
-            android:id="@+id/courseNameText"
+            android:id="@+id/gradesCourseNameText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -87,7 +87,7 @@
             android:layout_marginEnd="24dp"
             android:tint="#8B969E"
             android:importantForAccessibility="no"
-            app:layout_constraintTop_toBottomOf="@id/courseNameText"
+            app:layout_constraintTop_toBottomOf="@id/gradesCourseNameText"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,7 +98,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintStart_toEndOf="@id/courseImage"
-            app:layout_constraintTop_toBottomOf="@id/courseNameText"
+            app:layout_constraintTop_toBottomOf="@id/gradesCourseNameText"
             app:layout_constraintEnd_toStartOf="@id/chevronIcon">
 
             <View

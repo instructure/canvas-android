@@ -16,8 +16,55 @@
  */
 package com.instructure.student.ui.pages
 
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.*
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 
 class GradesPage : BasePage(R.id.gradesPage) {
+
+    private val swipeRefreshLayout by OnViewWithId(R.id.gradesRefreshLayout)
+    private val gradesRecyclerView by OnViewWithId(R.id.gradesRecyclerView)
+    private val emptyView by OnViewWithId(R.id.gradesEmptyView, autoAssert = false)
+
+    fun assertCourseShownWithGrades(courseName: String, grade: String) {
+        val courseNameMatcher = withId(R.id.gradesCourseNameText) + withText(courseName)
+        val gradeMatcher = withId(R.id.scoreText) + withText(grade)
+
+        onView(withId(R.id.gradeRow) + withDescendant(courseNameMatcher) + withDescendant(gradeMatcher))
+            .scrollTo()
+            .assertDisplayed()
+    }
+
+    fun refresh() {
+        swipeRefreshLayout.swipeDown()
+    }
+
+    fun assertEmptyViewVisible() {
+        emptyView.assertDisplayed()
+    }
+
+    fun assertRecyclerViewNotVisible() {
+        gradesRecyclerView.assertNotDisplayed()
+    }
+
+    fun clickGradeRow(courseName: String) {
+        onView(withId(R.id.gradesCourseNameText) + withText(courseName))
+            .scrollTo()
+            .click()
+    }
+
+    fun clickGradingPeriodSelector() {
+        onView(withId(R.id.gradingPeriodSelector))
+            .click()
+    }
+
+    fun selectGradingPeriod(gradingPeriodName: String) {
+        onView(withText(gradingPeriodName))
+            .click()
+    }
+
+    fun assertSelectedGradingPeriod(gradingPeriodName: String) {
+        onView(withId(R.id.gradingPeriodSelector) + withText(gradingPeriodName))
+            .assertDisplayed()
+    }
 }
