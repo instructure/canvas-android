@@ -23,10 +23,8 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.fragment.AnnouncementListFragment
-import com.instructure.student.fragment.AssignmentListFragment
-import com.instructure.student.fragment.CourseBrowserFragment
-import com.instructure.student.fragment.DiscussionDetailsFragment
+import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRouter {

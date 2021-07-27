@@ -79,7 +79,7 @@ object UserEndpoint : Endpoint(
                         .filter { userCourseIds.contains(it.courseId) }
                         .map {
                             val plannable = Plannable(it.id, it.name ?: "", it.courseId, null, userId, null, null, it.id)
-                            PlannerItem(it.courseId, null, userId, null, null, "assignment", plannable, Date(), null, SubmissionState())
+                            PlannerItem(it.courseId, null, userId, null, null, PlannableType.ASSIGNMENT, plannable, Date(), null, SubmissionState(), false)
                         }
 
                     request.successResponse(plannerItemsList)

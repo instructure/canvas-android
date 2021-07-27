@@ -1208,4 +1208,5 @@
     <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently not supported on mobile.</string>
     <string name="unsupportedSubmissionType">Unsupported Submission Type</string>
     <string name="studentAnnotationUnsupportedMessage">Submission cannot be displayed, because Student Annotation is currently not supported on mobile.</string>
+    <string name="schedule_marked_as_done">You\'ve marked it as done.</string>
 </resources>
