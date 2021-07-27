@@ -21,7 +21,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayHeaderItemViewModel" />
+            type="com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayGroupItemViewModel" />
 
         <import type="android.view.View" />
     </data>

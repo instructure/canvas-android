@@ -22,7 +22,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemsHeaderItemViewModel" />
+            type="com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemsGroupItemViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -30,7 +30,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:orientation="vertical">
 
         <View
@@ -43,7 +43,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:background="?attr/selectableItemBackground"
             android:minHeight="48dp"
             android:onClick="@{() -> itemViewModel.toggleItems()}"
@@ -84,18 +83,5 @@
                 tools:text="@string/show_missing_items_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="@{itemViewModel.collapsed ? View.GONE : View.VISIBLE}"
-            app:itemViewModels="@{itemViewModel.items}" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lightGray"
-            app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 </layout>

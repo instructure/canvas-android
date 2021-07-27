@@ -24,9 +24,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
 import com.instructure.pandautils.mvvm.Event
@@ -34,12 +32,9 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.OffsetDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -53,7 +48,6 @@ class ScheduleViewModel @Inject constructor(
 ) : ViewModel() {
 
     private lateinit var missingSubmissions: List<Assignment>
-    private lateinit var assignmentMap: Map<Long?, Assignment?>
     private lateinit var plannerItems: List<PlannerItem>
     private lateinit var coursesMap: Map<Long, Course>
 
@@ -120,7 +114,7 @@ class ScheduleViewModel @Inject constructor(
                         todayPos = itemViewModels.size
                     }
 
-                    itemViewModels.addAll(createCourseItemsForDate(date))
+                    itemViewModels.add(createCourseItemsForDate(date))
                 }
                 _data.postValue(ScheduleViewData(itemViewModels))
                 _state.postValue(ViewState.Success)
@@ -131,19 +125,19 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-    private fun createCourseItemsForDate(date: Date): List<ItemViewModel> {
+    private fun createCourseItemsForDate(date: Date): ScheduleDayGroupItemViewModel {
         val items = mutableListOf<ItemViewModel>()
-        items.add(createDayHeader(date))
+
         items.addAll(createCourseItems(date))
 
         if (date.isSameDay(Date()) && missingSubmissions.isNotEmpty()) {
             items.add(createMissingItems())
         }
 
-        return items
+        return createDayHeader(date, items)
     }
 
-    private fun createMissingItems(): ScheduleMissingItemsHeaderItemViewModel {
+    private fun createMissingItems(): ScheduleMissingItemsGroupItemViewModel {
         val missingItems = missingSubmissions.map {
             ScheduleMissingItemViewModel(
                 data = ScheduleMissingItemData(
@@ -173,15 +167,16 @@ class ScheduleViewModel @Inject constructor(
                 }
             )
         }
-        return ScheduleMissingItemsHeaderItemViewModel(items = missingItems)
+        return ScheduleMissingItemsGroupItemViewModel(items = missingItems)
     }
 
-    private fun createDayHeader(date: Date): ScheduleDayHeaderItemViewModel {
-        return ScheduleDayHeaderItemViewModel(
+    private fun createDayHeader(date: Date, items: List<ItemViewModel>): ScheduleDayGroupItemViewModel {
+        return ScheduleDayGroupItemViewModel(
             getTitleForDate(date),
             SimpleDateFormat("MMMM dd", Locale.getDefault()).format(date),
             !Date().isSameDay(date),
-            this@ScheduleViewModel::jumpToToday
+            this@ScheduleViewModel::jumpToToday,
+            items
         )
     }
 

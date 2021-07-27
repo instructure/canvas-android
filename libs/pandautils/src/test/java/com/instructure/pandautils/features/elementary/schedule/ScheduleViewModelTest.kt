@@ -21,21 +21,17 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.PlannerManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleCourseItemViewModel
-import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayHeaderItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayGroupItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleEmptyItemViewModel
-import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemsHeaderItemViewModel
-import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemsGroupItemViewModel
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -161,7 +157,7 @@ class ScheduleViewModelTest {
 
         viewModel.data.observe(lifecycleOwner, {})
 
-        val headerItems = viewModel.data.value?.itemViewModels?.filterIsInstance<ScheduleDayHeaderItemViewModel>()
+        val headerItems = viewModel.data.value?.itemViewModels?.filterIsInstance<ScheduleDayGroupItemViewModel>()
         assertEquals(6, headerItems?.count { it.todayVisible })
 
         val todayIndex = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1)
@@ -203,7 +199,7 @@ class ScheduleViewModelTest {
         viewModel.data.observe(lifecycleOwner, {})
 
         val missingItemHeader =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsHeaderItemViewModel } as ScheduleMissingItemsHeaderItemViewModel
+            viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsGroupItemViewModel } as ScheduleMissingItemsGroupItemViewModel
         assertEquals(2, missingItemHeader.items.size)
 
         val firstMissingItem = missingItemHeader.items[0]
@@ -236,9 +232,9 @@ class ScheduleViewModelTest {
 
         viewModel.data.observe(lifecycleOwner, {})
 
-        assertEquals(1, viewModel.data.value?.itemViewModels?.count { it is ScheduleMissingItemsHeaderItemViewModel })
+        assertEquals(1, viewModel.data.value?.itemViewModels?.count { it is ScheduleMissingItemsGroupItemViewModel })
         val missingItemHeader =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsHeaderItemViewModel } as ScheduleMissingItemsHeaderItemViewModel
+            viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsGroupItemViewModel } as ScheduleMissingItemsGroupItemViewModel
         assertEquals(true, missingItemHeader.collapsed)
         missingItemHeader.toggleItems()
         assertEquals(false, missingItemHeader.collapsed)
@@ -265,7 +261,7 @@ class ScheduleViewModelTest {
 
         viewModel.data.observe(lifecycleOwner, {})
 
-        assertEquals(1, viewModel.data.value?.itemViewModels?.count { it is ScheduleMissingItemsHeaderItemViewModel })
+        assertEquals(1, viewModel.data.value?.itemViewModels?.count { it is ScheduleMissingItemsGroupItemViewModel })
     }
 
     @Test
@@ -275,7 +271,7 @@ class ScheduleViewModelTest {
         viewModel.data.observe(lifecycleOwner, {})
 
         assertEquals(14, viewModel.data.value?.itemViewModels?.size)
-        assertEquals(null, viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsHeaderItemViewModel })
+        assertEquals(null, viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsGroupItemViewModel })
     }
 
     @Test
@@ -529,19 +525,19 @@ class ScheduleViewModelTest {
 
         val todayIndex = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1) * 2
         val todayHeader = viewModel.data.value?.itemViewModels?.get(todayIndex)
-        assert(todayHeader is ScheduleDayHeaderItemViewModel)
-        val todayHeaderItemViewModel = todayHeader as ScheduleDayHeaderItemViewModel
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        val todayHeaderItemViewModel = todayHeader as ScheduleDayGroupItemViewModel
         assertEquals("Today", todayHeaderItemViewModel.dayText)
 
         if (todayIndex != 0) {
             val yesterdayHeader = viewModel.data.value?.itemViewModels?.get(todayIndex - 2)
-            val yesterdayHeaderItemViewModel = yesterdayHeader as ScheduleDayHeaderItemViewModel
+            val yesterdayHeaderItemViewModel = yesterdayHeader as ScheduleDayGroupItemViewModel
             assertEquals("Yesterday", yesterdayHeaderItemViewModel.dayText)
         }
 
         if (todayIndex != 12) {
             val tomorrowHeader = viewModel.data.value?.itemViewModels?.get(todayIndex + 2)
-            val tomorrowHeaderItemViewModel = tomorrowHeader as ScheduleDayHeaderItemViewModel
+            val tomorrowHeaderItemViewModel = tomorrowHeader as ScheduleDayGroupItemViewModel
             assertEquals("Tomorrow", tomorrowHeaderItemViewModel.dayText)
         }
     }
@@ -554,7 +550,7 @@ class ScheduleViewModelTest {
 
         assertEquals(14, viewModel.data.value?.itemViewModels?.size)
 
-        assertEquals(7, viewModel.data.value?.itemViewModels?.count { it is ScheduleDayHeaderItemViewModel })
+        assertEquals(7, viewModel.data.value?.itemViewModels?.count { it is ScheduleDayGroupItemViewModel })
         assertEquals(7, viewModel.data.value?.itemViewModels?.count { it is ScheduleEmptyItemViewModel })
     }
 
@@ -585,8 +581,8 @@ class ScheduleViewModelTest {
 
         val dayIndex = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1) * 2
         val dayHeader = viewModel.data.value?.itemViewModels?.get(dayIndex)
-        assert(dayHeader is ScheduleDayHeaderItemViewModel)
-        val dayItemViewModel = dayHeader as ScheduleDayHeaderItemViewModel
+        assert(dayHeader is ScheduleDayGroupItemViewModel)
+        val dayItemViewModel = dayHeader as ScheduleDayGroupItemViewModel
         assertEquals(SimpleDateFormat("MMMM dd", Locale.getDefault()).format(Date()), dayItemViewModel.dateText)
 
         val courseItem = viewModel.data.value?.itemViewModels?.get(dayIndex + 1)
