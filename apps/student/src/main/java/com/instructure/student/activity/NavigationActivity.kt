@@ -225,6 +225,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
         }
 
+        bottomBar.inflateMenu(navigationBehavior.bottomBarMenu)
+
         supportFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)
 
         if (savedInstanceState == null) {

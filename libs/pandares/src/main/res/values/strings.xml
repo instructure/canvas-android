@@ -1195,6 +1195,7 @@
     <string name="notGraded">Not Graded</string>
     <string name="a11y_gradingPeriodSelectorClickDescription">Change grading period</string>
     <string name="a11y_gradesNotAvailableContentDescription">Grades not available</string>
+    <string name="bottomBarHomeroom">Homeroom</string>
 
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 
