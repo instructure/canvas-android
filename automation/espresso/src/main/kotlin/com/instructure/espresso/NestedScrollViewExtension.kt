@@ -21,6 +21,7 @@ import android.widget.HorizontalScrollView
 import android.widget.ListView
 import android.widget.ScrollView
 import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -33,6 +34,7 @@ class NestedScrollViewExtension(scrolltoAction: ViewAction = ViewActions.scrollT
             ViewMatchers.isDescendantOfA(Matchers.anyOf(ViewMatchers.isAssignableFrom(NestedScrollView::class.java),
                 ViewMatchers.isAssignableFrom(ScrollView::class.java),
                 ViewMatchers.isAssignableFrom(HorizontalScrollView::class.java),
+                ViewMatchers.isAssignableFrom(RecyclerView::class.java),
                 ViewMatchers.isAssignableFrom(ListView::class.java))))
     }
 }
