@@ -126,7 +126,9 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
 @BindingAdapter(value = ["imageUrl", "overlayColor"], requireAll = true)
 fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: Int?) {
     if (overlayColor != null) {
-        imageView.setCourseImage(imageUrl, overlayColor, true)
+        imageView.post {
+            imageView.setCourseImage(imageUrl, overlayColor, true)
+        }
     }
 }
 
