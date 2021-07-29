@@ -115,6 +115,7 @@ class SettingsInteractionTest : StudentTest() {
     fun testPairObserver_refreshCode() {
         setUpAndSignIn()
 
+        ApiPrefs.canGeneratePairingCode = true
         dashboardPage.launchSettingsPage()
         settingsPage.launchPairObserverPage()
 

@@ -83,12 +83,14 @@ class ApplicationSettingsFragment : ParentFragment() {
         legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
-        pairObserver.setVisible()
-        pairObserver.onClick {
-            if (APIHelper.hasNetworkConnection()) {
-                addFragment(PairObserverFragment.newInstance())
-            } else {
-                NoInternetConnectionDialog.show(requireFragmentManager())
+        if (ApiPrefs.canGeneratePairingCode == true) {
+            pairObserver.setVisible()
+            pairObserver.onClick {
+                if (APIHelper.hasNetworkConnection()) {
+                    addFragment(PairObserverFragment.newInstance())
+                } else {
+                    NoInternetConnectionDialog.show(requireFragmentManager())
+                }
             }
         }
 
