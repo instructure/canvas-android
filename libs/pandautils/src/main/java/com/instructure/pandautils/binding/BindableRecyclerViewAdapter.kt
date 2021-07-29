@@ -25,7 +25,7 @@ import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder>() {
+open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder>() {
 
     var itemViewModels: MutableList<ItemViewModel> = mutableListOf()
     private val viewTypeLayoutMap: MutableMap<Int, Int> = mutableMapOf()

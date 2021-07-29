@@ -81,9 +81,10 @@ private fun handleErrorState(emptyView: EmptyView, error: ViewState.Error) {
     }
 }
 
-@BindingAdapter("recyclerViewItemViewModels")
-fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?) {
-    val adapter = getOrCreateAdapter(recyclerView)
+@BindingAdapter("recyclerViewItemViewModels", "adapter", requireAll = false)
+fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?, bindableAdapter: BindableRecyclerViewAdapter?) {
+    val adapter = bindableAdapter ?: getOrCreateAdapter(recyclerView)
+    recyclerView.adapter = adapter
     adapter.updateItems(itemViewModels)
 }
 
@@ -97,7 +98,6 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
         recyclerView.adapter as BindableRecyclerViewAdapter
     } else {
         val bindableRecyclerAdapter = BindableRecyclerViewAdapter()
-        recyclerView.adapter = bindableRecyclerAdapter
         bindableRecyclerAdapter
     }
 }

@@ -35,10 +35,13 @@ class ScheduleFragment : Fragment() {
 
     private val viewModel: ScheduleViewModel by viewModels()
 
+    private val adapter = ScheduleRecyclerViewAdapter()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentScheduleBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.adapter = adapter
 
         viewModel.events.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
