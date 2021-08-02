@@ -24,8 +24,8 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -166,3 +166,10 @@ fun bindAccesibilityDelegate(view: View, clickDescription: String) {
     }
 }
 
+@BindingAdapter("android:layout_marginBottom")
+fun setBottomMargin(view: View, bottomMargin: Int) {
+    val layoutParams: ViewGroup.MarginLayoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+    layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin,
+        layoutParams.rightMargin, bottomMargin)
+    view.layoutParams = layoutParams
+}

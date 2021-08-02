@@ -14,10 +14,86 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/resourcesPage"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.instructure.pandautils.features.elementary.resources.ResourcesViewModel" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/resourcesPage">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/resourcesSwipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:onRefreshListener="@{() -> viewModel.refresh()}"
+            app:refreshState="@{viewModel.state}">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/resourcesContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingTop="28dp"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/importantLinksTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/importantLinksTitle"
+                        android:textColor="@color/defaultTextDark"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:visibility="@{viewModel.data.importantLinksItems.empty ? View.GONE : View.VISIBLE}"/>
+
+                    <LinearLayout
+                        android:id="@+id/announcementsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        app:itemViewModels="@{viewModel.data.importantLinksItems}" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/coursesRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        app:recyclerViewItemViewModels="@{viewModel.data.otherItems}"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:emptyViewState="@{viewModel.state}" />
+    </FrameLayout>
+
+</layout>

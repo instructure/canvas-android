@@ -21,12 +21,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.R
+import androidx.fragment.app.viewModels
+import com.instructure.pandautils.databinding.FragmentResourcesBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ResourcesFragment : Fragment() {
 
+    private val viewModel: ResourcesViewModel by viewModels()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return layoutInflater.inflate(R.layout.fragment_resources, container, false)
+        val binding = FragmentResourcesBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        viewModel.events.observe(viewLifecycleOwner, { event ->
+            event.getContentIfNotHandled()?.let {
+
+            }
+        })
+
+        return binding.root
     }
 
     companion object {
