@@ -62,11 +62,11 @@ class ResourcesViewModel @Inject constructor(
     private val _events = MutableLiveData<Event<ResourcesAction>>()
 
     init {
+        _state.postValue(ViewState.Loading)
         loadData(false)
     }
 
     private fun loadData(forceNetwork: Boolean) {
-        _state.postValue(ViewState.Loading)
         viewModelScope.launch {
 
             val coursesResult = courseManager.getCoursesWithSyllabusAsync(forceNetwork).await()
@@ -142,6 +142,7 @@ class ResourcesViewModel @Inject constructor(
     }
 
     fun refresh() {
-
+        _state.postValue(ViewState.Refresh)
+        loadData(true)
     }
 }

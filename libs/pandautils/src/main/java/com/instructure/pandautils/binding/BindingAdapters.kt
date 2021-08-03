@@ -35,12 +35,10 @@ import com.bumptech.glide.Glide
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.setCourseImage
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toPx
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
+import de.hdodenhof.circleimageview.CircleImageView
 import java.net.URLDecoder
 
 @BindingAdapter(value = ["itemViewModels", "onItemsAdded", "shouldUpdate"], requireAll = false)
@@ -177,4 +175,9 @@ fun setBottomMargin(view: View, bottomMargin: Int) {
     layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin,
         layoutParams.rightMargin, bottomMargin)
     view.layoutParams = layoutParams
+}
+
+@BindingAdapter(value = ["userAvatar", "userName"], requireAll = true)
+fun bindUserAvatar(imageView: CircleImageView, userAvatarUrl: String?, userName: String?) {
+    ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl)
 }
