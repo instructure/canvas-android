@@ -29,14 +29,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="60dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/avatarImg"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_canvas_logo"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -77,18 +78,12 @@
             android:textColor="@color/defaultTextDark"
             android:textSize="13sp"
             android:text="@{itemViewModel.data.description}"
+            android:visibility="@{itemViewModel.data.description.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/mailIcon"
             app:layout_constraintStart_toEndOf="@id/avatarImg"
             app:layout_constraintTop_toBottomOf="@id/nameTitle"
             tools:text="Office hours 9:00am to 3:00pm, Monday to Friday" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrier"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="avatarImg, descriptionTitle"/>
 
         <View
             android:id="@+id/separator"
@@ -96,7 +91,7 @@
             android:layout_height="0.5dp"
             android:background="@color/k5SeparatorColor"
             android:layout_marginTop="80dp"
-            app:layout_constraintBottom_toBottomOf="@id/barrier" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

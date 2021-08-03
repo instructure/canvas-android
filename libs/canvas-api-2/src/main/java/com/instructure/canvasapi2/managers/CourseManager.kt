@@ -101,6 +101,8 @@ object CourseManager {
         CourseAPI.getDashboardCourses(adapter, callback, params)
     }
 
+    fun getCoursesWithSyllabusAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithSyllabus(forceNetwork, it) }
+
     fun getCoursesWithSyllabus(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)

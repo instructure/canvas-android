@@ -17,6 +17,8 @@
 
 package com.instructure.canvasapi2.models
 
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -25,7 +27,16 @@ data class LTITool(
         var name: String? = null,
         var url: String? = null,
         var assignmentId: Long = 0L,
-        var courseId: Long = 0L
+        var courseId: Long = 0L,
+        var collaboration: Collaboration? = null
 ) : CanvasModel<LTITool>() {
     override val comparisonString get() = name
 }
+
+@Parcelize
+data class Collaboration(
+    val text: String? = null,
+
+    @SerializedName("icon_url")
+    val iconUrl: String? = null
+) : Parcelable

@@ -31,6 +31,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
@@ -123,12 +124,16 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
     }
 }
 
-@BindingAdapter(value = ["imageUrl", "overlayColor"], requireAll = true)
+@BindingAdapter(value = ["imageUrl", "overlayColor"], requireAll = false)
 fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: Int?) {
     if (overlayColor != null) {
         imageView.post {
             imageView.setCourseImage(imageUrl, overlayColor, true)
         }
+    } else {
+        Glide.with(imageView)
+            .load(imageUrl)
+            .into(imageView)
     }
 }
 

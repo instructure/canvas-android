@@ -24,7 +24,7 @@ data class ResourcesHeaderViewData(val title: String, val hasDivider: Boolean = 
 
 data class LtiApplicationViewData(val title: String, val imageUrl: String, val ltiUrl: String)
 
-data class ContactInfoViewData(val name: String, val description: String, val iamgeUrl: String)
+data class ContactInfoViewData(val name: String, val description: String, val imageUrl: String)
 
 sealed class ResourcesAction {
 

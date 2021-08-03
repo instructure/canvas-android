@@ -50,7 +50,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingTop="28dp"
-                    android:paddingBottom="16dp">
+                    android:paddingBottom="32dp">
 
                     <TextView
                         android:id="@+id/importantLinksTitle"
