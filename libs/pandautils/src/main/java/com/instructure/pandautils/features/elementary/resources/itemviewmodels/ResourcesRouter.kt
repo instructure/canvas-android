@@ -17,7 +17,9 @@
 package com.instructure.pandautils.features.elementary.resources.itemviewmodels
 
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.User
 
 interface ResourcesRouter {
     fun openLti(ltiTool: LTITool)
+    fun openComposeMessage(user: User)
 }

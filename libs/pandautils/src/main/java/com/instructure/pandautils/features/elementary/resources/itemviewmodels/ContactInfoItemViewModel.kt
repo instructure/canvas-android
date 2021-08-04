@@ -22,7 +22,8 @@ import com.instructure.pandautils.features.elementary.resources.ResourcesItemVie
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class ContactInfoItemViewModel(
-    val data: ContactInfoViewData
+    val data: ContactInfoViewData,
+    val onClick: () -> Unit
 ) : ItemViewModel {
 
     override val layoutId: Int = R.layout.item_contact_info

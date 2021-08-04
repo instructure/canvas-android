@@ -17,9 +17,9 @@
 package com.instructure.student.mobius.elementary.resources
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.*
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
+import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.router.RouteMatcher
 
@@ -34,6 +34,12 @@ class StudentResourcesRouter(private val activity: FragmentActivity) : Resources
             sessionLessLaunch = true,
             isAssignmentLTI = false,
             ltiTool = ltiTool)
+        RouteMatcher.route(activity, route)
+    }
+
+    override fun openComposeMessage(user: User) {
+        val recipient = Recipient.from(user)
+        val route = InboxComposeMessageFragment.makeRoute(CanvasContext.defaultCanvasContext(), arrayListOf(recipient))
         RouteMatcher.route(activity, route)
     }
 }

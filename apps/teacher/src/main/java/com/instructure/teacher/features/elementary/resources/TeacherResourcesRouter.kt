@@ -17,9 +17,12 @@
 package com.instructure.teacher.features.elementary.resources
 
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
 
 class TeacherResourcesRouter : ResourcesRouter {
 
     override fun openLti(ltiTool: LTITool) = Unit
+
+    override fun openComposeMessage(user: User) = Unit
 }

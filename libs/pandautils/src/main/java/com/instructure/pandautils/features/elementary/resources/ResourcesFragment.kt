@@ -56,6 +56,7 @@ class ResourcesFragment : Fragment() {
     private fun handleAction(action: ResourcesAction) {
         when (action) {
             is ResourcesAction.OpenLtiApp -> showCourseSelectorDialog(action.ltiTools)
+            is ResourcesAction.OpenComposeMessage -> resourcesRouter.openComposeMessage(action.recipient)
         }
     }
 

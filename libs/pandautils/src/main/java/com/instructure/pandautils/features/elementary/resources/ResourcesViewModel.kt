@@ -146,7 +146,9 @@ class ResourcesViewModel @Inject constructor(
             .distinctBy { user: User -> user.id }
 
         return teachers.map {
-            ContactInfoItemViewModel(ContactInfoViewData(it.name, it.bio ?: "", it.avatarUrl ?: ""))
+            ContactInfoItemViewModel(ContactInfoViewData(it.name, it.bio ?: "", it.avatarUrl ?: "")) {
+                _events.postValue(Event(ResourcesAction.OpenComposeMessage(it)))
+            }
         }
     }
 

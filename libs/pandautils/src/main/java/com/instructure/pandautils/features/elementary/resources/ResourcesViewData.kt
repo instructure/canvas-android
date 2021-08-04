@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.elementary.resources
 
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class ResourcesViewData(val importantLinksItems: List<ItemViewModel>, val actionItems: List<ItemViewModel>)
@@ -29,6 +30,7 @@ data class ContactInfoViewData(val name: String, val description: String, val im
 
 sealed class ResourcesAction {
     data class OpenLtiApp(val ltiTools: List<LTITool>) : ResourcesAction()
+    data class OpenComposeMessage(val recipient: User) : ResourcesAction()
 }
 
 enum class ResourcesItemViewType(val viewType: Int) {

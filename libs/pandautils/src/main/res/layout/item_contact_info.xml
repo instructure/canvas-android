@@ -29,7 +29,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        android:onClick="@{() -> itemViewModel.onClick.invoke()}">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatarImg"
