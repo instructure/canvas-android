@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.R
@@ -82,7 +83,7 @@ class ResourcesViewModel @Inject constructor(
             val homeroomCourses = coursesResult.dataOrThrow.filter { it.homeroomCourse }
             val importantLinks = createImportantLinks(homeroomCourses)
 
-            val actionItems = createActionItems(courses, forceNetwork)
+            val actionItems = createActionItems(courses, homeroomCourses, forceNetwork)
 
             _state.postValue(ViewState.Success)
             _data.postValue(ResourcesViewData(importantLinks, actionItems))
@@ -119,7 +120,7 @@ class ResourcesViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createActionItems(courses: List<Course>, forceNetwork: Boolean): List<ItemViewModel> {
+    private suspend fun createActionItems(courses: List<Course>, homeroomCourses: List<Course>, forceNetwork: Boolean): List<ItemViewModel> {
         val actionItems = mutableListOf<ItemViewModel>()
         val ltiApps = createLtiApps(courses, forceNetwork)
         if (ltiApps.isNotEmpty()) {
@@ -127,7 +128,7 @@ class ResourcesViewModel @Inject constructor(
             actionItems.addAll(ltiApps)
         }
 
-        val staffInfo = createStaffInfo(courses, forceNetwork)
+        val staffInfo = createStaffInfo(homeroomCourses, forceNetwork)
         if (staffInfo.isNotEmpty()) {
             actionItems.add(ResourcesHeaderViewModel(ResourcesHeaderViewData(resources.getString(R.string.staffContactInfo), true)))
             actionItems.addAll(staffInfo)
@@ -175,9 +176,17 @@ class ResourcesViewModel @Inject constructor(
             .distinctBy { user: User -> user.id }
 
         return teachers.map {
-            ContactInfoItemViewModel(ContactInfoViewData(it.name, it.bio ?: "", it.avatarUrl ?: "")) {
+            ContactInfoItemViewModel(ContactInfoViewData(it.shortName ?: "", getRoleString(it.enrollments[0].role), it.avatarUrl ?: "")) {
                 _events.postValue(Event(ResourcesAction.OpenComposeMessage(it)))
             }
+        }
+    }
+
+    private fun getRoleString(role: Enrollment.EnrollmentType?): String {
+        return when (role) {
+            Enrollment.EnrollmentType.Teacher -> resources.getString(R.string.staffRoleTeacher)
+            Enrollment.EnrollmentType.Ta -> resources.getString(R.string.staffRoleTeacherAssistant)
+            else -> ""
         }
     }
 

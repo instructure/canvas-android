@@ -87,7 +87,7 @@
             app:layout_constraintEnd_toStartOf="@id/mailIcon"
             app:layout_constraintStart_toEndOf="@id/avatarImg"
             app:layout_constraintTop_toBottomOf="@id/nameTitle"
-            tools:text="Office hours 9:00am to 3:00pm, Monday to Friday" />
+            tools:text="Teaching Assistant" />
 
         <View
             android:id="@+id/separator"

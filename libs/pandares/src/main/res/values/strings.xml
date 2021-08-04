@@ -1201,6 +1201,8 @@
     <string name="staffContactInfo">Staff Contact Info</string>
     <string name="chooseACourse">Choose a Course</string>
     <string name="webViewImportantLinksTitle">Important Links</string>
+    <string name="staffRoleTeacher">Teacher</string>
+    <string name="staffRoleTeacherAssistant">Teaching Assistant</string>
 
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 
