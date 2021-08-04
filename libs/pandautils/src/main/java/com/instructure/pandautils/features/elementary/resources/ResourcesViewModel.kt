@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ExternalToolManager
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
@@ -35,10 +36,12 @@ import com.instructure.pandautils.features.elementary.resources.itemviewmodels.R
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.toPx
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,7 +49,9 @@ class ResourcesViewModel @Inject constructor(
     private val resources: Resources,
     private val courseManager: CourseManager,
     private val userManager: UserManager,
-    private val externalToolManager: ExternalToolManager
+    private val externalToolManager: ExternalToolManager,
+    private val oAuthManager: OAuthManager,
+    private val htmlContentFormatter: HtmlContentFormatter
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -86,8 +91,32 @@ class ResourcesViewModel @Inject constructor(
 
     private fun createImportantLinks(homeroomCourses: List<Course>): List<ItemViewModel> {
         return homeroomCourses
-            .map { ImportantLinksItemViewModel(it.syllabusBody ?: "") }
+            .map { ImportantLinksItemViewModel(it.syllabusBody ?: "", ::ltiButtonPressed) }
             .filter { it.htmlContent.isNotEmpty() }
+    }
+
+    private fun ltiButtonPressed(html: String, htmlContent: String) {
+        viewModelScope.launch {
+            try {
+                val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(htmlContent)
+                matcher.find()
+                val url = matcher.group(1)
+
+                if (url == null) {
+                    _events.postValue(Event(ResourcesAction.WebLtiButtonPressed(html)))
+                    return@launch
+                }
+
+                // Get an authenticated session so the user doesn't have to log in
+                val authenticatedSessionURL = oAuthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
+                val newUrl = htmlContentFormatter.createAuthenticatedLtiUrl(html, authenticatedSessionURL)
+
+                _events.postValue(Event(ResourcesAction.WebLtiButtonPressed(newUrl)))
+            } catch (e: Exception) {
+                // Couldn't get the authenticated session, try to load it without it
+                _events.postValue(Event(ResourcesAction.WebLtiButtonPressed(html)))
+            }
+        }
     }
 
     private suspend fun createActionItems(courses: List<Course>, forceNetwork: Boolean): List<ItemViewModel> {

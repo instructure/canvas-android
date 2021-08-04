@@ -22,6 +22,8 @@
         <variable
             name="itemViewModel"
             type="com.instructure.pandautils.features.elementary.resources.itemviewmodels.ImportantLinksItemViewModel" />
+
+        <import type="com.instructure.pandares.R" />
     </data>
 
     <com.instructure.pandautils.views.CanvasWebView
@@ -29,5 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
-        app:htmlContent="@{itemViewModel.htmlContent}" />
+        app:htmlContent="@{itemViewModel.htmlContent}"
+        app:onLtiButtonPressed="@{(url) -> itemViewModel.onLtiButtonPressed(url)}"
+        app:htmlTitle="@{context.getString(R.string.webViewImportantLinksTitle)}"/>
 </layout>

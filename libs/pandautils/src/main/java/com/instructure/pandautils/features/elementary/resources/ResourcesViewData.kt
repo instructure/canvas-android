@@ -32,6 +32,7 @@ sealed class ResourcesAction {
     data class OpenLtiApp(val ltiTools: List<LTITool>) : ResourcesAction()
     data class OpenComposeMessage(val recipient: User) : ResourcesAction()
     object ImportantLinksViewsReady : ResourcesAction()
+    data class WebLtiButtonPressed(val url: String) : ResourcesAction()
 }
 
 enum class ResourcesItemViewType(val viewType: Int) {
