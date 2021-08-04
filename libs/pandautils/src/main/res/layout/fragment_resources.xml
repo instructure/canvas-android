@@ -80,7 +80,7 @@
                         android:nestedScrollingEnabled="false"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        app:recyclerViewItemViewModels="@{viewModel.data.otherItems}"
+                        app:recyclerViewItemViewModels="@{viewModel.data.actionItems}"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                 </LinearLayout>

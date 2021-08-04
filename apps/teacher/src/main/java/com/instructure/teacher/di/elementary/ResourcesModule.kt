@@ -14,19 +14,21 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.elementary.resources.itemviewmodels
+package com.instructure.teacher.di.elementary
 
-import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.resources.LtiApplicationViewData
-import com.instructure.pandautils.features.elementary.resources.ResourcesItemViewType
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
+import com.instructure.teacher.features.elementary.resources.TeacherResourcesRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
-class LtiApplicationItemViewModel(
-    val data: LtiApplicationViewData,
-    val marginBottom: Int,
-    val onClick: () -> Unit) : ItemViewModel {
+@Module
+@InstallIn(FragmentComponent::class)
+class ResourcesModule {
 
-    override val layoutId: Int = R.layout.item_lti_application
-
-    override val viewType: Int = ResourcesItemViewType.LTI_APPLICATION.viewType
+    @Provides
+    fun provideResourcesRouter(): ResourcesRouter {
+        return TeacherResourcesRouter()
+    }
 }

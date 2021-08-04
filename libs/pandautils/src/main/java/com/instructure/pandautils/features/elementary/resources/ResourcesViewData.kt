@@ -16,9 +16,10 @@
  */
 package com.instructure.pandautils.features.elementary.resources
 
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class ResourcesViewData(val importantLinksItems: List<ItemViewModel>, val otherItems: List<ItemViewModel>)
+data class ResourcesViewData(val importantLinksItems: List<ItemViewModel>, val actionItems: List<ItemViewModel>)
 
 data class ResourcesHeaderViewData(val title: String, val hasDivider: Boolean = false)
 
@@ -27,7 +28,7 @@ data class LtiApplicationViewData(val title: String, val imageUrl: String, val l
 data class ContactInfoViewData(val name: String, val description: String, val imageUrl: String)
 
 sealed class ResourcesAction {
-
+    data class OpenLtiApp(val ltiTools: List<LTITool>) : ResourcesAction()
 }
 
 enum class ResourcesItemViewType(val viewType: Int) {

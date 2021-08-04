@@ -28,7 +28,13 @@ data class LTITool(
         var url: String? = null,
         var assignmentId: Long = 0L,
         var courseId: Long = 0L,
-        var collaboration: Collaboration? = null
+        var collaboration: Collaboration? = null,
+        @SerializedName("icon_url")
+        var iconUrl: String? = null,
+        @SerializedName("context_id")
+        var contextId: Long? = null,
+        @SerializedName("context_name")
+        var contextName: String? = null
 ) : CanvasModel<LTITool>() {
     override val comparisonString get() = name
 }
@@ -36,7 +42,4 @@ data class LTITool(
 @Parcelize
 data class Collaboration(
     val text: String? = null,
-
-    @SerializedName("icon_url")
-    val iconUrl: String? = null
 ) : Parcelable

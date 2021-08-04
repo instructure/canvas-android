@@ -14,19 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.elementary.resources.itemviewmodels
+package com.instructure.teacher.features.elementary.resources
 
-import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.resources.LtiApplicationViewData
-import com.instructure.pandautils.features.elementary.resources.ResourcesItemViewType
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
 
-class LtiApplicationItemViewModel(
-    val data: LtiApplicationViewData,
-    val marginBottom: Int,
-    val onClick: () -> Unit) : ItemViewModel {
+class TeacherResourcesRouter : ResourcesRouter {
 
-    override val layoutId: Int = R.layout.item_lti_application
-
-    override val viewType: Int = ResourcesItemViewType.LTI_APPLICATION.viewType
+    override fun openLti(ltiTool: LTITool) = Unit
 }

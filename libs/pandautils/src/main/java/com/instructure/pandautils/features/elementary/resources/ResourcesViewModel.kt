@@ -112,20 +112,29 @@ class ResourcesViewModel @Inject constructor(
             .map { it.contextId }
 
         val ltiTools = externalToolManager.getExternalToolsForCoursesAsync(contextIds, forceNetwork).await().dataOrNull
-            ?.distinctBy { it.id }
 
-        return ltiTools
-            ?.mapIndexed { i: Int, ltiTool: LTITool -> createLtiApplicationItem(ltiTool, i == ltiTools.size - 1) }
+        val ltiToolsMapById = mutableMapOf<Long, MutableList<LTITool>>()
+        ltiTools?.forEach {
+            if (!ltiToolsMapById.contains(it.id)) {
+                ltiToolsMapById[it.id] = mutableListOf()
+            }
+            ltiToolsMapById[it.id]?.add(it)
+        }
+
+        val displayedLtiTools = ltiTools?.distinctBy { it.id }
+
+        return displayedLtiTools
+            ?.mapIndexed { i: Int, ltiTool: LTITool ->
+                createLtiApplicationItem(ltiTool, i == displayedLtiTools.size - 1, ltiToolsMapById[ltiTool.id] ?: emptyList()) }
             ?: emptyList()
     }
 
-    private fun createLtiApplicationItem(ltiTool: LTITool, isLast: Boolean): LtiApplicationItemViewModel {
+    private fun createLtiApplicationItem(ltiTool: LTITool, isLast: Boolean, courseLtiTools: List<LTITool>): LtiApplicationItemViewModel {
         val margin = if (isLast) 28.toPx else 0
         return LtiApplicationItemViewModel(
-            LtiApplicationViewData(ltiTool.collaboration?.text ?: "", ltiTool.collaboration?.iconUrl
-                ?: "", ltiTool.url ?: ""),
+            LtiApplicationViewData(ltiTool.collaboration?.text ?: "", ltiTool.iconUrl ?: "", ltiTool.url ?: ""),
             margin
-        )
+        ) { _events.postValue(Event(ResourcesAction.OpenLtiApp(courseLtiTools))) }
     }
 
     private suspend fun createStaffInfo(courses: List<Course>, forceNetwork: Boolean): List<ItemViewModel> {

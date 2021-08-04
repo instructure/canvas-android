@@ -16,17 +16,8 @@
  */
 package com.instructure.pandautils.features.elementary.resources.itemviewmodels
 
-import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.resources.LtiApplicationViewData
-import com.instructure.pandautils.features.elementary.resources.ResourcesItemViewType
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.canvasapi2.models.LTITool
 
-class LtiApplicationItemViewModel(
-    val data: LtiApplicationViewData,
-    val marginBottom: Int,
-    val onClick: () -> Unit) : ItemViewModel {
-
-    override val layoutId: Int = R.layout.item_lti_application
-
-    override val viewType: Int = ResourcesItemViewType.LTI_APPLICATION.viewType
+interface ResourcesRouter {
+    fun openLti(ltiTool: LTITool)
 }

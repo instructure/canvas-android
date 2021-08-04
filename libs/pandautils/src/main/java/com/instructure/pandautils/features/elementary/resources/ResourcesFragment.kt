@@ -16,32 +16,65 @@
  */
 package com.instructure.pandautils.features.elementary.resources
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentResourcesBinding
+import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ResourcesFragment : Fragment() {
 
+    @Inject
+    lateinit var resourcesRouter: ResourcesRouter
+
     private val viewModel: ResourcesViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentResourcesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         viewModel.events.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
-
+                handleAction(it)
             }
         })
 
         return binding.root
+    }
+
+    private fun handleAction(action: ResourcesAction) {
+        when (action) {
+            is ResourcesAction.OpenLtiApp -> showCourseSelectorDialog(action.ltiTools)
+        }
+    }
+
+    private fun showCourseSelectorDialog(ltiTools: List<LTITool>) {
+        val dialogEntries = ltiTools
+            .map { it.contextName }
+            .toTypedArray()
+
+        AlertDialog.Builder(context, R.style.AccentDialogTheme)
+            .setTitle(R.string.chooseACourse)
+            .setItems(dialogEntries) { dialog, which -> openSelectedLti(dialog, which, ltiTools) }
+            .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
+    private fun openSelectedLti(dialog: DialogInterface?, index: Int, ltiTools: List<LTITool>) {
+        dialog?.dismiss()
+        val ltiTool = ltiTools[index]
+        resourcesRouter.openLti(ltiTool)
     }
 
     companion object {
