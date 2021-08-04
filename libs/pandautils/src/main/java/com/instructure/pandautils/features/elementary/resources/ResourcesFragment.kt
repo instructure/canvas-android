@@ -18,17 +18,25 @@ package com.instructure.pandautils.features.elementary.resources
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentResourcesBinding
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
+import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_resources.*
+import kotlinx.android.synthetic.main.item_important_links.view.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,6 +44,9 @@ class ResourcesFragment : Fragment() {
 
     @Inject
     lateinit var resourcesRouter: ResourcesRouter
+
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
 
     private val viewModel: ResourcesViewModel by viewModels()
 
@@ -57,6 +68,7 @@ class ResourcesFragment : Fragment() {
         when (action) {
             is ResourcesAction.OpenLtiApp -> showCourseSelectorDialog(action.ltiTools)
             is ResourcesAction.OpenComposeMessage -> resourcesRouter.openComposeMessage(action.recipient)
+            ResourcesAction.ImportantLinksViewsReady -> setupWebViews()
         }
     }
 
@@ -76,6 +88,38 @@ class ResourcesFragment : Fragment() {
         dialog?.dismiss()
         val ltiTool = ltiTools[index]
         resourcesRouter.openLti(ltiTool)
+    }
+
+    private fun setupWebViews() {
+        importantLinksContainer.children.forEach {
+            val webView = it.importantLinksWebView
+            if (webView != null) {
+                setupWebView(webView)
+            }
+        }
+    }
+
+    private fun setupWebView(webView: CanvasWebView) {
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
+        webView.setBackgroundColor(Color.WHITE)
+        webView.settings.allowFileAccess = true
+        webView.settings.loadWithOverviewMode = true
+        webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            override fun routeInternallyCallback(url: String) {
+                webViewRouter.routeInternally(url)
+            }
+
+            override fun canRouteInternallyDelegate(url: String): Boolean = webViewRouter.canRouteInternally(url)
+
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                webViewRouter.openMedia(url)
+            }
+
+            override fun onPageStartedCallback(webView: WebView, url: String) = Unit
+            override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
+        }
+
+        webView.addVideoClient(requireActivity())
     }
 
     companion object {

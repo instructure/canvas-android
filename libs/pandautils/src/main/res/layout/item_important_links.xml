@@ -25,7 +25,7 @@
     </data>
 
     <com.instructure.pandautils.views.CanvasWebView
-        android:id="@+id/announcementWebView"
+        android:id="@+id/importantLinksWebView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"

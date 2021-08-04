@@ -14,22 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.elementary.homeroom
+package com.instructure.pandautils.navigation
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
+interface WebViewRouter {
 
-class TeacherHomeroomRouter : HomeroomRouter {
+    fun canRouteInternally(url: String): Boolean
 
-    override fun openAnnouncements(canvasContext: CanvasContext) = Unit
+    fun routeInternally(url: String)
 
-    override fun openCourse(course: Course) = Unit
-
-    override fun openAssignments(course: Course) = Unit
-
-    override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) = Unit
-
-    override fun updateColors() = Unit
+    fun openMedia(url: String)
 }

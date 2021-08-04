@@ -33,6 +33,7 @@ import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
 import com.instructure.pandautils.discussions.DiscussionUtils
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
@@ -47,6 +48,9 @@ class HomeroomFragment : Fragment() {
 
     @Inject
     lateinit var homeroomRouter: HomeroomRouter
+
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
 
     private val viewModel: HomeroomViewModel by viewModels()
 
@@ -129,13 +133,13 @@ class HomeroomFragment : Fragment() {
         announcementWebView.settings.loadWithOverviewMode = true
         announcementWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun routeInternallyCallback(url: String) {
-                homeroomRouter.routeInternally(url)
+                webViewRouter.routeInternally(url)
             }
 
-            override fun canRouteInternallyDelegate(url: String): Boolean = homeroomRouter.canRouteInternally(url)
+            override fun canRouteInternallyDelegate(url: String): Boolean = webViewRouter.canRouteInternally(url)
 
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                homeroomRouter.openMedia(url)
+                webViewRouter.openMedia(url)
             }
 
             override fun onPageStartedCallback(webView: WebView, url: String) = Unit

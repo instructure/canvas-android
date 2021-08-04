@@ -31,6 +31,7 @@ data class ContactInfoViewData(val name: String, val description: String, val im
 sealed class ResourcesAction {
     data class OpenLtiApp(val ltiTools: List<LTITool>) : ResourcesAction()
     data class OpenComposeMessage(val recipient: User) : ResourcesAction()
+    object ImportantLinksViewsReady : ResourcesAction()
 }
 
 enum class ResourcesItemViewType(val viewType: Int) {

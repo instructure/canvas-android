@@ -156,4 +156,8 @@ class ResourcesViewModel @Inject constructor(
         _state.postValue(ViewState.Refresh)
         loadData(true)
     }
+
+    fun onImportantLinksViewsReady() {
+        _events.postValue(Event(ResourcesAction.ImportantLinksViewsReady))
+    }
 }

@@ -65,13 +65,14 @@
                         android:visibility="@{viewModel.data.importantLinksItems.empty ? View.GONE : View.VISIBLE}"/>
 
                     <LinearLayout
-                        android:id="@+id/announcementsContainer"
+                        android:id="@+id/importantLinksContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
-                        app:itemViewModels="@{viewModel.data.importantLinksItems}" />
+                        app:itemViewModels="@{viewModel.data.importantLinksItems}"
+                        app:onItemsAdded="@{() -> viewModel.onImportantLinksViewsReady()}" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/coursesRecyclerView"

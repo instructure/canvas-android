@@ -29,18 +29,6 @@ import com.instructure.student.router.RouteMatcher
 
 class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRouter {
 
-    override fun canRouteInternally(url: String): Boolean {
-        return RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = false, allowUnsupported = false)
-    }
-
-    override fun routeInternally(url: String) {
-        RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)
-    }
-
-    override fun openMedia(url: String) {
-        RouteMatcher.openMedia(activity, url)
-    }
-
     override fun openAnnouncements(canvasContext: CanvasContext) {
         val route = AnnouncementListFragment.makeRoute(canvasContext)
         RouteMatcher.route(activity, route)
