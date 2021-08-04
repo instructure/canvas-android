@@ -53,20 +53,5 @@
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="July 2" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:gravity="bottom"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:onClick="@{() -> itemViewModel.onTodayClick.invoke()}"
-            android:text="@string/today"
-            android:textColor="@color/canvasDefaultAccent"
-            android:textSize="17sp"
-            android:visibility="@{itemViewModel.todayVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

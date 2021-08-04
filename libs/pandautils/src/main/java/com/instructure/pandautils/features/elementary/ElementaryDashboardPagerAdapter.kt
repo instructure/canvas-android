@@ -24,6 +24,7 @@ import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
 import com.instructure.pandautils.features.elementary.resources.ResourcesFragment
 import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
+import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 
 class ElementaryDashboardPagerAdapter(
     private val canvasContext: CanvasContext,
@@ -32,7 +33,7 @@ class ElementaryDashboardPagerAdapter(
 
     private val fragments = listOf(
         HomeroomFragment.newInstance(),
-        ScheduleFragment.newInstance(),
+        SchedulePagerFragment.newInstance(),
         GradesFragment.newInstance(),
         ResourcesFragment.newInstance()
     )

@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
 import com.instructure.pandautils.mvvm.Event
@@ -47,6 +48,8 @@ class ScheduleViewModel @Inject constructor(
     private val userManager: UserManager
 ) : ViewModel() {
 
+    private lateinit var startDate: Date
+
     private lateinit var missingSubmissions: List<Assignment>
     private lateinit var plannerItems: List<PlannerItem>
     private lateinit var coursesMap: Map<Long, Course>
@@ -66,8 +69,9 @@ class ScheduleViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<ScheduleAction>>()
 
-    init {
+    fun getDataForDate(dateString: String) {
         _state.postValue(ViewState.Loading)
+        startDate = dateString.toDate() ?: Date()
         getData(false)
         jumpToToday()
     }
@@ -84,7 +88,6 @@ class ScheduleViewModel @Inject constructor(
     private fun getData(forceNetwork: Boolean) {
         viewModelScope.launch {
             try {
-                val startDate = Date()
                 val weekStart = startDate.getLastSunday()
 
                 val courses = courseManager.getCoursesAsync(forceNetwork).await()
@@ -114,7 +117,7 @@ class ScheduleViewModel @Inject constructor(
                         todayPos = itemViewModels.size
                     }
 
-                    itemViewModels.add(createCourseItemsForDate(date))
+                    itemViewModels.add(createItemsForDate(date))
                 }
                 _data.postValue(ScheduleViewData(itemViewModels))
                 _state.postValue(ViewState.Success)
@@ -125,7 +128,7 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-    private fun createCourseItemsForDate(date: Date): ScheduleDayGroupItemViewModel {
+    private fun createItemsForDate(date: Date): ScheduleDayGroupItemViewModel {
         val items = mutableListOf<ItemViewModel>()
 
         items.addAll(createCourseItems(date))
@@ -175,7 +178,6 @@ class ScheduleViewModel @Inject constructor(
             getTitleForDate(date),
             SimpleDateFormat("MMMM dd", Locale.getDefault()).format(date),
             !Date().isSameDay(date),
-            this@ScheduleViewModel::jumpToToday,
             items
         )
     }

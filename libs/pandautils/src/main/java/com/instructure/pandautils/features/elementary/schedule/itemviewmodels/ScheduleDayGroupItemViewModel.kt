@@ -25,7 +25,6 @@ class ScheduleDayGroupItemViewModel(
         val dayText: String,
         val dateText: String,
         val todayVisible: Boolean,
-        val onTodayClick: (() -> Unit),
         items: List<ItemViewModel>
 ) : GroupItemViewModel(collapsable = false, items = items) {
 
