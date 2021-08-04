@@ -97,9 +97,9 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
                 .click()
     }
 
-    fun openCourseAnnouncment(announcementText: String) {
+    fun openCourseAnnouncement(announcementText: String) {
+        swipeRefreshLayout.swipeUp()
         onView(withId(R.id.announcementText) + withText(announcementText))
-                .scrollTo()
                 .click()
     }
 
@@ -116,8 +116,8 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
     }
 
     fun openAssignments(todoText: String) {
+        swipeRefreshLayout.swipeUp()
         onView(withId(R.id.todoText) + withText(todoText))
-                .scrollTo()
                 .click()
     }
 }
