@@ -74,19 +74,32 @@ class ResourcesViewModel @Inject constructor(
 
     private fun loadData(forceNetwork: Boolean) {
         viewModelScope.launch {
+            try {
+                val coursesResult = courseManager.getCoursesWithSyllabusAsync(forceNetwork).await()
 
-            val coursesResult = courseManager.getCoursesWithSyllabusAsync(forceNetwork).await()
+                val courses = coursesResult.dataOrThrow
+                    .filter { !it.homeroomCourse }
 
-            val courses = coursesResult.dataOrThrow
-                .filter { !it.homeroomCourse }
+                val homeroomCourses = coursesResult.dataOrThrow.filter { it.homeroomCourse }
+                val importantLinks = createImportantLinks(homeroomCourses)
 
-            val homeroomCourses = coursesResult.dataOrThrow.filter { it.homeroomCourse }
-            val importantLinks = createImportantLinks(homeroomCourses)
+                val actionItems = createActionItems(courses, homeroomCourses, forceNetwork)
 
-            val actionItems = createActionItems(courses, homeroomCourses, forceNetwork)
-
-            _state.postValue(ViewState.Success)
-            _data.postValue(ResourcesViewData(importantLinks, actionItems))
+                val viewData = ResourcesViewData(importantLinks, actionItems)
+                _data.postValue(viewData)
+                if (viewData.isEmpty()) {
+                    _state.postValue(ViewState.Empty(emptyTitle = R.string.resourcesEmptyMessage))
+                } else {
+                    _state.postValue(ViewState.Success)
+                }
+            } catch (e: Exception) {
+                if (_data.value == null || _data.value?.isEmpty() == true) {
+                    _state.postValue(ViewState.Error(resources.getString(R.string.failedToLoadResources)))
+                } else {
+                    _state.postValue(ViewState.Error())
+                    _events.postValue(Event(ResourcesAction.ShowRefreshError))
+                }
+            }
         }
     }
 

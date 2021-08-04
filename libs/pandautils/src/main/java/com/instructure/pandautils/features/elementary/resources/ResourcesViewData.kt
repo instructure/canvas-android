@@ -20,7 +20,9 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class ResourcesViewData(val importantLinksItems: List<ItemViewModel>, val actionItems: List<ItemViewModel>)
+data class ResourcesViewData(val importantLinksItems: List<ItemViewModel>, val actionItems: List<ItemViewModel>) {
+    fun isEmpty() = importantLinksItems.isEmpty() && actionItems.isEmpty()
+}
 
 data class ResourcesHeaderViewData(val title: String, val hasDivider: Boolean = false)
 
@@ -33,6 +35,7 @@ sealed class ResourcesAction {
     data class OpenComposeMessage(val recipient: User) : ResourcesAction()
     object ImportantLinksViewsReady : ResourcesAction()
     data class WebLtiButtonPressed(val url: String) : ResourcesAction()
+    object ShowRefreshError : ResourcesAction()
 }
 
 enum class ResourcesItemViewType(val viewType: Int) {

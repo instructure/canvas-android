@@ -30,9 +30,11 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentResourcesBinding
+import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_resources.*
@@ -69,6 +71,8 @@ class ResourcesFragment : Fragment() {
             is ResourcesAction.OpenLtiApp -> showCourseSelectorDialog(action.ltiTools)
             is ResourcesAction.OpenComposeMessage -> resourcesRouter.openComposeMessage(action.recipient)
             ResourcesAction.ImportantLinksViewsReady -> setupWebViews()
+            ResourcesAction.ShowRefreshError -> toast(R.string.failedToRefreshResources)
+            is ResourcesAction.WebLtiButtonPressed -> DiscussionUtils.launchIntent(requireContext(), action.url)
         }
     }
 
