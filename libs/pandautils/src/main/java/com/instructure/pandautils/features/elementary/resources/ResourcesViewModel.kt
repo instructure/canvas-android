@@ -38,7 +38,6 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.HtmlContentFormatter
-import com.instructure.pandautils.utils.toPx
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -135,7 +134,12 @@ class ResourcesViewModel @Inject constructor(
 
     private suspend fun createActionItems(courses: List<Course>, homeroomCourses: List<Course>, forceNetwork: Boolean): List<ItemViewModel> {
         val actionItems = mutableListOf<ItemViewModel>()
-        val ltiApps = createLtiApps(courses, forceNetwork)
+
+        val ltiApps = if (courses.isNotEmpty()) {
+            createLtiApps(courses, forceNetwork)
+        } else {
+            emptyList()
+        }
         if (ltiApps.isNotEmpty()) {
             actionItems.add(ResourcesHeaderViewModel(ResourcesHeaderViewData(resources.getString(R.string.studentApplications))))
             actionItems.addAll(ltiApps)
@@ -183,8 +187,8 @@ class ResourcesViewModel @Inject constructor(
         ) { _events.postValue(Event(ResourcesAction.OpenLtiApp(courseLtiTools))) }
     }
 
-    private suspend fun createStaffInfo(courses: List<Course>, forceNetwork: Boolean): List<ItemViewModel> {
-        val teachers = courses
+    private suspend fun createStaffInfo(homeroomCourses: List<Course>, forceNetwork: Boolean): List<ItemViewModel> {
+        val teachers = homeroomCourses
             .map { userManager.getTeacherListForCourseAsync(it.id, forceNetwork) }
             .awaitAll()
             .map { result -> result.dataOrNull ?: emptyList() }

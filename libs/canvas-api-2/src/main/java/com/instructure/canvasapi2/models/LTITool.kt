@@ -31,11 +31,11 @@ data class LTITool(
     @SerializedName("course_navigation")
     var courseNavigation: CourseNavigation? = null,
     @SerializedName("icon_url")
-        var iconUrl: String? = null,
+    var iconUrl: String? = null,
     @SerializedName("context_id")
-        var contextId: Long? = null,
+    var contextId: Long? = null,
     @SerializedName("context_name")
-        var contextName: String? = null
+    var contextName: String? = null
 ) : CanvasModel<LTITool>() {
     override val comparisonString get() = name
 }
