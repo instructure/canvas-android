@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
+import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -57,7 +58,7 @@ class ScheduleViewModel @Inject constructor(
     private lateinit var plannerItems: List<PlannerItem>
     private lateinit var coursesMap: Map<Long, Course>
 
-    private var todayPos = 0
+    private var todayHeader: ScheduleDayGroupItemViewModel? = null
     private val simpleDateFormat = SimpleDateFormat("hh:mm aa", Locale.getDefault())
 
     val state: LiveData<ViewState>
@@ -76,7 +77,6 @@ class ScheduleViewModel @Inject constructor(
         _state.postValue(ViewState.Loading)
         startDate = dateString.toDate() ?: Date()
         getData(false)
-        jumpToToday()
     }
 
     fun refresh() {
@@ -85,7 +85,10 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun jumpToToday() {
-        _events.postValue(Event(ScheduleAction.JumpToToday(todayPos)))
+        val todayPos = calculateTodayPosition()
+        if (todayPos != -1) {
+            _events.postValue(Event(ScheduleAction.JumpToToday(todayPos)))
+        }
     }
 
     private fun getData(forceNetwork: Boolean) {
@@ -123,14 +126,11 @@ class ScheduleViewModel @Inject constructor(
                     calendar.add(Calendar.DATE, i)
                     val date = calendar.time
 
-                    if (date.isSameDay(Date())) {
-                        todayPos = itemViewModels.size
-                    }
-
                     itemViewModels.add(createItemsForDate(date))
                 }
                 _data.postValue(ScheduleViewData(itemViewModels))
                 _state.postValue(ViewState.Success)
+                jumpToToday()
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.postValue(ViewState.Error(resources.getString(R.string.schedule_error_message)))
@@ -147,7 +147,13 @@ class ScheduleViewModel @Inject constructor(
             items.add(createMissingItems())
         }
 
-        return createDayHeader(date, items)
+        val dayHeader = createDayHeader(date, items)
+
+        if (date.isSameDay(Date())) {
+            todayHeader = dayHeader
+        }
+
+        return dayHeader
     }
 
     private fun createMissingItems(): ScheduleMissingItemsGroupItemViewModel {
@@ -447,6 +453,32 @@ class ScheduleViewModel @Inject constructor(
             R.string.schedule_calendar_event_due_text,
             simpleDateFormat.format(plannerItem.plannableDate)
         )
+    }
+
+    private fun calculateTodayPosition(): Int {
+        var position = -1
+        if (todayHeader != null) {
+            val items = _data.value?.itemViewModels.orEmpty()
+            items.forEach {
+                position++
+                if (it == todayHeader) return@forEach
+                if (it is GroupItemViewModel) {
+                    position += getGroupOpenChildCount(it)
+                }
+            }
+        }
+        return position
+    }
+
+    private fun getGroupOpenChildCount(group: GroupItemViewModel): Int {
+        var childCount = 0
+        if (!group.collapsed) {
+            childCount += group.items.size
+            group.items.filterIsInstance<GroupItemViewModel>().forEach {
+                childCount += getGroupOpenChildCount(it)
+            }
+        }
+        return childCount
     }
 
     private fun getCourseColor(course: Course?): String {

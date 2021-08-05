@@ -456,6 +456,6 @@
         <item quantity="one">%s pt</item>
         <item quantity="other">%s pts</item>
     </plurals>
-    <string name="schedule_all_day_event_text">All day</string>
+    <string name="schedule_all_day_event_text">All Day</string>
 
 </resources>
