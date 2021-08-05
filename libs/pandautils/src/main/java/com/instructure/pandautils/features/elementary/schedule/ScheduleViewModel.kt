@@ -33,6 +33,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -45,12 +46,14 @@ class ScheduleViewModel @Inject constructor(
     private val resources: Resources,
     private val plannerManager: PlannerManager,
     private val courseManager: CourseManager,
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    private val calendarEventManager: CalendarEventManager
 ) : ViewModel() {
 
     private lateinit var startDate: Date
 
     private lateinit var missingSubmissions: List<Assignment>
+    private lateinit var calendarEvents: Map<Long?, ScheduleItem?>
     private lateinit var plannerItems: List<PlannerItem>
     private lateinit var coursesMap: Map<Long, Course>
 
@@ -104,7 +107,14 @@ class ScheduleViewModel @Inject constructor(
                     .dataOrNull
                     .orEmpty()
 
-                missingSubmissions = userManager.getAllMissingSubmissionsAsync(forceNetwork).await().dataOrNull.orEmpty()
+                missingSubmissions =
+                    userManager.getAllMissingSubmissionsAsync(forceNetwork).await().dataOrNull.orEmpty()
+
+                calendarEvents = plannerItems.filter { it.plannableType == PlannableType.CALENDAR_EVENT }
+                    .map { calendarEventManager.getCalendarEventAsync(it.plannable.id, forceNetwork) }
+                    .awaitAll()
+                    .map { it.dataOrNull }
+                    .associateBy { it?.id }
 
                 val itemViewModels = mutableListOf<ItemViewModel>()
                 for (i in 0..6) {
@@ -412,16 +422,31 @@ class ScheduleViewModel @Inject constructor(
 
     private fun getDueText(plannerItem: PlannerItem): String {
         return when (plannerItem.plannableType) {
-            PlannableType.CALENDAR_EVENT -> resources.getString(
-                R.string.schedule_calendar_event_due_text,
-                simpleDateFormat.format(plannerItem.plannableDate)
-            )
+            PlannableType.CALENDAR_EVENT -> getCalendarEventDueText(plannerItem)
             PlannableType.PLANNER_NOTE -> resources.getString(
                 R.string.schedule_todo_due_text,
-                simpleDateFormat.format(plannerItem.plannableDate)
+                simpleDateFormat.format(plannerItem.plannable.todoDate.toDate() ?: plannerItem.plannableDate)
             )
             else -> resources.getString(R.string.schedule_due_text, simpleDateFormat.format(plannerItem.plannableDate))
         }
+    }
+
+    private fun getCalendarEventDueText(plannerItem: PlannerItem): String {
+        val calendarEvent = calendarEvents[plannerItem.plannable.id]
+        if (calendarEvent?.isAllDay == true) {
+            return resources.getString(R.string.schedule_all_day_event_text)
+        } else {
+            val startText = calendarEvent?.startDate?.let { simpleDateFormat.format(it) }
+            val endText = calendarEvent?.endDate?.let { simpleDateFormat.format(it) }
+            if (startText != null && endText != null) {
+                return resources.getString(R.string.schedule_calendar_event_interval_text, startText, endText)
+            }
+        }
+
+        return resources.getString(
+            R.string.schedule_calendar_event_due_text,
+            simpleDateFormat.format(plannerItem.plannableDate)
+        )
     }
 
     private fun getCourseColor(course: Course?): String {

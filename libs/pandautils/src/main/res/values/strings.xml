@@ -444,6 +444,7 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="yesterday">Yesterday</string>
     <string name="schedule_calendar_event_due_text">At %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s to %2$s</string>
     <string name="schedule_todo_due_text">To Do: %s</string>
     <string name="schedule_due_text">Due: %s</string>
     <string name="show_missing_items_title">Show %d missing items</string>
@@ -455,5 +456,6 @@
         <item quantity="one">%s pt</item>
         <item quantity="other">%s pts</item>
     </plurals>
+    <string name="schedule_all_day_event_text">All day</string>
 
 </resources>
