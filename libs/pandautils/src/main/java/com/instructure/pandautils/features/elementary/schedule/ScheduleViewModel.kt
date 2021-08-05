@@ -110,7 +110,7 @@ class ScheduleViewModel @Inject constructor(
                 for (i in 0..6) {
                     val calendar = Calendar.getInstance()
                     calendar.time = weekStart
-                    calendar.roll(Calendar.DAY_OF_MONTH, i)
+                    calendar.add(Calendar.DATE, i)
                     val date = calendar.time
 
                     if (date.isSameDay(Date())) {
