@@ -173,9 +173,12 @@ class ResourcesViewModel @Inject constructor(
     }
 
     private fun createLtiApplicationItem(ltiTool: LTITool, isLast: Boolean, courseLtiTools: List<LTITool>): LtiApplicationItemViewModel {
-        val margin = if (isLast) 28.toPx else 0
+        val margin = if (isLast) resources.getDimension(R.dimen.ltiAppsBottomMargin).toInt() else 0
         return LtiApplicationItemViewModel(
-            LtiApplicationViewData(ltiTool.collaboration?.text ?: "", ltiTool.iconUrl ?: "", ltiTool.url ?: ""),
+            LtiApplicationViewData(
+                ltiTool.courseNavigation?.text ?: ltiTool.name ?: "",
+                ltiTool.iconUrl ?: "",
+                ltiTool.url ?: ""),
             margin
         ) { _events.postValue(Event(ResourcesAction.OpenLtiApp(courseLtiTools))) }
     }
