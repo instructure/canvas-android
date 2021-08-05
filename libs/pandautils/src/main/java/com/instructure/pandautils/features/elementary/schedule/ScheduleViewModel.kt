@@ -41,6 +41,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
+const val TODO_COLOR = "#0081BD"
+
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
@@ -157,30 +159,30 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun createMissingItems(): ScheduleMissingItemsGroupItemViewModel {
-        val missingItems = missingSubmissions.map {
+        val missingItems = missingSubmissions.map { assignment ->
             ScheduleMissingItemViewModel(
                 data = ScheduleMissingItemData(
-                    it.name,
-                    it.dueDate?.let { resources.getString(R.string.schedule_due_text, simpleDateFormat.format(it)) },
-                    getPointsText(it.pointsPossible),
-                    if (it.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
-                    coursesMap[it.courseId]?.name,
-                    getCourseColor(coursesMap[it.courseId])
+                    assignment.name,
+                    assignment.dueDate?.let { resources.getString(R.string.schedule_due_text, simpleDateFormat.format(it)) },
+                    getPointsText(assignment.pointsPossible),
+                    if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
+                    coursesMap[assignment.courseId]?.name,
+                    getCourseColor(coursesMap[assignment.courseId])
                 ),
                 open = {
-                    val course = coursesMap[it.courseId]
+                    val course = coursesMap[assignment.courseId]
                     if (course != null) {
-                        if (it.discussionTopicHeader != null) {
+                        if (assignment.discussionTopicHeader != null) {
                             _events.postValue(
                                 Event(
                                     ScheduleAction.OpenDiscussion(
-                                        course, it.discussionTopicHeader!!.id, it.discussionTopicHeader!!.title
+                                        course, assignment.discussionTopicHeader!!.id, assignment.discussionTopicHeader!!.title
                                             ?: ""
                                     )
                                 )
                             )
                         } else {
-                            _events.postValue(Event(ScheduleAction.OpenAssignment(course, it.id)))
+                            _events.postValue(Event(ScheduleAction.OpenAssignment(course, assignment.id)))
                         }
                     }
                 }
@@ -214,20 +216,20 @@ class ScheduleViewModel @Inject constructor(
             .groupBy { coursesMap[it.courseId] }
 
 
-        val courseViewModels = coursePlannerMap.entries.map {
+        val courseViewModels = coursePlannerMap.entries.map { entry ->
             val scheduleViewData = ScheduleCourseViewData(
-                it.key?.name ?: resources.getString(R.string.schedule_todo_title),
-                it.key != null,
-                getCourseColor(it.key),
-                it.key?.imageUrl ?: "",
-                it.value.map {
+                entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
+                entry.key != null,
+                getCourseColor(entry.key),
+                entry.key?.imageUrl ?: "",
+                entry.value.map {
                     createPlannerItemViewModel(it)
                 }
             )
             ScheduleCourseItemViewModel(
                 scheduleViewData
             ) {
-                it.key?.let { course ->
+                entry.key?.let { course ->
                     _events.postValue(Event(ScheduleAction.OpenCourse(course)))
                 }
             }
@@ -489,7 +491,7 @@ class ScheduleViewModel @Inject constructor(
         return if (!course?.courseColor.isNullOrEmpty()) {
             course?.courseColor!!
         } else {
-            ColorApiHelper.K5_DEFAULT_COLOR
+            TODO_COLOR
         }
     }
 }
