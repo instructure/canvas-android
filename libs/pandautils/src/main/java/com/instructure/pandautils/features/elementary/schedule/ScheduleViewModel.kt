@@ -259,6 +259,10 @@ class ScheduleViewModel @Inject constructor(
             chips.add(PlannerItemTag.FEEDBACK)
         }
 
+        if (plannerItem.submissionState?.missing == true) {
+            chips.add(PlannerItemTag.MISSING)
+        }
+
         if (plannerItem.submissionState?.late == true) {
             chips.add(PlannerItemTag.LATE)
         }

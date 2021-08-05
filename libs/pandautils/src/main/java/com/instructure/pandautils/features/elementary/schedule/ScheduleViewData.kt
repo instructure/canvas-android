@@ -88,7 +88,8 @@ enum class PlannerItemTag(@StringRes val text: Int, @ColorRes val color: Int) {
     REPLIES(R.string.schedule_tag_replies, R.color.textLightGray),
     FEEDBACK(R.string.schedule_tag_feedback, R.color.textLightGray),
     LATE(R.string.schedule_tag_late, R.color.canvasRed),
-    REDO(R.string.schedule_tag_redo, R.color.canvasRed)
+    REDO(R.string.schedule_tag_redo, R.color.canvasRed),
+    MISSING(R.string.schedule_tag_missing, R.color.canvasRed)
 }
 
 sealed class ScheduleAction {
