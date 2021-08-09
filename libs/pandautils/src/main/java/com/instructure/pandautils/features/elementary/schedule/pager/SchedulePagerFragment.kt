@@ -22,7 +22,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.instructure.pandautils.databinding.FragmentSchedulePagerBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule_pager.*
@@ -58,9 +60,35 @@ class SchedulePagerFragment : Fragment() {
                     override fun createFragment(position: Int): Fragment = it.fragments[position]
 
                 }
-
-                schedulePager.setCurrentItem((SCHEDULE_PAGE_COUNT.toFloat() / 2F).roundToInt(), false)
             }
         })
+
+        viewModel.events.observe(viewLifecycleOwner, { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
+
+        schedulePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if (position == 0) {
+                    previousWeekButton.visibility = View.GONE
+                } else if (position == schedulePager.childCount - 1) {
+                    nextWeekButton.visibility = View.GONE
+                } else {
+                    previousWeekButton.visibility = View.VISIBLE
+                    nextWeekButton.visibility = View.VISIBLE
+                }
+            }
+        })
+    }
+
+    private fun handleAction(action: SchedulePagerAction) {
+        when (action) {
+            is SchedulePagerAction.SelectPage -> schedulePager.setCurrentItem(action.position, action.smoothScroll)
+            is SchedulePagerAction.MoveToNext -> schedulePager.setCurrentItem(schedulePager.currentItem + 1, true)
+            is SchedulePagerAction.MoveToPrevious -> schedulePager.setCurrentItem(schedulePager.currentItem - 1, true)
+        }
     }
 }

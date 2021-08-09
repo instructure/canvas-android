@@ -21,5 +21,7 @@ import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
 data class SchedulePagerViewData(val fragments: List<ScheduleFragment>)
 
 sealed class SchedulePagerAction {
-
+    data class SelectPage(val position: Int, val smoothScroll: Boolean = false) : SchedulePagerAction()
+    object MoveToNext : SchedulePagerAction()
+    object MoveToPrevious: SchedulePagerAction()
 }

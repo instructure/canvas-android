@@ -16,9 +16,13 @@
 
 package com.instructure.pandautils.features.elementary.schedule.pager
 
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
 import com.instructure.pandautils.mvvm.Event
@@ -28,6 +32,7 @@ import javax.inject.Inject
 
 
 const val SCHEDULE_PAGE_COUNT = 53
+const val THIS_WEEKS_POSITION = 27
 
 @HiltViewModel
 class SchedulePagerViewModel @Inject constructor() : ViewModel() {
@@ -40,6 +45,12 @@ class SchedulePagerViewModel @Inject constructor() : ViewModel() {
         get() = _events
     private val _events = MutableLiveData<Event<SchedulePagerAction>>()
 
+    val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+        }
+    }
+
     init {
         val calendar = Calendar.getInstance()
         calendar.roll(Calendar.WEEK_OF_YEAR, -28)
@@ -49,5 +60,14 @@ class SchedulePagerViewModel @Inject constructor() : ViewModel() {
         }
 
         _data.postValue(SchedulePagerViewData(fragments))
+        _events.postValue(Event(SchedulePagerAction.SelectPage(THIS_WEEKS_POSITION)))
+    }
+
+    fun onPreviousWeekClick() {
+        _events.postValue(Event(SchedulePagerAction.MoveToPrevious))
+    }
+
+    fun onNextWeekClick() {
+        _events.postValue(Event(SchedulePagerAction.MoveToNext))
     }
 }

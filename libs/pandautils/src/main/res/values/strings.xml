@@ -458,5 +458,7 @@
     </plurals>
     <string name="schedule_all_day_event_text">All Day</string>
     <string name="schedule_tag_missing">Missing</string>
+    <string name="previous_week">Previous Week</string>
+    <string name="next_week">Next Week</string>
 
 </resources>
