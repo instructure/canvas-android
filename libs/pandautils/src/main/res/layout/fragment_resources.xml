@@ -75,7 +75,7 @@
                         app:onItemsAdded="@{() -> viewModel.onImportantLinksViewsReady()}" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/coursesRecyclerView"
+                        android:id="@+id/actionItemsRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
