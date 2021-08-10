@@ -50,13 +50,15 @@ class ScheduleViewModel @Inject constructor(
     private val plannerManager: PlannerManager,
     private val courseManager: CourseManager,
     private val userManager: UserManager,
-    private val calendarEventManager: CalendarEventManager
+    private val calendarEventManager: CalendarEventManager,
+    private val assignmentManager: AssignmentManager
 ) : ViewModel() {
 
     private lateinit var startDate: Date
 
     private lateinit var missingSubmissions: List<Assignment>
     private lateinit var calendarEvents: Map<Long?, ScheduleItem?>
+    private lateinit var discussions: Map<Long?, Assignment?>
     private lateinit var plannerItems: List<PlannerItem>
     private lateinit var coursesMap: Map<Long, Course>
 
@@ -121,6 +123,13 @@ class ScheduleViewModel @Inject constructor(
                     .map { it.dataOrNull }
                     .associateBy { it?.id }
 
+                discussions =
+                    plannerItems.filter { (it.plannableType == PlannableType.ANNOUNCEMENT || it.plannableType == PlannableType.DISCUSSION_TOPIC) && it.courseId != null }
+                        .map { assignmentManager.getAssignmentAsync(it.plannable.id, it.courseId!!, forceNetwork) }
+                        .awaitAll()
+                        .map { it.dataOrNull }
+                        .associateBy { it?.id }
+
                 val itemViewModels = mutableListOf<ItemViewModel>()
                 for (i in 0..6) {
                     val calendar = Calendar.getInstance()
@@ -163,7 +172,12 @@ class ScheduleViewModel @Inject constructor(
             ScheduleMissingItemViewModel(
                 data = ScheduleMissingItemData(
                     assignment.name,
-                    assignment.dueDate?.let { resources.getString(R.string.schedule_due_text, simpleDateFormat.format(it)) },
+                    assignment.dueDate?.let {
+                        resources.getString(
+                            R.string.schedule_due_text,
+                            simpleDateFormat.format(it)
+                        )
+                    },
                     getPointsText(assignment.pointsPossible),
                     if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
                     coursesMap[assignment.courseId]?.name,
@@ -176,7 +190,9 @@ class ScheduleViewModel @Inject constructor(
                             _events.postValue(
                                 Event(
                                     ScheduleAction.OpenDiscussion(
-                                        course, assignment.discussionTopicHeader!!.id, assignment.discussionTopicHeader!!.title
+                                        course,
+                                        assignment.discussionTopicHeader!!.id,
+                                        assignment.discussionTopicHeader!!.title
                                             ?: ""
                                     )
                                 )
@@ -250,37 +266,43 @@ class ScheduleViewModel @Inject constructor(
         val chips = mutableListOf<PlannerItemTag>()
 
         if (plannerItem.submissionState?.graded == true && plannerItem.submissionState?.excused == false) {
-            chips.add(PlannerItemTag.GRADED)
+            chips.add(PlannerItemTag.Graded)
         }
 
         if (plannerItem.submissionState?.excused == true) {
-            chips.add(PlannerItemTag.EXCUSED)
+            chips.add(PlannerItemTag.Excused)
         }
 
         if (plannerItem.submissionState?.withFeedback == true) {
-            chips.add(PlannerItemTag.FEEDBACK)
+            chips.add(PlannerItemTag.Feedback)
         }
 
         if (plannerItem.submissionState?.missing == true) {
-            chips.add(PlannerItemTag.MISSING)
+            chips.add(PlannerItemTag.Missing)
         }
 
         if (plannerItem.submissionState?.late == true) {
-            chips.add(PlannerItemTag.LATE)
+            chips.add(PlannerItemTag.Late)
         }
 
         if (plannerItem.submissionState?.redoRequest == true) {
-            chips.add(PlannerItemTag.REDO)
+            chips.add(PlannerItemTag.Redo)
         }
 
-        if (plannerItem.newActivity == true) {
-            chips.add(PlannerItemTag.REPLIES)
+        if (plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC || plannerItem.plannableType == PlannableType.ANNOUNCEMENT) {
+            val discussion = discussions[plannerItem.plannable.id]
+            discussion?.discussionTopicHeader?.unreadCount?.let { unreadCount ->
+                if (unreadCount > 0) {
+                    chips.add(PlannerItemTag.Replies(unreadCount))
+                }
+            }
         }
 
         return chips.map {
             SchedulePlannerItemTagItemViewModel(
                 SchedulePlannerItemTag(
-                    resources.getString(it.text),
+                    if (it is PlannerItemTag.Replies) resources.getQuantityString(it.text, it.replyCount, it.replyCount)
+                    else resources.getString(it.text),
                     resources.getColor(it.color)
                 )
             )
