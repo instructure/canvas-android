@@ -178,6 +178,6 @@ fun setBottomMargin(view: View, bottomMargin: Int) {
 }
 
 @BindingAdapter(value = ["userAvatar", "userName"], requireAll = true)
-fun bindUserAvatar(imageView: CircleImageView, userAvatarUrl: String?, userName: String?) {
+fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: String?) {
     ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl)
 }

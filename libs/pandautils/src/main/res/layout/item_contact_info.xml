@@ -34,7 +34,7 @@
         android:foreground="?selectableItemBackground"
         android:onClick="@{() -> itemViewModel.onClick.invoke()}">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/avatarImg"
             android:layout_width="48dp"
             android:layout_height="48dp"
