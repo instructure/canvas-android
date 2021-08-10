@@ -28,6 +28,10 @@ import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
@@ -100,13 +104,23 @@ object ProfileUtils {
             val avatarDrawable = createAvatarDrawable(context, name ?: "")
             imageView.setImageDrawable(avatarDrawable)
         } else {
-            val target = Glide.with(imageView)
+            Glide.with(imageView)
                 .load(url)
                 .placeholder(R.drawable.recipient_avatar_placeholder)
                 .circleCrop()
-                .into(imageView)
+                .addListener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        val avatarDrawable = createAvatarDrawable(context, name ?: "")
+                        imageView.setImageDrawable(avatarDrawable)
+                        return false
+                    }
 
-            target.onLoadFailed(createAvatarDrawable(context, name ?: ""))
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        return false
+                    }
+
+                })
+                .into(imageView)
         }
     }
 
