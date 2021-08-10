@@ -30,11 +30,12 @@ import org.hamcrest.Matchers
 class ResourcesPage : BasePage(R.id.resourcesPage) {
 
     private val swipeRefreshLayout by OnViewWithId(R.id.resourcesSwipeRefreshLayout)
-    private val importantLinksTitle by OnViewWithId(R.id.importantLinksTitle)
+    private val importantLinksTitle by OnViewWithId(R.id.importantLinksTitle, autoAssert = false)
     private val importantLinksContainer by OnViewWithId(R.id.importantLinksContainer)
     private val coursesRecyclerView by OnViewWithId(R.id.actionItemsRecyclerView)
 
     fun assertImportantLinksDisplayed(content: String) {
+        importantLinksTitle.assertDisplayed()
         Web.onWebView()
             .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "html"))
             .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(content)))
