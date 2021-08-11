@@ -15,7 +15,8 @@
   ~
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -24,14 +25,48 @@
             type="com.instructure.pandautils.features.elementary.resources.itemviewmodels.ImportantLinksItemViewModel" />
 
         <import type="com.instructure.pandares.R" />
+
+        <import type="android.view.View" />
     </data>
 
-    <com.instructure.pandautils.views.CanvasWebView
-        android:id="@+id/importantLinksWebView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        app:htmlContent="@{itemViewModel.htmlContent}"
-        app:onLtiButtonPressed="@{(url) -> itemViewModel.onLtiButtonPressed(url)}"
-        app:htmlTitle="@{context.getString(R.string.webViewImportantLinksTitle)}"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/importantLinksCourseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:drawableStart="@drawable/ic_book"
+            android:drawablePadding="8dp"
+            android:text="@{itemViewModel.data.courseName}"
+            android:textColor="@color/defaultTextDark"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:visibility="@{itemViewModel.data.courseName.empty ? View.GONE : View.VISIBLE}"
+            tools:text="Homeroom 1" />
+
+        <com.instructure.pandautils.views.CanvasWebView
+            android:id="@+id/importantLinksWebView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            app:htmlContent="@{itemViewModel.data.htmlContent}"
+            app:htmlTitle="@{context.getString(R.string.webViewImportantLinksTitle)}"
+            app:onLtiButtonPressed="@{(url) -> itemViewModel.onLtiButtonPressed(url)}" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/k5SeparatorColor"
+            android:visibility="@{itemViewModel.data.hasDivider ? View.VISIBLE : View.GONE}" />
+
+    </LinearLayout>
 </layout>

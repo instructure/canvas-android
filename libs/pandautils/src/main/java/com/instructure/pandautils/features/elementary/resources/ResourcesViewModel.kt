@@ -103,9 +103,16 @@ class ResourcesViewModel @Inject constructor(
     }
 
     private fun createImportantLinks(homeroomCourses: List<Course>): List<ItemViewModel> {
-        return homeroomCourses
-            .map { ImportantLinksItemViewModel(it.syllabusBody ?: "", ::ltiButtonPressed) }
-            .filter { it.htmlContent.isNotEmpty() }
+        val homeroomCoursesWithSyllabus = homeroomCourses.filter { !it.syllabusBody.isNullOrEmpty() }
+        return if (homeroomCoursesWithSyllabus.size > 1) {
+            homeroomCoursesWithSyllabus
+                .mapIndexed { index, course -> ImportantLinksItemViewModel(
+                    ImportantLinksViewData(course.name, course.syllabusBody ?: "", index < homeroomCoursesWithSyllabus.size - 1),
+                    ::ltiButtonPressed) }
+        } else {
+            homeroomCoursesWithSyllabus
+                .map { ImportantLinksItemViewModel(ImportantLinksViewData("", it.syllabusBody ?: ""), ::ltiButtonPressed) }
+        }
     }
 
     private fun ltiButtonPressed(html: String, htmlContent: String) {

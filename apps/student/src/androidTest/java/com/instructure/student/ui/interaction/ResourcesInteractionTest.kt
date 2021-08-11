@@ -66,6 +66,30 @@ class ResourcesInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testImportantLinksForTwoCourses() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 2)
+
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val courseWithSyllabus = homeroomCourse.copy(syllabusBody = "Important links content")
+        data.courses[homeroomCourse.id] = courseWithSyllabus
+
+        val homeroomCourse2 = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, isHomeroom = true)
+        data.addEnrollment(data.teachers[0], homeroomCourse, Enrollment.EnrollmentType.Teacher)
+
+        val courseWithSyllabus2 = homeroomCourse2.copy(syllabusBody = "Important links 2")
+        data.courses[homeroomCourse2.id] = courseWithSyllabus2
+
+        goToResources(data)
+
+        resourcesPage.assertPageObjects()
+
+        // We only assert the course names, because can't differentiate between the two WebViews.
+        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus.name)
+        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus2.name)
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyActionItemsShowIfSyllabusIsEmpty() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
