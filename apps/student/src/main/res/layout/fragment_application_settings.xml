@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/toggle"
                     android:textSize="16sp"
-                    android:text="@string/settingsElementaryView"
+                    android:text="@string/settingsHomeroomView"
                     app:layout_constraintVertical_chainStyle="packed"
                     app:layout_constraintBottom_toTopOf="@id/elementaryViewDescription"
                     app:layout_constraintStart_toStartOf="parent"

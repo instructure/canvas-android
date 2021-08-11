@@ -28,5 +28,13 @@ data class TermsOfService(
         val passive: Boolean = false,
         @SerializedName("account_id")
         val accountId: Long = 0,
-        val content: String? = null
+        val content: String? = null,
+        @SerializedName("self_registration_type")
+        val selfRegistrationType: SelfRegistration? = null
 ) : Parcelable
+
+enum class SelfRegistration(val apiString: String) {
+        @SerializedName("all") ALL("all"),
+        @SerializedName("observer") OBSERVER("observer"),
+        @SerializedName("none") NONE("none"),
+}

@@ -73,6 +73,11 @@ object ApiModule {
     }
 
     @Provides
+    fun provideExternalToolManager(): ExternalToolManager {
+        return ExternalToolManager
+    }
+
+    @Provides
     @Singleton
     fun provideHelpLinksApi(): HelpLinksAPI {
         return HelpLinksAPI

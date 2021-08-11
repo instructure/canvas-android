@@ -25,7 +25,13 @@ import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
@@ -90,6 +96,48 @@ object ProfileUtils {
                         }
                     })
         }
+    }
+
+    fun loadAvatarForUser(imageView: ImageView, name: String?, url: String?) {
+        val context = imageView.context
+        if (shouldLoadAltAvatarImage(url)) {
+            val avatarDrawable = createAvatarDrawable(context, name ?: "")
+            imageView.setImageDrawable(avatarDrawable)
+        } else {
+            Glide.with(imageView)
+                .load(url)
+                .placeholder(R.drawable.recipient_avatar_placeholder)
+                .circleCrop()
+                .addListener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        val avatarDrawable = createAvatarDrawable(context, name ?: "")
+                        imageView.setImageDrawable(avatarDrawable)
+                        return false
+                    }
+
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        return false
+                    }
+
+                })
+                .into(imageView)
+        }
+    }
+
+    private fun createAvatarDrawable(context: Context, userName: String): Drawable {
+        val initials = getUserInitials(userName)
+        val color = ContextCompat.getColor(context, R.color.gray)
+        return TextDrawable.builder()
+            .beginConfig()
+            .height(context.resources.getDimensionPixelSize(R.dimen.avatar_size))
+            .width(context.resources.getDimensionPixelSize(R.dimen.avatar_size))
+            .toUpperCase()
+            .useFont(Typeface.DEFAULT_BOLD)
+            .textColor(color)
+            .withBorder(context.DP(0.5f).toInt())
+            .withBorderColor(color)
+            .endConfig()
+            .buildRound(initials, Color.WHITE)
     }
 
     /**

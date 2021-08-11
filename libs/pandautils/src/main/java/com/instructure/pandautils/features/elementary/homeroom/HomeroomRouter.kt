@@ -22,12 +22,6 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 
 interface HomeroomRouter {
 
-    fun canRouteInternally(url: String): Boolean
-
-    fun routeInternally(url: String)
-
-    fun openMedia(url: String)
-
     fun openAnnouncements(canvasContext: CanvasContext)
 
     fun openCourse(course: Course)

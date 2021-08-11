@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{() -> itemViewModel.onCardClick.invoke()}"
-            android:minHeight="220dp"
+            android:minHeight="290dp"
             app:cardCornerRadius="3dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
@@ -49,7 +49,7 @@
                 <ImageView
                     android:id="@+id/courseImage"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="150dp"
                     android:importantForAccessibility="no"
                     android:background="@{Color.parseColor(itemViewModel.data.courseColor)}"
                     app:imageUrl="@{itemViewModel.data.imageUrl}"

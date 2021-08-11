@@ -16,6 +16,7 @@
  */
 package com.instructure.student.navigation
 
+import androidx.annotation.MenuRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.student.fragment.ParentFragment
@@ -34,6 +35,9 @@ interface NavigationBehavior {
     val visibleAccountMenuItems: Set<AccountMenuItem>
 
     val shouldOverrideFont: Boolean
+
+    @get:MenuRes
+    val bottomBarMenu: Int
 
     fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route
 
