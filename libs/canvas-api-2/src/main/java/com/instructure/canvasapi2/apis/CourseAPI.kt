@@ -47,6 +47,9 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users")
         val firstPageCoursesWithSyllabus: Call<List<Course>>
 
+        @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=license&include[]=is_public&include[]=permissions&enrollment_state=active")
+        val firstPageCoursesWithSyllabusWithActiveEnrollment: Call<List<Course>>
+
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&state[]=unpublished")
         val firstPageCoursesTeacher: Call<List<Course>>
 
@@ -159,6 +162,10 @@ object CourseAPI {
 
     fun getFirstPageCoursesWithSyllabus(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCoursesWithSyllabus).enqueue(callback)
+    }
+
+    fun getFirstPageCoursesWithSyllabusWithActiveEnrollment(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCoursesWithSyllabusWithActiveEnrollment).enqueue(callback)
     }
 
     fun getFirstPageCoursesTeacher(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {

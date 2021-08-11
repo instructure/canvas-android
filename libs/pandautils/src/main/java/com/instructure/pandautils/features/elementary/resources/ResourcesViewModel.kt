@@ -74,7 +74,7 @@ class ResourcesViewModel @Inject constructor(
     private fun loadData(forceNetwork: Boolean) {
         viewModelScope.launch {
             try {
-                val coursesResult = courseManager.getCoursesWithSyllabusAsync(forceNetwork).await()
+                val coursesResult = courseManager.getCoursesWithSyllabusAsyncWithActiveEnrollmentAsync(forceNetwork).await()
 
                 val courses = coursesResult.dataOrThrow
                     .filter { !it.homeroomCourse }

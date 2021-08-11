@@ -315,7 +315,7 @@ class ResourcesViewModelTest {
         // Given
         val course = Course(id = 1, homeroomCourse = true, syllabusBody = "This link is really important: www.tamaskozmer.com")
         initMockData()
-        every { courseManager.getCoursesWithSyllabusAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithSyllabusAsyncWithActiveEnrollmentAsync(any()) } returns mockk {
             coEvery { await() }.returnsMany(DataResult.Success(listOf(course)), DataResult.Fail())
         }
 
@@ -350,7 +350,7 @@ class ResourcesViewModelTest {
         externalTools: DataResult<List<LTITool>> = DataResult.Success(emptyList()),
         teachers: List<DataResult<List<User>>> = listOf(DataResult.Success(emptyList()))
     ) {
-        every { courseManager.getCoursesWithSyllabusAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithSyllabusAsyncWithActiveEnrollmentAsync(any()) } returns mockk {
             coEvery { await() } returns courses
         }
         every { externalToolManager.getExternalToolsForCoursesAsync(any(), any()) } returns mockk() {
