@@ -43,4 +43,5 @@ data class LTITool(
 @Parcelize
 data class CourseNavigation(
     val text: String? = null,
+    val url: String? = null
 ) : Parcelable

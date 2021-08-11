@@ -29,7 +29,7 @@ class StudentResourcesRouter(private val activity: FragmentActivity) : Resources
         val course = Course(id = ltiTool.contextId ?: 0, name = ltiTool.contextName ?: "")
         val route = LtiLaunchFragment.makeRoute(
             course,
-            ltiTool.url ?: "",
+            ltiTool.url ?: ltiTool.courseNavigation?.url ?: "",
             ltiTool.courseNavigation?.text ?: ltiTool.name ?: "",
             sessionLessLaunch = true,
             isAssignmentLTI = false,
