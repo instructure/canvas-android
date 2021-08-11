@@ -14,22 +14,19 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.elementary.homeroom
+package com.instructure.pandautils.features.elementary.resources.itemviewmodels
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
+import com.instructure.pandautils.R
+import com.instructure.pandautils.mvvm.ItemViewModel
 
-class TeacherHomeroomRouter : HomeroomRouter {
+class ImportantLinksItemViewModel(
+    val htmlContent: String,
+    private val onLtiButtonPressed: (url: String, content: String) -> Unit
+) : ItemViewModel {
 
-    override fun openAnnouncements(canvasContext: CanvasContext) = Unit
+    override val layoutId: Int = R.layout.item_important_links
 
-    override fun openCourse(course: Course) = Unit
-
-    override fun openAssignments(course: Course) = Unit
-
-    override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) = Unit
-
-    override fun updateColors() = Unit
+    fun onLtiButtonPressed(url: String) {
+        onLtiButtonPressed(url, htmlContent)
+    }
 }

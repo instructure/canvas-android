@@ -14,22 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.elementary.homeroom
+package com.instructure.student.di.elementary
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
+import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
+import com.instructure.student.mobius.elementary.resources.StudentResourcesRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
-class TeacherHomeroomRouter : HomeroomRouter {
+@Module
+@InstallIn(FragmentComponent::class)
+class ResourcesModule {
 
-    override fun openAnnouncements(canvasContext: CanvasContext) = Unit
-
-    override fun openCourse(course: Course) = Unit
-
-    override fun openAssignments(course: Course) = Unit
-
-    override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) = Unit
-
-    override fun updateColors() = Unit
+    @Provides
+    fun provideResourcesRouter(activity: FragmentActivity): ResourcesRouter {
+        return StudentResourcesRouter(activity)
+    }
 }

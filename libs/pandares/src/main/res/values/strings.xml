@@ -1196,6 +1196,16 @@
     <string name="a11y_gradesNotAvailableContentDescription">Grades not available</string>
     <string name="bottomBarHomeroom">Homeroom</string>
     <string name="settingsHomeroomView">Homeroom View</string>
+    <string name="importantLinksTitle">Important Links</string>
+    <string name="studentApplications">Student Applications</string>
+    <string name="staffContactInfo">Staff Contact Info</string>
+    <string name="chooseACourse">Choose a Course</string>
+    <string name="webViewImportantLinksTitle">Important Links</string>
+    <string name="staffRoleTeacher">Teacher</string>
+    <string name="staffRoleTeacherAssistant">Teaching Assistant</string>
+    <string name="resourcesEmptyMessage">Your resources show up here.</string>
+    <string name="failedToLoadResources">Failed to load resources</string>
+    <string name="failedToRefreshResources">Failed to refresh resources</string>
 
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 

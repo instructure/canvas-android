@@ -24,22 +24,21 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.setCourseImage
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toPx
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
+import de.hdodenhof.circleimageview.CircleImageView
 import java.net.URLDecoder
 
 @BindingAdapter(value = ["itemViewModels", "onItemsAdded", "shouldUpdate"], requireAll = false)
@@ -123,12 +122,16 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
     }
 }
 
-@BindingAdapter(value = ["imageUrl", "overlayColor"], requireAll = true)
+@BindingAdapter(value = ["imageUrl", "overlayColor"], requireAll = false)
 fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: Int?) {
     if (overlayColor != null) {
         imageView.post {
             imageView.setCourseImage(imageUrl, overlayColor, true)
         }
+    } else {
+        Glide.with(imageView)
+            .load(imageUrl)
+            .into(imageView)
     }
 }
 
@@ -166,3 +169,15 @@ fun bindAccesibilityDelegate(view: View, clickDescription: String) {
     }
 }
 
+@BindingAdapter("android:layout_marginBottom")
+fun setBottomMargin(view: View, bottomMargin: Int) {
+    val layoutParams: ViewGroup.MarginLayoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+    layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin,
+        layoutParams.rightMargin, bottomMargin)
+    view.layoutParams = layoutParams
+}
+
+@BindingAdapter(value = ["userAvatar", "userName"], requireAll = true)
+fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: String?) {
+    ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl)
+}

@@ -122,6 +122,17 @@ object ApiEndpoint : Endpoint(
                 request.successResponse(result)
             }
         }
+    ),
+    Segment("external_tools") to Endpoint(
+        Segment("visible_course_nav_tools") to Endpoint {
+            GET {
+                val contextCodes = request.url().queryParameterValues("context_codes[]")
+                val courseIds = contextCodes.map { it.substringAfter("_").toLong() }
+
+                val ltiToolsForCourse = data.ltiTools.filter { courseIds.contains(it.contextId ?: 0) }
+                request.successResponse(ltiToolsForCourse)
+            }
+        }
     )
 )
 

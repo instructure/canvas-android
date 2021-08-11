@@ -154,7 +154,7 @@ class MockCanvas {
     /** Map of assignment ID to a list of submissions */
     val submissions = mutableMapOf<Long, MutableList<Submission>>()
 
-    var ltiTool: LTITool? = null
+    val ltiTools = mutableListOf<LTITool>()
 
     /** Map of course ids to discussion topic headers */
     val courseDiscussionTopicHeaders = mutableMapOf<Long, MutableList<DiscussionTopicHeader>>()
@@ -447,8 +447,8 @@ fun MockCanvas.updateUserEnrollments() {
     }
 }
 
-fun MockCanvas.addCourseWithEnrollment(user: User, enrollmentType: Enrollment.EnrollmentType, score: Double = 0.0, grade: String = ""): Course {
-    val course = addCourse()
+fun MockCanvas.addCourseWithEnrollment(user: User, enrollmentType: Enrollment.EnrollmentType, score: Double = 0.0, grade: String = "", isHomeroom: Boolean = false): Course {
+    val course = addCourse(isHomeroom = isHomeroom)
 
     addEnrollment(
         user = user,
@@ -977,10 +977,10 @@ fun MockCanvas.addSubmissionForAssignment(
     return userRootSubmission
 }
 
-fun MockCanvas.addLTITool(name: String, url: String): LTITool {
-    val ltiTool = LTITool(id = 123L, name = name, url = url)
+fun MockCanvas.addLTITool(name: String, url: String, course: Course, id: Long = newItemId()): LTITool {
+    val ltiTool = LTITool(id = id, name = name, url = url, contextId = course.id, contextName = course.name)
 
-    this.ltiTool = ltiTool
+    this.ltiTools.add(ltiTool)
 
     return ltiTool
 }

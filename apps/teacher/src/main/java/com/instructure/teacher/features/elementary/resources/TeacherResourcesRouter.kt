@@ -14,22 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.elementary.homeroom
+package com.instructure.teacher.features.elementary.resources
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
 
-class TeacherHomeroomRouter : HomeroomRouter {
+class TeacherResourcesRouter : ResourcesRouter {
 
-    override fun openAnnouncements(canvasContext: CanvasContext) = Unit
+    override fun openLti(ltiTool: LTITool) = Unit
 
-    override fun openCourse(course: Course) = Unit
-
-    override fun openAssignments(course: Course) = Unit
-
-    override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) = Unit
-
-    override fun updateColors() = Unit
+    override fun openComposeMessage(user: User) = Unit
 }

@@ -14,22 +14,19 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.elementary.homeroom
+package com.instructure.pandautils.features.elementary.resources.itemviewmodels
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.elementary.resources.LtiApplicationViewData
+import com.instructure.pandautils.features.elementary.resources.ResourcesItemViewType
+import com.instructure.pandautils.mvvm.ItemViewModel
 
-class TeacherHomeroomRouter : HomeroomRouter {
+class LtiApplicationItemViewModel(
+    val data: LtiApplicationViewData,
+    val marginBottom: Int,
+    val onClick: () -> Unit) : ItemViewModel {
 
-    override fun openAnnouncements(canvasContext: CanvasContext) = Unit
+    override val layoutId: Int = R.layout.item_lti_application
 
-    override fun openCourse(course: Course) = Unit
-
-    override fun openAssignments(course: Course) = Unit
-
-    override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) = Unit
-
-    override fun updateColors() = Unit
+    override val viewType: Int = ResourcesItemViewType.LTI_APPLICATION.viewType
 }

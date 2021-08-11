@@ -22,23 +22,19 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
-import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 import junit.framework.Assert.assertTrue
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.allOf
 
 class NewMessagePage : BasePage() {
 
@@ -171,6 +167,10 @@ class NewMessagePage : BasePage() {
         Espresso.closeSoftKeyboard()
         setMessage(message)
         Espresso.closeSoftKeyboard()
+    }
+
+    fun assertToolbarTitleNewMessage() {
+        onView(withId(R.id.toolbar) + withDescendant(withText(R.string.newMessage))).assertDisplayed()
     }
 }
 
