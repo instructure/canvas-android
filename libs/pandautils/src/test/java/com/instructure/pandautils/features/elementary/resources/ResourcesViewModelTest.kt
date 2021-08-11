@@ -160,7 +160,6 @@ class ResourcesViewModelTest {
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
         assertEquals(2, viewModel.data.value!!.importantLinksItems.size)
-
         assertFalse(viewModel.data.value!!.isEmpty())
 
         val viewData1 = (viewModel.data.value!!.importantLinksItems[0] as ImportantLinksItemViewModel).data
