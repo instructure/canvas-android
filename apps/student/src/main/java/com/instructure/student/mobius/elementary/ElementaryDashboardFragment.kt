@@ -48,12 +48,6 @@ class ElementaryDashboardFragment : ParentFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!FeatureFlagPrefs.showInProgressK5Tabs) {
-            dashboardTabLayout.removeTabAt(3)
-            dashboardTabLayout.removeTabAt(2)
-            dashboardTabLayout.removeTabAt(1)
-        }
-
         dashboardPager.adapter = ElementaryDashboardPagerAdapter(canvasContext, childFragmentManager)
         dashboardTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) = Unit

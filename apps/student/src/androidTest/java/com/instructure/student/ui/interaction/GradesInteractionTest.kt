@@ -117,7 +117,6 @@ class GradesInteractionTest : StudentTest() {
         // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
         Thread.sleep(3000)
         RemoteConfigPrefs.putString(RemoteConfigParam.K5_DESIGN.rc_name, "true")
-        FeatureFlagPrefs.showInProgressK5Tabs = true
 
         return MockCanvas.init(
             studentCount = 1,
