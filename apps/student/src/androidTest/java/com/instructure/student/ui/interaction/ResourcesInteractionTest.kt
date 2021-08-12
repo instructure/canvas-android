@@ -204,6 +204,11 @@ class ResourcesInteractionTest : StudentTest() {
         resourcesPage.openComposeMessage(data.teachers[0].shortName!!)
 
         newMessagePage.assertToolbarTitleNewMessage()
+        newMessagePage.assertCourseSelectorNotShown()
+        newMessagePage.assertRecipientsNotShown()
+        newMessagePage.assertSendIndividualMessagesNotShown()
+        newMessagePage.assertSubjectViewShown()
+        newMessagePage.assertMessageViewShown()
     }
 
     private fun createMockDataWithHomeroomCourse(
