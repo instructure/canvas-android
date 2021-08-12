@@ -17,16 +17,17 @@
 package com.instructure.pandautils.features.elementary.resources.itemviewmodels
 
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.elementary.resources.ImportantLinksViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class ImportantLinksItemViewModel(
-    val htmlContent: String,
+    val data: ImportantLinksViewData,
     private val onLtiButtonPressed: (url: String, content: String) -> Unit
 ) : ItemViewModel {
 
     override val layoutId: Int = R.layout.item_important_links
 
     fun onLtiButtonPressed(url: String) {
-        onLtiButtonPressed(url, htmlContent)
+        onLtiButtonPressed(url, data.htmlContent)
     }
 }

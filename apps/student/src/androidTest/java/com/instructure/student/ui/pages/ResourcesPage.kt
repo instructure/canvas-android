@@ -41,6 +41,10 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
             .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(content)))
     }
 
+    fun assertCourseNameDisplayed(courseName: String) {
+        onView(withId(R.id.importantLinksCourseName) + withText(courseName)).assertDisplayed()
+    }
+
     fun assertStudentApplicationsHeaderDisplayed() {
         onView(withText(R.string.studentApplications)).assertDisplayed()
     }

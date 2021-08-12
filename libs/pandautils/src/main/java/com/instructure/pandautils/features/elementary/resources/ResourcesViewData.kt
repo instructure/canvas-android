@@ -30,6 +30,8 @@ data class LtiApplicationViewData(val title: String, val imageUrl: String, val l
 
 data class ContactInfoViewData(val name: String, val description: String, val imageUrl: String)
 
+data class ImportantLinksViewData(val courseName: String, val htmlContent: String, val hasDivider: Boolean = false)
+
 sealed class ResourcesAction {
     data class OpenLtiApp(val ltiTools: List<LTITool>) : ResourcesAction()
     data class OpenComposeMessage(val recipient: User) : ResourcesAction()
