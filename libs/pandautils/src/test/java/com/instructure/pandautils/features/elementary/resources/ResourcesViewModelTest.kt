@@ -127,7 +127,7 @@ class ResourcesViewModelTest {
     }
 
     @Test
-    fun `Create important links from homeroom course syllabus body`() {
+    fun `Create important links from homeroom course syllabus body without course name if only 1 homeroom course is present`() {
         // Given
         val course = Course(homeroomCourse = true, syllabusBody = "This link is really important: www.tamaskozmer.com")
         initMockData(courses = DataResult.Success(listOf(course)))
@@ -142,7 +142,30 @@ class ResourcesViewModelTest {
 
         val expectedHtmlContent = "This link is really important: www.tamaskozmer.com"
         assertFalse(viewModel.data.value!!.isEmpty())
-        assertEquals(expectedHtmlContent, (viewModel.data.value!!.importantLinksItems[0] as ImportantLinksItemViewModel).htmlContent)
+        val viewData = (viewModel.data.value!!.importantLinksItems[0] as ImportantLinksItemViewModel).data
+        assertEquals(ImportantLinksViewData("", expectedHtmlContent), viewData)
+    }
+
+    @Test
+    fun `Create important links from homeroom course syllabus body with course name if there are more than 1 homeroom courses`() {
+        // Given
+        val course = Course(name = "Course 1", homeroomCourse = true, syllabusBody = "This link is really important: www.tamaskozmer.com")
+        val course2 = Course(name = "Course 2", homeroomCourse = true, syllabusBody = "Something really important")
+        initMockData(courses = DataResult.Success(listOf(course, course2)))
+
+        // When
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, {})
+
+        // Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(2, viewModel.data.value!!.importantLinksItems.size)
+        assertFalse(viewModel.data.value!!.isEmpty())
+
+        val viewData1 = (viewModel.data.value!!.importantLinksItems[0] as ImportantLinksItemViewModel).data
+        val viewData2 = (viewModel.data.value!!.importantLinksItems[1] as ImportantLinksItemViewModel).data
+        assertEquals(ImportantLinksViewData("Course 1", "This link is really important: www.tamaskozmer.com", true), viewData1)
+        assertEquals(ImportantLinksViewData("Course 2", "Something really important"), viewData2)
     }
 
     @Test
@@ -314,7 +337,7 @@ class ResourcesViewModelTest {
     fun `Error after refresh should trigger refresh error event if data is already available`() {
         // Given
         val course = Course(id = 1, homeroomCourse = true, syllabusBody = "This link is really important: www.tamaskozmer.com")
-        initMockData()
+        initMockData(courses = DataResult.Success(listOf(course)))
         every { courseManager.getCoursesWithSyllabusAsyncWithActiveEnrollmentAsync(any()) } returns mockk {
             coEvery { await() }.returnsMany(DataResult.Success(listOf(course)), DataResult.Fail())
         }
@@ -359,6 +382,7 @@ class ResourcesViewModelTest {
 
         val usersDeferred: Deferred<DataResult<List<User>>> = mockk()
         every { userManager.getTeacherListForCourseAsync(any(), any()) } returns usersDeferred
-        coEvery { listOf(usersDeferred).awaitAll() } returns teachers
+        val listOfUsersDeferred = courses.dataOrNull?.map { usersDeferred } ?: emptyList()
+        coEvery { listOfUsersDeferred.awaitAll() } returns teachers
     }
 }

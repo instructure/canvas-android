@@ -172,6 +172,26 @@ class NewMessagePage : BasePage() {
     fun assertToolbarTitleNewMessage() {
         onView(withId(R.id.toolbar) + withDescendant(withText(R.string.newMessage))).assertDisplayed()
     }
+
+    fun assertCourseSelectorNotShown() {
+        coursesSpinner.assertNotDisplayed()
+    }
+
+    fun assertRecipientsNotShown() {
+        onViewWithId(R.id.recipientWrapper).assertNotDisplayed()
+    }
+
+    fun assertSendIndividualMessagesNotShown() {
+        sendIndividualMessageSwitch.assertNotDisplayed()
+    }
+
+    fun assertSubjectViewShown() {
+        onViewWithId(R.id.editSubject).assertDisplayed()
+    }
+
+    fun assertMessageViewShown() {
+        onViewWithId(R.id.message)
+    }
 }
 
 /** Custom ViewAssertion to make sure that a TextBox is empty */

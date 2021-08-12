@@ -39,7 +39,8 @@ class StudentResourcesRouter(private val activity: FragmentActivity) : Resources
 
     override fun openComposeMessage(user: User) {
         val recipient = Recipient.from(user)
-        val route = InboxComposeMessageFragment.makeRoute(CanvasContext.defaultCanvasContext(), arrayListOf(recipient))
+        val context = Course(id = user.enrollments[0].courseId, homeroomCourse = true)
+        val route = InboxComposeMessageFragment.makeRoute(context, arrayListOf(recipient), homeroomMessage = true)
         RouteMatcher.route(activity, route)
     }
 }
