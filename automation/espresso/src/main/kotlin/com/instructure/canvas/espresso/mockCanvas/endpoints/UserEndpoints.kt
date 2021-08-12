@@ -78,7 +78,7 @@ object UserEndpoint : Endpoint(
                     val plannerItemsList = data.assignments.values
                         .filter { userCourseIds.contains(it.courseId) }
                         .map {
-                            val plannable = Plannable(it.id, it.name ?: "", it.courseId, null, userId, null, null, it.id)
+                            val plannable = Plannable(it.id, it.name ?: "", it.courseId, null, userId, null, null, it.id, null)
                             PlannerItem(it.courseId, null, userId, null, null, PlannableType.ASSIGNMENT, plannable, Date(), null, SubmissionState(), false)
                         }
 
