@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 class StickyHeaderItemDecoration(private val stickyHeaderAdapter: StickyHeaderInterface) :
     RecyclerView.ItemDecoration() {
 
-    private var mStickyHeaderHeight = 0
+    private var stickyHeaderHeight = 0
 
     private var xPos = 0
 
@@ -76,7 +76,7 @@ class StickyHeaderItemDecoration(private val stickyHeaderAdapter: StickyHeaderIn
             if (currentHeaderPos != i) {
                 val isChildHeader: Boolean = stickyHeaderAdapter.isHeader(parent.getChildAdapterPosition(child))
                 if (isChildHeader) {
-                    heightTolerance = mStickyHeaderHeight - child.height
+                    heightTolerance = stickyHeaderHeight - child.height
                 }
             }
 
@@ -109,7 +109,7 @@ class StickyHeaderItemDecoration(private val stickyHeaderAdapter: StickyHeaderIn
         )
         xPos = parent.paddingLeft
         view.measure(childWidthSpec, childHeightSpec)
-        view.layout(0, 0, view.measuredWidth, view.measuredHeight.also { mStickyHeaderHeight = it })
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight.also { stickyHeaderHeight = it })
     }
 
 }

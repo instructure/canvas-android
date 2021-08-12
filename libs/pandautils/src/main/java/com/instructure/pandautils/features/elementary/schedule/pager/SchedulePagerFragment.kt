@@ -35,10 +35,6 @@ class SchedulePagerFragment : Fragment() {
 
     private val viewModel: SchedulePagerViewModel by viewModels()
 
-    companion object {
-        fun newInstance() = SchedulePagerFragment()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -86,9 +82,13 @@ class SchedulePagerFragment : Fragment() {
 
     private fun handleAction(action: SchedulePagerAction) {
         when (action) {
-            is SchedulePagerAction.SelectPage -> schedulePager.setCurrentItem(action.position, action.smoothScroll)
+            is SchedulePagerAction.SelectPage -> schedulePager.setCurrentItem(action.position, false)
             is SchedulePagerAction.MoveToNext -> schedulePager.setCurrentItem(schedulePager.currentItem + 1, true)
             is SchedulePagerAction.MoveToPrevious -> schedulePager.setCurrentItem(schedulePager.currentItem - 1, true)
         }
+    }
+
+    companion object {
+        fun newInstance() = SchedulePagerFragment()
     }
 }

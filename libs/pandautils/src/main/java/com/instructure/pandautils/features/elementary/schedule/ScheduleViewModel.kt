@@ -510,10 +510,10 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun getCourseColor(course: Course?): String {
-        return if (!course?.courseColor.isNullOrEmpty()) {
-            course?.courseColor!!
-        } else {
-            TODO_COLOR
+        return when {
+            !course?.courseColor.isNullOrEmpty() -> course?.courseColor!!
+            !course?.name.isNullOrEmpty() -> ColorApiHelper.K5_DEFAULT_COLOR
+            else -> TODO_COLOR
         }
     }
 }
