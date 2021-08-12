@@ -83,15 +83,6 @@
         android:background="@color/dividerColor"
         app:layout_constraintTop_toBottomOf="@id/dashboardTabLayout" />
     
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/importantDatesContainer"
-        android:layout_width="320dp"
-        android:layout_height="0dp"
-        android:background="@color/messageBackgroundGray"
-        app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-    
     <com.instructure.pandautils.views.ViewPagerNonSwipeable
         android:id="@+id/dashboardPager"
         android:layout_width="0dp"
@@ -99,6 +90,6 @@
         app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/importantDatesContainer"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
