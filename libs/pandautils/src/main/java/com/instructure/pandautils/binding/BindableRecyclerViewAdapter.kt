@@ -21,8 +21,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
-import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder>() {
@@ -32,7 +32,7 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
 
     private val groupObserver = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            if (sender is GroupItemViewModel) {
+            if (sender is GroupItemViewModel && propertyId == BR.collapsed) {
                 toggleGroup(sender)
             }
         }

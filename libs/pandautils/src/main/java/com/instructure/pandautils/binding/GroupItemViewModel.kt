@@ -18,6 +18,7 @@ package com.instructure.pandautils.binding
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 abstract class GroupItemViewModel(
@@ -28,6 +29,6 @@ abstract class GroupItemViewModel(
 
     fun toggleItems() {
         collapsed = !collapsed
-        notifyChange()
+        notifyPropertyChanged(BR.collapsed)
     }
 }
