@@ -74,7 +74,8 @@ class StickyHeaderItemDecoration(private val stickyHeaderAdapter: StickyHeaderIn
             val child = parent.getChildAt(i)
 
             if (currentHeaderPos != i) {
-                val isChildHeader: Boolean = stickyHeaderAdapter.isHeader(parent.getChildAdapterPosition(child))
+                val childAdapterPosition = parent.getChildAdapterPosition(child)
+                val isChildHeader: Boolean = if (childAdapterPosition == RecyclerView.NO_POSITION) false else stickyHeaderAdapter.isHeader(childAdapterPosition)
                 if (isChildHeader) {
                     heightTolerance = stickyHeaderHeight - child.height
                 }
