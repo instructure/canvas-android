@@ -16,9 +16,7 @@
 
 package com.instructure.pandautils.features.elementary.schedule.pager
 
-import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
-
-data class SchedulePagerViewData(val fragments: List<ScheduleFragment>)
+data class SchedulePagerViewData(val pageStartDates: List<String>)
 
 sealed class SchedulePagerAction {
     data class SelectPage(val position: Int) : SchedulePagerAction()

@@ -16,15 +16,10 @@
 
 package com.instructure.pandautils.features.elementary.schedule.pager
 
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
 import com.instructure.pandautils.mvvm.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
@@ -45,21 +40,15 @@ class SchedulePagerViewModel @Inject constructor() : ViewModel() {
         get() = _events
     private val _events = MutableLiveData<Event<SchedulePagerAction>>()
 
-    val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
-        override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-        }
-    }
-
     init {
         val calendar = Calendar.getInstance()
         calendar.roll(Calendar.WEEK_OF_YEAR, -28)
-        val fragments = (0..SCHEDULE_PAGE_COUNT).map {
+        val startDates = (0..SCHEDULE_PAGE_COUNT).map {
             calendar.roll(Calendar.WEEK_OF_YEAR, true)
-            ScheduleFragment.newInstance(calendar.time.toApiString())
+            calendar.time.toApiString()
         }
 
-        _data.postValue(SchedulePagerViewData(fragments))
+        _data.postValue(SchedulePagerViewData(startDates))
         _events.postValue(Event(SchedulePagerAction.SelectPage(THIS_WEEKS_POSITION)))
     }
 

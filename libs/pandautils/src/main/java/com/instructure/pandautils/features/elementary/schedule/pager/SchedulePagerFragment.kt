@@ -17,18 +17,17 @@
 package com.instructure.pandautils.features.elementary.schedule.pager
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.instructure.pandautils.databinding.FragmentSchedulePagerBinding
+import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule_pager.*
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class SchedulePagerFragment : Fragment() {
@@ -48,13 +47,12 @@ class SchedulePagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.data.observe(viewLifecycleOwner, {
-            it?.let {
+        viewModel.data.observe(viewLifecycleOwner, { schedulePagerViewData ->
+            schedulePagerViewData?.let {
                 schedulePager.adapter = object : FragmentStateAdapter(this) {
-                    override fun getItemCount(): Int = it.fragments.size
+                    override fun getItemCount(): Int = it.pageStartDates.size
 
-                    override fun createFragment(position: Int): Fragment = it.fragments[position]
-
+                    override fun createFragment(position: Int): Fragment = ScheduleFragment.newInstance(it.pageStartDates[position])
                 }
             }
         })

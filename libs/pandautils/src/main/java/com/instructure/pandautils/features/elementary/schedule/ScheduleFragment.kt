@@ -79,12 +79,6 @@ class ScheduleFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(startDate: String?): ScheduleFragment {
-            return ScheduleFragment().apply {
-                if (startDate != null) {
-                    startDateString = startDate
-                }
-            }
-        }
+        fun newInstance(startDate: String) = ScheduleFragment().apply { startDateString = startDate }
     }
 }
