@@ -102,7 +102,6 @@ class ScheduleViewModel @Inject constructor(
 
                 val courses = courseManager.getCoursesAsync(forceNetwork).await()
                 coursesMap = courses.dataOrThrow
-                    .filter { !it.homeroomCourse }
                     .associateBy { it.id }
 
                 plannerItems = plannerManager.getPlannerItemsAsync(
@@ -229,7 +228,7 @@ class ScheduleViewModel @Inject constructor(
             .filter {
                 date.isSameDay(it.plannableDate)
             }
-            .groupBy { coursesMap[it.courseId] }
+            .groupBy { coursesMap[it.courseId ?: it.plannable.courseId] }
 
 
         val courseViewModels = coursePlannerMap.entries.map { entry ->
@@ -456,6 +455,7 @@ class ScheduleViewModel @Inject constructor(
 
     private fun getDueText(plannerItem: PlannerItem): String {
         return when (plannerItem.plannableType) {
+            PlannableType.ANNOUNCEMENT -> simpleDateFormat.format(plannerItem.plannableDate)
             PlannableType.CALENDAR_EVENT -> getCalendarEventDueText(plannerItem)
             PlannableType.PLANNER_NOTE -> resources.getString(
                 R.string.schedule_todo_due_text,
