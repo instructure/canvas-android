@@ -95,17 +95,16 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                     event.getContentIfNotHandled()?.let {
                         if (it) {
                             startApp()
+                            // We only want to finish here on debug builds, our login bypass for UI testing depends
+                            // on a function called by this class, which then finishes the activity.
+                            // See loginWithToken() in Teacher's InitLoginActivity.
+                            if (!isTesting) finish()
                         } else {
                             logout()
                         }
                     }
                 })
             }
-
-            // We only want to finish here on debug builds, our login bypass for UI testing depends
-            // on a function called by this class, which then finishes the activity.
-            // See loginWithToken() in Teacher's InitLoginActivity.
-            if (!isTesting) finish()
         } else {
             Handler().postDelayed({
                 runOnUiThread {
