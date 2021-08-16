@@ -232,7 +232,9 @@ class ScheduleViewModel @Inject constructor(
             .groupBy { coursesMap[it.courseId ?: it.plannable.courseId] }
 
 
-        val courseViewModels = coursePlannerMap.entries.map { entry ->
+        val courseViewModels = coursePlannerMap.entries
+            .sortedBy { it.key?.name }
+            .map { entry ->
             val scheduleViewData = ScheduleCourseViewData(
                 entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
                 entry.key != null,
