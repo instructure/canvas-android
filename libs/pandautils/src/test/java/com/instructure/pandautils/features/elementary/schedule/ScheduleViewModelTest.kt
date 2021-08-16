@@ -21,23 +21,22 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.PlannerManager
-import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleCourseItemViewModel
-import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayGroupItemViewModel
-import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleEmptyItemViewModel
-import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemsGroupItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
@@ -62,6 +61,8 @@ class ScheduleViewModelTest {
     private val userManager: UserManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val calendarEventManager: CalendarEventManager = mockk(relaxed = true)
+    private val assignmentManager: AssignmentManager = mockk(relaxed = true)
 
     private lateinit var viewModel: ScheduleViewModel
 
@@ -202,11 +203,11 @@ class ScheduleViewModelTest {
             viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsGroupItemViewModel } as ScheduleMissingItemsGroupItemViewModel
         assertEquals(2, missingItemHeader.items.size)
 
-        val firstMissingItem = missingItemHeader.items[0]
+        val firstMissingItem = missingItemHeader.items[0] as ScheduleMissingItemViewModel
         assertEquals("Assignment 1", firstMissingItem.data.title)
         assertEquals("Course 1", firstMissingItem.data.courseName)
 
-        val secondMissingItem = missingItemHeader.items[1]
+        val secondMissingItem = missingItemHeader.items[1] as ScheduleMissingItemViewModel
         assertEquals("Assignment 2", secondMissingItem.data.title)
         assertEquals("Course 2", secondMissingItem.data.courseName)
     }
@@ -461,9 +462,12 @@ class ScheduleViewModelTest {
         viewModel = createViewModel()
 
         viewModel.data.observe(lifecycleOwner, {})
+        viewModel.getDataForDate(Calendar.getInstance().time.toApiString())
 
-        val courseItem =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+        val courseGroupItem =
+            viewModel.data.value?.itemViewModels?.find { it is ScheduleDayGroupItemViewModel && it.dayText == "Today" } as ScheduleDayGroupItemViewModel
+
+        val courseItem = courseGroupItem.items[0] as ScheduleCourseItemViewModel
 
         assertEquals("To Do", courseItem.data.courseName)
         assertEquals(1, courseItem.data.plannerItems.size)
@@ -617,15 +621,15 @@ class ScheduleViewModelTest {
         assertEquals(4, unreadGradedLateExcusedPlannerItem.data.chips.size)
         assert(
             unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Replies" }
-                    && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Late" }
-                    && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Excused" }
-                    && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Feedback" }
+                && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Late" }
+                && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Excused" }
+                && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Feedback" }
         )
 
     }
 
-    private fun createPlannerItem(courseId: Long, assignmentId: Long, plannableType: PlannableType, submissionState: SubmissionState, date: Date, plannerOverride: PlannerOverride? = null, newActivity: Boolean = false): PlannerItem {
-        val plannable = Plannable(id = assignmentId, title = "Plannable $assignmentId", courseId, null, null, null, date, assignmentId)
+    private fun createPlannerItem(courseId: Long, assignmentId: Long, plannableType: PlannableType, submissionState: SubmissionState, date: Date, plannerOverride: PlannerOverride? = null, newActivity: Boolean = false, todoDate: String? = null): PlannerItem {
+        val plannable = Plannable(id = assignmentId, title = "Plannable $assignmentId", courseId, null, null, null, date, assignmentId, todoDate)
         return PlannerItem(courseId, null, null, null, null, plannableType, plannable, date, null, submissionState, plannerOverride = plannerOverride, newActivity = newActivity)
     }
 
@@ -642,7 +646,7 @@ class ScheduleViewModelTest {
     }
 
     private fun createToDoItem(id: Long, title: String): PlannerItem {
-        val plannable = Plannable(id = id, title = title, null, null, null, null, Date(), null)
+        val plannable = Plannable(id = id, title = title, null, null, null, null, Date(), null, null)
         return PlannerItem(
             plannable = plannable,
             plannableType = PlannableType.PLANNER_NOTE,
@@ -661,7 +665,7 @@ class ScheduleViewModelTest {
 
     private fun setupStrings() {
         every { resources.getString(R.string.schedule_tag_graded) } returns "Graded"
-        every { resources.getString(R.string.schedule_tag_replies) } returns "Replies"
+        every { resources.getString(R.plurals.schedule_tag_replies) } returns "Replies"
         every { resources.getString(R.string.schedule_tag_feedback) } returns "Feedback"
         every { resources.getString(R.string.schedule_tag_late) } returns "Late"
         every { resources.getString(R.string.schedule_tag_redo) } returns "Redo"
@@ -673,6 +677,20 @@ class ScheduleViewModelTest {
     }
 
     private fun createViewModel(): ScheduleViewModel {
-        return ScheduleViewModel(apiPrefs, resources, plannerManager, courseManager, userManager)
+        return ScheduleViewModel(apiPrefs, resources, plannerManager, courseManager, userManager, calendarEventManager, assignmentManager)
+    }
+
+    private fun mockAssignments(assignments: List<DataResult<Assignment>> = emptyList()) {
+        val assignmentDeferred: Deferred<DataResult<Assignment>> = mockk()
+        every { assignmentManager.getAssignmentAsync(any(), any(), any()) } returns assignmentDeferred
+        val listOfAssignmentDeferred = assignments.map { assignmentDeferred }
+        coEvery { listOfAssignmentDeferred.awaitAll() } returns assignments
+    }
+
+    private fun mockCalendarEvents(calendarEvents: List<DataResult<ScheduleItem>> = emptyList()) {
+        val calendarEventDeferred: Deferred<DataResult<ScheduleItem>> = mockk()
+        every { calendarEventManager.getCalendarEventAsync(any(), any()) } returns calendarEventDeferred
+        val listOfCalendarEventDeferred = calendarEvents.map { calendarEventDeferred }
+        coEvery { listOfCalendarEventDeferred.awaitAll() } returns calendarEvents
     }
 }
