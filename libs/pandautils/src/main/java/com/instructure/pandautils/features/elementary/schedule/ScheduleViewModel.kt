@@ -319,7 +319,7 @@ class ScheduleViewModel @Inject constructor(
                 isPlannableOpenable(plannerItem),
                 createChips(plannerItem)
             ),
-            plannerItem.plannerOverride?.markedComplete ?: false,
+            plannerItem.plannerOverride?.markedComplete ?: false || plannerItem.submissionState?.submitted ?: false,
             { scheduleItemViewModel, markedAsDone ->
                 updatePlannerOverride(
                     plannerItem,
