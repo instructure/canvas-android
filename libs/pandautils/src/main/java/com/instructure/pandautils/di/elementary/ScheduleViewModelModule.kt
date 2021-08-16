@@ -14,21 +14,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.binding
+package com.instructure.pandautils.di.elementary
 
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
-import com.instructure.pandautils.BR
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.utils.MissingItemsPrefs
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-abstract class GroupItemViewModel(
-    val collapsable: Boolean,
-    @get:Bindable var collapsed: Boolean = collapsable,
-    val items: List<ItemViewModel>
-) : ItemViewModel, BaseObservable() {
+@Module
+@InstallIn(ViewModelComponent::class)
+class ScheduleViewModelModule {
 
-    open fun toggleItems() {
-        collapsed = !collapsed
-        notifyPropertyChanged(BR.collapsed)
+    @Provides
+    fun provideMissingItemsPrefs(): MissingItemsPrefs {
+        return MissingItemsPrefs
     }
 }

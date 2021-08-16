@@ -14,21 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.binding
+package com.instructure.pandautils.utils
 
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
-import com.instructure.pandautils.BR
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.canvasapi2.utils.BooleanPref
+import com.instructure.canvasapi2.utils.PrefManager
 
-abstract class GroupItemViewModel(
-    val collapsable: Boolean,
-    @get:Bindable var collapsed: Boolean = collapsable,
-    val items: List<ItemViewModel>
-) : ItemViewModel, BaseObservable() {
+object MissingItemsPrefs : PrefManager("missing-items-prefs") {
 
-    open fun toggleItems() {
-        collapsed = !collapsed
-        notifyPropertyChanged(BR.collapsed)
-    }
+    var itemsCollapsed by BooleanPref()
 }

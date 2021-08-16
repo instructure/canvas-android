@@ -19,11 +19,18 @@ package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.ScheduleItemViewModelType
+import com.instructure.pandautils.utils.MissingItemsPrefs
 
 class ScheduleMissingItemsGroupItemViewModel(
+    private val missingItemsPrefs: MissingItemsPrefs,
     items: List<ScheduleMissingItemViewModel>
-) : GroupItemViewModel(collapsable = true, items = items) {
+) : GroupItemViewModel(collapsable = true, collapsed = missingItemsPrefs.itemsCollapsed, items = items) {
     override val layoutId: Int = R.layout.item_schedule_missing_header
 
     override val viewType: Int = ScheduleItemViewModelType.MISSING_HEADER.viewType
+
+    override fun toggleItems() {
+        super.toggleItems()
+        missingItemsPrefs.itemsCollapsed = collapsed
+    }
 }

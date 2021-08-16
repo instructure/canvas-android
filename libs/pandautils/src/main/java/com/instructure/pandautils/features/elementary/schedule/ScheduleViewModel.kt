@@ -51,7 +51,8 @@ class ScheduleViewModel @Inject constructor(
     private val courseManager: CourseManager,
     private val userManager: UserManager,
     private val calendarEventManager: CalendarEventManager,
-    private val assignmentManager: AssignmentManager
+    private val assignmentManager: AssignmentManager,
+    private val missingItemsPrefs: MissingItemsPrefs
 ) : ViewModel() {
 
     private lateinit var startDate: Date
@@ -203,7 +204,7 @@ class ScheduleViewModel @Inject constructor(
                 }
             )
         }
-        return ScheduleMissingItemsGroupItemViewModel(items = missingItems)
+        return ScheduleMissingItemsGroupItemViewModel(missingItemsPrefs = missingItemsPrefs, items = missingItems)
     }
 
     private fun createDayHeader(date: Date, items: List<ItemViewModel>): ScheduleDayGroupItemViewModel {
