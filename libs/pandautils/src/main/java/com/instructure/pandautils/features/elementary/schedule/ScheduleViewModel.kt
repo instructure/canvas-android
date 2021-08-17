@@ -130,7 +130,7 @@ class ScheduleViewModel @Inject constructor(
                         .map { it.dataOrNull }
                         .associateBy { it?.id }
 
-                val itemViewModels = mutableListOf<ItemViewModel>()
+                val itemViewModels = mutableListOf<ScheduleDayGroupItemViewModel>()
                 for (i in 0..6) {
                     val calendar = Calendar.getInstance()
                     calendar.time = weekStart

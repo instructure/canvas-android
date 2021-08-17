@@ -21,11 +21,12 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayGroupItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemTagItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class ScheduleViewData(val itemViewModels: List<ItemViewModel>)
+data class ScheduleViewData(val itemViewModels: List<ScheduleDayGroupItemViewModel>)
 
 data class ScheduleCourseViewData(
         val courseName: String,

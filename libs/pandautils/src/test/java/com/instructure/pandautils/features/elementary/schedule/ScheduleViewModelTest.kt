@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
+import com.instructure.pandautils.utils.MissingItemsPrefs
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -42,7 +43,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.text.SimpleDateFormat
 import java.util.*
 
 @ExperimentalCoroutinesApi
@@ -63,6 +63,7 @@ class ScheduleViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val calendarEventManager: CalendarEventManager = mockk(relaxed = true)
     private val assignmentManager: AssignmentManager = mockk(relaxed = true)
+    private val missingItemsPrefs: MissingItemsPrefs = mockk(relaxed = true)
 
     private lateinit var viewModel: ScheduleViewModel
 
@@ -86,6 +87,8 @@ class ScheduleViewModelTest {
         every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
+
+        every { missingItemsPrefs.itemsCollapsed } returns false
     }
 
     @Test
@@ -107,12 +110,24 @@ class ScheduleViewModelTest {
             coEvery { await() } returns DataResult.Success(plannerItems)
         }
 
-        viewModel = createViewModel()
+        val assignments = listOf(
+            createAssignment(3, 1),
+            createAssignment(4, 1)
+        ).map { DataResult.Success(it) }
 
+        mockAssignments(assignments)
+
+        viewModel = createViewModel()
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        val courseItemViewModel =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val courseItemViewModel = todayHeader?.items?.get(0) as ScheduleCourseItemViewModel
 
         courseItemViewModel.onHeaderClick.invoke()
         assertEquals(ScheduleAction.OpenCourse(course), viewModel.events.value?.getContentIfNotHandled())
@@ -152,18 +167,6 @@ class ScheduleViewModelTest {
         )
     }
 
-    @Test
-    fun `Today button only visible for the other days`() {
-        viewModel = createViewModel()
-
-        viewModel.data.observe(lifecycleOwner, {})
-
-        val headerItems = viewModel.data.value?.itemViewModels?.filterIsInstance<ScheduleDayGroupItemViewModel>()
-        assertEquals(6, headerItems?.count { it.todayVisible })
-
-        val todayIndex = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1)
-        assertEquals(false, headerItems?.get(todayIndex)?.todayVisible)
-    }
 
     @Test
     fun `Missing items set up correctly`() {
@@ -196,11 +199,17 @@ class ScheduleViewModelTest {
         }
 
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
         val missingItemHeader =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsGroupItemViewModel } as ScheduleMissingItemsGroupItemViewModel
+            todayHeader?.items?.find { it is ScheduleMissingItemsGroupItemViewModel } as ScheduleMissingItemsGroupItemViewModel
         assertEquals(2, missingItemHeader.items.size)
 
         val firstMissingItem = missingItemHeader.items[0] as ScheduleMissingItemViewModel
@@ -210,6 +219,38 @@ class ScheduleViewModelTest {
         val secondMissingItem = missingItemHeader.items[1] as ScheduleMissingItemViewModel
         assertEquals("Assignment 2", secondMissingItem.data.title)
         assertEquals("Course 2", secondMissingItem.data.courseName)
+    }
+
+    @Test
+    fun `Missing items are open by default`() {
+        val course = Course(id = 1)
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        val missingItems = listOf(
+            createAssignment(1, courseId = 1, createSubmission(id = 1, grade = null, late = false, excused = false)),
+            createAssignment(2, courseId = 1, createSubmission(id = 2, grade = null, late = false, excused = false))
+        )
+
+        every { userManager.getAllMissingSubmissionsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(missingItems)
+        }
+
+        viewModel = createViewModel()
+        viewModel.getDataForDate(Date().toApiString())
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val missingItemHeader =
+            todayHeader?.items?.find { it is ScheduleMissingItemsGroupItemViewModel } as ScheduleMissingItemsGroupItemViewModel
+        assertEquals(false, missingItemHeader.collapsed)
     }
 
     @Test
@@ -230,15 +271,20 @@ class ScheduleViewModelTest {
         }
 
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        assertEquals(1, viewModel.data.value?.itemViewModels?.count { it is ScheduleMissingItemsGroupItemViewModel })
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
         val missingItemHeader =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsGroupItemViewModel } as ScheduleMissingItemsGroupItemViewModel
-        assertEquals(true, missingItemHeader.collapsed)
-        missingItemHeader.toggleItems()
+            todayHeader?.items?.find { it is ScheduleMissingItemsGroupItemViewModel } as ScheduleMissingItemsGroupItemViewModel
         assertEquals(false, missingItemHeader.collapsed)
+        missingItemHeader.toggleItems()
+        assertEquals(true, missingItemHeader.collapsed)
     }
 
     @Test
@@ -259,20 +305,37 @@ class ScheduleViewModelTest {
         }
 
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        assertEquals(1, viewModel.data.value?.itemViewModels?.count { it is ScheduleMissingItemsGroupItemViewModel })
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        items?.forEach { dayGroup ->
+            if (dayGroup != todayHeader) {
+                assertEquals(0, dayGroup.items.count { it is ScheduleMissingItemsGroupItemViewModel })
+            } else {
+                assertEquals(1, dayGroup.items.count { it is ScheduleMissingItemsGroupItemViewModel })
+            }
+        }
     }
 
     @Test
     fun `Missing items are not visible if there are none`() {
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        assertEquals(14, viewModel.data.value?.itemViewModels?.size)
-        assertEquals(null, viewModel.data.value?.itemViewModels?.find { it is ScheduleMissingItemsGroupItemViewModel })
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        assertEquals(null, todayHeader?.items?.find { it is ScheduleMissingItemsGroupItemViewModel })
     }
 
     @Test
@@ -297,12 +360,18 @@ class ScheduleViewModelTest {
         }
 
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        assertEquals(3, viewModel.data.value?.itemViewModels?.count { it is ScheduleCourseItemViewModel })
+        val items = viewModel.data.value?.itemViewModels
 
-        val courseItemViewModels = viewModel.data.value?.itemViewModels?.filterIsInstance<ScheduleCourseItemViewModel>()
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        assertEquals(3, todayHeader?.items?.count { it is ScheduleCourseItemViewModel })
+
+        val courseItemViewModels = todayHeader?.items?.filterIsInstance<ScheduleCourseItemViewModel>()
         val firstCourseItemViewModel = courseItemViewModels?.find { it.data.courseName == "Course 1" }
         assertEquals(true, firstCourseItemViewModel?.data?.openable)
         assertEquals(1, firstCourseItemViewModel?.data?.plannerItems?.size)
@@ -322,8 +391,9 @@ class ScheduleViewModelTest {
         assertEquals(false, todoCourseItemViewModel?.data?.plannerItems?.get(0)?.data?.openable)
     }
 
+
     @Test
-    fun `Mark item as done error`() {
+    fun `Submitted items are marked as done`() {
         val course = Course(id = 1)
 
         every { courseManager.getCoursesAsync(any()) } returns mockk {
@@ -346,11 +416,59 @@ class ScheduleViewModelTest {
         }
 
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        val courseItemViewModel =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val courseItemViewModel = todayHeader?.items?.get(0) as ScheduleCourseItemViewModel
+
+        assertEquals(true, courseItemViewModel.data.openable)
+
+        assertEquals(1, courseItemViewModel.data.plannerItems.size)
+        val plannerItemViewModel = courseItemViewModel.data.plannerItems[0]
+
+        assertEquals(true, plannerItemViewModel.completed)
+    }
+
+    @Test
+    fun `Mark item as done error`() {
+        val course = Course(id = 1)
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        val plannerItems = listOf(
+            createPlannerItem(
+                courseId = course.id, assignmentId = 1, PlannableType.ASSIGNMENT, SubmissionState(submitted = false),
+                Date()
+            )
+        )
+
+        every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(plannerItems)
+        }
+
+        every { plannerManager.createPlannerOverrideAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail()
+        }
+
+        viewModel = createViewModel()
+        viewModel.getDataForDate(Date().toApiString())
+        viewModel.data.observe(lifecycleOwner, {})
+
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val courseItemViewModel = todayHeader?.items?.get(0) as ScheduleCourseItemViewModel
 
         assertEquals(true, courseItemViewModel.data.openable)
 
@@ -390,11 +508,16 @@ class ScheduleViewModelTest {
         }
 
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        val courseItemViewModel =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val courseItemViewModel = todayHeader?.items?.get(0) as ScheduleCourseItemViewModel
 
         assertEquals(true, courseItemViewModel.data.openable)
 
@@ -433,11 +556,16 @@ class ScheduleViewModelTest {
         }
 
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        val courseItemViewModel =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val courseItemViewModel = todayHeader?.items?.get(0) as ScheduleCourseItemViewModel
 
         assertEquals(true, courseItemViewModel.data.openable)
 
@@ -460,14 +588,16 @@ class ScheduleViewModelTest {
         }
 
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
-        viewModel.getDataForDate(Calendar.getInstance().time.toApiString())
 
-        val courseGroupItem =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleDayGroupItemViewModel && it.dayText == "Today" } as ScheduleDayGroupItemViewModel
+        val items = viewModel.data.value?.itemViewModels
 
-        val courseItem = courseGroupItem.items[0] as ScheduleCourseItemViewModel
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val courseItem = todayHeader?.items?.get(0) as ScheduleCourseItemViewModel
 
         assertEquals("To Do", courseItem.data.courseName)
         assertEquals(1, courseItem.data.plannerItems.size)
@@ -502,11 +632,16 @@ class ScheduleViewModelTest {
         }
 
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        val courseItemViewModel =
-            viewModel.data.value?.itemViewModels?.find { it is ScheduleCourseItemViewModel } as ScheduleCourseItemViewModel
+        val items = viewModel.data.value?.itemViewModels
+
+        val todayHeader = items?.find { it.dayText == "Today" }
+        assert(todayHeader is ScheduleDayGroupItemViewModel)
+        assertEquals("Today", todayHeader?.dayText)
+
+        val courseItemViewModel = todayHeader?.items?.get(0) as ScheduleCourseItemViewModel
 
         assertEquals(true, courseItemViewModel.data.openable)
 
@@ -522,25 +657,26 @@ class ScheduleViewModelTest {
     @Test
     fun `Day titles set up correctly`() {
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        assertEquals(14, viewModel.data.value?.itemViewModels?.size)
+        val items = viewModel.data.value?.itemViewModels
 
-        val todayIndex = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1) * 2
-        val todayHeader = viewModel.data.value?.itemViewModels?.get(todayIndex)
+        assertEquals(7, items?.size)
+
+        val todayHeader = items?.find { it.dayText == "Today" }
         assert(todayHeader is ScheduleDayGroupItemViewModel)
-        val todayHeaderItemViewModel = todayHeader as ScheduleDayGroupItemViewModel
-        assertEquals("Today", todayHeaderItemViewModel.dayText)
+        assertEquals("Today", todayHeader?.dayText)
+        val todayIndex = items!!.indexOf(todayHeader)
 
         if (todayIndex != 0) {
-            val yesterdayHeader = viewModel.data.value?.itemViewModels?.get(todayIndex - 2)
+            val yesterdayHeader = viewModel.data.value?.itemViewModels?.get(todayIndex - 1)
             val yesterdayHeaderItemViewModel = yesterdayHeader as ScheduleDayGroupItemViewModel
             assertEquals("Yesterday", yesterdayHeaderItemViewModel.dayText)
         }
 
-        if (todayIndex != 12) {
-            val tomorrowHeader = viewModel.data.value?.itemViewModels?.get(todayIndex + 2)
+        if (todayIndex != 6) {
+            val tomorrowHeader = viewModel.data.value?.itemViewModels?.get(todayIndex + 1)
             val tomorrowHeaderItemViewModel = tomorrowHeader as ScheduleDayGroupItemViewModel
             assertEquals("Tomorrow", tomorrowHeaderItemViewModel.dayText)
         }
@@ -549,13 +685,18 @@ class ScheduleViewModelTest {
     @Test
     fun `Empty view`() {
         viewModel = createViewModel()
-
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        assertEquals(14, viewModel.data.value?.itemViewModels?.size)
+        val items = viewModel.data.value?.itemViewModels
 
-        assertEquals(7, viewModel.data.value?.itemViewModels?.count { it is ScheduleDayGroupItemViewModel })
-        assertEquals(7, viewModel.data.value?.itemViewModels?.count { it is ScheduleEmptyItemViewModel })
+        assertEquals(7, items?.size)
+
+        items?.forEach {
+            assertEquals(1, it.items.size)
+            assert(it.items[0] is ScheduleEmptyItemViewModel)
+        }
+
     }
 
     @Test
@@ -569,27 +710,51 @@ class ScheduleViewModelTest {
         val plannerItems = listOf(
             createPlannerItem(course.id, 1, PlannableType.ASSIGNMENT, SubmissionState(late = true), Date()),
             createPlannerItem(course.id, 2, PlannableType.ASSIGNMENT, SubmissionState(graded = true), Date()),
-            createPlannerItem(course.id, 3, PlannableType.ASSIGNMENT, SubmissionState(excused = true, graded = true), Date()),
-            createPlannerItem(course.id, 4, PlannableType.ASSIGNMENT, SubmissionState(graded = true, late = true), Date()),
+            createPlannerItem(
+                course.id,
+                3,
+                PlannableType.ASSIGNMENT,
+                SubmissionState(excused = true, graded = true),
+                Date()
+            ),
+            createPlannerItem(
+                course.id,
+                4,
+                PlannableType.ASSIGNMENT,
+                SubmissionState(graded = true, late = true),
+                Date()
+            ),
             createPlannerItem(course.id, 5, PlannableType.ANNOUNCEMENT, SubmissionState(), Date(), newActivity = true),
-            createPlannerItem(course.id, 6, PlannableType.DISCUSSION_TOPIC, SubmissionState(late = true, excused = true, withFeedback = true), Date(), newActivity = true)
+            createPlannerItem(
+                course.id,
+                6,
+                PlannableType.DISCUSSION_TOPIC,
+                SubmissionState(late = true, excused = true, withFeedback = true),
+                Date(),
+                newActivity = true
+            )
         )
 
         every { plannerManager.getPlannerItemsAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(plannerItems)
         }
 
-        viewModel = createViewModel()
+        val assignments = listOf(
+            createAssignment(5, 1, discussionTopicHeader = DiscussionTopicHeader(4, unreadCount = 2)),
+            createAssignment(6, 1, discussionTopicHeader = DiscussionTopicHeader(5, unreadCount = 1))
+        ).map { DataResult.Success(it) }
 
+        mockAssignments(assignments)
+
+        viewModel = createViewModel()
+        viewModel.getDataForDate(Date().toApiString())
         viewModel.data.observe(lifecycleOwner, {})
 
-        val dayIndex = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1) * 2
-        val dayHeader = viewModel.data.value?.itemViewModels?.get(dayIndex)
-        assert(dayHeader is ScheduleDayGroupItemViewModel)
-        val dayItemViewModel = dayHeader as ScheduleDayGroupItemViewModel
-        assertEquals(SimpleDateFormat("MMMM dd", Locale.getDefault()).format(Date()), dayItemViewModel.dateText)
+        val items = viewModel.data.value?.itemViewModels
+        val dayGroup = items?.find { it.dayText == "Today" }
+        assertEquals("Today", dayGroup?.dayText)
 
-        val courseItem = viewModel.data.value?.itemViewModels?.get(dayIndex + 1)
+        val courseItem = dayGroup?.items?.get(0)
         assert(courseItem is ScheduleCourseItemViewModel)
         val courseItemViewModel = courseItem as ScheduleCourseItemViewModel
         assertEquals(6, courseItemViewModel.data.plannerItems.size)
@@ -615,30 +780,84 @@ class ScheduleViewModelTest {
 
         val unreadPlannerItem = courseItem.data.plannerItems[4]
         assertEquals(1, unreadPlannerItem.data.chips.size)
-        assert(unreadPlannerItem.data.chips.any { it.data.text == "Replies" })
+        assert(unreadPlannerItem.data.chips.any { it.data.text == "2 Replies" })
 
         val unreadGradedLateExcusedPlannerItem = courseItem.data.plannerItems[5]
         assertEquals(4, unreadGradedLateExcusedPlannerItem.data.chips.size)
         assert(
-            unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Replies" }
-                && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Late" }
-                && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Excused" }
-                && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Feedback" }
+            unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "1 Reply" }
+                    && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Late" }
+                    && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Excused" }
+                    && unreadGradedLateExcusedPlannerItem.data.chips.any { it.data.text == "Feedback" }
         )
 
     }
 
-    private fun createPlannerItem(courseId: Long, assignmentId: Long, plannableType: PlannableType, submissionState: SubmissionState, date: Date, plannerOverride: PlannerOverride? = null, newActivity: Boolean = false, todoDate: String? = null): PlannerItem {
-        val plannable = Plannable(id = assignmentId, title = "Plannable $assignmentId", courseId, null, null, null, date, assignmentId, todoDate)
-        return PlannerItem(courseId, null, null, null, null, plannableType, plannable, date, null, submissionState, plannerOverride = plannerOverride, newActivity = newActivity)
+    private fun createPlannerItem(
+        courseId: Long,
+        assignmentId: Long,
+        plannableType: PlannableType,
+        submissionState: SubmissionState,
+        date: Date,
+        plannerOverride: PlannerOverride? = null,
+        newActivity: Boolean = false,
+        todoDate: String? = null
+    ): PlannerItem {
+        val plannable = Plannable(
+            id = assignmentId,
+            title = "Plannable $assignmentId",
+            courseId,
+            null,
+            null,
+            null,
+            date,
+            assignmentId,
+            todoDate
+        )
+        return PlannerItem(
+            courseId,
+            null,
+            null,
+            null,
+            null,
+            plannableType,
+            plannable,
+            date,
+            null,
+            submissionState,
+            plannerOverride = plannerOverride,
+            newActivity = newActivity
+        )
     }
 
-    private fun createPlannerOverride(id: Long, plannableType: PlannableType, plannableId: Long, markedAsComplete: Boolean): PlannerOverride {
-        return PlannerOverride(id = id, plannableType = plannableType, plannableId = plannableId, markedComplete = markedAsComplete)
+    private fun createPlannerOverride(
+        id: Long,
+        plannableType: PlannableType,
+        plannableId: Long,
+        markedAsComplete: Boolean
+    ): PlannerOverride {
+        return PlannerOverride(
+            id = id,
+            plannableType = plannableType,
+            plannableId = plannableId,
+            markedComplete = markedAsComplete
+        )
     }
 
-    private fun createAssignment(id: Long, courseId: Long, submission: Submission? = null, discussionTopicHeader: DiscussionTopicHeader? = null, name: String? = null): Assignment {
-        return Assignment(id = id, submission = submission, discussionTopicHeader = discussionTopicHeader, courseId = courseId, name = name)
+    private fun createAssignment(
+        id: Long,
+        courseId: Long,
+        submission: Submission? = null,
+        discussionTopicHeader: DiscussionTopicHeader? = null,
+        name: String? = null
+    ): Assignment {
+        return Assignment(
+            id = id,
+            submission = submission,
+            discussionTopicHeader = discussionTopicHeader,
+            courseId = courseId,
+            name = name
+        )
     }
 
     private fun createSubmission(id: Long, grade: String?, late: Boolean, excused: Boolean): Submission {
@@ -674,10 +893,21 @@ class ScheduleViewModelTest {
         every { resources.getString(R.string.yesterday) } returns "Yesterday"
         every { resources.getString(R.string.today) } returns "Today"
         every { resources.getString(R.string.schedule_todo_title) } returns "To Do"
+        every { resources.getQuantityString(R.plurals.schedule_tag_replies, 2, 2) } returns "2 Replies"
+        every { resources.getQuantityString(R.plurals.schedule_tag_replies, 1, 1) } returns "1 Reply"
     }
 
     private fun createViewModel(): ScheduleViewModel {
-        return ScheduleViewModel(apiPrefs, resources, plannerManager, courseManager, userManager, calendarEventManager, assignmentManager)
+        return ScheduleViewModel(
+            apiPrefs,
+            resources,
+            plannerManager,
+            courseManager,
+            userManager,
+            calendarEventManager,
+            assignmentManager,
+            missingItemsPrefs
+        )
     }
 
     private fun mockAssignments(assignments: List<DataResult<Assignment>> = emptyList()) {
