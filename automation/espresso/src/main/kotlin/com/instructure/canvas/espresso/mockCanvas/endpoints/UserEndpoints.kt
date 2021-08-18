@@ -66,6 +66,8 @@ object UserEndpoint : Endpoint(
                     val userId = pathVars.userId
                     val userCourseIds = data.enrollments.values.filter {it.userId == userId}.map {it -> it.courseId}
 
+                    val todos = data.todos.filter { it.userId == userId }
+
                     // Gather our assignments
                     // Currently we assume all the assignments are due today
                     val plannerItemsList = data.assignments.values
@@ -76,6 +78,7 @@ object UserEndpoint : Endpoint(
                                 ?: "", it.courseId, null, userId, null, it.dueDate, it.id, null)
                             PlannerItem(it.courseId, null, userId, null, null, PlannableType.ASSIGNMENT, plannable, plannableDate, null, SubmissionState(), false)
                         }
+                        .plus(todos)
 
                     request.successResponse(plannerItemsList)
                 }

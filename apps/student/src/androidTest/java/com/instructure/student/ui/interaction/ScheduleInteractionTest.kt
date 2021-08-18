@@ -18,6 +18,7 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addTodo
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.RemoteConfigParam
@@ -89,7 +90,7 @@ class ScheduleInteractionTest : StudentTest() {
         val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
 
         goToSchedule(data)
-        schedulePage.scrollToPosition(8)
+        schedulePage.scrollToPosition(10)
         schedulePage.assertCourseHeaderDisplayed(courses[0].name)
         schedulePage.assertScheduleItemDisplayed(assignment1.name!!)
         schedulePage.assertScheduleItemDisplayed(assignment2.name!!)
@@ -116,43 +117,147 @@ class ScheduleInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowToDoEvents() {
+        setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
+
+        val todo = data.addTodo("To Do event", data.students[0].id, date = dateTimeProvider.getCalendar().time)
+        val todo2 = data.addTodo("Calendar event", data.students[0].id, date = dateTimeProvider.getCalendar().time)
+
         goToSchedule(data)
+        schedulePage.scrollToPosition(8)
+        schedulePage.assertCourseHeaderDisplayed(schedulePage.getStringFromResource(R.string.schedule_todo_title))
+        schedulePage.assertScheduleItemDisplayed(todo.plannable.title)
+        schedulePage.assertScheduleItemDisplayed(todo2.plannable.title)
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testRefresh() {
+        setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+
         goToSchedule(data)
+
+        // Check that we don't have any elements initially
+        schedulePage.assertNoScheduleItemDisplayed()
+        schedulePage.scrollToPosition(8)
+        schedulePage.assertNoScheduleItemDisplayed()
+
+        val currentDate = dateTimeProvider.getCalendar().time.toApiString()
+        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+
+        schedulePage.scrollToPosition(0)
+        schedulePage.refresh()
+
+        // Check that refresh was successful
+        schedulePage.scrollToPosition(7)
+        schedulePage.assertCourseHeaderDisplayed(courses[0].name)
+        schedulePage.assertScheduleItemDisplayed(assignment1.name!!)
+        schedulePage.assertScheduleItemDisplayed(assignment2.name!!)
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testGoToPreviousWeek() {
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testGoBack2Weeks() {
+        setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
+
         goToSchedule(data)
+
+        schedulePage.assertDayHeaderShown("August 08", "Sunday", 0)
+        schedulePage.assertDayHeaderShown("August 09", "Monday", 2)
+
+        schedulePage.previousWeekButtonClick()
+        schedulePage.swipeRight()
+
+        schedulePage.assertDayHeaderShown("July 25", "Sunday", 0, recyclerViewMatcherText = "July 25")
+        schedulePage.assertDayHeaderShown("July 26", "Monday", 2, recyclerViewMatcherText = "July 25")
+        schedulePage.assertDayHeaderShown("July 27", "Tuesday", 4, recyclerViewMatcherText = "July 26")
+        schedulePage.assertDayHeaderShown("July 28", "Wednesday", 6, recyclerViewMatcherText = "July 27")
+        schedulePage.assertDayHeaderShown("July 29", "Thursday", 8, recyclerViewMatcherText = "July 28")
+        schedulePage.assertDayHeaderShown("July 30", "Friday", 10, recyclerViewMatcherText = "July 29")
+        schedulePage.assertDayHeaderShown("July 31", "Saturday", 12, recyclerViewMatcherText = "July 30")
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testGoToNextWeek() {
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testGoForward2Weeks() {
+        setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
+
         goToSchedule(data)
+
+        schedulePage.assertDayHeaderShown("August 08", "Sunday", 0)
+        schedulePage.assertDayHeaderShown("August 09", "Monday", 2)
+
+        schedulePage.nextWeekButtonClick()
+        schedulePage.swipeLeft()
+
+        schedulePage.assertDayHeaderShown("August 22", "Sunday", 0, recyclerViewMatcherText = "August 22")
+        schedulePage.assertDayHeaderShown("August 23", "Monday", 2, recyclerViewMatcherText = "August 22")
+        schedulePage.assertDayHeaderShown("August 24", "Tuesday", 4, recyclerViewMatcherText = "August 23")
+        schedulePage.assertDayHeaderShown("August 25", "Wednesday", 6, recyclerViewMatcherText = "August 24")
+        schedulePage.assertDayHeaderShown("August 26", "Thursday", 8, recyclerViewMatcherText = "August 25")
+        schedulePage.assertDayHeaderShown("August 27", "Friday", 10, recyclerViewMatcherText = "August 26")
+        schedulePage.assertDayHeaderShown("August 28", "Saturday", 12, recyclerViewMatcherText = "August 27")
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenAssignment() {
+        setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+
+        val currentDate = dateTimeProvider.getCalendar().time.toApiString()
+        val assignment = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+
         goToSchedule(data)
+        schedulePage.scrollToPosition(9)
+        schedulePage.clickScheduleItem(assignment.name!!)
+
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.verifyAssignmentDetails(assignment)
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCourse() {
+        setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+
+        val currentDate = dateTimeProvider.getCalendar().time.toApiString()
+        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+
         goToSchedule(data)
+        schedulePage.scrollToPosition(8)
+        schedulePage.clickCourseHeader(courses[0].name)
+
+        courseBrowserPage.assertPageObjects()
+        courseBrowserPage.assertTitleCorrect(courses[0])
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testMarkAsDone() {
+        setDate(2021, Calendar.AUGUST, 11)
+        val data = createMockData(courseCount = 1)
+
+        data.addTodo("To Do event", data.students[0].id, date = dateTimeProvider.getCalendar().time)
+
+        goToSchedule(data)
+        schedulePage.scrollToPosition(8)
+
+        schedulePage.assertMarkedAsDoneNotShown()
+
+        schedulePage.clickDoneCheckbox()
+        schedulePage.assertMarkedAsDoneShown()
     }
 
     private fun createMockData(

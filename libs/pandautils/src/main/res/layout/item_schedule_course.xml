@@ -38,7 +38,7 @@
         app:borderColor="@{Color.parseColor(itemViewModel.data.courseColor)}">
 
         <TextView
-            android:id="@+id/courseName"
+            android:id="@+id/scheduleCourseHeaderText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
@@ -67,6 +67,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:itemViewModels="@{itemViewModel.data.plannerItems}"
-            app:layout_constraintTop_toBottomOf="@id/courseName" />
+            app:layout_constraintTop_toBottomOf="@id/scheduleCourseHeaderText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
