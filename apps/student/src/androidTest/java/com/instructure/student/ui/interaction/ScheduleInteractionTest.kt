@@ -50,7 +50,9 @@ class ScheduleInteractionTest : StudentTest() {
 
     @Before
     fun setUp() {
-        hiltRule.inject()
+        if (!this::dateTimeProvider.isInitialized) {
+            hiltRule.inject()
+        }
     }
 
     @Test
