@@ -28,6 +28,7 @@ import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.student.R
 import org.hamcrest.Matcher
@@ -74,7 +75,7 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
 
     private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedGrade: String? = null) {
         waitForMatcherWithRefreshes(withText(assignmentName))
-        waitForViewWithText(assignmentName).assertDisplayed()
+        waitForView(allOf(withText(assignmentName), isDescendantOfA(withId(R.id.assignmentListPage)))).assertDisplayed()
 
         // Check that either the assignment due date is present, or "No Due Date" is displayed
         if(assignmentDueAt != null) {

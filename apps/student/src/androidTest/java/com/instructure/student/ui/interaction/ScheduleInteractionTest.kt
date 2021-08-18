@@ -89,13 +89,11 @@ class ScheduleInteractionTest : StudentTest() {
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
         val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
-        val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
 
         goToSchedule(data)
         schedulePage.scrollToPosition(10)
         schedulePage.assertCourseHeaderDisplayed(courses[0].name)
         schedulePage.assertScheduleItemDisplayed(assignment1.name!!)
-        schedulePage.assertScheduleItemDisplayed(assignment2.name!!)
     }
 
     @Test
@@ -108,12 +106,10 @@ class ScheduleInteractionTest : StudentTest() {
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
         val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
-        val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
 
         goToSchedule(data)
         schedulePage.scrollToPosition(12)
         schedulePage.assertMissingItemDisplayed(assignment1.name!!, courses[0].name, "10 pts")
-        schedulePage.assertMissingItemDisplayed(assignment2.name!!, courses[0].name, "10 pts")
     }
 
     @Test
