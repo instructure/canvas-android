@@ -64,6 +64,7 @@ class ScheduleViewModel @Inject constructor(
     private lateinit var coursesMap: Map<Long, Course>
 
     private var todayHeader: ScheduleDayGroupItemViewModel? = null
+    private var todayPosition: Int = -1
     private val simpleDateFormat = SimpleDateFormat("hh:mm aa", Locale.getDefault())
 
     val state: LiveData<ViewState>
@@ -90,9 +91,8 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun jumpToToday() {
-        val todayPos = calculateTodayPosition()
-        if (todayPos != -1) {
-            _events.postValue(Event(ScheduleAction.JumpToToday(todayPos)))
+        if (todayPosition != -1) {
+            _events.postValue(Event(ScheduleAction.JumpToToday(todayPosition)))
         }
     }
 
@@ -141,6 +141,7 @@ class ScheduleViewModel @Inject constructor(
                 }
                 _data.postValue(ScheduleViewData(itemViewModels))
                 _state.postValue(ViewState.Success)
+                todayPosition = calculateTodayPosition(itemViewModels)
                 jumpToToday()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -486,16 +487,13 @@ class ScheduleViewModel @Inject constructor(
         )
     }
 
-    private fun calculateTodayPosition(): Int {
+    private fun calculateTodayPosition(items: List<ScheduleDayGroupItemViewModel>): Int {
         var position = -1
         if (todayHeader != null) {
-            val items = _data.value?.itemViewModels.orEmpty()
             items.forEach {
                 position++
-                if (it == todayHeader) return@forEach
-                if (it is GroupItemViewModel) {
-                    position += getGroupOpenChildCount(it)
-                }
+                if (it == todayHeader) return position
+                position += getGroupOpenChildCount(it)
             }
         }
         return position
