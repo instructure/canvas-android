@@ -22,75 +22,93 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.utils.date.DateTimeProvider
 import com.instructure.student.R
+import com.instructure.student.ui.utils.FakeDateTimeProvider
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Before
 import org.junit.Test
+import java.util.*
+import javax.inject.Inject
 
 @HiltAndroidTest
 class ScheduleInteractionTest : StudentTest() {
 
+    @Inject
+    lateinit var dateTimeProvider: DateTimeProvider
+
     override fun displaysPageObjects() = Unit
+
+    @Before
+    fun setUp() {
+        hiltRule.inject()
+    }
 
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowCorrectHeaderItems() {
+        setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
         goToSchedule(data)
 
         schedulePage.assertPageObjects()
-        schedulePage.assertDayHeaderShown("August 15", "Sunday", 0)
-        schedulePage.assertDayHeaderShown("August 16", schedulePage.getStringFromResource(R.string.yesterday), 2)
+        schedulePage.assertDayHeaderShown("August 08", "Sunday", 0)
+        schedulePage.assertDayHeaderShown("August 09", "Monday", 2)
         schedulePage.assertNoScheduleItemDisplayed()
 
-        schedulePage.assertDayHeaderShown("August 17", schedulePage.getStringFromResource(R.string.today), 4)
-        schedulePage.assertDayHeaderShown("August 18", schedulePage.getStringFromResource(R.string.tomorrow), 6)
+        schedulePage.assertDayHeaderShown("August 10", schedulePage.getStringFromResource(R.string.yesterday), 4)
+        schedulePage.assertDayHeaderShown("August 11", schedulePage.getStringFromResource(R.string.today), 6)
         schedulePage.assertNoScheduleItemDisplayed()
 
-        schedulePage.assertDayHeaderShown("August 19", "Thursday", 8)
-        schedulePage.assertDayHeaderShown("August 20", "Friday", 10)
+        schedulePage.assertDayHeaderShown("August 12", schedulePage.getStringFromResource(R.string.tomorrow), 8)
+        schedulePage.assertDayHeaderShown("August 13", "Friday", 10)
         schedulePage.assertNoScheduleItemDisplayed()
 
-        schedulePage.assertDayHeaderShown("August 21", "Saturday", 12)
+        schedulePage.assertDayHeaderShown("August 14", "Saturday", 12)
         schedulePage.assertNoScheduleItemDisplayed()
     }
 
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowScheduledAssignments() {
+        setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
 
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
-        val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        val currentDate = dateTimeProvider.getCalendar().time.toApiString()
+        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
 
         goToSchedule(data)
         schedulePage.scrollToPosition(8)
         schedulePage.assertCourseHeaderDisplayed(courses[0].name)
         schedulePage.assertScheduleItemDisplayed(assignment1.name!!)
         schedulePage.assertScheduleItemDisplayed(assignment2.name!!)
-        // TODO Maybe also check due date
     }
 
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowMissingAssignments() {
+        setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
 
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
-        val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        val currentDate = dateTimeProvider.getCalendar().time.toApiString()
+        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
 
         goToSchedule(data)
-        schedulePage.scrollToPosition(10)
+        schedulePage.scrollToPosition(12)
         schedulePage.assertMissingItemDisplayed(assignment1.name!!, courses[0].name, "10 pts")
         schedulePage.assertMissingItemDisplayed(assignment2.name!!, courses[0].name, "10 pts")
     }
@@ -159,5 +177,13 @@ class ScheduleInteractionTest : StudentTest() {
         tokenLoginElementary(data.domain, token, student)
         elementaryDashboardPage.waitForRender()
         elementaryDashboardPage.selectScheduleTab()
+    }
+
+    private fun setDate(year: Int, month: Int, dayOfMonth: Int) {
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.YEAR, year)
+        cal.set(Calendar.MONTH, month)
+        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        (dateTimeProvider as FakeDateTimeProvider).fakeTimeInMillis = cal.timeInMillis
     }
 }

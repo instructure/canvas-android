@@ -33,6 +33,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.date.DateTimeProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -52,7 +53,8 @@ class ScheduleViewModel @Inject constructor(
     private val userManager: UserManager,
     private val calendarEventManager: CalendarEventManager,
     private val assignmentManager: AssignmentManager,
-    private val missingItemsPrefs: MissingItemsPrefs
+    private val missingItemsPrefs: MissingItemsPrefs,
+    private val dateTimeProvider: DateTimeProvider
 ) : ViewModel() {
 
     private lateinit var startDate: Date
@@ -80,7 +82,7 @@ class ScheduleViewModel @Inject constructor(
 
     fun getDataForDate(dateString: String) {
         _state.postValue(ViewState.Loading)
-        startDate = dateString.toDate() ?: Date()
+        startDate = dateString.toDate() ?: dateTimeProvider.getCalendar().time
         getData(false)
     }
 
@@ -132,7 +134,7 @@ class ScheduleViewModel @Inject constructor(
 
                 val itemViewModels = mutableListOf<ScheduleDayGroupItemViewModel>()
                 for (i in 0..6) {
-                    val calendar = Calendar.getInstance()
+                    val calendar = dateTimeProvider.getCalendar()
                     calendar.time = weekStart
                     calendar.add(Calendar.DATE, i)
                     val date = calendar.time
@@ -154,13 +156,14 @@ class ScheduleViewModel @Inject constructor(
 
         items.addAll(createCourseItems(date))
 
-        if (date.isSameDay(Date()) && missingSubmissions.isNotEmpty()) {
+        val today = dateTimeProvider.getCalendar().time
+        if (date.isSameDay(today) && missingSubmissions.isNotEmpty()) {
             items.add(createMissingItems())
         }
 
         val dayHeader = createDayHeader(date, items)
 
-        if (date.isSameDay(Date())) {
+        if (date.isSameDay(today)) {
             todayHeader = dayHeader
         }
 
@@ -211,13 +214,13 @@ class ScheduleViewModel @Inject constructor(
         return ScheduleDayGroupItemViewModel(
             getTitleForDate(date),
             SimpleDateFormat("MMMM dd", Locale.getDefault()).format(date),
-            !Date().isSameDay(date),
+            !dateTimeProvider.getCalendar().time.isSameDay(date),
             items
         )
     }
 
     private fun getTitleForDate(date: Date): String {
-        val today = Date()
+        val today = dateTimeProvider.getCalendar().time
         if (date.isSameDay(today)) return resources.getString(R.string.today)
         if (date.isNextDay(today)) return resources.getString(R.string.tomorrow)
         if (date.isPreviousDay(today)) return resources.getString(R.string.yesterday)
