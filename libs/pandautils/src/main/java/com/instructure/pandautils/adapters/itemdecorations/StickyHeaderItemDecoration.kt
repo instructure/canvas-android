@@ -28,6 +28,9 @@ class StickyHeaderItemDecoration(private val stickyHeaderAdapter: StickyHeaderIn
 
     private var xPos = 0
 
+    private var contactPointPair: Pair<Int, Int>? = null
+    private var childInContact: View? = null
+
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(c, parent, state)
         val topChild = parent.getChildAt(0) ?: return
@@ -35,20 +38,31 @@ class StickyHeaderItemDecoration(private val stickyHeaderAdapter: StickyHeaderIn
         if (topChildPosition == RecyclerView.NO_POSITION) {
             return
         }
+
         val headerPos: Int = stickyHeaderAdapter.getHeaderPositionForItem(topChildPosition)
-        val currentHeader = getHeaderViewForItem(headerPos, parent)
+        if (contactPointPair != null && contactPointPair?.first == headerPos) {
+            childInContact = getChildInContact(parent, contactPointPair!!.second, contactPointPair!!.first)
+        }
+
+        val currentHeader =
+            if (childInContact != null && !stickyHeaderAdapter.isHeader(parent.getChildAdapterPosition(childInContact!!))) {
+                getHeaderViewForItem(headerPos, parent, true)
+            } else {
+                getHeaderViewForItem(headerPos, parent, false)
+            }
         fixLayoutSize(parent, currentHeader)
+
         val contactPoint = currentHeader.bottom
-        val childInContact = getChildInContact(parent, contactPoint, headerPos)
-        if (childInContact != null && stickyHeaderAdapter.isHeader(parent.getChildAdapterPosition(childInContact))) {
-            moveHeader(c, currentHeader, childInContact)
+        contactPointPair = Pair(headerPos, contactPoint)
+        if (childInContact != null && stickyHeaderAdapter.isHeader(parent.getChildAdapterPosition(childInContact!!))) {
+            moveHeader(c, currentHeader, childInContact!!)
             return
         }
         drawHeader(c, currentHeader)
     }
 
-    private fun getHeaderViewForItem(headerPosition: Int, parent: RecyclerView): View {
-        val binding = stickyHeaderAdapter.getHeaderBinding(headerPosition, parent)
+    private fun getHeaderViewForItem(headerPosition: Int, parent: RecyclerView, hasChildInContact: Boolean = false): View {
+        val binding = stickyHeaderAdapter.getHeaderBinding(headerPosition, parent, hasChildInContact)
         binding.executePendingBindings()
         return binding.root
     }
@@ -75,7 +89,10 @@ class StickyHeaderItemDecoration(private val stickyHeaderAdapter: StickyHeaderIn
 
             if (currentHeaderPos != i) {
                 val childAdapterPosition = parent.getChildAdapterPosition(child)
-                val isChildHeader: Boolean = if (childAdapterPosition == RecyclerView.NO_POSITION) false else stickyHeaderAdapter.isHeader(childAdapterPosition)
+                val isChildHeader: Boolean =
+                    if (childAdapterPosition == RecyclerView.NO_POSITION) false else stickyHeaderAdapter.isHeader(
+                        childAdapterPosition
+                    )
                 if (isChildHeader) {
                     heightTolerance = stickyHeaderHeight - child.height
                 }

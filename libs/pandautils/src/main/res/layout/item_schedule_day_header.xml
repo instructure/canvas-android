@@ -22,6 +22,10 @@
             name="itemViewModel"
             type="com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayGroupItemViewModel" />
 
+        <variable
+            name="hasDivider"
+            type="Boolean" />
+
         <import type="android.view.View" />
     </data>
 
@@ -29,8 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingBottom="10dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
@@ -45,12 +48,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{itemViewModel.dateText}"
             android:layout_marginTop="-8dp"
-            android:textSize="17sp"
+            android:text="@{itemViewModel.dateText}"
             android:textColor="@color/defaultTextDark"
+            android:textSize="17sp"
             android:textStyle="bold"
-            tools:text="July 2" />
+            tools:text="July 2"
+            android:layout_marginBottom="6dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/headerDivider"
+            android:background="@color/lightGray"
+            android:visibility="@{hasDivider ? View.VISIBLE : View.GONE, default=gone}" />
 
     </LinearLayout>
 </layout>

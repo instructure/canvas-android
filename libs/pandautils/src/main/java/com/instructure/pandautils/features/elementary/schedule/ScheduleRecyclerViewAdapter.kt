@@ -46,9 +46,10 @@ class ScheduleRecyclerViewAdapter : BindableRecyclerViewAdapter(), StickyHeaderI
         return headerPosition
     }
 
-    override fun getHeaderBinding(headerPosition: Int, parent: RecyclerView): ViewDataBinding {
+    override fun getHeaderBinding(headerPosition: Int, parent: RecyclerView, hasChildInContact: Boolean): ViewDataBinding {
         val binding = ItemScheduleDayHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.setVariable(BR.itemViewModel, itemViewModels[headerPosition])
+        binding.hasDivider = hasChildInContact
         binding.invalidateAll()
         return binding
     }

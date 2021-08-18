@@ -23,7 +23,7 @@ interface StickyHeaderInterface {
 
     fun getHeaderPositionForItem(itemPosition: Int): Int
 
-    fun getHeaderBinding(headerPosition: Int, parent: RecyclerView): ViewDataBinding
+    fun getHeaderBinding(headerPosition: Int, parent: RecyclerView, hasChildInContact: Boolean): ViewDataBinding
 
     fun isHeader(itemPosition: Int): Boolean
 }
