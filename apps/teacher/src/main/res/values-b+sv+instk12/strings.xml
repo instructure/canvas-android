@@ -355,7 +355,7 @@
     <string name="excuse_student">Låt eleven slippa göra</string>
     <string name="excuseGroup">Låt gruppen slippa göra</string>
     <string name="complete_grade">Fullständig</string>
-    <string name="incomplete_grade">Ofullständig</string>
+    <string name="incomplete_grade">Inte färdig</string>
     <string name="not_graded">Ej bedömd</string>
     <string name="excused">Ursäktad</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
@@ -822,7 +822,7 @@
     <string name="hideCreateFileFolderFabContentDesc">Dölj knappar för Skapa fil och Skapa mapp</string>
     <string name="unpublish">Avpublicera</string>
     <string name="restrictedAccess">Begränsad åtkomst</string>
-    <string name="restricted">Begränsad</string>
+    <string name="restricted">Begränsat</string>
     <string name="hidden">Dold, filerna inuti kommer att vara tillgängliga via länkar.</string>
     <string name="studentsWithLink">Endast tillgänglig för elever med länk. Ej tillgänglig i elevfiler.</string>
     <string name="scheduleAvailability">Schemalägg elevens tillgänglighet</string>

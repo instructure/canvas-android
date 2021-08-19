@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Media auswählen</string>
     <string name="takeVideo">Video aufnehmen</string>
     <string name="noCameraOnDevice">Keine Kamera</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Benachrichtigungen hochladen</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-Benachrichtigungen für laufende Uploads</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Datei hinzufügen</string>
+
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galerie</string>
     <string name="fromDevice">Gerät</string>
@@ -53,7 +55,6 @@
     <string name="file">Datei</string>
     <string name="fileTalkBack">Datei %s</string>
     <string name="folderTalkBack">Ordner %s</string>
-
     <string name="addItem">Objekt hinzufügen</string>
     <string name="assignment">Aufgabe</string>
     <string name="attachedFiles">Angehängte Dateien</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Abgabe für %s hochladen</string>
     <string name="assignmentSubmissionError">Abgabe für %s fehlgeschlagen</string>
     <string name="assignmentSubmissionComplete">%s erfolgreich abgegeben</string>
+
     <!--Errors-->
     <string name="errorOccurred">Es ist ein unerwarteter Fehler aufgetreten.</string>
     <string name="serverError">Ein Server-Fehler ist aufgetreten.</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">Es wurden scheinbar noch keine Module erstellt.</string>
     <string name="noPages">Keine Seiten</string>
     <string name="noPagesSubtext">Es wurden scheinbar noch keine Seiten erstellt.</string>
-
     <string name="modulesLockedSubtext">Module wurden für diesen Kurs deaktiviert.</string>
     <string name="modulesLocked">Etwas ging schief</string>
+
     <!--General-->
     <string name="yes">Ja</string>
     <string name="no">Kein</string>
@@ -326,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Das Freigabedatum kann nicht nach dem Abgabetermin liegen.</string>
     <string name="utils_lockBeforeDueDateError">Das Sperrdatum darf nicht vor dem Abgabetermin liegen.</string>
     <string name="utils_lockAfterUnlockError">Das Sperrdatum darf nicht nach dem Freigabedatum liegen.</string>
@@ -379,13 +382,14 @@
     <string name="utils_uploadToSubmissionComment">Hochladen zum Sendekommentar</string>
     <string name="utils_attachFile">Eine Datei anhängen</string>
     <string name="utils_with">mit</string>
+
     <string name="notificationPrimaryInboxTitle">Canvas-Benachrichtigung</string>
     <string name="notificationChannelNamePrimary">Allgemeine Canvas-Benachrichtigungen</string>
     <string name="notificationChannelDescriptionPrimary">Die weitere Konfiguration von Benachrichtigungen kann im Abschnitt „Canvas-Benachrichtigungseinstellungen“ vorgenommen werden.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d neue Benachrichtigungen</item>
     </plurals>
+
     <string name="copyLinkAddress">Link-Adresse kopieren</string>
     <string name="copyLink">Link kopieren</string>
     <string name="linkCopied">Link kopiert</string>
@@ -415,7 +419,6 @@
     <string name="image_uploading">Bild wird hochgeladen ...</string>
     <string name="image_upload_error">Fehler beim Bildhochladen</string>
     <string name="retry">Erneut versuchen</string>
-
     <string name="search">Suchen</string>
     <string name="searchAssignmentsHint">Aufgaben suchen</string>
     <string name="searchAnnouncementsHint">Ankündigungen suchen</string>
@@ -423,11 +426,33 @@
     <string name="searchPagesHint">Seiten suchen</string>
     <string name="searchQuizzesHint">Quizze suchen</string>
     <string name="noItemsMatchingQuery">Keine übereinstimmenden Objekte mit \"%s\"</string>
+
     <string name="selected">Ausgewählt</string>
 
     <string name="notificationChannelNameInAppUpdate">App-Aktualisierungsbenachrichtigungen</string>
     <string name="notificationChannelDescriptionInAppUpdate">Canvas-Benachrichtigungen für App-interne Updates.</string>
     <string name="appUpdateReadyTitle">App zum Update bereit</string>
     <string name="appUpdateReadyDescription">Starten Sie die App erneut, um die neue Version zu installieren.</string>
+    <string name="nothing_planned_yet">Noch nichts geplant</string>
+    <string name="schedule_tag_graded">Benotet</string>
+    <string name="schedule_tag_replies">Antworten</string>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">Verspätet</string>
+    <string name="schedule_tag_redo">Wiederholen</string>
+    <string name="schedule_tag_excused">Entschuldigt</string>
+    <string name="tomorrow">Morgen</string>
+    <string name="yesterday">Gestern</string>
+    <string name="schedule_calendar_event_due_text">Um %s</string>
+    <string name="schedule_todo_due_text">Zu erledigen: %s</string>
+    <string name="schedule_due_text">Fällig: %s</string>
+    <string name="show_missing_items_title">%d fehlende Elemente anzeigen</string>
+    <string name="hide_missing_items_title">%d fehlende Elemente ausblenden</string>
+    <string name="schedule_error_message">Ihr Zeitplan konnte nicht abgerufen werden</string>
+    <string name="schedule_todo_title">Zu erledigen</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s Pkt.</item>
+        <item quantity="one">%s Pkt.</item>
+        <item quantity="other">%s Pkte.</item>
+    </plurals>
 
 </resources>

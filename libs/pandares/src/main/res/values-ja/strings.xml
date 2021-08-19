@@ -15,7 +15,6 @@
   ~
   -->
 <resources>
-
     <string name="noFilesFound">ファイルが見つかりません</string>
     <string name="searchFilesHint">ファイルを検索する</string>
     <string name="fileSearchInstructions">3文字以上の検索語を入力してください</string>
@@ -32,6 +31,7 @@
     <string name="selectedListItem">選択されたもの：%s</string>
 
     <!-- Student Strings -->
+
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">課題の詳細</string>
     <string name="submission_types">提出タイプ</string>
@@ -54,10 +54,8 @@
     <string name="attemptsUsedLabel">企図が使用されました</string>
     <string name="noAttemptsLeft">残り試行回数なし</string>
     <string name="resubmitAssignment">課題を再提出する</string>
-
     <string name="launchingExternalTool">外部ツールを起動中</string>
     <string name="launchExternalTool">外部ツールを起動する</string>
-
     <string name="preview">プレビュー</string>
     <string name="submissionUploadFailedMessage">1つ以上のファイルのアップロードに失敗しました。インターネット接続をチェックしてから、提出を再試行してください。</string>
     <string name="submissionUploadByteProgress">%1$s / %2$s</string>
@@ -68,19 +66,20 @@
     <string name="submissionDeleted">提出を削除しました</string>
     <string name="missingSubmissionLabel">欠如</string>
     <string name="gradedSubmissionLabel">採点済み</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">URL を \'http://\' でプレビューすることはできません</string>
     <string name="submissionUrlNotAUrlError">有効なURLを入力してください</string>
     <string name="enterAUrlHereForYourSubmission">提出するにはこちらに URL を入力してください</string>
     <string name="addFileFabContentDesc">追加ファイルオプションを表示する</string>
     <string name="recordAudio">オーディオを録音する</string>
-
     <string name="recordVideo">動画を録画する</string>
-
     <string name="a11y_textSubmissionEditor">テキスト提出エディタ</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">&#8230; を書く</string>
     <string name="textSubmissionFailureMessage">提出物のアップロードで不具合が発生しました。もう一度提出します。</string>
+
     <!-- Student Submission Details -->
     <string name="submission">提出</string>
     <string name="submissionVersions">提出バージョン</string>
@@ -103,6 +102,7 @@
     <string name="speedGraderExternalToolMessage">この課題は、提出用の外部ツールにリンクします。</string>
     <string name="openTool">オープンツール</string>
     <string name="a11y_submissionText">テキストを提出する</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s 点</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s 点</string>
@@ -114,10 +114,12 @@
     <string name="scoreStatisticsLow">低：%s</string>
     <string name="scoreStatisticsMean">中程度：%s</string>
     <string name="scoreStatisticsHigh">高：%s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">カスタムスコア</string>
     <string name="rubricEmptyMessage">この課題に説明はありません</string>
     <string name="rubricViewLongDescription">長い説明を表示</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">%1$d / %2$d のアップロード</string>
     <string name="assignmentSubmissionCommentUpload">%s へのコメントのアップロード</string>
@@ -137,6 +139,7 @@
     <string name="commentSubmissionTypeMediaFile">メディアファイル</string>
     <string name="commentSubmissionTypeAudio">オーディオ</string>
     <string name="commentSubmissionTypeVideo">ビデオ</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">バージョン:</string>
 
@@ -186,6 +189,8 @@
     <string name="submissionDetailsDueAt">%1$s の %2$s が期限</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">ロックされています</string>
     <string name="assignments">課題</string>
@@ -204,15 +209,17 @@
     <string name="a11y_sortByTypeButton">課題の並べ替えボタン、タイプごとに並べ替え</string>
     <string name="a11y_assignmentsSortedByTime">時間ごとに並べ替えされた課題</string>
     <string name="a11y_assignmentsSortedByType">タイプごとに並べ替えされた課題</string>
+
     <!-- Assignment editing -->
     <string name="points">ポイント\u0020</string>
     <string name="save">保存</string>
     <string name="cancel">キャンセル</string>
+
     <!-- Discussions -->
     <string name="forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
-
     <string name="fileCurrentlyLocked">このファイルは現在ロックされています</string>
     <string name="a11y_discussionReplyEditor">ディスカッション返信エディタ</string>
+
     <!-- Events -->
     <string name="Starts">開始</string>
     <string name="Ends">終了</string>
@@ -231,8 +238,6 @@
     <string name="whatIfDialogText">仮定のスコア</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s / %2$s 点、%3$s</string>
-
-
     <string name="inbox">受信トレイ</string>
     <string name="unread">未読</string>
     <string name="archived">アーカイブ済み</string>
@@ -393,8 +398,8 @@
     <string name="students">受講生</string>
     <string name="observers">オブザーバー</string>
     <string name="syllabusMissing">シラバスが追加されていません。</string>
-
     <string name="syllabusEventsError">モジュールの読込時にエラーが発生しました。</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">受信者(複数可)を選択</string>
     <string name="messageHasNoRecipients">このメッセージには現在、受信者はいません。</string>
@@ -420,6 +425,7 @@
 
     <!-- Notifications -->
     <string name="deleted">削除されました</string>
+
     <string name="loadingCanvas">Canvas コンテンツ&#8230;を読み込み中</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -436,9 +442,11 @@
     <string name="stopMasquerading">ユーザーとして行動することを止める</string>
     <string name="userId">ユーザーID</string>
     <string name="masqueradeFail">ユーザーとして行動しようとした際にエラーが発生しました</string>
+
     <string name="emptyId">IDは空欄にはできません</string>
 
     <string name="goToQuiz">クイズへ移動</string>
+
     <string name="quizzes">クイズ</string>
 
     <string name="lastDiscussionPost">最後のポスト</string>
@@ -497,8 +505,8 @@
     <string name="goToModules">モジュールに移動</string>
     <string name="markDone">完了にする</string>
     <string name="moduleItemNotFound">モジュールアイテムが見つかりません</string>
-
     <string name="errorLoadingModules">モジュールの読込時にエラーが発生しました。</string>
+
     <string name="help">ヘルプ</string>
     <string name="instructor_question">講師の質問</string>
     <string name="link">リンク</string>
@@ -591,6 +599,8 @@
     <string name="practiceQuizzes">練習クイズ</string>
     <string name="gradedSurveys">採点されたアンケート</string>
     <string name="surveys">サーベイ</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">タスク</string>
     <string name="gradesWidgetTitle">成績</string>
@@ -636,12 +646,12 @@
     <string name="profileSettings">プロファイル設定</string>
     <string name="accountPreferences">アカウントの設定</string>
     <string name="pinAndFingerprint">PIN と指紋</string>
-
     <string name="pairWithObserver">オブザーバーとペアにする</string>
     <string name="pairWithObserverDetails">あなたとペアリングするために、親にCanvas ParentアプリからこのQRコードをスキャンしてもらいます。このコードは7日間後または1回使用した後に有効期限が切れます。</string>
     <string name="pairingCodeLabel">ペアリングコード：\u0020</string>
     <string name="pairingCodeErrorTitle">ペアリングコードエラー</string>
     <string name="pairingCodeErrorDescription">ペアリングコードを取得できません。この機能は受講生にのみサポートされています。</string>
+
     <string name="launchSpeedgrader">SpeedGraderを開く</string>
 
     <string name="search_todo">するべきこと するべきこと するべきことリスト</string>
@@ -712,8 +722,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-
     <string name="content_description_speed_grader_slider">成績スライダー</string>
+
     <string name="createNewCalendarEvent">新しいイベントを作成</string>
     <string name="enableFunMode">パンダをオフにする</string>
 
@@ -800,6 +810,7 @@
     <string name="notification_desc_recording_ready">会議録画の準備ができたときに通知を受け取ります。</string>
 
     <string name="unlimited">無制限</string>
+
     <string name="question">質問</string>
     <plurals name="question_count">
         <item quantity="other">%dの質問</item>
@@ -808,6 +819,7 @@
     <plurals name="pointCount">
         <item quantity="other">%s 点</item>
     </plurals>
+
     <string name="timeLimit">時間制限</string>
     <string name="newPushNotifications">%1$s 新規通知</string>
     <string name="like">いいね</string>
@@ -976,10 +988,10 @@
     <string name="conferencesNotSupported">会議はまだモバイルではサポートされていません。</string>
     <string name="filePreviewContentDescription">ファイルプレビュー画像</string>
     <string name="pdfError">このPDFを削除しようとしてエラーが発生しました。</string>
-
     <string name="featureNotAllowedInStudentView">申し訳ありません！この機能は受講生のビューでは許可されていません。</string>
     <string name="nothingToSeeHere">ここには何もありません</string>
     <string name="unsupportedFeature">サポートされていない機能</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">受講生を追加</string>
     <string name="addChildSubTitle">提供されている受講生ペアリングコードを入力します。</string>
@@ -1016,11 +1028,12 @@
     <string name="gradeAfterPosting">投稿後の成績</string>
     <string name="gradeOverride">成績上書き</string>
     <string name="currentGrade">現在の成績 </string>
-
     <string name="opensInCanvasStudent">Canvas受講生内で開く</string>
     <string name="tab_student_view">受講生ビュー</string>
 
+
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">選択した頭部：%s</string>
     <string name="content_description_chosen_body">選択したボディ：%s</string>
     <string name="content_description_chosen_feet">選択した足：%s</string>
@@ -1091,6 +1104,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="other">%s 分</item>
     </plurals>
@@ -1110,6 +1124,7 @@
     <string name="conferenceDetails">会議の詳細</string>
     <string name="recordings">録画</string>
     <string name="conferenceInProgress">会議進行中</string>
+
     <string name="a11y_criterion_content_description">基準の評価 %s</string>
     <string name="a11y_criterion_description_content_description">%s、%s</string>
     <string name="a11y_criterion_button_click_description">詳細はこちら</string>
@@ -1136,6 +1151,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">ダッシュボードすべてから削除</string>
     <string name="a11y_content_description_add_to_dashboard">ダッシュボードに追加</string>
     <string name="a11y_content_description_add_all_to_dashboard">ダッシュ​​ボードにすべてを追加</string>
+
     <!-- K5 Strings -->
     <string name="navDrawerAccount">アカウント</string>
     <string name="dashboardTabHomeroom">ホームルーム</string>
@@ -1144,28 +1160,40 @@
     <string name="dashboardTabResources">リソース</string>
     <string name="homeroomWelcomeMessage">ようこそ、%1$sさん！</string>
     <string name="homeroomMySubjects">マイ教科</string>
-
     <string name="viewPreviousAnnouncements">前の通知を表示する</string>
     <string name="homeroomError">ホームルーム読み込みに失敗</string>
     <string name="homeroomRefreshFail">ホームルーム更新に失敗</string>
-
-
     <string name="nothingDueToday">今日が期限のものなし</string>
     <string name="dueToday">%1$s 今日が期限</string>
     <string name="missing">%1$s 欠如</string>
     <string name="homeroomEmptyTitle">どういたしまして！</string>
     <string name="homeroomEmptyMessage">あなたの科目はここに表示されます。</string>
     <string name="homeroomNoSubjects">現在、科目はありません。</string>
-
+    <string name="settingsElementaryView">エレメンタリービュー</string>
+    <string name="settingsElementaryViewSubtitle">アプリの再起動が必要</string>
+    <string name="gradesSelect">選択</string>
+    <string name="selectGradingPeriod">採点期間を選択</string>
+    <string name="currentGradingPeriod">現在の採点期間</string>
+    <string name="failedToLoadGrades">成績読み込みに失敗</string>
+    <string name="failedToLoadGradesForGradingPeriod">採点期間中に成績をロードできませんでした</string>
+    <string name="failedToRefreshGrades">成績更新に失敗</string>
+    <string name="noGradesToDisplay">表示する成績なし</string>
+    <string name="notGraded">未採点</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">採点期間を変更</string>
+    <string name="a11y_gradesNotAvailableContentDescription">利用可能な成績なし</string>
+    <string name="bottomBarHomeroom">ホームルーム</string>
 
     <string name="open_alternate_view">よりアクセスしやすい代替ビューを開く</string>
+
     <string name="a11y_content_description_message_recipients">受信者</string>
     <string name="a11y_content_description_inbox_subject">件名</string>
     <string name="a11y_content_description_inbox_course_spinner">コースを選択する、%s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">この課題は匿名であるため、この学生の応答は表示されません。</string>
 
     <string name="studentAnnotationUnsupported">学生の注釈（サポートされていません）</string>
     <string name="studentAnnotationUnsupportedDescription">現在、学生の注釈はモバイルではサポートされていません。</string>
     <string name="unsupportedSubmissionType">サポートされていない提出タイプ</string>
     <string name="studentAnnotationUnsupportedMessage">現在、学生の注釈はモバイルでサポートされていないため、提出物を表示できません。</string>
+    <string name="schedule_marked_as_done">「終了」としてマークしました。</string>
 </resources>

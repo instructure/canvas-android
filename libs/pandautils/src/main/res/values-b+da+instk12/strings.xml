@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Vælg medie</string>
     <string name="takeVideo">Tag video</string>
     <string name="noCameraOnDevice">Intet kamera</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Upload meddelelser</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-meddelelser til løbende uploads.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Tilføj fil</string>
+
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleri</string>
     <string name="fromDevice">Enhed</string>
@@ -96,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Uploader aflevering til %s</string>
     <string name="assignmentSubmissionError">Aflevering mislykkedes for %s</string>
     <string name="assignmentSubmissionComplete">%s blev indsendt</string>
+
     <!--Errors-->
     <string name="errorOccurred">En uventet fejl opstod.</string>
     <string name="serverError">En serverfejl opstod.</string>
@@ -182,9 +185,9 @@
     <string name="noModulesSubtext">Det ser ud til, at der ikke er oprettet nogen forløb endnu.</string>
     <string name="noPages">Ingen sier</string>
     <string name="noPagesSubtext">Det ser ud til, at der ikke er oprettet nogen sider endnu.</string>
-
     <string name="modulesLockedSubtext">Forløb er blevet deaktiveret for dette fag</string>
     <string name="modulesLocked">Noget gik galt</string>
+
     <!--General-->
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
@@ -325,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Oplåsningsdatoen kan ikke ligge efter afleveringsdato</string>
     <string name="utils_lockBeforeDueDateError">Låsningsdato kan ikke ligge før afleveringsdatoer</string>
     <string name="utils_lockAfterUnlockError">Låsningsdato kan ikke ligge før oplåsningsdato</string>
@@ -378,13 +382,14 @@
     <string name="utils_uploadToSubmissionComment">Upload til afleveringskommentar</string>
     <string name="utils_attachFile">Vedhæft en fil</string>
     <string name="utils_with">med</string>
+
     <string name="notificationPrimaryInboxTitle">Canvas-meddelelse</string>
     <string name="notificationChannelNamePrimary">Almindelige Canvas-meddelelser</string>
     <string name="notificationChannelDescriptionPrimary">Yderligere konfiguration af meddelelser kan ske i sektionen Canvas-meddelelsesindstillinger.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d nye meddelelser</item>
     </plurals>
+
     <string name="copyLinkAddress">Kopier linkets adresse</string>
     <string name="copyLink">Kopier link</string>
     <string name="linkCopied">Link kopieret</string>
@@ -428,5 +433,26 @@
     <string name="notificationChannelDescriptionInAppUpdate">Canvas-meddelelser til opdateringer i appen.</string>
     <string name="appUpdateReadyTitle">App klar til opdatering</string>
     <string name="appUpdateReadyDescription">Genstart appen for at installere den nye version</string>
+    <string name="nothing_planned_yet">Intet planlagt endnu</string>
+    <string name="schedule_tag_graded">Bedømt</string>
+    <string name="schedule_tag_replies">Svar</string>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">Sen</string>
+    <string name="schedule_tag_redo">Annuller fortryd</string>
+    <string name="schedule_tag_excused">Undskyldt</string>
+    <string name="tomorrow">I morgen</string>
+    <string name="yesterday">I går</string>
+    <string name="schedule_calendar_event_due_text">Kl. %s</string>
+    <string name="schedule_todo_due_text">Opgaveliste: %s</string>
+    <string name="schedule_due_text">Forfalder: %s</string>
+    <string name="show_missing_items_title">Vis %d manglende elementer</string>
+    <string name="hide_missing_items_title">Skjul %d manglende elementer</string>
+    <string name="schedule_error_message">Din tidsplan kunne ikke hentes</string>
+    <string name="schedule_todo_title">Opgaveliste</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s point</item>
+        <item quantity="one">%s point</item>
+        <item quantity="other">%s point</item>
+    </plurals>
 
 </resources>

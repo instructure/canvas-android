@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Media kiezen</string>
     <string name="takeVideo">Video maken</string>
     <string name="noCameraOnDevice">Geen camera</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Meldingen voor uploaden</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-meldingen voor actieve uploads.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Een bestand toevoegen</string>
+
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Galerij</string>
     <string name="fromDevice">Apparaat</string>
@@ -53,7 +55,6 @@
     <string name="file">Bestand</string>
     <string name="fileTalkBack">Bestand %s</string>
     <string name="folderTalkBack">Map %s</string>
-
     <string name="addItem">Item toevoegen</string>
     <string name="assignment">Opdracht</string>
     <string name="attachedFiles">Bijgevoegde bestanden</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Bezig met uploaden van inlevering voor %s</string>
     <string name="assignmentSubmissionError">Inlevering mislukt voor %s</string>
     <string name="assignmentSubmissionComplete">Inlevering van %s is gelukt</string>
+
     <!--Errors-->
     <string name="errorOccurred">Er is een onverwachte fout opgetreden.</string>
     <string name="serverError">Er is een serverfout opgetreden.</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">Het lijkt erop dat er nog geen modules zijn gemaakt.</string>
     <string name="noPages">Geen pagina\'s</string>
     <string name="noPagesSubtext">Het lijkt erop dat er nog geen pagina\'s zijn gemaakt.</string>
-
     <string name="modulesLockedSubtext">Er zijn voor deze cursus modules uitgeschakeld.</string>
     <string name="modulesLocked">Er is iets misgegaan</string>
+
     <!--General-->
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
@@ -326,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Vergrendeldatum kan niet na inleverdatum vallen</string>
     <string name="utils_lockBeforeDueDateError">Vergrendeldatum kan niet voor vervaldatum vallen</string>
     <string name="utils_lockAfterUnlockError">Vergrendeldatum kan niet voor ontgrendeldatum vallen</string>
@@ -379,13 +382,14 @@
     <string name="utils_uploadToSubmissionComment">Uploaden naar Opmerking bij inlevering</string>
     <string name="utils_attachFile">Bestand bijvoegen</string>
     <string name="utils_with">met</string>
+
     <string name="notificationPrimaryInboxTitle">Canvas-melding</string>
     <string name="notificationChannelNamePrimary">Algemene Canvas-meldingen</string>
     <string name="notificationChannelDescriptionPrimary">Verdere configuratie van meldingen kan worden uitgevoerd in de sectie Voorkeuren Canvas-meldingen.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d nieuwe meldingen</item>
     </plurals>
+
     <string name="copyLinkAddress">Linkadres kopiëren</string>
     <string name="copyLink">Link kopieren</string>
     <string name="linkCopied">Link gekopieerd</string>
@@ -415,7 +419,6 @@
     <string name="image_uploading">Afbeelding wordt geüpload...</string>
     <string name="image_upload_error">Fout tijdens afbeelding uploaden</string>
     <string name="retry">Opnieuw proberen</string>
-
     <string name="search">Zoeken</string>
     <string name="searchAssignmentsHint">Zoek opdrachten</string>
     <string name="searchAnnouncementsHint">Aankondigingen zoeken</string>
@@ -423,11 +426,33 @@
     <string name="searchPagesHint">Pagina\'s zoeken</string>
     <string name="searchQuizzesHint">Toetsen zoeken</string>
     <string name="noItemsMatchingQuery">Er komen geen items overeen met \"%s\"</string>
+
     <string name="selected">Geselecteerd</string>
 
     <string name="notificationChannelNameInAppUpdate">Meldingen voor app-update</string>
     <string name="notificationChannelDescriptionInAppUpdate">Canvas-meldingen voor in-app updates.</string>
     <string name="appUpdateReadyTitle">App klaar voor update</string>
     <string name="appUpdateReadyDescription">Start de app opnieuw om de nieuwe versie te installeren</string>
+    <string name="nothing_planned_yet">Nog niets gepland</string>
+    <string name="schedule_tag_graded">Beoordeeld</string>
+    <string name="schedule_tag_replies">Antwoorden</string>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">Te laat</string>
+    <string name="schedule_tag_redo">Opnieuw</string>
+    <string name="schedule_tag_excused">Vrijgesteld</string>
+    <string name="tomorrow">Morgen</string>
+    <string name="yesterday">Gisteren</string>
+    <string name="schedule_calendar_event_due_text">Om %s</string>
+    <string name="schedule_todo_due_text">Takenlijst: %s</string>
+    <string name="schedule_due_text">Inleverdatum: %s</string>
+    <string name="show_missing_items_title">%d ontbrekende items tonen</string>
+    <string name="hide_missing_items_title">%d ontbrekende items verbergen</string>
+    <string name="schedule_error_message">Kan je planning niet ophalen</string>
+    <string name="schedule_todo_title">Takenlijst</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s punten</item>
+    </plurals>
 
 </resources>
