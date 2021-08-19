@@ -19,14 +19,7 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
 import com.instructure.canvas.espresso.mockCanvas.endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.LongId
-import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
-import com.instructure.canvas.espresso.mockCanvas.utils.Segment
-import com.instructure.canvas.espresso.mockCanvas.utils.UserId
-import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.user
+import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import okio.Buffer
@@ -73,14 +66,19 @@ object UserEndpoint : Endpoint(
                     val userId = pathVars.userId
                     val userCourseIds = data.enrollments.values.filter {it.userId == userId}.map {it -> it.courseId}
 
+                    val todos = data.todos.filter { it.userId == userId }
+
                     // Gather our assignments
                     // Currently we assume all the assignments are due today
                     val plannerItemsList = data.assignments.values
                         .filter { userCourseIds.contains(it.courseId) }
                         .map {
-                            val plannable = Plannable(it.id, it.name ?: "", it.courseId, null, userId, null, null, it.id, null)
-                            PlannerItem(it.courseId, null, userId, null, null, PlannableType.ASSIGNMENT, plannable, Date(), null, SubmissionState(), false)
+                            val plannableDate = it.dueDate ?: Date()
+                            val plannable = Plannable(it.id, it.name
+                                ?: "", it.courseId, null, userId, null, it.dueDate, it.id, null)
+                            PlannerItem(it.courseId, null, userId, null, null, PlannableType.ASSIGNMENT, plannable, plannableDate, null, SubmissionState(), false)
                         }
+                        .plus(todos)
 
                     request.successResponse(plannerItemsList)
                 }

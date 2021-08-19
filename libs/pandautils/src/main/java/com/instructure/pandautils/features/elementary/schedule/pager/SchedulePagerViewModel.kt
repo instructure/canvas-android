@@ -21,6 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.utils.date.DateTimeProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -30,7 +31,9 @@ const val SCHEDULE_PAGE_COUNT = 53
 const val THIS_WEEKS_POSITION = 27
 
 @HiltViewModel
-class SchedulePagerViewModel @Inject constructor() : ViewModel() {
+class SchedulePagerViewModel @Inject constructor(
+    dateTimeProvider: DateTimeProvider
+) : ViewModel() {
 
     val data: LiveData<SchedulePagerViewData>
         get() = _data
@@ -41,7 +44,7 @@ class SchedulePagerViewModel @Inject constructor() : ViewModel() {
     private val _events = MutableLiveData<Event<SchedulePagerAction>>()
 
     init {
-        val calendar = Calendar.getInstance()
+        val calendar = dateTimeProvider.getCalendar()
         calendar.roll(Calendar.WEEK_OF_YEAR, -28)
         val startDates = (0..SCHEDULE_PAGE_COUNT).map {
             calendar.roll(Calendar.WEEK_OF_YEAR, true)

@@ -149,7 +149,10 @@ class MockCanvas {
     val assignmentGroups = mutableMapOf<Long, MutableList<AssignmentGroup>>()
 
     /** Map of assignment ID to assignment */
-    val assignments = mutableMapOf<Long,Assignment>()
+    val assignments = mutableMapOf<Long, Assignment>()
+
+    /** Map of todos */
+    val todos = mutableListOf<PlannerItem>()
 
     /** Map of assignment ID to a list of submissions */
     val submissions = mutableMapOf<Long, MutableList<Submission>>()
@@ -1943,7 +1946,7 @@ fun MockCanvas.addSubmissionStreamItem(
 
     // Record the StreamItem
     var list = streamItems[user.id]
-    if(list == null) {
+    if (list == null) {
         list = mutableListOf<StreamItem>()
         streamItems[user.id] = list
     }
@@ -1951,4 +1954,23 @@ fun MockCanvas.addSubmissionStreamItem(
 
     // Return the StreamItem
     return item
+}
+
+fun MockCanvas.addTodo(name: String, userId: Long, courseId: Long? = null, date: Date? = null): PlannerItem {
+    val todo = PlannerItem(
+        courseId,
+        null,
+        userId,
+        null,
+        null,
+        PlannableType.TODO,
+        Plannable(newItemId(), name, courseId, null, userId, null, date, null, date.toApiString()),
+        date ?: Date(),
+        null,
+        null,
+        null
+    )
+
+    todos.add(todo)
+    return todo
 }

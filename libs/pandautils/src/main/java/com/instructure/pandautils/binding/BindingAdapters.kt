@@ -180,3 +180,10 @@ fun setBottomMargin(view: View, bottomMargin: Int) {
 fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: String?) {
     ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl)
 }
+
+@BindingAdapter("accessibleTouchTarget")
+fun bindAccessibleTouchTarget(view: View, accessibleTouchTarget: Boolean?) {
+    if (accessibleTouchTarget == true) {
+        view.accessibleTouchTarget()
+    }
+}

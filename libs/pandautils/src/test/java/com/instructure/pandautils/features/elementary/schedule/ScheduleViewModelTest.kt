@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
 import com.instructure.pandautils.utils.MissingItemsPrefs
+import com.instructure.pandautils.utils.date.RealDateTimeProvider
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -64,6 +65,7 @@ class ScheduleViewModelTest {
     private val calendarEventManager: CalendarEventManager = mockk(relaxed = true)
     private val assignmentManager: AssignmentManager = mockk(relaxed = true)
     private val missingItemsPrefs: MissingItemsPrefs = mockk(relaxed = true)
+    private val dateTimeProvider = RealDateTimeProvider()
 
     private lateinit var viewModel: ScheduleViewModel
 
@@ -906,7 +908,8 @@ class ScheduleViewModelTest {
             userManager,
             calendarEventManager,
             assignmentManager,
-            missingItemsPrefs
+            missingItemsPrefs,
+            dateTimeProvider
         )
     }
 
