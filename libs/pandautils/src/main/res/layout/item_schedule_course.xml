@@ -25,7 +25,7 @@
 
         <import type="android.view.View" />
 
-        <import type="android.graphics.Color" />
+        <import type="com.instructure.pandautils.utils.ColorUtils" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +34,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="24dp"
         android:padding="2dp"
-        app:borderColor="@{Color.parseColor(itemViewModel.data.courseColor)}">
+        app:borderColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}">
 
         <TextView
             android:id="@+id/courseName"
@@ -51,7 +51,7 @@
             android:paddingEnd="0dp"
             android:text="@{itemViewModel.data.courseName}"
             android:textAllCaps="true"
-            android:textColor="@{Color.parseColor(itemViewModel.data.courseColor)}"
+            android:textColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
             android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

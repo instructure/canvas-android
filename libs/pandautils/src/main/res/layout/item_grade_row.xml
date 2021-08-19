@@ -24,7 +24,7 @@
             name="itemViewModel"
             type="com.instructure.pandautils.features.elementary.grades.itemviewmodels.GradeRowItemViewModel" />
 
-        <import type="android.graphics.Color" />
+        <import type="com.instructure.pandautils.utils.ColorUtils" />
 
     </data>
 
@@ -59,7 +59,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:text="@{itemViewModel.data.courseName}"
-            android:textColor="@{Color.parseColor(itemViewModel.data.courseColor)}"
+            android:textColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
             app:layout_constraintTop_toBottomOf="@id/courseSeparator"
             tools:text="Math"
             tools:textColor="@color/red" />
@@ -90,7 +90,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_rounded_rectangle"
-                android:backgroundTint="@{Color.parseColor(itemViewModel.data.courseColor)}"
+                android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
                 tools:backgroundTint="@color/red"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +101,7 @@
                 android:layout_width="0dp"
                 android:layout_height="12dp"
                 android:background="@drawable/bg_rounded_rectangle_filled"
-                android:backgroundTint="@{Color.parseColor(itemViewModel.data.courseColor)}"
+                android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
