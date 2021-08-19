@@ -86,9 +86,10 @@ class ScheduleInteractionTest : StudentTest() {
         val data = createMockData(courseCount = 1)
 
         val courses = data.courses.values.filter { !it.homeroomCourse }
+        courses[0].name = "Course 1"
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
 
         goToSchedule(data)
         schedulePage.scrollToPosition(10)
@@ -210,9 +211,10 @@ class ScheduleInteractionTest : StudentTest() {
         val data = createMockData(courseCount = 1)
 
         val courses = data.courses.values.filter { !it.homeroomCourse }
+        courses[0].name = "Course 1"
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        val assignment = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
 
         goToSchedule(data)
         schedulePage.scrollToPosition(9)
