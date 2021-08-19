@@ -24,24 +24,25 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
+import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.date.DateTimeProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.OffsetDateTime
 import java.util.*
 import javax.inject.Inject
+
+const val TODO_COLOR = "#0081BD"
 
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
@@ -49,15 +50,23 @@ class ScheduleViewModel @Inject constructor(
     private val resources: Resources,
     private val plannerManager: PlannerManager,
     private val courseManager: CourseManager,
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    private val calendarEventManager: CalendarEventManager,
+    private val assignmentManager: AssignmentManager,
+    private val missingItemsPrefs: MissingItemsPrefs,
+    private val dateTimeProvider: DateTimeProvider
 ) : ViewModel() {
 
+    private lateinit var startDate: Date
+
     private lateinit var missingSubmissions: List<Assignment>
-    private lateinit var assignmentMap: Map<Long?, Assignment?>
+    private lateinit var calendarEvents: Map<Long?, ScheduleItem?>
+    private lateinit var discussions: Map<Long?, Assignment?>
     private lateinit var plannerItems: List<PlannerItem>
     private lateinit var coursesMap: Map<Long, Course>
 
-    private var todayPos = 0
+    private var todayHeader: ScheduleDayGroupItemViewModel? = null
+    private var todayPosition: Int = -1
     private val simpleDateFormat = SimpleDateFormat("hh:mm aa", Locale.getDefault())
 
     val state: LiveData<ViewState>
@@ -72,10 +81,10 @@ class ScheduleViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<ScheduleAction>>()
 
-    init {
+    fun getDataForDate(dateString: String) {
         _state.postValue(ViewState.Loading)
+        startDate = dateString.toDate() ?: dateTimeProvider.getCalendar().time
         getData(false)
-        jumpToToday()
     }
 
     fun refresh() {
@@ -84,18 +93,18 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun jumpToToday() {
-        _events.postValue(Event(ScheduleAction.JumpToToday(todayPos)))
+        if (todayPosition != -1) {
+            _events.postValue(Event(ScheduleAction.JumpToToday(todayPosition)))
+        }
     }
 
     private fun getData(forceNetwork: Boolean) {
         viewModelScope.launch {
             try {
-                val startDate = Date()
                 val weekStart = startDate.getLastSunday()
 
                 val courses = courseManager.getCoursesAsync(forceNetwork).await()
                 coursesMap = courses.dataOrThrow
-                    .filter { !it.homeroomCourse }
                     .associateBy { it.id }
 
                 plannerItems = plannerManager.getPlannerItemsAsync(
@@ -107,23 +116,35 @@ class ScheduleViewModel @Inject constructor(
                     .dataOrNull
                     .orEmpty()
 
-                missingSubmissions = userManager.getAllMissingSubmissionsAsync(forceNetwork).await().dataOrNull.orEmpty()
+                missingSubmissions =
+                    userManager.getAllMissingSubmissionsAsync(forceNetwork).await().dataOrNull.orEmpty()
 
-                val itemViewModels = mutableListOf<ItemViewModel>()
+                calendarEvents = plannerItems.filter { it.plannableType == PlannableType.CALENDAR_EVENT }
+                    .map { calendarEventManager.getCalendarEventAsync(it.plannable.id, forceNetwork) }
+                    .awaitAll()
+                    .map { it.dataOrNull }
+                    .associateBy { it?.id }
+
+                discussions =
+                    plannerItems.filter { (it.plannableType == PlannableType.ANNOUNCEMENT || it.plannableType == PlannableType.DISCUSSION_TOPIC) && it.courseId != null }
+                        .map { assignmentManager.getAssignmentAsync(it.plannable.id, it.courseId!!, forceNetwork) }
+                        .awaitAll()
+                        .map { it.dataOrNull }
+                        .associateBy { it?.id }
+
+                val itemViewModels = mutableListOf<ScheduleDayGroupItemViewModel>()
                 for (i in 0..6) {
-                    val calendar = Calendar.getInstance()
+                    val calendar = dateTimeProvider.getCalendar()
                     calendar.time = weekStart
-                    calendar.roll(Calendar.DAY_OF_MONTH, i)
+                    calendar.add(Calendar.DATE, i)
                     val date = calendar.time
 
-                    if (date.isSameDay(Date())) {
-                        todayPos = itemViewModels.size
-                    }
-
-                    itemViewModels.addAll(createCourseItemsForDate(date))
+                    itemViewModels.add(createItemsForDate(date))
                 }
                 _data.postValue(ScheduleViewData(itemViewModels))
                 _state.postValue(ViewState.Success)
+                todayPosition = calculateTodayPosition(itemViewModels)
+                jumpToToday()
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.postValue(ViewState.Error(resources.getString(R.string.schedule_error_message)))
@@ -131,62 +152,76 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-    private fun createCourseItemsForDate(date: Date): List<ItemViewModel> {
+    private fun createItemsForDate(date: Date): ScheduleDayGroupItemViewModel {
         val items = mutableListOf<ItemViewModel>()
-        items.add(createDayHeader(date))
+
         items.addAll(createCourseItems(date))
 
-        if (date.isSameDay(Date()) && missingSubmissions.isNotEmpty()) {
+        val today = dateTimeProvider.getCalendar().time
+        if (date.isSameDay(today) && missingSubmissions.isNotEmpty()) {
             items.add(createMissingItems())
         }
 
-        return items
+        val dayHeader = createDayHeader(date, items)
+
+        if (date.isSameDay(today)) {
+            todayHeader = dayHeader
+        }
+
+        return dayHeader
     }
 
-    private fun createMissingItems(): ScheduleMissingItemsHeaderItemViewModel {
-        val missingItems = missingSubmissions.map {
+    private fun createMissingItems(): ScheduleMissingItemsGroupItemViewModel {
+        val missingItems = missingSubmissions.map { assignment ->
             ScheduleMissingItemViewModel(
                 data = ScheduleMissingItemData(
-                    it.name,
-                    it.dueDate?.let { resources.getString(R.string.schedule_due_text, simpleDateFormat.format(it)) },
-                    getPointsText(it.pointsPossible),
-                    if (it.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
-                    coursesMap[it.courseId]?.name,
-                    getCourseColor(coursesMap[it.courseId])
+                    assignment.name,
+                    assignment.dueDate?.let {
+                        resources.getString(
+                            R.string.schedule_due_text,
+                            simpleDateFormat.format(it)
+                        )
+                    },
+                    getPointsText(assignment.pointsPossible),
+                    if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
+                    coursesMap[assignment.courseId]?.name,
+                    getCourseColor(coursesMap[assignment.courseId])
                 ),
                 open = {
-                    val course = coursesMap[it.courseId]
+                    val course = coursesMap[assignment.courseId]
                     if (course != null) {
-                        if (it.discussionTopicHeader != null) {
+                        if (assignment.discussionTopicHeader != null) {
                             _events.postValue(
                                 Event(
                                     ScheduleAction.OpenDiscussion(
-                                        course, it.discussionTopicHeader!!.id, it.discussionTopicHeader!!.title
+                                        course,
+                                        assignment.discussionTopicHeader!!.id,
+                                        assignment.discussionTopicHeader!!.title
                                             ?: ""
                                     )
                                 )
                             )
                         } else {
-                            _events.postValue(Event(ScheduleAction.OpenAssignment(course, it.id)))
+                            _events.postValue(Event(ScheduleAction.OpenAssignment(course, assignment.id)))
                         }
                     }
                 }
             )
         }
-        return ScheduleMissingItemsHeaderItemViewModel(items = missingItems)
+        return ScheduleMissingItemsGroupItemViewModel(missingItemsPrefs = missingItemsPrefs, items = missingItems)
     }
 
-    private fun createDayHeader(date: Date): ScheduleDayHeaderItemViewModel {
-        return ScheduleDayHeaderItemViewModel(
+    private fun createDayHeader(date: Date, items: List<ItemViewModel>): ScheduleDayGroupItemViewModel {
+        return ScheduleDayGroupItemViewModel(
             getTitleForDate(date),
             SimpleDateFormat("MMMM dd", Locale.getDefault()).format(date),
-            !Date().isSameDay(date),
-            this@ScheduleViewModel::jumpToToday
+            !dateTimeProvider.getCalendar().time.isSameDay(date),
+            items
         )
     }
 
     private fun getTitleForDate(date: Date): String {
-        val today = Date()
+        val today = dateTimeProvider.getCalendar().time
         if (date.isSameDay(today)) return resources.getString(R.string.today)
         if (date.isNextDay(today)) return resources.getString(R.string.tomorrow)
         if (date.isPreviousDay(today)) return resources.getString(R.string.yesterday)
@@ -198,23 +233,25 @@ class ScheduleViewModel @Inject constructor(
             .filter {
                 date.isSameDay(it.plannableDate)
             }
-            .groupBy { coursesMap[it.courseId] }
+            .groupBy { coursesMap[it.courseId ?: it.plannable.courseId] }
 
 
-        val courseViewModels = coursePlannerMap.entries.map {
+        val courseViewModels = coursePlannerMap.entries
+            .sortedBy { it.key?.name }
+            .map { entry ->
             val scheduleViewData = ScheduleCourseViewData(
-                it.key?.name ?: resources.getString(R.string.schedule_todo_title),
-                it.key != null,
-                getCourseColor(it.key),
-                it.key?.imageUrl ?: "",
-                it.value.map {
+                entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
+                entry.key != null,
+                getCourseColor(entry.key),
+                entry.key?.imageUrl ?: "",
+                entry.value.map {
                     createPlannerItemViewModel(it)
                 }
             )
             ScheduleCourseItemViewModel(
                 scheduleViewData
             ) {
-                it.key?.let { course ->
+                entry.key?.let { course ->
                     _events.postValue(Event(ScheduleAction.OpenCourse(course)))
                 }
             }
@@ -235,33 +272,43 @@ class ScheduleViewModel @Inject constructor(
         val chips = mutableListOf<PlannerItemTag>()
 
         if (plannerItem.submissionState?.graded == true && plannerItem.submissionState?.excused == false) {
-            chips.add(PlannerItemTag.GRADED)
+            chips.add(PlannerItemTag.Graded)
         }
 
         if (plannerItem.submissionState?.excused == true) {
-            chips.add(PlannerItemTag.EXCUSED)
+            chips.add(PlannerItemTag.Excused)
         }
 
         if (plannerItem.submissionState?.withFeedback == true) {
-            chips.add(PlannerItemTag.FEEDBACK)
+            chips.add(PlannerItemTag.Feedback)
+        }
+
+        if (plannerItem.submissionState?.missing == true) {
+            chips.add(PlannerItemTag.Missing)
         }
 
         if (plannerItem.submissionState?.late == true) {
-            chips.add(PlannerItemTag.LATE)
+            chips.add(PlannerItemTag.Late)
         }
 
         if (plannerItem.submissionState?.redoRequest == true) {
-            chips.add(PlannerItemTag.REDO)
+            chips.add(PlannerItemTag.Redo)
         }
 
-        if (plannerItem.newActivity == true) {
-            chips.add(PlannerItemTag.REPLIES)
+        if (plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC || plannerItem.plannableType == PlannableType.ANNOUNCEMENT) {
+            val discussion = discussions[plannerItem.plannable.id]
+            discussion?.discussionTopicHeader?.unreadCount?.let { unreadCount ->
+                if (unreadCount > 0) {
+                    chips.add(PlannerItemTag.Replies(unreadCount))
+                }
+            }
         }
 
         return chips.map {
             SchedulePlannerItemTagItemViewModel(
                 SchedulePlannerItemTag(
-                    resources.getString(it.text),
+                    if (it is PlannerItemTag.Replies) resources.getQuantityString(it.text, it.replyCount, it.replyCount)
+                    else resources.getString(it.text),
                     resources.getColor(it.color)
                 )
             )
@@ -278,7 +325,7 @@ class ScheduleViewModel @Inject constructor(
                 isPlannableOpenable(plannerItem),
                 createChips(plannerItem)
             ),
-            plannerItem.plannerOverride?.markedComplete ?: false,
+            plannerItem.plannerOverride?.markedComplete ?: false || plannerItem.submissionState?.submitted ?: false,
             { scheduleItemViewModel, markedAsDone ->
                 updatePlannerOverride(
                     plannerItem,
@@ -415,23 +462,62 @@ class ScheduleViewModel @Inject constructor(
 
     private fun getDueText(plannerItem: PlannerItem): String {
         return when (plannerItem.plannableType) {
-            PlannableType.CALENDAR_EVENT -> resources.getString(
-                R.string.schedule_calendar_event_due_text,
-                simpleDateFormat.format(plannerItem.plannableDate)
-            )
+            PlannableType.ANNOUNCEMENT -> simpleDateFormat.format(plannerItem.plannableDate)
+            PlannableType.CALENDAR_EVENT -> getCalendarEventDueText(plannerItem)
             PlannableType.PLANNER_NOTE -> resources.getString(
                 R.string.schedule_todo_due_text,
-                simpleDateFormat.format(plannerItem.plannableDate)
+                simpleDateFormat.format(plannerItem.plannable.todoDate.toDate() ?: plannerItem.plannableDate)
             )
             else -> resources.getString(R.string.schedule_due_text, simpleDateFormat.format(plannerItem.plannableDate))
         }
     }
 
-    private fun getCourseColor(course: Course?): String {
-        return if (!course?.courseColor.isNullOrEmpty()) {
-            course?.courseColor!!
+    private fun getCalendarEventDueText(plannerItem: PlannerItem): String {
+        val calendarEvent = calendarEvents[plannerItem.plannable.id]
+        if (calendarEvent?.isAllDay == true) {
+            return resources.getString(R.string.schedule_all_day_event_text)
         } else {
-            ColorApiHelper.K5_DEFAULT_COLOR
+            val startText = calendarEvent?.startDate?.let { simpleDateFormat.format(it) }
+            val endText = calendarEvent?.endDate?.let { simpleDateFormat.format(it) }
+            if (startText != null && endText != null) {
+                return resources.getString(R.string.schedule_calendar_event_interval_text, startText, endText)
+            }
+        }
+
+        return resources.getString(
+            R.string.schedule_calendar_event_due_text,
+            simpleDateFormat.format(plannerItem.plannableDate)
+        )
+    }
+
+    private fun calculateTodayPosition(items: List<ScheduleDayGroupItemViewModel>): Int {
+        var position = -1
+        if (todayHeader != null) {
+            items.forEach {
+                position++
+                if (it == todayHeader) return position
+                position += getGroupOpenChildCount(it)
+            }
+        }
+        return position
+    }
+
+    private fun getGroupOpenChildCount(group: GroupItemViewModel): Int {
+        var childCount = 0
+        if (!group.collapsed) {
+            childCount += group.items.size
+            group.items.filterIsInstance<GroupItemViewModel>().forEach {
+                childCount += getGroupOpenChildCount(it)
+            }
+        }
+        return childCount
+    }
+
+    private fun getCourseColor(course: Course?): String {
+        return when {
+            !course?.courseColor.isNullOrEmpty() -> course?.courseColor!!
+            !course?.name.isNullOrEmpty() -> ColorApiHelper.K5_DEFAULT_COLOR
+            else -> TODO_COLOR
         }
     }
 }

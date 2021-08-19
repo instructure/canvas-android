@@ -28,10 +28,9 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
-import com.instructure.student.R
-import com.instructure.student.util.FeatureFlagPrefs
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 

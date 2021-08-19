@@ -14,24 +14,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
+package com.instructure.pandautils.binding
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.schedule.ScheduleItemViewModelType
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class ScheduleMissingItemsHeaderItemViewModel(
-        @get:Bindable var collapsed: Boolean = true,
-        val items: List<ScheduleMissingItemViewModel>
+abstract class GroupItemViewModel(
+    val collapsable: Boolean,
+    @get:Bindable var collapsed: Boolean = collapsable,
+    val items: List<ItemViewModel>
 ) : ItemViewModel, BaseObservable() {
-    override val layoutId: Int = R.layout.item_schedule_missing_header
 
-    override val viewType: Int = ScheduleItemViewModelType.MISSING_HEADER.viewType
-
-    fun toggleItems() {
+    open fun toggleItems() {
         collapsed = !collapsed
-        notifyChange()
+        notifyPropertyChanged(BR.collapsed)
     }
 }

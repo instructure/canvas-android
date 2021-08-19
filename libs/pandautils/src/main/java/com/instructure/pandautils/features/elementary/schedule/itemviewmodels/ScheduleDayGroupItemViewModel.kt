@@ -17,15 +17,16 @@
 package com.instructure.pandautils.features.elementary.schedule.itemviewmodels
 
 import com.instructure.pandautils.R
+import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.elementary.schedule.ScheduleItemViewModelType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class ScheduleDayHeaderItemViewModel(
+class ScheduleDayGroupItemViewModel(
         val dayText: String,
         val dateText: String,
         val todayVisible: Boolean,
-        val onTodayClick: (() -> Unit)
-) : ItemViewModel {
+        items: List<ItemViewModel>
+) : GroupItemViewModel(collapsable = false, items = items) {
 
     override val layoutId: Int = R.layout.item_schedule_day_header
 

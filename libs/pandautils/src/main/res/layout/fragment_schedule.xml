@@ -22,14 +22,18 @@
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.elementary.schedule.ScheduleViewModel" />
+
+        <variable
+            name="adapter"
+            type="com.instructure.pandautils.features.elementary.schedule.ScheduleRecyclerViewAdapter" />
     </data>
 
     <FrameLayout
-        android:id="@+id/schedulePage"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/scheduleSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:onRefreshListener="@{() -> viewModel.refresh()}"
@@ -41,7 +45,9 @@
                 android:layout_height="match_parent"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:padding="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:adapter="@{adapter}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:recyclerViewItemViewModels="@{viewModel.data.itemViewModels}" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

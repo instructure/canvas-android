@@ -14,58 +14,57 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayHeaderItemViewModel" />
+            type="com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayGroupItemViewModel" />
+
+        <variable
+            name="hasDivider"
+            type="Boolean" />
 
         <import type="android.view.View" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        android:id="@+id/scheduleHeaderLayout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp">
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="0dp"
+            android:id="@+id/dayText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{itemViewModel.dayText}"
-            android:textColor="@color/canvasTextDark"
+            android:textColor="@color/defaultTextDark"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textStyle="bold"
             tools:text="Today" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{itemViewModel.dateText}"
-            android:textColor="@color/canvasTextDark"
-            android:textSize="17sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="July 2" />
-
-        <TextView
+            android:id="@+id/dateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:gravity="bottom"
-            android:minHeight="48dp"
-            android:minWidth="48dp"
-            android:onClick="@{() -> itemViewModel.onTodayClick.invoke()}"
-            android:text="@string/today"
-            android:textColor="@color/canvasDefaultAccent"
+            android:layout_marginTop="-8dp"
+            android:text="@{itemViewModel.dateText}"
+            android:textColor="@color/defaultTextDark"
             android:textSize="17sp"
-            android:visibility="@{itemViewModel.todayVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:textStyle="bold"
+            tools:text="July 2"
+            android:layout_marginBottom="6dp"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/headerDivider"
+            android:background="@color/lightGray"
+            android:visibility="@{hasDivider ? View.VISIBLE : View.GONE, default=gone}" />
+
+    </LinearLayout>
 </layout>

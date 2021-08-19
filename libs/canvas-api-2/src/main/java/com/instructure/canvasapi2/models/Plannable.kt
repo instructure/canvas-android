@@ -40,5 +40,8 @@ data class Plannable(
 
     // Used to determine if a quiz is an assignment or not
     @SerializedName("assignment_id")
-    val assignmentId: Long?
-) {}
+    val assignmentId: Long?,
+
+    @SerializedName("todo_date")
+    val todoDate: String?
+)

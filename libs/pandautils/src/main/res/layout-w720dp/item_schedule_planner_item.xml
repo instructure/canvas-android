@@ -32,14 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lightGray"
-            android:paddingStart="1.5dp"
-            android:paddingEnd="1.5dp" />
+        android:orientation="vertical"
+        android:paddingEnd="2dp"
+        android:paddingStart="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -59,7 +54,6 @@
                 android:buttonTint="@color/schedule_checkbox_color_selector"
                 android:checked="@{itemViewModel.completed}"
                 android:onCheckedChanged="@{(checkbox, checked) -> itemViewModel.markAsDone.invoke(itemViewModel, checked)}"
-                app:accessibleTouchTarget="@{true}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -157,5 +151,10 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/lightGray" />
     </LinearLayout>
 </layout>

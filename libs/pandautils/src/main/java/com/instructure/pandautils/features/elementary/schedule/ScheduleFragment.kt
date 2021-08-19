@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.databinding.FragmentScheduleBinding
+import com.instructure.pandautils.utils.StringArg
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import javax.inject.Inject
@@ -35,10 +36,17 @@ class ScheduleFragment : Fragment() {
 
     private val viewModel: ScheduleViewModel by viewModels()
 
+    private val adapter = ScheduleRecyclerViewAdapter()
+
+    private var startDateString by StringArg()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentScheduleBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.adapter = adapter
+
+        viewModel.getDataForDate(startDateString)
 
         viewModel.events.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
@@ -70,8 +78,7 @@ class ScheduleFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): ScheduleFragment {
-            return ScheduleFragment()
-        }
+
+        fun newInstance(startDate: String) = ScheduleFragment().apply { startDateString = startDate }
     }
 }
