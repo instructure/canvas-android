@@ -15,7 +15,6 @@
   ~
   -->
 <resources>
-
     <string name="noFilesFound">Nie odnaleziono żadnych plików</string>
     <string name="searchFilesHint">Wyszukaj pliki</string>
     <string name="fileSearchInstructions">Wprowadź szukany termin zawierający co najmniej trzy znaki</string>
@@ -35,6 +34,7 @@
     <string name="selectedListItem">Wybrano: %s</string>
 
     <!-- Student Strings -->
+
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Szczegóły zadania</string>
     <string name="submission_types">Typy przesłanych materiałów</string>
@@ -77,8 +77,8 @@
     <string name="addFileFabContentDesc">Pokaż opcje dodawania plików</string>
     <string name="recordAudio">Nagraj dźwięk</string>
     <string name="recordVideo">Nagraj dźwięk</string>
-
     <string name="a11y_textSubmissionEditor">Edytor zgłoszeń tekstowych</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Napisz&#8230;</string>
     <string name="textSubmissionFailureMessage">Wystąpił problem z przesyłaniem. Prześlij ponownie.</string>
@@ -102,10 +102,10 @@
     <string name="noneContentMessage">To zadanie nie umożliwia przesyłania online</string>
     <string name="onPaperContentMessage">To zadanie nie umożliwia przesyłania online</string>
     <string name="noOnlineSubmissions">Brak przesyłek online</string>
-
     <string name="speedGraderExternalToolMessage">To zadanie odnosi się do zewnętrznego narzędzia do przesyłania.</string>
     <string name="openTool">Otwórz narzędzie</string>
     <string name="a11y_submissionText">Tekst przesyłki</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Z %s pkt</string>
     <string name="outOfPointsAbbreviatedFormatted">Z %s pkt</string>
@@ -114,10 +114,10 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s z %2$s pkt</string>
     <string name="enterWhatIfScore">Wprowadź wynik dla a-co-jeśli</string>
-
     <string name="scoreStatisticsLow">Niski: %s</string>
     <string name="scoreStatisticsMean">Średni: %s</string>
     <string name="scoreStatisticsHigh">Wysoki: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Niestandardowy wynik punktowy</string>
     <string name="rubricEmptyMessage">Nie ma rubryki dla tego zadania</string>
@@ -201,7 +201,6 @@
     <string name="noAssignmentsInGroup">Brak zadań w danej grupie</string>
     <string name="excusedAssignment">To zadanie zostało usprawiedliwione i nie zostanie ujęte w ostatecznym rozliczeniu</string>
     <string name="excused">EX</string>
-
     <string name="sortByDialogTitle">Sortuj wg</string>
     <string name="sortByDialogTimeOption">Czas</string>
     <string name="sortByDialogTypeOption">Typ</string>
@@ -213,6 +212,7 @@
     <string name="a11y_sortByTypeButton">Przycisk sortowania zadań, sortuj wg typu</string>
     <string name="a11y_assignmentsSortedByTime">Zadania posortowane wg czasu</string>
     <string name="a11y_assignmentsSortedByType">Zadania posortowane wg typu</string>
+
     <!-- Assignment editing -->
     <string name="points">Punkty\u0020</string>
     <string name="save">Zapisz</string>
@@ -220,9 +220,9 @@
 
     <!-- Discussions -->
     <string name="forbidden">Odpowiedzi są widoczne tylko dla tych osób, które opublikowały co najmniej jedną odpowiedź.</string>
-
     <string name="fileCurrentlyLocked">Aktualnie plik jest zablokowany</string>
     <string name="a11y_discussionReplyEditor">Edytor odpowiedzi w dyskusji</string>
+
     <!-- Events -->
     <string name="Starts">Rozpoczyna się</string>
     <string name="Ends">Kończy się</string>
@@ -460,6 +460,7 @@
     <string name="stopMasquerading">Przestań działać jako użytkownik</string>
     <string name="userId">ID użytkownika</string>
     <string name="masqueradeFail">Wystąpił błąd podczas działania jako użytkownik</string>
+
     <string name="emptyId">Pole identyfikatora nie może być puste</string>
 
     <string name="goToQuiz">Przejdź do testu</string>
@@ -616,6 +617,8 @@
     <string name="practiceQuizzes">Testy próbne</string>
     <string name="gradedSurveys">Ocenione ankiety</string>
     <string name="surveys">Ankiety</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Lista zadań</string>
     <string name="gradesWidgetTitle">Oceny</string>
@@ -661,12 +664,12 @@
     <string name="profileSettings">Ustawienia profilu</string>
     <string name="accountPreferences">Preferencje konta</string>
     <string name="pinAndFingerprint">Kod PIN i linie papilarne</string>
-
     <string name="pairWithObserver">Paruj z obserwującym</string>
     <string name="pairWithObserverDetails">Poproś rodzica o zeskanowanie tego kodu QR w aplikacji Canvas Parent w celu sparowania. Ten kod wygaśnie za siedem dni lub po jednym jego wykorzystaniu.</string>
     <string name="pairingCodeLabel">Kod parowania:\u0020</string>
     <string name="pairingCodeErrorTitle">Błąd kodu parowania</string>
     <string name="pairingCodeErrorDescription">Nie udało się pobrać kodu parowania. Funkcji tej mogą używać tylko uczestnicy.</string>
+
     <string name="launchSpeedgrader">Otwórz Speedgrader</string>
 
     <string name="search_todo">do zrobienia do zrobienia lista do zrobienia</string>
@@ -737,8 +740,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-
     <string name="content_description_speed_grader_slider">Suwak stopni</string>
+
     <string name="createNewCalendarEvent">Utwórz nowe wydarzenie</string>
     <string name="enableFunMode">Wyłącz pandy</string>
 
@@ -825,6 +828,7 @@
     <string name="notification_desc_recording_ready">Powiadamiaj mnie o gotowości do nagrywania konferencji.</string>
 
     <string name="unlimited">Nieograniczony</string>
+
     <string name="question">Pytanie</string>
     <plurals name="question_count">
         <item quantity="one">%d pytanie</item>
@@ -839,6 +843,7 @@
         <item quantity="many">%s punkty</item>
         <item quantity="other">%s punkty</item>
     </plurals>
+
     <string name="timeLimit">Limit czasu</string>
     <string name="newPushNotifications">Nowe powiadomienia: %1$s</string>
     <string name="like">lubię to</string>
@@ -1016,10 +1021,10 @@
     <string name="conferencesNotSupported">Konferencje nie mają jeszcze wsparcia dla urządzeń przenośnych.</string>
     <string name="filePreviewContentDescription">Obraz podglądu pliku</string>
     <string name="pdfError">Podczas wczytywania tego pliku PDF wystąpił błąd.</string>
-
     <string name="featureNotAllowedInStudentView">Przepraszamy! Funkcja ta nie jest dozwolona w widoku uczestnika.</string>
     <string name="nothingToSeeHere">Nic tu nie ma</string>
     <string name="unsupportedFeature">Nieobsługiwana funkcja</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Dodaj ucznia</string>
     <string name="addChildSubTitle">Wpisz otrzymany kod parowania uczestnika.</string>
@@ -1062,11 +1067,12 @@
     <string name="gradeAfterPosting">Ocena po opublikowaniu</string>
     <string name="gradeOverride">Nadpisująca ocena</string>
     <string name="currentGrade">Bieżąca ocena</string>
-
     <string name="opensInCanvasStudent">Otwiera się w Canvas Student</string>
     <string name="tab_student_view">Widok uczestnika</string>
 
+
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">Wybrana głowa: %s</string>
     <string name="content_description_chosen_body">Wybrany tułów: %s</string>
     <string name="content_description_chosen_feet">Wybrane stopy: %s</string>
@@ -1137,6 +1143,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s min</item>
         <item quantity="few">%s min</item>
@@ -1159,6 +1166,7 @@
     <string name="conferenceDetails">Szczegóły konferencji</string>
     <string name="recordings">Nagrań</string>
     <string name="conferenceInProgress">Konferencja w toku</string>
+
     <string name="a11y_criterion_content_description">Punktacja dla danego kryterium %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">więcej informacji</string>
@@ -1185,6 +1193,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Usuń wszystko z panelu nawigacyjnego</string>
     <string name="a11y_content_description_add_to_dashboard">Dodaj do panelu nawigacyjnego</string>
     <string name="a11y_content_description_add_all_to_dashboard">Dodaj wszystko do panelu nawigacyjnego</string>
+
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Konto</string>
     <string name="dashboardTabHomeroom">Pokój główny</string>
@@ -1193,28 +1202,40 @@
     <string name="dashboardTabResources">Zasoby</string>
     <string name="homeroomWelcomeMessage">Witamy, %1$s!</string>
     <string name="homeroomMySubjects">Moje tematy</string>
-
     <string name="viewPreviousAnnouncements">Wyświetl poprzednie ogłoszenia</string>
     <string name="homeroomError">Nie udało się załadować pokoju głównego</string>
     <string name="homeroomRefreshFail">Nie udało się odświeżyć pokoju głównego</string>
-
-
     <string name="nothingDueToday">Brak elementów z dzisiejszym terminem</string>
     <string name="dueToday">%1$s z terminem dzisiaj</string>
     <string name="missing">Brak %1$s</string>
     <string name="homeroomEmptyTitle">Witamy!</string>
     <string name="homeroomEmptyMessage">Twoje tematy pojawią się tutaj.</string>
     <string name="homeroomNoSubjects">Nie masz obecnie żadnych tematów.</string>
-
+    <string name="settingsElementaryView">Widok podstawowy</string>
+    <string name="settingsElementaryViewSubtitle">Wymaga ponownego uruchomienia aplikacji</string>
+    <string name="gradesSelect">Wybierz</string>
+    <string name="selectGradingPeriod">Wybierz okres oceniania</string>
+    <string name="currentGradingPeriod">Bieżący okres oceniania</string>
+    <string name="failedToLoadGrades">Nie udało się załadować ocen</string>
+    <string name="failedToLoadGradesForGradingPeriod">Nie udało się wczytać ocen dla okresu oceniania</string>
+    <string name="failedToRefreshGrades">Nie udało się odświeżyć ocen</string>
+    <string name="noGradesToDisplay">Brak ocen do wyświetlenia</string>
+    <string name="notGraded">Nie oceniono</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Zmień okres oceniania</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Brak dostępnych ocen</string>
+    <string name="bottomBarHomeroom">Pokój główny</string>
 
     <string name="open_alternate_view">Otwórz alternatywny widok z ułatwieniami dostępu</string>
+
     <string name="a11y_content_description_message_recipients">Odbiorcy</string>
     <string name="a11y_content_description_inbox_subject">Temat</string>
     <string name="a11y_content_description_inbox_course_spinner">Wybierz kurs, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Odpowiedzi tego uczestnika są ukryte, ponieważ to zadanie jest anonimowe.</string>
 
     <string name="studentAnnotationUnsupported">Adnotacja uczestnika (nieobsługiwana)</string>
     <string name="studentAnnotationUnsupportedDescription">Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
     <string name="unsupportedSubmissionType">Nieobsługiwany typ zgłoszenia</string>
     <string name="studentAnnotationUnsupportedMessage">Przesyłki nie można wyświetlić, ponieważ Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
+    <string name="schedule_marked_as_done">Oznaczono je jako gotowe.</string>
 </resources>

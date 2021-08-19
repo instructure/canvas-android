@@ -15,7 +15,6 @@
   ~
   -->
 <resources>
-
     <string name="noFilesFound">Файлы не найдены</string>
     <string name="searchFilesHint">Поиск файлов</string>
     <string name="fileSearchInstructions">Введите ключевое слово из трех или более символов</string>
@@ -35,6 +34,7 @@
     <string name="selectedListItem">Выбрано: %s</string>
 
     <!-- Student Strings -->
+
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Сведения о задании</string>
     <string name="submission_types">Типы сдаваемых работ</string>
@@ -77,8 +77,8 @@
     <string name="addFileFabContentDesc">Показать параметры добавления файла</string>
     <string name="recordAudio">Записать аудио</string>
     <string name="recordVideo">Записать видео</string>
-
     <string name="a11y_textSubmissionEditor">Редактор текстовой отправки</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Запись&#8230;</string>
     <string name="textSubmissionFailureMessage">Произошла ошибка при загрузке предоставляемых данных. Отправьте еще раз.</string>
@@ -102,10 +102,10 @@
     <string name="noneContentMessage">Это задание не допускает отправку данных онлайн</string>
     <string name="onPaperContentMessage">Это задание не допускает отправку данных онлайн</string>
     <string name="noOnlineSubmissions">Отправка данных онлайн невозможна</string>
-
     <string name="speedGraderExternalToolMessage">Это задание содержит ссылку на внешний инструмент для отправки.</string>
     <string name="openTool">Открыть инструмент</string>
     <string name="a11y_submissionText">Текст для отправки</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Из %s баллов</string>
     <string name="outOfPointsAbbreviatedFormatted">Из %s баллов</string>
@@ -114,10 +114,10 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s из %2$s баллов</string>
     <string name="enterWhatIfScore">Ввести оценку «что, если»</string>
-
     <string name="scoreStatisticsLow">Низкий: %s</string>
     <string name="scoreStatisticsMean">Средний: %s</string>
     <string name="scoreStatisticsHigh">Высокий: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Персонализированная оценка</string>
     <string name="rubricEmptyMessage">Нет раздела для этого задания</string>
@@ -201,7 +201,6 @@
     <string name="noAssignmentsInGroup">Нет Заданий в этой группе</string>
     <string name="excusedAssignment">Данное задание не обязательно и не будет учитываться в общем подсчете</string>
     <string name="excused">EX</string>
-
     <string name="sortByDialogTitle">Сортировать по</string>
     <string name="sortByDialogTimeOption">Время</string>
     <string name="sortByDialogTypeOption">Укажите</string>
@@ -213,6 +212,7 @@
     <string name="a11y_sortByTypeButton">Кнопка «Сортировать задания», сортировка по типу</string>
     <string name="a11y_assignmentsSortedByTime">Задания, отсортированные по времени</string>
     <string name="a11y_assignmentsSortedByType">Назначения, отсортированные по типу</string>
+
     <!-- Assignment editing -->
     <string name="points">Баллы\u0020</string>
     <string name="save">Сохранить</string>
@@ -220,9 +220,9 @@
 
     <!-- Discussions -->
     <string name="forbidden">Ответы видны только тем, кто опубликовал не менее одного ответа.</string>
-
     <string name="fileCurrentlyLocked">Файл в настоящее время заблокирован</string>
     <string name="a11y_discussionReplyEditor">Редактор ответов в обсуждении</string>
+
     <!-- Events -->
     <string name="Starts">Начинается</string>
     <string name="Ends">Заканчивается</string>
@@ -460,6 +460,7 @@
     <string name="stopMasquerading">Перестать действовать как пользователь</string>
     <string name="userId">Идентификатор пользователя</string>
     <string name="masqueradeFail">Произошла ошибка при попытке действовать как пользователь</string>
+
     <string name="emptyId">ID не может быть пустым</string>
 
     <string name="goToQuiz">Перейти к тестовому заданию</string>
@@ -616,6 +617,8 @@
     <string name="practiceQuizzes">Практические тесты</string>
     <string name="gradedSurveys">Оцениваемые опросы</string>
     <string name="surveys">Опросы</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Задачи</string>
     <string name="gradesWidgetTitle">Оценки</string>
@@ -661,12 +664,12 @@
     <string name="profileSettings">Настройки профиля</string>
     <string name="accountPreferences">Параметры учетной записи</string>
     <string name="pinAndFingerprint">PIN-код и отпечаток пальца</string>
-
     <string name="pairWithObserver">Сопряжение с наблюдателем</string>
     <string name="pairWithObserverDetails">Отсканировал ли ваш родитель этот QR-код из приложения Canvas Parent для сопряжения с вами. Срок действия этого кода истекает через семь дней или после однократного использования.</string>
     <string name="pairingCodeLabel">Код сопряжения:\u0020</string>
     <string name="pairingCodeErrorTitle">Ошибка кода сопряжения</string>
     <string name="pairingCodeErrorDescription">Невозможно получить код сопряжения. Эта функция поддерживается только для студентов.</string>
+
     <string name="launchSpeedgrader">Открыть Speedgrader</string>
 
     <string name="search_todo">для выполнения выполнить список заданий список задач</string>
@@ -737,8 +740,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-
     <string name="content_description_speed_grader_slider">Ползунок оценивания</string>
+
     <string name="createNewCalendarEvent">Создать новое событие</string>
     <string name="enableFunMode">Выключить панд</string>
 
@@ -825,6 +828,7 @@
     <string name="notification_desc_recording_ready">Получайте уведомления о готовности к записи конференции.</string>
 
     <string name="unlimited">Неограниченно</string>
+
     <string name="question">Вопрос</string>
     <plurals name="question_count">
         <item quantity="one">Вопрос %d</item>
@@ -839,18 +843,19 @@
         <item quantity="many">%s баллов</item>
         <item quantity="other">%s баллов</item>
     </plurals>
+
     <string name="timeLimit">Ограничение по времени</string>
     <string name="newPushNotifications">Новые уведомления %1$s</string>
     <string name="like">нравятся</string>
     <string name="likeEntryLabel">Добавление лайка</string>
     <string name="likes">нравится</string>
-
     <plurals name="likeCountLabel">
         <item quantity="one">%s лайк</item>
         <item quantity="few">%s лайка(-ов)</item>
         <item quantity="many">%s лайка(-ов)</item>
         <item quantity="other">%s лайка(-ов)</item>
     </plurals>
+
     <string name="color_1">Красный</string>
     <string name="color_2">Ярко-розовый</string>
     <string name="color_3">Лавандовый</string>
@@ -1016,10 +1021,10 @@
     <string name="conferencesNotSupported">Конференции еще не поддерживаются на мобильных устройствах.</string>
     <string name="filePreviewContentDescription">Изображение для предварительного просмотра</string>
     <string name="pdfError">Ошибка при попытке скачать этот PDF.</string>
-
     <string name="featureNotAllowedInStudentView">Очень жаль! Эта функция недоступна в представлении для студентов.</string>
     <string name="nothingToSeeHere">Здесь ничего нет для просмотра</string>
     <string name="unsupportedFeature">Неподдерживаемая функция</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Добавить студента</string>
     <string name="addChildSubTitle">Введите полученный код привязки студента.</string>
@@ -1062,11 +1067,12 @@
     <string name="gradeAfterPosting">Оценка после публикации</string>
     <string name="gradeOverride">Игнорировать оценку</string>
     <string name="currentGrade">Текущая оценка</string>
-
     <string name="opensInCanvasStudent">Открыть в Canvas Student</string>
     <string name="tab_student_view">Просмотр студентом</string>
 
+
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">Выбранная голова: %s</string>
     <string name="content_description_chosen_body">Выбранное тело: %s</string>
     <string name="content_description_chosen_feet">Выбранные ноги: %s</string>
@@ -1137,6 +1143,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s минута</item>
         <item quantity="few">%s минут</item>
@@ -1159,6 +1166,7 @@
     <string name="conferenceDetails">Данные веб-конференции</string>
     <string name="recordings">Записи</string>
     <string name="conferenceInProgress">Идет конференция</string>
+
     <string name="a11y_criterion_content_description">Оценка критерия %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">дополнительная информация</string>
@@ -1185,6 +1193,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Удалить все информационной панели</string>
     <string name="a11y_content_description_add_to_dashboard">Добавить на информационную панель</string>
     <string name="a11y_content_description_add_all_to_dashboard">Добавить все на информационную панель</string>
+
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Учетная запись</string>
     <string name="dashboardTabHomeroom">«Домашняя комната»</string>
@@ -1193,28 +1202,40 @@
     <string name="dashboardTabResources">Ресурсы</string>
     <string name="homeroomWelcomeMessage">Добро пожаловать, %1$s!</string>
     <string name="homeroomMySubjects">Мои темы</string>
-
     <string name="viewPreviousAnnouncements">Просмотреть предыдущие объявления</string>
     <string name="homeroomError">Не удалось загрузить «Домашнюю комнату»</string>
     <string name="homeroomRefreshFail">Не удалось обновить «Домашнюю комнату»</string>
-
-
     <string name="nothingDueToday">Сегодня ничего сдавать не нужно</string>
     <string name="dueToday">Срок сдачи %1$s — сегодня</string>
     <string name="missing">%1$s отсутствует</string>
     <string name="homeroomEmptyTitle">Добро пожаловать!</string>
     <string name="homeroomEmptyMessage">Ваши темы будут отображаться здесь.</string>
     <string name="homeroomNoSubjects">В настоящее время у вас нет тем.</string>
-
+    <string name="settingsElementaryView">Простой вид</string>
+    <string name="settingsElementaryViewSubtitle">Требуется перезапуск приложения</string>
+    <string name="gradesSelect">Выбрать</string>
+    <string name="selectGradingPeriod">Выбрать период оценивания</string>
+    <string name="currentGradingPeriod">Текущий период оценки</string>
+    <string name="failedToLoadGrades">Не удалось загрузить оценки</string>
+    <string name="failedToLoadGradesForGradingPeriod">Не удалось загрузить оценки для академического периода</string>
+    <string name="failedToRefreshGrades">Не удалось обновить оценки</string>
+    <string name="noGradesToDisplay">Нет оценок для отображения</string>
+    <string name="notGraded">Оценка не выставлена</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Изменить академический период</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Оценки недоступны</string>
+    <string name="bottomBarHomeroom">«Домашняя комната»</string>
 
     <string name="open_alternate_view">Откройте более доступный альтернативный вид</string>
+
     <string name="a11y_content_description_message_recipients">Получатели</string>
     <string name="a11y_content_description_inbox_subject">Тема</string>
     <string name="a11y_content_description_inbox_course_spinner">Выбрать курс, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Ответы студентов скрыты, поскольку это задание анонимно.</string>
 
     <string name="studentAnnotationUnsupported">Аннотация учащегося (не поддерживается)</string>
     <string name="studentAnnotationUnsupportedDescription">В настоящее время функция Аннотация учащегося не поддерживается на мобильных устройствах.</string>
     <string name="unsupportedSubmissionType">Неподдерживаемый тип отправки</string>
     <string name="studentAnnotationUnsupportedMessage">Невозможно отобразить отправку, так как Аннотация учащегося в настоящее время не поддерживается на мобильном устройстве.</string>
+    <string name="schedule_marked_as_done">Вы отметили это как выполненное.</string>
 </resources>

@@ -15,7 +15,6 @@
   ~
   -->
 <resources>
-
     <string name="noFilesFound">No Files Found</string>
     <string name="searchFilesHint">Search files</string>
     <string name="fileSearchInstructions">Enter a search term with three or more characters</string>
@@ -33,6 +32,7 @@
     <string name="selectedListItem">Selected: %s</string>
 
     <!-- Student Strings -->
+
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Assignment Details</string>
     <string name="submission_types">Submission Types</string>
@@ -1046,6 +1046,7 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">Chosen head: %s</string>
     <string name="content_description_chosen_body">Chosen body: %s</string>
     <string name="content_description_chosen_feet">Chosen feet: %s</string>
@@ -1176,24 +1177,37 @@
     <string name="viewPreviousAnnouncements">View Previous Announcements</string>
     <string name="homeroomError">Failed to load Homeroom</string>
     <string name="homeroomRefreshFail">Failed to refresh Homeroom</string>
-
     <string name="nothingDueToday">Nothing Due Today</string>
     <string name="dueToday">%1$s due today</string>
     <string name="missing">%1$s missing</string>
     <string name="homeroomEmptyTitle">Welcome!</string>
     <string name="homeroomEmptyMessage">Your topics show up here.</string>
     <string name="homeroomNoSubjects">You currently have no topics.</string>
-
+    <string name="settingsElementaryView">Elementary View</string>
+    <string name="settingsElementaryViewSubtitle">Requires app restart</string>
+    <string name="gradesSelect">Select</string>
+    <string name="selectGradingPeriod">Select Grading Period</string>
+    <string name="currentGradingPeriod">Current Grading Period</string>
+    <string name="failedToLoadGrades">Failed to load grades</string>
+    <string name="failedToLoadGradesForGradingPeriod">Failed to load grades for grading period</string>
+    <string name="failedToRefreshGrades">Failed to refresh grades</string>
+    <string name="noGradesToDisplay">No grades to display</string>
+    <string name="notGraded">Not Graded</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Change grading period</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Grades not available</string>
+    <string name="bottomBarHomeroom">Homeroom</string>
 
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 
     <string name="a11y_content_description_message_recipients">Recipients</string>
     <string name="a11y_content_description_inbox_subject">Topic</string>
     <string name="a11y_content_description_inbox_course_spinner">Select a subject, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">This student\'s responses are hidden because this assignment is anonymous.</string>
 
     <string name="studentAnnotationUnsupported">Student Annotation (Unsupported)</string>
     <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently not supported on mobile.</string>
     <string name="unsupportedSubmissionType">Unsupported Submission Type</string>
     <string name="studentAnnotationUnsupportedMessage">Submission cannot be displayed, because Student Annotation is currently not supported on mobile.</string>
+    <string name="schedule_marked_as_done">You\'ve marked it as done.</string>
 </resources>

@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">اختيار الوسائط</string>
     <string name="takeVideo">التقاط فيديو</string>
     <string name="noCameraOnDevice">لا توجد كاميرا</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">إخطارات التحميل</string>
     <string name="notificationChannelNameFileUploadsDescription">إخطارات Canvas لعمليات التحميل الجارية.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">إضافة ملف</string>
+
     <string name="fromCamera">الكاميرا</string>
     <string name="fromGallery">المعرض</string>
     <string name="fromDevice">الجهاز</string>
@@ -53,7 +55,6 @@
     <string name="file">الملف</string>
     <string name="fileTalkBack">الملف %s</string>
     <string name="folderTalkBack">المجلد %s</string>
-
     <string name="addItem">إضافة عنصر</string>
     <string name="assignment">المهمة</string>
     <string name="attachedFiles">الملفات المرفقة</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">جاري تحميل الإرسال لـ %s</string>
     <string name="assignmentSubmissionError">الإرسال فشل لـ %s</string>
     <string name="assignmentSubmissionComplete">تم إرسال %s بنجاح</string>
+
     <!--Errors-->
     <string name="errorOccurred">حدث خطأ غير متوقع.</string>
     <string name="serverError">حدث خطأ بالخادم.</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">يبدو أنه لم يتم إنشاء وحدات نمطية حتى الآن.</string>
     <string name="noPages">لا توجد صفحات</string>
     <string name="noPagesSubtext">يبدو أنه لم يتم إنشاء أي صفحات حتى الآن.</string>
-
     <string name="modulesLockedSubtext">تم تعطيل وحدات نمطية لهذا المساق.</string>
     <string name="modulesLocked">حدث خطأ ما</string>
+
     <!--General-->
     <string name="yes">نعم</string>
     <string name="no">لا</string>
@@ -337,6 +339,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">لا يمكن أن يكون تاريخ إلغاء التأمين بعد تاريخ الاستحقاق</string>
     <string name="utils_lockBeforeDueDateError">لا يمكن أن يكون تاريخ التأمين قبل تاريخ الاستحقاق</string>
     <string name="utils_lockAfterUnlockError">لا يمكن أن يكون تاريخ التأمين قبل تاريخ إلغاء التأمين</string>
@@ -390,16 +393,17 @@
     <string name="utils_uploadToSubmissionComment">التحميل إلى تعليق الإرسال</string>
     <string name="utils_attachFile">إرفاق ملف</string>
     <string name="utils_with">مع</string>
+
     <string name="notificationPrimaryInboxTitle">إخطار Canvas</string>
     <string name="notificationChannelNamePrimary">إخطارات Canvas عامة</string>
     <string name="notificationChannelDescriptionPrimary">يمكن إجراء تكوين إضافي للإخطارات داخل قسم تفضيلات إخطار Canvas.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="two">%d من الإعلامات الجديدة</item>
         <item quantity="few">%d من الإعلامات الجديدة</item>
         <item quantity="many">%d من الإعلامات الجديدة</item>
         <item quantity="other">%d من الإعلامات الجديدة</item>
     </plurals>
+
     <string name="copyLinkAddress">نسخ عنوان الارتباط</string>
     <string name="copyLink">نسخ الرابط</string>
     <string name="linkCopied">تم نسخ الارتباط</string>
@@ -429,7 +433,6 @@
     <string name="image_uploading">جارٍ تحميل الصورة...</string>
     <string name="image_upload_error">خطأ في تحميل الصورة</string>
     <string name="retry">إعادة المحاولة</string>
-
     <string name="search">بحث</string>
     <string name="searchAssignmentsHint">البحث عن المهام</string>
     <string name="searchAnnouncementsHint">البحث عن الإعلانات</string>
@@ -437,11 +440,37 @@
     <string name="searchPagesHint">البحث عن الصفحات</string>
     <string name="searchQuizzesHint">البحث عن الاختبارات الموجزة</string>
     <string name="noItemsMatchingQuery">لا توجد عناصر مطابقة لـ \"%s\"</string>
+
     <string name="selected">تم التحديد</string>
 
     <string name="notificationChannelNameInAppUpdate">إضافة إعلامات التحديث</string>
     <string name="notificationChannelDescriptionInAppUpdate">إعلامات Canvas للتحديثات داخل التطبيق.</string>
     <string name="appUpdateReadyTitle">التطبيق جاهز للتحديث</string>
     <string name="appUpdateReadyDescription">إعادة تشغيل التطبيق لتثبيت الإصدار الجديد</string>
+    <string name="nothing_planned_yet">لم يتم تخطيط أي شيء بعد</string>
+    <string name="schedule_tag_graded">تم تقييم الدرجة</string>
+    <string name="schedule_tag_replies">ردود</string>
+    <string name="schedule_tag_feedback">الملاحظات</string>
+    <string name="schedule_tag_late">متأخر</string>
+    <string name="schedule_tag_redo">إعادة</string>
+    <string name="schedule_tag_excused">معفى</string>
+    <string name="tomorrow">غدًا</string>
+    <string name="yesterday">أمس</string>
+    <string name="schedule_calendar_event_due_text">في %s</string>
+    <string name="schedule_todo_due_text">قائمة المهام: %s</string>
+    <string name="schedule_due_text">تاريخ الاستحقاق: %s</string>
+    <string name="show_missing_items_title">إظهار %d من العناصر المفقودة</string>
+    <string name="hide_missing_items_title">إخفاء %d من العناصر المفقودة</string>
+    <string name="schedule_error_message">لا يمكن إحضار جدولك</string>
+    <string name="schedule_todo_title">قائمة المهام</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s نقطة</item>
+        <item quantity="zero">%s نقاط</item>
+        <item quantity="one">%s نقطة</item>
+        <item quantity="two">%s نقاط</item>
+        <item quantity="few">%s نقاط</item>
+        <item quantity="many">%s نقاط</item>
+        <item quantity="other">%s نقاط</item>
+    </plurals>
 
 </resources>

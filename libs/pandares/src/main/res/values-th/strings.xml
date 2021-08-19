@@ -15,7 +15,6 @@
   ~
   -->
 <resources>
-
     <string name="noFilesFound">ไม่พบไฟล์</string>
     <string name="searchFilesHint">ค้นหาไฟล์</string>
     <string name="fileSearchInstructions">กรอกคำค้นหาความยาวสามตัวอักษรขึ้นไป</string>
@@ -33,6 +32,7 @@
     <string name="selectedListItem">ที่เลือก: %s</string>
 
     <!-- Student Strings -->
+
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">รายละเอียดภารกิจ</string>
     <string name="submission_types">ประเภทการจัดส่ง</string>
@@ -1046,6 +1046,7 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">หัวที่เลือก: %s</string>
     <string name="content_description_chosen_body">ลำดับที่เลือก: %s</string>
     <string name="content_description_chosen_feet">เท้าที่เลือก: %s</string>
@@ -1182,6 +1183,19 @@
     <string name="homeroomEmptyTitle">ยินดีต้อนรับ!</string>
     <string name="homeroomEmptyMessage">วิชาของคุณจะปรากฏขึ้นที่นี่</string>
     <string name="homeroomNoSubjects">ปัจจุบันคุณไม่มีวิชาใด ๆ</string>
+    <string name="settingsElementaryView">มุมมองระดับประถมศึกษา</string>
+    <string name="settingsElementaryViewSubtitle">ต้องรีสตาร์ทแอพ</string>
+    <string name="gradesSelect">เลือก</string>
+    <string name="selectGradingPeriod">เลือกระยะเวลาการให้เกรด</string>
+    <string name="currentGradingPeriod">ระยะเวลาการให้เกรดในปัจจุบัน</string>
+    <string name="failedToLoadGrades">ไม่สามารถโหลดเกรดได้</string>
+    <string name="failedToLoadGradesForGradingPeriod">ไม่สามารถโหลดเกรดสำหรับระยะเวลาให้เกรด</string>
+    <string name="failedToRefreshGrades">ไม่สามารถรีเฟรชเกรดได้</string>
+    <string name="noGradesToDisplay">ไม่มีเกรดที่จะแสดง</string>
+    <string name="notGraded">ไม่ได้ลงเกรด</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">เปลี่ยนแปลงระยะเวลาการให้เกรด</string>
+    <string name="a11y_gradesNotAvailableContentDescription">ไม่มีเกรด</string>
+    <string name="bottomBarHomeroom">โฮมรูม</string>
 
     <string name="open_alternate_view">เปิดมุมมองเผื่อเลือกที่สามารถเข้าถึงได้มากกว่า</string>
 
@@ -1195,4 +1209,5 @@
     <string name="studentAnnotationUnsupportedDescription">หมายเหตุกำกับของผู้เรียนปัจจุบันไม่รองรับสำหรับอุปกรณ์พกพา</string>
     <string name="unsupportedSubmissionType">ประเภทการจัดส่งที่ไม่รองรับ</string>
     <string name="studentAnnotationUnsupportedMessage">ไม่สามารถแสดงผลงานจัดส่งได้เนื่องจากหมายเหตุกำกับของผู้เรียนปัจจุบันไม่รองรับกับอุปกรณ์พกพา</string>
+    <string name="schedule_marked_as_done">คุณกำกับว่าเสร็จสิ้นแล้ว</string>
 </resources>

@@ -15,7 +15,6 @@
   ~
   -->
 <resources>
-
     <string name="noFilesFound">Ingen filer fundet</string>
     <string name="searchFilesHint">Søg filer</string>
     <string name="fileSearchInstructions">Indtast et søgeord med tre eller flere tegn</string>
@@ -33,6 +32,7 @@
     <string name="selectedListItem">Valgt: %s</string>
 
     <!-- Student Strings -->
+
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Opgaveoplysninger</string>
     <string name="submission_types">Afleveringstyper</string>
@@ -1046,6 +1046,7 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">Valgt hoved: %s</string>
     <string name="content_description_chosen_body">Valgt krop: %s</string>
     <string name="content_description_chosen_feet">Valgte fødder: %s</string>
@@ -1176,24 +1177,37 @@
     <string name="viewPreviousAnnouncements">Se tidligere beskeder</string>
     <string name="homeroomError">Kunne ikke indlæse Homeroom</string>
     <string name="homeroomRefreshFail">Kunne ikke opdatere Homeroom</string>
-
     <string name="nothingDueToday">Intet forfalder i dag</string>
     <string name="dueToday">%1$s forfalder i dag</string>
     <string name="missing">%1$s mangler</string>
     <string name="homeroomEmptyTitle">Velkommen!</string>
     <string name="homeroomEmptyMessage">Dine emner vises her.</string>
     <string name="homeroomNoSubjects">Du har i øjeblikket ingen emner.</string>
-
+    <string name="settingsElementaryView">Folkeskole-visning</string>
+    <string name="settingsElementaryViewSubtitle">Kræver genstart af app</string>
+    <string name="gradesSelect">Vælg</string>
+    <string name="selectGradingPeriod">Vælg vurderingsperiode</string>
+    <string name="currentGradingPeriod">Nuværende vurderingsperiode</string>
+    <string name="failedToLoadGrades">Kunne ikke indlæse vurderinger</string>
+    <string name="failedToLoadGradesForGradingPeriod">Kunne ikke indlæse vurderinger for vurderingsperioden</string>
+    <string name="failedToRefreshGrades">Kunne ikke opdatere vurderinger</string>
+    <string name="noGradesToDisplay">Ingen vurderinger at vise</string>
+    <string name="notGraded">Ikke bedømt</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Skift vurderingsperiode</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Vurderinger ikke tilgængelige</string>
+    <string name="bottomBarHomeroom">Klasselokale</string>
 
     <string name="open_alternate_view">Åbn en mere tilgængelig alternativ visning</string>
 
     <string name="a11y_content_description_message_recipients">Modtagere</string>
     <string name="a11y_content_description_inbox_subject">Emne</string>
     <string name="a11y_content_description_inbox_course_spinner">Vælg et fag, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Elevens svar er skjult, fordi denne opgave er anonym.</string>
 
     <string name="studentAnnotationUnsupported">Elevers anmærkninger (ikke understøttet)</string>
     <string name="studentAnnotationUnsupportedDescription">Elevers anmærkninger understøttes i øjeblikket ikke på mobil.</string>
     <string name="unsupportedSubmissionType">Ikke-understøttet afleveringsform</string>
     <string name="studentAnnotationUnsupportedMessage">Aflevering kan ikke vises, fordi elevers anmærkninger i øjeblikket ikke understøttes på mobil.</string>
+    <string name="schedule_marked_as_done">Du har markeret det som udført.</string>
 </resources>

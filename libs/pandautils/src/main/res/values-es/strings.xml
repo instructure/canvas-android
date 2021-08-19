@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Escoger multimedia</string>
     <string name="takeVideo">Tomar video</string>
     <string name="noCameraOnDevice">Sin cámara</string>
@@ -46,6 +45,7 @@
 
     <!-- Turn in Files -->
     <string name="addFile">Agregar archivo</string>
+
     <string name="fromCamera">Cámara</string>
     <string name="fromGallery">Galería</string>
     <string name="fromDevice">Dispositivo</string>
@@ -121,6 +121,7 @@
     <string name="oneOrMoreExtensionNotAllowed">Uno o más archivos tienen una extensión de archivo que no se permite</string>
     <string name="extensionNotAllowed">No se permite el tipo de archivo seleccionado.</string>
     <string name="allowedExtensions">Extensiones permitidas:&#160;</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Compruebe su conexión de datos y vuelva a intentarlo. </string>
     <string name="noApps">Su dispositivo no tiene aplicaciones instaladas que puedan manejar este archivo.</string>
@@ -184,9 +185,9 @@
     <string name="noModulesSubtext">Al parecer no se han creado módulos todavía.</string>
     <string name="noPages">No hay páginas</string>
     <string name="noPagesSubtext">Al parecer no se han creado páginas todavía.</string>
-
     <string name="modulesLockedSubtext">Se deshabilitaron los módulos para este curso.</string>
     <string name="modulesLocked">Algo salió mal</string>
+
     <!--General-->
     <string name="yes">Sí</string>
     <string name="no">No</string>
@@ -327,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">La fecha de desbloqueo no puede ser posterior a la fecha de entrega</string>
     <string name="utils_lockBeforeDueDateError">La fecha de bloqueo no puede ser anterior a la fecha de entrega</string>
     <string name="utils_lockAfterUnlockError">La fecha de bloqueo no puede ser anterior a la fecha de desbloqueo</string>
@@ -384,10 +386,10 @@
     <string name="notificationPrimaryInboxTitle">Notificación de Canvas</string>
     <string name="notificationChannelNamePrimary">Notificaciones generales de Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Se puede realizar una posterior configuración de las notificaciones dentro de la sección de Preferencias de notificaciones de Canvas.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d nuevas notificaciones</item>
     </plurals>
+
     <string name="copyLinkAddress">Copiar dirección del enlace</string>
     <string name="copyLink">Copiar enlace</string>
     <string name="linkCopied">Enlace copiado</string>
@@ -431,5 +433,26 @@
     <string name="notificationChannelDescriptionInAppUpdate">Notificaciones de Canvas para actualizaciones en la aplicación.</string>
     <string name="appUpdateReadyTitle">Aplicación lista para ser actualizada</string>
     <string name="appUpdateReadyDescription">Reinicie la aplicación para instalar la nueva versión</string>
+    <string name="nothing_planned_yet">Todavía no hay nada planificado</string>
+    <string name="schedule_tag_graded">Calificado</string>
+    <string name="schedule_tag_replies">Respuestas</string>
+    <string name="schedule_tag_feedback">Comentarios</string>
+    <string name="schedule_tag_late">Atrasado</string>
+    <string name="schedule_tag_redo">Rehacer</string>
+    <string name="schedule_tag_excused">Justificado</string>
+    <string name="tomorrow">Mañana</string>
+    <string name="yesterday">Ayer</string>
+    <string name="schedule_calendar_event_due_text">A las %s</string>
+    <string name="schedule_todo_due_text">Por hacer: %s</string>
+    <string name="schedule_due_text">Fecha límite: %s</string>
+    <string name="show_missing_items_title">Mostrar %d ítems faltantes</string>
+    <string name="hide_missing_items_title">Ocultar %d ítems faltantes</string>
+    <string name="schedule_error_message">No se pudo recuperar su cronograma</string>
+    <string name="schedule_todo_title">Por hacer</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pto.</item>
+        <item quantity="one">%s pto.</item>
+        <item quantity="other">%s ptos.</item>
+    </plurals>
 
 </resources>
