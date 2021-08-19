@@ -26,7 +26,7 @@ apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'dagger.hilt.android.plugin'
 
-def updatePriority = 0
+def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
@@ -59,8 +59,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 229
-        versionName = '6.13.0'
+        versionCode = 230
+        versionName = '6.14.0'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
