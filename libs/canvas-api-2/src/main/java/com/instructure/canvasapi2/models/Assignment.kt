@@ -103,7 +103,9 @@ data class Assignment(
         val externalToolAttributes: ExternalToolAttributes? = null,
         @SerializedName("planner_override")
         val plannerOverride: PlannerOverride? = null,
-        var isStudioEnabled: Boolean = false
+        var isStudioEnabled: Boolean = false,
+        @SerializedName("in_closed_grading_period")
+        val inClosedGradingPeriod: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt
