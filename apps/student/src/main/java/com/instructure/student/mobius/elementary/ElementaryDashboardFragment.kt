@@ -20,14 +20,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.makeBundle
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.util.FeatureFlagPrefs
 import kotlinx.android.synthetic.main.fragment_course_grid.toolbar
 import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
@@ -49,6 +52,16 @@ class ElementaryDashboardFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         dashboardPager.adapter = ElementaryDashboardPagerAdapter(canvasContext, childFragmentManager)
+        dashboardPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
+
+            override fun onPageSelected(position: Int) {
+                DashboardStateStore.currentPage = position
+            }
+
+            override fun onPageScrollStateChanged(state: Int) = Unit
+
+        })
         dashboardTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) = Unit
 
@@ -59,8 +72,10 @@ class ElementaryDashboardFragment : ParentFragment() {
                     dashboardPager.setCurrentItem(it.position, !isTablet)
                 }
             }
-
         })
+
+        dashboardPager.setCurrentItem(DashboardStateStore.currentPage, false)
+        dashboardTabLayout.getTabAt(DashboardStateStore.currentPage)?.select()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -78,4 +93,9 @@ class ElementaryDashboardFragment : ParentFragment() {
 
         fun makeRoute(canvasContext: CanvasContext?) = Route(ElementaryDashboardFragment::class.java, canvasContext)
     }
+}
+
+object DashboardStateStore {
+
+    var currentPage: Int = 0
 }
