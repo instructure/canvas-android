@@ -15,7 +15,6 @@
   ~
   -->
 <resources>
-
     <string name="noFilesFound">Heb ddod o hyd i unrhyw ffeiliau</string>
     <string name="searchFilesHint">Chwilio ffeiliau</string>
     <string name="fileSearchInstructions">Rhowch derm chwilio sy’n cynnwys tri nod neu fwy</string>
@@ -33,6 +32,7 @@
     <string name="selectedListItem">Wedi dewis: %s</string>
 
     <!-- Student Strings -->
+
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Manylion Aseiniad</string>
     <string name="submission_types">Mathau o Gyflwyniadau</string>
@@ -1046,6 +1046,7 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">Dewis pen: %s</string>
     <string name="content_description_chosen_body">Dewis corff: %s</string>
     <string name="content_description_chosen_feet">Dewis traed: %s</string>
@@ -1176,24 +1177,37 @@
     <string name="viewPreviousAnnouncements">Gweld Cyhoeddiadau Blaenorol</string>
     <string name="homeroomError">Wedi methu llwytho Homeroom</string>
     <string name="homeroomRefreshFail">Wedi methu adnewyddu Homeroom</string>
-
     <string name="nothingDueToday">Dim byd i fod i mewn heddiw</string>
     <string name="dueToday">%1$s i fod i mewn heddiw</string>
     <string name="missing">%1$s ar goll</string>
     <string name="homeroomEmptyTitle">Croeso!</string>
     <string name="homeroomEmptyMessage">Mae eich pynciau’n ymddangos yma.</string>
     <string name="homeroomNoSubjects">Does gennych chi ddim pynciau ar hyn o bryd.</string>
-
+    <string name="settingsElementaryView">Gwedd Sylfaenol</string>
+    <string name="settingsElementaryViewSubtitle">Mae angen ailddechrau’r ap</string>
+    <string name="gradesSelect">Dewiswch</string>
+    <string name="selectGradingPeriod">Dewis Cyfnod Graddio</string>
+    <string name="currentGradingPeriod">Cyfnod Graddio Presennol</string>
+    <string name="failedToLoadGrades">Wedi methu llwytho’r graddau</string>
+    <string name="failedToLoadGradesForGradingPeriod">Wedi methu llwytho’r graddau ar gyfer y cyfnod graddio</string>
+    <string name="failedToRefreshGrades">Wedi methu adnewyddu’r graddau</string>
+    <string name="noGradesToDisplay">Dim Graddau i’w dangos</string>
+    <string name="notGraded">Heb eu graddio</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Newid cyfnod graddio</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Graddau ddim ar gael</string>
+    <string name="bottomBarHomeroom">Ystafell hafan</string>
 
     <string name="open_alternate_view">Agor gwedd arall fwy hygyrch</string>
 
     <string name="a11y_content_description_message_recipients">Derbynwyr</string>
     <string name="a11y_content_description_inbox_subject">Pwnc</string>
     <string name="a11y_content_description_inbox_course_spinner">Dewiswch gwrs, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Mae atebion y myfyriwr hwn wedi’u cuddio gan fod yr aseiniad hwn yn ddienw.</string>
 
     <string name="studentAnnotationUnsupported">Anodiad gan Fyfyriwr (Anghydnaws)</string>
     <string name="studentAnnotationUnsupportedDescription">Does dim modd delio ag anodiadau gan fyfyrwyr ar ddyfeisiau symudol ar hyn o bryd.</string>
     <string name="unsupportedSubmissionType">Math o Gyflwyniad Anghydnaws</string>
     <string name="studentAnnotationUnsupportedMessage">Does dim modd dangos y cyflwyniad, oherwydd does dim modd delio ag anodiadau gan fyfyrwyr ar ddyfeisiau symudol ar hyn o bryd.</string>
+    <string name="schedule_marked_as_done">Rydych chi wedi’i farcio fel wedi’i orffen.</string>
 </resources>

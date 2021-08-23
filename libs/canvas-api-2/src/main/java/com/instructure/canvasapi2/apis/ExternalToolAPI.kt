@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.LTITool
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 import retrofit2.http.Url
 
 
@@ -34,6 +35,9 @@ internal object ExternalToolAPI {
     internal interface ExternalToolInterface {
         @GET("{contextId}/external_tools?include_parents=true")
         fun getExternalToolsForCanvasContext(@Path("contextId") contextId: Long): Call<List<LTITool>>
+
+        @GET("external_tools/visible_course_nav_tools")
+        fun getExternalToolsForCourses(@Query("context_codes[]", encoded = true) contextCodes: List<String>): Call<List<LTITool>>
 
         @GET
         fun getLtiFromUrl(@Url url: String): Call<LTITool>
@@ -45,6 +49,14 @@ internal object ExternalToolAPI {
             params: RestParams,
             callback: StatusCallback<List<LTITool>>) {
         callback.addCall(adapter.build(ExternalToolInterface::class.java, params).getExternalToolsForCanvasContext(canvasContextId)).enqueue(callback)
+    }
+
+    fun getExternalToolsForCourses(
+        canvasContextIds: List<String>,
+        adapter: RestBuilder,
+        params: RestParams,
+        callback: StatusCallback<List<LTITool>>) {
+        callback.addCall(adapter.build(ExternalToolInterface::class.java, params).getExternalToolsForCourses(canvasContextIds)).enqueue(callback)
     }
 
     fun getLtiFromUrlSynchronous(url: String, adapter: RestBuilder, params: RestParams): LTITool? {

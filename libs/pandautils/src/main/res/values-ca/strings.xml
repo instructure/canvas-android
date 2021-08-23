@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Tria un element multimèdia</string>
     <string name="takeVideo">Enregistra vídeo</string>
     <string name="noCameraOnDevice">Sense càmera</string>
@@ -46,6 +45,7 @@
 
     <!-- Turn in Files -->
     <string name="addFile">Afegeix un fitxer</string>
+
     <string name="fromCamera">Càmera</string>
     <string name="fromGallery">Galeria</string>
     <string name="fromDevice">Dispositiu</string>
@@ -121,6 +121,7 @@
     <string name="oneOrMoreExtensionNotAllowed">Un o més fitxers tenen una extensió de fitxer que no està permesa</string>
     <string name="extensionNotAllowed">El tipus de fitxer seleccionat no està permès.</string>
     <string name="allowedExtensions">Extensions permeses:&#160;</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Reviseu la connexió de dades i torneu a provar-ho. </string>
     <string name="noApps">El dispositiu no té cap aplicació instal·lada per obrir aquest fitxer.</string>
@@ -184,9 +185,9 @@
     <string name="noModulesSubtext">Sembla que encara no s\'ha creat cap mòdul.</string>
     <string name="noPages">No hi ha cap pàgina</string>
     <string name="noPagesSubtext">Sembla que encara no s\'ha creat cap pàgina.</string>
-
     <string name="modulesLockedSubtext">S’han inhabilitat mòduls per a aquest curs.</string>
     <string name="modulesLocked">Alguna cosa no ha anat bé</string>
+
     <!--General-->
     <string name="yes">Sí</string>
     <string name="no">No</string>
@@ -327,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">La data de desbloqueig no pot ser posterior a la data de venciment</string>
     <string name="utils_lockBeforeDueDateError">La data de bloqueig no pot ser anterior a la data de venciment</string>
     <string name="utils_lockAfterUnlockError">La data de bloqueig no pot ser anterior a la data de desbloqueig</string>
@@ -384,10 +386,11 @@
     <string name="notificationPrimaryInboxTitle">Notificació de Canvas</string>
     <string name="notificationChannelNamePrimary">Notificacions de Canvas generals</string>
     <string name="notificationChannelDescriptionPrimary">A la secció de Preferències de notificacions de Canvas es pot ampliar la configuració de les notificacions.</string>
-
     <plurals name="notificationGroupContent">
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
         <item quantity="other">%d notificacions noves</item>
     </plurals>
+
     <string name="copyLinkAddress">Copia l\'adreça de l\'enllaç</string>
     <string name="copyLink">Copia l\'enllaç</string>
     <string name="linkCopied">Enllaç copiat</string>
@@ -431,5 +434,26 @@
     <string name="notificationChannelDescriptionInAppUpdate">Notificació de Canvas d’actualitzacions de l’aplicació.</string>
     <string name="appUpdateReadyTitle">Tot és a punt per fer l’actualització de l’aplicació</string>
     <string name="appUpdateReadyDescription">Reinicieu l’aplicació per instal·lar la versió nova</string>
+    <string name="nothing_planned_yet">Encara no hi ha res planificat</string>
+    <string name="schedule_tag_graded">Qualificat</string>
+    <string name="schedule_tag_replies">Respostes</string>
+    <string name="schedule_tag_feedback">Suggeriments</string>
+    <string name="schedule_tag_late">Tardà</string>
+    <string name="schedule_tag_redo">Refés</string>
+    <string name="schedule_tag_excused">Excusat</string>
+    <string name="tomorrow">Demà</string>
+    <string name="yesterday">Ahir</string>
+    <string name="schedule_calendar_event_due_text">A les %s</string>
+    <string name="schedule_todo_due_text">Tasques pendents: %s</string>
+    <string name="schedule_due_text">Venciment: %s</string>
+    <string name="show_missing_items_title">Mostra %d elements que falten</string>
+    <string name="hide_missing_items_title">Amaga %d elements que falten</string>
+    <string name="schedule_error_message">No es pot obtenir la vostra planificació</string>
+    <string name="schedule_todo_title">Tasques pendents</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s punt</item>
+        <item quantity="one">%s punt</item>
+        <item quantity="other">%s punts</item>
+    </plurals>
 
 </resources>

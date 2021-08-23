@@ -211,9 +211,9 @@ object DateHelper {
         val cal = GregorianCalendar()
         cal.timeInMillis = dateTime
         val genericDate = GregorianCalendar(
-            cal[Calendar.YEAR],
-            cal[Calendar.MONTH],
-            cal[Calendar.DAY_OF_MONTH]
+                cal[Calendar.YEAR],
+                cal[Calendar.MONTH],
+                cal[Calendar.DAY_OF_MONTH]
         )
         return Date(genericDate.timeInMillis)
     }
@@ -233,4 +233,5 @@ object DateHelper {
         calendar[year, month, day, hour, minute] = second
         return calendar.time
     }
+
 }

@@ -19,19 +19,32 @@ package com.instructure.pandautils.binding
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
-import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder>() {
+open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder>() {
 
-    var itemViewModels: List<ItemViewModel> = emptyList()
+    var itemViewModels: MutableList<ItemViewModel> = mutableListOf()
     private val viewTypeLayoutMap: MutableMap<Int, Int> = mutableMapOf()
 
+    private val groupObserver = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            if (sender is GroupItemViewModel && propertyId == BR.collapsed) {
+                toggleGroup(sender)
+            }
+        }
+
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindableViewHolder {
-        val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), viewTypeLayoutMap[viewType]
-                ?: 0, parent, false)
+        val binding: ViewDataBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context), viewTypeLayoutMap[viewType]
+                ?: 0, parent, false
+        )
+
         return BindableViewHolder(binding)
     }
 
@@ -50,8 +63,34 @@ class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder>() {
     }
 
     fun updateItems(items: List<ItemViewModel>?) {
-        itemViewModels = items ?: emptyList()
+        itemViewModels = items.orEmpty().toMutableList()
+        val groups = itemViewModels.filterIsInstance<GroupItemViewModel>()
+        setupGroups(groups)
         notifyDataSetChanged()
+    }
+
+    private fun setupGroups(groups: List<GroupItemViewModel>) {
+        groups.forEach {
+            it.removeOnPropertyChangedCallback(groupObserver)
+            it.addOnPropertyChangedCallback(groupObserver)
+            if (!it.collapsed) {
+                itemViewModels.addAll(itemViewModels.indexOf(it) + 1, it.items)
+                notifyItemRangeInserted(itemViewModels.indexOf(it) + 1, it.items.size)
+                setupGroups(it.items.filterIsInstance<GroupItemViewModel>())
+            }
+        }
+    }
+
+    private fun toggleGroup(group: GroupItemViewModel) {
+        val position = itemViewModels.indexOf(group)
+        if (group.collapsed) {
+            itemViewModels.removeAll(group.items)
+            notifyItemRangeRemoved(position + 1, group.items.size)
+        } else {
+            itemViewModels.addAll(position + 1, group.items)
+            setupGroups(group.items.filterIsInstance<GroupItemViewModel>())
+            notifyItemRangeInserted(position + 1, group.items.size)
+        }
     }
 
 }

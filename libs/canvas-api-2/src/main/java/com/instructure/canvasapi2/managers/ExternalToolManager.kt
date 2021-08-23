@@ -45,4 +45,20 @@ object ExternalToolManager {
         forceNetwork: Boolean
     ) = apiAsync<List<LTITool>> { getExternalToolsForCanvasContext(canvasContext, it, forceNetwork) }
 
+    fun getExternalToolsForCoursesAsync(ids: List<String>, forceNetwork: Boolean) = apiAsync<List<LTITool>> { getExternalToolsForCourses(ids, it, forceNetwork) }
+
+    private fun getExternalToolsForCourses(
+        ids: List<String>,
+        callback: StatusCallback<List<LTITool>>,
+        forceNetwork: Boolean
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(
+            isForceReadFromNetwork = forceNetwork,
+            usePerPageQueryParam = true
+        )
+
+        ExternalToolAPI.getExternalToolsForCourses(ids, adapter, params, callback)
+    }
+
 }

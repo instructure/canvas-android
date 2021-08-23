@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @JvmOverloads
-fun Date?.toApiString(timeZone: TimeZone? = null): String? {
+fun Date?.toApiString(timeZone: TimeZone? = null): String {
     this ?: return ""
 
     val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)

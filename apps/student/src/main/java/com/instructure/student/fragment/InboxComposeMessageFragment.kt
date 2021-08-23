@@ -60,6 +60,7 @@ class InboxComposeMessageFragment : ParentFragment() {
     private val includedMessageIds by LongArrayArg(key = Const.MESSAGE)
     private val isReply by BooleanArg(key = IS_REPLY)
     private val currentMessage by NullableParcelableArg<Message>(key = Const.MESSAGE_TO_USER)
+    private val homeroomMessage by BooleanArg(key = HOMEROOM_MESSAGE)
 
     private var selectedContext by NullableParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
     private val isNewMessage by lazy { conversation == null }
@@ -203,6 +204,16 @@ class InboxComposeMessageFragment : ParentFragment() {
 
         // Get courses and groups if this is a new compose message
         if (isNewMessage) getAllCoursesAndGroups()
+
+        if (homeroomMessage) {
+            hideFieldsForHomeroomMessage()
+        }
+    }
+
+    private fun hideFieldsForHomeroomMessage() {
+        spinnerWrapper.setGone()
+        recipientWrapper.setGone()
+        sendIndividualMessageWrapper.setGone()
     }
 
     private fun getAllCoursesAndGroups() {
@@ -244,8 +255,10 @@ class InboxComposeMessageFragment : ParentFragment() {
     }
 
     private fun courseWasSelected() {
-        recipientWrapper.visibility = View.VISIBLE
-        contactsImageButton.visibility = View.VISIBLE
+        if (!homeroomMessage) {
+            recipientWrapper.visibility = View.VISIBLE
+            contactsImageButton.visibility = View.VISIBLE
+        }
         requireActivity().invalidateOptionsMenu()
         chips.canvasContext = selectedContext
     }
@@ -442,6 +455,7 @@ class InboxComposeMessageFragment : ParentFragment() {
 
         private const val IS_REPLY = "is_reply"
         private const val PARTICIPANTS = "participants"
+        private const val HOMEROOM_MESSAGE = "homeroom_message"
 
         fun makeRoute(
             isReply: Boolean,
@@ -464,11 +478,13 @@ class InboxComposeMessageFragment : ParentFragment() {
 
         fun makeRoute(
             canvasContext: CanvasContext,
-            participants: ArrayList<Recipient>
+            participants: ArrayList<Recipient>,
+            homeroomMessage: Boolean = false
         ): Route {
             val bundle = Bundle().apply {
                 putParcelableArrayList(PARTICIPANTS, participants)
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
+                putBoolean(HOMEROOM_MESSAGE, homeroomMessage)
             }
             return Route(InboxComposeMessageFragment::class.java, canvasContext, bundle)
         }

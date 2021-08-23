@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -78,13 +79,13 @@ class CalendarFragment : ParentFragment() {
 
     private fun routeToItem(item: PlannerItem) {
         val route: Route? = when (item.plannableType) {
-            "assignment" -> {
+            PlannableType.ASSIGNMENT -> {
                 AssignmentDetailsFragment.makeRoute(item.canvasContext, item.plannable.id)
             }
-            "discussion_topic" -> {
+            PlannableType.DISCUSSION_TOPIC -> {
                 DiscussionDetailsFragment.makeRoute(item.canvasContext, item.plannable.id, title = item.plannable.title)
             }
-            "quiz" -> {
+            PlannableType.QUIZ -> {
                 if (item.plannable.assignmentId != null) {
                     // This is a quiz assignment, go to the assignment page
                     AssignmentDetailsFragment.makeRoute(item.canvasContext, item.plannable.assignmentId!!)
@@ -96,7 +97,7 @@ class CalendarFragment : ParentFragment() {
                     } else null
                 }
             }
-            "calendar_event" -> {
+            PlannableType.CALENDAR_EVENT -> {
                 CalendarEventFragment.makeRoute(item.canvasContext, item.plannable.id)
             }
             else -> {

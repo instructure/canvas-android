@@ -20,6 +20,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
+import java.util.*
 
 fun OffsetDateTime.getShortMonthAndDay(): String {
     // Get year if the year of the due date isn't the current year
@@ -30,4 +31,43 @@ fun OffsetDateTime.getShortMonthAndDay(): String {
 fun OffsetDateTime.getTime(): String {
     val pattern = DateTimeFormatterBuilder().appendPattern("h:mm a").toFormatter()
     return format(pattern).toLowerCase()
+}
+
+fun Date.isSameDay(date: Date?): Boolean {
+    if (date == null) return false
+    val calendar1: Calendar = Calendar.getInstance()
+    calendar1.time = this
+    val calendar2: Calendar = Calendar.getInstance()
+    calendar2.time = date
+    return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) && calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
+}
+
+fun Date.isNextDay(date: Date?): Boolean {
+    if (date == null) return false
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    calendar.roll(Calendar.DAY_OF_YEAR, true)
+    return calendar.time.isSameDay(this)
+}
+
+fun Date.isPreviousDay(date: Date?): Boolean {
+    if (date == null) return false
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    calendar.roll(Calendar.DAY_OF_YEAR, false)
+    return calendar.time.isSameDay(this)
+}
+
+fun Date.getLastSunday(): Date {
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar.add(Calendar.DAY_OF_WEEK, -(calendar.get(Calendar.DAY_OF_WEEK) - 1))
+    return calendar.time
+}
+
+fun Date.getNextSaturday(): Date {
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - calendar.get(Calendar.DAY_OF_WEEK))
+    return calendar.time
 }

@@ -100,4 +100,25 @@ object EnrollmentManager {
         EnrollmentAPI.handleInvite(courseId, enrollmentId, acceptInvite, adapter, params, callback)
     }
 
+    fun getEnrollmentsForGradingPeriodAsync(
+        gradingPeriodId: Long,
+        forceNetwork: Boolean
+    ) = apiAsync<List<Enrollment>> { getEnrollmentsForGradingPeriod(gradingPeriodId, forceNetwork, it) }
+
+    private fun getEnrollmentsForGradingPeriod(
+        gradingPeriodId: Long,
+        forceNetwork: Boolean,
+        callback: StatusCallback<List<Enrollment>>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        val depaginatedCallback = object : ExhaustiveListCallback<Enrollment>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Enrollment>>, nextUrl: String, isCached: Boolean) {
+                EnrollmentAPI.getEnrollmentsForGradingPeriod(gradingPeriodId, adapter, params, callback)
+            }
+        }
+        adapter.statusCallback = depaginatedCallback
+        EnrollmentAPI.getEnrollmentsForGradingPeriod(gradingPeriodId, adapter, params, depaginatedCallback)
+    }
+
 }

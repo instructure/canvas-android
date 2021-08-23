@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Scegli supporto multimediale</string>
     <string name="takeVideo">Realizza video</string>
     <string name="noCameraOnDevice">Nessuna videocamera</string>
@@ -46,6 +45,7 @@
 
     <!-- Turn in Files -->
     <string name="addFile">Aggiungi file</string>
+
     <string name="fromCamera">Videocamera</string>
     <string name="fromGallery">Galleria</string>
     <string name="fromDevice">Dispositivo</string>
@@ -121,6 +121,7 @@
     <string name="oneOrMoreExtensionNotAllowed">Uno o più file hanno un’estensione file non consentita</string>
     <string name="extensionNotAllowed">Il tipo di file selezionato non è consentito.</string>
     <string name="allowedExtensions">Estensioni consentite:&#160;</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Verificare la connessione dati e riprovare. </string>
     <string name="noApps">Il tuo dispositivo non ha alcuna applicazione installata in grado di gestire questo file.</string>
@@ -184,9 +185,9 @@
     <string name="noModulesSubtext">Sembra che non sia stato ancora creato alcun modulo.</string>
     <string name="noPages">Nessuna pagina</string>
     <string name="noPagesSubtext">Sembra che non siano ancora state create delle pagine.</string>
-
     <string name="modulesLockedSubtext">I moduli sono stati disabilitati per questo corso.</string>
     <string name="modulesLocked">Si è verificato un problema</string>
+
     <!--General-->
     <string name="yes">Sì</string>
     <string name="no">No</string>
@@ -327,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">La data di sblocco non può essere successiva alla data di scadenza</string>
     <string name="utils_lockBeforeDueDateError">La data di blocco non può essere precedente alla data di scadenza</string>
     <string name="utils_lockAfterUnlockError">La data di blocco non può essere precedente alla data di sblocco</string>
@@ -384,10 +386,10 @@
     <string name="notificationPrimaryInboxTitle">Notifica Canvas</string>
     <string name="notificationChannelNamePrimary">Notifiche Canvas generali</string>
     <string name="notificationChannelDescriptionPrimary">Un\'ulteriore configurazione delle notifiche può eseguita all\'interno della sezione Preferenze notifiche Canvas.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d nuove notifiche</item>
     </plurals>
+
     <string name="copyLinkAddress">Copia indirizzo link</string>
     <string name="copyLink">Copia link</string>
     <string name="linkCopied">Link copiato</string>
@@ -431,5 +433,26 @@
     <string name="notificationChannelDescriptionInAppUpdate">Notifiche Canvas per aggiornamenti in-app.</string>
     <string name="appUpdateReadyTitle">App pronta per l’aggiornamento</string>
     <string name="appUpdateReadyDescription">Riavvia l’app per installare la nuova versione</string>
+    <string name="nothing_planned_yet">Ancora nulla programmato</string>
+    <string name="schedule_tag_graded">Valutato</string>
+    <string name="schedule_tag_replies">Risposte</string>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">In ritardo</string>
+    <string name="schedule_tag_redo">Ripeti</string>
+    <string name="schedule_tag_excused">Giustificato</string>
+    <string name="tomorrow">Domani</string>
+    <string name="yesterday">Ieri</string>
+    <string name="schedule_calendar_event_due_text">Alle %s</string>
+    <string name="schedule_todo_due_text">Elenco attività: %s</string>
+    <string name="schedule_due_text">Scadenza: %s</string>
+    <string name="show_missing_items_title">Mostra %d elementi mancanti</string>
+    <string name="hide_missing_items_title">Nascondi %d elementi mancanti</string>
+    <string name="schedule_error_message">Impossibile recuperare programma</string>
+    <string name="schedule_todo_title">Elenco attività</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s pt.</item>
+    </plurals>
 
 </resources>

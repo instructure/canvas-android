@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Velja miðil</string>
     <string name="takeVideo">Taka myndband</string>
     <string name="noCameraOnDevice">Engin myndavél</string>
@@ -46,6 +45,7 @@
 
     <!-- Turn in Files -->
     <string name="addFile">Bæta við skrá</string>
+
     <string name="fromCamera">Myndavél</string>
     <string name="fromGallery">Gallerí</string>
     <string name="fromDevice">Tæki</string>
@@ -121,6 +121,7 @@
     <string name="oneOrMoreExtensionNotAllowed">Ein eða fleiri af skránum er með nafnauka skrár sem er ekki leyfð</string>
     <string name="extensionNotAllowed">Valin skráargerð er ekki leyfileg.</string>
     <string name="allowedExtensions">Leyfðir nafnaukar:&#160;</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Athugaðu gagnatengingu þína og reyndu aftur. </string>
     <string name="noApps">Tækið er ekki með uppsett app sem getur opnað þessa skrá.</string>
@@ -184,9 +185,9 @@
     <string name="noModulesSubtext">Það lítur ekki út fyrir að einingar hafi verið búnar til.</string>
     <string name="noPages">Engar síður</string>
     <string name="noPagesSubtext">Engin síður virðast hafa verið stofnaðar enn.</string>
-
     <string name="modulesLockedSubtext">Slökkt hefur verið á námsefni fyrir þetta námskeið.</string>
     <string name="modulesLocked">Eitthvað fór úrskeiðis</string>
+
     <!--General-->
     <string name="yes">Já</string>
     <string name="no">Nei</string>
@@ -327,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Aflæsingardagur getur ekki verið eftir skiladag</string>
     <string name="utils_lockBeforeDueDateError">Læsingardagur getur ekki verið fyrir skiladag</string>
     <string name="utils_lockAfterUnlockError">Læsingardagur getur ekki verið fyrir opnunardag</string>
@@ -384,10 +386,10 @@
     <string name="notificationPrimaryInboxTitle">Canvas-tilkynningar</string>
     <string name="notificationChannelNamePrimary">Almennar Canvas-tilkynningar</string>
     <string name="notificationChannelDescriptionPrimary">Frekari fínstillingar á tilkynningum má gera innan kjörstillingahluta Canvas-tilkynninga.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d nýjar tilkynningar</item>
     </plurals>
+
     <string name="copyLinkAddress">Afrita slóð tengils</string>
     <string name="copyLink">Afrita tengil</string>
     <string name="linkCopied">Tengill afritaður</string>
@@ -431,5 +433,26 @@
     <string name="notificationChannelDescriptionInAppUpdate">Canvas tilkynningar vegna uppfærslu í smáforriti.</string>
     <string name="appUpdateReadyTitle">Smáforrit tilbúið til uppfærslu</string>
     <string name="appUpdateReadyDescription">Endurræstu smáforritið til að setja upp nýja útgáfu</string>
+    <string name="nothing_planned_yet">Ekkert skipulagt ennþá</string>
+    <string name="schedule_tag_graded">Metið</string>
+    <string name="schedule_tag_replies">Svör</string>
+    <string name="schedule_tag_feedback">Endurgjöf</string>
+    <string name="schedule_tag_late">Seint</string>
+    <string name="schedule_tag_redo">Endurtaka</string>
+    <string name="schedule_tag_excused">Undanþegið</string>
+    <string name="tomorrow">Á morgun</string>
+    <string name="yesterday">Í gær</string>
+    <string name="schedule_calendar_event_due_text">Á %s</string>
+    <string name="schedule_todo_due_text">Verkefni: %s</string>
+    <string name="schedule_due_text">Skil: %s</string>
+    <string name="show_missing_items_title">Sýna %d hluti sem vantar</string>
+    <string name="hide_missing_items_title">Fela %d hluti sem vantar</string>
+    <string name="schedule_error_message">Get ekki náð í stundaskrá þína</string>
+    <string name="schedule_todo_title">Verkefnalisti</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s punktur</item>
+        <item quantity="one">%s punktur</item>
+        <item quantity="other">%s punktar</item>
+    </plurals>
 
 </resources>

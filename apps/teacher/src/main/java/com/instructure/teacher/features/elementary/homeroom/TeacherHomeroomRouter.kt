@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.elementary
+package com.instructure.teacher.features.elementary.homeroom
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -22,11 +22,6 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 
 class TeacherHomeroomRouter : HomeroomRouter {
-    override fun canRouteInternally(url: String): Boolean = false
-
-    override fun routeInternally(url: String) = Unit
-
-    override fun openMedia(url: String) = Unit
 
     override fun openAnnouncements(canvasContext: CanvasContext) = Unit
 

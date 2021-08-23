@@ -75,6 +75,10 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
                 }
             }
 
+            val termsOfService = awaitApi<TermsOfService> { UserManager.getTermsOfService(it, true) }
+            ApiPrefs.canGeneratePairingCode = termsOfService.selfRegistrationType == SelfRegistration.ALL
+                || termsOfService.selfRegistrationType == SelfRegistration.OBSERVER
+
             // Grab colors
             if (ColorKeeper.hasPreviouslySynced) {
                 UserManager.getColors(userColorsCallback, true)

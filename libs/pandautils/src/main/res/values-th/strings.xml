@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">เลือกไฟล์สื่อ</string>
     <string name="takeVideo">ถ่ายวิดีโอ</string>
     <string name="noCameraOnDevice">ไม่มีกล้อง</string>
@@ -329,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">วันที่ปลดล็อคจะอยู่หลังจากวันครบกำหนดไม่ได้</string>
     <string name="utils_lockBeforeDueDateError">วันที่ล็อคจะอยู่ก่อนวันครบกำหนดไม่ได้</string>
     <string name="utils_lockAfterUnlockError">วันที่ล็อคจะอยู่ก่อนวันที่ปลดล็อคไม่ได้</string>
@@ -434,5 +434,26 @@
     <string name="notificationChannelDescriptionInAppUpdate">การแจ้งข้อมูลจาก Canvas สำหรับข้อมูลอัพเดตในแอพ</string>
     <string name="appUpdateReadyTitle">แอพพร้อมสำหรับการอัพเดต</string>
     <string name="appUpdateReadyDescription">รีสตาร์ทแอพเพื่อติดตั้งเวอร์ชั่นใหม่</string>
+    <string name="nothing_planned_yet">ยังไม่มีแผนตอนนี้</string>
+    <string name="schedule_tag_graded">ให้เกรดแล้ว</string>
+    <string name="schedule_tag_replies">การตอบกลับ</string>
+    <string name="schedule_tag_feedback">ผลตอบรับ</string>
+    <string name="schedule_tag_late">ล่าช้า</string>
+    <string name="schedule_tag_redo">ทำซ้ำ</string>
+    <string name="schedule_tag_excused">ได้รับการยกเว้น</string>
+    <string name="tomorrow">พรุ่งนี้</string>
+    <string name="yesterday">เมื่อวานนี้</string>
+    <string name="schedule_calendar_event_due_text">เมื่อ %s</string>
+    <string name="schedule_todo_due_text">สิ่งที่ต้องทำ: %s</string>
+    <string name="schedule_due_text">ครบกำหนด: %s</string>
+    <string name="show_missing_items_title">แสดง %d รายการที่ขาดหาย</string>
+    <string name="hide_missing_items_title">ซ่อน %d รายการที่ขาดหาย</string>
+    <string name="schedule_error_message">ไม่สามารถสืบค้นกำหนดเวลาของคุณได้</string>
+    <string name="schedule_todo_title">สิ่งที่ต้องทำ</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s คะแนน</item>
+        <item quantity="one">%s คะแนน</item>
+        <item quantity="other">%s คะแนน</item>
+    </plurals>
 
 </resources>

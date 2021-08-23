@@ -21,17 +21,64 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.R
+import androidx.fragment.app.viewModels
+import com.instructure.pandautils.databinding.FragmentScheduleBinding
+import com.instructure.pandautils.utils.StringArg
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_schedule.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ScheduleFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return layoutInflater.inflate(R.layout.fragment_schedule, container, false)
+    @Inject
+    lateinit var scheduleRouter: ScheduleRouter
+
+    private val viewModel: ScheduleViewModel by viewModels()
+
+    private val adapter = ScheduleRecyclerViewAdapter()
+
+    private var startDateString by StringArg()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val binding = FragmentScheduleBinding.inflate(layoutInflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.adapter = adapter
+
+        viewModel.getDataForDate(startDateString)
+
+        viewModel.events.observe(viewLifecycleOwner, { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
+
+        return binding.root
+    }
+
+    private fun handleAction(action: ScheduleAction) {
+        when (action) {
+            is ScheduleAction.OpenCourse -> scheduleRouter.openCourse(action.course)
+            is ScheduleAction.OpenAssignment -> scheduleRouter.openAssignment(action.canvasContext, action.assignmentId)
+            is ScheduleAction.OpenCalendarEvent -> scheduleRouter.openCalendarEvent(
+                action.canvasContext,
+                action.scheduleItemId
+            )
+            is ScheduleAction.OpenQuiz -> {
+                scheduleRouter.openQuiz(action.canvasContext, action.htmlUrl)
+            }
+            is ScheduleAction.OpenDiscussion -> {
+                scheduleRouter.openDiscussion(action.canvasContext, action.id, action.title)
+            }
+            is ScheduleAction.JumpToToday -> {
+                scheduleRecyclerView.scrollToPosition(action.position)
+            }
+        }
     }
 
     companion object {
-        fun newInstance(): ScheduleFragment {
-            return ScheduleFragment()
-        }
+
+        fun newInstance(startDate: String) = ScheduleFragment().apply { startDateString = startDate }
     }
 }

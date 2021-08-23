@@ -16,22 +16,26 @@
  */
 package com.instructure.pandautils.binding
 
-import android.util.Log
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.setCourseImage
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
 import java.net.URLDecoder
@@ -75,9 +79,10 @@ private fun handleErrorState(emptyView: EmptyView, error: ViewState.Error) {
     }
 }
 
-@BindingAdapter("recyclerViewItemViewModels")
-fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?) {
-    val adapter = getOrCreateAdapter(recyclerView)
+@BindingAdapter("recyclerViewItemViewModels", "adapter", requireAll = false)
+fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?, bindableAdapter: BindableRecyclerViewAdapter?) {
+    val adapter = bindableAdapter ?: getOrCreateAdapter(recyclerView)
+    recyclerView.adapter = adapter
     adapter.updateItems(itemViewModels)
 }
 
@@ -91,7 +96,6 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
         recyclerView.adapter as BindableRecyclerViewAdapter
     } else {
         val bindableRecyclerAdapter = BindableRecyclerViewAdapter()
-        recyclerView.adapter = bindableRecyclerAdapter
         bindableRecyclerAdapter
     }
 }
@@ -117,10 +121,69 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
     }
 }
 
-@BindingAdapter(value = ["imageUrl", "overlayColor"], requireAll = true)
+@BindingAdapter(value = ["imageUrl", "overlayColor"], requireAll = false)
 fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: Int?) {
     if (overlayColor != null) {
-        imageView.setCourseImage(imageUrl, overlayColor, true)
+        imageView.post {
+            imageView.setCourseImage(imageUrl, overlayColor, true)
+        }
+    } else {
+        Glide.with(imageView)
+            .load(imageUrl)
+            .into(imageView)
     }
 }
 
+@BindingAdapter(value = ["borderColor", "borderWidth", "backgroundColor", "borderCornerRadius"], requireAll = false)
+fun addBorderToContainer(view: View, borderColor: Int?, borderWidth: Int?, backgroundColor: Int?, borderCornerRadius: Int?) {
+    val border = GradientDrawable()
+    val background = backgroundColor ?: 0xffffff
+    val strokeColor = borderColor
+            ?: 0x000000
+    border.setColor(background)
+    border.setStroke(borderWidth?.toPx ?: 2.toPx, strokeColor)
+    border.cornerRadius = borderCornerRadius?.toPx?.toFloat() ?: 4.toPx.toFloat()
+    view.background = border
+}
+@BindingAdapter("layout_constraintWidth_percent")
+fun bindConstraintWidthPercentage(view: View, percentage: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    params.matchConstraintPercentWidth = percentage
+    view.layoutParams = params
+}
+
+@BindingAdapter("imageRes")
+fun bindImageResource(imageView: ImageView, @DrawableRes imageRes: Int) {
+    imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
+}
+
+
+@BindingAdapter("accessibilityClickDescription")
+fun bindAccesibilityDelegate(view: View, clickDescription: String) {
+    view.accessibilityDelegate = object : View.AccessibilityDelegate() {
+        override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfo?) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+            info?.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, clickDescription))
+        }
+    }
+}
+
+@BindingAdapter("android:layout_marginBottom")
+fun setBottomMargin(view: View, bottomMargin: Int) {
+    val layoutParams: ViewGroup.MarginLayoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+    layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin,
+        layoutParams.rightMargin, bottomMargin)
+    view.layoutParams = layoutParams
+}
+
+@BindingAdapter(value = ["userAvatar", "userName"], requireAll = true)
+fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: String?) {
+    ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl)
+}
+
+@BindingAdapter("accessibleTouchTarget")
+fun bindAccessibleTouchTarget(view: View, accessibleTouchTarget: Boolean?) {
+    if (accessibleTouchTarget == true) {
+        view.accessibleTouchTarget()
+    }
+}
