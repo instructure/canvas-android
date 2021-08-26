@@ -50,6 +50,7 @@
                 android:minHeight="48dp"
                 android:padding="16dp"
                 android:src="@drawable/ic_jump_to_today"
+                android:contentDescription="@string/a11y_content_description_schedule_jump_to_today"
                 android:visibility="@{todayButtonVisibility ? View.VISIBLE : View.GONE, default = gone}" />
         </androidx.appcompat.widget.Toolbar>
 
