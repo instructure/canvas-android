@@ -99,5 +99,5 @@ sealed class ScheduleAction {
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val scheduleItemId: Long) : ScheduleAction()
     data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String) : ScheduleAction()
     data class OpenDiscussion(val canvasContext: CanvasContext, val id: Long, val title: String) : ScheduleAction()
-    data class JumpToToday(val position: Int) : ScheduleAction()
+    object JumpToToday : ScheduleAction()
 }
