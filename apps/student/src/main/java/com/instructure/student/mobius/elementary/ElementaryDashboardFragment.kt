@@ -67,6 +67,8 @@ class ElementaryDashboardFragment : ParentFragment() {
             schedulePagerFragment.jumpToToday()
         }
 
+        binding.dashboardPager.offscreenPageLimit = fragments.size
+
         return binding.root
     }
 
