@@ -79,7 +79,10 @@ class SchedulePagerFragment : Fragment() {
         schedulePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                setTodayButtonVisibility(position != THIS_WEEKS_POSITION)
+                if (position != THIS_WEEKS_POSITION) {
+                    setTodayButtonVisibility(true)
+                }
+
                 if (position == 0) {
                     previousWeekButton.visibility = View.GONE
                 } else if (position == schedulePager.childCount - 1) {

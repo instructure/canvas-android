@@ -82,9 +82,14 @@ class ElementaryDashboardFragment : ParentFragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
                     dashboardPager.setCurrentItem(it.position, !isTablet)
+                    if (it.position != fragments.indexOf(schedulePagerFragment)) {
+                        todayButton.visibility = View.GONE
+                    } else {
+                        todayButton.visibility =
+                            if (schedulePagerFragment.getTodayButtonVisibility().value == true) View.VISIBLE else View.GONE
+                    }
                 }
             }
-
         })
     }
 

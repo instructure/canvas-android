@@ -48,12 +48,7 @@ class ScheduleFragment : Fragment() {
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            val firstItemPosition =
-                (scheduleRecyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-            val todayRange = viewModel.getTodayRange()
-            if (todayRange != null) {
-                toggleJumpToTodayButton(firstItemPosition !in viewModel.getTodayRange()!!)
-            }
+            checkFirstPosition()
         }
     }
 
@@ -85,10 +80,6 @@ class ScheduleFragment : Fragment() {
         recyclerView?.removeOnScrollListener(onScrollListener)
     }
 
-    private fun toggleJumpToTodayButton(visible: Boolean) {
-        (requireParentFragment() as SchedulePagerFragment).setTodayButtonVisibility(visible)
-    }
-
     private fun handleAction(action: ScheduleAction) {
         when (action) {
             is ScheduleAction.OpenCourse -> scheduleRouter.openCourse(action.course)
@@ -116,6 +107,26 @@ class ScheduleFragment : Fragment() {
                 0
             )
         }
+    }
+
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        if (menuVisible) {
+            checkFirstPosition()
+        }
+        super.setMenuVisibility(menuVisible)
+    }
+
+    fun checkFirstPosition() {
+        val firstItemPosition =
+            (scheduleRecyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+        val todayRange = viewModel.getTodayRange()
+        if (todayRange != null) {
+            toggleJumpToTodayButton(firstItemPosition !in todayRange)
+        }
+    }
+
+    private fun toggleJumpToTodayButton(visible: Boolean) {
+        (requireParentFragment() as SchedulePagerFragment).setTodayButtonVisibility(visible)
     }
 
     companion object {

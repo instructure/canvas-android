@@ -59,7 +59,10 @@ class ScheduleRecyclerViewAdapter : BindableRecyclerViewAdapter(), StickyHeaderI
     }
 
     override fun isHeader(itemPosition: Int): Boolean {
-        if (itemPosition == RecyclerView.NO_POSITION) return false
-        return itemViewModels[itemPosition] is ScheduleDayGroupItemViewModel
+        return if (itemPosition == RecyclerView.NO_POSITION) {
+            false
+        } else {
+            return itemViewModels[itemPosition] is ScheduleDayGroupItemViewModel
+        }
     }
 }
