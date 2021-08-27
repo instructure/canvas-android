@@ -24,16 +24,32 @@ import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.features.elementary.grades.GradesFragment
+import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
+import com.instructure.pandautils.features.elementary.resources.ResourcesFragment
+import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.makeBundle
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentElementaryDashboardBinding
 import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.util.FeatureFlagPrefs
 import kotlinx.android.synthetic.main.fragment_course_grid.toolbar
 import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
 class ElementaryDashboardFragment : ParentFragment() {
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+
+    private val schedulePagerFragment = SchedulePagerFragment.newInstance()
+
+    private val fragments = listOf(
+        HomeroomFragment.newInstance(),
+        schedulePagerFragment,
+        GradesFragment.newInstance(),
+        ResourcesFragment.newInstance()
+    )
 
     override fun title(): String = if (isAdded) getString(R.string.dashboard) else ""
 
@@ -42,13 +58,24 @@ class ElementaryDashboardFragment : ParentFragment() {
         navigation?.attachNavigationDrawer(this, toolbar)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        layoutInflater.inflate(R.layout.fragment_elementary_dashboard, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding = FragmentElementaryDashboardBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.todayButtonVisibility = schedulePagerFragment.getTodayButtonVisibility()
+
+        binding.todayButton.setOnClickListener {
+            schedulePagerFragment.jumpToToday()
+        }
+
+        binding.dashboardPager.offscreenPageLimit = fragments.size
+
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dashboardPager.adapter = ElementaryDashboardPagerAdapter(canvasContext, childFragmentManager)
+        dashboardPager.adapter = ElementaryDashboardPagerAdapter(fragments, childFragmentManager)
         dashboardTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) = Unit
 
@@ -57,9 +84,14 @@ class ElementaryDashboardFragment : ParentFragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
                     dashboardPager.setCurrentItem(it.position, !isTablet)
+                    if (it.position != fragments.indexOf(schedulePagerFragment)) {
+                        todayButton.visibility = View.GONE
+                    } else {
+                        todayButton.visibility =
+                            if (schedulePagerFragment.getTodayButtonVisibility().value == true) View.VISIBLE else View.GONE
+                    }
                 }
             }
-
         })
     }
 

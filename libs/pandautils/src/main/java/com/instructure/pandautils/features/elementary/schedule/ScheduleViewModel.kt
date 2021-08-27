@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.elementary.schedule
 
 import android.content.res.Resources
+import android.util.Range
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -66,8 +67,9 @@ class ScheduleViewModel @Inject constructor(
     private lateinit var coursesMap: Map<Long, Course>
 
     private var todayHeader: ScheduleDayGroupItemViewModel? = null
-    private var todayPosition: Int = -1
     private val simpleDateFormat = SimpleDateFormat("hh:mm aa", Locale.getDefault())
+
+    var todayPosition: Int = -1
 
     val state: LiveData<ViewState>
         get() = _state
@@ -94,7 +96,7 @@ class ScheduleViewModel @Inject constructor(
 
     private fun jumpToToday() {
         if (todayPosition != -1) {
-            _events.postValue(Event(ScheduleAction.JumpToToday(todayPosition)))
+            _events.postValue(Event(ScheduleAction.JumpToToday))
         }
     }
 
@@ -519,5 +521,12 @@ class ScheduleViewModel @Inject constructor(
             !course?.name.isNullOrEmpty() -> ColorApiHelper.K5_DEFAULT_COLOR
             else -> TODO_COLOR
         }
+    }
+
+    fun getTodayRange(): Range<Int>? {
+        todayHeader?.let {
+            return Range(todayPosition, todayPosition + getGroupOpenChildCount(it))
+        }
+        return null
     }
 }

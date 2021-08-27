@@ -46,7 +46,11 @@ class ScheduleRecyclerViewAdapter : BindableRecyclerViewAdapter(), StickyHeaderI
         return headerPosition
     }
 
-    override fun getHeaderBinding(headerPosition: Int, parent: RecyclerView, hasChildInContact: Boolean): ViewDataBinding {
+    override fun getHeaderBinding(
+        headerPosition: Int,
+        parent: RecyclerView,
+        hasChildInContact: Boolean
+    ): ViewDataBinding {
         val binding = ItemScheduleDayHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.setVariable(BR.itemViewModel, itemViewModels[headerPosition])
         binding.hasDivider = hasChildInContact
@@ -55,6 +59,10 @@ class ScheduleRecyclerViewAdapter : BindableRecyclerViewAdapter(), StickyHeaderI
     }
 
     override fun isHeader(itemPosition: Int): Boolean {
-        return itemViewModels[itemPosition] is ScheduleDayGroupItemViewModel
+        return if (itemPosition == RecyclerView.NO_POSITION) {
+            false
+        } else {
+            return itemViewModels[itemPosition] is ScheduleDayGroupItemViewModel
+        }
     }
 }
