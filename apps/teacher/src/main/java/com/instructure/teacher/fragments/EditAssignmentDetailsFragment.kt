@@ -461,7 +461,11 @@ class EditAssignmentDetailsFragment : BaseFragment() {
             } catch (e: Throwable) {
                 saveButton?.setVisible()
                 savingProgressBar.setGone()
-                toast(R.string.error_saving_assignment)
+                if (mAssignment.inClosedGradingPeriod) {
+                    toast(R.string.error_saving_assignment_closed_grading_period)
+                } else {
+                    toast(R.string.error_saving_assignment)
+                }
             }
         }
     }
