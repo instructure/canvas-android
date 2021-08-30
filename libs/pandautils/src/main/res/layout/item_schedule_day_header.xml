@@ -29,18 +29,20 @@
         <import type="android.view.View" />
     </data>
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scheduleHeaderLayout"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:contentDescription="@{@string/a11y_schedule_day_header_content_description(itemViewModel.dayText, itemViewModel.dateText)}"
+        android:importantForAccessibility="yes"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/dayText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
             android:text="@{itemViewModel.dayText}"
             android:textColor="@color/defaultTextDark"
             android:textSize="24sp"
@@ -52,18 +54,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-8dp"
+            android:layout_marginBottom="6dp"
+            android:importantForAccessibility="no"
             android:text="@{itemViewModel.dateText}"
             android:textColor="@color/defaultTextDark"
             android:textSize="17sp"
             android:textStyle="bold"
-            tools:text="July 2"
-            android:layout_marginBottom="6dp"/>
+            tools:text="July 2" />
 
         <View
+            android:id="@+id/headerDivider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:id="@+id/headerDivider"
             android:background="@color/lightGray"
+            android:importantForAccessibility="no"
             android:visibility="@{hasDivider ? View.VISIBLE : View.GONE, default=gone}" />
 
     </LinearLayout>

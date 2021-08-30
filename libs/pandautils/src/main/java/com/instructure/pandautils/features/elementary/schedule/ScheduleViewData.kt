@@ -42,6 +42,7 @@ data class SchedulePlannerItemData(
         val points: String?,
         val dueDate: String?,
         val openable: Boolean,
+        val contentDescription: String,
         val chips: List<SchedulePlannerItemTagItemViewModel>
 )
 

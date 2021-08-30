@@ -241,23 +241,23 @@ class ScheduleViewModel @Inject constructor(
         val courseViewModels = coursePlannerMap.entries
             .sortedBy { it.key?.name }
             .map { entry ->
-            val scheduleViewData = ScheduleCourseViewData(
-                entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
-                entry.key != null,
-                getCourseColor(entry.key),
-                entry.key?.imageUrl ?: "",
-                entry.value.map {
-                    createPlannerItemViewModel(it)
-                }
-            )
-            ScheduleCourseItemViewModel(
-                scheduleViewData
-            ) {
-                entry.key?.let { course ->
-                    _events.postValue(Event(ScheduleAction.OpenCourse(course)))
+                val scheduleViewData = ScheduleCourseViewData(
+                    entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
+                    entry.key != null,
+                    getCourseColor(entry.key),
+                    entry.key?.imageUrl ?: "",
+                    entry.value.map {
+                        createPlannerItemViewModel(it)
+                    }
+                )
+                ScheduleCourseItemViewModel(
+                    scheduleViewData
+                ) {
+                    entry.key?.let { course ->
+                        _events.postValue(Event(ScheduleAction.OpenCourse(course)))
+                    }
                 }
             }
-        }
 
         return if (courseViewModels.isEmpty()) {
             listOf(
@@ -325,6 +325,7 @@ class ScheduleViewModel @Inject constructor(
                 getPointsText(plannerItem.plannable.pointsPossible),
                 getDueText(plannerItem),
                 isPlannableOpenable(plannerItem),
+                createContentDescription(plannerItem),
                 createChips(plannerItem)
             ),
             plannerItem.plannerOverride?.markedComplete ?: false || plannerItem.submissionState?.submitted ?: false,
@@ -337,6 +338,30 @@ class ScheduleViewModel @Inject constructor(
             },
             { openPlannable(plannerItem) }
         )
+    }
+
+    private fun createContentDescription(plannerItem: PlannerItem): String {
+        val typeContentDescription = createTypeContentDescription(plannerItem.plannableType)
+        val dateContentDescription = getDueText(plannerItem)
+        val markedAsDoneContentDescription =
+            if (plannerItem.plannerOverride?.markedComplete == true) resources.getString(R.string.a11y_marked_as_done) else resources.getString(
+                R.string.a11y_not_marked_as_done
+            )
+
+        return "$typeContentDescription ${plannerItem.plannable.title} $dateContentDescription $markedAsDoneContentDescription"
+    }
+
+    private fun createTypeContentDescription(plannableType: PlannableType): String {
+        return when (plannableType) {
+            PlannableType.ANNOUNCEMENT -> resources.getString(R.string.a11y_announcement)
+            PlannableType.DISCUSSION_TOPIC -> resources.getString(R.string.a11y_discussion_topic)
+            PlannableType.CALENDAR_EVENT -> resources.getString(R.string.a11y_calendar_event)
+            PlannableType.ASSIGNMENT -> resources.getString(R.string.a11y_assignment)
+            PlannableType.PLANNER_NOTE -> resources.getString(R.string.a11y_planner_note)
+            PlannableType.QUIZ -> resources.getString(R.string.a11y_quiz)
+            PlannableType.TODO -> resources.getString(R.string.a11y_todo)
+            PlannableType.WIKI_PAGE -> resources.getString(R.string.a11y_page)
+        }
     }
 
     private fun updatePlannerOverride(
