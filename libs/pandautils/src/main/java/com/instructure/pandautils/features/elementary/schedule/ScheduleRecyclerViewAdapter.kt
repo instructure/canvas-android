@@ -62,7 +62,7 @@ class ScheduleRecyclerViewAdapter : BindableRecyclerViewAdapter(), StickyHeaderI
         return if (itemPosition == RecyclerView.NO_POSITION) {
             false
         } else {
-            return itemViewModels[itemPosition] is ScheduleDayGroupItemViewModel
+            itemViewModels[itemPosition] is ScheduleDayGroupItemViewModel
         }
     }
 }

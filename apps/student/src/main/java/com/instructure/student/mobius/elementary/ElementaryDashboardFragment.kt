@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
@@ -93,6 +94,9 @@ class ElementaryDashboardFragment : ParentFragment() {
                 }
             }
         })
+
+        dashboardPager.setCurrentItem(DashboardStateStore.currentPage, false)
+        dashboardTabLayout.getTabAt(DashboardStateStore.currentPage)?.select()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -110,4 +114,9 @@ class ElementaryDashboardFragment : ParentFragment() {
 
         fun makeRoute(canvasContext: CanvasContext?) = Route(ElementaryDashboardFragment::class.java, canvasContext)
     }
+}
+
+object DashboardStateStore {
+
+    var currentPage: Int = 0
 }
