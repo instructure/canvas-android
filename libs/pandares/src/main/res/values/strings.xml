@@ -1222,5 +1222,6 @@
     <string name="schedule_marked_as_done">You\'ve marked it as done.</string>
     <string name="error_saving_assignment_closed_grading_period">Cannot change the due date when due in a closed grading period.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Jump to Today</string>
-    <string name="a11y_contact_info_content_description">%1$s, %2$s, send message</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">send message</string>
 </resources>

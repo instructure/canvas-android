@@ -34,7 +34,8 @@
         android:contentDescription="@{@string/a11y_contact_info_content_description(itemViewModel.data.name, itemViewModel.data.description)}"
         android:foreground="?selectableItemBackground"
         android:importantForAccessibility="yes"
-        android:onClick="@{() -> itemViewModel.onClick.invoke()}">
+        android:onClick="@{() -> itemViewModel.onClick.invoke()}"
+        app:accessibilityClickDescription="@{@string/a11y_contact_info_click_description}">
 
         <ImageView
             android:id="@+id/avatarImg"
