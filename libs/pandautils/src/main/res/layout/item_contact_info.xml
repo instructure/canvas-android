@@ -31,7 +31,9 @@
         android:id="@+id/contactInfoLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@{@string/a11y_contact_info_content_description(itemViewModel.data.name, itemViewModel.data.description)}"
         android:foreground="?selectableItemBackground"
+        android:importantForAccessibility="yes"
         android:onClick="@{() -> itemViewModel.onClick.invoke()}">
 
         <ImageView
@@ -40,6 +42,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:importantForAccessibility="no"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -51,6 +54,7 @@
             android:id="@+id/mailIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:importantForAccessibility="no"
             android:src="@drawable/ic_mail"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,10 +66,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:importantForAccessibility="no"
+            android:text="@{itemViewModel.data.name}"
             android:textColor="@color/defaultTextDark"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:text="@{itemViewModel.data.name}"
             app:layout_constraintBottom_toTopOf="@id/descriptionTitle"
             app:layout_constraintEnd_toStartOf="@id/mailIcon"
             app:layout_constraintStart_toEndOf="@id/avatarImg"
@@ -79,9 +84,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:importantForAccessibility="no"
+            android:text="@{itemViewModel.data.description}"
             android:textColor="@color/defaultTextDark"
             android:textSize="13sp"
-            android:text="@{itemViewModel.data.description}"
             android:visibility="@{itemViewModel.data.description.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/mailIcon"
@@ -94,6 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/k5SeparatorColor"
+            android:importantForAccessibility="no"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
