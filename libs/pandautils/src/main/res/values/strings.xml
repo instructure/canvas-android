@@ -459,6 +459,11 @@
         <item quantity="one">%s pt</item>
         <item quantity="other">%s pts</item>
     </plurals>
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f points</item>
+        <item quantity="one">%.1f point</item>
+        <item quantity="other">%.1f points</item>
+    </plurals>
     <string name="schedule_all_day_event_text">All Day</string>
     <string name="schedule_tag_missing">Missing</string>
     <string name="previous_week">Previous Week</string>

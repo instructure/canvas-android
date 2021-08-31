@@ -177,17 +177,18 @@ class ScheduleViewModel @Inject constructor(
         val missingItems = missingSubmissions.map { assignment ->
             ScheduleMissingItemViewModel(
                 data = ScheduleMissingItemData(
-                    assignment.name,
-                    assignment.dueDate?.let {
+                    title = assignment.name,
+                    dueString = assignment.dueDate?.let {
                         resources.getString(
                             R.string.schedule_due_text,
                             simpleDateFormat.format(it)
                         )
                     },
-                    getPointsText(assignment.pointsPossible),
-                    if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
-                    coursesMap[assignment.courseId]?.name,
-                    getCourseColor(coursesMap[assignment.courseId])
+                    points = getPointsText(assignment.pointsPossible),
+                    type = if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
+                    courseName = coursesMap[assignment.courseId]?.name,
+                    courseColor = getCourseColor(coursesMap[assignment.courseId]),
+                    contentDescription = createMissingItemContentDescription(assignment)
                 ),
                 open = {
                     val course = coursesMap[assignment.courseId]
@@ -211,6 +212,20 @@ class ScheduleViewModel @Inject constructor(
             )
         }
         return ScheduleMissingItemsGroupItemViewModel(missingItemsPrefs = missingItemsPrefs, items = missingItems)
+    }
+
+    private fun createMissingItemContentDescription(assignment: Assignment): String {
+        val typeContentDescription = if (assignment.discussionTopicHeader != null) resources.getString(R.string.a11y_discussion_topic) else resources.getString(R.string.a11y_assignment)
+        val pointsContentDescription = resources.getQuantityString(R.plurals.a11y_schedule_points, assignment.pointsPossible.toInt(), assignment.pointsPossible)
+        val dueContentDescription = assignment.dueDate?.let {
+            resources.getString(
+                R.string.schedule_due_text,
+                simpleDateFormat.format(it)
+            )
+        }
+        val courseContentDescription = resources.getString(R.string.a11y_schedule_course_header_content_description, coursesMap[assignment.courseId]?.name)
+
+        return "$typeContentDescription ${assignment.name} $courseContentDescription $pointsContentDescription $dueContentDescription"
     }
 
     private fun createDayHeader(date: Date, items: List<ItemViewModel>): ScheduleDayGroupItemViewModel {

@@ -61,7 +61,8 @@ data class ScheduleMissingItemData(
         val points: String?,
         val type: PlannerItemType,
         val courseName: String?,
-        val courseColor: String
+        val courseColor: String,
+        val contentDescription: String
 )
 
 enum class PlannerItemType(@DrawableRes val iconRes: Int) {

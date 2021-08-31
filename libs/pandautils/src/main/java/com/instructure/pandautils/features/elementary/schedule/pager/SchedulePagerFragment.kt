@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -28,6 +29,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.instructure.pandautils.databinding.FragmentSchedulePagerBinding
 import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule_pager.*
 
@@ -93,6 +95,22 @@ class SchedulePagerFragment : Fragment() {
                 }
             }
         })
+
+        if (isAccessibilityEnabled(requireContext())) {
+            movePagerControlToTop()
+        }
+    }
+
+    private fun movePagerControlToTop() {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(schedulePage)
+        constraintSet.clear(controls.id, ConstraintSet.BOTTOM)
+        constraintSet.clear(schedulePager.id, ConstraintSet.BOTTOM)
+        constraintSet.clear(schedulePager.id, ConstraintSet.TOP)
+        constraintSet.connect(controls.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        constraintSet.connect(schedulePager.id, ConstraintSet.TOP, controls.id, ConstraintSet.BOTTOM)
+        constraintSet.connect(schedulePager.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.applyTo(schedulePage)
     }
 
     private fun handleAction(action: SchedulePagerAction) {
