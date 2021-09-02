@@ -177,17 +177,18 @@ class ScheduleViewModel @Inject constructor(
         val missingItems = missingSubmissions.map { assignment ->
             ScheduleMissingItemViewModel(
                 data = ScheduleMissingItemData(
-                    assignment.name,
-                    assignment.dueDate?.let {
+                    title = assignment.name,
+                    dueString = assignment.dueDate?.let {
                         resources.getString(
                             R.string.schedule_due_text,
                             simpleDateFormat.format(it)
                         )
                     },
-                    getPointsText(assignment.pointsPossible),
-                    if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
-                    coursesMap[assignment.courseId]?.name,
-                    getCourseColor(coursesMap[assignment.courseId])
+                    points = getPointsText(assignment.pointsPossible),
+                    type = if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
+                    courseName = coursesMap[assignment.courseId]?.name,
+                    courseColor = getCourseColor(coursesMap[assignment.courseId]),
+                    contentDescription = createMissingItemContentDescription(assignment)
                 ),
                 open = {
                     val course = coursesMap[assignment.courseId]
@@ -211,6 +212,20 @@ class ScheduleViewModel @Inject constructor(
             )
         }
         return ScheduleMissingItemsGroupItemViewModel(missingItemsPrefs = missingItemsPrefs, items = missingItems)
+    }
+
+    private fun createMissingItemContentDescription(assignment: Assignment): String {
+        val typeContentDescription = if (assignment.discussionTopicHeader != null) resources.getString(R.string.a11y_discussion_topic) else resources.getString(R.string.a11y_assignment)
+        val pointsContentDescription = resources.getQuantityString(R.plurals.a11y_schedule_points, assignment.pointsPossible.toInt(), assignment.pointsPossible)
+        val dueContentDescription = assignment.dueDate?.let {
+            resources.getString(
+                R.string.schedule_due_text,
+                simpleDateFormat.format(it)
+            )
+        }
+        val courseContentDescription = resources.getString(R.string.a11y_schedule_course_header_content_description, coursesMap[assignment.courseId]?.name)
+
+        return "$typeContentDescription ${assignment.name} $courseContentDescription $pointsContentDescription $dueContentDescription"
     }
 
     private fun createDayHeader(date: Date, items: List<ItemViewModel>): ScheduleDayGroupItemViewModel {
@@ -241,23 +256,23 @@ class ScheduleViewModel @Inject constructor(
         val courseViewModels = coursePlannerMap.entries
             .sortedBy { it.key?.name }
             .map { entry ->
-            val scheduleViewData = ScheduleCourseViewData(
-                entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
-                entry.key != null,
-                getCourseColor(entry.key),
-                entry.key?.imageUrl ?: "",
-                entry.value.map {
-                    createPlannerItemViewModel(it)
-                }
-            )
-            ScheduleCourseItemViewModel(
-                scheduleViewData
-            ) {
-                entry.key?.let { course ->
-                    _events.postValue(Event(ScheduleAction.OpenCourse(course)))
+                val scheduleViewData = ScheduleCourseViewData(
+                    entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
+                    entry.key != null,
+                    getCourseColor(entry.key),
+                    entry.key?.imageUrl ?: "",
+                    entry.value.map {
+                        createPlannerItemViewModel(it)
+                    }
+                )
+                ScheduleCourseItemViewModel(
+                    scheduleViewData
+                ) {
+                    entry.key?.let { course ->
+                        _events.postValue(Event(ScheduleAction.OpenCourse(course)))
+                    }
                 }
             }
-        }
 
         return if (courseViewModels.isEmpty()) {
             listOf(
@@ -325,6 +340,7 @@ class ScheduleViewModel @Inject constructor(
                 getPointsText(plannerItem.plannable.pointsPossible),
                 getDueText(plannerItem),
                 isPlannableOpenable(plannerItem),
+                createContentDescription(plannerItem),
                 createChips(plannerItem)
             ),
             plannerItem.plannerOverride?.markedComplete ?: false || plannerItem.submissionState?.submitted ?: false,
@@ -337,6 +353,30 @@ class ScheduleViewModel @Inject constructor(
             },
             { openPlannable(plannerItem) }
         )
+    }
+
+    private fun createContentDescription(plannerItem: PlannerItem): String {
+        val typeContentDescription = createTypeContentDescription(plannerItem.plannableType)
+        val dateContentDescription = getDueText(plannerItem)
+        val markedAsDoneContentDescription =
+            if (plannerItem.plannerOverride?.markedComplete == true || plannerItem.submissionState?.submitted == true) resources.getString(R.string.a11y_marked_as_done) else resources.getString(
+                R.string.a11y_not_marked_as_done
+            )
+
+        return "$typeContentDescription ${plannerItem.plannable.title} $dateContentDescription $markedAsDoneContentDescription"
+    }
+
+    private fun createTypeContentDescription(plannableType: PlannableType): String {
+        return when (plannableType) {
+            PlannableType.ANNOUNCEMENT -> resources.getString(R.string.a11y_announcement)
+            PlannableType.DISCUSSION_TOPIC -> resources.getString(R.string.a11y_discussion_topic)
+            PlannableType.CALENDAR_EVENT -> resources.getString(R.string.a11y_calendar_event)
+            PlannableType.ASSIGNMENT -> resources.getString(R.string.a11y_assignment)
+            PlannableType.PLANNER_NOTE -> resources.getString(R.string.a11y_planner_note)
+            PlannableType.QUIZ -> resources.getString(R.string.a11y_quiz)
+            PlannableType.TODO -> resources.getString(R.string.a11y_todo)
+            PlannableType.WIKI_PAGE -> resources.getString(R.string.a11y_page)
+        }
     }
 
     private fun updatePlannerOverride(
