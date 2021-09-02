@@ -359,7 +359,7 @@ class ScheduleViewModel @Inject constructor(
         val typeContentDescription = createTypeContentDescription(plannerItem.plannableType)
         val dateContentDescription = getDueText(plannerItem)
         val markedAsDoneContentDescription =
-            if (plannerItem.plannerOverride?.markedComplete == true) resources.getString(R.string.a11y_marked_as_done) else resources.getString(
+            if (plannerItem.plannerOverride?.markedComplete == true || plannerItem.submissionState?.submitted == true) resources.getString(R.string.a11y_marked_as_done) else resources.getString(
                 R.string.a11y_not_marked_as_done
             )
 
