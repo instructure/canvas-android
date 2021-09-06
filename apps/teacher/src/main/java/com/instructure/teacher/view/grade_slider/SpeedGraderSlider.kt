@@ -78,7 +78,7 @@ class SpeedGraderSlider @JvmOverloads constructor(
             accessibleTouchTarget()
         }
 
-        maxGradeValue.apply {
+        maxGrade.apply {
             setOnClickListener {
                 updateGrade(maxGradeValue)
                 notGraded = false
