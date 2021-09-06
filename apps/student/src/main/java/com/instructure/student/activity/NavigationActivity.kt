@@ -102,6 +102,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import javax.inject.Inject
 
+private const val BOTTOM_NAV_SCREEN = "bottomNavScreen"
 
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
@@ -197,7 +198,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             /* Update nav bar visibility to show for specific 'root' fragments. Also show the nav bar when there is
              only one fragment on the backstack, which commonly occurs with non-root fragments when routing
              from external sources. */
-            val visible = it::class.java in navigationBehavior.bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1
+            val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             bottomBar.setVisible(visible)
             bottomBarDivider.setVisible(visible)
         }
@@ -445,10 +446,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             Logger.e("Error getting version: " + e)
         }
 
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
-        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
-        toolbar.setNavigationOnClickListener {
-            openNavigationDrawer()
+        if (isBottomNavFragment(fragment)) {
+            toolbar.setNavigationIcon(R.drawable.ic_hamburger)
+            toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
+            toolbar.setNavigationOnClickListener {
+                openNavigationDrawer()
+            }
+        } else {
+            toolbar.setupAsBackButton(fragment)
         }
 
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
@@ -764,6 +769,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         if (selectedFragment == null) {
             val fragment = createBottomNavFragment(fragmentClass.name)
+            val newArguments = if (fragment?.arguments != null) fragment.requireArguments() else Bundle()
+            newArguments.putBoolean(BOTTOM_NAV_SCREEN, true)
+            fragment?.arguments = newArguments
             addFullScreenFragment(fragment)
         } else {
             showHiddenFragment(selectedFragment)
@@ -822,7 +830,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val topFragment = topFragment
         if (topFragment is ParentFragment) {
             if (!topFragment.handleBackPressed()) {
-                if (topFragment::class.java.name in getBottomNavFragmentNames()) {
+                if (isBottomNavFragment(topFragment)) {
                     handleBottomNavBackStack()
                 } else {
                     super.onBackPressed()
@@ -858,12 +866,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         get() {
             val stackSize = supportFragmentManager.backStackEntryCount
             if (stackSize > 0) {
-                val fragmentTag = supportFragmentManager.getBackStackEntryAt(stackSize - 1).name
-                return if (fragmentTag in getBottomNavFragmentNames()) {
-                    val topFragmentName = bottomNavScreensStack.peek() ?: navigationBehavior.homeFragmentClass.name
-                    supportFragmentManager.findFragmentByTag(topFragmentName)
+                val backStackEntryName = supportFragmentManager.getBackStackEntryAt(stackSize - 1).name
+                return if (backStackEntryName in getBottomNavFragmentNames()) {
+                    currentFragment
                 } else {
-                    supportFragmentManager.findFragmentByTag(fragmentTag)
+                    supportFragmentManager.findFragmentByTag(backStackEntryName)
                 }
             }
             return null
@@ -882,13 +889,15 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override val currentFragment: Fragment?
         get() {
             val fragment = supportFragmentManager.findFragmentById(R.id.fullscreen)
-            return if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames()) {
+            return if (fragment != null && isBottomNavFragment(fragment)) {
                 val currentFragmentName = bottomNavScreensStack.peek() ?: navigationBehavior.homeFragmentClass.name
                 supportFragmentManager.findFragmentByTag(currentFragmentName)
             } else {
                 fragment
             }
         }
+
+    private fun isBottomNavFragment(fragment: Fragment) = fragment.arguments?.getBoolean(BOTTOM_NAV_SCREEN) == true
 
     private fun getBottomNavFragmentNames() = navigationBehavior.bottomNavBarFragments.map { it.name }
 
