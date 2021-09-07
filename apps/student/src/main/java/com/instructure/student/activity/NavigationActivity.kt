@@ -760,7 +760,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             ft.addToBackStack(fragment::class.java.name)
             fragment.show(ft, fragment::class.java.name)
         } else {
-            addFullScreenFragment(fragment)
+            if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
+                selectBottomNavFragment(fragment::class.java)
+            } else {
+                addFullScreenFragment(fragment)
+            }
         }
     }
 
@@ -897,7 +901,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
         }
 
-    private fun isBottomNavFragment(fragment: Fragment) = fragment.arguments?.getBoolean(BOTTOM_NAV_SCREEN) == true
+    private fun isBottomNavFragment(fragment: Fragment?) = fragment?.arguments?.getBoolean(BOTTOM_NAV_SCREEN) == true
 
     private fun getBottomNavFragmentNames() = navigationBehavior.bottomNavBarFragments.map { it.name }
 
