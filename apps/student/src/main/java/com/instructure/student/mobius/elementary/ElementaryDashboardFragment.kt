@@ -94,9 +94,6 @@ class ElementaryDashboardFragment : ParentFragment() {
                 }
             }
         })
-
-        dashboardPager.setCurrentItem(DashboardStateStore.currentPage, false)
-        dashboardTabLayout.getTabAt(DashboardStateStore.currentPage)?.select()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -114,9 +111,4 @@ class ElementaryDashboardFragment : ParentFragment() {
 
         fun makeRoute(canvasContext: CanvasContext?) = Route(ElementaryDashboardFragment::class.java, canvasContext)
     }
-}
-
-object DashboardStateStore {
-
-    var currentPage: Int = 0
 }
