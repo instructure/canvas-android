@@ -100,10 +100,6 @@ dependencies {
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
 
-    /* Custom Views */
-    // TODO Only one occurrence, could be replaced with material fab
-    api 'com.getbase:floatingactionbutton:1.10.1'
-
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.MOCKK
