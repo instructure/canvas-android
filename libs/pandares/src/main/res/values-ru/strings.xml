@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Файлы не найдены</string>
     <string name="searchFilesHint">Поиск файлов</string>
     <string name="fileSearchInstructions">Введите ключевое слово из трех или более символов</string>
@@ -34,7 +35,6 @@
     <string name="selectedListItem">Выбрано: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Сведения о задании</string>
     <string name="submission_types">Типы сдаваемых работ</string>
@@ -1072,7 +1072,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Выбранная голова: %s</string>
     <string name="content_description_chosen_body">Выбранное тело: %s</string>
     <string name="content_description_chosen_feet">Выбранные ноги: %s</string>
@@ -1211,7 +1210,6 @@
     <string name="homeroomEmptyTitle">Добро пожаловать!</string>
     <string name="homeroomEmptyMessage">Ваши темы будут отображаться здесь.</string>
     <string name="homeroomNoSubjects">В настоящее время у вас нет тем.</string>
-    <string name="settingsElementaryView">Простой вид</string>
     <string name="settingsElementaryViewSubtitle">Требуется перезапуск приложения</string>
     <string name="gradesSelect">Выбрать</string>
     <string name="selectGradingPeriod">Выбрать период оценивания</string>
@@ -1225,6 +1223,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Оценки недоступны</string>
     <string name="bottomBarHomeroom">«Домашняя комната»</string>
 
+    <string name="settingsHomeroomView">Представление домашней комнаты</string>
+    <string name="importantLinksTitle">Важные ссылки</string>
+    <string name="studentApplications">Заявки учащихся</string>
+    <string name="staffContactInfo">Контактная информация персонала</string>
+    <string name="chooseACourse">Выбрать курс</string>
+    <string name="webViewImportantLinksTitle">Важные ссылки</string>
+    <string name="staffRoleTeacher">Преподаватель</string>
+    <string name="staffRoleTeacherAssistant">Ассистент преподавателя</string>
+    <string name="resourcesEmptyMessage">Ваши ресурсы будут отображаться здесь.</string>
+    <string name="failedToLoadResources">Не удалось загрузить ресурсы</string>
+    <string name="failedToRefreshResources">Не удалось обновить ресурсы</string>
     <string name="open_alternate_view">Откройте более доступный альтернативный вид</string>
 
     <string name="a11y_content_description_message_recipients">Получатели</string>

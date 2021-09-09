@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Fant ingen filer</string>
     <string name="searchFilesHint">Søk i filer</string>
     <string name="fileSearchInstructions">Skriv inn en søkeord med tre eller flere tegn</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Valgt: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Oppgavedetaljer</string>
     <string name="submission_types">Innleveringstyper</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Valgt hode: %s</string>
     <string name="content_description_chosen_body">Valgt kropp: %s</string>
     <string name="content_description_chosen_feet">Valgte føtter: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Velkommen!</string>
     <string name="homeroomEmptyMessage">Fagene dine vises her.</string>
     <string name="homeroomNoSubjects">Du har for øyeblikket ingen fag.</string>
-    <string name="settingsElementaryView">Grunnskolevisning</string>
     <string name="settingsElementaryViewSubtitle">Krever omstart av appen</string>
     <string name="gradesSelect">Velg</string>
     <string name="selectGradingPeriod">Velg vurderingsperiode</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Vurderingerer er ikke tilgjengelig</string>
     <string name="bottomBarHomeroom">Hjem</string>
 
+    <string name="settingsHomeroomView">Vis hjemmerom</string>
+    <string name="importantLinksTitle">Viktige lenker</string>
+    <string name="studentApplications">Elev-applikasjoner</string>
+    <string name="staffContactInfo">Kontaktinformasjon personale</string>
+    <string name="chooseACourse">Velg et fag</string>
+    <string name="webViewImportantLinksTitle">Viktige lenker</string>
+    <string name="staffRoleTeacher">Lærer</string>
+    <string name="staffRoleTeacherAssistant">Lærerassistent</string>
+    <string name="resourcesEmptyMessage">Ressusrene dine vises her.</string>
+    <string name="failedToLoadResources">Kunne ikke laste opp ressurser</string>
+    <string name="failedToRefreshResources">Kunne ikke oppdatere ressurser</string>
     <string name="open_alternate_view">Åpne en mer tilgjengelig alternativ visning</string>
 
     <string name="a11y_content_description_message_recipients">Mottakere</string>

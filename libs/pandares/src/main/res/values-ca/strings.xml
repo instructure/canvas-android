@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">No s\'ha trobat cap fitxer</string>
     <string name="searchFilesHint">Cerca fitxers</string>
     <string name="fileSearchInstructions">Introduïu un terme de cerca de tres o més caràcters</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Seleccionat: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Detalls de la tasca</string>
     <string name="submission_types">Tipus d\'entrega</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Cap triat: %s</string>
     <string name="content_description_chosen_body">Cos triat: %s</string>
     <string name="content_description_chosen_feet">Peus triats: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Us donem la benvinguda!</string>
     <string name="homeroomEmptyMessage">Les vostres matèries es mostren aquí.</string>
     <string name="homeroomNoSubjects">En aquest moment, no teniu cap matèria.</string>
-    <string name="settingsElementaryView">Vista elemental</string>
     <string name="settingsElementaryViewSubtitle">Heu de reiniciar l’aplicació.</string>
     <string name="gradesSelect">Selecciona</string>
     <string name="selectGradingPeriod">Selecciona el període de qualificació</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">No hi cap qualificació disponible</string>
     <string name="bottomBarHomeroom">Tutoria</string>
 
+    <string name="settingsHomeroomView">Vista de la tutoria.</string>
+    <string name="importantLinksTitle">Enllaços importants</string>
+    <string name="studentApplications">Sol·licituds dels estudiants</string>
+    <string name="staffContactInfo">Informació de contacte del personal</string>
+    <string name="chooseACourse">Tria un curs</string>
+    <string name="webViewImportantLinksTitle">Enllaços importants</string>
+    <string name="staffRoleTeacher">Professor</string>
+    <string name="staffRoleTeacherAssistant">Auxiliar de professor</string>
+    <string name="resourcesEmptyMessage">Els vostres recursos es mostren aquí.</string>
+    <string name="failedToLoadResources">No s\'han pogut carregar els recursos</string>
+    <string name="failedToRefreshResources">No s\'han pogut actualitzar els recursos</string>
     <string name="open_alternate_view">Obriu una visualització alternativa més accessible</string>
 
     <string name="a11y_content_description_message_recipients">Destinataris</string>

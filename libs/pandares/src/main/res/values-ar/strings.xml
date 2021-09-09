@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">لم يتم العثور على الملفات</string>
     <string name="searchFilesHint">البحث عن ملفات</string>
     <string name="fileSearchInstructions">أدخل مصطلح بحث يحتوي على ثلاثة أحرف أو أكثر</string>
@@ -35,7 +36,6 @@
     <string name="selectedListItem">المحدد: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">تفاصيل المهمة</string>
     <string name="submission_types">أنواع الإرسال</string>
@@ -1097,7 +1097,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">اختر الرأس: %s</string>
     <string name="content_description_chosen_body">اختر الجسم: %s</string>
     <string name="content_description_chosen_feet">اختر القدم: %s</string>
@@ -1238,7 +1237,6 @@
     <string name="homeroomEmptyTitle">مرحبًا!</string>
     <string name="homeroomEmptyMessage">تظهر الموضوعات هنا.</string>
     <string name="homeroomNoSubjects">ليس لديك موضوعات في الوقت الحالي.</string>
-    <string name="settingsElementaryView">طريقة عرض المدارس الابتدائية</string>
     <string name="settingsElementaryViewSubtitle">يتطلب إعادة تشغيل التطبيق</string>
     <string name="gradesSelect">تحديد</string>
     <string name="selectGradingPeriod">تحديد فترة التقييم</string>
@@ -1252,6 +1250,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">التقديرات غير متاحة</string>
     <string name="bottomBarHomeroom">جلسة التسجيل</string>
 
+    <string name="settingsHomeroomView">عرض جلسة التسجيل</string>
+    <string name="importantLinksTitle">الروابط الهامة</string>
+    <string name="studentApplications">تقديمات الطالب</string>
+    <string name="staffContactInfo">معلومات الاتصال الخاصة بالعاملين</string>
+    <string name="chooseACourse">اختر مساقًا</string>
+    <string name="webViewImportantLinksTitle">الروابط الهامة</string>
+    <string name="staffRoleTeacher">المعلم</string>
+    <string name="staffRoleTeacherAssistant">المعلم المساعد</string>
+    <string name="resourcesEmptyMessage">مواردك تظهر هنا.</string>
+    <string name="failedToLoadResources">فشل تحميل الموارد</string>
+    <string name="failedToRefreshResources">فشل تحديث الموارد</string>
     <string name="open_alternate_view">فتح طريقة عرض بديلة أكثر سهولة</string>
 
     <string name="a11y_content_description_message_recipients">المتلقون</string>

@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Kaore ngā kōnae e kitea</string>
     <string name="searchFilesHint">Rapu ngā kōnae</string>
     <string name="fileSearchInstructions">Whakauruhia he kupu rapu me te toru neke atu rānei o nga pūāhua</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Kua tīpakohia: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Taipitopito whakataunga</string>
     <string name="submission_types">Ngā momo tāpaetanga</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Ūpoko i tohua: %s</string>
     <string name="content_description_chosen_body">Tinana i tohua: %s</string>
     <string name="content_description_chosen_feet">Waewae i tohua: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Nau Mai!</string>
     <string name="homeroomEmptyMessage">Ka kitea ō marau i konei.</string>
     <string name="homeroomNoSubjects">Kaore koe e whiwhi marau i tēnei wā.</string>
-    <string name="settingsElementaryView">Tiro Tuatahi</string>
     <string name="settingsElementaryViewSubtitle">E hiahia taupanga timata</string>
     <string name="gradesSelect">Tīpakohia</string>
     <string name="selectGradingPeriod">Tīpakohia te Kōeke Wā</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Kāore ngā kōeke i te wātea</string>
     <string name="bottomBarHomeroom">Kainga rūma</string>
 
+    <string name="settingsHomeroomView">Kainga rūma Tiro</string>
+    <string name="importantLinksTitle">Ngā Hono Mea Nui</string>
+    <string name="studentApplications">Ākonga Tono</string>
+    <string name="staffContactInfo">Kaimahi Whakapā Pūrongo</string>
+    <string name="chooseACourse">Kōwhiri he Akoranga</string>
+    <string name="webViewImportantLinksTitle">Ngā Hono Mea Nui</string>
+    <string name="staffRoleTeacher">Kaiako</string>
+    <string name="staffRoleTeacherAssistant">Kaiako Kaiāwhina</string>
+    <string name="resourcesEmptyMessage">Ka kitea ō rauemi i konei.</string>
+    <string name="failedToLoadResources">I rahua te uta i ngā rauemi</string>
+    <string name="failedToRefreshResources">I rāhua te whakahou i ngā rauemi</string>
     <string name="open_alternate_view">Huaki he wāhanga whakauru ngāwari mo tētahi tiro atu</string>
 
     <string name="a11y_content_description_message_recipients">Ngā Kaiwhiwhi</string>

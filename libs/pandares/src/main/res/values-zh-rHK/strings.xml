@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">找不到檔案</string>
     <string name="searchFilesHint">搜尋檔案</string>
     <string name="fileSearchInstructions">輸入三個或更多字元的搜尋字詞</string>
@@ -31,7 +32,6 @@
     <string name="selectedListItem">已選擇：%s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">作業詳情</string>
     <string name="submission_types">提交類型</string>
@@ -1033,7 +1033,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">選擇的頁首：%s</string>
     <string name="content_description_chosen_body">選擇的正文：%s</string>
     <string name="content_description_chosen_feet">選擇的頁尾：%s</string>
@@ -1169,7 +1168,6 @@
     <string name="homeroomEmptyTitle">歡迎！</string>
     <string name="homeroomEmptyMessage">您的主題在此顯示。</string>
     <string name="homeroomNoSubjects">您目前沒有任何主題。</string>
-    <string name="settingsElementaryView">小學版檢視</string>
     <string name="settingsElementaryViewSubtitle">需要重新啟動應用程式</string>
     <string name="gradesSelect">選擇</string>
     <string name="selectGradingPeriod">選擇評分期</string>
@@ -1183,6 +1181,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">不提供成績</string>
     <string name="bottomBarHomeroom">主教室</string>
 
+    <string name="settingsHomeroomView">主教室檢視</string>
+    <string name="importantLinksTitle">重要連結</string>
+    <string name="studentApplications">學生應用程式</string>
+    <string name="staffContactInfo">員工聯絡資料</string>
+    <string name="chooseACourse">選擇一個課程</string>
+    <string name="webViewImportantLinksTitle">重要連結</string>
+    <string name="staffRoleTeacher">教師</string>
+    <string name="staffRoleTeacherAssistant">助教</string>
+    <string name="resourcesEmptyMessage">您的資源在此顯示。</string>
+    <string name="failedToLoadResources">無法載入資源</string>
+    <string name="failedToRefreshResources">無法重新整理資源</string>
     <string name="open_alternate_view">開啟更容易存取的替代視圖</string>
 
     <string name="a11y_content_description_message_recipients">收件人</string>

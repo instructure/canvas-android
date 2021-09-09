@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Heb ddod o hyd i unrhyw ffeiliau</string>
     <string name="searchFilesHint">Chwilio ffeiliau</string>
     <string name="fileSearchInstructions">Rhowch derm chwilio sy’n cynnwys tri nod neu fwy</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Wedi dewis: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Manylion Aseiniad</string>
     <string name="submission_types">Mathau o Gyflwyniadau</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Dewis pen: %s</string>
     <string name="content_description_chosen_body">Dewis corff: %s</string>
     <string name="content_description_chosen_feet">Dewis traed: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Croeso!</string>
     <string name="homeroomEmptyMessage">Mae eich pynciau’n ymddangos yma.</string>
     <string name="homeroomNoSubjects">Does gennych chi ddim pynciau ar hyn o bryd.</string>
-    <string name="settingsElementaryView">Gwedd Sylfaenol</string>
     <string name="settingsElementaryViewSubtitle">Mae angen ailddechrau’r ap</string>
     <string name="gradesSelect">Dewiswch</string>
     <string name="selectGradingPeriod">Dewis Cyfnod Graddio</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Graddau ddim ar gael</string>
     <string name="bottomBarHomeroom">Ystafell hafan</string>
 
+    <string name="settingsHomeroomView">Gwedd Homeroom</string>
+    <string name="importantLinksTitle">Dolenni Pwysig</string>
+    <string name="studentApplications">Ceisiadau Myfyriwr</string>
+    <string name="staffContactInfo">Manylion Cyswllt Staff</string>
+    <string name="chooseACourse">Dewis Cwrs</string>
+    <string name="webViewImportantLinksTitle">Dolenni Pwysig</string>
+    <string name="staffRoleTeacher">Athro</string>
+    <string name="staffRoleTeacherAssistant">Cynorthwyydd Dysgu</string>
+    <string name="resourcesEmptyMessage">Mae eich adnoddau’n ymddangos yma.</string>
+    <string name="failedToLoadResources">Wedi methu llwytho adnoddau</string>
+    <string name="failedToRefreshResources">Wedi methu adnewyddu’r adnoddau</string>
     <string name="open_alternate_view">Agor gwedd arall fwy hygyrch</string>
 
     <string name="a11y_content_description_message_recipients">Derbynwyr</string>

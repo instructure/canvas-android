@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Ingen filer fundet</string>
     <string name="searchFilesHint">Søg filer</string>
     <string name="fileSearchInstructions">Indtast et søgeord med tre eller flere tegn</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Valgt: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Opgaveoplysninger</string>
     <string name="submission_types">Afleveringsformer</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Valgt hoved: %s</string>
     <string name="content_description_chosen_body">Valgt krop: %s</string>
     <string name="content_description_chosen_feet">Valgte fødder: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Velkommen!</string>
     <string name="homeroomEmptyMessage">Dine emner vises her.</string>
     <string name="homeroomNoSubjects">Du har i øjeblikket ingen emner.</string>
-    <string name="settingsElementaryView">Folkeskole-visning</string>
     <string name="settingsElementaryViewSubtitle">Kræver genstart af app</string>
     <string name="gradesSelect">Vælg</string>
     <string name="selectGradingPeriod">Vælg karakterperiode</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Karakterer ikke tilgængelige</string>
     <string name="bottomBarHomeroom">Klasselokale</string>
 
+    <string name="settingsHomeroomView">Klasseværelsevisning</string>
+    <string name="importantLinksTitle">Vigtige links</string>
+    <string name="studentApplications">Applikationer for studerende</string>
+    <string name="staffContactInfo">Kontaktoplysninger for personale</string>
+    <string name="chooseACourse">Vælg et fag</string>
+    <string name="webViewImportantLinksTitle">Vigtige links</string>
+    <string name="staffRoleTeacher">Lærer</string>
+    <string name="staffRoleTeacherAssistant">Undervisningsassistent</string>
+    <string name="resourcesEmptyMessage">Dine ressourcer vises her.</string>
+    <string name="failedToLoadResources">Kunne ikke indlæse ressourcer</string>
+    <string name="failedToRefreshResources">Kunne ikke opdatere ressourcer</string>
     <string name="open_alternate_view">Åbn en mere tilgængelig alternativ visning</string>
 
     <string name="a11y_content_description_message_recipients">Modtagere</string>
