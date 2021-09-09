@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Geen bestanden gevonden</string>
     <string name="searchFilesHint">Bestanden zoeken</string>
     <string name="fileSearchInstructions">Voer een zoekterm van drie of meer tekens in.</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Geselecteerd: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Opdrachtdetails</string>
     <string name="submission_types">Inleveringstypen</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Gekozen kop: %s</string>
     <string name="content_description_chosen_body">Gekozen hoofdtekst: %s</string>
     <string name="content_description_chosen_feet">Gekozen voettekst: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Welkom!</string>
     <string name="homeroomEmptyMessage">Je vakken worden hier getoond.</string>
     <string name="homeroomNoSubjects">Je hebt momenteel geen vakken.</string>
-    <string name="settingsElementaryView">Elementaire weergave</string>
     <string name="settingsElementaryViewSubtitle">Vereist herstarten van app</string>
     <string name="gradesSelect">Selecteren</string>
     <string name="selectGradingPeriod">Beoordelingsperiode selecteren</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Cijfers niet beschikbaar</string>
     <string name="bottomBarHomeroom">Klas</string>
 
+    <string name="settingsHomeroomView">Huisklasweergave</string>
+    <string name="importantLinksTitle">Belangrijke links</string>
+    <string name="studentApplications">Cursistapplicaties</string>
+    <string name="staffContactInfo">Contactgegevens van medewerkers</string>
+    <string name="chooseACourse">Een cursus kiezen</string>
+    <string name="webViewImportantLinksTitle">Belangrijke links</string>
+    <string name="staffRoleTeacher">Docent</string>
+    <string name="staffRoleTeacherAssistant">Onderwijsassistent</string>
+    <string name="resourcesEmptyMessage">Je bronnen worden hier getoond.</string>
+    <string name="failedToLoadResources">Laden van bronnen mislukt</string>
+    <string name="failedToRefreshResources">Verversen van bronnen mislukt</string>
     <string name="open_alternate_view">Open een meer toegankelijke alternatieve weergave</string>
 
     <string name="a11y_content_description_message_recipients">Geadresseerden</string>

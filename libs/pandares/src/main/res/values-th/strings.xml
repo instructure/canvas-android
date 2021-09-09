@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">ไม่พบไฟล์</string>
     <string name="searchFilesHint">ค้นหาไฟล์</string>
     <string name="fileSearchInstructions">กรอกคำค้นหาความยาวสามตัวอักษรขึ้นไป</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">ที่เลือก: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">รายละเอียดภารกิจ</string>
     <string name="submission_types">ประเภทการจัดส่ง</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">หัวที่เลือก: %s</string>
     <string name="content_description_chosen_body">ลำดับที่เลือก: %s</string>
     <string name="content_description_chosen_feet">เท้าที่เลือก: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">ยินดีต้อนรับ!</string>
     <string name="homeroomEmptyMessage">วิชาของคุณจะปรากฏขึ้นที่นี่</string>
     <string name="homeroomNoSubjects">ปัจจุบันคุณไม่มีวิชาใด ๆ</string>
-    <string name="settingsElementaryView">มุมมองระดับประถมศึกษา</string>
     <string name="settingsElementaryViewSubtitle">ต้องรีสตาร์ทแอพ</string>
     <string name="gradesSelect">เลือก</string>
     <string name="selectGradingPeriod">เลือกระยะเวลาการให้เกรด</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">ไม่มีเกรด</string>
     <string name="bottomBarHomeroom">โฮมรูม</string>
 
+    <string name="settingsHomeroomView">มุมมองโฮมรูม</string>
+    <string name="importantLinksTitle">ลิงค์ที่สำคัญ</string>
+    <string name="studentApplications">แอพพลิเคชั่นของผู้เรียน</string>
+    <string name="staffContactInfo">ข้อมูลติดต่อบุคลากร</string>
+    <string name="chooseACourse">เลือกบทเรียน</string>
+    <string name="webViewImportantLinksTitle">ลิงค์ที่สำคัญ</string>
+    <string name="staffRoleTeacher">ผู้สอน</string>
+    <string name="staffRoleTeacherAssistant">ผู้ช่วยสอน</string>
+    <string name="resourcesEmptyMessage">ทรัพยากรของคุณจะปรากฏขึ้นที่นี่</string>
+    <string name="failedToLoadResources">ไม่สามารถโหลดทรัพยากรได้</string>
+    <string name="failedToRefreshResources">ไม่สามารถรีเฟรชทรัพยากรได้</string>
     <string name="open_alternate_view">เปิดมุมมองเผื่อเลือกที่สามารถเข้าถึงได้มากกว่า</string>
 
     <string name="a11y_content_description_message_recipients">ผู้รับ</string>

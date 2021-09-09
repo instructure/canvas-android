@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Inga filer hittades</string>
     <string name="searchFilesHint">Sök i filer</string>
     <string name="fileSearchInstructions">Ange en sökterm med tre eller fler tecken</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Valda: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Uppgiftsdetaljer</string>
     <string name="submission_types">Inlämningstyper</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Vald rubrik: %s</string>
     <string name="content_description_chosen_body">Vald brödtext: %s</string>
     <string name="content_description_chosen_feet">Vald fotnot: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Välkommen!</string>
     <string name="homeroomEmptyMessage">Dina ämnen visas här.</string>
     <string name="homeroomNoSubjects">Du har inga ämnen för närvarande.</string>
-    <string name="settingsElementaryView">Elementary-vy</string>
     <string name="settingsElementaryViewSubtitle">Kräver omstart av appen</string>
     <string name="gradesSelect">Välj</string>
     <string name="selectGradingPeriod">Välj omdömesperiod</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Omdömen är inte tillgängliga</string>
     <string name="bottomBarHomeroom">Fjärrundervisningsrum</string>
 
+    <string name="settingsHomeroomView">Vy för fjärrundervisningsrum</string>
+    <string name="importantLinksTitle">Viktiga länkar</string>
+    <string name="studentApplications">Studentansökningar</string>
+    <string name="staffContactInfo">Kontaktuppgifter för personal</string>
+    <string name="chooseACourse">Välj en kurs</string>
+    <string name="webViewImportantLinksTitle">Viktiga länkar</string>
+    <string name="staffRoleTeacher">Lärare</string>
+    <string name="staffRoleTeacherAssistant">Lärarassistent</string>
+    <string name="resourcesEmptyMessage">Dina resurser visas här.</string>
+    <string name="failedToLoadResources">Det gick inte att läsa in resurser</string>
+    <string name="failedToRefreshResources">Det gick inte att uppdatera resurser</string>
     <string name="open_alternate_view">Öppna en mer tillgänglig alternativ vy</string>
 
     <string name="a11y_content_description_message_recipients">Mottagare</string>

@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Aucun fichier trouvé</string>
     <string name="searchFilesHint">Chercher des fichiers</string>
     <string name="fileSearchInstructions">Indiquez un élément à rechercher comprenant au moins trois caractères</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Sélectionné : %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Détails de la tâche</string>
     <string name="submission_types">Types d’envoi</string>
@@ -56,7 +56,7 @@
     <string name="noAttemptsLeft">Aucune tentative restante</string>
     <string name="resubmitAssignment">Envoyer la tâche de nouveau</string>
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">Le téléversement d\'un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
     <string name="submissionUploadByteProgress">%1$s sur %2$s</string>
@@ -72,7 +72,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URL utilisant http://</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Saisissez un URL ici pour votre envoi</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer le son</string>
     <string name="recordVideo">Enregistrer la vidéo</string>
     <string name="a11y_textSubmissionEditor">Éditeur d’envoi de texte</string>
@@ -930,7 +930,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Cette tâche n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Cette tâche n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Entête choisi : %s</string>
     <string name="content_description_chosen_body">Corps choisi : %s</string>
     <string name="content_description_chosen_feet">Pied de page choisi : %s</string>
@@ -1094,8 +1093,8 @@
     <string name="closeRecordingView">Fermer la vue d’enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur s\'est produite lors de la tentative de lecture.</string>
-    <string name="errorSubmittingMediaComment">Une erreur s\'est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
+    <string name="errorShowingVideoReplay">Une erreur s&apos;est produite lors de la tentative de lecture.</string>
+    <string name="errorSubmittingMediaComment">Une erreur s&apos;est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>
     <string name="addAudioComment">Ajouter un commentaire audio</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Bienvenue!</string>
     <string name="homeroomEmptyMessage">Vos sujets apparaissent ici.</string>
     <string name="homeroomNoSubjects">Vous n’avez actuellement aucun sujet.</string>
-    <string name="settingsElementaryView">Vue élémentaire</string>
     <string name="settingsElementaryViewSubtitle">Redémarrage de l\'application requis</string>
     <string name="gradesSelect">Sélectionner</string>
     <string name="selectGradingPeriod">Choisir la période de notation</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Notes non disponibles</string>
     <string name="bottomBarHomeroom">Classe titulaire</string>
 
+    <string name="settingsHomeroomView">Vue de la salle d’accueil</string>
+    <string name="importantLinksTitle">Liens importants</string>
+    <string name="studentApplications">Dossiers de l’étudiant</string>
+    <string name="staffContactInfo">Coordonnées du personnel</string>
+    <string name="chooseACourse">Choisir un cours</string>
+    <string name="webViewImportantLinksTitle">Liens importants</string>
+    <string name="staffRoleTeacher">Enseignant</string>
+    <string name="staffRoleTeacherAssistant">Assistants d’enseignement</string>
+    <string name="resourcesEmptyMessage">Vos ressources apparaissent ici.</string>
+    <string name="failedToLoadResources">Échec lors du chargement de ressource</string>
+    <string name="failedToRefreshResources">Échec lors de l’actualisation des ressources</string>
     <string name="open_alternate_view">Ouvrir une vue alternative plus accessible</string>
 
     <string name="a11y_content_description_message_recipients">Destinataires</string>

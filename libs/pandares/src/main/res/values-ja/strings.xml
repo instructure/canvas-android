@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">ファイルが見つかりません</string>
     <string name="searchFilesHint">ファイルを検索する</string>
     <string name="fileSearchInstructions">3文字以上の検索語を入力してください</string>
@@ -31,7 +32,6 @@
     <string name="selectedListItem">選択されたもの：%s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">課題の詳細</string>
     <string name="submission_types">提出タイプ</string>
@@ -1033,7 +1033,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">選択した頭部：%s</string>
     <string name="content_description_chosen_body">選択したボディ：%s</string>
     <string name="content_description_chosen_feet">選択した足：%s</string>
@@ -1169,7 +1168,6 @@
     <string name="homeroomEmptyTitle">どういたしまして！</string>
     <string name="homeroomEmptyMessage">あなたの科目はここに表示されます。</string>
     <string name="homeroomNoSubjects">現在、科目はありません。</string>
-    <string name="settingsElementaryView">エレメンタリービュー</string>
     <string name="settingsElementaryViewSubtitle">アプリの再起動が必要</string>
     <string name="gradesSelect">選択</string>
     <string name="selectGradingPeriod">採点期間を選択</string>
@@ -1183,6 +1181,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">利用可能な成績なし</string>
     <string name="bottomBarHomeroom">ホームルーム</string>
 
+    <string name="settingsHomeroomView">ホームルームビュー</string>
+    <string name="importantLinksTitle">重要なリンク</string>
+    <string name="studentApplications">生徒アプリケーション</string>
+    <string name="staffContactInfo">スタッフの連絡先情報</string>
+    <string name="chooseACourse">コースを選択する</string>
+    <string name="webViewImportantLinksTitle">重要なリンク</string>
+    <string name="staffRoleTeacher">講師</string>
+    <string name="staffRoleTeacherAssistant">講師の助手</string>
+    <string name="resourcesEmptyMessage">あなたリソースはここに表示されます。</string>
+    <string name="failedToLoadResources">リソース読み込みに失敗</string>
+    <string name="failedToRefreshResources">リソース更新に失敗</string>
     <string name="open_alternate_view">よりアクセスしやすい代替ビューを開く</string>
 
     <string name="a11y_content_description_message_recipients">受信者</string>

@@ -464,6 +464,7 @@
     <string name="schedule_error_message">لا يمكن إحضار جدولك</string>
     <string name="schedule_todo_title">قائمة المهام</string>
     <plurals name="schedule_points">
+        <item quantity="zero">%s نقطة</item>
         <item quantity="zero">%s نقاط</item>
         <item quantity="one">%s نقطة</item>
         <item quantity="two">%s نقاط</item>
