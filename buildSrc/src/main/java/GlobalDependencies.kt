@@ -12,7 +12,6 @@ object Versions {
     const val BUILD_SCAN = "1.16"
 
     /* Testing */
-    const val ATSL_ORCHESTRATOR = "1.1.0-beta01"
     const val JACOCO = "0.8.3"
     const val JUNIT = "4.12"
     const val ROBOLECTRIC = "4.3.1"
@@ -45,6 +44,7 @@ object Versions {
     const val LIFECYCLE = "2.3.0"
     const val FRAGMENT_KTX = "1.3.1"
     const val WORK_MANAGER = "2.5.0"
+    const val GLIDE_VERSION = "4.9.0"
 }
 
 object Libs {
@@ -77,7 +77,7 @@ object Libs {
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
 
-    /* Play Services */
+    /* Google Dependencies */
     const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics:${Versions.FIREBASE_ANALYTICS}"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics:${Versions.CRASHLYTICS}"
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging:20.1.7"
@@ -86,8 +86,10 @@ object Libs {
     const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:16.0.1"
     const val FIREBASE_CORE = "com.google.firebase:firebase-core:17.2.0"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config:${Versions.FIREBASE_CONFIG}"
+    const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk:17.2.1"
     const val PLAY_CORE = "com.google.android.play:core:${Versions.PLAY_CORE}"
     const val PLAY_CORE_KTX = "com.google.android.play:core-ktx:${Versions.PLAY_CORE_KTX}"
+    const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"
@@ -101,6 +103,8 @@ object Libs {
     const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.1.0"
     const val MOCKK = "io.mockk:mockk:1.10.0"
     const val THREETEN_BP = "org.threeten:threetenbp:1.3.8"
+    const val UI_AUTOMATOR = "com.android.support.test.uiautomator:uiautomator-v18:2.1.3"
+    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.3.0"
 
     /* Qr Code (zxing) */
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.1.0"
@@ -119,11 +123,22 @@ object Libs {
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
     const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT_KTX}"
 
-    /* Other */
+    /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
     const val EXOPLAYER = "com.github.google.ExoPlayer:exoplayer:r2.9.6"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:${Versions.ANDROID_SVG}"
+    const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"
+    const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE_VERSION}"
+    const val GLIDE_OKHTTP = "com.github.bumptech.glide:okhttp3-integration:${Versions.GLIDE_VERSION}"
+    const val GLIDE_COMPILER = "com.github.bumptech.glide:compiler:${Versions.GLIDE_VERSION}"
+    const val SCALE_IMAGE_VIEW = "com.davemorrissey.labs:subsampling-scale-image-view:3.9.0"
+
+    /* Other */
+    const val LOTTIE = "com.airbnb.android:lottie:3.4.1"
+    const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.4.0"
+    const val SQLDELIGHT = "com.squareup.sqldelight:android-driver:1.4.3"
+    const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
 }
 
 object Plugins {

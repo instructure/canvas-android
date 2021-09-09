@@ -203,8 +203,6 @@ dependencies {
     implementation project(path: ':annotations')
     implementation project(path: ':interactions')
 
-
-
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
 
@@ -222,11 +220,6 @@ dependencies {
         transitive = true
     }
 
-    /* OkHttp Idling Resource */
-    implementation('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
-        exclude module: 'espresso-idling-resource'
-    }
-
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
@@ -241,19 +234,20 @@ dependencies {
     androidTestImplementation Libs.JUNIT
     androidTestImplementation project(path: ':panda_annotations')
 
-    androidTestUtil('androidx.test:orchestrator:1.3.0') {
+    androidTestUtil(Libs.TEST_ORCHESTRATOR) {
         exclude module: 'support-annotations'
     }
 
     /* Sliding Panel */
-    implementation 'com.sothree.slidinguppanel:library:3.3.1'
+    implementation Libs.SLIDING_UP_PANEL
 
     /* Media handling */
     implementation Libs.ANDROID_SVG
     implementation Libs.PHOTO_VIEW
 
     /* Flexbox Layout */
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation Libs.FLEXBOX_LAYOUT
+    // TODO Used only in one place, might be goog idea to remove
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1'
 
     /* Support libs */
@@ -285,7 +279,7 @@ dependencies {
     androidTestImplementation Libs.HILT_TESTING
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
 
-    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
+    androidTestImplementation Libs.UI_AUTOMATOR
 }
 
 apply plugin: 'com.google.gms.google-services'
