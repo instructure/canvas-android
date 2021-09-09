@@ -45,6 +45,8 @@ object Versions {
     const val FRAGMENT_KTX = "1.3.1"
     const val WORK_MANAGER = "2.5.0"
     const val GLIDE_VERSION = "4.9.0"
+    const val RETROFIT = "2.5.0"
+    const val OKHTTP = "3.13.1"
 }
 
 object Libs {
@@ -134,11 +136,25 @@ object Libs {
     const val GLIDE_COMPILER = "com.github.bumptech.glide:compiler:${Versions.GLIDE_VERSION}"
     const val SCALE_IMAGE_VIEW = "com.davemorrissey.labs:subsampling-scale-image-view:3.9.0"
 
+    /* Network */
+    const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
+    const val GSON = "com.google.code.gson:gson:2.8.5"
+    const val RETROFIT_GSON_ADAPTER = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
+    const val RETROFIT_XML_ADAPTER = "com.squareup.retrofit2:converter-simplexml:${Versions.RETROFIT}"
+    const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
+    const val OKHTTP_LOGGING = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
+    const val OKHTTP_URL_CONNECTION = "com.squareup.okhttp3:okhttp-urlconnection:${Versions.OKHTTP}"
+    const val OKIO = "com.squareup.okio:okio:1.17.3"
+
     /* Other */
     const val LOTTIE = "com.airbnb.android:lottie:3.4.1"
     const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.4.0"
     const val SQLDELIGHT = "com.squareup.sqldelight:android-driver:1.4.3"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
+    const val EVENTBUS = "org.greenrobot:eventbus:3.1.1"
+    const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.1.2"
+    const val PROCESS_PHOENIX = "com.jakewharton:process-phoenix:2.0.0"
+    const val PAPERDB = "io.github.pilgr:paperdb:2.7.1"
 }
 
 object Plugins {
