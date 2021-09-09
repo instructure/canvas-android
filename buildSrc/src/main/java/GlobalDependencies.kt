@@ -155,6 +155,9 @@ object Libs {
     const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.1.2"
     const val PROCESS_PHOENIX = "com.jakewharton:process-phoenix:2.0.0"
     const val PAPERDB = "io.github.pilgr:paperdb:2.7.1"
+    const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
+    const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.6"
+    const val WONDERKILN_CAMERA_KIT = "com.github.CameraKit:camerakit-android:v0.13.4"
 }
 
 object Plugins {

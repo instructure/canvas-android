@@ -247,8 +247,7 @@ dependencies {
 
     /* Flexbox Layout */
     implementation Libs.FLEXBOX_LAYOUT
-    // TODO Used only in one place, might be goog idea to remove
-    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1'
+    implementation Libs.KEYBOARD_VISIBILITY_LISTENER
 
     /* Support libs */
     implementation Libs.ANDROIDX_APPCOMPAT

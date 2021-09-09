@@ -293,8 +293,7 @@ dependencies {
     implementation Libs.SLIDING_UP_PANEL
 
     /* Apache Commons */
-    // TODO We only use one function from this library in one place, maybe it can be replaced.
-    implementation 'org.apache.commons:commons-text:1.6'
+    implementation Libs.APACHE_COMMONS_TEXT
 
     /* Support dependencies */
     implementation Libs.ANDROIDX_ANNOTATION
