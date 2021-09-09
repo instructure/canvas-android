@@ -19,8 +19,7 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.4"
 
     /* Kotlin */
-    const val KOTLIN = "1.4.10"
-    const val KOTLIN_ANKO = "0.10.4"
+    const val KOTLIN = "1.5.30"
     const val KOTLIN_COROUTINES = "1.3.9"
 
     /* Google, Play Services */
