@@ -22,7 +22,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandautils.databinding.FragmentScheduleBinding
+import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 import com.instructure.pandautils.utils.StringArg
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule.*
@@ -40,11 +43,21 @@ class ScheduleFragment : Fragment() {
 
     private var startDateString by StringArg()
 
+    private var recyclerView: RecyclerView? = null
+
+    private val onScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            checkFirstPosition()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentScheduleBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.adapter = adapter
+        recyclerView = binding.scheduleRecyclerView
 
         viewModel.getDataForDate(startDateString)
 
@@ -55,6 +68,16 @@ class ScheduleFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        recyclerView?.addOnScrollListener(onScrollListener)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        recyclerView?.removeOnScrollListener(onScrollListener)
     }
 
     private fun handleAction(action: ScheduleAction) {
@@ -72,9 +95,38 @@ class ScheduleFragment : Fragment() {
                 scheduleRouter.openDiscussion(action.canvasContext, action.id, action.title)
             }
             is ScheduleAction.JumpToToday -> {
-                scheduleRecyclerView.scrollToPosition(action.position)
+                jumpToToday()
             }
         }
+    }
+
+    fun jumpToToday() {
+        if (recyclerView?.layoutManager is LinearLayoutManager) {
+            (recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+                viewModel.todayPosition,
+                0
+            )
+        }
+    }
+
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        if (menuVisible) {
+            checkFirstPosition()
+        }
+        super.setMenuVisibility(menuVisible)
+    }
+
+    fun checkFirstPosition() {
+        val firstItemPosition =
+            (scheduleRecyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+        val todayRange = viewModel.getTodayRange()
+        if (todayRange != null) {
+            toggleJumpToTodayButton(firstItemPosition !in todayRange)
+        }
+    }
+
+    private fun toggleJumpToTodayButton(visible: Boolean) {
+        (requireParentFragment() as SchedulePagerFragment).setTodayButtonVisibility(visible)
     }
 
     companion object {

@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Engar skrár fundust</string>
     <string name="searchFilesHint">Leita í skrám</string>
     <string name="fileSearchInstructions">Skráðu leitarorð sem er þrír stafir eða lengra</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Valið: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Upplýsingar um verkefni</string>
     <string name="submission_types">Tegundir skila</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Valinn haus: %s</string>
     <string name="content_description_chosen_body">Valið meginmál: %s</string>
     <string name="content_description_chosen_feet">Valinn fótur: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Velkomin(n)!</string>
     <string name="homeroomEmptyMessage">Efni þitt sést hér.</string>
     <string name="homeroomNoSubjects">Þú hefur engin efni eins og er.</string>
-    <string name="settingsElementaryView">Grunnsýn</string>
     <string name="settingsElementaryViewSubtitle">Krefst endurræsingar á forritinu</string>
     <string name="gradesSelect">Velja</string>
     <string name="selectGradingPeriod">Velja einkunnatímabil</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Einkunnir ekki í boði</string>
     <string name="bottomBarHomeroom">Námssalur</string>
 
+    <string name="settingsHomeroomView">Yfirlit yfir námssal</string>
+    <string name="importantLinksTitle">Mikilvægir tenglar</string>
+    <string name="studentApplications">Forrit nemenda</string>
+    <string name="staffContactInfo">Samskiptaupplýsingar starfsfólks</string>
+    <string name="chooseACourse">Velja námskeið</string>
+    <string name="webViewImportantLinksTitle">Mikilvægir tenglar</string>
+    <string name="staffRoleTeacher">Kennari</string>
+    <string name="staffRoleTeacherAssistant">Aðstoðarkennari</string>
+    <string name="resourcesEmptyMessage">Auðlindir þínar sjást hér.</string>
+    <string name="failedToLoadResources">Mistókst að hlaða auðlindum</string>
+    <string name="failedToRefreshResources">Mistókst að endurglæða auðlindir</string>
     <string name="open_alternate_view">Opnið annað auðveldara útlit</string>
 
     <string name="a11y_content_description_message_recipients">Viðtakendur</string>

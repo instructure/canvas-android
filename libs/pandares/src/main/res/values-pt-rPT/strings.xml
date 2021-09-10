@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Nenhum ficheiro encontrado</string>
     <string name="searchFilesHint">Pesquisar ficheiros</string>
     <string name="fileSearchInstructions">Digite um termo de pesquisa com três ou mais caracteres</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Selecionado: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Detalhes da tarefa</string>
     <string name="submission_types">Tipos de submissão</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Cabeça escolhida: %s</string>
     <string name="content_description_chosen_body">Corpo escolhido: %s</string>
     <string name="content_description_chosen_feet">Pé escolhido: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Bem-vindo!</string>
     <string name="homeroomEmptyMessage">Os seus assuntos aparecem aqui.</string>
     <string name="homeroomNoSubjects">Atualmente, não tem assuntos.</string>
-    <string name="settingsElementaryView">Vista Elementar</string>
     <string name="settingsElementaryViewSubtitle">Requer reinicialização da aplicação</string>
     <string name="gradesSelect">Selecionar</string>
     <string name="selectGradingPeriod">Selecionar Período de classificação</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Classificações não disponíveis</string>
     <string name="bottomBarHomeroom">Casa de família</string>
 
+    <string name="settingsHomeroomView">Exibição da sala de aula</string>
+    <string name="importantLinksTitle">Ligações importantes</string>
+    <string name="studentApplications">Aplicações para alunos</string>
+    <string name="staffContactInfo">Informações de contato do pessoal</string>
+    <string name="chooseACourse">Escolha uma Disciplina</string>
+    <string name="webViewImportantLinksTitle">Ligações importantes</string>
+    <string name="staffRoleTeacher">Professor</string>
+    <string name="staffRoleTeacherAssistant">Assistente de ensino</string>
+    <string name="resourcesEmptyMessage">Os seus recursos aparecem aqui.</string>
+    <string name="failedToLoadResources">Falha no carregamento de recursos</string>
+    <string name="failedToRefreshResources">Falha na actualização de recursos</string>
     <string name="open_alternate_view">Abrir uma vista alternativa mais acessível</string>
 
     <string name="a11y_content_description_message_recipients">Destinatários</string>

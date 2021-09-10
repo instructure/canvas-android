@@ -44,6 +44,7 @@
             android:layout_weight="1"
             android:background="?android:selectableItemBackground"
             android:clickable="@{itemViewModel.data.openable}"
+            android:importantForAccessibility="yes"
             android:minHeight="80dp"
             android:onClick="@{() -> itemViewModel.onHeaderClick.invoke()}"
             app:layout_constraintEnd_toStartOf="@+id/plannerItems">
@@ -53,6 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:importantForAccessibility="no"
                 android:lineSpacingExtra="2sp"
                 android:paddingStart="8dp"
                 android:paddingTop="4dp"
@@ -74,6 +76,7 @@
                 android:layout_marginStart="1.5dp"
                 android:layout_marginBottom="1.5dp"
                 android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{itemViewModel.data.imageUrl}"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -25,7 +25,6 @@ interface Navigation {
     val currentFragment: Fragment?
 
     fun popCurrentFragment()
-    fun updateCalendarStartDay()
     fun addBookmark()
     fun canBookmark(): Boolean
 

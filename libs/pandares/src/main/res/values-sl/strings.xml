@@ -1183,7 +1183,6 @@
     <string name="homeroomEmptyTitle">Dobrodošli.</string>
     <string name="homeroomEmptyMessage">Vaši predmeti se prikažejo tukaj.</string>
     <string name="homeroomNoSubjects">Trenutno nimate premetov.</string>
-    <string name="settingsElementaryView">Osnovni pogled</string>
     <string name="settingsElementaryViewSubtitle">Zahteva ponovni zagon aplikacije</string>
     <string name="gradesSelect">Izberi</string>
     <string name="selectGradingPeriod">Izberi ocenjevalno obdobje</string>
@@ -1196,6 +1195,17 @@
     <string name="a11y_gradingPeriodSelectorClickDescription">Sprememba ocenjevalnega obdobja</string>
     <string name="a11y_gradesNotAvailableContentDescription">Ocene niso na voljo</string>
     <string name="bottomBarHomeroom">Matični razred</string>
+    <string name="settingsHomeroomView">Pogled matičnega razreda</string>
+    <string name="importantLinksTitle">Pomembne povezave</string>
+    <string name="studentApplications">Vloge študentov</string>
+    <string name="staffContactInfo">Kontaktni podatki osebja</string>
+    <string name="chooseACourse">Izberite predmet</string>
+    <string name="webViewImportantLinksTitle">Pomembne povezave</string>
+    <string name="staffRoleTeacher">Izvajalec</string>
+    <string name="staffRoleTeacherAssistant">Demonstrator</string>
+    <string name="resourcesEmptyMessage">Tukaj se prikažejo vaši viri.</string>
+    <string name="failedToLoadResources">Nalaganje virov ni uspelo</string>
+    <string name="failedToRefreshResources">Osveževanje virov ni uspelo</string>
 
     <string name="open_alternate_view">Odpri dostopnejši alternativni pogled</string>
 

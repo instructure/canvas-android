@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Yo pa Jwenn Okenn Fichye</string>
     <string name="searchFilesHint">Rechèch fichye</string>
     <string name="fileSearchInstructions">Antre yon tèm rechèch ki gen pou pi piti twa karaktè</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Seleksyone: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Detay Sesyon</string>
     <string name="submission_types">Tip Soumisyon</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Antèt chwazi: %s</string>
     <string name="content_description_chosen_body">Kò chwazi: %s</string>
     <string name="content_description_chosen_feet">Pye chwazi: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Bienveni!</string>
     <string name="homeroomEmptyMessage">Matyè ou yo afiche la a.</string>
     <string name="homeroomNoSubjects">Pou kounye a ou pa gen matyè.</string>
-    <string name="settingsElementaryView">Afichaj Elemantè</string>
     <string name="settingsElementaryViewSubtitle">App la bezwen redemare</string>
     <string name="gradesSelect">Seleksyone</string>
     <string name="selectGradingPeriod">Seleksyone Peryòd Klasman</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Nòt pa disponib</string>
     <string name="bottomBarHomeroom">Sal kou</string>
 
+    <string name="settingsHomeroomView">Apèsi Sal la</string>
+    <string name="importantLinksTitle">Lyen Enpòtan</string>
+    <string name="studentApplications">Aplikasyon Elèv</string>
+    <string name="staffContactInfo">Kontakte Anplwaye</string>
+    <string name="chooseACourse">Chwazi yon Kou</string>
+    <string name="webViewImportantLinksTitle">Lyen Enpòtan</string>
+    <string name="staffRoleTeacher">Pwofesè</string>
+    <string name="staffRoleTeacherAssistant">Asistan Pwofesè</string>
+    <string name="resourcesEmptyMessage">Resous ou yo ap afiche la a.</string>
+    <string name="failedToLoadResources">Enposib pou chaje resous yo</string>
+    <string name="failedToRefreshResources">Enposib pou aktyalize resous yo</string>
     <string name="open_alternate_view">Ouvri yon lòt afichaj ki pi aksesib</string>
 
     <string name="a11y_content_description_message_recipients">Destinatè</string>

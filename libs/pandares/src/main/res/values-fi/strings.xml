@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Tiedostoja ei löytynyt</string>
     <string name="searchFilesHint">Tiedostojen etsiminen</string>
     <string name="fileSearchInstructions">Syötä hakutermi, jossa on vähintään kolme merkkiä</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Valittu: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Tehtävän tiedot</string>
     <string name="submission_types">Lähetystyypit</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Valittu pää: %s</string>
     <string name="content_description_chosen_body">Valittu keho: %s</string>
     <string name="content_description_chosen_feet">Valitut jalat: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Tervetuloa!</string>
     <string name="homeroomEmptyMessage">Aiheesi näkyvät täällä.</string>
     <string name="homeroomNoSubjects">Sinulla ei tällä hetkellä ole aiheita.</string>
-    <string name="settingsElementaryView">Elementary-näkymä</string>
     <string name="settingsElementaryViewSubtitle">Vaatii sovelluksen uudelleenkäynnistyksen</string>
     <string name="gradesSelect">Valitse</string>
     <string name="selectGradingPeriod">Valitse arvosanojen antojakso</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Arvosanat eivät ole käytettävissä</string>
     <string name="bottomBarHomeroom">Homeroom</string>
 
+    <string name="settingsHomeroomView">Homeroom-näkymä</string>
+    <string name="importantLinksTitle">Tärkeitä linkkejä</string>
+    <string name="studentApplications">Opiskeluhakemukset</string>
+    <string name="staffContactInfo">Henkilökunnan yhteistiedot</string>
+    <string name="chooseACourse">Valitse kurssi</string>
+    <string name="webViewImportantLinksTitle">Tärkeitä linkkejä</string>
+    <string name="staffRoleTeacher">Opettaja</string>
+    <string name="staffRoleTeacherAssistant">Apuopettaja</string>
+    <string name="resourcesEmptyMessage">Resurssisi näkyvät täällä.</string>
+    <string name="failedToLoadResources">Resurssien lataus epäonnistui</string>
+    <string name="failedToRefreshResources">Resurssien päivitys epäonnistui</string>
     <string name="open_alternate_view">Avaa lähestyttävämpi vaihtoehtoinen näkymä</string>
 
     <string name="a11y_content_description_message_recipients">Vastaanottajat</string>

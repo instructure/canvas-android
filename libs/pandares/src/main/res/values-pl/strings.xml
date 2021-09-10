@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Nie odnaleziono żadnych plików</string>
     <string name="searchFilesHint">Wyszukaj pliki</string>
     <string name="fileSearchInstructions">Wprowadź szukany termin zawierający co najmniej trzy znaki</string>
@@ -34,7 +35,6 @@
     <string name="selectedListItem">Wybrano: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Szczegóły zadania</string>
     <string name="submission_types">Typy przesłanych materiałów</string>
@@ -1072,7 +1072,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Wybrana głowa: %s</string>
     <string name="content_description_chosen_body">Wybrany tułów: %s</string>
     <string name="content_description_chosen_feet">Wybrane stopy: %s</string>
@@ -1211,7 +1210,6 @@
     <string name="homeroomEmptyTitle">Witamy!</string>
     <string name="homeroomEmptyMessage">Twoje tematy pojawią się tutaj.</string>
     <string name="homeroomNoSubjects">Nie masz obecnie żadnych tematów.</string>
-    <string name="settingsElementaryView">Widok podstawowy</string>
     <string name="settingsElementaryViewSubtitle">Wymaga ponownego uruchomienia aplikacji</string>
     <string name="gradesSelect">Wybierz</string>
     <string name="selectGradingPeriod">Wybierz okres oceniania</string>
@@ -1225,6 +1223,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Brak dostępnych ocen</string>
     <string name="bottomBarHomeroom">Pokój główny</string>
 
+    <string name="settingsHomeroomView">Widok pokoju głównego</string>
+    <string name="importantLinksTitle">Ważne łącza</string>
+    <string name="studentApplications">Aplikacje uczestników</string>
+    <string name="staffContactInfo">Dane kontaktowe pracowników</string>
+    <string name="chooseACourse">Wybierz kurs</string>
+    <string name="webViewImportantLinksTitle">Ważne łącza</string>
+    <string name="staffRoleTeacher">Nauczyciel</string>
+    <string name="staffRoleTeacherAssistant">Asystent instruktora</string>
+    <string name="resourcesEmptyMessage">Twoje zasoby pojawią się tutaj.</string>
+    <string name="failedToLoadResources">Nie udało się załadować zasobów</string>
+    <string name="failedToRefreshResources">Nie udało się odświeżyć zasobów</string>
     <string name="open_alternate_view">Otwórz alternatywny widok z ułatwieniami dostępu</string>
 
     <string name="a11y_content_description_message_recipients">Odbiorcy</string>

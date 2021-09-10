@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Aucun fichier trouvé</string>
     <string name="searchFilesHint">Rechercher des fichiers</string>
     <string name="fileSearchInstructions">Saisissez un terme de recherche de trois caractères ou davantage</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Sélectionné : %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Informations sur le devoir</string>
     <string name="submission_types">Types de soumission</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Tête sélectionnée : %s</string>
     <string name="content_description_chosen_body">Corps sélectionné : %s</string>
     <string name="content_description_chosen_feet">Pieds sélectionnés : %s</string>
@@ -1183,7 +1182,6 @@
     <string name="homeroomEmptyTitle">Bienvenue !</string>
     <string name="homeroomEmptyMessage">Vos sujets s\'affichent ici.</string>
     <string name="homeroomNoSubjects">Vous n\'avez actuellement aucun sujet.</string>
-    <string name="settingsElementaryView">Vue élémentaire</string>
     <string name="settingsElementaryViewSubtitle">Nécessite de redémarrer l’application</string>
     <string name="gradesSelect">Sélectionner</string>
     <string name="selectGradingPeriod">Sélectionner la période de notation</string>
@@ -1197,6 +1195,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">Notes indisponibles</string>
     <string name="bottomBarHomeroom">Salle d\'accueil</string>
 
+    <string name="settingsHomeroomView">Vue de la classe d’attache</string>
+    <string name="importantLinksTitle">Liens importants</string>
+    <string name="studentApplications">Applications des élèves</string>
+    <string name="staffContactInfo">Coordonnées du personnel</string>
+    <string name="chooseACourse">Choisir un cours</string>
+    <string name="webViewImportantLinksTitle">Liens importants</string>
+    <string name="staffRoleTeacher">Enseignant</string>
+    <string name="staffRoleTeacherAssistant">Assistant d\'enseignement</string>
+    <string name="resourcesEmptyMessage">Vos ressources s\'affichent ici</string>
+    <string name="failedToLoadResources">Échec du chargement des ressources</string>
+    <string name="failedToRefreshResources">Échec de l\'actualisation des ressources</string>
     <string name="open_alternate_view">Ouvrir une vue alternative plus accessible</string>
 
     <string name="a11y_content_description_message_recipients">Destinataires</string>

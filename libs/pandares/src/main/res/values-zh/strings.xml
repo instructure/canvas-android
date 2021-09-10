@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">找不到文件</string>
     <string name="searchFilesHint">搜索文件</string>
     <string name="fileSearchInstructions">输入三个或更多字符的搜索词</string>
@@ -31,7 +32,6 @@
     <string name="selectedListItem">已选择：%s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">作业详情</string>
     <string name="submission_types">提交项类型</string>
@@ -1033,7 +1033,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">已选头部：%s</string>
     <string name="content_description_chosen_body">已选身体：%s</string>
     <string name="content_description_chosen_feet">已选脚部：%s</string>
@@ -1169,7 +1168,6 @@
     <string name="homeroomEmptyTitle">欢迎！</string>
     <string name="homeroomEmptyMessage">您的科目显示在这里。</string>
     <string name="homeroomNoSubjects">您目前没有科目。</string>
-    <string name="settingsElementaryView">基本视图</string>
     <string name="settingsElementaryViewSubtitle">要求重启 app</string>
     <string name="gradesSelect">选择</string>
     <string name="selectGradingPeriod">选择评分周期</string>
@@ -1183,6 +1181,17 @@
     <string name="a11y_gradesNotAvailableContentDescription">评分不可用</string>
     <string name="bottomBarHomeroom">指导教室</string>
 
+    <string name="settingsHomeroomView">教室视图</string>
+    <string name="importantLinksTitle">重要链接</string>
+    <string name="studentApplications">学生申请</string>
+    <string name="staffContactInfo">员工联系信息</string>
+    <string name="chooseACourse">选择课程</string>
+    <string name="webViewImportantLinksTitle">重要链接</string>
+    <string name="staffRoleTeacher">教师</string>
+    <string name="staffRoleTeacherAssistant">助教</string>
+    <string name="resourcesEmptyMessage">您的资源显示在此处。</string>
+    <string name="failedToLoadResources">无法加载资源</string>
+    <string name="failedToRefreshResources">无法刷新资源</string>
     <string name="open_alternate_view">打开一个更加方便访问的备选视图</string>
 
     <string name="a11y_content_description_message_recipients">收件人</string>
