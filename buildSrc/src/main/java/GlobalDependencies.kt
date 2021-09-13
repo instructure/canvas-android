@@ -30,7 +30,7 @@ object Versions {
     const val PLAY_CORE_KTX = "1.8.1"
 
     /* Others */
-    const val APOLLO = "2.4.1"
+    const val APOLLO = "2.5.9"
     const val CRASHLYTICS = "17.2.1"
     const val ANALYTICS = "17.4.1"
     const val FIREBASE_ANALYTICS = "17.4.1"
