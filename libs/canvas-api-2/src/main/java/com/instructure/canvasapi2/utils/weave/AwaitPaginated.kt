@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.suspendAtomicCancellableCoroutine
+import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Response
 
@@ -42,10 +42,10 @@ inline fun <reified T> weavePaginated(crossinline configure: PaginationConfig<T>
  * for the first page and [onRequestNext { nextUrl, callback -> }][PaginationConfig.onRequestNext] for
  * subsequent pages. See [PaginationConfig] for additional configuration options.
  */
-@UseExperimental(InternalCoroutinesApi::class)
+@OptIn(InternalCoroutinesApi::class)
 suspend inline fun <reified T> WeaveCoroutine.awaitPaginated(crossinline configure: PaginationConfig<T>.() -> Unit) {
     val originStackTrace = Thread.currentThread().stackTrace
-    return suspendAtomicCancellableCoroutine { continuation ->
+    return suspendCancellableCoroutine { continuation ->
         val config = PaginationConfig<T>()
         config.configure()
         addAndStartStitcher(WeavePager(config, PaginationCallback(), continuation, originStackTrace))

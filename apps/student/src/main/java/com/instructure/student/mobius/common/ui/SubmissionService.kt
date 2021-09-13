@@ -48,10 +48,7 @@ import com.instructure.student.db.getInstance
 import com.instructure.student.db.sqlColAdapters.Date
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.common.ChannelSource
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.threeten.bp.OffsetDateTime
 import java.io.File
@@ -258,7 +255,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         return attachmentIds
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @ObsoleteCoroutinesApi
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun uploadComment(intent: Intent) {
         runBlocking {
             val db = Db.getInstance(this@SubmissionService)
@@ -411,7 +409,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 }
 
                 val newComment = submission.submissionComments.last()
-                ChannelSource.getChannel<SubmissionComment>().offer(newComment)
+                ChannelSource.getChannel<SubmissionComment>().trySend(newComment)
 
                 // Remove db entry
                 commentDb.deleteCommentById(comment.id)

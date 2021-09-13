@@ -30,7 +30,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /** Returns true if this string is non-null and non-blank, otherwise returns false */
-@UseExperimental(ExperimentalContracts::class)
+@OptIn(ExperimentalContracts::class)
 @Suppress("NOTHING_TO_INLINE")
 inline fun String?.isValid(): Boolean {
     contract {

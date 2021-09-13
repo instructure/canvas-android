@@ -20,7 +20,7 @@ object Versions {
 
     /* Kotlin */
     const val KOTLIN = "1.5.30"
-    const val KOTLIN_COROUTINES = "1.3.9"
+    const val KOTLIN_COROUTINES = "1.5.2"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.3.3"
