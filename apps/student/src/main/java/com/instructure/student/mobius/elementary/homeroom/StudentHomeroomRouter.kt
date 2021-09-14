@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.elementary
+package com.instructure.student.mobius.elementary.homeroom
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
@@ -23,25 +23,11 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.fragment.AnnouncementListFragment
-import com.instructure.student.fragment.AssignmentListFragment
-import com.instructure.student.fragment.CourseBrowserFragment
-import com.instructure.student.fragment.DiscussionDetailsFragment
+import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRouter {
-
-    override fun canRouteInternally(url: String): Boolean {
-        return RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = false, allowUnsupported = false)
-    }
-
-    override fun routeInternally(url: String) {
-        RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)
-    }
-
-    override fun openMedia(url: String) {
-        RouteMatcher.openMedia(activity, url)
-    }
 
     override fun openAnnouncements(canvasContext: CanvasContext) {
         val route = AnnouncementListFragment.makeRoute(canvasContext)

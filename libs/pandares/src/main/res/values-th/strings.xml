@@ -1182,7 +1182,30 @@
     <string name="homeroomEmptyTitle">ยินดีต้อนรับ!</string>
     <string name="homeroomEmptyMessage">วิชาของคุณจะปรากฏขึ้นที่นี่</string>
     <string name="homeroomNoSubjects">ปัจจุบันคุณไม่มีวิชาใด ๆ</string>
+    <string name="settingsElementaryViewSubtitle">ต้องรีสตาร์ทแอพ</string>
+    <string name="gradesSelect">เลือก</string>
+    <string name="selectGradingPeriod">เลือกระยะเวลาการให้เกรด</string>
+    <string name="currentGradingPeriod">ระยะเวลาการให้เกรดในปัจจุบัน</string>
+    <string name="failedToLoadGrades">ไม่สามารถโหลดเกรดได้</string>
+    <string name="failedToLoadGradesForGradingPeriod">ไม่สามารถโหลดเกรดสำหรับระยะเวลาให้เกรด</string>
+    <string name="failedToRefreshGrades">ไม่สามารถรีเฟรชเกรดได้</string>
+    <string name="noGradesToDisplay">ไม่มีเกรดที่จะแสดง</string>
+    <string name="notGraded">ไม่ได้ลงเกรด</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">เปลี่ยนแปลงระยะเวลาการให้เกรด</string>
+    <string name="a11y_gradesNotAvailableContentDescription">ไม่มีเกรด</string>
+    <string name="bottomBarHomeroom">โฮมรูม</string>
 
+    <string name="settingsHomeroomView">มุมมองโฮมรูม</string>
+    <string name="importantLinksTitle">ลิงค์ที่สำคัญ</string>
+    <string name="studentApplications">แอพพลิเคชั่นของผู้เรียน</string>
+    <string name="staffContactInfo">ข้อมูลติดต่อบุคลากร</string>
+    <string name="chooseACourse">เลือกบทเรียน</string>
+    <string name="webViewImportantLinksTitle">ลิงค์ที่สำคัญ</string>
+    <string name="staffRoleTeacher">ผู้สอน</string>
+    <string name="staffRoleTeacherAssistant">ผู้ช่วยสอน</string>
+    <string name="resourcesEmptyMessage">ทรัพยากรของคุณจะปรากฏขึ้นที่นี่</string>
+    <string name="failedToLoadResources">ไม่สามารถโหลดทรัพยากรได้</string>
+    <string name="failedToRefreshResources">ไม่สามารถรีเฟรชทรัพยากรได้</string>
     <string name="open_alternate_view">เปิดมุมมองเผื่อเลือกที่สามารถเข้าถึงได้มากกว่า</string>
 
     <string name="a11y_content_description_message_recipients">ผู้รับ</string>
@@ -1195,4 +1218,5 @@
     <string name="studentAnnotationUnsupportedDescription">หมายเหตุกำกับของผู้เรียนปัจจุบันไม่รองรับสำหรับอุปกรณ์พกพา</string>
     <string name="unsupportedSubmissionType">ประเภทการจัดส่งที่ไม่รองรับ</string>
     <string name="studentAnnotationUnsupportedMessage">ไม่สามารถแสดงผลงานจัดส่งได้เนื่องจากหมายเหตุกำกับของผู้เรียนปัจจุบันไม่รองรับกับอุปกรณ์พกพา</string>
+    <string name="schedule_marked_as_done">คุณกำกับว่าเสร็จสิ้นแล้ว</string>
 </resources>

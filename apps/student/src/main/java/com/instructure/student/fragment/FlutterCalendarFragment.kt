@@ -109,7 +109,9 @@ class FlutterCalendarFragment : FlutterFragment() {
 
         // Perform onBackPressed on the FlutterFragment, which will attempt to pop the current route and update
         // the 'shouldPop' value for future use.
-        onBackPressed()
+        if (!shouldPop) {
+            onBackPressed()
+        }
 
         // If 'shouldPop' was true it means we just popped a CalendarScreen in Flutter and that we should also
         // allow this fragment to be popped

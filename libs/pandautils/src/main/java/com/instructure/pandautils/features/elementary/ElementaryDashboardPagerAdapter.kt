@@ -19,23 +19,12 @@ package com.instructure.pandautils.features.elementary
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
-import com.instructure.pandautils.features.elementary.resources.ResourcesFragment
-import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
 
 class ElementaryDashboardPagerAdapter(
-    private val canvasContext: CanvasContext,
+    private val fragments: List<Fragment>,
     fragmentManager: FragmentManager
 ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-
-    private val fragments = listOf(
-        HomeroomFragment.newInstance(),
-        ScheduleFragment.newInstance(),
-        GradesFragment.newInstance(),
-        ResourcesFragment.newInstance()
-    )
 
     override fun getItem(position: Int): Fragment {
         return fragments[position]

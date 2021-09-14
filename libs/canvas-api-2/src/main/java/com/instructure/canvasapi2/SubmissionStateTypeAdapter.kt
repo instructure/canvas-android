@@ -28,7 +28,13 @@ class SubmissionStateTypeAdapter : JsonDeserializer<SubmissionState?> {
         if (json?.isJsonObject == true) {
             val submitted = json.asJsonObject?.get("submitted")?.asBoolean ?: false
             val missing = json.asJsonObject?.get("missing")?.asBoolean ?: false
-            return SubmissionState(submitted, missing)
+            val late = json.asJsonObject?.get("late")?.asBoolean ?: false
+            val excused = json.asJsonObject?.get("excused")?.asBoolean ?: false
+            val graded = json.asJsonObject?.get("graded")?.asBoolean ?: false
+            val needsGrading = json.asJsonObject?.get("needs_grading")?.asBoolean ?: false
+            val withFeedback = json.asJsonObject?.get("with_feedback")?.asBoolean ?: false
+            val redoRequest = json.asJsonObject?.get("redo_request")?.asBoolean ?: false
+            return SubmissionState(submitted, missing, late, excused, graded, needsGrading, withFeedback, redoRequest)
         } else {
             return null
         }

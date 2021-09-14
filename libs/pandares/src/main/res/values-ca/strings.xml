@@ -1176,24 +1176,47 @@
     <string name="viewPreviousAnnouncements">Visualitza els anuncis anteriors</string>
     <string name="homeroomError">No s\'ha pogut carregar la tutoria</string>
     <string name="homeroomRefreshFail">No s\'ha pogut actualitzar la tutoria</string>
-
     <string name="nothingDueToday">Res venç avui</string>
     <string name="dueToday">%1$s venç avui</string>
     <string name="missing">Falta %1$s</string>
     <string name="homeroomEmptyTitle">Us donem la benvinguda!</string>
     <string name="homeroomEmptyMessage">Les vostres matèries es mostren aquí.</string>
     <string name="homeroomNoSubjects">En aquest moment, no teniu cap matèria.</string>
+    <string name="settingsElementaryViewSubtitle">Heu de reiniciar l’aplicació.</string>
+    <string name="gradesSelect">Selecciona</string>
+    <string name="selectGradingPeriod">Selecciona el període de qualificació</string>
+    <string name="currentGradingPeriod">Període de qualificació actual</string>
+    <string name="failedToLoadGrades">No s\'han pogut carregar les qualificacions</string>
+    <string name="failedToLoadGradesForGradingPeriod">No s\'han pogut carregar les qualificacions del període de qualificació sol·licitat</string>
+    <string name="failedToRefreshGrades">No s\'han pogut actualitzar les qualificacions</string>
+    <string name="noGradesToDisplay">No hi ha cap qualificació a mostrar</string>
+    <string name="notGraded">Sense qualificació</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Canvia el període de qualificació</string>
+    <string name="a11y_gradesNotAvailableContentDescription">No hi cap qualificació disponible</string>
+    <string name="bottomBarHomeroom">Tutoria</string>
 
-
+    <string name="settingsHomeroomView">Vista de la tutoria.</string>
+    <string name="importantLinksTitle">Enllaços importants</string>
+    <string name="studentApplications">Sol·licituds dels estudiants</string>
+    <string name="staffContactInfo">Informació de contacte del personal</string>
+    <string name="chooseACourse">Tria un curs</string>
+    <string name="webViewImportantLinksTitle">Enllaços importants</string>
+    <string name="staffRoleTeacher">Professor</string>
+    <string name="staffRoleTeacherAssistant">Auxiliar de professor</string>
+    <string name="resourcesEmptyMessage">Els vostres recursos es mostren aquí.</string>
+    <string name="failedToLoadResources">No s\'han pogut carregar els recursos</string>
+    <string name="failedToRefreshResources">No s\'han pogut actualitzar els recursos</string>
     <string name="open_alternate_view">Obriu una visualització alternativa més accessible</string>
 
     <string name="a11y_content_description_message_recipients">Destinataris</string>
     <string name="a11y_content_description_inbox_subject">Assumpte</string>
     <string name="a11y_content_description_inbox_course_spinner">Seleccioneu un curs, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Les respostes d\'aquest estudiant estan amagades perquè la tasca és anònima.</string>
 
     <string name="studentAnnotationUnsupported">Anotació de l’estudiant (no admesa)</string>
     <string name="studentAnnotationUnsupportedDescription">En aquest moment, no s\'admet l’anotació de l\'estudiant al dispositiu mòbil.</string>
     <string name="unsupportedSubmissionType">Tipus de entrega no admès</string>
     <string name="studentAnnotationUnsupportedMessage">No es pot mostrar l’entrega, perquè en aquest moment no s\'admet l’anotació de l\'estudiant al dispositiu mòbil.</string>
+    <string name="schedule_marked_as_done">L’heu marcat com a fet.</string>
 </resources>

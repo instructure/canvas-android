@@ -28,5 +28,17 @@ data class SubmissionState(
     @SerializedName("submitted")
     val submitted: Boolean = false,
     @SerializedName("missing")
-    val missing: Boolean = false
+    val missing: Boolean = false,
+    @SerializedName("late")
+    val late: Boolean = false,
+    @SerializedName("excused")
+    val excused: Boolean = false,
+    @SerializedName("graded")
+    val graded: Boolean = false,
+    @SerializedName("needs_grading")
+    val needsGrading: Boolean = false,
+    @SerializedName("with_feedback")
+    val withFeedback: Boolean = false,
+    @SerializedName("redo_request")
+    val redoRequest: Boolean = false
 )

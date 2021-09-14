@@ -279,4 +279,18 @@ object UserManager {
         UserAPI.getMissingSubmissions(forceNetwork, adapter, depaginatedCallback)
     }
 
+    fun getTeacherListForCourseAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<List<User>> { getTeacherListForCourse(courseId, it, forceNetwork) }
+
+    private fun getTeacherListForCourse(courseId: Long, callback: StatusCallback<List<User>>, forceNetwork: Boolean) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        val adapter = RestBuilder(callback)
+        val depaginatedCallback = object : ExhaustiveListCallback<User>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<User>>, nextUrl: String, isCached: Boolean) {
+                UserAPI.getTeacherListForCourse(adapter, params, courseId, callback)
+            }
+        }
+        adapter.statusCallback = depaginatedCallback
+        UserAPI.getTeacherListForCourse(adapter, params, courseId, depaginatedCallback)
+    }
+
 }

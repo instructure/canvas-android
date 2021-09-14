@@ -55,10 +55,8 @@
     <string name="attemptsUsedLabel">Tentativas utilizadas</string>
     <string name="noAttemptsLeft">Não há mais tentativas</string>
     <string name="resubmitAssignment">Voltar a submeter tarefa</string>
-
     <string name="launchingExternalTool">Lançar Ferramenta Externa...</string>
     <string name="launchExternalTool">Lançar Ferramenta Externa</string>
-
     <string name="preview">Visualização</string>
     <string name="submissionUploadFailedMessage">Um ou mais arquivos não foram carregados. Verifique sua conexão com a Internet e tente enviar novamente.</string>
     <string name="submissionUploadByteProgress">%1$s de %2$s</string>
@@ -69,19 +67,20 @@
     <string name="submissionDeleted">Submissão eliminada</string>
     <string name="missingSubmissionLabel">Em falta</string>
     <string name="gradedSubmissionLabel">Classificado</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Nenhuma visualização disponível para URLs usando \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Por favor, insira um URL válido</string>
     <string name="enterAUrlHereForYourSubmission">Insira um URL aqui para o seu envio</string>
     <string name="addFileFabContentDesc">Mostrar opções de adicionar ficheiro</string>
     <string name="recordAudio">Gravar Áudio</string>
-
     <string name="recordVideo">Gravar Vídeo</string>
-
     <string name="a11y_textSubmissionEditor">Editor de Submissão de Texto</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Escrever&#8230;</string>
     <string name="textSubmissionFailureMessage">Algo deu errado no carregamento do envio. Envie novamente.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Submissão</string>
     <string name="submissionVersions">Versões de envio</string>
@@ -104,6 +103,7 @@
     <string name="speedGraderExternalToolMessage">Esta atribuição liga a uma ferramenta externa para submissões.</string>
     <string name="openTool">Abrir ferramenta</string>
     <string name="a11y_submissionText">Texto de submissão</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Fora de %s pontos</string>
     <string name="outOfPointsAbbreviatedFormatted">Fora de %s pts</string>
@@ -115,10 +115,12 @@
     <string name="scoreStatisticsLow">Baixa: %s</string>
     <string name="scoreStatisticsMean">Média: %s</string>
     <string name="scoreStatisticsHigh">Alta: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Personalizar pontuação</string>
     <string name="rubricEmptyMessage">Não existe rubrica para esta atribuição</string>
     <string name="rubricViewLongDescription">Ver descrição longa</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">A carregar ficheiro %1$d de %2$d</string>
     <string name="assignmentSubmissionCommentUpload">A carregar comentário para %s</string>
@@ -138,6 +140,7 @@
     <string name="commentSubmissionTypeMediaFile">Ficheiro de mídia</string>
     <string name="commentSubmissionTypeAudio">Áudio</string>
     <string name="commentSubmissionTypeVideo">Vídeo</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Versão:</string>
 
@@ -187,6 +190,8 @@
     <string name="submissionDetailsDueAt">Termina %1$s a %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Bloqueado</string>
     <string name="assignments">Tarefas</string>
@@ -205,15 +210,17 @@
     <string name="a11y_sortByTypeButton">Classificar botão de tarefas, classificar por tipo</string>
     <string name="a11y_assignmentsSortedByTime">Tarefas classificadas por tempo</string>
     <string name="a11y_assignmentsSortedByType">Tarefas classificadas por tipo</string>
+
     <!-- Assignment editing -->
     <string name="points">Pontos\u0020</string>
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
+
     <!-- Discussions -->
     <string name="forbidden">As respostas apenas estão visíveis para aqueles que publicaram pelo menos uma resposta.</string>
-
     <string name="fileCurrentlyLocked">Este ficheiro está bloqueado de momento</string>
     <string name="a11y_discussionReplyEditor">Editor da Resposta de Discussão</string>
+
     <!-- Events -->
     <string name="Starts">Inicia</string>
     <string name="Ends">Termina</string>
@@ -232,8 +239,6 @@
     <string name="whatIfDialogText">Pontuação Potencial</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s pontos, %3$s</string>
-
-
     <string name="inbox">Caixa de entrada</string>
     <string name="unread">Não lida</string>
     <string name="archived">Arquivada</string>
@@ -399,8 +404,8 @@
     <string name="students">Alunos</string>
     <string name="observers">Observadores</string>
     <string name="syllabusMissing">Um plano de estudos não foi adicionado.</string>
-
     <string name="syllabusEventsError">Houve um erro ao carregar seus módulos.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Escolher Destinatário(s)</string>
     <string name="messageHasNoRecipients">Esta mensagem atualmente não tem destinatários.</string>
@@ -426,6 +431,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Eliminado</string>
+
     <string name="loadingCanvas">A carregar o conteúdo da tela&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -442,9 +448,11 @@
     <string name="stopMasquerading">Parar de agir como utilizador</string>
     <string name="userId">ID do utilizador</string>
     <string name="masqueradeFail">Houve um erro ao tentar agir como utilizador</string>
+
     <string name="emptyId">A ID não pode estar vazia</string>
 
     <string name="goToQuiz">Ir Para Questionário</string>
+
     <string name="quizzes">Testes</string>
 
     <string name="lastDiscussionPost">Última Publicação</string>
@@ -503,8 +511,8 @@
     <string name="goToModules">Ir Para Módulos</string>
     <string name="markDone">Marcar terminado</string>
     <string name="moduleItemNotFound">Item do Módulo não encontrado</string>
-
     <string name="errorLoadingModules">Houve um erro ao carregar seus módulos.</string>
+
     <string name="help">Ajuda</string>
     <string name="instructor_question">Questões do Formador</string>
     <string name="link">Ligação</string>
@@ -520,11 +528,11 @@
     <string name="textEntry">Entrada de texto</string>
     <string name="onlineURL">URL On-line</string>
     <string name="oneFileOnly">Este envio apenas aceita o carregamento de um ficheiro</string>
-
-
     <string name="websiteEntry">Adicionar entrada de site</string>
     <string name="mediaRecordingEntry">Gravações de multimédia</string>
     <string name="submit">Submeter</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Progresso não guardado</string>
     <string name="informationLost">As informações não guardadas serão perdidas. Deseja continuar?</string>
@@ -539,6 +547,7 @@
     <!-- Submission Details Strings -->
     <string name="next">Próximo</string>
     <string name="addComment">Adicionar um comentário&#8230;</string>
+
     <string name="home">Início</string>
     <string name="Notifications">Notificações</string>
 
@@ -568,6 +577,8 @@
     <string name="clickToViewSubmission">Foi tirada uma imagem deste site quando fez a entrega. Insira e mantenha a imagem abaixo para abrir ou descarregar a imagem completa.</string>
     <string name="urlSubmissionNoPreview">Este envio era um URL de uma página externa. Tenha em mente que esta página pode ter sido alterada desde o envio original.</string>
     <string name="contentDescriptionPreviewImage">Uma previsualização do url entregue</string>
+
+
     <string name="isNotSupportedFeature">%1$s não são suportados.</string>
     <string name="isNotSupported">A ligação não é suportada.</string>
     <string name="openInBrowser">Abrir no Navegador</string>
@@ -583,15 +594,19 @@
     <string name="panda_fact_string">Fat. Panda:&#160;</string>
     <string name="remove">Eliminar</string>
     <string name="founders">Fundadores</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Política de Privacidade</string>
     <string name="termsOfUse">Termos de uso</string>
     <string name="canvasOnGithub">Canvas no GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Testes da tarefa</string>
     <string name="practiceQuizzes">Testes práticos</string>
     <string name="gradedSurveys">Inquéritos Classificados</string>
     <string name="surveys">Inquéritos</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">A Fazer</string>
     <string name="gradesWidgetTitle">Classificações</string>
@@ -637,12 +652,12 @@
     <string name="profileSettings">Configurações de perfil</string>
     <string name="accountPreferences">Preferências da conta</string>
     <string name="pinAndFingerprint">PIN e impressão digital</string>
-
     <string name="pairWithObserver">Par com o observador</string>
     <string name="pairWithObserverDetails">Peça ao seu pai para digitalizar este código QR da aplicação Canvas Parent para parelhar com você. Este código expirará em sete dias, ou após uma utilização.</string>
     <string name="pairingCodeLabel">Código de pareamento:\u0020</string>
     <string name="pairingCodeErrorTitle">Erro de Código de pareamento</string>
     <string name="pairingCodeErrorDescription">Incapaz de recuperar um código de pareamento. Esta funcionalidade só é suportada por estudantes.</string>
+
     <string name="launchSpeedgrader">Abrir Speedgrader</string>
 
     <string name="search_todo">afazer a fazer afazer lista a fazer</string>
@@ -713,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-
     <string name="content_description_speed_grader_slider">Seletor de classificação</string>
+
     <string name="createNewCalendarEvent">Criar Novo Evento</string>
     <string name="enableFunMode">Desligar os pandas</string>
 
@@ -801,6 +816,7 @@
     <string name="notification_desc_recording_ready">Receba notificações quando uma gravação de conferência estiver pronta.</string>
 
     <string name="unlimited">Ilimitado</string>
+
     <string name="question">Pergunta</string>
     <plurals name="question_count">
         <item quantity="one">%d pergunta</item>
@@ -811,16 +827,17 @@
         <item quantity="one">%s ponto</item>
         <item quantity="other">%s pontos</item>
     </plurals>
+
     <string name="timeLimit">Limite de tempo</string>
     <string name="newPushNotifications">%1$s Novas Notificações</string>
     <string name="like">gostar</string>
     <string name="likeEntryLabel">Entrada gostos</string>
     <string name="likes">gostos</string>
-
     <plurals name="likeCountLabel">
         <item quantity="one">%s gosto</item>
         <item quantity="other">%s gostos</item>
     </plurals>
+
     <string name="color_1">Encarnado</string>
     <string name="color_2">Rosa</string>
     <string name="color_3">Lavanda</string>
@@ -879,6 +896,7 @@
     <string name="editDashboard">Editar painel</string>
     <string name="editDashboardDescriptor">Selecionar quais disciplinas você gostaria de ver no Painel</string>
     <string name="a11y_editYourCourseList">Editar sua lista de disciplinas</string>
+
     <string name="dashboard">Painel de controlo</string>
     <string name="previous">Anterior</string>
     <string name="pageNum" formatted="false">Página %d de %d</string>
@@ -906,8 +924,8 @@
     <string name="tapToViewAnnouncement">Toque para ver o anúncio.</string>
     <string name="acceptCourseInvitation">Aceitar</string>
     <string name="declineCourseInvitation">Recusar</string>
-
     <string name="outOf">de</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Não há ficheiros associados a esta disciplina.</string>
     <string name="noFilesSubtextGroup">Não há ficheiros associados a este grupo.</string>
@@ -968,6 +986,7 @@
     <string name="unableToViewInBrowser">Não conseguimos encontrar uma aplicação externa para visualizar essa ferramenta LTI.</string>
 
     <string name="commentUpload">Carregamento de comentários</string>
+
     <string name="frontPage">Primeira página</string>
     <string name="editPage">Editar Página</string>
     <string name="description">Descrição</string>
@@ -980,10 +999,10 @@
     <string name="conferencesNotSupported">Conferências ainda não são suportadas no telemóvel.</string>
     <string name="filePreviewContentDescription">Imagem de pré-visualização de ficheiro</string>
     <string name="pdfError">Ocorreu um erro ao tentar carregar este PDF.</string>
-
     <string name="featureNotAllowedInStudentView">Lamento imenso! Esta funcionalidade não é permitida na visão dos alunos.</string>
     <string name="nothingToSeeHere">Nada Para Ver Aqui</string>
     <string name="unsupportedFeature">Característica não suportada</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Adicionar aluno</string>
     <string name="addChildSubTitle">Insira o código de pareamento de alunos fornecido a você.</string>
@@ -991,6 +1010,7 @@
     <string name="addChildErrorMessage">O emparelhamento falhou. Certifique-se de que seu código de pareamento esteja correto e dentro do limite de tempo de uso.</string>
     <string name="gradeComplete">Completo</string>
     <string name="gradeIncomplete">Incompleto</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Publicar configurações</string>
     <string name="postGradesTab">Publicar Classificações</string>
@@ -1021,9 +1041,9 @@
     <string name="gradeAfterPosting">Classificação após publicação</string>
     <string name="gradeOverride">Substituir classificação </string>
     <string name="currentGrade">Classificação Atual</string>
-
     <string name="opensInCanvasStudent">Abrir no Aluno Canvas</string>
     <string name="tab_student_view">Vista de aluno</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Cabeça escolhida: %s</string>
@@ -1078,7 +1098,6 @@
 
     <string name="addVideoComment">Adicionar comentário de vídeo</string>
     <string name="addAudioComment">Adicionar comentário de vídeo</string>
-
     <string name="audioRecordingError">Ocorreu um erro inesperado ao tentar gravar áudio.</string>
     <string name="videoRecordingError">Ocorreu um erro inesperado ao tentar gravar vídeo.</string>
 
@@ -1097,6 +1116,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
         <item quantity="other">%s minutos</item>
@@ -1117,6 +1137,7 @@
     <string name="conferenceDetails">Detalhes da Conferência</string>
     <string name="recordings">Gravações</string>
     <string name="conferenceInProgress">Conferência em curso</string>
+
     <string name="a11y_criterion_content_description">Critério de classificação %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">mais informações</string>
@@ -1143,6 +1164,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Retirar tudo do painel</string>
     <string name="a11y_content_description_add_to_dashboard">Adicionar ao painel</string>
     <string name="a11y_content_description_add_all_to_dashboard">Adicionar tudo ao painel</string>
+
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Conta</string>
     <string name="dashboardTabHomeroom">Casa de família</string>
@@ -1151,28 +1173,50 @@
     <string name="dashboardTabResources">Recursos</string>
     <string name="homeroomWelcomeMessage">Bem-vindo, %1$s!</string>
     <string name="homeroomMySubjects">Minhas Disciplinas</string>
-
     <string name="viewPreviousAnnouncements">Ver Anúncios Anteriores</string>
     <string name="homeroomError">Falha no carregamento da sala de estar</string>
     <string name="homeroomRefreshFail">Falha ao atualizar a sala de estar</string>
-
-
     <string name="nothingDueToday">Nada Devido Hoje</string>
     <string name="dueToday">%1$s devido hoje</string>
     <string name="missing">%1$s em falta</string>
     <string name="homeroomEmptyTitle">Bem-vindo!</string>
     <string name="homeroomEmptyMessage">Os seus assuntos aparecem aqui.</string>
     <string name="homeroomNoSubjects">Atualmente, não tem assuntos.</string>
+    <string name="settingsElementaryViewSubtitle">Requer reinicialização da aplicação</string>
+    <string name="gradesSelect">Selecionar</string>
+    <string name="selectGradingPeriod">Selecionar Período de classificação</string>
+    <string name="currentGradingPeriod">Período de classificação atual</string>
+    <string name="failedToLoadGrades">Falha ao carregar classificações</string>
+    <string name="failedToLoadGradesForGradingPeriod">Falha no carregamento das classificações para o período de classificação</string>
+    <string name="failedToRefreshGrades">Falha em atualizar classificações</string>
+    <string name="noGradesToDisplay">Sem classificações a exibir</string>
+    <string name="notGraded">Sem classificação</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Período de classificação das alterações</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Classificações não disponíveis</string>
+    <string name="bottomBarHomeroom">Casa de família</string>
 
-
+    <string name="settingsHomeroomView">Exibição da sala de aula</string>
+    <string name="importantLinksTitle">Ligações importantes</string>
+    <string name="studentApplications">Aplicações para alunos</string>
+    <string name="staffContactInfo">Informações de contato do pessoal</string>
+    <string name="chooseACourse">Escolha uma Disciplina</string>
+    <string name="webViewImportantLinksTitle">Ligações importantes</string>
+    <string name="staffRoleTeacher">Professor</string>
+    <string name="staffRoleTeacherAssistant">Assistente de ensino</string>
+    <string name="resourcesEmptyMessage">Os seus recursos aparecem aqui.</string>
+    <string name="failedToLoadResources">Falha no carregamento de recursos</string>
+    <string name="failedToRefreshResources">Falha na actualização de recursos</string>
     <string name="open_alternate_view">Abrir uma vista alternativa mais acessível</string>
+
     <string name="a11y_content_description_message_recipients">Destinatários</string>
     <string name="a11y_content_description_inbox_subject">Assunto</string>
     <string name="a11y_content_description_inbox_course_spinner">Seleccione uma disciplina, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">As respostas deste aluno são ocultas porque esta tarefa é anónima.</string>
 
     <string name="studentAnnotationUnsupported">Anotação do aluno (Sem suporte)</string>
     <string name="studentAnnotationUnsupportedDescription">A anotação do aluno não é actualmente suportada em telemóvel.</string>
     <string name="unsupportedSubmissionType">Tipo de apresentação não suportada</string>
     <string name="studentAnnotationUnsupportedMessage">A submissão não pode ser exibida, porque a Anotação do aluno não é atualmente suportada em telemóvel.</string>
+    <string name="schedule_marked_as_done">Marcou-o como feito.</string>
 </resources>

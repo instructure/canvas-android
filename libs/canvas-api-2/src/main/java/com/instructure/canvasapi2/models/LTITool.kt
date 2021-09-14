@@ -17,15 +17,31 @@
 
 package com.instructure.canvasapi2.models
 
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class LTITool(
-        override var id: Long = 0,
-        var name: String? = null,
-        var url: String? = null,
-        var assignmentId: Long = 0L,
-        var courseId: Long = 0L
+    override var id: Long = 0,
+    var name: String? = null,
+    var url: String? = null,
+    var assignmentId: Long = 0L,
+    var courseId: Long = 0L,
+    @SerializedName("course_navigation")
+    var courseNavigation: CourseNavigation? = null,
+    @SerializedName("icon_url")
+    var iconUrl: String? = null,
+    @SerializedName("context_id")
+    var contextId: Long? = null,
+    @SerializedName("context_name")
+    var contextName: String? = null
 ) : CanvasModel<LTITool>() {
     override val comparisonString get() = name
 }
+
+@Parcelize
+data class CourseNavigation(
+    val text: String? = null,
+    val url: String? = null
+) : Parcelable

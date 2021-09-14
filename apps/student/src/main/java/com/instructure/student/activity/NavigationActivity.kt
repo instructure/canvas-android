@@ -99,8 +99,10 @@ import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 import javax.inject.Inject
 
+private const val BOTTOM_NAV_SCREEN = "bottomNavScreen"
 
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
@@ -125,6 +127,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private var drawerItemSelectedJob: Job? = null
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var colorOverlayJob: Job? = null
+
+    private val bottomNavScreensStack: Deque<String> = ArrayDeque()
 
     override fun contentResId(): Int = R.layout.activity_navigation
 
@@ -194,7 +198,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             /* Update nav bar visibility to show for specific 'root' fragments. Also show the nav bar when there is
              only one fragment on the backstack, which commonly occurs with non-root fragments when routing
              from external sources. */
-            val visible = it::class.java in navigationBehavior.bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1
+            val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             bottomBar.setVisible(visible)
             bottomBarDivider.setVisible(visible)
         }
@@ -224,6 +228,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
         }
+
+        bottomBar.inflateMenu(navigationBehavior.bottomBarMenu)
 
         supportFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)
 
@@ -314,8 +320,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun loadLandingPage(clearBackStack: Boolean) {
         if (clearBackStack) clearBackStack(navigationBehavior.homeFragmentClass)
-        val homeRoute = navigationBehavior.createHomeFragmentRoute(ApiPrefs.user)
-        addFragment(navigationBehavior.createHomeFragment(homeRoute), homeRoute)
+        selectBottomNavFragment(navigationBehavior.homeFragmentClass)
+        bottomNavScreensStack.clear()
 
         if (intent.extras?.containsKey(AppShortcutManager.APP_SHORTCUT_PLACEMENT) == true) {
             // Launch to the app shortcut placement
@@ -329,26 +335,15 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     val route = BookmarksFragment.makeRoute(ApiPrefs.user)
                     addFragment(BookmarksFragment.newInstance(route) { RouteMatcher.routeUrl(this, it.url!!) }, route)
                 }
-                AppShortcutManager.APP_SHORTCUT_CALENDAR -> {
-                    val route = CalendarFragment.makeRoute()
-                    addFragment(CalendarFragment.newInstance(route), route)
-                }
-                AppShortcutManager.APP_SHORTCUT_TODO -> {
-                    val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
-                    addFragment(ToDoListFragment.newInstance(route), route)
-                }
-                AppShortcutManager.APP_SHORTCUT_NOTIFICATIONS -> {
-                    val route = NotificationListFragment.makeRoute(ApiPrefs.user!!)
-                    addFragment(NotificationListFragment.newInstance(route), route)
-                }
+                AppShortcutManager.APP_SHORTCUT_CALENDAR -> selectBottomNavFragment(CalendarFragment::class.java)
+                AppShortcutManager.APP_SHORTCUT_TODO -> selectBottomNavFragment(ToDoListFragment::class.java)
+                AppShortcutManager.APP_SHORTCUT_NOTIFICATIONS -> selectBottomNavFragment(NotificationListFragment::class.java)
                 AppShortcutManager.APP_SHORTCUT_INBOX -> {
                     if (ApiPrefs.isStudentView) {
                         // Inbox not available in Student View
-                        val route = NothingToSeeHereFragment.makeRoute()
-                        addFragment(NothingToSeeHereFragment.newInstance(), route)
+                        selectBottomNavFragment(NothingToSeeHereFragment::class.java)
                     } else {
-                        val route = InboxFragment.makeRoute()
-                        addFragment(InboxFragment.newInstance(route), route)
+                        selectBottomNavFragment(InboxFragment::class.java)
                     }
                 }
             }
@@ -451,10 +446,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             Logger.e("Error getting version: " + e)
         }
 
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
-        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
-        toolbar.setNavigationOnClickListener {
-            openNavigationDrawer()
+        if (isBottomNavFragment(fragment)) {
+            toolbar.setNavigationIcon(R.drawable.ic_hamburger)
+            toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
+            toolbar.setNavigationOnClickListener {
+                openNavigationDrawer()
+            }
+        } else {
+            toolbar.setupAsBackButton(fragment)
         }
 
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
@@ -545,24 +544,15 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private val bottomBarItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item: MenuItem ->
         when (item.itemId) {
-            R.id.bottomNavigationHome -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
-            R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
-            R.id.bottomNavigationToDo -> {
-                val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
-                addFragment(ToDoListFragment.newInstance(route), route)
-            }
-            R.id.bottomNavigationNotifications ->{
-                val route = NotificationListFragment.makeRoute(ApiPrefs.user!!)
-                addFragment(NotificationListFragment.newInstance(route), route)
-            }
+            R.id.bottomNavigationHome -> selectBottomNavFragment(navigationBehavior.homeFragmentClass)
+            R.id.bottomNavigationCalendar -> selectBottomNavFragment(CalendarFragment::class.java)
+            R.id.bottomNavigationToDo -> selectBottomNavFragment(ToDoListFragment::class.java)
+            R.id.bottomNavigationNotifications -> selectBottomNavFragment(NotificationListFragment::class.java)
             R.id.bottomNavigationInbox -> {
                 if (ApiPrefs.isStudentView) {
-                    // Inbox not available in Student View
-                    val route = NothingToSeeHereFragment.makeRoute()
-                    addFragment(NothingToSeeHereFragment.newInstance(), route)
+                    selectBottomNavFragment(NothingToSeeHereFragment::class.java)
                 } else {
-                    val route = InboxFragment.makeRoute()
-                    addFragment(InboxFragment.newInstance(route), route)
+                    selectBottomNavFragment(InboxFragment::class.java)
                 }
             }
         }
@@ -586,24 +576,15 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         if(!abortReselect) {
             when (item.itemId) {
-                R.id.bottomNavigationHome -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
-                R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
-                R.id.bottomNavigationToDo -> {
-                    val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
-                    addFragment(ToDoListFragment.newInstance(route), route)
-                }
-                R.id.bottomNavigationNotifications -> {
-                    val route = NotificationListFragment.makeRoute(ApiPrefs.user!!)
-                    addFragment(NotificationListFragment.newInstance(route), route)
-                }
+                R.id.bottomNavigationHome -> selectBottomNavFragment(navigationBehavior.homeFragmentClass)
+                R.id.bottomNavigationCalendar -> selectBottomNavFragment(CalendarFragment::class.java)
+                R.id.bottomNavigationToDo -> selectBottomNavFragment(ToDoListFragment::class.java)
+                R.id.bottomNavigationNotifications -> selectBottomNavFragment(NotificationListFragment::class.java)
                 R.id.bottomNavigationInbox -> {
                     if (ApiPrefs.isStudentView) {
-                        // Inbox not available in Student View
-                        val route = NothingToSeeHereFragment.makeRoute()
-                        addFragment(NothingToSeeHereFragment.newInstance(), route)
+                        selectBottomNavFragment(NothingToSeeHereFragment::class.java)
                     } else {
-                        val route = InboxFragment.makeRoute()
-                        addFragment(InboxFragment.newInstance(route), route)
+                        selectBottomNavFragment(InboxFragment::class.java)
                     }
                 }
             }
@@ -678,19 +659,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 return true
             }
             addBookmark()
-            return true
-        } else if (item.itemId == android.R.id.home) {
-            //if we hit the x while we're on a detail fragment, we always want to close the top fragment
-            //and not have it trigger an actual "back press"
-            val topFragment = topFragment
-            if (supportFragmentManager.backStackEntryCount > 0) {
-                if (topFragment != null) {
-                    supportFragmentManager.beginTransaction().remove(topFragment).commit()
-                }
-                super.onBackPressed()
-            } else if (topFragment == null) {
-                super.onBackPressed()
-            }
             return true
         }
 
@@ -787,31 +755,72 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     private fun addFragment(fragment: Fragment?, route: Route) {
+        if (RouteType.DIALOG == route.routeType && fragment is DialogFragment && isTablet) {
+            val ft = supportFragmentManager.beginTransaction()
+            ft.addToBackStack(fragment::class.java.name)
+            fragment.show(ft, fragment::class.java.name)
+        } else {
+            if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
+                selectBottomNavFragment(fragment::class.java)
+            } else {
+                addFullScreenFragment(fragment)
+            }
+        }
+    }
+
+    private fun selectBottomNavFragment(fragmentClass: Class<out Fragment>) {
+        val selectedFragment = supportFragmentManager.findFragmentByTag(fragmentClass.name)
+
+        if (selectedFragment == null) {
+            val fragment = createBottomNavFragment(fragmentClass.name)
+            val newArguments = if (fragment?.arguments != null) fragment.requireArguments() else Bundle()
+            newArguments.putBoolean(BOTTOM_NAV_SCREEN, true)
+            fragment?.arguments = newArguments
+            addFullScreenFragment(fragment)
+        } else {
+            showHiddenFragment(selectedFragment)
+        }
+
+        bottomNavScreensStack.remove(fragmentClass.name)
+        bottomNavScreensStack.push(fragmentClass.name)
+    }
+
+    private fun addFullScreenFragment(fragment: Fragment?) {
         if (fragment == null) {
-            Logger.e("NavigationActivity:addFragment() - Could not route null Fragment.")
+            Logger.e("NavigationActivity:addFullScreenFragment() - Could not route null Fragment.")
             return
         }
 
         val ft = supportFragmentManager.beginTransaction()
-
-        if (RouteType.DIALOG == route.routeType && fragment is DialogFragment && isTablet) {
-            ft.addToBackStack(fragment::class.java.name)
-            fragment.show(ft, fragment::class.java.name)
-        } else {
-            ft.setCustomAnimations(R.anim.fade_in_quick, R.anim.fade_out_quick)
-            currentFragment?.let { ft.hide(it) }
-            ft.add(R.id.fullscreen, fragment, fragment::class.java.name)
-            ft.addToBackStack(fragment::class.java.name)
-            ft.commitAllowingStateLoss()
-        }
+        ft.setCustomAnimations(R.anim.fade_in_quick, R.anim.fade_out_quick)
+        currentFragment?.let { ft.hide(it) }
+        ft.add(R.id.fullscreen, fragment, fragment::class.java.name)
+        ft.addToBackStack(fragment::class.java.name)
+        ft.commitAllowingStateLoss()
     }
 
+    private fun showHiddenFragment(fragment: Fragment) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.fade_in_quick, R.anim.fade_out_quick)
+        val bottomBarFragments = getBottomBarFragments(fragment::class.java.name)
+        bottomBarFragments.forEach {
+            ft.hide(it)
+        }
+        ft.show(fragment)
+        ft.commitAllowingStateLoss()
+    }
+
+    private fun getBottomBarFragments(selectedFragmentName: String): List<Fragment> {
+        return getBottomNavFragmentNames()
+            .filter { it != selectedFragmentName }
+            .mapNotNull { supportFragmentManager.findFragmentByTag(it) }
+    }
     //endregion
 
     //region Back Stack
 
     override fun onBackPressed() {
-        if(isDrawerOpen) {
+        if (isDrawerOpen) {
             closeNavigationDrawer()
             return
         }
@@ -825,10 +834,35 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val topFragment = topFragment
         if (topFragment is ParentFragment) {
             if (!topFragment.handleBackPressed()) {
-                super.onBackPressed()
+                if (isBottomNavFragment(topFragment)) {
+                    handleBottomNavBackStack()
+                } else {
+                    super.onBackPressed()
+                }
             }
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun handleBottomNavBackStack() {
+        if (bottomNavScreensStack.size == 0) {
+            finish()
+        } else if (bottomNavScreensStack.size == 1) {
+            bottomNavScreensStack.pop()
+            val previousFragment = supportFragmentManager.findFragmentByTag(navigationBehavior.homeFragmentClass.name)
+            if (previousFragment != null) {
+                showHiddenFragment(previousFragment)
+                applyCurrentFragmentTheme()
+            }
+        } else {
+            bottomNavScreensStack.pop()
+            val previousFragmentName = bottomNavScreensStack.peek()
+            val previousFragment = supportFragmentManager.findFragmentByTag(previousFragmentName)
+            if (previousFragment != null) {
+                showHiddenFragment(previousFragment)
+                applyCurrentFragmentTheme()
+            }
         }
     }
 
@@ -836,8 +870,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         get() {
             val stackSize = supportFragmentManager.backStackEntryCount
             if (stackSize > 0) {
-                val fragmentTag = supportFragmentManager.getBackStackEntryAt(stackSize - 1).name
-                return supportFragmentManager.findFragmentByTag(fragmentTag)
+                val backStackEntryName = supportFragmentManager.getBackStackEntryAt(stackSize - 1).name
+                return if (backStackEntryName in getBottomNavFragmentNames()) {
+                    currentFragment
+                } else {
+                    supportFragmentManager.findFragmentByTag(backStackEntryName)
+                }
             }
             return null
         }
@@ -852,7 +890,20 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             return null
         }
 
-    override val currentFragment: Fragment? get() = supportFragmentManager.findFragmentById(R.id.fullscreen)
+    override val currentFragment: Fragment?
+        get() {
+            val fragment = supportFragmentManager.findFragmentById(R.id.fullscreen)
+            return if (fragment != null && isBottomNavFragment(fragment)) {
+                val currentFragmentName = bottomNavScreensStack.peek() ?: navigationBehavior.homeFragmentClass.name
+                supportFragmentManager.findFragmentByTag(currentFragmentName)
+            } else {
+                fragment
+            }
+        }
+
+    private fun isBottomNavFragment(fragment: Fragment?) = fragment?.arguments?.getBoolean(BOTTOM_NAV_SCREEN) == true
+
+    private fun getBottomNavFragmentNames() = navigationBehavior.bottomNavBarFragments.map { it.name }
 
     private fun clearBackStack(cls: Class<*>?) {
         val fragment = topFragment
@@ -940,16 +991,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val gauge = findViewById<View>(R.id.navigationDrawerItem_gauge)
         gauge.visibility = if (gaugeLaunchDefinition != null) View.VISIBLE else View.GONE
         gauge.tag = gaugeLaunchDefinition
-    }
-
-    override fun updateCalendarStartDay() {
-        //Restarts the CalendarListViewFragment to update the changed start day of the week
-        val fragment = supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.name) as? ParentFragment
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit()
-        }
-        val route = CalendarFragment.makeRoute()
-        addFragment(CalendarFragment.newInstance(route), route)
     }
 
     override fun addBookmark() {
@@ -1043,6 +1084,33 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun onTicketError() {
         toast(R.string.errorOccurred)
+    }
+
+    private fun createBottomNavFragment(name: String?): ParentFragment? {
+        return when (name) {
+            navigationBehavior.homeFragmentClass.name -> {
+                val route = navigationBehavior.createHomeFragmentRoute(ApiPrefs.user)
+                navigationBehavior.createHomeFragment(route)
+            }
+            CalendarFragment::class.java.name -> {
+                val route = CalendarFragment.makeRoute()
+                CalendarFragment.newInstance(route)
+            }
+            ToDoListFragment::class.java.name -> {
+                val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
+                ToDoListFragment.newInstance(route)
+            }
+            NotificationListFragment::class.java.name -> {
+                val route = NotificationListFragment.makeRoute(ApiPrefs.user!!)
+                NotificationListFragment.newInstance(route)
+            }
+            InboxFragment::class.java.name -> {
+                val route = InboxFragment.makeRoute()
+                InboxFragment.newInstance(route)
+            }
+            NothingToSeeHereFragment::class.java.name -> NothingToSeeHereFragment.newInstance()
+            else -> null
+        }
     }
 
     companion object {

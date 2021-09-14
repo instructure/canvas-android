@@ -20,7 +20,6 @@ package com.instructure.canvas.espresso.mockCanvas
 
 import android.util.Log
 import com.github.javafaker.Faker
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas.Companion.data
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
@@ -150,12 +149,15 @@ class MockCanvas {
     val assignmentGroups = mutableMapOf<Long, MutableList<AssignmentGroup>>()
 
     /** Map of assignment ID to assignment */
-    val assignments = mutableMapOf<Long,Assignment>()
+    val assignments = mutableMapOf<Long, Assignment>()
+
+    /** Map of todos */
+    val todos = mutableListOf<PlannerItem>()
 
     /** Map of assignment ID to a list of submissions */
     val submissions = mutableMapOf<Long, MutableList<Submission>>()
 
-    var ltiTool: LTITool? = null
+    val ltiTools = mutableListOf<LTITool>()
 
     /** Map of course ids to discussion topic headers */
     val courseDiscussionTopicHeaders = mutableMapOf<Long, MutableList<DiscussionTopicHeader>>()
@@ -448,15 +450,19 @@ fun MockCanvas.updateUserEnrollments() {
     }
 }
 
-fun MockCanvas.addCourseWithEnrollment(user: User, enrollmentType: Enrollment.EnrollmentType) {
-    val course = addCourse()
+fun MockCanvas.addCourseWithEnrollment(user: User, enrollmentType: Enrollment.EnrollmentType, score: Double = 0.0, grade: String = "", isHomeroom: Boolean = false): Course {
+    val course = addCourse(isHomeroom = isHomeroom)
 
     addEnrollment(
         user = user,
         course = course,
         type = enrollmentType,
-        courseSectionId = if(course.sections.count() > 0) course.sections.get(0).id else 0
+        courseSectionId = if(course.sections.count() > 0) course.sections.get(0).id else 0,
+        currentScore = score,
+        currentGrade = grade
     )
+
+    return course
 }
 
 /** Creates a new Course and adds it to MockCanvas */
@@ -471,6 +477,15 @@ fun MockCanvas.addCourse(
 ): Course {
     val randomCourseName = Randomizer.randomCourseName()
     val endAt = if (concluded) OffsetDateTime.now().minusWeeks(1).toApiString() else null
+
+    val gradingPeriodList = if (withGradingPeriod) {
+        val gradingPeriodId = this.newItemId()
+        val gradingPeriod = GradingPeriod(gradingPeriodId, "Grading Period $gradingPeriodId")
+        addGradingPeriod(id, gradingPeriod)
+    } else {
+        emptyList()
+    }
+
     val course = Course(
         id = id,
         name = randomCourseName,
@@ -481,7 +496,8 @@ fun MockCanvas.addCourse(
         isFavorite = isFavorite,
         sections = if (section != null) listOf(section) else listOf<Section>(),
         isPublic = isPublic,
-        homeroomCourse = isHomeroom
+        homeroomCourse = isHomeroom,
+        gradingPeriods = gradingPeriodList
     )
     courses += course.id to course
 
@@ -490,22 +506,17 @@ fun MockCanvas.addCourse(
     val quizzesTab = Tab(position = 1, label = "Quizzes", visibility = "public", tabId = Tab.QUIZZES_ID)
     courseTabs += course.id to mutableListOf(assignmentsTab, quizzesTab)
 
-    if(withGradingPeriod) {
-        val id = this.newItemId()
-        val gradingPeriod = GradingPeriod(id, "Grading Period $id")
-        addGradingPeriod(course.id, gradingPeriod)
-    }
-
     return course
 }
 
-fun MockCanvas.addGradingPeriod(courseId : Long, gradingPeriod: GradingPeriod) {
+fun MockCanvas.addGradingPeriod(courseId : Long, gradingPeriod: GradingPeriod): List<GradingPeriod> {
     var gpList = courseGradingPeriods[courseId]
     if(gpList == null) {
         gpList = mutableListOf<GradingPeriod>()
         courseGradingPeriods[courseId] = gpList
     }
     gpList.add(gradingPeriod)
+    return gpList
 }
 
 /** Adds the provided permissions to the course */
@@ -969,10 +980,10 @@ fun MockCanvas.addSubmissionForAssignment(
     return userRootSubmission
 }
 
-fun MockCanvas.addLTITool(name: String, url: String): LTITool {
-    val ltiTool = LTITool(id = 123L, name = name, url = url)
+fun MockCanvas.addLTITool(name: String, url: String, course: Course, id: Long = newItemId()): LTITool {
+    val ltiTool = LTITool(id = id, name = name, url = url, contextId = course.id, contextName = course.name)
 
-    this.ltiTool = ltiTool
+    this.ltiTools.add(ltiTool)
 
     return ltiTool
 }
@@ -993,23 +1004,27 @@ fun MockCanvas.addTerm(name: String = Randomizer.randomEnrollmentTitle()): Term 
 
 /** Creates a new Enrollment and adds it to MockCanvas */
 fun MockCanvas.addEnrollment(
-        user: User,
-        course: Course,
-        type: Enrollment.EnrollmentType,
-        observedUser: User? = null,
-        courseSectionId: Long = 0
+    user: User,
+    course: Course,
+    type: Enrollment.EnrollmentType,
+    observedUser: User? = null,
+    courseSectionId: Long = 0,
+    currentScore: Double = 88.1,
+    currentGrade: String = "B+"
 ): Enrollment {
     val enrollment = Enrollment(
-            id = enrollments.size + 1L,
-            role = type,
-            type = type,
-            courseId = course.id,
-            enrollmentState = "active",
-            userId = user.id,
-            observedUser = observedUser,
-            grades = Grades(currentScore = 88.1, currentGrade = "B+"),
-            courseSectionId = courseSectionId,
-            user = user
+        id = enrollments.size + 1L,
+        role = type,
+        type = type,
+        courseId = course.id,
+        enrollmentState = "active",
+        userId = user.id,
+        observedUser = observedUser,
+        grades = Grades(currentScore = currentScore, currentGrade = currentGrade),
+        courseSectionId = courseSectionId,
+        user = user,
+        computedCurrentScore = currentScore,
+        computedCurrentGrade = currentGrade
     )
     enrollments += enrollment.id to enrollment
     course.enrollments?.add(enrollment) // You won't see grades in the dashboard unless the course has enrollments
@@ -1931,7 +1946,7 @@ fun MockCanvas.addSubmissionStreamItem(
 
     // Record the StreamItem
     var list = streamItems[user.id]
-    if(list == null) {
+    if (list == null) {
         list = mutableListOf<StreamItem>()
         streamItems[user.id] = list
     }
@@ -1939,4 +1954,23 @@ fun MockCanvas.addSubmissionStreamItem(
 
     // Return the StreamItem
     return item
+}
+
+fun MockCanvas.addTodo(name: String, userId: Long, courseId: Long? = null, date: Date? = null): PlannerItem {
+    val todo = PlannerItem(
+        courseId,
+        null,
+        userId,
+        null,
+        null,
+        PlannableType.TODO,
+        Plannable(newItemId(), name, courseId, null, userId, null, date, null, date.toApiString()),
+        date ?: Date(),
+        null,
+        null,
+        null
+    )
+
+    todos.add(todo)
+    return todo
 }

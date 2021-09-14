@@ -23,8 +23,10 @@ import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 object ExternalToolsEndpoint : Endpoint(
     response = {
         GET { // Only currently used for AssignmentDetailsInteractionTest.testQuizzesNext, which is commented out
-            if(data.ltiTool != null) {
-                request.successResponse(data.ltiTool!!)
+            val course = data.courses[pathVars.courseId]!!
+            val result = data.ltiTools.filter { it.contextId == course.id }
+            if(!result.isNullOrEmpty()) {
+                request.successResponse(result)
             } else {
                 request.unauthorizedResponse()
             }

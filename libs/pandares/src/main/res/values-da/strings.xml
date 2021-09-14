@@ -1176,24 +1176,47 @@
     <string name="viewPreviousAnnouncements">Se tidligere beskeder</string>
     <string name="homeroomError">Kunne ikke indlæse Homeroom</string>
     <string name="homeroomRefreshFail">Kunne ikke opdatere Homeroom</string>
-
     <string name="nothingDueToday">Intet forfalder i dag</string>
     <string name="dueToday">%1$s forfalder i dag</string>
     <string name="missing">%1$s mangler</string>
     <string name="homeroomEmptyTitle">Velkommen!</string>
     <string name="homeroomEmptyMessage">Dine emner vises her.</string>
     <string name="homeroomNoSubjects">Du har i øjeblikket ingen emner.</string>
+    <string name="settingsElementaryViewSubtitle">Kræver genstart af app</string>
+    <string name="gradesSelect">Vælg</string>
+    <string name="selectGradingPeriod">Vælg karakterperiode</string>
+    <string name="currentGradingPeriod">Nuværende karakterperiode</string>
+    <string name="failedToLoadGrades">Kunne ikke indlæse karakterer</string>
+    <string name="failedToLoadGradesForGradingPeriod">Kunne ikke indlæse karakterer for karakterperioden</string>
+    <string name="failedToRefreshGrades">Kunne ikke opdatere karakterer</string>
+    <string name="noGradesToDisplay">Ingen karakterer at vise</string>
+    <string name="notGraded">Ikke bedømt</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Skift karakterperiode</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Karakterer ikke tilgængelige</string>
+    <string name="bottomBarHomeroom">Klasselokale</string>
 
-
+    <string name="settingsHomeroomView">Klasseværelsevisning</string>
+    <string name="importantLinksTitle">Vigtige links</string>
+    <string name="studentApplications">Applikationer for studerende</string>
+    <string name="staffContactInfo">Kontaktoplysninger for personale</string>
+    <string name="chooseACourse">Vælg et fag</string>
+    <string name="webViewImportantLinksTitle">Vigtige links</string>
+    <string name="staffRoleTeacher">Lærer</string>
+    <string name="staffRoleTeacherAssistant">Undervisningsassistent</string>
+    <string name="resourcesEmptyMessage">Dine ressourcer vises her.</string>
+    <string name="failedToLoadResources">Kunne ikke indlæse ressourcer</string>
+    <string name="failedToRefreshResources">Kunne ikke opdatere ressourcer</string>
     <string name="open_alternate_view">Åbn en mere tilgængelig alternativ visning</string>
 
     <string name="a11y_content_description_message_recipients">Modtagere</string>
     <string name="a11y_content_description_inbox_subject">Emne</string>
     <string name="a11y_content_description_inbox_course_spinner">Vælg et fag, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Den studerendes svar er skjult, fordi denne opgave er anonym.</string>
 
     <string name="studentAnnotationUnsupported">Studerendes anmærkninger (ikke understøttet)</string>
     <string name="studentAnnotationUnsupportedDescription">Studerendes anmærkninger understøttes i øjeblikket ikke på mobil.</string>
     <string name="unsupportedSubmissionType">Ikke-understøttet afleveringsform</string>
     <string name="studentAnnotationUnsupportedMessage">Aflevering kan ikke vises, fordi studerendes anmærkninger i øjeblikket ikke understøttes på mobil.</string>
+    <string name="schedule_marked_as_done">Du har markeret det som udført.</string>
 </resources>

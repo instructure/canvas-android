@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Chwazi Medya</string>
     <string name="takeVideo">Anrejistre Videyo</string>
     <string name="noCameraOnDevice">Pa gen Kamera</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Notifikasyon Transfè</string>
     <string name="notificationChannelNameFileUploadsDescription">Notifikasyon Canvas pou transfè k ap fèt.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Ajoute Fichye</string>
+
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galeri</string>
     <string name="fromDevice">Aparèy</string>
@@ -53,7 +55,6 @@
     <string name="file">Fichye</string>
     <string name="fileTalkBack">Fichye %s</string>
     <string name="folderTalkBack">Dosye %s</string>
-
     <string name="addItem">Ajoute Eleman</string>
     <string name="assignment">Sesyon</string>
     <string name="attachedFiles">Fichye Ajoute</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Transfè soumisyon pou %s</string>
     <string name="assignmentSubmissionError">Soumisyon echwe pou %s</string>
     <string name="assignmentSubmissionComplete">Soumisyon reyisi %s</string>
+
     <!--Errors-->
     <string name="errorOccurred">Yon erè fèt sanzatann.</string>
     <string name="serverError">Gen yon erè sèvè ki fèt.</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">Ta sanble poko gen modil ki kreye.</string>
     <string name="noPages">Okenn Paj</string>
     <string name="noPagesSubtext">Ta sanble poko gen paj ki kreye.</string>
-
     <string name="modulesLockedSubtext">Yo dezaktive modil yo pou kou sa a.</string>
     <string name="modulesLocked">Gen yon Bagay ki Pase Mal</string>
+
     <!--General-->
     <string name="yes">Wi</string>
     <string name="no">Non</string>
@@ -326,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Dat deblokaj la pa kapab aprè delè a</string>
     <string name="utils_lockBeforeDueDateError">Dat blokaj la pa dwe anvan delè a</string>
     <string name="utils_lockAfterUnlockError">Dat blokaj la pa dwe anvan dat deblokaj la</string>
@@ -379,13 +382,14 @@
     <string name="utils_uploadToSubmissionComment">Soumèt nan Kòmantè Soumisyon</string>
     <string name="utils_attachFile">Ajoute yon fichye</string>
     <string name="utils_with">avèk</string>
+
     <string name="notificationPrimaryInboxTitle">Avètisman Canvas</string>
     <string name="notificationChannelNamePrimary">Avètisman Jeneral Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Plis konfigirasyon avètisman posib nan seksyon Preferans Avètisman Canvas la.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d Nouvo notifikasyon</item>
     </plurals>
+
     <string name="copyLinkAddress">Kopye lyen</string>
     <string name="copyLink">Kopye Lyen</string>
     <string name="linkCopied">Lyen kopye</string>
@@ -415,7 +419,6 @@
     <string name="image_uploading">Transfè Imaj...</string>
     <string name="image_upload_error">Erè Transfè Imaj</string>
     <string name="retry">Re eseye</string>
-
     <string name="search">Chèche</string>
     <string name="searchAssignmentsHint">Chèche Sesyon</string>
     <string name="searchAnnouncementsHint">Chèche Anons</string>
@@ -423,11 +426,33 @@
     <string name="searchPagesHint">Chèche Paj</string>
     <string name="searchQuizzesHint">Chèche Quiz</string>
     <string name="noItemsMatchingQuery">Pa gen eleman ki koresponn \"%s\"</string>
+
     <string name="selected">Chwazi</string>
 
     <string name="notificationChannelNameInAppUpdate">Notifikasyon aktyalizasyon app</string>
     <string name="notificationChannelDescriptionInAppUpdate">Notifikasyon Canvas pou achte nan app la.</string>
     <string name="appUpdateReadyTitle">App pare pou aktyalize</string>
     <string name="appUpdateReadyDescription">Relanse app la pou ka enstale nouvo vèsyon an</string>
+    <string name="nothing_planned_yet">Anyen poko planifye</string>
+    <string name="schedule_tag_graded">Klase</string>
+    <string name="schedule_tag_replies">Repons</string>
+    <string name="schedule_tag_feedback">Kòmantè</string>
+    <string name="schedule_tag_late">An reta</string>
+    <string name="schedule_tag_redo">Refè</string>
+    <string name="schedule_tag_excused">Egzante</string>
+    <string name="tomorrow">Demen</string>
+    <string name="yesterday">Yè</string>
+    <string name="schedule_calendar_event_due_text">Nan %s</string>
+    <string name="schedule_todo_due_text">Tach: %s</string>
+    <string name="schedule_due_text">Delè: %s</string>
+    <string name="show_missing_items_title">Afiche %d eleman ki manke</string>
+    <string name="hide_missing_items_title">Kache %d eleman ki manke</string>
+    <string name="schedule_error_message">Enposib pou rekipere agenda w la</string>
+    <string name="schedule_todo_title">Pou Fè</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pwen</item>
+        <item quantity="one">%s pwen</item>
+        <item quantity="other">%s pwen</item>
+    </plurals>
 
 </resources>

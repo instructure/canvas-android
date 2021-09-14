@@ -19,15 +19,9 @@ package com.instructure.pandautils.di
 import android.app.NotificationManager
 import android.content.Context
 import android.content.res.Resources
-import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.pandautils.typeface.TypefaceBehavior
-import com.instructure.pandautils.update.UpdateManager
-import com.instructure.pandautils.update.UpdatePrefs
-import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.Module

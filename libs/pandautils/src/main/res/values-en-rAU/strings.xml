@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Choose Media</string>
     <string name="takeVideo">Take Video</string>
     <string name="noCameraOnDevice">No Camera</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Upload Notifications</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas notifications for ongoing uploads.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Add File</string>
+
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Gallery</string>
     <string name="fromDevice">Device</string>
@@ -53,7 +55,6 @@
     <string name="file">File</string>
     <string name="fileTalkBack">File %s</string>
     <string name="folderTalkBack">Folder %s</string>
-
     <string name="addItem">Add Item</string>
     <string name="assignment">Assignment</string>
     <string name="attachedFiles">Attached Files</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Uploading submission for %s</string>
     <string name="assignmentSubmissionError">Submission failed for %s</string>
     <string name="assignmentSubmissionComplete">Successfully submitted %s</string>
+
     <!--Errors-->
     <string name="errorOccurred">An unexpected error occurred.</string>
     <string name="serverError">A server error has occurred.</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">It looks like there aren\'t any modules created yet.</string>
     <string name="noPages">No Pages</string>
     <string name="noPagesSubtext">It looks like no pages have been created yet.</string>
-
     <string name="modulesLockedSubtext">Modules have been disabled for this course.</string>
     <string name="modulesLocked">Something Went Wrong</string>
+
     <!--General-->
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -326,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Unlock date cannot be after due date</string>
     <string name="utils_lockBeforeDueDateError">Lock date cannot be before due date</string>
     <string name="utils_lockAfterUnlockError">Lock date cannot be before unlock date</string>
@@ -379,13 +382,14 @@
     <string name="utils_uploadToSubmissionComment">Upload to Submission Comment</string>
     <string name="utils_attachFile">Attach a file</string>
     <string name="utils_with">with</string>
+
     <string name="notificationPrimaryInboxTitle">Canvas Notification</string>
     <string name="notificationChannelNamePrimary">General Canvas Notifications</string>
     <string name="notificationChannelDescriptionPrimary">Further configuration of notifications can be done within the Canvas Notification Preferences section.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d new notifications</item>
     </plurals>
+
     <string name="copyLinkAddress">Copy link address</string>
     <string name="copyLink">Copy Link</string>
     <string name="linkCopied">Link copied</string>
@@ -415,7 +419,6 @@
     <string name="image_uploading">Image Uploading...</string>
     <string name="image_upload_error">Image Upload Error</string>
     <string name="retry">Retry</string>
-
     <string name="search">Search</string>
     <string name="searchAssignmentsHint">Search Assignments</string>
     <string name="searchAnnouncementsHint">Search Announcements</string>
@@ -423,11 +426,33 @@
     <string name="searchPagesHint">Search Pages</string>
     <string name="searchQuizzesHint">Search Quizzes</string>
     <string name="noItemsMatchingQuery">No items match \"%s\"</string>
+
     <string name="selected">Selected</string>
 
     <string name="notificationChannelNameInAppUpdate">App update notifications</string>
     <string name="notificationChannelDescriptionInAppUpdate">Canvas notifications for in-app updates.</string>
     <string name="appUpdateReadyTitle">App ready to update</string>
     <string name="appUpdateReadyDescription">Restart the app to install the new version</string>
+    <string name="nothing_planned_yet">Nothing planned yet</string>
+    <string name="schedule_tag_graded">Marked</string>
+    <string name="schedule_tag_replies">Replies</string>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">Late</string>
+    <string name="schedule_tag_redo">Redo</string>
+    <string name="schedule_tag_excused">Excused</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="schedule_calendar_event_due_text">At %s</string>
+    <string name="schedule_todo_due_text">To Do: %s</string>
+    <string name="schedule_due_text">Due: %s</string>
+    <string name="show_missing_items_title">Show %d missing items</string>
+    <string name="hide_missing_items_title">Hide %d missing items</string>
+    <string name="schedule_error_message">Unable to fetch your schedule</string>
+    <string name="schedule_todo_title">To Do</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s pts</item>
+    </plurals>
 
 </resources>

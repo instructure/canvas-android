@@ -1,7 +1,9 @@
 package com.instructure.canvasapi2.di
 
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.HelpLinksAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.apis.ToDoAPI
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -61,6 +63,21 @@ object ApiModule {
     }
 
     @Provides
+    fun provideToDoManager(): ToDoManager {
+        return ToDoManager
+    }
+
+    @Provides
+    fun provideEnrollmentManager(): EnrollmentManager {
+        return EnrollmentManager
+    }
+
+    @Provides
+    fun provideExternalToolManager(): ExternalToolManager {
+        return ExternalToolManager
+    }
+
+    @Provides
     @Singleton
     fun provideHelpLinksApi(): HelpLinksAPI {
         return HelpLinksAPI
@@ -76,5 +93,15 @@ object ApiModule {
     @Singleton
     fun providePlannerApi(): PlannerAPI {
         return PlannerAPI
+    }
+
+    @Provides
+    fun provideAssignmentManager(): AssignmentManager {
+        return AssignmentManager
+    }
+
+    @Provides
+    fun provideCalendarEventManager(): CalendarEventManager {
+        return CalendarEventManager
     }
 }

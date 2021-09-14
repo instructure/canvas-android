@@ -35,7 +35,7 @@ data class PlannerItem (
     val contextName: String?,
 
     @SerializedName("plannable_type")
-    val plannableType: String,
+    val plannableType: PlannableType,
 
     val plannable: Plannable,
 
@@ -46,7 +46,13 @@ data class PlannerItem (
     val htmlUrl: String?,
 
     @SerializedName("submissions")
-    val submissionState: SubmissionState?
+    val submissionState: SubmissionState?,
+
+    @SerializedName("new_activity")
+    val newActivity: Boolean?,
+
+    @SerializedName("planner_override")
+    var plannerOverride: PlannerOverride? = null
 ) {
 
     val canvasContext: CanvasContext
@@ -60,4 +66,23 @@ data class PlannerItem (
             return CanvasContext.defaultCanvasContext()
         }
 
+}
+
+enum class PlannableType {
+    @SerializedName("announcement")
+    ANNOUNCEMENT,
+    @SerializedName("assignment")
+    ASSIGNMENT,
+    @SerializedName("discussion_topic")
+    DISCUSSION_TOPIC,
+    @SerializedName("quiz")
+    QUIZ,
+    @SerializedName("wiki_page")
+    WIKI_PAGE,
+    @SerializedName("planner_note")
+    PLANNER_NOTE,
+    @SerializedName("calendar_event")
+    CALENDAR_EVENT,
+    @SerializedName("todo")
+    TODO
 }

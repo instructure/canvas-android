@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C)  - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.elementary.grades.itemviewmodels.GradeRowItemViewModel" />
+
+        <import type="com.instructure.pandautils.utils.ColorUtils" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/gradeRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="@{() -> itemViewModel.onRowClicked.invoke()}">
+
+        <View
+            android:id="@+id/courseSeparator"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/k5SeparatorColor"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/gradesCourseNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="17sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="@{itemViewModel.data.courseName}"
+            android:textColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+            app:layout_constraintTop_toBottomOf="@id/courseSeparator"
+            tools:text="Math"
+            tools:textColor="@color/red" />
+
+        <ImageView
+            android:id="@+id/chevronIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_chevron_right"
+            android:layout_marginEnd="8dp"
+            android:tint="#8B969E"
+            app:layout_constraintTop_toBottomOf="@id/gradesCourseNameText"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/progressLayout"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gradesCourseNameText"
+            app:layout_constraintEnd_toStartOf="@id/chevronIcon">
+
+            <View
+                android:id="@+id/progressBorder"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_rounded_rectangle"
+                android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                tools:backgroundTint="@color/red"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <View
+                android:id="@+id/progress"
+                android:layout_width="0dp"
+                android:layout_height="12dp"
+                android:background="@drawable/bg_rounded_rectangle_filled"
+                android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="@{itemViewModel.percentage}"
+                app:layout_constraintHorizontal_bias="0"
+                tools:background="@color/red" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/scoreText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:textSize="17sp"
+            android:textColor="@color/defaultTextDark"
+            android:text="@{itemViewModel.data.gradeText}"
+            android:contentDescription="@{itemViewModel.gradeContentDescription}"
+            app:layout_constraintTop_toBottomOf="@id/progressLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="90%" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

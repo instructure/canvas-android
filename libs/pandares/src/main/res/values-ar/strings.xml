@@ -1053,6 +1053,7 @@
     <string name="addChildErrorMessage">تعذر الإقران. تأكد من أن رمز الإقران صحيح وفي إطار الحد الزمني للاستخدام.</string>
     <string name="gradeComplete">مكتمل</string>
     <string name="gradeIncomplete">غير مكتمل</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">نشر الإعدادات</string>
     <string name="postGradesTab">نشر التقادير</string>
@@ -1230,24 +1231,47 @@
     <string name="viewPreviousAnnouncements">عرض إعلانات سابقة</string>
     <string name="homeroomError">فشل تحميل جلسة التسجيل</string>
     <string name="homeroomRefreshFail">فشل تحديث جلسة التسجيل</string>
-
     <string name="nothingDueToday">لا شيء مستحق اليوم</string>
     <string name="dueToday">%1$s مستحق اليوم</string>
     <string name="missing">%1$s مفقود</string>
     <string name="homeroomEmptyTitle">مرحبًا!</string>
     <string name="homeroomEmptyMessage">تظهر الموضوعات هنا.</string>
     <string name="homeroomNoSubjects">ليس لديك موضوعات في الوقت الحالي.</string>
+    <string name="settingsElementaryViewSubtitle">يتطلب إعادة تشغيل التطبيق</string>
+    <string name="gradesSelect">تحديد</string>
+    <string name="selectGradingPeriod">تحديد فترة التقييم</string>
+    <string name="currentGradingPeriod">فترة التقدير الحالية</string>
+    <string name="failedToLoadGrades">فشل تحميل الدرجات</string>
+    <string name="failedToLoadGradesForGradingPeriod">تعذر تحميل التقديرات لفترة التقدير</string>
+    <string name="failedToRefreshGrades">تعذر تحديث التقديرات</string>
+    <string name="noGradesToDisplay">لا توجد تقديرات للعرض</string>
+    <string name="notGraded">لم يتم التقييم</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">تغيير فترة التقدير</string>
+    <string name="a11y_gradesNotAvailableContentDescription">التقديرات غير متاحة</string>
+    <string name="bottomBarHomeroom">جلسة التسجيل</string>
 
-
+    <string name="settingsHomeroomView">عرض جلسة التسجيل</string>
+    <string name="importantLinksTitle">الروابط الهامة</string>
+    <string name="studentApplications">تقديمات الطالب</string>
+    <string name="staffContactInfo">معلومات الاتصال الخاصة بالعاملين</string>
+    <string name="chooseACourse">اختر مساقًا</string>
+    <string name="webViewImportantLinksTitle">الروابط الهامة</string>
+    <string name="staffRoleTeacher">المعلم</string>
+    <string name="staffRoleTeacherAssistant">المعلم المساعد</string>
+    <string name="resourcesEmptyMessage">مواردك تظهر هنا.</string>
+    <string name="failedToLoadResources">فشل تحميل الموارد</string>
+    <string name="failedToRefreshResources">فشل تحديث الموارد</string>
     <string name="open_alternate_view">فتح طريقة عرض بديلة أكثر سهولة</string>
 
     <string name="a11y_content_description_message_recipients">المتلقون</string>
     <string name="a11y_content_description_inbox_subject">الموضوع</string>
     <string name="a11y_content_description_inbox_course_spinner">حدد مساقًا، %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">استجابات هذا الطالب مخفية لأن هذه المهمة مجهولة الاسم.</string>
 
     <string name="studentAnnotationUnsupported">التعليق التوضيحي للطالب (غير مدعوم)</string>
     <string name="studentAnnotationUnsupportedDescription">التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
     <string name="unsupportedSubmissionType">نوع إرسال غير مدعوم</string>
     <string name="studentAnnotationUnsupportedMessage">لا يمكن عرض الإرسال، لأن التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
+    <string name="schedule_marked_as_done">قمت بتمييزه بأنه تم.</string>
 </resources>

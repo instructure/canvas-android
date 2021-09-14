@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Välj media</string>
     <string name="takeVideo">Spela in video</string>
     <string name="noCameraOnDevice">Ingen kamera</string>
@@ -46,6 +45,7 @@
 
     <!-- Turn in Files -->
     <string name="addFile">Lägg till fil</string>
+
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleri</string>
     <string name="fromDevice">Enhet</string>
@@ -91,7 +91,7 @@
     <string name="fileIcon">Filikon</string>
     <string name="uploadingFileNum" formatted="false">Laddar upp %d av %d</string>
     <string name="fileLocked" formatted="false">%s har låsts.</string>
-    <string name="filePermissionGranted">Filerna är nu redo att ladda ned. Försök igen.</string>
+    <string name="filePermissionGranted">Filen är nu klar att laddas ner. Försök igen.</string>
     <string name="filePermissionDenied">Filen kan inte laddas ned utan att ge behörighet.</string>
     <string name="pleaseTryAgain">Behörighet beviljades. Försök igen..</string>
     <string name="pickFile">Välj en fil</string>
@@ -121,6 +121,7 @@
     <string name="oneOrMoreExtensionNotAllowed">En eller flera filer har ett filtillägg som inte är tillåtet</string>
     <string name="extensionNotAllowed">Den valda filtypen är inte tillåten.</string>
     <string name="allowedExtensions">Tillåtna tillägg:&#160;</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Kontrollera din dataanslutning och försök igen. </string>
     <string name="noApps">Din enhet har inte några program installerade som kan hantera den här filen.</string>
@@ -184,9 +185,9 @@
     <string name="noModulesSubtext">Det verkar inte som om några moduler har skapats än.</string>
     <string name="noPages">Inga sidor</string>
     <string name="noPagesSubtext">Det verkar inte som om några sidor har skapats än.</string>
-
     <string name="modulesLockedSubtext">Moduler har inaktiverats för den här kursen.</string>
     <string name="modulesLocked">Något gick fel</string>
+
     <!--General-->
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
@@ -327,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Upplåsningsdatumet kan inte vara efter sista inlämningsdatumet</string>
     <string name="utils_lockBeforeDueDateError">Låsdatumet kan inte vara före inlämningsdatumet</string>
     <string name="utils_lockAfterUnlockError">Låsdatumet kan inte vara före upplåsningsdatumet</string>
@@ -343,7 +345,7 @@
     <string name="utils_addNew">Lägg till ny</string>
 
     <!--Attachment Layout-->
-    <string name="utils_downloadAttachment">Ladda ned bilaga</string>
+    <string name="utils_downloadAttachment">Ladda ner bilaga</string>
     <string name="utils_removeAttachment">Ta bort bilaga</string>
 
     <!--Unsaved Changes-->
@@ -384,10 +386,10 @@
     <string name="notificationPrimaryInboxTitle">Canvas-avisering</string>
     <string name="notificationChannelNamePrimary">Allmänna Canvas-aviseringar</string>
     <string name="notificationChannelDescriptionPrimary">Ytterligare konfiguration av aviseringar kan göras i sektionen för inställningar för Canvas-aviseringar.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d nya aviseringar</item>
     </plurals>
+
     <string name="copyLinkAddress">Kopiera länkadress</string>
     <string name="copyLink">Kopiera länk</string>
     <string name="linkCopied">Länken har kopierats</string>
@@ -431,5 +433,26 @@
     <string name="notificationChannelDescriptionInAppUpdate">Canvas-aviseringar för uppdateringar i appen.</string>
     <string name="appUpdateReadyTitle">Appen är klar för uppdatering</string>
     <string name="appUpdateReadyDescription">Starta om appen för att installera den nya versionen</string>
+    <string name="nothing_planned_yet">Inget planerat ännu</string>
+    <string name="schedule_tag_graded">Har bedömts</string>
+    <string name="schedule_tag_replies">Svar</string>
+    <string name="schedule_tag_feedback">Återkoppling</string>
+    <string name="schedule_tag_late">Sen</string>
+    <string name="schedule_tag_redo">Gör om</string>
+    <string name="schedule_tag_excused">Ursäktad</string>
+    <string name="tomorrow">I morgon</string>
+    <string name="yesterday">I går</string>
+    <string name="schedule_calendar_event_due_text">Kl. %s</string>
+    <string name="schedule_todo_due_text">Att göra: %s</string>
+    <string name="schedule_due_text">Inlämningsdatum: %s</string>
+    <string name="show_missing_items_title">Visa %d saknade objekt</string>
+    <string name="hide_missing_items_title">Dölj %d saknade objekt</string>
+    <string name="schedule_error_message">Det gick inte att hämta ditt schema</string>
+    <string name="schedule_todo_title">Att göra</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s poäng</item>
+        <item quantity="one">%s poäng</item>
+        <item quantity="other">%s poäng</item>
+    </plurals>
 
 </resources>

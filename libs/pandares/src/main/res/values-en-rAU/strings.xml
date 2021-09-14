@@ -1176,24 +1176,47 @@
     <string name="viewPreviousAnnouncements">View Previous Announcements</string>
     <string name="homeroomError">Failed to load Homeroom</string>
     <string name="homeroomRefreshFail">Failed to refresh Homeroom</string>
-
     <string name="nothingDueToday">Nothing Due Today</string>
     <string name="dueToday">%1$s due today</string>
     <string name="missing">%1$s missing</string>
     <string name="homeroomEmptyTitle">Welcome!</string>
     <string name="homeroomEmptyMessage">Your subjects show up here.</string>
     <string name="homeroomNoSubjects">You currently have no subjects.</string>
+    <string name="settingsElementaryViewSubtitle">Requires app restart</string>
+    <string name="gradesSelect">Select</string>
+    <string name="selectGradingPeriod">Select Grading Period</string>
+    <string name="currentGradingPeriod">Current Grading Period</string>
+    <string name="failedToLoadGrades">Failed to load marks</string>
+    <string name="failedToLoadGradesForGradingPeriod">Failed to load grades for grading period</string>
+    <string name="failedToRefreshGrades">Failed to refresh grades</string>
+    <string name="noGradesToDisplay">No grades to display</string>
+    <string name="notGraded">Not Marked</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Change grading period</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Grades not available</string>
+    <string name="bottomBarHomeroom">Homeroom</string>
 
-
+    <string name="settingsHomeroomView">Homeroom View</string>
+    <string name="importantLinksTitle">Important Links</string>
+    <string name="studentApplications">Student Applications</string>
+    <string name="staffContactInfo">Staff Contact Info</string>
+    <string name="chooseACourse">Choose a Course</string>
+    <string name="webViewImportantLinksTitle">Important Links</string>
+    <string name="staffRoleTeacher">Teacher</string>
+    <string name="staffRoleTeacherAssistant">Teaching Assistant</string>
+    <string name="resourcesEmptyMessage">Your resources show up here.</string>
+    <string name="failedToLoadResources">Failed to load resources</string>
+    <string name="failedToRefreshResources">Failed to refresh resources</string>
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 
     <string name="a11y_content_description_message_recipients">Recipients</string>
     <string name="a11y_content_description_inbox_subject">Subject</string>
     <string name="a11y_content_description_inbox_course_spinner">Select a course, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">This student\'s responses are hidden because this assignment is anonymous.</string>
 
     <string name="studentAnnotationUnsupported">Student Annotation (Unsupported)</string>
     <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently not supported on mobile.</string>
     <string name="unsupportedSubmissionType">Unsupported Submission Type</string>
     <string name="studentAnnotationUnsupportedMessage">Submission cannot be displayed, because Student Annotation is currently not supported on mobile.</string>
+    <string name="schedule_marked_as_done">You\'ve marked it as done.</string>
 </resources>

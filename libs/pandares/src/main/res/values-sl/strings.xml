@@ -15,7 +15,6 @@
   ~
   -->
 <resources>
-
     <string name="noFilesFound">Ni najdenih datotek.</string>
     <string name="searchFilesHint">Poišči datoteke</string>
     <string name="fileSearchInstructions">Vnesite iskalno besedo s tremi ali več znaki.</string>
@@ -33,6 +32,7 @@
     <string name="selectedListItem">Izbrano: %s</string>
 
     <!-- Student Strings -->
+
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Podrobnosti o nalogi</string>
     <string name="submission_types">Vrste oddaj</string>
@@ -75,8 +75,8 @@
     <string name="addFileFabContentDesc">Prikaži možnosti za Dodaj datoteko</string>
     <string name="recordAudio">Posnemi zvok</string>
     <string name="recordVideo">Posnemi videoposnetek</string>
-
     <string name="a11y_textSubmissionEditor">Urejevalnik oddaje besedila</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Zapis&#8230;</string>
     <string name="textSubmissionFailureMessage">Prišlo je do težav pri nalaganju oddaje. Ponovno pošlji.</string>
@@ -1046,6 +1046,7 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
+
     <string name="content_description_chosen_head">Izbrana glava: %s</string>
     <string name="content_description_chosen_body">Izbrano telo: %s</string>
     <string name="content_description_chosen_feet">Izbrane noge: %s</string>
@@ -1164,6 +1165,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Odstrani vse z nadzorne plošče</string>
     <string name="a11y_content_description_add_to_dashboard">Dodaj na nadzorno ploščo</string>
     <string name="a11y_content_description_add_all_to_dashboard">Dodaj vse na nadzorno ploščo</string>
+
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Račun</string>
     <string name="dashboardTabHomeroom">Matični</string>
@@ -1172,28 +1174,50 @@
     <string name="dashboardTabResources">Viri</string>
     <string name="homeroomWelcomeMessage">Dobrodošli, %1$s!</string>
     <string name="homeroomMySubjects">Moji kratki opisi predmetov</string>
-
     <string name="viewPreviousAnnouncements">Prikaži predhodna obvestila</string>
     <string name="homeroomError">Nalaganje matičnega razreda ni uspelo</string>
     <string name="homeroomRefreshFail">Osveževanje matičnega razreda ni uspelo</string>
-
-
     <string name="nothingDueToday">Danes nič ne poteče</string>
     <string name="dueToday">%1$s poteče danes</string>
     <string name="missing">%1$s manjka</string>
     <string name="homeroomEmptyTitle">Dobrodošli.</string>
     <string name="homeroomEmptyMessage">Vaši predmeti se prikažejo tukaj.</string>
     <string name="homeroomNoSubjects">Trenutno nimate premetov.</string>
-
+    <string name="settingsElementaryViewSubtitle">Zahteva ponovni zagon aplikacije</string>
+    <string name="gradesSelect">Izberi</string>
+    <string name="selectGradingPeriod">Izberi ocenjevalno obdobje</string>
+    <string name="currentGradingPeriod">Trenutno ocenjevalno obdobje</string>
+    <string name="failedToLoadGrades">Nalaganje ocen ni uspelo.</string>
+    <string name="failedToLoadGradesForGradingPeriod">Ocen za obdobje ocenjevanja ni bilo mogoče naložiti</string>
+    <string name="failedToRefreshGrades">Osveževanje ocen ni uspelo</string>
+    <string name="noGradesToDisplay">Ni ocen za prikaz</string>
+    <string name="notGraded">Ni ocenjeno</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Sprememba ocenjevalnega obdobja</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Ocene niso na voljo</string>
+    <string name="bottomBarHomeroom">Matični razred</string>
+    <string name="settingsHomeroomView">Pogled matičnega razreda</string>
+    <string name="importantLinksTitle">Pomembne povezave</string>
+    <string name="studentApplications">Vloge študentov</string>
+    <string name="staffContactInfo">Kontaktni podatki osebja</string>
+    <string name="chooseACourse">Izberite predmet</string>
+    <string name="webViewImportantLinksTitle">Pomembne povezave</string>
+    <string name="staffRoleTeacher">Izvajalec</string>
+    <string name="staffRoleTeacherAssistant">Demonstrator</string>
+    <string name="resourcesEmptyMessage">Tukaj se prikažejo vaši viri.</string>
+    <string name="failedToLoadResources">Nalaganje virov ni uspelo</string>
+    <string name="failedToRefreshResources">Osveževanje virov ni uspelo</string>
 
     <string name="open_alternate_view">Odpri dostopnejši alternativni pogled</string>
+
     <string name="a11y_content_description_message_recipients">Prejemniki</string>
     <string name="a11y_content_description_inbox_subject">Zadeva</string>
     <string name="a11y_content_description_inbox_course_spinner">Izberite predmet, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Odgovori tega študenta so skriti, ker je ta naloga anonimna.</string>
 
     <string name="studentAnnotationUnsupported">Opomba študenta (ni podprto)</string>
     <string name="studentAnnotationUnsupportedDescription">Opomba študenta v mobilnem prikazu trenutno ni podprta.</string>
     <string name="unsupportedSubmissionType">Nepodprta vrsta oddaje</string>
     <string name="studentAnnotationUnsupportedMessage">Oddaje ni mogoče prikazati, ker funkcija Opomba študenta v mobilnem prikazu trenutno ni podprta.</string>
+    <string name="schedule_marked_as_done">To ste označili kot končano.</string>
 </resources>

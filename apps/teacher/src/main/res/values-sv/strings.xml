@@ -354,7 +354,7 @@
     <string name="excuse_student">Låt studenten slippa göra</string>
     <string name="excuseGroup">Låt gruppen slippa göra</string>
     <string name="complete_grade">Färdig</string>
-    <string name="incomplete_grade">ofullständig</string>
+    <string name="incomplete_grade">Inte färdig</string>
     <string name="not_graded">Ej bedömd</string>
     <string name="excused">Ursäktad</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
@@ -391,7 +391,7 @@
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Inte inskickade, %s av %s</string>
     <string name="display_grade_as">Visa omdöme som&#8230;</string>
     <string name="percentage">Procent</string>
-    <string name="complete_incomplete">Färdig/ofullständig</string>
+    <string name="complete_incomplete">Färdig/Inte färdig</string>
     <string name="points">Poäng</string>
     <string name="gpa_scale">GPA-skala</string>
 
@@ -821,7 +821,7 @@
     <string name="hideCreateFileFolderFabContentDesc">Dölj knappar för Skapa fil och Skapa mapp</string>
     <string name="unpublish">Avpublicera</string>
     <string name="restrictedAccess">Begränsad åtkomst</string>
-    <string name="restricted">Begränsad</string>
+    <string name="restricted">Begränsat</string>
     <string name="hidden">Dold, filerna inuti kommer att vara tillgängliga via länkar.</string>
     <string name="studentsWithLink">Endast tillgänglig för studenter med länk. Ej tillgänglig i studentfiler.</string>
     <string name="scheduleAvailability">Schemalägg studentens tillgänglighet</string>

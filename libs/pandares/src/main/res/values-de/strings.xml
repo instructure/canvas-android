@@ -1176,24 +1176,47 @@
     <string name="viewPreviousAnnouncements">Vorherige Ankündigungen anzeigen</string>
     <string name="homeroomError">Organisationsstunde konnte nicht geladen werden.</string>
     <string name="homeroomRefreshFail">Aktualisierung der Organisationsstunde fehlgeschlagen</string>
-
     <string name="nothingDueToday">Heute ist nichts fällig.</string>
     <string name="dueToday">%1$s heute fällig</string>
     <string name="missing">%1$s fehlt/fehlen</string>
     <string name="homeroomEmptyTitle">Willkommen!</string>
     <string name="homeroomEmptyMessage">Ihre Fächer werden hier angezeigt.</string>
     <string name="homeroomNoSubjects">Zurzeit haben Sie keine Themen.</string>
+    <string name="settingsElementaryViewSubtitle">Erfordert Neustart der App</string>
+    <string name="gradesSelect">Auswählen</string>
+    <string name="selectGradingPeriod">Benotungszeitraum auswählen</string>
+    <string name="currentGradingPeriod">Aktueller Benotungszeitraums</string>
+    <string name="failedToLoadGrades">Laden von Noten fehlgeschlagen</string>
+    <string name="failedToLoadGradesForGradingPeriod">Noten für den Benotungszeitraum konnten nicht geladen werden.</string>
+    <string name="failedToRefreshGrades">Noten konnten nicht aktualisiert werden.</string>
+    <string name="noGradesToDisplay">Keine Noten anzuzeigen</string>
+    <string name="notGraded">Unbenotet</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Benotungszeitraum ändern</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Noten nicht verfügbar</string>
+    <string name="bottomBarHomeroom">Organisationsstunde</string>
 
-
+    <string name="settingsHomeroomView">Organisationsstundenansicht</string>
+    <string name="importantLinksTitle">Wichtige Links</string>
+    <string name="studentApplications">Anwendungen für Studenten</string>
+    <string name="staffContactInfo">Mitarbeiterkontakt-Info</string>
+    <string name="chooseACourse">Einen Kurs auswählen</string>
+    <string name="webViewImportantLinksTitle">Wichtige Links</string>
+    <string name="staffRoleTeacher">Lehrer</string>
+    <string name="staffRoleTeacherAssistant">Lehrassistent</string>
+    <string name="resourcesEmptyMessage">Ihre Ressourcen werden hier angezeigt.</string>
+    <string name="failedToLoadResources">Ressourcen konnten nicht geladen werden</string>
+    <string name="failedToRefreshResources">Ressourcen konnten nicht aktualisiert werden</string>
     <string name="open_alternate_view">Eine leichter zugängliche, alternative Ansicht öffnen</string>
 
     <string name="a11y_content_description_message_recipients">Empfänger</string>
     <string name="a11y_content_description_inbox_subject">Betreff</string>
     <string name="a11y_content_description_inbox_course_spinner">Einen Kurs auswählen, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Die Antworten dieses Studenten sind ausgeblendet, weil diese Aufgabe anonym ist.</string>
 
     <string name="studentAnnotationUnsupported">Studentenanmerkung (Nicht unterstützt)</string>
     <string name="studentAnnotationUnsupportedDescription">Studentenanmerkungen werden derzeit auf Mobilgeräten nicht unterstützt.</string>
     <string name="unsupportedSubmissionType">Nicht unterstützte Abgabeart</string>
     <string name="studentAnnotationUnsupportedMessage">Abgabe kann nicht angezeigt werden, weil Studentenanmerkungen derzeit auf Mobilgeräten nicht unterstützt werden.</string>
+    <string name="schedule_marked_as_done">Sie haben es es als erledigt markiert.</string>
 </resources>

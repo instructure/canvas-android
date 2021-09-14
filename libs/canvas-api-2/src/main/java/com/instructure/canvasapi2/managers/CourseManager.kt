@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.models.postmodels.UpdateCourseWrapper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
-import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import kotlinx.coroutines.Deferred
 import java.io.IOException
@@ -114,6 +113,22 @@ object CourseManager {
 
         adapter.statusCallback = depaginatedCallback
         CourseAPI.getFirstPageCoursesWithSyllabus(adapter, depaginatedCallback, params)
+    }
+
+    fun getCoursesWithSyllabusAsyncWithActiveEnrollmentAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithSyllabusWithActiveEnrollment(forceNetwork, it) }
+
+    private fun getCoursesWithSyllabusWithActiveEnrollment(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
+                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CourseAPI.getFirstPageCoursesWithSyllabusWithActiveEnrollment(adapter, depaginatedCallback, params)
     }
 
     fun getCoursesTeacher(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
@@ -312,7 +327,7 @@ object CourseManager {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         val data = CourseAPI.getCoursesSynchronously(adapter, params)
-        return data?.filter { it.isNotDeleted() } ?: ArrayList()
+        return data ?: ArrayList()
     }
 
     fun createCourseMap(courses: List<Course>?): Map<Long, Course> = courses?.associateBy { it.id } ?: emptyMap()
@@ -321,6 +336,22 @@ object CourseManager {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         CourseAPI.getRubricSettings(courseId, rubricId, adapter, callback, params)
+    }
+
+    fun getCoursesWithGradesAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithGrades(forceNetwork, it) }
+
+    private fun getCoursesWithGrades(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
+                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CourseAPI.getFirstPageCoursesWithGrades(adapter, callback, params)
     }
 
 }

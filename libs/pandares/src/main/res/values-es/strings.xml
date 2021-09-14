@@ -75,8 +75,8 @@
     <string name="addFileFabContentDesc">Mostrar opciones de Agregar archivo</string>
     <string name="recordAudio">Grabar audio</string>
     <string name="recordVideo">Grabar video</string>
-
     <string name="a11y_textSubmissionEditor">Editor de Entrega de Texto</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Escriba&#8230;</string>
     <string name="textSubmissionFailureMessage">Algo salió mal al cargar la entrega. Entregar nuevamente.</string>
@@ -100,10 +100,10 @@
     <string name="noneContentMessage">Esta tarea no permite entregas en línea</string>
     <string name="onPaperContentMessage">Esta tarea no permite entregas en línea</string>
     <string name="noOnlineSubmissions">Sin entregas en línea</string>
-
     <string name="speedGraderExternalToolMessage">Esta tarea se vincula con una herramienta externa para entregas.</string>
     <string name="openTool">Abrir herramienta</string>
     <string name="a11y_submissionText">Texto de la entrega</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">De %s puntos</string>
     <string name="outOfPointsAbbreviatedFormatted">De %s pts</string>
@@ -112,10 +112,10 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s puntos</string>
     <string name="enterWhatIfScore">Ingresar puntaje hipotético</string>
-
     <string name="scoreStatisticsLow">Bajo: %s</string>
     <string name="scoreStatisticsMean">Promedio: %s</string>
     <string name="scoreStatisticsHigh">Alto: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Puntaje personalizado</string>
     <string name="rubricEmptyMessage">No hay ninguna rúbrica para esta tarea</string>
@@ -199,7 +199,6 @@
     <string name="noAssignmentsInGroup">No hay tarea en este grupo</string>
     <string name="excusedAssignment">Esta tarea está justificada y no será considerada en el cálculo total</string>
     <string name="excused">EX</string>
-
     <string name="sortByDialogTitle">Ordenar por</string>
     <string name="sortByDialogTimeOption">Hora</string>
     <string name="sortByDialogTypeOption">Tipo</string>
@@ -211,6 +210,7 @@
     <string name="a11y_sortByTypeButton">Botón Ordenar tareas, ordenar por tipo</string>
     <string name="a11y_assignmentsSortedByTime">Tareas ordenadas por hora</string>
     <string name="a11y_assignmentsSortedByType">Tareas ordenadas por tipo</string>
+
     <!-- Assignment editing -->
     <string name="points">Puntos\u0020</string>
     <string name="save">Guardar</string>
@@ -218,9 +218,9 @@
 
     <!-- Discussions -->
     <string name="forbidden">Las respuestas son visibles solamente para aquellos que han publicado al menos una respuesta.</string>
-
     <string name="fileCurrentlyLocked">Este archivo está bloqueado actualmente</string>
     <string name="a11y_discussionReplyEditor">Editor de Respuesta de Discusión</string>
+
     <!-- Events -->
     <string name="Starts">Comienza en</string>
     <string name="Ends">Finaliza</string>
@@ -448,6 +448,7 @@
     <string name="stopMasquerading">Dejar de actuar como usuario</string>
     <string name="userId">Identificación de usuario</string>
     <string name="masqueradeFail">Hubo un error al intentar actuar como usuario</string>
+
     <string name="emptyId">El identificador no puede estar en blanco</string>
 
     <string name="goToQuiz">Ir al examen</string>
@@ -604,6 +605,8 @@
     <string name="practiceQuizzes">Exámenes de práctica</string>
     <string name="gradedSurveys">Encuestas calificadas</string>
     <string name="surveys">Encuestas</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Por hacer</string>
     <string name="gradesWidgetTitle">Calificaciones</string>
@@ -649,12 +652,12 @@
     <string name="profileSettings">Configuración del perfil</string>
     <string name="accountPreferences">Preferencias de la cuenta</string>
     <string name="pinAndFingerprint">PIN y huella digital</string>
-
     <string name="pairWithObserver">Emparejamiento con un observador</string>
     <string name="pairWithObserverDetails">Pídale a su padre/madre que escanee este código QR desde la aplicación Canvas Parent para emparejarse con usted. Este código caducará dentro de siete días, o tras el primer uso.</string>
     <string name="pairingCodeLabel">Código de emparejamiento:\u0020</string>
     <string name="pairingCodeErrorTitle">Ocurrió un error con el código de emparejamiento</string>
     <string name="pairingCodeErrorDescription">No se pudo obtener un código de emparejamiento. Esta funcionalidad solo es compatible para los estudiantes.</string>
+
     <string name="launchSpeedgrader">Abrir SpeedGrader</string>
 
     <string name="search_todo">Lista de cosa o cosas por hacer</string>
@@ -725,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Indicador</string>
-
     <string name="content_description_speed_grader_slider">Control deslizante de calificaciones</string>
+
     <string name="createNewCalendarEvent">Crear nuevo evento</string>
     <string name="enableFunMode">Apagar los pandas</string>
 
@@ -813,6 +816,7 @@
     <string name="notification_desc_recording_ready">Reciba notificaciones cuando esté lista la grabación de una conferencia.</string>
 
     <string name="unlimited">Ilimitados</string>
+
     <string name="question">Pregunta</string>
     <plurals name="question_count">
         <item quantity="one">%d pregunta</item>
@@ -823,6 +827,7 @@
         <item quantity="one">%s punto</item>
         <item quantity="other">%s puntos</item>
     </plurals>
+
     <string name="timeLimit">Límite de tiempo</string>
     <string name="newPushNotifications">%1$s Nuevas notificaciones</string>
     <string name="like">me gusta</string>
@@ -994,10 +999,10 @@
     <string name="conferencesNotSupported">Los teléfonos móviles aún no admiten conferencias.</string>
     <string name="filePreviewContentDescription">Imagen de vista previa del archivo</string>
     <string name="pdfError">Se ha producido un error al intentar cargar este PDF.</string>
-
     <string name="featureNotAllowedInStudentView">¡Lo sentimos! Esta funcionalidad no se permite en la vista del estudiante.</string>
     <string name="nothingToSeeHere">No hay nada para ver aquí</string>
     <string name="unsupportedFeature">Funcionalidad no compatible</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Agregar estudiante</string>
     <string name="addChildSubTitle">Introduzca el código de emparejamiento de estudiante que se le proporcionó.</string>
@@ -1036,9 +1041,9 @@
     <string name="gradeAfterPosting">Calificación después de la publicación</string>
     <string name="gradeOverride">Anulación de las calificaciones</string>
     <string name="currentGrade">Calificación actual</string>
-
     <string name="opensInCanvasStudent">Se abre en Canvas Student</string>
     <string name="tab_student_view">Vista del estudiante</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Cabeza seleccionada: %s</string>
@@ -1132,6 +1137,7 @@
     <string name="conferenceDetails">Detalles de la conferencia</string>
     <string name="recordings">Grabaciones</string>
     <string name="conferenceInProgress">Conferencia en curso</string>
+
     <string name="a11y_criterion_content_description">Valoración del criterio %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">más información</string>
@@ -1158,6 +1164,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Eliminar todo del Tablero</string>
     <string name="a11y_content_description_add_to_dashboard">Agregar al Tablero</string>
     <string name="a11y_content_description_add_all_to_dashboard">Agregar todo al Tablero</string>
+
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Cuenta</string>
     <string name="dashboardTabHomeroom">Aula principal</string>
@@ -1166,28 +1173,50 @@
     <string name="dashboardTabResources">Recursos</string>
     <string name="homeroomWelcomeMessage">¡Le damos la bienvenida, %1$s!</string>
     <string name="homeroomMySubjects">Mis temas</string>
-
     <string name="viewPreviousAnnouncements">Ver anuncios previos</string>
     <string name="homeroomError">No se pudo cargar el Aula principal (Homeroom)</string>
     <string name="homeroomRefreshFail">No se pudo actualizar el Aula principal (Homeroom)</string>
-
-
     <string name="nothingDueToday">Nada con fecha límite el día de hoy</string>
     <string name="dueToday">%1$s tiene fecha límite el día de hoy</string>
     <string name="missing">%1$s faltante</string>
     <string name="homeroomEmptyTitle">¡Bienvenido!</string>
     <string name="homeroomEmptyMessage">Sus materias se muestran aquí.</string>
     <string name="homeroomNoSubjects">No tiene materias actualmente.</string>
+    <string name="settingsElementaryViewSubtitle">Requiere reiniciar la aplicación</string>
+    <string name="gradesSelect">Seleccionar</string>
+    <string name="selectGradingPeriod">Seleccionar Período de Calificación</string>
+    <string name="currentGradingPeriod">Período de Calificación Actual</string>
+    <string name="failedToLoadGrades">No se pudieron cargar las calificaciones</string>
+    <string name="failedToLoadGradesForGradingPeriod">No se pudieron cargar las calificaciones del período de calificación</string>
+    <string name="failedToRefreshGrades">No se pudieron actualizar las calificaciones</string>
+    <string name="noGradesToDisplay">No hay calificaciones para mostrar</string>
+    <string name="notGraded">Sin calificar</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Cambiar Período de calificación</string>
+    <string name="a11y_gradesNotAvailableContentDescription">No hay calificaciones disponibles</string>
+    <string name="bottomBarHomeroom">Aula principal</string>
 
-
+    <string name="settingsHomeroomView">Vista del aula</string>
+    <string name="importantLinksTitle">Enlaces importantes</string>
+    <string name="studentApplications">Solicitudes del alumno</string>
+    <string name="staffContactInfo">Información de contacto del personal</string>
+    <string name="chooseACourse">Elegir un curso</string>
+    <string name="webViewImportantLinksTitle">Enlaces importantes</string>
+    <string name="staffRoleTeacher">Profesor</string>
+    <string name="staffRoleTeacherAssistant">Profesor asistente</string>
+    <string name="resourcesEmptyMessage">Sus recursos se muestran aquí.</string>
+    <string name="failedToLoadResources">No se pudieron cargar los recursos</string>
+    <string name="failedToRefreshResources">No se pudieron actualizar los recursos</string>
     <string name="open_alternate_view">Abrir una vista alternativa más accesible</string>
+
     <string name="a11y_content_description_message_recipients">Destinatarios</string>
     <string name="a11y_content_description_inbox_subject">Asunto</string>
     <string name="a11y_content_description_inbox_course_spinner">Seleccione un curso, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Las respuestas del estudiante están ocultas porque esta tarea es anónima.</string>
 
     <string name="studentAnnotationUnsupported">Anotación del estudiante (no admitida)</string>
     <string name="studentAnnotationUnsupportedDescription">La anotación del estudiante actualmente no se admite en el móvil.</string>
     <string name="unsupportedSubmissionType">Tipo de entrega no admitida</string>
     <string name="studentAnnotationUnsupportedMessage">La entrega no se puede mostrar porque la Anotación del estudiante actualmente no se admite en el móvil.</string>
+    <string name="schedule_marked_as_done">Lo marcó como terminado.</string>
 </resources>

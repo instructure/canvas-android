@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Velg media</string>
     <string name="takeVideo">Ta video</string>
     <string name="noCameraOnDevice">Ingen kamera</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Varslinger for opplastinger</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-varslinger for pågående opplastinger.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Legg til fil</string>
+
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleri</string>
     <string name="fromDevice">Enhet</string>
@@ -53,7 +55,6 @@
     <string name="file">Fil</string>
     <string name="fileTalkBack">Fil %s</string>
     <string name="folderTalkBack">Mapper %s</string>
-
     <string name="addItem">Legg til punkt</string>
     <string name="assignment">Oppgave</string>
     <string name="attachedFiles">Vedlagte filer</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Last opp innlevering for %s</string>
     <string name="assignmentSubmissionError">Kunne ikke innlevere for %s</string>
     <string name="assignmentSubmissionComplete">Innlevering fullført %s</string>
+
     <!--Errors-->
     <string name="errorOccurred">Det oppsto en uventet feil.</string>
     <string name="serverError">En serverfeil har oppstått.</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">Det ser ut som det ikke er laget noen emner ennå.</string>
     <string name="noPages">Ingen sider</string>
     <string name="noPagesSubtext">Det ser ut som det ikke er laget noen sider ennå.</string>
-
     <string name="modulesLockedSubtext">Moduler er deaktivert for dette emnet.</string>
     <string name="modulesLocked">Noe gikk galt</string>
+
     <!--General-->
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
@@ -326,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Opplåsingsdatoen kan ikke være etter forfallsdato</string>
     <string name="utils_lockBeforeDueDateError">Låsedato kan ikke være før forfallsdato</string>
     <string name="utils_lockAfterUnlockError">Låsedato kan ikke være før opplåsingsdato</string>
@@ -379,13 +382,14 @@
     <string name="utils_uploadToSubmissionComment">Last opp til sendt inn kommentar</string>
     <string name="utils_attachFile">Legg ved en fil</string>
     <string name="utils_with">med</string>
+
     <string name="notificationPrimaryInboxTitle">Canvas Notification</string>
     <string name="notificationChannelNamePrimary">Generelle Canvas Notifications</string>
     <string name="notificationChannelDescriptionPrimary">Ytterligere konfigurering av varsler kan gjøres inne i seksjonen for Canvas Notification Preferences.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d nye varslinger</item>
     </plurals>
+
     <string name="copyLinkAddress">Kopier lenkeadresse</string>
     <string name="copyLink">Kopiert lenke</string>
     <string name="linkCopied">Lenke kopiert</string>
@@ -415,7 +419,6 @@
     <string name="image_uploading">Bilde lastes opp...</string>
     <string name="image_upload_error">Avvik i opplasting av bilde</string>
     <string name="retry">Forsøk igjen</string>
-
     <string name="search">Søk</string>
     <string name="searchAssignmentsHint">Oppgavesøk</string>
     <string name="searchAnnouncementsHint">Søk kunngjøringer</string>
@@ -423,11 +426,33 @@
     <string name="searchPagesHint">Søk sider</string>
     <string name="searchQuizzesHint">Søk tester</string>
     <string name="noItemsMatchingQuery">Ingen matchende punkter  \"%s\"</string>
+
     <string name="selected">Valgt</string>
 
     <string name="notificationChannelNameInAppUpdate">Varslinger om app-oppdatering</string>
     <string name="notificationChannelDescriptionInAppUpdate">Canvas-varslinger for oppdateringer i appen</string>
     <string name="appUpdateReadyTitle">Appen er klar til å oppdateres</string>
     <string name="appUpdateReadyDescription">Start appen på nytt for å installere den nye versjonen</string>
+    <string name="nothing_planned_yet">Ingenting planlagt enda</string>
+    <string name="schedule_tag_graded">Vurdert</string>
+    <string name="schedule_tag_replies">Svar</string>
+    <string name="schedule_tag_feedback">Tilbakemelding</string>
+    <string name="schedule_tag_late">Sent</string>
+    <string name="schedule_tag_redo">Gjør om</string>
+    <string name="schedule_tag_excused">Fritatt</string>
+    <string name="tomorrow">I morgen</string>
+    <string name="yesterday">I går</string>
+    <string name="schedule_calendar_event_due_text">Den %s</string>
+    <string name="schedule_todo_due_text">Å gjøre: %s</string>
+    <string name="schedule_due_text">Frist: %s</string>
+    <string name="show_missing_items_title">Vis %d manglende elementer</string>
+    <string name="hide_missing_items_title">Skjul %d manglende elementer</string>
+    <string name="schedule_error_message">Kunne ikke hente timeplanen din</string>
+    <string name="schedule_todo_title">Å gjøre</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s poeng</item>
+        <item quantity="one">%s poeng</item>
+        <item quantity="other">%s poeng</item>
+    </plurals>
 
 </resources>

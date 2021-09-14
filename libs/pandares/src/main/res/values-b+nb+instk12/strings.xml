@@ -75,8 +75,8 @@
     <string name="addFileFabContentDesc">Vis Legg til fil valg</string>
     <string name="recordAudio">Lydopptak</string>
     <string name="recordVideo">Ta opp video</string>
-
     <string name="a11y_textSubmissionEditor">Redigeringsprogram for tekstinnlevering</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
     <string name="textSubmissionFailureMessage">Noe gikk galt ved opplasting av innlevering. Lever på nytt.</string>
@@ -100,10 +100,10 @@
     <string name="noneContentMessage">Denne oppgaven tillater ikke levering på nett</string>
     <string name="onPaperContentMessage">Denne oppgaven tillater ikke levering på nett</string>
     <string name="noOnlineSubmissions">Ingen levering på nett</string>
-
     <string name="speedGraderExternalToolMessage">Denne oppgaven er lenket til et eksternt verktøy for innleveringer.</string>
     <string name="openTool">Åpne verktøy</string>
     <string name="a11y_submissionText">Innleveringstekst</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Av %s poeng</string>
     <string name="outOfPointsAbbreviatedFormatted">Av %s poeng</string>
@@ -112,10 +112,10 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s av %2$s poeng</string>
     <string name="enterWhatIfScore">Skriv inn what-If resultat</string>
-
     <string name="scoreStatisticsLow">Lav: %s</string>
     <string name="scoreStatisticsMean">Gjennomsnitt: %s</string>
     <string name="scoreStatisticsHigh">Høy: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Egendefinert resultat</string>
     <string name="rubricEmptyMessage">Det er ingen vurderingskriterier for denne oppgaven</string>
@@ -199,7 +199,6 @@
     <string name="noAssignmentsInGroup">Ingen oppgaver i denne gruppen</string>
     <string name="excusedAssignment">Denne oppgaven er fritatt og blir ikke vurdert i den totale beregningen</string>
     <string name="excused">EX</string>
-
     <string name="sortByDialogTitle">Sorter etter</string>
     <string name="sortByDialogTimeOption">Tid</string>
     <string name="sortByDialogTypeOption">Skriv inn</string>
@@ -211,6 +210,7 @@
     <string name="a11y_sortByTypeButton">Sorter oppgaver-knapp, sorter etter type</string>
     <string name="a11y_assignmentsSortedByTime">Oppgaver sortert etter tid</string>
     <string name="a11y_assignmentsSortedByType">Oppgaver sortert etter type</string>
+
     <!-- Assignment editing -->
     <string name="points">Poeng\u0020</string>
     <string name="save">Lagre</string>
@@ -218,9 +218,9 @@
 
     <!-- Discussions -->
     <string name="forbidden">Svarene er kun synlige for dem som har postet minst ett svar.</string>
-
     <string name="fileCurrentlyLocked">Denne filen er for tiden låst</string>
     <string name="a11y_discussionReplyEditor">Redigeringsprogram for diskusjonssvar</string>
+
     <!-- Events -->
     <string name="Starts">Starter</string>
     <string name="Ends">Slutter</string>
@@ -1164,6 +1164,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Fjern alle fra oversikt</string>
     <string name="a11y_content_description_add_to_dashboard">Legg til oversikt</string>
     <string name="a11y_content_description_add_all_to_dashboard">Legg til alle til oversikt</string>
+
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Konto</string>
     <string name="dashboardTabHomeroom">Hjem</string>
@@ -1172,28 +1173,50 @@
     <string name="dashboardTabResources">Ressurser</string>
     <string name="homeroomWelcomeMessage">Velkommen, %1$s!</string>
     <string name="homeroomMySubjects">Mine emner</string>
-
     <string name="viewPreviousAnnouncements">Vis tidligere beskjeder</string>
     <string name="homeroomError">Kunne ikke laste inn Homeroom</string>
     <string name="homeroomRefreshFail">Kunne ikke oppdatere Homeroom</string>
-
-
     <string name="nothingDueToday">Ingenting forfaller i dag</string>
     <string name="dueToday">%1$s forfaller i dag</string>
     <string name="missing">%1$s mangler</string>
     <string name="homeroomEmptyTitle">Velkommen!</string>
     <string name="homeroomEmptyMessage">Fagene dine vises her.</string>
     <string name="homeroomNoSubjects">Du har for øyeblikket ingen fag.</string>
+    <string name="settingsElementaryViewSubtitle">Krever omstart av appen</string>
+    <string name="gradesSelect">Velg</string>
+    <string name="selectGradingPeriod">Velg vurderingsperiode</string>
+    <string name="currentGradingPeriod">Gjeldende vurderingsperiode</string>
+    <string name="failedToLoadGrades">Kunne ikke laste vurderinger</string>
+    <string name="failedToLoadGradesForGradingPeriod">Kunne ikke laste inn vurderinger for vurderingsperioden</string>
+    <string name="failedToRefreshGrades">Kunne ikke oppdatere vurderinger</string>
+    <string name="noGradesToDisplay">Ingen vurderinger å vise</string>
+    <string name="notGraded">Ikke vurdert</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Endre vurderingsperiode</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Vurderingerer er ikke tilgjengelig</string>
+    <string name="bottomBarHomeroom">Hjem</string>
 
-
+    <string name="settingsHomeroomView">Vis hjemmerom</string>
+    <string name="importantLinksTitle">Viktige lenker</string>
+    <string name="studentApplications">Elev-applikasjoner</string>
+    <string name="staffContactInfo">Kontaktinformasjon personale</string>
+    <string name="chooseACourse">Velg et fag</string>
+    <string name="webViewImportantLinksTitle">Viktige lenker</string>
+    <string name="staffRoleTeacher">Lærer</string>
+    <string name="staffRoleTeacherAssistant">Lærerassistent</string>
+    <string name="resourcesEmptyMessage">Ressusrene dine vises her.</string>
+    <string name="failedToLoadResources">Kunne ikke laste opp ressurser</string>
+    <string name="failedToRefreshResources">Kunne ikke oppdatere ressurser</string>
     <string name="open_alternate_view">Åpne en mer tilgjengelig alternativ visning</string>
+
     <string name="a11y_content_description_message_recipients">Mottakere</string>
     <string name="a11y_content_description_inbox_subject">Tittel</string>
     <string name="a11y_content_description_inbox_course_spinner">Velg et fag, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Denne elevens svar er skjult fordi denne oppgaven er anonym.</string>
 
     <string name="studentAnnotationUnsupported">Elevmerknad (ikke støttet)</string>
     <string name="studentAnnotationUnsupportedDescription">Elevmerknader støttes for øyeblikket ikke på mobil.</string>
     <string name="unsupportedSubmissionType">Ustøttet innleveringstype</string>
     <string name="studentAnnotationUnsupportedMessage">Innlevering kan ikke vises fordi Elevmerknader for øyeblikket ikke støttes på mobil.</string>
+    <string name="schedule_marked_as_done">Du har merket det som fullført.</string>
 </resources>

@@ -75,8 +75,8 @@
     <string name="addFileFabContentDesc">Visa alternativ för Lägg till fil</string>
     <string name="recordAudio">Spela in ljud</string>
     <string name="recordVideo">Spela in video</string>
-
     <string name="a11y_textSubmissionEditor">Textinlämningsredigerare</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
     <string name="textSubmissionFailureMessage">Något gick fel vid uppladdning av inlämningen. Lämna in igen.</string>
@@ -100,10 +100,10 @@
     <string name="noneContentMessage">Den här uppgiften tillåter inte onlineinlämningar</string>
     <string name="onPaperContentMessage">Den här uppgiften tillåter inte onlineinlämningar</string>
     <string name="noOnlineSubmissions">Inga onlineinlämningar</string>
-
     <string name="speedGraderExternalToolMessage">Den här uppgiften länkar till ett externt verktyg för inlämningar.</string>
     <string name="openTool">Öppna verktyg</string>
     <string name="a11y_submissionText">Inlämningstext</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Av %s poäng</string>
     <string name="outOfPointsAbbreviatedFormatted">Av %s poäng</string>
@@ -112,10 +112,10 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s av %2$s poäng</string>
     <string name="enterWhatIfScore">Ange Vad om-resultat</string>
-
     <string name="scoreStatisticsLow">Låg: %s</string>
     <string name="scoreStatisticsMean">Medel: %s</string>
     <string name="scoreStatisticsHigh">Hög: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Anpassat resultat</string>
     <string name="rubricEmptyMessage">Det finns ingen matris för den här uppgiften</string>
@@ -127,7 +127,7 @@
     <string name="assignmentSubmissionCommentUploadingMedia">Laddar upp mediefil</string>
     <string name="assignmentSubmissionCommentError">Uppladdningen av kommentaren misslyckades för %s</string>
     <string name="chooseFileForCommentSubtext">Bifoga filer till dina kommentarer genom att välja ett alternativ nedan</string>
-    <string name="emptySubmissionCommentsSubtext">Har du frågor om din uppgift?\nSkicka ett meddelande till din instruktör.</string>
+    <string name="emptySubmissionCommentsSubtext">Har du frågor om din uppgift?\nSkicka ett meddelande till din lärare.</string>
     <string name="submissionCommentErrorMessage">Detta meddelande kunde inte skickas. Tryck för att försöka igen.</string>
     <string name="mediaUpload">Mediauppladdning</string>
     <string name="mediaUploadAudio">Mediauppladdning – ljud</string>
@@ -199,7 +199,6 @@
     <string name="noAssignmentsInGroup">Inga uppgifter i den här gruppen</string>
     <string name="excusedAssignment">Den här uppgiften är ursäktad och kommer inte räknas in i den totala uträkningen</string>
     <string name="excused">EX</string>
-
     <string name="sortByDialogTitle">Sortera efter</string>
     <string name="sortByDialogTimeOption">Tid</string>
     <string name="sortByDialogTypeOption">Typ</string>
@@ -211,6 +210,7 @@
     <string name="a11y_sortByTypeButton">Sortera uppgiftsknappar, sortera efter typ</string>
     <string name="a11y_assignmentsSortedByTime">Uppgifter sorterade efter tid</string>
     <string name="a11y_assignmentsSortedByType">Uppgifter sorterade efter typ</string>
+
     <!-- Assignment editing -->
     <string name="points">Poäng\u0020</string>
     <string name="save">Spara</string>
@@ -218,9 +218,9 @@
 
     <!-- Discussions -->
     <string name="forbidden">Svaren är endast synliga för de som har publicerat minst ett svar.</string>
-
     <string name="fileCurrentlyLocked">Den här filen är för närvarande låst</string>
     <string name="a11y_discussionReplyEditor">Diskussionssvarsredigerare</string>
+
     <!-- Events -->
     <string name="Starts">Börjar</string>
     <string name="Ends">Slutar</string>
@@ -339,7 +339,7 @@
     <string name="open">Öppna</string>
     <string name="openAlternate">Öppna med en alternativ app</string>
     <string name="opening">Öppnar fil&#8230;</string>
-    <string name="download">Ladda ned</string>
+    <string name="download">Ladda ner</string>
     <string name="messageAttachments">Meddelandebilagor</string>
     <string name="discussionAttachmentLabel">Bilaga</string>
     <string name="attachmentIcon">Bilageikon</string>
@@ -355,7 +355,7 @@
     <string name="selectCanvasContext">Välj en kurs eller grupp</string>
     <string name="inboxEmptyTitle">Inga meddelanden</string>
     <string name="removeAttachment">Ta bort bilaga</string>
-    <string name="downloadAttachment">Ladda ned bilaga</string>
+    <string name="downloadAttachment">Ladda ner bilaga</string>
     <string name="messageOptions">Meddelandealternativ</string>
     <string name="forward">Vidarebefordra</string>
     <string name="replyAll">Svara alla</string>
@@ -448,6 +448,7 @@
     <string name="stopMasquerading">Sluta uppträda som användare</string>
     <string name="userId">Användar-ID</string>
     <string name="masqueradeFail">Ett fel inträffade vid försök att uppträda som användaren.</string>
+
     <string name="emptyId">ID kan inte lämnas tomt</string>
 
     <string name="goToQuiz">Gå till quiz</string>
@@ -604,6 +605,8 @@
     <string name="practiceQuizzes">Övningsquiz</string>
     <string name="gradedSurveys">Bedömda enkäter</string>
     <string name="surveys">Enkäter</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Att göra</string>
     <string name="gradesWidgetTitle">Omdömen</string>
@@ -649,12 +652,12 @@
     <string name="profileSettings">Profilinställningar</string>
     <string name="accountPreferences">Kontoinställningar</string>
     <string name="pinAndFingerprint">PIN och fingeravtryck</string>
-
     <string name="pairWithObserver">Koppla med observatör</string>
     <string name="pairWithObserverDetails">Be din förälder scanna QR-koden från Canvas Parent-appen för att parkopplas med dig. Den här koden upphör att gälla om sju dagar, eller efter en användning.</string>
     <string name="pairingCodeLabel">Kopplingskod:\u0020</string>
     <string name="pairingCodeErrorTitle">Parkopplingskodfel</string>
     <string name="pairingCodeErrorDescription">Det gick inte att hämta en parkopplingskod. Den här funktionen stöds endast för elever.</string>
+
     <string name="launchSpeedgrader">Öppna Speedgrader</string>
 
     <string name="search_todo">att göra att göra lista</string>
@@ -725,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mätare</string>
-
     <string name="content_description_speed_grader_slider">Bedömningsreglage</string>
+
     <string name="createNewCalendarEvent">Skapa ny händelse</string>
     <string name="enableFunMode">Stäng av pandorna</string>
 
@@ -744,7 +747,7 @@
 
     <string name="notification_cat_course_activities">Kursaktiviteter</string>
     <string name="notification_cat_discussions">Diskussioner</string>
-    <string name="notification_cat_conversations">Konversationer</string>
+    <string name="notification_cat_conversations">Inkorgen</string>
     <string name="notification_cat_scheduling">Schemaläggning</string>
     <string name="notification_cat_groups">Grupper</string>
     <string name="notification_cat_alerts">Larm</string>
@@ -766,7 +769,7 @@
     <string name="notification_pref_discussion_post">Diskussionsinlägg</string>
 
     <string name="notification_pref_add_to_conversation">Lägg till i konversation</string>
-    <string name="notification_pref_conversation_message">Konversationsmeddelande</string>
+    <string name="notification_pref_conversation_message">Meddelande i Inkorgen</string>
     <string name="notification_pref_conversations_created_by_you">Konversationer som skapats av dig</string>
 
     <string name="notification_pref_student_appointment_signups">Elevens mötesregistreringar</string>
@@ -795,24 +798,25 @@
     <string name="notification_desc_announcement_created_by_you">Få aviseringar när du skapar ett anslag, och när någon svarar på ditt anslag.</string>
     <string name="notification_desc_grading">Få aviseringar när en uppgift/inlämning har bedömts/ändrats, och när en omdömesvikt ändrats.</string>
     <string name="notification_desc_invitation">Få aviseringar om inbjudningar till webbkonferenser, grupper, samarbeten, kamratresponsuppgifter och påminnelser.</string>
-    <string name="notification_desc_all_submissions">Endast lärare och admin. Få aviseringar när en uppgift lämnas in för första gången eller lämnas in på nytt.</string>
-    <string name="notification_desc_late_grading">Endast lärare och admin. Få aviseringar när en sen uppgift skickas in.</string>
+    <string name="notification_desc_all_submissions">Endast lärare och administratörer. Få aviseringar när en uppgift lämnas in för första gången eller lämnas in på nytt.</string>
+    <string name="notification_desc_late_grading">Endast lärare och administratörer. Få aviseringar när en sen uppgift skickas in.</string>
     <string name="notification_desc_submission_comment">Få aviseringar när en kommentar görs om din inlämning.</string>
     <string name="notification_desc_discussion">Få aviseringar när det finns ett nytt diskussionsämne i din kurs.</string>
     <string name="notification_desc_discussion_post">Få aviseringar när det finns ett nytt inlägg i en diskussion som du prenumererar på.</string>
     <string name="notification_desc_add_to_conversation">Få aviseringar när du läggs till i en konversation.</string>
     <string name="notification_desc_conversation_message">Få aviseringar när du har ett nytt meddelande i din inkorg.</string>
     <string name="notification_desc_conversations_created_by_you">Få aviseringar när du skapar en ny konversation.</string>
-    <string name="notification_desc_student_appointment_signups">Endast lärare och admin. Få aviseringar när det finns en mötesregistrering.</string>
+    <string name="notification_desc_student_appointment_signups">Endast lärare och administratörer. Få aviseringar när det finns en mötesregistrering.</string>
     <string name="notification_desc_appointment_signups">Få aviseringar när det finns en ny registrering på din kalender.</string>
     <string name="notification_desc_appointment_cancelations">Få aviseringar vid avbeställning av tid.</string>
     <string name="notification_desc_appointment_availability">Få aviseringar när en möteslucka blir tillgänglig.</string>
     <string name="notification_desc_calendar">Få aviseringar om nya och uppdaterade kalenderobjekt.</string>
     <string name="notification_desc_membership_update">Endast admin, väntande registrering aktiverad. Få avisering när en gruppregistrering accepteras eller nekas.</string>
-    <string name="notification_desc_admin">Endast lärare och admin. Få aviseringar om kursregistreringar, genererade rapporter, exporterat innehåll, migrationsrapporter, nya kontoanvändare, och nya elevgrupper.</string>
+    <string name="notification_desc_admin">Endast lärare och administratörer. Få aviseringar om kursregistreringar, genererade rapporter, exporterat innehåll, migrationsrapporter, nya kontoanvändare, och nya elevgrupper.</string>
     <string name="notification_desc_recording_ready">Få aviseringar när en konferensinspelning är klar.</string>
 
     <string name="unlimited">Obegränsade</string>
+
     <string name="question">Fråga</string>
     <plurals name="question_count">
         <item quantity="one">%d fråga</item>
@@ -823,6 +827,7 @@
         <item quantity="one">%s poäng</item>
         <item quantity="other">%s poäng</item>
     </plurals>
+
     <string name="timeLimit">Tidsgräns</string>
     <string name="newPushNotifications">%1$s Nya aviseringar</string>
     <string name="like">gilla-markering</string>
@@ -994,10 +999,10 @@
     <string name="conferencesNotSupported">Konferenser stöds ännu inte på den här mobilen.</string>
     <string name="filePreviewContentDescription">Förhandsvisningsbild för fil</string>
     <string name="pdfError">Ett fel uppstod vid inläsning av den här PDF:en.</string>
-
     <string name="featureNotAllowedInStudentView">Tyvärr! Den här funktionen tillåts inte i elevens vyn.</string>
     <string name="nothingToSeeHere">Inget att se här</string>
     <string name="unsupportedFeature">Funktionen saknar stöd</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Lägg till elev</string>
     <string name="addChildSubTitle">Ange kopplingskoden du fått för elever.</string>
@@ -1008,7 +1013,7 @@
 
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Publiceringsinställningar</string>
-    <string name="postGradesTab">Offentliggör omdömen</string>
+    <string name="postGradesTab">Publicera omdömen</string>
     <string name="hideGradesTab">Dölj omdömen</string>
     <plurals name="gradesPostedCount">
         <item quantity="one">%d omdöme publicerat för närvarande</item>
@@ -1030,15 +1035,15 @@
     <string name="postPolicyAllPostedMessage">Alla omdömen har publicerats.</string>
     <string name="postPolicyPostedToast">Publicerade omdömen</string>
     <string name="postPolicyHiddenToast">Dolda omdömen</string>
-    <string name="postPolicyPostFailedToast">Det gick inte att offentliggör omdömen</string>
+    <string name="postPolicyPostFailedToast">Det gick inte att publicera omdömen</string>
     <string name="postPolicyHideFailedToast">Det gick inte att dölja omdömen</string>
     <string name="gradeBeforePosting">Bedöm före publicering</string>
     <string name="gradeAfterPosting">Bedöm efter publicering</string>
     <string name="gradeOverride">Åsidosättning av omdöme</string>
     <string name="currentGrade">Aktuell omdöme</string>
-
     <string name="opensInCanvasStudent">Öppnas i Canvas Elev</string>
     <string name="tab_student_view">Elevens vy</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Vald rubrik: %s</string>
@@ -1111,6 +1116,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
         <item quantity="other">%s minuter</item>
@@ -1131,6 +1137,7 @@
     <string name="conferenceDetails">Konferensinformation</string>
     <string name="recordings">Inspelningar</string>
     <string name="conferenceInProgress">Konferens pågår...</string>
+
     <string name="a11y_criterion_content_description">Kriteriebedömning %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">mer information</string>
@@ -1157,6 +1164,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Ta bort alla från översikten</string>
     <string name="a11y_content_description_add_to_dashboard">Lägg till i översikten</string>
     <string name="a11y_content_description_add_all_to_dashboard">Lägga till alla i översikten</string>
+
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Konto</string>
     <string name="dashboardTabHomeroom">Hemrum</string>
@@ -1165,28 +1173,50 @@
     <string name="dashboardTabResources">Resurser</string>
     <string name="homeroomWelcomeMessage">Välkommen %1$s!</string>
     <string name="homeroomMySubjects">Mina ämnen</string>
-
     <string name="viewPreviousAnnouncements">Visa tidigare meddelanden</string>
     <string name="homeroomError">Det gick inte att läsa in fjärrundervisningsrummet.</string>
     <string name="homeroomRefreshFail">Det gick inte att uppdatera fjärrundervisningsrummet.</string>
-
-
     <string name="nothingDueToday">Inget måste lämnas in i dag</string>
     <string name="dueToday">%1$s förfaller i dag</string>
     <string name="missing">%1$s saknas</string>
     <string name="homeroomEmptyTitle">Välkommen!</string>
     <string name="homeroomEmptyMessage">Dina ämnen visas här.</string>
     <string name="homeroomNoSubjects">Du har inga ämnen för närvarande.</string>
+    <string name="settingsElementaryViewSubtitle">Kräver omstart av appen</string>
+    <string name="gradesSelect">Välj</string>
+    <string name="selectGradingPeriod">Välj bedömningsperiod</string>
+    <string name="currentGradingPeriod">Aktuell bedömningsperiod</string>
+    <string name="failedToLoadGrades">Det gick inte att läsa in omdömen</string>
+    <string name="failedToLoadGradesForGradingPeriod">Det gick inte att läsa in bedömningar för bedömningsperioden</string>
+    <string name="failedToRefreshGrades">Det gick inte att uppdatera bedömningar</string>
+    <string name="noGradesToDisplay">Det finns inga bedömningar att visa</string>
+    <string name="notGraded">Inte bedömd</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Ändra bedömningsperiod</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Bedömningar är inte tillgängliga</string>
+    <string name="bottomBarHomeroom">Hemrum</string>
 
-
+    <string name="settingsHomeroomView">Vy för fjärrundervisningsrum</string>
+    <string name="importantLinksTitle">Viktiga länkar</string>
+    <string name="studentApplications">Elev-applikationer</string>
+    <string name="staffContactInfo">Kontaktuppgifter för personal</string>
+    <string name="chooseACourse">Välj en kurs</string>
+    <string name="webViewImportantLinksTitle">Viktiga länkar</string>
+    <string name="staffRoleTeacher">Lärare</string>
+    <string name="staffRoleTeacherAssistant">Lärarassistent</string>
+    <string name="resourcesEmptyMessage">Dina resurser visas här.</string>
+    <string name="failedToLoadResources">Det gick inte att läsa in resurser</string>
+    <string name="failedToRefreshResources">Det gick inte att uppdatera resurser</string>
     <string name="open_alternate_view">Öppna en mer tillgänglig alternativ vy</string>
+
     <string name="a11y_content_description_message_recipients">Mottagare</string>
     <string name="a11y_content_description_inbox_subject">Ämne</string>
     <string name="a11y_content_description_inbox_course_spinner">Välj en kurs, %s</string>
+
     <string name="speedGraderAnonymousSubmissionMessage">Den här elevens svar är dolda eftersom uppgiften är anonym.</string>
 
     <string name="studentAnnotationUnsupported">Elevnotering (stöds inte)</string>
     <string name="studentAnnotationUnsupportedDescription">Elevnotering stöds för närvarande inte på mobila enheter.</string>
     <string name="unsupportedSubmissionType">Inlämningstyp som inte stöds</string>
     <string name="studentAnnotationUnsupportedMessage">Inlämningen kan inte visas eftersom elevnotering inte stöds på mobila enheter.</string>
+    <string name="schedule_marked_as_done">Du har markerat den som färdig.</string>
 </resources>
