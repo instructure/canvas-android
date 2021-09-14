@@ -34,7 +34,7 @@ object Versions {
     const val CRASHLYTICS = "17.2.1"
     const val ANALYTICS = "17.4.1"
     const val FIREBASE_ANALYTICS = "17.4.1"
-    const val PSPDFKIT = "6.5.2"
+    const val PSPDFKIT = "7.0.0"
     const val PHOTO_VIEW = "2.3.0"
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
