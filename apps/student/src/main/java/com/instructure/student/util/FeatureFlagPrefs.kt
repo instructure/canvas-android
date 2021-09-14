@@ -15,10 +15,8 @@
  */
 package com.instructure.student.util
 
-import com.instructure.canvasapi2.utils.FeatureFlagPref
 import com.instructure.canvasapi2.utils.PrefManager
 
 object FeatureFlagPrefs : PrefManager("feature_flags") {
 
-    var showInProgressK5Tabs by FeatureFlagPref("Show K5 in progress tabs")
 }

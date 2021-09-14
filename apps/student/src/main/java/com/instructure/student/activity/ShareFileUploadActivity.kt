@@ -132,7 +132,6 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
     private fun getCourses() {
         loadCoursesJob = tryWeave {
             val courses = awaitApi<List<Course>> { CourseManager.getCourses(true, it) }
-                .filter { it.isNotDeleted() }
             if (courses.isNotEmpty()) {
                 this@ShareFileUploadActivity.courses = ArrayList(courses)
                 if (uploadFileSourceFragment == null) showDestinationDialog()
