@@ -40,7 +40,7 @@ object Versions {
     const val SQLDELIGHT = "1.4.3"
     const val HILT = "2.38.1"
     const val LIFECYCLE = "2.3.1"
-    const val FRAGMENT_KTX = "1.3.1"
+    const val FRAGMENT = "1.3.6"
     const val WORK_MANAGER = "2.6.0"
     const val GLIDE_VERSION = "4.12.0"
     const val RETROFIT = "2.5.0"
@@ -61,13 +61,14 @@ object Libs {
 
     /* Support Libs */
     const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.2.0"
-    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.0.2"
+    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.3.1"
     const val ANDROIDX_BROWSER = "androidx.browser:browser:1.3.0"
     const val ANDROIDX_CARDVIEW = "androidx.cardview:cardview:${Versions.ANDROIDX}"
     const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.0"
     const val ANDROIDX_DESIGN = "com.google.android.material:material:1.4.0"
     const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:1.3.3"
-    const val ANDROIDX_FRAGMENT = "androidx.fragment:fragment:${Versions.ANDROIDX}"
+    const val ANDROIDX_FRAGMENT = "androidx.fragment:fragment:${Versions.FRAGMENT}"
+    const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
     const val ANDROIDX_PALETTE = "androidx.palette:palette:${Versions.ANDROIDX}"
     const val ANDROIDX_PERCENT = "androidx.percentlayout:percentlayout:${Versions.ANDROIDX}"
     const val ANDROIDX_RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.2.1"
@@ -121,7 +122,6 @@ object Libs {
     const val LIVE_DATA = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.LIFECYCLE}"
     const val VIEW_MODE_SAVED_STATE = "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.LIFECYCLE}"
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
-    const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT_KTX}"
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
