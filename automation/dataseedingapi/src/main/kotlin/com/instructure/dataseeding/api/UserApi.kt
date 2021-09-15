@@ -21,6 +21,7 @@ import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.CanvasRestAdapter
 import com.instructure.dataseeding.util.Randomizer
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.FormElement
@@ -120,6 +121,6 @@ object UserApi {
         val authFormResponse = loginForm.submit().cookies(loginPageResponse.cookies()).execute()
         val authForm = authFormResponse.parse().select("form").first() as FormElement
         val responseUrl = authForm.submit().cookies(authFormResponse.cookies()).execute().url().toString()
-        return HttpUrl.parse(responseUrl)?.queryParameter("code") ?: throw RuntimeException("/login/oauth2/auth failed!")
+        return responseUrl.toHttpUrlOrNull()?.queryParameter("code") ?: throw RuntimeException("/login/oauth2/auth failed!")
     }
 }

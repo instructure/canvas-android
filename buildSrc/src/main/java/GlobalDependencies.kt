@@ -139,6 +139,7 @@ object Libs {
     const val GSON = "com.google.code.gson:gson:2.8.8"
     const val RETROFIT_GSON_ADAPTER = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
     const val RETROFIT_XML_ADAPTER = "com.squareup.retrofit2:converter-simplexml:${Versions.RETROFIT}"
+    const val RETROFIT_SCALAR_CONVERTER = "com.squareup.retrofit2:converter-scalars:${Versions.RETROFIT}"
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
     const val OKHTTP_LOGGING = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     const val OKHTTP_URL_CONNECTION = "com.squareup.okhttp3:okhttp-urlconnection:${Versions.OKHTTP}"
