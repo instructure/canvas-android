@@ -27,8 +27,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.Logger
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -79,8 +81,8 @@ internal object NotoriousAPI {
 
     fun uploadFileSynchronous(notoriousToken: String, uploadToken: String, filePart: MultipartBody.Part, adapter: RestBuilder): Response<Void>? {
         return try {
-            val notoriousTokenPart = RequestBody.create(MediaType.parse("text/plain"), notoriousToken)
-            val uploadTokenPart = RequestBody.create(MediaType.parse("text/plain/"), uploadToken)
+            val notoriousTokenPart = notoriousToken.toRequestBody("text/plain".toMediaTypeOrNull())
+            val uploadTokenPart = uploadToken.toRequestBody("text/plain/".toMediaTypeOrNull())
             adapter.buildNotorious(NotoriousInterface::class.java).uploadFile(notoriousTokenPart, uploadTokenPart, filePart).execute()
         } catch (e: Exception) {
             null

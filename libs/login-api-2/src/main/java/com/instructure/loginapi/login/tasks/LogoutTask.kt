@@ -88,7 +88,7 @@ abstract class LogoutTask(
                 File(ContextKeeper.appContext.filesDir, "cache_masquerade").deleteRecursively()
 
                 // Clear caches
-                CanvasRestAdapter.okHttpClient.cache()?.evictAll()
+                CanvasRestAdapter.okHttpClient.cache?.evictAll()
                 RestBuilder.clearCacheDirectory()
                 Utils.getAttachmentsDirectory(ContextKeeper.appContext).deleteRecursively()
                 File(ContextKeeper.appContext.filesDir, "cache").deleteRecursively()

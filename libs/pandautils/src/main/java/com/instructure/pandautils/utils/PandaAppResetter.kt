@@ -57,7 +57,7 @@ object PandaAppResetter {
 
     private fun clearHttpClientCache() {
         try {
-            CanvasRestAdapter.client?.cache()?.evictAll()
+            CanvasRestAdapter.client?.cache?.evictAll()
         } catch (e: IOException) {
             //Do Nothing
         }

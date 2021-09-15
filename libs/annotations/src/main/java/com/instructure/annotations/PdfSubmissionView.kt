@@ -602,7 +602,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             }
         } catch {
             if (it is StatusCallbackError) {
-                if (it.response?.raw()?.code() == 404) {
+                if (it.response?.raw()?.code == 404) {
                     // Not found; Annotation has been deleted and no longer exists.
                     val dialog = AnnotationErrorDialog.getInstance(supportFragmentManager) {
                         // Delete annotation after user clicks OK on dialog

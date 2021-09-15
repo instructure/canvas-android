@@ -32,7 +32,7 @@ class ResponseInterceptor : Interceptor {
         val response = chain.proceed(request)
         //We modify the response to be cache-able :)
         val builder = response.newBuilder()
-        if (request.method() == "GET") {
+        if (request.method == "GET") {
             builder.removeHeader("Pragma")
 
             /**

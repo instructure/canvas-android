@@ -28,8 +28,11 @@ import com.instructure.canvasapi2.models.postmodels.DiscussionEntryPostBody
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.utils.APIHelper
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.http.*
 import java.io.File
@@ -225,15 +228,15 @@ object DiscussionAPI {
     fun replyToDiscussionEntry(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, message: String, callback: StatusCallback<DiscussionEntry>, params: RestParams) {
         val contextType = CanvasContext.getApiContext(canvasContext)
 
-        val messagePart = RequestBody.create(MediaType.parse("multipart/form-data"), message)
+        val messagePart = message.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).postDiscussionReply(contextType, canvasContext.id, topicId, entryId, messagePart)).enqueue(callback)
     }
 
     fun replyToDiscussionEntryWithAttachment(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long,
                                              message: String, attachment: File, mimeType: String, callback: StatusCallback<DiscussionEntry>, params: RestParams) {
         val contextType = CanvasContext.getApiContext(canvasContext)
-        val messagePart = RequestBody.create(MediaType.parse("multipart/form-data"), message)
-        val requestFile = RequestBody.create(MediaType.parse(mimeType), attachment)
+        val messagePart = message.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val requestFile = attachment.asRequestBody(mimeType.toMediaTypeOrNull())
         val attachmentPart = MultipartBody.Part.createFormData("attachment", attachment.name, requestFile)
 
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).postDiscussionReplyWithAttachment(contextType, canvasContext.id, topicId, entryId, messagePart, attachmentPart)).enqueue(callback)
@@ -247,16 +250,16 @@ object DiscussionAPI {
     fun postToDiscussionTopic(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, message: String, callback: StatusCallback<DiscussionEntry>, params: RestParams) {
         val contextType = CanvasContext.getApiContext(canvasContext)
 
-        val messagePart = RequestBody.create(MediaType.parse("multipart/form-data"), message)
+        val messagePart = message.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).postDiscussionEntry(contextType, canvasContext.id, topicId, messagePart)).enqueue(callback)
     }
 
     fun postToDiscussionTopicWithAttachment(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, message: String, attachment: File, mimeType: String, callback: StatusCallback<DiscussionEntry>, params: RestParams) {
         val contextType = CanvasContext.getApiContext(canvasContext)
 
-        val messagePart = RequestBody.create(MediaType.parse("multipart/form-data"), message)
+        val messagePart = message.toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-        val requestFile = RequestBody.create(MediaType.parse(mimeType), attachment)
+        val requestFile = attachment.asRequestBody(mimeType.toMediaTypeOrNull())
         val attachmentPart = MultipartBody.Part.createFormData("attachment", attachment.name, requestFile)
 
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).postDiscussionEntryWithAttachment(contextType, canvasContext.id, topicId, messagePart, attachmentPart)).enqueue(callback)

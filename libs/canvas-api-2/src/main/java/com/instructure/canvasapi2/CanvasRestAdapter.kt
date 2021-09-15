@@ -71,7 +71,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
 
     fun deleteCache() {
         try {
-            okHttpClient.cache()?.evictAll()
+            okHttpClient.cache?.evictAll()
         } catch (e: IOException) {
             Logger.e("Failed to delete cache $e")
         }
@@ -318,7 +318,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         fun clearCacheUrls(pattern: String) {
             synchronized(okHttpClient) {
                 val regex = Regex(pattern)
-                val urls = okHttpClient.cache()?.urls() ?: return
+                val urls = okHttpClient.cache?.urls() ?: return
                 while (urls.hasNext()) {
                     val next = urls.next()
                     if (regex.containsMatchIn(next)) {

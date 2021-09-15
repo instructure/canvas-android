@@ -20,6 +20,8 @@ package com.instructure.canvas.espresso.mockCanvas
 
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody.Companion.toResponseBody
 
 /**
  * A class that emulates a Canvas API endpoint and issues a [Response] for a given [Request].
@@ -45,7 +47,7 @@ open class Endpoint(
     open fun routeRequest(currentPath: List<String>, vars: PathVars, request: Request): Response {
         if (currentPath.isEmpty()) {
             // This likely won't happen, but could occur if an endpoint incorrectly overrides routeRequest
-            throw IllegalStateException("Encountered empty path while processing request ${request.url()}")
+            throw IllegalStateException("Encountered empty path while processing request ${request.url}")
         }
 
         // Handle here if we match the current path (i.e. stop condition - this is the last segment)
@@ -80,10 +82,8 @@ open class Endpoint(
         }
 
         // If not handled, return a 404
-        val body = ResponseBody.create(
-            MediaType.parse("application/json"),
-            """No mock endpoint implemented for request: ${request.url()}"""
-        )
+        val body = """No mock endpoint implemented for request: ${request.url}"""
+            .toResponseBody("application/json".toMediaTypeOrNull())
         return Response.Builder()
             .request(request)
             .body(body)

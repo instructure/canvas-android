@@ -94,14 +94,14 @@ class FetchFileAsyncTask private constructor(
                     .newCall(request)
                     .execute()
 
-            if (!response.isSuccessful) throw IOException("Unable to download. Error code ${response.code()}")
+            if (!response.isSuccessful) throw IOException("Unable to download. Error code ${response.code}")
 
             // Get the total expected download size. If this size is unknown this will be -1, and incremental progress updates will not be posted.
-            val total = response.body()?.contentLength()?.toFloat() ?: 0f
+            val total = response.body?.contentLength()?.toFloat() ?: 0f
 
             // Set up source and sink
             val sink = tmpFile.sink().buffer()
-            val source = response.body()?.source()
+            val source = response.body?.source()
 
             var downloaded = 0L
             var lastUpdate = System.currentTimeMillis()

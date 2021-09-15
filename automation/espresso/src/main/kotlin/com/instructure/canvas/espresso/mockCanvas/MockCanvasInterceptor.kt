@@ -30,7 +30,7 @@ class MockCanvasInterceptor : Interceptor {
         // Skip if data is not initialized
         if (!MockCanvas.isInitialized) return chain.proceed(chain.request())
         val request = chain.request()
-        val segments = request.url().pathSegments()
+        val segments = request.url.pathSegments
         return RootEndpoint.routeRequest(
             segments,
             PathVars(), request

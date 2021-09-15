@@ -22,6 +22,8 @@ import com.google.gson.JsonObject
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvasapi2.models.User
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
 import okio.IOException
 
@@ -29,10 +31,8 @@ import okio.IOException
  * Creates a successful response for this [Request] with a response code of 200 and response [body] serialized to json
  */
 fun Request.successResponse(body: Any): Response {
-    val responseBody = ResponseBody.create(
-        MediaType.parse("application/json"),
-        Gson().toJson(body)
-    )
+    val responseBody = Gson().toJson(body)
+        .toResponseBody("application/json".toMediaTypeOrNull())
     return Response.Builder()
         .request(this)
         .body(responseBody)
@@ -43,10 +43,8 @@ fun Request.successResponse(body: Any): Response {
 }
 
 fun Request.successRedirectWithHeader(header: String, headerValue: String): Response {
-    val responseBody = ResponseBody.create(
-            MediaType.parse("text/plain"),
-            "hodor"
-    )
+    val responseBody = "hodor"
+        .toResponseBody("text/plain".toMediaTypeOrNull())
     return Response.Builder()
             .request(this)
             .header(header, headerValue)
@@ -61,10 +59,8 @@ fun Request.successRedirectWithHeader(header: String, headerValue: String): Resp
  * Creates a successful response for this [Request] with a response code of 200 and a plain text response [body]
  */
 fun Request.successResponseRaw(body: String): Response {
-    val responseBody = ResponseBody.create(
-            MediaType.parse("text/plain"),
-            body
-    )
+    val responseBody = body
+        .toResponseBody("text/plain".toMediaTypeOrNull())
     return Response.Builder()
             .request(this)
             .body(responseBody)
@@ -80,7 +76,7 @@ fun Request.successResponseRaw(body: String): Response {
 fun Request.noContentResponse(): Response {
     return Response.Builder()
             .request(this)
-            .body(ResponseBody.create(MediaType.parse("text/plain"), ""))
+            .body("".toResponseBody("text/plain".toMediaTypeOrNull()))
             .message("No Content")
             .protocol(Protocol.HTTP_1_1)
             .code(204)
@@ -94,10 +90,8 @@ fun Request.noContentResponse(): Response {
  */
 fun Request.successPaginatedResponse(body: List<Any>): Response {
     // TODO: Add pagination support
-    val responseBody = ResponseBody.create(
-        MediaType.parse("application/json"),
-        Gson().toJson(body)
-    )
+    val responseBody = Gson().toJson(body)
+        .toResponseBody("application/json".toMediaTypeOrNull())
     return Response.Builder()
         .request(this)
         .body(responseBody)
@@ -112,7 +106,7 @@ fun Request.successPaginatedResponse(body: List<Any>): Response {
  */
 fun Request.unauthorizedResponse(): Response {
     val body =
-        ResponseBody.create(MediaType.parse("application/json"), """{ "error": "Unauthorized" }""")
+        """{ "error": "Unauthorized" }""".toResponseBody("application/json".toMediaTypeOrNull())
     return Response.Builder()
         .message("Unauthorized")
         .protocol(Protocol.HTTP_1_1)
