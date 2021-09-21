@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
+import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch

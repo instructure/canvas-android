@@ -25,7 +25,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'dagger.hilt.android.plugin'
 
-def updatePriority = 0
+def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
@@ -43,8 +43,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 42
-        versionName = '1.14.0'
+        versionCode = 43
+        versionName = '1.14.1'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
