@@ -38,6 +38,12 @@ data class Plannable(
     @SerializedName("due_at")
     val dueAt: Date?,
 
+    @SerializedName("start_at")
+    val startAt: Date?,
+
+    @SerializedName("end_at")
+    val endAt: Date?,
+
     // Used to determine if a quiz is an assignment or not
     @SerializedName("assignment_id")
     val assignmentId: Long?,

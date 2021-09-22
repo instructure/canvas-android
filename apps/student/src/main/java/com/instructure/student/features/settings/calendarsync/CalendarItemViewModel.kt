@@ -19,7 +19,12 @@ package com.instructure.student.features.settings.calendarsync
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.student.R
 
-class CalendarItemViewModel(val calendarViewData: CalendarViewData): ItemViewModel {
+class CalendarItemViewModel(
+    val calendarViewData: CalendarViewData,
+    val calendarClicked: () -> Unit
+): ItemViewModel {
 
     override val layoutId: Int = R.layout.item_calendar
+
+    val subtitle: String = "${calendarViewData.accountType} - ${calendarViewData.accountName}"
 }

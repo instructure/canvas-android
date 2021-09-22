@@ -29,7 +29,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/listPreferredItemHeight"
         android:paddingEnd="12dp"
-        android:paddingStart="16dp">
+        android:paddingStart="16dp"
+        android:onClick="@{() -> itemViewModel.calendarClicked.invoke()}"
+        android:foreground="?selectableItemBackground">
 
         <RadioButton
             android:id="@+id/calendarSyncSwitch"
@@ -63,7 +65,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/defaultTextGray"
             android:textSize="12sp"
-            android:text="@{itemViewModel.calendarViewData.accountName}"
+            android:text="@{itemViewModel.subtitle}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/calendarSyncSwitch"
             app:layout_constraintBottom_toBottomOf="parent"
