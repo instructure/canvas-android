@@ -135,6 +135,18 @@
                 android:textSize="16sp"/>
 
             <TextView
+                android:id="@+id/calendarSync"
+                style="@style/TextFont.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="Calendar Sync"
+                android:textSize="16sp"/>
+
+            <TextView
                 android:id="@+id/pairObserver"
                 style="@style/TextFont.Medium"
                 android:layout_width="match_parent"

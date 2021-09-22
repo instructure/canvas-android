@@ -37,6 +37,7 @@ import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.activity.NotificationPreferencesActivity
 import com.instructure.student.activity.SettingsActivity
 import com.instructure.student.dialog.LegalDialogStyled
+import com.instructure.student.features.settings.calendarsync.CalendarSyncFragment
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
 import com.instructure.student.util.Analytics
 import kotlinx.android.synthetic.main.dialog_about.*
@@ -92,6 +93,10 @@ class ApplicationSettingsFragment : ParentFragment() {
                     NoInternetConnectionDialog.show(requireFragmentManager())
                 }
             }
+        }
+
+        calendarSync.onClick {
+            addFragment(CalendarSyncFragment.newInstance())
         }
 
         pushNotifications.onClick {
