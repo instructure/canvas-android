@@ -35,6 +35,10 @@ object StudentPrefs : PrefManager("candroidSP") {
 
     var eventIds by MapPref(Long::class, Long::class)
 
+    var syncedCalendarId by LongPref(-1L)
+
+    var lastCalendarSync by LongPref(-1L)
+
     override fun keepBaseProps() = listOf(
             ::showGradesOnCard
     )

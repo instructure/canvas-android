@@ -16,15 +16,29 @@
  */
 package com.instructure.student.features.settings.calendarsync
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.student.R
 
 class CalendarItemViewModel(
     val calendarViewData: CalendarViewData,
-    val calendarClicked: () -> Unit
-): ItemViewModel {
+    @get:Bindable var selected: Boolean,
+    private val calendarClicked: () -> Unit
+): BaseObservable(), ItemViewModel {
 
     override val layoutId: Int = R.layout.item_calendar
 
     val subtitle: String = "${calendarViewData.accountType} - ${calendarViewData.accountName}"
+
+    fun onClick() {
+        calendarClicked()
+        selected = true
+        notifyChange()
+    }
+
+    fun unselect() {
+        selected = false
+        notifyChange()
+    }
 }

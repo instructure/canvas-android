@@ -22,6 +22,8 @@
         <variable
             name="viewModel"
             type="com.instructure.student.features.settings.calendarsync.CalendarSyncViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout
@@ -34,12 +36,24 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:background="@android:color/white"
-            android:elevation="2dp"
+            android:elevation="4dp"
             app:popupTheme="@style/ToolBarPopupStyle"
             app:theme="@style/ToolBarStyle"
             app:title="Calendar Sync"
             app:titleTextColor="@color/black"
             tools:navigationIcon="@drawable/ic_back_arrow" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="#FFF4D5"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:text="@{@string/lastSynced(viewModel.lastSynced)}"
+            android:visibility="@{viewModel.lastSynced.empty ? View.GONE : View.VISIBLE}"
+            tools:text="Last synced on 9.23. 11:05. Select calendar to sync now."/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/elementaryViewLayout"
@@ -55,6 +69,7 @@
                 android:minHeight="48dp"
                 android:layout_marginStart="16dp"
                 android:onCheckedChanged="@{(switch, checked) -> viewModel.syncSwitchChanged(checked)}"
+                android:checked="@{viewModel.syncEnabled}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>

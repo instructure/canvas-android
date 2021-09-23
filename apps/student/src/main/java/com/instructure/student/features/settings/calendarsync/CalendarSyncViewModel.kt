@@ -34,6 +34,7 @@ import com.instructure.pandautils.utils.date.DateTimeProvider
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -66,14 +67,51 @@ class CalendarSyncViewModel @Inject constructor(
         get() = _data
     private val _data = MutableLiveData<List<CalendarItemViewModel>>(emptyList())
 
+    val syncEnabled: LiveData<Boolean>
+        get() = _syncEnabled
+    private val _syncEnabled = MutableLiveData<Boolean>(false)
+
+    val lastSynced: LiveData<String>
+        get() = _lastSynced
+    private val _lastSynced = MutableLiveData<String>("")
+
+    private val simpleDateFormat = SimpleDateFormat("dd. MM. hh:mm aa", Locale.getDefault())
+
+    init {
+        val syncedCalendarId = StudentPrefs.syncedCalendarId
+        val isSyncEnabled = syncedCalendarId != -1L
+        _syncEnabled.value = isSyncEnabled
+
+        if (isSyncEnabled) {
+            val calendars = getCalendars()
+                .map { CalendarItemViewModel(it, syncedCalendarId == it.calID) { calendarClicked(it.calID) } }
+            _data.postValue(calendars)
+
+            val lastSync = StudentPrefs.lastCalendarSync
+            if (lastSync > -1L) {
+                _lastSynced.value = simpleDateFormat.format(Date(lastSync))
+            }
+        }
+    }
+
     fun syncSwitchChanged(checked: Boolean) {
-        if (checked) enableSync() else disableSync()
+        if (checked) {
+            _syncEnabled.value = true
+            enableSync()
+        } else {
+            _syncEnabled.value = false
+            StudentPrefs.syncedCalendarId = -1
+
+            _lastSynced.value = ""
+            StudentPrefs.lastCalendarSync = -1
+            disableSync()
+        }
     }
 
     private fun enableSync() {
         viewModelScope.launch {
             val calendars = getCalendars()
-                .map { CalendarItemViewModel(it) { calendarClicked(it.calID) } }
+                .map { CalendarItemViewModel(it, false) { calendarClicked(it.calID) } }
             _data.postValue(calendars)
         }
     }
@@ -101,6 +139,10 @@ class CalendarSyncViewModel @Inject constructor(
 
     private fun calendarClicked(calID: Long) {
         viewModelScope.launch {
+            StudentPrefs.syncedCalendarId = calID
+
+            data.value?.forEach { it.unselect() }
+
             val today = Date(dateTimeProvider.getCalendar().timeInMillis)
             val endDateCalendar = dateTimeProvider.getCalendar()
             endDateCalendar.add(Calendar.DAY_OF_YEAR, 7)
@@ -119,15 +161,18 @@ class CalendarSyncViewModel @Inject constructor(
                     val eventId = StudentPrefs.eventIds[it.plannableId] ?: -1
                     val isEventPresent = queryEvent(eventId)
                     if (isEventPresent) {
-                        updateCalendarEvent(calID, it, eventId)
+//                        updateCalendarEvent(calID, it, eventId)
                     } else {
-                        insertCalendarEvent(calID, it)
+//                        insertCalendarEvent(calID, it)
                     }
                 } else {
-                    insertCalendarEvent(calID, it)
+//                    insertCalendarEvent(calID, it)
                 }
             }
 
+            val currentTime = dateTimeProvider.getCalendar().timeInMillis
+            _lastSynced.value = simpleDateFormat.format(Date(currentTime))
+            StudentPrefs.lastCalendarSync = currentTime
         }
     }
 

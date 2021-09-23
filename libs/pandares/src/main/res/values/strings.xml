@@ -1224,4 +1224,6 @@
     <string name="a11y_content_description_schedule_jump_to_today">Jump to Today</string>
     <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
     <string name="a11y_contact_info_click_description">send message</string>
+
+    <string name="lastSynced">Last synced on %1$s. Select calendar to sync now.</string>
 </resources>

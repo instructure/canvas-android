@@ -30,7 +30,7 @@
         android:layout_height="?attr/listPreferredItemHeight"
         android:paddingEnd="12dp"
         android:paddingStart="16dp"
-        android:onClick="@{() -> itemViewModel.calendarClicked.invoke()}"
+        android:onClick="@{() -> itemViewModel.onClick()}"
         android:foreground="?selectableItemBackground">
 
         <RadioButton
@@ -39,6 +39,9 @@
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:layout_marginStart="16dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:checked="@{itemViewModel.selected}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
