@@ -26,6 +26,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.instructure.canvasapi2.managers.PlannerManager
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -36,6 +39,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 // Projection array. Creating indices for this array instead of doing
@@ -55,12 +59,15 @@ private const val PROJECTION_DISPLAY_NAME_INDEX: Int = 2
 private const val PROJECTION_OWNER_ACCOUNT_INDEX: Int = 3
 private const val PROJECTION_ACCOUNT_TYPE_INDEX: Int = 4
 
+private const val CALENDAR_WORKER_TAG = "calendarWork"
+
 @HiltViewModel
 class CalendarSyncViewModel @Inject constructor(
     private val application: Application,
     private val plannerManager: PlannerManager,
     private val dateTimeProvider: DateTimeProvider,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val workManager: WorkManager
 ) : ViewModel() {
 
     val data: LiveData<List<CalendarItemViewModel>>
@@ -161,18 +168,26 @@ class CalendarSyncViewModel @Inject constructor(
                     val eventId = StudentPrefs.eventIds[it.plannableId] ?: -1
                     val isEventPresent = queryEvent(eventId)
                     if (isEventPresent) {
-//                        updateCalendarEvent(calID, it, eventId)
+                        updateCalendarEvent(calID, it, eventId)
                     } else {
-//                        insertCalendarEvent(calID, it)
+                        insertCalendarEvent(calID, it)
                     }
                 } else {
-//                    insertCalendarEvent(calID, it)
+                    insertCalendarEvent(calID, it)
                 }
             }
 
             val currentTime = dateTimeProvider.getCalendar().timeInMillis
             _lastSynced.value = simpleDateFormat.format(Date(currentTime))
             StudentPrefs.lastCalendarSync = currentTime
+
+            workManager.cancelAllWorkByTag(CALENDAR_WORKER_TAG)
+
+            val workRequest: WorkRequest = PeriodicWorkRequestBuilder<CalendarSyncWorker>(5, TimeUnit.MINUTES)
+                .addTag(CALENDAR_WORKER_TAG)
+                .build()
+
+            workManager.enqueue(workRequest)
         }
     }
 
@@ -254,5 +269,7 @@ class CalendarSyncViewModel @Inject constructor(
 
     private fun disableSync() {
         _data.postValue(emptyList())
+
+        workManager.cancelAllWorkByTag(CALENDAR_WORKER_TAG)
     }
 }

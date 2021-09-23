@@ -329,6 +329,10 @@ dependencies {
     implementation Libs.FRAGMENT_KTX
     kapt Libs.LIFECYCLE_COMPILER
 
+    /* Work Manager */
+    implementation Libs.ANDROIDX_WORK_MANAGER
+    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
+
     /* DI */
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
