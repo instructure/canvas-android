@@ -24,6 +24,8 @@
             type="com.instructure.student.features.settings.calendarsync.CalendarSyncViewModel" />
 
         <import type="android.view.View" />
+
+        <import type="com.instructure.pandautils.mvvm.ViewState" />
     </data>
 
     <LinearLayout
@@ -41,7 +43,16 @@
             app:theme="@style/ToolBarStyle"
             app:title="Calendar Sync"
             app:titleTextColor="@color/black"
-            tools:navigationIcon="@drawable/ic_back_arrow" />
+            tools:navigationIcon="@drawable/ic_back_arrow">
+
+            <ProgressBar
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:indeterminateTint="@color/black"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="8dp"
+                android:visibility="@{viewModel.loading ? View.VISIBLE : View.GONE}"/>
+        </androidx.appcompat.widget.Toolbar>
 
         <TextView
             android:layout_width="match_parent"

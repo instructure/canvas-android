@@ -70,6 +70,10 @@ class CalendarSyncViewModel @Inject constructor(
     private val workManager: WorkManager
 ) : ViewModel() {
 
+    val loading: LiveData<Boolean>
+        get() = _loading
+    private val _loading = MutableLiveData<Boolean>(false)
+
     val data: LiveData<List<CalendarItemViewModel>>
         get() = _data
     private val _data = MutableLiveData<List<CalendarItemViewModel>>(emptyList())
@@ -90,21 +94,33 @@ class CalendarSyncViewModel @Inject constructor(
         _syncEnabled.value = isSyncEnabled
 
         if (isSyncEnabled) {
+            _loading.value = true
             val calendars = getCalendars()
-                .map { CalendarItemViewModel(it, syncedCalendarId == it.calID) { calendarClicked(it.calID) } }
+                .map {
+                    CalendarItemViewModel(
+                        it,
+                        syncedCalendarId == it.calID
+                    ) { calendarClicked(it.calID) }
+                }
             _data.postValue(calendars)
 
             val lastSync = StudentPrefs.lastCalendarSync
             if (lastSync > -1L) {
                 _lastSynced.value = simpleDateFormat.format(Date(lastSync))
             }
+
+            _loading.value = false
         }
     }
 
     fun syncSwitchChanged(checked: Boolean) {
         if (checked) {
+            _loading.value = true
+
             _syncEnabled.value = true
             enableSync()
+
+            _loading.value = false
         } else {
             _syncEnabled.value = false
             StudentPrefs.syncedCalendarId = -1
@@ -112,6 +128,8 @@ class CalendarSyncViewModel @Inject constructor(
             _lastSynced.value = ""
             StudentPrefs.lastCalendarSync = -1
             disableSync()
+
+            _loading.value = false
         }
     }
 
@@ -145,49 +163,57 @@ class CalendarSyncViewModel @Inject constructor(
     }
 
     private fun calendarClicked(calID: Long) {
+        _loading.value = true
         viewModelScope.launch {
-            StudentPrefs.syncedCalendarId = calID
+            try {
+                StudentPrefs.syncedCalendarId = calID
 
-            data.value?.forEach { it.unselect() }
+                data.value?.forEach { it.unselect() }
 
-            val today = Date(dateTimeProvider.getCalendar().timeInMillis)
-            val endDateCalendar = dateTimeProvider.getCalendar()
-            endDateCalendar.add(Calendar.DAY_OF_YEAR, 7)
-            val endDate = Date(endDateCalendar.timeInMillis)
+                val today = Date(dateTimeProvider.getCalendar().timeInMillis)
+                val endDateCalendar = dateTimeProvider.getCalendar()
+                endDateCalendar.add(Calendar.DAY_OF_YEAR, 7)
+                val endDate = Date(endDateCalendar.timeInMillis)
 
-            val plannerItems = plannerManager.getPlannerItemsAsync(
-                true,
-                today.toApiString(),
-                endDate.toApiString()
-            )
-                .await()
-                .dataOrNull
+                val plannerItems = plannerManager.getPlannerItemsAsync(
+                    true,
+                    today.toApiString(),
+                    endDate.toApiString()
+                )
+                    .await()
+                    .dataOrNull
 
-            plannerItems?.forEach {
-                if (StudentPrefs.eventIds.containsKey(it.plannableId)) {
-                    val eventId = StudentPrefs.eventIds[it.plannableId] ?: -1
-                    val isEventPresent = queryEvent(eventId)
-                    if (isEventPresent) {
-                        updateCalendarEvent(calID, it, eventId)
+                plannerItems?.forEach {
+                    if (StudentPrefs.eventIds.containsKey(it.plannableId)) {
+                        val eventId = StudentPrefs.eventIds[it.plannableId] ?: -1
+                        val isEventPresent = queryEvent(eventId)
+                        if (isEventPresent) {
+                            updateCalendarEvent(calID, it, eventId)
+                        } else {
+                            insertCalendarEvent(calID, it)
+                        }
                     } else {
                         insertCalendarEvent(calID, it)
                     }
-                } else {
-                    insertCalendarEvent(calID, it)
                 }
+
+                val currentTime = dateTimeProvider.getCalendar().timeInMillis
+                _lastSynced.value = simpleDateFormat.format(Date(currentTime))
+                StudentPrefs.lastCalendarSync = currentTime
+
+                workManager.cancelAllWorkByTag(CALENDAR_WORKER_TAG)
+
+                val workRequest: WorkRequest =
+                    PeriodicWorkRequestBuilder<CalendarSyncWorker>(5, TimeUnit.MINUTES)
+                        .addTag(CALENDAR_WORKER_TAG)
+                        .build()
+
+                workManager.enqueue(workRequest)
+
+                _loading.value = false
+            } catch (e: Exception) {
+                _loading.value = false
             }
-
-            val currentTime = dateTimeProvider.getCalendar().timeInMillis
-            _lastSynced.value = simpleDateFormat.format(Date(currentTime))
-            StudentPrefs.lastCalendarSync = currentTime
-
-            workManager.cancelAllWorkByTag(CALENDAR_WORKER_TAG)
-
-            val workRequest: WorkRequest = PeriodicWorkRequestBuilder<CalendarSyncWorker>(5, TimeUnit.MINUTES)
-                .addTag(CALENDAR_WORKER_TAG)
-                .build()
-
-            workManager.enqueue(workRequest)
         }
     }
 
