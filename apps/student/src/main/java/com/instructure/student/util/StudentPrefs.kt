@@ -33,6 +33,8 @@ object StudentPrefs : PrefManager("candroidSP") {
 
     var conferenceDashboardBlacklist by StringSetPref()
 
+    var eventIds by MapPref(Long::class, Long::class)
+
     override fun keepBaseProps() = listOf(
             ::showGradesOnCard
     )

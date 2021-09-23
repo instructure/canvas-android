@@ -52,7 +52,10 @@ data class PlannerItem (
     val newActivity: Boolean?,
 
     @SerializedName("planner_override")
-    var plannerOverride: PlannerOverride? = null
+    var plannerOverride: PlannerOverride? = null,
+
+    @SerializedName("plannable_id")
+    var plannableId: Long = -1
 ) {
 
     val canvasContext: CanvasContext

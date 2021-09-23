@@ -545,3 +545,35 @@ class SetPref<T : Any>(
         return this
     }
 }
+
+class MapPref<K : Any, V : Any>(
+    private val keyClass: KClass<K>,
+    private val valueClass: KClass<V>,
+    defaultValue: Map<K, V> = mapOf(),
+    keyName: String? = null
+) : Pref<Map<K, V>>(defaultValue, keyName) {
+
+    private var cachedObject: Map<K, V>? = null
+
+    override fun onClear() {
+        cachedObject = null
+    }
+
+    override fun SharedPreferences.getValue(key: String, default: Map<K, V>): Map<K, V> {
+        if (cachedObject == null) {
+            val type = TypeToken.getParameterized(
+                HashMap::class.java,
+                keyClass.javaObjectType,
+                valueClass.javaObjectType
+            ).type
+            cachedObject = Gson().fromJson<HashMap<K, V>>(getString(key, null), type)
+        }
+        return cachedObject ?: default
+    }
+
+    override fun Editor.setValue(key: String, value: Map<K, V>): SharedPreferences.Editor {
+        cachedObject = value
+        putString(key, Gson().toJson(value))
+        return this
+    }
+}
