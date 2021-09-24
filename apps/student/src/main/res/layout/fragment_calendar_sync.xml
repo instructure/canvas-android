@@ -41,7 +41,7 @@
             android:elevation="4dp"
             app:popupTheme="@style/ToolBarPopupStyle"
             app:theme="@style/ToolBarStyle"
-            app:title="Calendar Sync"
+            app:title="@string/calendarSyncTitle"
             app:titleTextColor="@color/black"
             tools:navigationIcon="@drawable/ic_back_arrow">
 
@@ -69,7 +69,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/elementaryViewLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/listPreferredItemHeight"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:minHeight="?attr/listPreferredItemHeight"
             android:paddingEnd="12dp"
             android:paddingStart="16dp">
 
@@ -92,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:labelFor="@+id/toggle"
                 android:textSize="16sp"
-                android:text="Enable calendar sync"
+                android:text="@string/enableCalendarSyncTitle"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintBottom_toTopOf="@id/calendarSyncDescription"
                 app:layout_constraintStart_toStartOf="parent"
@@ -106,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/defaultTextGray"
                 android:textSize="12sp"
-                android:text="Enabling this option will periodically sync your Canvas calendar events to your chosen calendar"
+                android:text="@string/enableCalendarSyncDescription"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/calendarSyncSwitch"
                 app:layout_constraintBottom_toBottomOf="parent"

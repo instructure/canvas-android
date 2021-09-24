@@ -30,9 +30,11 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.instructure.canvasapi2.managers.PlannerManager
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -241,10 +243,7 @@ class CalendarSyncViewModel @Inject constructor(
                 plannerItem.plannable.endAt?.time ?: plannerItem.plannable.dueAt?.time
                 ?: dateTimeProvider.getCalendar().timeInMillis
             )
-            put(
-                CalendarContract.Events.TITLE,
-                "${plannerItem.contextName} - ${plannerItem.plannable.title}"
-            )
+            put(CalendarContract.Events.TITLE, createEventTitle(plannerItem))
             put(CalendarContract.Events.DESCRIPTION, createUrl(plannerItem))
             put(CalendarContract.Events.CALENDAR_ID, calID)
             put(CalendarContract.Events.EVENT_TIMEZONE, "Mountain Time")
@@ -266,10 +265,7 @@ class CalendarSyncViewModel @Inject constructor(
                 plannerItem.plannable.endAt?.time ?: plannerItem.plannable.dueAt?.time
                 ?: dateTimeProvider.getCalendar().timeInMillis
             )
-            put(
-                CalendarContract.Events.TITLE,
-                "${plannerItem.contextName} - ${plannerItem.plannable.title}"
-            )
+            put(CalendarContract.Events.TITLE, createEventTitle(plannerItem))
             put(CalendarContract.Events.DESCRIPTION, createUrl(plannerItem))
             put(CalendarContract.Events.CALENDAR_ID, calID)
             put(CalendarContract.Events.EVENT_TIMEZONE, "Mountain Time")
@@ -283,6 +279,19 @@ class CalendarSyncViewModel @Inject constructor(
         val eventIds = StudentPrefs.eventIds
         val newEventIds = eventIds.plus(plannerItem.plannableId to eventID)
         StudentPrefs.eventIds = newEventIds
+    }
+
+    private fun createEventTitle(plannerItem: PlannerItem): String {
+        return when (plannerItem.plannableType) {
+            PlannableType.ANNOUNCEMENT -> application.getString(R.string.calendarSync_announcement, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.DISCUSSION_TOPIC -> application.getString(R.string.calendarSync_discussion_topic, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.CALENDAR_EVENT -> application.getString(R.string.calendarSync_calendar_event, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.ASSIGNMENT -> application.getString(R.string.calendarSync_assignment, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.PLANNER_NOTE -> application.getString(R.string.calendarSync_planner_note, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.QUIZ -> application.getString(R.string.calendarSync_quiz, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.TODO -> application.getString(R.string.calendarSync_todo, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.WIKI_PAGE -> application.getString(R.string.calendarSync_page, plannerItem.contextName, plannerItem.plannable.title)
+        }
     }
 
     private fun createUrl(plannerItem: PlannerItem): String {

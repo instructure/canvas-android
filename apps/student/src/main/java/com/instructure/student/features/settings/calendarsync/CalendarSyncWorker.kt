@@ -26,9 +26,11 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.managers.PlannerManager
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.date.RealDateTimeProvider
 import com.instructure.student.util.StudentPrefs
 import java.util.*
@@ -106,7 +108,7 @@ class CalendarSyncWorker(private val appContext: Context, workerParameters: Work
             )
             put(
                 CalendarContract.Events.TITLE,
-                "${plannerItem.contextName} - ${plannerItem.plannable.title}"
+                createEventTitle(plannerItem)
             )
             put(CalendarContract.Events.DESCRIPTION, createUrl(plannerItem))
             put(CalendarContract.Events.CALENDAR_ID, calID)
@@ -131,7 +133,7 @@ class CalendarSyncWorker(private val appContext: Context, workerParameters: Work
             )
             put(
                 CalendarContract.Events.TITLE,
-                "${plannerItem.contextName} - ${plannerItem.plannable.title}"
+                createEventTitle(plannerItem)
             )
             put(CalendarContract.Events.DESCRIPTION, createUrl(plannerItem))
             put(CalendarContract.Events.CALENDAR_ID, calID)
@@ -153,6 +155,19 @@ class CalendarSyncWorker(private val appContext: Context, workerParameters: Work
             plannerItem.htmlUrl!!
         } else {
             "${ApiPrefs.fullDomain}${plannerItem.htmlUrl}"
+        }
+    }
+
+    private fun createEventTitle(plannerItem: PlannerItem): String {
+        return when (plannerItem.plannableType) {
+            PlannableType.ANNOUNCEMENT -> appContext.getString(R.string.calendarSync_announcement, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.DISCUSSION_TOPIC -> appContext.getString(R.string.calendarSync_discussion_topic, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.CALENDAR_EVENT -> appContext.getString(R.string.calendarSync_calendar_event, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.ASSIGNMENT -> appContext.getString(R.string.calendarSync_assignment, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.PLANNER_NOTE -> appContext.getString(R.string.calendarSync_planner_note, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.QUIZ -> appContext.getString(R.string.calendarSync_quiz, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.TODO -> appContext.getString(R.string.calendarSync_todo, plannerItem.contextName, plannerItem.plannable.title)
+            PlannableType.WIKI_PAGE -> appContext.getString(R.string.calendarSync_page, plannerItem.contextName, plannerItem.plannable.title)
         }
     }
 }

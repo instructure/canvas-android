@@ -1226,4 +1226,16 @@
     <string name="a11y_contact_info_click_description">send message</string>
 
     <string name="lastSynced">Last synced on %1$s. Select calendar to sync now.</string>
+
+    <string name="calendarSync_announcement">[%1$s - Announcement] %2$s</string>
+    <string name="calendarSync_discussion_topic">[%1$s - Discussion] %2$s</string>
+    <string name="calendarSync_calendar_event">[%1$s - Event] %2$s</string>
+    <string name="calendarSync_assignment">[%1$s - Assignment] %2$s</string>
+    <string name="calendarSync_planner_note">[%1$s - Planner note] %2$s</string>
+    <string name="calendarSync_quiz">[%1$s - Quiz] %2$s</string>
+    <string name="calendarSync_todo">[%1$s - To Do] %2$s</string>
+    <string name="calendarSync_page">[%1$s - Page] %2$s</string>
+    <string name="calendarSyncTitle">Calendar Sync</string>
+    <string name="enableCalendarSyncTitle">Enable calendar sync</string>
+    <string name="enableCalendarSyncDescription">Enabling this option will periodically sync your Canvas calendar events to your chosen calendar</string>
 </resources>
