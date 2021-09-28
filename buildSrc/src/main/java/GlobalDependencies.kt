@@ -12,7 +12,6 @@ object Versions {
     const val BUILD_SCAN = "1.16"
 
     /* Testing */
-    const val JACOCO = "0.8.3"
     const val JUNIT = "4.12"
     const val ROBOLECTRIC = "4.3.1"
     const val ESPRESSO = "3.1.0"
@@ -24,7 +23,6 @@ object Versions {
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.3.3"
-    const val ANDROIDX = "1.0.0"
     const val FIREBASE_CONFIG = "18.0.0"
     const val PLAY_CORE = "1.10.0"
     const val PLAY_CORE_KTX = "1.8.1"
@@ -32,7 +30,6 @@ object Versions {
     /* Others */
     const val APOLLO = "2.5.9"
     const val CRASHLYTICS = "17.2.1"
-    const val ANALYTICS = "17.4.1"
     const val FIREBASE_ANALYTICS = "17.4.1"
     const val PSPDFKIT = "7.0.0"
     const val PHOTO_VIEW = "2.3.0"
@@ -63,14 +60,14 @@ object Libs {
     const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.2.0"
     const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.3.1"
     const val ANDROIDX_BROWSER = "androidx.browser:browser:1.3.0"
-    const val ANDROIDX_CARDVIEW = "androidx.cardview:cardview:${Versions.ANDROIDX}"
+    const val ANDROIDX_CARDVIEW = "androidx.cardview:cardview:1.0.0"
     const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.0"
     const val ANDROIDX_DESIGN = "com.google.android.material:material:1.4.0"
     const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:1.3.3"
     const val ANDROIDX_FRAGMENT = "androidx.fragment:fragment:${Versions.FRAGMENT}"
     const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
-    const val ANDROIDX_PALETTE = "androidx.palette:palette:${Versions.ANDROIDX}"
-    const val ANDROIDX_PERCENT = "androidx.percentlayout:percentlayout:${Versions.ANDROIDX}"
+    const val ANDROIDX_PALETTE = "androidx.palette:palette:1.0.0"
+    const val ANDROIDX_PERCENT = "androidx.percentlayout:percentlayout:1.0.0"
     const val ANDROIDX_RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.2.1"
     const val ANDROIDX_VECTOR = "androidx.vectordrawable:vectordrawable:1.1.0"
     const val ANDROIDX_SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
