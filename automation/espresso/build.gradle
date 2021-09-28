@@ -141,10 +141,11 @@ dependencies {
     api("junit:junit:$junitVersion")
     implementation Libs.KOTLIN_STD_LIB
 
-    // Currently we can only get this from Jitpack, so we had to change the package name. It will be soon migrated to Maven Central.
-    api('com.github.AdevintaSpain:Barista:v2.4.0') {
+    api('com.adevinta.android:barista:4.2.0') {
         exclude group: 'com.android.support'
         exclude group: 'org.jetbrains.kotlin'
+        exclude group: 'androidx.test.espresso'
+        exclude group: 'androidx.test'
     }
 
     implementation project(':canvas-api-2')

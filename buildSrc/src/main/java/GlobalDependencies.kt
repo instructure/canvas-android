@@ -12,6 +12,7 @@ object Versions {
     const val BUILD_SCAN = "1.16"
 
     /* Testing */
+    const val JACOCO = "0.8.3"
     const val JUNIT = "4.12"
     const val ROBOLECTRIC = "4.3.1"
     const val ESPRESSO = "3.1.0"
