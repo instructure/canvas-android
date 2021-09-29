@@ -189,8 +189,10 @@ class PlannerFetcher extends ChangeNotifier {
       dayItems[dayKeyForYearMonthDay(date.year, date.month, i)] = [];
     }
     items.forEach((item) {
-      String dayKey = dayKeyForDate(item.plannableDate.toLocal());
-      dayItems[dayKey].add(item);
+      if (item.plannableDate != null) {
+        String dayKey = dayKeyForDate(item.plannableDate.toLocal());
+        dayItems[dayKey].add(item);
+      }
     });
 
     dayItems.forEach((dayKey, items) {
