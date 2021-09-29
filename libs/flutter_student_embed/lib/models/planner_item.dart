@@ -54,6 +54,7 @@ abstract class PlannerItem implements Built<PlannerItem, PlannerItemBuilder> {
 
   Plannable get plannable;
 
+  @nullable
   @BuiltValueField(wireName: 'plannable_date')
   DateTime get plannableDate;
 
