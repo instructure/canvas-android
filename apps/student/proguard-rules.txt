@@ -224,6 +224,22 @@
     *** lambda$*(...);
 }
 
+# Preserve all .class method names.
+-keepclassmembernames class * {
+    java.lang.Class class$(java.lang.String);
+    java.lang.Class class$(java.lang.String, boolean);
+}
+
+# Preserve all native method names and the names of their classes.
+-keepclasseswithmembernames,includedescriptorclasses class * {
+    native <methods>;
+}
+
+# Preserve the special static methods that are required in all enumeration classes.
+-keepclassmembers,allowoptimization enum * {
+    public static **[] values(); public static ** valueOf(java.lang.String);
+}
+
 # Keep third party lib class names. PSPDFKit relies on those class names to be present.
 -keepnames class rx.android.schedulers.AndroidSchedulers
 -keepnames class rx.Observable
