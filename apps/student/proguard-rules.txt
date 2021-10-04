@@ -193,9 +193,13 @@
 
 #PSPDFKit
 -keep class com.pspdfkit.** { *; }
+-keep class com.pspdfkit.** { lambda$*; }
 -keep class com.pspdfkit.**$** { *; }
+-keep class com.pspdfkit.**$** { lambda$*; }
 -keepclassmembers class com.pspdfkit.** { *;}
+-keepclassmembers class com.pspdfkit.** { lambda$*; }
 -keepclassmembers class com.pspdfkit.**$** { *; }
+-keepclassmembers class com.pspdfkit.**$** { lambda$*; }
 -keep class rx.internal.util.unsafe.** { *; }
 -keep class io.reactivex.Observable
 -dontwarn sun.misc.**
@@ -205,6 +209,13 @@
 -dontwarn com.pspdfkit.**
 -dontwarn android.view.WindowInsets
 -dontwarn android.graphics.Insets
+-keepclassmembers class ** {
+    private static synthetic java.lang.Object $deserializeLambda$(java.lang.invoke.SerializedLambda);
+}
+
+-keepclassmembernames class ** {
+    private static synthetic *** lambda$*(...);
+}
 
 # Keep third party lib class names. PSPDFKit relies on those class names to be present.
 -keepnames class rx.android.schedulers.AndroidSchedulers
