@@ -196,6 +196,8 @@
 -keepclassmembers class com.pspdfkit.** {
     *;
 }
+-keep class rx.internal.util.unsafe.** { *; }
+-keep class io.reactivex.Observable
 -dontwarn sun.misc.**
 -dontwarn edu.umd.cs.findbugs.annotations.SuppressWarnings
 -keepnames class io.reactivex.android.schedulers.AndroidSchedulers
