@@ -193,6 +193,9 @@
 
 #PSPDFKit
 -keep class com.pspdfkit.** { *; }
+-keepclassmembers class com.pspdfkit.** {
+    *;
+}
 -dontwarn sun.misc.**
 -dontwarn edu.umd.cs.findbugs.annotations.SuppressWarnings
 -keepnames class io.reactivex.android.schedulers.AndroidSchedulers
