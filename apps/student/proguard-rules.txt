@@ -193,13 +193,9 @@
 
 #PSPDFKit
 -keep class com.pspdfkit.** { *; }
--keep class com.pspdfkit.** { lambda$*; }
 -keep class com.pspdfkit.**$** { *; }
--keep class com.pspdfkit.**$** { lambda$*; }
 -keepclassmembers class com.pspdfkit.** { *;}
--keepclassmembers class com.pspdfkit.** { lambda$*; }
 -keepclassmembers class com.pspdfkit.**$** { *; }
--keepclassmembers class com.pspdfkit.**$** { lambda$*; }
 -keep class rx.internal.util.unsafe.** { *; }
 -keep class io.reactivex.Observable
 -dontwarn sun.misc.**
@@ -215,6 +211,7 @@
 
 -keepclassmembernames class ** {
     private static synthetic *** lambda$*(...);
+    *** lambda$*(...);
 }
 
 # Keep third party lib class names. PSPDFKit relies on those class names to be present.
