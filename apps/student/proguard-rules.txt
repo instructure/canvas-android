@@ -192,10 +192,10 @@
 -dontwarn okhttp3.**
 
 #PSPDFKit
--keep class com.pspdfkit.** { *; }
--keepclassmembers class com.pspdfkit.** {
-    *;
-}
+-keep class com.pspdfkit.** { **; }
+-keep class com.pspdfkit.**$** { **; }
+-keepclassmembers class com.pspdfkit.** { **;}
+-keepclassmembers class com.pspdfkit.**$** { **; }
 -keep class rx.internal.util.unsafe.** { *; }
 -keep class io.reactivex.Observable
 -dontwarn sun.misc.**
