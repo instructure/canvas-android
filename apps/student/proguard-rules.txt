@@ -192,9 +192,19 @@
 -dontwarn okhttp3.**
 
 #PSPDFKit
--keep class com.pspdfkit.** { *; }
+-keep class com.pspdfkit.** {
+    private <methods>;
+    private org.reactivestreams.Publisher lambda$performSearchAsync$1(java.lang.String, com.pspdfkit.document.search.SearchOptions);
+    private void lambda$performSearchAsync$0(com.pspdfkit.document.search.SearchOptions, java.lang.String, io.reactivex.FlowableEmitter);
+    *;
+}
 -keep class com.pspdfkit.**$** { *; }
--keepclassmembers class com.pspdfkit.** { *;}
+-keepclassmembers class com.pspdfkit.** {
+    private <methods>;
+    private org.reactivestreams.Publisher lambda$performSearchAsync$1(java.lang.String, com.pspdfkit.document.search.SearchOptions);
+    private void lambda$performSearchAsync$0(com.pspdfkit.document.search.SearchOptions, java.lang.String, io.reactivex.FlowableEmitter);
+    *;
+}
 -keepclassmembers class com.pspdfkit.**$** { *; }
 -keep class rx.internal.util.unsafe.** { *; }
 -keep class io.reactivex.Observable
