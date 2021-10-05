@@ -192,22 +192,7 @@
 -dontwarn okhttp3.**
 
 #PSPDFKit
--keep class com.pspdfkit.** {
-    private <methods>;
-    private org.reactivestreams.Publisher lambda$performSearchAsync$1(java.lang.String, com.pspdfkit.document.search.SearchOptions);
-    private void lambda$performSearchAsync$0(com.pspdfkit.document.search.SearchOptions, java.lang.String, io.reactivex.FlowableEmitter);
-    *;
-}
--keep class com.pspdfkit.**$** { *; }
--keepclassmembers class com.pspdfkit.** {
-    private <methods>;
-    private org.reactivestreams.Publisher lambda$performSearchAsync$1(java.lang.String, com.pspdfkit.document.search.SearchOptions);
-    private void lambda$performSearchAsync$0(com.pspdfkit.document.search.SearchOptions, java.lang.String, io.reactivex.FlowableEmitter);
-    *;
-}
--keepclassmembers class com.pspdfkit.**$** { *; }
--keep class rx.internal.util.unsafe.** { *; }
--keep class io.reactivex.Observable
+-keep class com.pspdfkit.** { *; }
 -dontwarn sun.misc.**
 -dontwarn edu.umd.cs.findbugs.annotations.SuppressWarnings
 -keepnames class io.reactivex.android.schedulers.AndroidSchedulers
@@ -215,30 +200,6 @@
 -dontwarn com.pspdfkit.**
 -dontwarn android.view.WindowInsets
 -dontwarn android.graphics.Insets
--keepclassmembers class ** {
-    private static synthetic java.lang.Object $deserializeLambda$(java.lang.invoke.SerializedLambda);
-}
-
--keepclassmembernames class ** {
-    private static synthetic *** lambda$*(...);
-    *** lambda$*(...);
-}
-
-# Preserve all .class method names.
--keepclassmembernames class * {
-    java.lang.Class class$(java.lang.String);
-    java.lang.Class class$(java.lang.String, boolean);
-}
-
-# Preserve all native method names and the names of their classes.
--keepclasseswithmembernames,includedescriptorclasses class * {
-    native <methods>;
-}
-
-# Preserve the special static methods that are required in all enumeration classes.
--keepclassmembers,allowoptimization enum * {
-    public static **[] values(); public static ** valueOf(java.lang.String);
-}
 
 # Keep third party lib class names. PSPDFKit relies on those class names to be present.
 -keepnames class rx.android.schedulers.AndroidSchedulers
@@ -294,18 +255,6 @@
 
 # Kotlin
 -dontwarn kotlinx.atomicfu.AtomicBoolean
--keep class kotlin.** { *; }
--keep class kotlin.Metadata { *; }
--dontwarn kotlin.**
--keepclassmembers class **$WhenMappings {
-    <fields>;
-}
--keepclassmembers class kotlin.Metadata {
-    public <methods>;
-}
--assumenosideeffects class kotlin.jvm.internal.Intrinsics {
-    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);
-}
 
 # CameraKit
 -dontwarn com.google.android.gms.**
