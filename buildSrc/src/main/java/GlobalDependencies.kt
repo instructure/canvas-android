@@ -12,11 +12,11 @@ object Versions {
     const val BUILD_SCAN = "1.16"
 
     /* Testing */
-    const val JACOCO = "0.8.3"
+    const val JACOCO = "0.8.7"
     const val JUNIT = "4.12"
     const val ROBOLECTRIC = "4.3.1"
     const val ESPRESSO = "3.1.0"
-    const val JACOCO_ANDROID = "0.1.4"
+    const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
     const val KOTLIN = "1.5.30"
