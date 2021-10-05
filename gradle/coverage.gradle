@@ -44,6 +44,8 @@ def prepareJacocoParams(variant) {
         '**/Hilt_*.*',
         '**/*GeneratedInjector*.*',
         '**/*MembersInjector*.*',
+        '**/*_HiltComponents*.*',
+        '**/*_ComponentTreeDeps*.*',
         '**/*_Provide*/**',
         '**/*_Factory*/**',
         '**/DataBinding*.*'
