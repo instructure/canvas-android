@@ -35,7 +35,7 @@ def prepareJacocoParams(variant) {
                           '**/com/instructure/**/*.*',
     ]
     params.exclusions = [
-        '**/DataBinderMapperImpl.java'
+        '**/DataBinderMapperImpl*.*'
     ]
     params.classDirectories = files([fileTree(
             dir: variant.javaCompiler.destinationDir,
