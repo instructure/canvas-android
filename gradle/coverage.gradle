@@ -35,7 +35,8 @@ def prepareJacocoParams(variant) {
                           '**/com/instructure/**/*.*',
     ]
     params.exclusions = [
-        '**/R.class', 
+        '**/R.class',
+        '**/BR.class', 
         '**/R$*.class', 
         '**/BuildConfig.*',
         '**/DataBinderMapperImpl*.*',
