@@ -44,6 +44,8 @@ def prepareJacocoParams(variant) {
         '**/Hilt_*.*',
         '**/*GeneratedInjector*.*',
         '**/*MembersInjector*.*',
+        '**/*_Provide*/**',
+        '**/*_Factory*/**',
         '**/DataBinding*.*'
     ]
     params.classDirectories = files([fileTree(
