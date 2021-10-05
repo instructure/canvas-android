@@ -39,7 +39,7 @@ def prepareJacocoParams(variant) {
         '**/R$*.class', 
         '**/BuildConfig.*',
         '**/DataBinderMapperImpl*.*',
-        '**/build/generated/**',
+        '**/build/generated/**/*.*',
         '**/DataBinding*.*'
     ]
     params.classDirectories = files([fileTree(
