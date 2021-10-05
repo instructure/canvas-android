@@ -84,7 +84,6 @@ android {
 
     configurations.all {
         resolutionStrategy.force 'com.getkeepsafe.relinker:relinker:1.4.3'
-        resolutionStrategy.force Libs.OKHTTP
     }
 }
 

@@ -71,11 +71,6 @@ apollo {
     ]
 }
 
-ext {
-    retrofitVersion = '2.5.0'
-    okhttpVersion = '3.13.1'
-}
-
 dependencies {
     api project(path: ':pandares')
 
