@@ -186,9 +186,6 @@ android {
         */
         resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
 
-        // Fix for Robolectric 4.x
-        resolutionStrategy.force "org.ow2.asm:asm:7.0"
-
         resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
     }
 

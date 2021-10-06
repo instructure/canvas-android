@@ -129,8 +129,6 @@ android {
     configurations.all {
         resolutionStrategy {
             force 'android.arch.lifecycle:runtime:1.0.3'
-            // Fix for Robolectric 4.x
-            force "org.ow2.asm:asm:7.0"
 
             force Libs.KOTLIN_COROUTINES_CORE
         }
