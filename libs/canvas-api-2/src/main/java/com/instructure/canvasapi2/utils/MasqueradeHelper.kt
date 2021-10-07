@@ -171,7 +171,7 @@ object MasqueradeHelper {
         val client = CanvasRestAdapter.client
         if (client != null) {
             try {
-                client.cache()?.evictAll()
+                client.cache?.evictAll()
             } catch (e: IOException) {/* Do Nothing */ }
         }
 

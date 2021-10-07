@@ -33,7 +33,7 @@ class MobileDataWarningDialog : AppCompatDialogFragment() {
     init { retainInstance = true }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val checkBox = AppCompatCheckBox(context).apply {
+        val checkBox = AppCompatCheckBox(requireContext()).apply {
             isChecked = false
             setText(R.string.utils_doNotShowMessageAgain)
             textSize = 12f

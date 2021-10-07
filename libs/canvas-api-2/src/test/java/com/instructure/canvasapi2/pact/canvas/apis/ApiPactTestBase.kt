@@ -19,10 +19,8 @@ package com.instructure.canvasapi2.pact.canvas.apis
 import au.com.dius.pact.consumer.junit.PactProviderRule
 import au.com.dius.pact.core.model.PactSpecVersion
 import com.instructure.canvasapi2.PactRequestInterceptor
-import com.instructure.canvasapi2.apis.CourseAPI
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
+import okhttp3.Request
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import retrofit2.Call
@@ -57,10 +55,10 @@ open class ApiPactTestBase {
         return client
     }
 
-    fun <T> assertQueryParamsAndPath(call: Call<T>, expectedQuery: String?, expectedPath: String?)
-    {
-        assertEquals("Call Query Params", call.request().url().query(), expectedQuery)
-        assertEquals("Call Path", call.request().url().url().path, expectedPath)
+    fun <T> assertQueryParamsAndPath(call: Call<T>, expectedQuery: String?, expectedPath: String?) {
+        val request: Request = call.request()
+        assertEquals("Call Query Params", request.url.query, expectedQuery)
+        assertEquals("Call Path", request.url.toUrl().path, expectedPath)
     }
 
     val DEFAULT_REQUEST_HEADERS = mapOf(

@@ -34,6 +34,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import okhttp3.Headers
+import okhttp3.Headers.Companion.toHeaders
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -316,6 +317,7 @@ class ModuleListEffectHandlerTest : Assert() {
     }
 
 
-    private fun makeLinkHeader(nextUrl: String) = Headers.of(mapOf("Link" to """<$nextUrl>; rel="next""""))
+    private fun makeLinkHeader(nextUrl: String) =
+        mapOf("Link" to """<$nextUrl>; rel="next"""").toHeaders()
 
 }

@@ -34,12 +34,30 @@ def prepareJacocoParams(variant) {
     params.fileFilter = [
                           '**/com/instructure/**/*.*',
     ]
+    params.exclusions = [
+        '**/R.class',
+        '**/BR.class', 
+        '**/R$*.class', 
+        '**/BuildConfig.*',
+        '**/DataBinderMapperImpl*.*',
+        '**/build/generated/**/*.*',
+        '**/Hilt_*.*',
+        '**/*GeneratedInjector*.*',
+        '**/*MembersInjector*.*',
+        '**/*_HiltComponents*.*',
+        '**/*_ComponentTreeDeps*.*',
+        '**/*_Provide*/**',
+        '**/*_Factory*/**',
+        '**/DataBinding*.*'
+    ]
     params.classDirectories = files([fileTree(
             dir: variant.javaCompiler.destinationDir,
-            includes: params.fileFilter
+            includes: params.fileFilter,
+            excludes: params.exclusions
     ) + fileTree(
             dir: "$buildDir/tmp/kotlin-classes/$params.variantName",
-            includes: params.fileFilter
+            includes: params.fileFilter,
+            excludes: params.exclusions
     )])
 
     params.sourceDirectories = files([

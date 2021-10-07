@@ -37,8 +37,10 @@ import com.instructure.teacher.viewinterface.CreateDiscussionView
 import instructure.androidblueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Response
 import java.io.File
 
@@ -72,7 +74,7 @@ class CreateDiscussionPresenter(private val canvasContext: CanvasContext, privat
                 var filePart: MultipartBody.Part? = null
                 attachment?.let {
                     val file = File(it.fullPath)
-                    val requestBody = RequestBody.create(MediaType.parse(it.contentType), file)
+                    val requestBody = file.asRequestBody(it.contentType.toMediaTypeOrNull())
                     filePart = MultipartBody.Part.createFormData("attachment", file.name, requestBody)
                 }
                 awaitApi<DiscussionTopicHeader> { DiscussionManager.createDiscussion(canvasContext, discussionTopicHeader, filePart, it) }

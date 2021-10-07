@@ -28,13 +28,13 @@ private const val RETRY_HEADER = "mobile_refresh"
 class CanvasAuthenticator : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        if (response.request().header(RETRY_HEADER) != null) {
+        if (response.request.header(RETRY_HEADER) != null) {
             logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE)
             EventBus.getDefault().post(CanvasAuthError("Failed to authenticate"))
             return null // Give up, we've already failed to authenticate
         }
 
-        if (response.request().url().url().path.contains("accounts/self")) {
+        if (response.request.url.toUrl().path.contains("accounts/self")) {
             // We are likely just checking if the user can masquerade or not, which happens on login - don't try to re-auth here
             return null
         }
@@ -54,7 +54,7 @@ class CanvasAuthenticator : Authenticator {
                 EventBus.getDefault().post(CanvasTokenRefreshedEvent())
             }
 
-            return response.request().newBuilder()
+            return response.request.newBuilder()
                 .header(AUTH_HEADER, OAuthAPI.authBearer(ApiPrefs.accessToken))
                 .header(RETRY_HEADER, RETRY_HEADER) // Mark retry to prevent infinite recursion
                 .build()

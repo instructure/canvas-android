@@ -20,14 +20,14 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui.SubmissionFilesView
 import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.EffectHandler
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 
 class SubmissionFilesEffectHandler : EffectHandler<SubmissionFilesView, SubmissionFilesEvent, SubmissionFilesEffect>() {
-    @ExperimentalCoroutinesApi
+    @ObsoleteCoroutinesApi
     override fun accept(value: SubmissionFilesEffect) {
         when (value) {
             is SubmissionFilesEffect.BroadcastFileSelected -> {
-                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().offer(
+                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
                     SubmissionDetailsSharedEvent.FileSelected(value.file)
                 )
             }

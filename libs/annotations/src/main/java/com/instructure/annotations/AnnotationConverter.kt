@@ -295,8 +295,8 @@ fun listOfRectsToListOfListOfFloats(rects: List<RectF>?): ArrayList<ArrayList<Fl
         return null
 
     val listOfLists = ArrayList<ArrayList<Float>>()
-    listOfLists.add(arrayListOf(rects.minBy { it.left }?.left ?: 0f, rects.minBy { it.bottom }?.bottom ?: 0f))
-    listOfLists.add(arrayListOf(rects.maxBy { it.right }?.right ?: 0f, rects.maxBy { it.top }?.top ?: 0f))
+    listOfLists.add(arrayListOf(rects.minByOrNull { it.left }?.left ?: 0f, rects.minByOrNull { it.bottom }?.bottom ?: 0f))
+    listOfLists.add(arrayListOf(rects.maxByOrNull { it.right }?.right ?: 0f, rects.maxByOrNull { it.top }?.top ?: 0f))
 
     return listOfLists
 }

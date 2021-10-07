@@ -41,8 +41,10 @@ import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
 import instructure.androidblueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 class CreateOrEditAnnouncementPresenter(
@@ -114,7 +116,7 @@ class CreateOrEditAnnouncementPresenter(
                 var filePart: MultipartBody.Part? = null
                 attachment?.let {
                     val file = File(it.fullPath)
-                    val requestBody = RequestBody.create(MediaType.parse(it.contentType), file)
+                    val requestBody = file.asRequestBody(it.contentType.toMediaTypeOrNull())
                     filePart = MultipartBody.Part.createFormData("attachment", file.name, requestBody)
                 }
 

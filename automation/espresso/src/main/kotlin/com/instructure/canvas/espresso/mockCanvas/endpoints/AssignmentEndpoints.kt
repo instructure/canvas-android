@@ -74,7 +74,7 @@ object AssignmentEndpoint : Endpoint(
 
                 // Sigh... Need to extract the json object from the body
                 val buffer = Buffer()
-                request.body()?.writeTo(buffer)
+                request.body?.writeTo(buffer)
                 val stringOutput = buffer.readUtf8()
                 val jsonObject = JSONObject(stringOutput)
 

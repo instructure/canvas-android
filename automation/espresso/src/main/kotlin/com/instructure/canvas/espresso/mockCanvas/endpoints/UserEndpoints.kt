@@ -115,7 +115,7 @@ object UserEndpoint : Endpoint(
         PUT {
             val userId = pathVars.userId
             val user = data.users[userId]
-            val newShortName = request.url().queryParameter("user[short_name]")
+            val newShortName = request.url.queryParameter("user[short_name]")
             if(user != null && newShortName != null) {
                 // Replace the user object with a clone that has the new short name
                 val newUser = user.copy(shortName = newShortName)
@@ -175,15 +175,15 @@ object UserTodoEndpoint : Endpoint (
 object UserFilesEndpoint : Endpoint(
         response = {
             POST {
-                val fileName = request.url().queryParameter("name")!!
-                val fileType = request.url().queryParameter("content_type")!!
-                val fileParentFolder = request.url().queryParameter("parent_folder_id")?.toLong()!!
+                val fileName = request.url.queryParameter("name")!!
+                val fileType = request.url.queryParameter("content_type")!!
+                val fileParentFolder = request.url.queryParameter("parent_folder_id")?.toLong()!!
 
                 // Assumes a binary payload... May not always be valid.
                 // We only hit this logic when uploading files from the global file list page,
                 // not when uploading course assignments.
                 val buffer = Buffer()
-                request.body()?.writeTo(buffer)
+                request.body?.writeTo(buffer)
                 // This is a little weak, and possibly wrong for image files.  But since
                 // we do not actually check the content of image files, we should be OK.
                 val content = buffer.readByteArray().toString(Charset.defaultCharset()) // Should be utf-8
@@ -306,7 +306,7 @@ object UserFavoriteCourseEndpoint : Endpoint ( response = {
  */
 object UserEnrollmentEndpoint : Endpoint(response = {
     GET {
-        val states = request.url().queryParameterValues("state[]")
+        val states = request.url.queryParameterValues("state[]")
         var enrollments = data.enrollments.values.filter { it.userId == pathVars.userId }
         if (states.isNotEmpty()) {
             enrollments = enrollments.filter { it.enrollmentState in states }
@@ -344,7 +344,7 @@ object UserSettingsEndpoint : Endpoint(response = {
     GET { request.successResponse(data.userSettings[pathVars.userId]!!) }
     PUT {
         var settings = data.userSettings[pathVars.userId]!!
-        request.url().queryParameter("hide_dashcard_color_overlays")?.let {
+        request.url.queryParameter("hide_dashcard_color_overlays")?.let {
             settings = settings.copy(hideDashCardColorOverlays = it.equals("true", true))
         }
         data.userSettings[pathVars.userId] = settings
@@ -384,9 +384,9 @@ object UserBookmarksEndpoint : Endpoint(
                 val userId = pathVars.userId
 
                 // query vars
-                val name = request.url().queryParameter("name")
-                val url = request.url().queryParameter("url")
-                val position = request.url().queryParameter("position")
+                val name = request.url.queryParameter("name")
+                val url = request.url.queryParameter("url")
+                val position = request.url.queryParameter("position")
 
                 val bookmark = data.bookmarks[userId]?.firstOrNull {b -> b.id == bookmarkId}
                 if(bookmark != null) {
@@ -414,9 +414,9 @@ object UserBookmarksEndpoint : Endpoint(
         response = {
 
             POST {
-                val name = request.url().queryParameter("name")
-                val url = request.url().queryParameter("url")
-                val position = request.url().queryParameter("position")?.toInt() ?: 0
+                val name = request.url.queryParameter("name")
+                val url = request.url.queryParameter("url")
+                val position = request.url.queryParameter("position")?.toInt() ?: 0
 
                 val bookmark = Bookmark(
                         id = data.newItemId(),

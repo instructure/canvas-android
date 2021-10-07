@@ -80,14 +80,17 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
             }
             SubmissionCommentsEffect.ScrollToBottom -> view?.scrollToBottom()
             is SubmissionCommentsEffect.BroadcastSubmissionSelected -> {
-                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().offer(
+                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
                     SubmissionDetailsSharedEvent.SubmissionClicked(effect.submission)
                 )
                 Unit
             }
             is SubmissionCommentsEffect.BroadcastSubmissionAttachmentSelected -> {
-                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().offer(
-                    SubmissionDetailsSharedEvent.SubmissionAttachmentClicked(effect.submission, effect.attachment)
+                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+                    SubmissionDetailsSharedEvent.SubmissionAttachmentClicked(
+                        effect.submission,
+                        effect.attachment
+                    )
                 )
                 Unit
             }
@@ -124,14 +127,14 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
     }
 
     private fun showVideoCommentDialog() {
-        ChannelSource.getChannel<SubmissionDetailsSharedEvent>().offer(
-                SubmissionDetailsSharedEvent.VideoRecordingViewLaunched
+        ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+            SubmissionDetailsSharedEvent.VideoRecordingViewLaunched
         )
     }
 
     private fun showAudioCommentDialog() {
-        ChannelSource.getChannel<SubmissionDetailsSharedEvent>().offer(
-                SubmissionDetailsSharedEvent.AudioRecordingViewLaunched
+        ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+            SubmissionDetailsSharedEvent.AudioRecordingViewLaunched
         )
     }
 

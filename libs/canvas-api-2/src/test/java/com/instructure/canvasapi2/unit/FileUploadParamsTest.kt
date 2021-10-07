@@ -39,8 +39,8 @@ class FileUploadParamsTest {
         for ((key, _) in uploadParams) {
             val requestBody = plainUploadParams[key]
             assertNotNull(requestBody)
-            assertEquals("text", requestBody?.contentType()!!.type())
-            assertEquals("plain", requestBody.contentType()!!.subtype())
+            assertEquals("text", requestBody?.contentType()!!.type)
+            assertEquals("plain", requestBody.contentType()!!.subtype)
         }
     }
 }
