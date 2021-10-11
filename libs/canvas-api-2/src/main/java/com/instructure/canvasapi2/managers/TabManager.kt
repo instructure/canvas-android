@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object TabManager {
 
@@ -30,5 +31,14 @@ object TabManager {
 
         TabAPI.getTabs(canvasContext.id, adapter, callback, params)
     }
+
+    fun getTabsForElementary(canvasContext: CanvasContext, callback: StatusCallback<List<Tab>>, forceNetwork: Boolean) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(canvasContext = canvasContext, isForceReadFromNetwork = forceNetwork)
+
+        TabAPI.getTabsForElementary(canvasContext.id, adapter, callback, params)
+    }
+
+    fun getTabsForElementaryAsync(canvasContext: CanvasContext, forceNetwork: Boolean) = apiAsync<List<Tab>> { getTabsForElementary(canvasContext, it, forceNetwork) }
 
 }
