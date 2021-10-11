@@ -38,8 +38,8 @@ class InternalWebViewActivity : BaseActionBarActivity() {
         toolbar?.let { themeToolbar(this, it, Color.WHITE, Color.BLACK, false) }
         if (savedInstanceState == null) {
             val bundle = intent.getBundleExtra(Const.EXTRAS)
-            bundle.getString(Const.ACTION_BAR_TITLE)?.let { toolbar?.title = it }
-            bundle.getParcelable<CanvasContext>(Const.CANVAS_CONTEXT)?.let { canvasContext ->
+            bundle?.getString(Const.ACTION_BAR_TITLE)?.let { toolbar?.title = it }
+            bundle?.getParcelable<CanvasContext>(Const.CANVAS_CONTEXT)?.let { canvasContext ->
                 // Currently we use an empty context when showing the EULA, privacy policy, etc., in which case we
                 // want the internalWebViewFragment to hide its toolbar
                 if (canvasContext.id == 0L) {
@@ -50,7 +50,7 @@ class InternalWebViewActivity : BaseActionBarActivity() {
                     supportActionBar?.title = canvasContext.name
                 }
             }
-            val fragment = newInstance(makeRoute(bundle))
+            val fragment = newInstance(makeRoute(bundle!!))
             val ft = supportFragmentManager.beginTransaction()
             ft.add(R.id.container, fragment, InternalWebviewFragment::class.java.name)
             ft.commitAllowingStateLoss()

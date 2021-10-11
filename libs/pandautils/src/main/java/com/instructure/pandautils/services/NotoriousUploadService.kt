@@ -104,7 +104,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
 
         createNotificationChannel(CHANNEL_ID)
 
-        mediaPath = intent.getStringExtra(Const.MEDIA_FILE_PATH)
+        mediaPath = intent.getStringExtra(Const.MEDIA_FILE_PATH) ?: ""
 
         notificationManager.notify(notificationId, builder.build())
 

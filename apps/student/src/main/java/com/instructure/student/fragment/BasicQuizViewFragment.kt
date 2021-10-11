@@ -191,7 +191,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             val authenticatedUrl = tryOrNull {
                 awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url!!, it) }.sessionUrl
             }
-            getCanvasWebView()?.loadUrl(authenticatedUrl ?: url, APIHelper.referrer)
+            getCanvasWebView()?.loadUrl(authenticatedUrl ?: url ?: "", APIHelper.referrer)
         }
     }
 
