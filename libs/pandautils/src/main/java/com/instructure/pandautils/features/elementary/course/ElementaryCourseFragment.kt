@@ -27,10 +27,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentElementaryCourseBinding
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_elementary_course.*
 
 @AndroidEntryPoint
 class ElementaryCourseFragment : Fragment() {
@@ -51,6 +50,7 @@ class ElementaryCourseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        applyTheme()
         viewModel.getData(canvasContext)
     }
 
@@ -63,5 +63,11 @@ class ElementaryCourseFragment : Fragment() {
         private fun validateRoute(route: Route) = route.canvasContext != null
 
         fun makeRoute(canvasContext: CanvasContext?) = Route(ElementaryCourseFragment::class.java, canvasContext)
+    }
+
+    private fun applyTheme() {
+        toolbar.title = canvasContext.name
+        toolbar.setupAsBackButton(this)
+        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
     }
 }
