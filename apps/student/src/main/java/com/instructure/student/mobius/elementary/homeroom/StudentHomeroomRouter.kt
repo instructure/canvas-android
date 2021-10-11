@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.elementary.course.ElementaryCourseFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
@@ -35,7 +36,7 @@ class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRo
     }
 
     override fun openCourse(course: Course) {
-        RouteMatcher.route(activity, CourseBrowserFragment.makeRoute(course))
+        RouteMatcher.route(activity, ElementaryCourseFragment.makeRoute(course))
     }
 
     override fun openAssignments(course: Course) {

@@ -23,22 +23,45 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.FragmentElementaryCourseBinding
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.makeBundle
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ElementaryCourseFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ElementaryCourseFragment()
-    }
+    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private val viewModel: ElementaryCourseViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_elementary_course, container, false)
+    ): View {
+        val binding = FragmentElementaryCourseBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getData(canvasContext)
+    }
+
+    companion object {
+        fun newInstance(route: Route) =
+            if (validateRoute(route)) ElementaryCourseFragment().apply {
+                arguments = route.canvasContext!!.makeBundle(route.arguments)
+            } else null
+
+        private fun validateRoute(route: Route) = route.canvasContext != null
+
+        fun makeRoute(canvasContext: CanvasContext?) = Route(ElementaryCourseFragment::class.java, canvasContext)
     }
 }

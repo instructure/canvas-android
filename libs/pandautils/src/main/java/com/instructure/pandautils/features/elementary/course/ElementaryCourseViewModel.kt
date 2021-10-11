@@ -16,11 +16,67 @@
 
 package com.instructure.pandautils.features.elementary.course
 
+import android.content.res.Resources
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.TabManager
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.pandautils.R
+import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ElementaryCourseViewModel @Inject constructor() : ViewModel() {
+class ElementaryCourseViewModel @Inject constructor(
+    private val tabManager: TabManager,
+    private val resources: Resources
+) : ViewModel() {
 
+    val state: LiveData<ViewState>
+        get() = _state
+    private val _state = MutableLiveData<ViewState>()
+
+    val data: LiveData<ElementaryCourseViewData>
+        get() = _data
+    private val _data = MutableLiveData<ElementaryCourseViewData>()
+
+    val events: LiveData<Event<CourseAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<CourseAction>>()
+
+    fun getData(canvasContext: CanvasContext, forceNetwork: Boolean = false) {
+        viewModelScope.launch {
+            try {
+                val tabs = tabManager.getTabsForElementaryAsync(canvasContext, forceNetwork).await().dataOrThrow
+                tabs.filter { it.isHidden }
+                    .sortedBy { it.position }
+
+                val tabViewData = createTabs(tabs)
+                _data.postValue(ElementaryCourseViewData(tabViewData))
+                _state.postValue(ViewState.Success)
+            } catch (e: Exception) {
+                _state.postValue(ViewState.Error())
+            }
+        }
+    }
+
+    private fun createTabs(tabs: List<Tab>): List<ElementaryCourseTab> {
+        return tabs.map {
+            val drawable = when (it.tabId) {
+                Tab.HOME_ID -> resources.getDrawable(R.drawable.ic_home)
+                Tab.SCHEDULE_ID -> resources.getDrawable(R.drawable.ic_schedule)
+                Tab.MODULES_ID -> resources.getDrawable(R.drawable.ic_modules)
+                Tab.GRADES_ID -> resources.getDrawable(R.drawable.ic_grades)
+                Tab.RESOURCES_ID -> resources.getDrawable(R.drawable.ic_resources)
+                else -> null
+            }
+            ElementaryCourseTab(drawable, it.label, it.htmlUrl)
+        }
+    }
 }
