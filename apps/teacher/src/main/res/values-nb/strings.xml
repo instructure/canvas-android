@@ -885,4 +885,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">Dette LTI-verktøyet kan ikke lastes ned på dette tidspunktet.</string>
     <string name="downloading">Laster ned...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Pensum oppdatert.</string>
+    <string name="errorSavingSyllabus">Det oppsto en feil ved lagring av pensum. Prøv igjen.</string>
+    <string name="editSyllabusTitle">Rediger emneoversikt</string>
+    <string name="editSyllabusContent">Innhold</string>
+    <string name="editSyllabusDetails">Detaljer</string>
+    <string name="editSyllabusShowCourseSummary">Vis emnesammendrag</string>
+    <string name="editSyllabusContentAccessibilityLabel">Innhold emneoversikt</string>
+
+    <string name="no_grade">Ingen karakter</string>
+    <string name="excuse">Unnskyldning</string>
+    <string name="speed_grader_overgraded_by">Overgradert av %s</string>
 </resources>

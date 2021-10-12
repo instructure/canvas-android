@@ -20,6 +20,8 @@ import java.security.MessageDigest
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -76,6 +78,10 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
     }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 androidExtensions {
@@ -94,11 +100,12 @@ dependencies {
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
+    testImplementation Libs.ANDROIDX_CORE_TESTING
+    testImplementation Libs.MOCKK
+    testImplementation Libs.KOTLIN_COROUTINES_TEST
 
     /* AndroidTest Dependencies */
     androidTestImplementation Libs.JUNIT
-
-    implementation "com.squareup.okhttp3:logging-interceptor:3.13.1"
 
     /* Support Dependencies */
     implementation Libs.ANDROIDX_ANNOTATION
@@ -110,6 +117,10 @@ dependencies {
 
     implementation(Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.ZXING
+
+    implementation Libs.FRAGMENT_KTX
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
 }
 
 task copySnickerDoodles(type: Copy) {

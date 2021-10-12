@@ -28,7 +28,7 @@
         tools:visibility="gone" />
 
 
-    <com.instructure.student.view.EmptyView
+    <com.instructure.pandautils.views.EmptyView
         android:id="@+id/syllabusEmptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

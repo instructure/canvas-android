@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.utils.GsonListPref
 import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.canvasapi2.utils.StringPref
 
-object TeacherPrefs : PrefManager(AppManager.PREF_FILE_NAME) {
+object TeacherPrefs : PrefManager(BaseAppManager.PREF_FILE_NAME) {
 
     var isConfirmedTeacher by BooleanPref()
 

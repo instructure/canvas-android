@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Valitse media</string>
     <string name="takeVideo">Ota video</string>
     <string name="noCameraOnDevice">Ei kameraa</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Latausilmoitukset</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-ilmoitukset meneillään olevien latausten tilasta.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Tiedoston lisäysikkuna</string>
+
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleria</string>
     <string name="fromDevice">Laite</string>
@@ -96,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Ladataan lähetystä kohteelle %s</string>
     <string name="assignmentSubmissionError">Lähetys epäonnistui kohteelle %s</string>
     <string name="assignmentSubmissionComplete">Lähetetty onnistuneesti %s</string>
+
     <!--Errors-->
     <string name="errorOccurred">Ilmeni odottamaton virhe.</string>
     <string name="serverError">Palvelinvirhe ilmeni.</string>
@@ -118,6 +121,7 @@
     <string name="oneOrMoreExtensionNotAllowed">Yhden tai useamman tiedoston tiedostotunniste ei ole sallittua muotoa</string>
     <string name="extensionNotAllowed">Valittu tiedoston tyyppi ei kelpaa.</string>
     <string name="allowedExtensions">Sallitut tiedostotunnisteet:&#160;</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Tarkasta datayhteytesi ja yritä uudelleen. </string>
     <string name="noApps">Laitteessasi ei ole asennettuna sovelluksia, jotka voisivat käsitellä tämän tiedoston.</string>
@@ -181,9 +185,9 @@
     <string name="noModulesSubtext">Näyttäisi siltä, että yhtään moduulia ei ole vielä luotu.</string>
     <string name="noPages">Ei sivuja</string>
     <string name="noPagesSubtext">Näyttäisi siltä, että sivuja ei ole vielä julkaistu.</string>
-
     <string name="modulesLockedSubtext">Tälle kurssille moduulit on poistettu käytöstä.</string>
     <string name="modulesLocked">Jotakin meni pieleen</string>
+
     <!--General-->
     <string name="yes">Kyllä</string>
     <string name="no">Ei</string>
@@ -225,7 +229,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas-kyselyt</string>
     <string name="utils_speedgrader">SpeedGrader</string>
 
     <!-- Rating Dialog -->
@@ -325,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Lukituspäivä ei voi olla määräpäivän jälkeen.</string>
     <string name="utils_lockBeforeDueDateError">Lukituspäivä ei voi olla ennen määräpäivää.</string>
     <string name="utils_lockAfterUnlockError">Lukituspäivä ei voi olla ennen lukituksen poistopäivää.</string>
@@ -382,10 +386,10 @@
     <string name="notificationPrimaryInboxTitle">Canvas-ilmoitus</string>
     <string name="notificationChannelNamePrimary">Yleiset Canvas-ilmoitukset</string>
     <string name="notificationChannelDescriptionPrimary">Ilmoitusten lisäkonfigurointi voidaan tehdä Canvas-ilmoitusasetusten osassa.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d uudet ilmoitukset</item>
     </plurals>
+
     <string name="copyLinkAddress">Kopioi linkin osoite</string>
     <string name="copyLink">Kopioi linkki</string>
     <string name="linkCopied">Linkki kopioitu</string>
@@ -424,5 +428,31 @@
     <string name="noItemsMatchingQuery">Ei täsmääviä kohteita \"%s\" kanssa</string>
 
     <string name="selected">Valittu</string>
+
+    <string name="notificationChannelNameInAppUpdate">Sovelluspäivitysten ilmoitukset</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas-ilmoitukset sovelluksen sisäisille päivityksille.</string>
+    <string name="appUpdateReadyTitle">Sovellus valmis päivitettäväksi</string>
+    <string name="appUpdateReadyDescription">Käynnistä sovellus uudelleen asentaaksesi uusi versio</string>
+    <string name="nothing_planned_yet">Ei mitään vielä suunniteltuna</string>
+    <string name="schedule_tag_graded">Arvioitu</string>
+    <string name="schedule_tag_replies">Vastausta</string>
+    <string name="schedule_tag_feedback">Palaute</string>
+    <string name="schedule_tag_late">Myöhään</string>
+    <string name="schedule_tag_redo">Suorita uudelleen</string>
+    <string name="schedule_tag_excused">Vapautettu</string>
+    <string name="tomorrow">Huomenna</string>
+    <string name="yesterday">Eilen</string>
+    <string name="schedule_calendar_event_due_text">Kohteessa %s</string>
+    <string name="schedule_todo_due_text">Tehtävälista: %s</string>
+    <string name="schedule_due_text">Määräpäivä: %s</string>
+    <string name="show_missing_items_title">Näytä %d puuttuvaa kohdetta</string>
+    <string name="hide_missing_items_title">Piilota %d puuttuvaa kohdetta</string>
+    <string name="schedule_error_message">Aikataulun nouto ei onnistu</string>
+    <string name="schedule_todo_title">Tehtävälista</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s piste</item>
+        <item quantity="one">%s piste</item>
+        <item quantity="other">%s pistettä</item>
+    </plurals>
 
 </resources>

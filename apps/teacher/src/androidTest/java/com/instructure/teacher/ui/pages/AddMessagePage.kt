@@ -59,7 +59,11 @@ class AddMessagePage: BasePage() {
     }
 
     fun selectCourseFromSpinner(course: Course) {
-        waitForViewWithText(course.name).click()
+        selectCourseFromSpinner(course.name)
+    }
+
+    fun selectCourseFromSpinner(courseName: String) {
+        waitForViewWithText(courseName).click()
     }
 
     fun clickAddContacts() {
@@ -78,6 +82,19 @@ class AddMessagePage: BasePage() {
         val message = randomString()
         editSubjectEditText.replaceText(subject)
         messageEditText.replaceText(message)
+        sendButton.click()
+    }
+
+    fun addSubject(subject: String) {
+        editSubjectEditText.replaceText(subject)
+    }
+
+    fun addMessage(message: String) {
+        messageEditText.scrollTo()
+        messageEditText.replaceText(message)
+    }
+
+    fun clickSendButton() {
         sendButton.click()
     }
 }

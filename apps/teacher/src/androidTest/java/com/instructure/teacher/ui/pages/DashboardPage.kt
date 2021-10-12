@@ -90,4 +90,12 @@ class DashboardPage : BasePage() {
     fun waitForRender() {
         onView(hamburgerButtonMatcher).waitForCheck(matches(isDisplayed()))
     }
+
+    fun openInbox() {
+        inboxTab.click()
+    }
+
+    fun openTodo() {
+        todoTab.click()
+    }
 }

@@ -26,18 +26,21 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
+import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
-import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Utils
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
+import com.instructure.student.tasks.StudentLogoutTask
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class LoginActivity : BaseLoginInitActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading)
+        PushNotificationRegistrationWorker.scheduleJob(this, ApiPrefs.isMasquerading)
 
         CookieManager.getInstance().flush()
 
@@ -65,6 +68,10 @@ class LoginActivity : BaseLoginInitActivity() {
 
     override val isTesting: Boolean = BuildConfig.IS_TESTING
 
+    override fun logout() {
+        StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -79,13 +86,16 @@ class LoginActivity : BaseLoginInitActivity() {
      * ONLY USE FOR UI TESTING
      * Skips the traditional login process by directly setting the domain, token, and user info.
      */
-    fun loginWithToken(token: String, domain: String, user: User) {
+    fun loginWithToken(token: String, domain: String, user: User, canvasForElementary: Boolean = false) {
         ApiPrefs.accessToken = token
         ApiPrefs.domain = domain
         ApiPrefs.user = user
         ApiPrefs.userAgent = Utils.generateUserAgent(this, userAgent())
         finish()
-        val intent = Intent(this, NavigationActivity.startActivityClass).apply { intent?.extras?.let { putExtras(it) } }
+        val intent = Intent(this, NavigationActivity.startActivityClass).apply {
+            intent?.extras?.let { putExtras(it) }
+            putExtra("canvas_for_elementary", canvasForElementary)
+        }
         startActivity(intent)
     }
 

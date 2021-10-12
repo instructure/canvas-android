@@ -30,9 +30,11 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.util.*
 
+@HiltAndroidTest
 class PushNotificationInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 

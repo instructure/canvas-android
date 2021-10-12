@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">レポートＡ問題</string>
     <string name="errorReportSubject">件名</string>
     <string name="errorReportDescription">説明</string>
-    <string name="errorReportWriteSomething">何か書いてください...</string>
     <string name="errorReportSend">送信</string>
     <string name="errorReportThankyou">問題をサポートチームにご報告いただきありがとうございます。メールで確認と更新を受け取られます。</string>
     <string name="errorReportSeverityText">これはあなたにどのような影響を与えるでしょうか？</string>
@@ -85,7 +84,6 @@
     <string name="errorSeverityCantGetThingsDone">あなたの返事が来るまで用が足せません。</string>
     <string name="errorSeverityExtremelyCritical">非常に緊急な事態!!</string>
     <string name="errorReportEmailAddress">メールアドレス</string>
-    <string name="errorReportEnterEmail">メールアドレスを入力してください...</string>
     <string name="errorReportUnknown">不明</string>
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 マイル (1.6 km)</string>

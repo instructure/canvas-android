@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Ekki tókst að skila</string>
     <string name="submissionStatusFailedSubtitle">Smelltu til að skoða upplýsingar</string>
     <string name="submissionAndRubric">Skil &amp; matsviðmið</string>
+    <string name="commentsAndRubric">Athugasemdir og matsviðmið</string>
     <string name="errorLoadingAssignment">Það kom upp vandamál við að hlaða inn þessu verkefni. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="submitted">Skilað</string>
     <string name="notSubmitted">Ekki lagt fram</string>
@@ -75,6 +75,7 @@
     <string name="addFileFabContentDesc">Sýna bæta við skrá valkosti</string>
     <string name="recordAudio">Taka upp hljóð</string>
     <string name="recordVideo">Taka upp myndband</string>
+    <string name="a11y_textSubmissionEditor">Ritill fyrir textaskil</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Skrifa&#8230;</string>
@@ -93,14 +94,16 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Verkefninu er læst af einingu \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Verkefninu er læst af einingakröfu</string>
     <string name="submissionDetailsAssignmentLocked">Verkefni læst</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Engin skil leyfð</string>
     <string name="webPreview">Forskoðun innslegnar vefslóðar</string>
     <string name="websiteUrl">Slóð vefsvæðis</string>
     <string name="noneContentMessage">Þetta verkefni leyfir ekki netskil</string>
     <string name="onPaperContentMessage">Þetta verkefni leyfir ekki netskil</string>
     <string name="noOnlineSubmissions">Engin netskil</string>
-
     <string name="speedGraderExternalToolMessage">Þetta verkefni er með tengil á ytra verkfæri fyrir skil.</string>
     <string name="openTool">Opna verkfæri</string>
+    <string name="a11y_submissionText">Skilatexti</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Af %s stigum</string>
     <string name="outOfPointsAbbreviatedFormatted">Af %s st</string>
@@ -109,10 +112,10 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s af %2$s stigum</string>
     <string name="enterWhatIfScore">Færa inn spáða einkunn</string>
-
     <string name="scoreStatisticsLow">Lágt: %s</string>
     <string name="scoreStatisticsMean">Meðal: %s</string>
     <string name="scoreStatisticsHigh">Hátt: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Sérsniðin einkunn</string>
     <string name="rubricEmptyMessage">Það eru engin matsviðmið fyrir þetta verkefni</string>
@@ -126,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Festu skrár við athugasemdina með því að smella á valkostinn hér að neðan</string>
     <string name="emptySubmissionCommentsSubtext">Ertu með spurningar um verkefnið?\nSendu skilaboð á kennarann þinn.</string>
     <string name="submissionCommentErrorMessage">Ekki var hægt að senda þessi skilaboð. Smelltu til að reyna aftur.</string>
+    <string name="mediaUpload">Upphleðsla á miðla</string>
     <string name="mediaUploadAudio">Upphleðsla margmiðlunarefnis - Hljóð</string>
     <string name="mediaUploadVideo">Upphleðsla margmiðlunarefnis - Myndband</string>
     <string name="commentSubmissionTypeText">Textaskil</string>
@@ -195,6 +199,17 @@
     <string name="noAssignmentsInGroup">Engin verkefni í þessum hópi</string>
     <string name="excusedAssignment">Þetta verkefni er undanskilið og verður ekki með í heildarútreikningum</string>
     <string name="excused">Dæmi</string>
+    <string name="sortByDialogTitle">Raða eftir</string>
+    <string name="sortByDialogTimeOption">Tími</string>
+    <string name="sortByDialogTypeOption">Tegund</string>
+    <string name="sortByTime">Raða eftir tíma</string>
+    <string name="sortByType">Raða eftir gerð</string>
+    <string name="sortByDialogCancel">Hætta við</string>
+    <string name="assignmentsListAllGradingPeriods">Allt</string>
+    <string name="a11y_sortByTimeButton">Hnappur til að raða verkefnum, raða eftir tíma</string>
+    <string name="a11y_sortByTypeButton">Hnappur til að raða verkefnum, raða eftir gerð</string>
+    <string name="a11y_assignmentsSortedByTime">Verkefnum raðað eftir tíma</string>
+    <string name="a11y_assignmentsSortedByType">Verkefnum raðað eftir gerð</string>
 
     <!-- Assignment editing -->
     <string name="points">Punktar\u0020</string>
@@ -203,8 +218,9 @@
 
     <!-- Discussions -->
     <string name="forbidden">Svör eru bara sýnileg þeim sem hafa birt minnst eitt svar.</string>
-
     <string name="fileCurrentlyLocked">Þessi skrá er læst eins og er</string>
+    <string name="a11y_discussionReplyEditor">Ritill fyrir umræðusvör</string>
+
     <!-- Events -->
     <string name="Starts">Byrjar</string>
     <string name="Ends">Lýkur</string>
@@ -254,6 +270,7 @@
     <string name="createFolder">Stofna möppu</string>
     <string name="createAFile">Stofna skrá</string>
     <string name="createFileFolderFabContentDesc">Sýna stofna skrá og stofna möppu hnappana</string>
+    <string name="hideCreateFileFolderFabContentDesc">Fela hnappana Stofna skrá og Stofna möppu</string>
     <string name="folderCreationError">Villa kom upp við stofnun möppu.</string>
     <string name="rename">Endurnefna</string>
     <string name="renameFile">Endurnefna skrá</string>
@@ -431,6 +448,7 @@
     <string name="stopMasquerading">Hætta að vera notandi</string>
     <string name="userId">Auðkenni notanda</string>
     <string name="masqueradeFail">Villa kom upp við að reyna að vera notandi</string>
+
     <string name="emptyId">Auðkenni getur ekki verið autt</string>
 
     <string name="goToQuiz">Farðu í próf</string>
@@ -587,6 +605,8 @@
     <string name="practiceQuizzes">Æfingapróf</string>
     <string name="gradedSurveys">Kannanir með einkunn</string>
     <string name="surveys">Kannanir</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Verkefni</string>
     <string name="gradesWidgetTitle">Einkunnir</string>
@@ -632,12 +652,12 @@
     <string name="profileSettings">Uppsetningarstillingar</string>
     <string name="accountPreferences">Kjörstillingar reiknings</string>
     <string name="pinAndFingerprint">PIN-númer og fingrafar</string>
-
     <string name="pairWithObserver">Para við áhorfanda</string>
     <string name="pairWithObserverDetails">Láttu foreldra þína skanna þennan QR-kóða úr Canvas foreldra appinu til að para við þig. Þessi kóði rennur út á sjö dögum, eða eftir eina notkun.</string>
     <string name="pairingCodeLabel">Pörunarkóði:\u0020</string>
     <string name="pairingCodeErrorTitle">Pörunarkóða villa</string>
     <string name="pairingCodeErrorDescription">Ekki tókst að endurheimta pörunarkóða. Þessi eiginleiki er bara studdur fyrir nemendur.</string>
+
     <string name="launchSpeedgrader">Opna Speedgrader</string>
 
     <string name="search_todo">verkefni verkefnalisti</string>
@@ -708,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mælir</string>
-
     <string name="content_description_speed_grader_slider">Einkunnasleði</string>
+
     <string name="createNewCalendarEvent">Stofna nýjan viðburð</string>
     <string name="enableFunMode">Slökkva á pöndunum</string>
 
@@ -796,6 +816,7 @@
     <string name="notification_desc_recording_ready">Fá tilkynningu þegar ráðstefnuupptaka er tilbúin.</string>
 
     <string name="unlimited">Ótakmarkað</string>
+
     <string name="question">Spurning</string>
     <plurals name="question_count">
         <item quantity="one">%d spurning</item>
@@ -806,6 +827,7 @@
         <item quantity="one">%s punktur</item>
         <item quantity="other">%s punktar</item>
     </plurals>
+
     <string name="timeLimit">Tímamörk</string>
     <string name="newPushNotifications">%1$s nýjar tilkynningar</string>
     <string name="like">líka við</string>
@@ -977,10 +999,10 @@
     <string name="conferencesNotSupported">Ráðstefnur eru ekki enn studdar á farsíma.</string>
     <string name="filePreviewContentDescription">Forskoðun skráar mynd</string>
     <string name="pdfError">Villa kom upp við að sækja þetta PDF.</string>
-
     <string name="featureNotAllowedInStudentView">Því miður! Þessi eiginleiki er ekki leyfður fyrir nemendur.</string>
     <string name="nothingToSeeHere">Hér er ekkert að sjá</string>
     <string name="unsupportedFeature">Óstuddur eiginleiki</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Bæta við nemanda</string>
     <string name="addChildSubTitle">Settu inn pörunarkóða nemanda sem þú fékkst.</string>
@@ -1019,9 +1041,9 @@
     <string name="gradeAfterPosting">Gefðu einkunn eftir birtingu</string>
     <string name="gradeOverride">Hnekking einkunnar</string>
     <string name="currentGrade">Núverandi einkunn</string>
-
     <string name="opensInCanvasStudent">Opnast í Canvas Student</string>
     <string name="tab_student_view">Nemandasýn</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valinn haus: %s</string>
@@ -1094,6 +1116,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Mínúta</item>
         <item quantity="other">%s mínútur</item>
@@ -1114,4 +1137,86 @@
     <string name="conferenceDetails">Upplýsingar um ráðstefnur</string>
     <string name="recordings">Upptökur</string>
     <string name="conferenceInProgress">Ráðstefna í gangi</string>
+
+    <string name="a11y_criterion_content_description">Viðmiðunarmat %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">frekari upplýsingar</string>
+    <string name="a11y_create_file_folder_visible">Hnapparnir Stofna skrá og Stofna möppu sýnilegir</string>
+    <string name="a11y_create_file_folder_gone">Hnapparnir Stofna skrá og Stofna möppu ósýnilegir</string>
+    <string name="unselect_all">Afvelja allt</string>
+    <string name="select_all">Velja allt</string>
+    <string name="all_courses">Öll námskeið</string>
+    <string name="all_groups">Allir hópar</string>
+    <string name="edit_dashboard_course_description">Veldu námskeið fyrir stjórnborðið eða farðu að upplýsingum námskeiðs.</string>
+    <string name="edit_dashboard_group_description">Veldu hópa fyrir stjórnborðið eða farðu að upplýsingum námskeiðs.</string>
+    <string name="current_enrollments">Núverandi innritanir</string>
+    <string name="past_enrollments">Fyrri innritanir</string>
+    <string name="future_enrollments">Framtíðarinnritanir</string>
+    <string name="added_to_dashboard">Bætt við stjórnborð</string>
+    <string name="removed_from_dashboard">Fjarlægt af stjórnborði</string>
+    <string name="all_added_to_dashboard">Öllu bætt við stjórnborðið</string>
+    <string name="all_removed_from_dashboard">Allt fjarlægt af stjórnborðinu</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Ekki var hægt að bæta óvirkum námskeiðum við stjórnborðið.</string>
+    <string name="edit_dashboard">Breyta stjórnborði</string>
+    <string name="edit_dashboard_empty_title">Engin námskeið hér</string>
+    <string name="edit_dashboard_empty_message">Þú hefur innritað þig á námskeið til að bæta því við stjórnborðið.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Fjarlægja af stjórnborði</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Fjarlægja allt af stjórnborði</string>
+    <string name="a11y_content_description_add_to_dashboard">Bæta við stjórnborð</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Bæta öllu við stjórnborð</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Reikningur</string>
+    <string name="dashboardTabHomeroom">Námssalur</string>
+    <string name="dashboardTabSchedule">Áætlun</string>
+    <string name="dashboardTabGrades">Einkunnir</string>
+    <string name="dashboardTabResources">Hjálparefni</string>
+    <string name="homeroomWelcomeMessage">Velkomin/n, %1$s!</string>
+    <string name="homeroomMySubjects">Námsefnið mitt</string>
+    <string name="viewPreviousAnnouncements">Skoða fyrri tilkynningar</string>
+    <string name="homeroomError">Mistókst að hlaða inn Skólastofu</string>
+    <string name="homeroomRefreshFail">Mistókst að endurglæða Skólastofu</string>
+    <string name="nothingDueToday">Ekkert á skilum í dag</string>
+    <string name="dueToday">%1$s á skilum í dag</string>
+    <string name="missing">%1$s vantar</string>
+    <string name="homeroomEmptyTitle">Velkomin(n)!</string>
+    <string name="homeroomEmptyMessage">Efni þitt sést hér.</string>
+    <string name="homeroomNoSubjects">Þú hefur engin efni eins og er.</string>
+    <string name="settingsElementaryViewSubtitle">Krefst endurræsingar á forritinu</string>
+    <string name="gradesSelect">Velja</string>
+    <string name="selectGradingPeriod">Velja einkunnatímabil</string>
+    <string name="currentGradingPeriod">Núverandi einkunnatímabil</string>
+    <string name="failedToLoadGrades">Ekki tókst að sækja einkunnir</string>
+    <string name="failedToLoadGradesForGradingPeriod">Ekki tókst að sækja einkunnir fyrir einkunnatímabil</string>
+    <string name="failedToRefreshGrades">Mistókst að endurglæða einkunnir</string>
+    <string name="noGradesToDisplay">Engar einkunnir til að sýna</string>
+    <string name="notGraded">Ekki metið</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Breyta einkunnatímabili</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Einkunnir ekki í boði</string>
+    <string name="bottomBarHomeroom">Námssalur</string>
+
+    <string name="settingsHomeroomView">Yfirlit yfir námssal</string>
+    <string name="importantLinksTitle">Mikilvægir tenglar</string>
+    <string name="studentApplications">Forrit nemenda</string>
+    <string name="staffContactInfo">Samskiptaupplýsingar starfsfólks</string>
+    <string name="chooseACourse">Velja námskeið</string>
+    <string name="webViewImportantLinksTitle">Mikilvægir tenglar</string>
+    <string name="staffRoleTeacher">Kennari</string>
+    <string name="staffRoleTeacherAssistant">Aðstoðarkennari</string>
+    <string name="resourcesEmptyMessage">Auðlindir þínar sjást hér.</string>
+    <string name="failedToLoadResources">Mistókst að hlaða auðlindum</string>
+    <string name="failedToRefreshResources">Mistókst að endurglæða auðlindir</string>
+    <string name="open_alternate_view">Opnið annað auðveldara útlit</string>
+
+    <string name="a11y_content_description_message_recipients">Viðtakendur</string>
+    <string name="a11y_content_description_inbox_subject">Efni</string>
+    <string name="a11y_content_description_inbox_course_spinner">Veldu námskeið, %s</string>
+
+    <string name="speedGraderAnonymousSubmissionMessage">Svör nemanda eru falin því þetta verkefni er nafnlaust.</string>
+
+    <string name="studentAnnotationUnsupported">Athugasemd nemanda (Enginn stuðningur)</string>
+    <string name="studentAnnotationUnsupportedDescription">Ekki er stuðningur við athugasemd nemanda á farsímum.</string>
+    <string name="unsupportedSubmissionType">Gerð skila ekki studd</string>
+    <string name="studentAnnotationUnsupportedMessage">Ekki hægt að birta skil því ekki er stuðningur við athugasemd nemanda á farsímum.</string>
+    <string name="schedule_marked_as_done">Þú hefur merkt þetta sem lokið.</string>
 </resources>

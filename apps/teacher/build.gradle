@@ -23,7 +23,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
+apply plugin: 'dagger.hilt.android.plugin'
 
+def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
@@ -41,11 +43,11 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 39
-        versionName = '1.12.0'
+        versionCode = 43
+        versionName = '1.14.1'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
-        testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
+        testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
         /* BuildConfig fields */
@@ -127,8 +129,8 @@ android {
     configurations.all {
         resolutionStrategy {
             force 'android.arch.lifecycle:runtime:1.0.3'
-            // Fix for Robolectric 4.x
-            force "org.ow2.asm:asm:7.0"
+
+            force Libs.KOTLIN_COROUTINES_CORE
         }
     }
 
@@ -170,7 +172,7 @@ android {
             new ProjectTransformer(
                     android,
                     new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
-                    new LocaleTransformer()
+                    new LocaleTransformer(project)
             )
     )
 
@@ -178,11 +180,14 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
-}
 
-repositories {
-    jcenter()
-    maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 androidExtensions {
@@ -195,8 +200,6 @@ dependencies {
     implementation project(path: ':rceditor')
     implementation project(path: ':annotations')
     implementation project(path: ':interactions')
-
-
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
@@ -215,11 +218,6 @@ dependencies {
         transitive = true
     }
 
-    /* OkHttp Idling Resource */
-    implementation('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
-        exclude module: 'espresso-idling-resource'
-    }
-
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
@@ -234,20 +232,20 @@ dependencies {
     androidTestImplementation Libs.JUNIT
     androidTestImplementation project(path: ':panda_annotations')
 
-    androidTestUtil('androidx.test:orchestrator:1.3.0') {
+    androidTestUtil(Libs.TEST_ORCHESTRATOR) {
         exclude module: 'support-annotations'
     }
 
     /* Sliding Panel */
-    implementation 'com.sothree.slidinguppanel:library:3.3.1'
+    implementation Libs.SLIDING_UP_PANEL
 
     /* Media handling */
     implementation Libs.ANDROID_SVG
     implementation Libs.PHOTO_VIEW
 
     /* Flexbox Layout */
-    implementation 'com.google.android:flexbox:1.1.0'
-    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1'
+    implementation Libs.FLEXBOX_LAYOUT
+    implementation Libs.KEYBOARD_VISIBILITY_LISTENER
 
     /* Support libs */
     implementation Libs.ANDROIDX_APPCOMPAT
@@ -261,10 +259,24 @@ dependencies {
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
     implementation Libs.PLAY_CORE
+    implementation Libs.PLAY_CORE_KTX
     implementation Libs.FIREBASE_MESSAGING
+    testImplementation Libs.ANDROIDX_CORE_TESTING
 
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
+    /* AAC */
+    implementation Libs.VIEW_MODEL
+    implementation Libs.LIVE_DATA
+    implementation Libs.VIEW_MODE_SAVED_STATE
+    implementation Libs.FRAGMENT_KTX
+    kapt Libs.LIFECYCLE_COMPILER
+
+    /* DI */
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
+    androidTestImplementation Libs.HILT_TESTING
+    kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
+
+    androidTestImplementation Libs.UI_AUTOMATOR
 }
 
 apply plugin: 'com.google.gms.google-services'
@@ -291,6 +303,36 @@ if (coverageEnabled) {
         // project.buildDir is /canvas-android/apps/teacher/build
         sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
         executionData.setFrom fileTree(dir: "results", includes: ['**/*.ec'])
+
+        reports {
+            // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
+            html.enabled true
+            csv.enabled  false
+            xml.enabled  false
+        }
+    }
+
+    task combinedJacoco(type: JacocoReport) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports for FTL + unit tests."
+
+        def productFlavor = 'qa'
+        def buildType = 'debug'
+
+        classDirectories.setFrom fileTree(
+                dir: "${project.buildDir}/tmp/kotlin-classes/qaDebug",
+                excludes: ['**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/*$ViewBinder*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*'],
+                //includes: ['**/com/instructure/*']
+        )
+
+        // project.buildDir is /canvas-android/apps/teacher/build
+        sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
+        executionData.setFrom fileTree(dir: ".", includes: ['results/**/*.ec', '**/testQaDebugUnitTest.exec'])
 
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/

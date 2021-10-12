@@ -15,6 +15,7 @@
  */
 package com.instructure.canvasapi2.utils
 
+import org.threeten.bp.LocalDate
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
@@ -22,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @JvmOverloads
-fun Date?.toApiString(timeZone: TimeZone? = null): String? {
+fun Date?.toApiString(timeZone: TimeZone? = null): String {
     this ?: return ""
 
     val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
@@ -34,6 +35,11 @@ fun Date?.toApiString(timeZone: TimeZone? = null): String? {
 fun OffsetDateTime?.toApiString(): String? {
     this ?: return null
     return DateTimeFormatter.ISO_INSTANT.format(this.truncatedTo(ChronoUnit.SECONDS))
+}
+
+fun LocalDate?.toApiString(): String? {
+    this ?: return null
+    return DateTimeFormatter.ISO_LOCAL_DATE.format(this)
 }
 
 fun String?.toDate(): Date? {

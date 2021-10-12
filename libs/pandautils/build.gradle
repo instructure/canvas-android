@@ -19,6 +19,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -64,8 +65,16 @@ android {
         exclude 'LICENSE.txt'
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    buildFeatures {
+        dataBinding true
     }
 }
 
@@ -78,10 +87,6 @@ androidExtensions {
     experimental = true
 }
 
-ext {
-    glideVersion = "4.9.0"
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -89,32 +94,35 @@ dependencies {
     api project(path: ':blueprint')
     api project(path: ':interactions')
 
-    implementation 'com.wonderkiln:camerakit:0.13.4'
+    implementation Libs.WONDERKILN_CAMERA_KIT
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
 
-    /* Custom Views */
-    api 'com.getbase:floatingactionbutton:1.10.1'
-
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.MOCKK
+    testImplementation Libs.KOTLIN_COROUTINES_TEST
+    testImplementation Libs.ANDROIDX_CORE_TESTING
+    testImplementation Libs.THREETEN_BP
 
     /* Media handling */
-    api("com.github.bumptech.glide:glide:$glideVersion") {
+    api(Libs.GLIDE) {
         exclude group: "com.android.support"
     }
-    api ("com.github.bumptech.glide:okhttp3-integration:$glideVersion") {
+    api (Libs.GLIDE_OKHTTP) {
         exclude group: "com.android.support"
     }
-    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    kapt Libs.GLIDE_COMPILER
 
     api Libs.ANDROID_SVG
+
+    // TODO These should be replaced in the future with Glide.
     api 'com.squareup.picasso:picasso:2.5.2'
     api 'de.hdodenhof:circleimageview:3.0.0'
+
     api Libs.EXOPLAYER
-    api ('com.davemorrissey.labs:subsampling-scale-image-view:3.9.0') {
+    api (Libs.SCALE_IMAGE_VIEW) {
         exclude group: "androidx.exifinterface"
     }
 
@@ -134,7 +142,23 @@ dependencies {
     implementation Libs.ANDROIDX_EXIF
     implementation Libs.FIREBASE_MESSAGING
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
+    implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
+    implementation Libs.PLAY_CORE_KTX
 
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
+    /* Work Manager */
+    implementation Libs.ANDROIDX_WORK_MANAGER
+    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
+
+    /* DI */
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
+
+    /* AAC */
+    implementation Libs.VIEW_MODEL
+    implementation Libs.LIVE_DATA
+    implementation Libs.VIEW_MODE_SAVED_STATE
+    implementation Libs.FRAGMENT_KTX
+    kapt Libs.LIFECYCLE_COMPILER
+
+    implementation Libs.FLEXBOX_LAYOUT
 }

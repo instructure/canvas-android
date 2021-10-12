@@ -18,10 +18,16 @@ package com.instructure.teacher.ui.pages
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.PerformException
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
@@ -38,36 +44,36 @@ class CourseBrowserPage : BasePage() {
     private val courseTitle by OnViewWithId(R.id.courseBrowserTitle)
     private val courseSubtitle by OnViewWithId(R.id.courseBrowserSubtitle)
     private val courseSettingsMenuButton by OnViewWithId(R.id.menu_course_browser_settings)
+    private val magicNumberForScroll = 10
 
     fun openAssignmentsTab() {
-        waitForViewWithText("Assignments").click()
+        scrollOpen("Assignments", scrollPosition = magicNumberForScroll)
     }
 
-    private fun scrollDownToCourseBrowser()
+    private fun scrollDownToCourseBrowser(scrollPosition: Int)
     {
         /* The course browser RecyclerView is inside a CoordinatorLayout and is therefore only partially
            visible, causing some clicks to fail. We need to perform a swipe up first to make it fully visible. */
         Espresso.onView(ViewMatchers.withId(android.R.id.content)).perform(ViewActions.swipeUp())
         Espresso.onView(ViewMatchers.withId(R.id.courseBrowserRecyclerView))
-                .perform(scrollToPosition<CourseBrowserViewHolder>(10))
+                .perform(scrollToPosition<CourseBrowserViewHolder>(scrollPosition))
 
     }
     fun openQuizzesTab() {
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText(R.string.tab_quizzes).click()
     }
 
     fun openDiscussionsTab() {
-        scrollDownToCourseBrowser()
-        waitForViewWithText("Discussions").click()
+        scrollOpen(textName = "Discussions", scrollPosition = 1)
     }
 
     fun openAnnouncementsTab() {
-        waitForViewWithText("Announcements").click()
+        scrollOpen("Announcements", scrollPosition = magicNumberForScroll)
     }
 
     fun openPeopleTab() {
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText("People").click()
     }
 
@@ -94,19 +100,19 @@ class CourseBrowserPage : BasePage() {
             }
 
     fun openPagesTab() {
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText(R.string.tab_pages).click()
     }
 
     fun openSyllabus() {
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText("Syllabus").click()
     }
 
     fun openModulesTab() {
         //modules sits at the end of the list, so on smaller resolutions it may be necessary to scroll down twitce
-        scrollDownToCourseBrowser()
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText("Modules").click()
     }
 
@@ -117,5 +123,23 @@ class CourseBrowserPage : BasePage() {
 
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout))).swipeDown()
+    }
+
+    private fun scrollOpen(textName: String, scrollPosition: Int) {
+        try {
+            waitForViewWithText(textName).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
+        } catch (e: Exception) {
+            when(e) {
+                is NoMatchingViewException, is PerformException -> {
+                    scrollDownToCourseBrowser(scrollPosition)
+                    waitForViewWithText(textName).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
+                }
+                else -> throw e
+            }
+        }
+    }
+
+    fun waitForRender() {
+        onView(withId(R.id.menu_course_browser_settings)).waitForCheck(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 }

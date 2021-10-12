@@ -104,6 +104,9 @@ class SubmissionDetailsEmptyContentView(
                 // The LTI info shouldn't be null if we are showing the Studio upload option
                 showStudioUploadView(assignment, ltiToolUrl!!, ltiToolName!!)
             }
+            setupDialogRow(dialog, dialog.submissionEntryStudentAnnotation, visibilities.studentAnnotation) {
+                showStudentAnnotationView(assignment.htmlUrl ?: "")
+            }
         }
         dialog.show()
     }
@@ -216,5 +219,11 @@ class SubmissionDetailsEmptyContentView(
     fun returnToAssignmentDetails() {
         // Not run on main thread of fragment host by default, so force it to run on UI thread
         (context as Activity).runOnUiThread { (context as Activity).onBackPressed() }
+    }
+
+    fun showStudentAnnotationView(assignmentUrl: String) {
+        logEvent(AnalyticsEventConstants.SUBMIT_STUDENT_ANNOTATION_SELECTED)
+        RouteMatcher.route(context,
+            UnsupportedFeatureFragment.makeRoute(canvasContext, unsupportedDescription = context.getString(R.string.studentAnnotationUnsupportedDescription), url = assignmentUrl))
     }
 }

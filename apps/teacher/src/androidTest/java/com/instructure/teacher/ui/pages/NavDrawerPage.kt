@@ -9,7 +9,6 @@ import com.instructure.teacher.R
 
 class NavDrawerPage: BasePage() {
 
-    private val logo by OnViewWithId(R.id.navigationDrawerInstitutionImage)
     private val settings by OnViewWithId(R.id.navigationDrawerSettings)
     private val userName by OnViewWithId(R.id.navigationDrawerUserName)
     private val userEmail by OnViewWithId(R.id.navigationDrawerUserEmail)

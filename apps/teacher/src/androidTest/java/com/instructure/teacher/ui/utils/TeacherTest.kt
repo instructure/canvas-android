@@ -26,8 +26,10 @@ import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.*
+import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
+import org.junit.Rule
 
 abstract class TeacherTest : CanvasTest() {
 
@@ -36,51 +38,57 @@ abstract class TeacherTest : CanvasTest() {
 
     override val isTesting = BuildConfig.IS_TESTING
 
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
+
     /**
      * Required for auto complete of page objects within tests
      */
-    val coursesListPage = CoursesListPage()
+    val addMessagePage = AddMessagePage()
     val allCoursesListPage = AllCoursesListPage()
-    val assignmentListPage = AssignmentListPage()
-    val assignmentSubmissionListPage = AssignmentSubmissionListPage()
+    val announcementsListPage = AnnouncementsListPage()
+    val assigneeListPage = AssigneeListPage()
     val assignmentDetailsPage = AssignmentDetailsPage()
     val assignmentDueDatesPage = AssignmentDueDatesPage()
+    val assignmentListPage = AssignmentListPage()
+    val assignmentSubmissionListPage = AssignmentSubmissionListPage()
+    val calendarEventPage = CalendarEventPage()
+    val chooseRecipientsPage = ChooseRecipientsPage()
     val courseBrowserPage = CourseBrowserPage()
-    val editCoursesListPage = EditCoursesListPage()
     val courseSettingsPage = CourseSettingsPage()
+    val coursesListPage = CoursesListPage()
+    val dashboardPage = DashboardPage()
+    val discussionsDetatailsPage = DiscussionsDetailsPage()
+    val discussionsListPage = DiscussionsListPage()
+    val editAnnouncementPage = EditAnnouncementPage()
     val editAssignmentDetailsPage = EditAssignmentDetailsPage()
-    val assigneeListPage = AssigneeListPage()
-    val loginLandingPage = LoginLandingPage()
-    val loginFindSchoolPage = LoginFindSchoolPage()
-    val loginSignInPage = LoginSignInPage()
-    val notATeacherPage = NotATeacherPage()
+    val editCoursesListPage = EditCoursesListPage()
+    val editDiscussionsDetailsPage = EditDiscussionsDetailsPage()
+    val editPageDetailsPage = EditPageDetailsPage()
+    val editQuizDetailsPage = EditQuizDetailsPage()
+    val editSyllabusPage = EditSyllabusPage()
+    val inboxMessagePage = InboxMessagePage()
     val inboxPage = InboxPage()
+    val loginFindSchoolPage = LoginFindSchoolPage()
+    val loginLandingPage = LoginLandingPage()
+    val loginSignInPage = LoginSignInPage()
+    val modulesPage = ModulesPage()
     val navDrawerPage = NavDrawerPage()
-    val speedGraderPage = SpeedGraderPage()
-    val speedGraderGradePage = SpeedGraderGradePage()
+    val notATeacherPage = NotATeacherPage()
+    val pageListPage = PageListPage()
+    val peopleListPage = PeopleListPage()
+    val quizDetailsPage = QuizDetailsPage()
+    val quizListPage = QuizListPage()
+    val quizSubmissionListPage = QuizSubmissionListPage()
     val speedGraderCommentsPage = SpeedGraderCommentsPage()
     val speedGraderFilesPage = SpeedGraderFilesPage()
-    val quizListPage = QuizListPage()
-    val quizDetailsPage = QuizDetailsPage()
-    val editQuizDetailsPage = EditQuizDetailsPage()
-    val discussionsListPage = DiscussionsListPage()
-    val quizSubmissionListPage = QuizSubmissionListPage()
-    val inboxMessagePage = InboxMessagePage()
-    val addMessagePage = AddMessagePage()
-    val chooseRecipientsPage = ChooseRecipientsPage()
+    val speedGraderGradePage = SpeedGraderGradePage()
+    val speedGraderPage = SpeedGraderPage()
     val speedGraderQuizSubmissionPage = SpeedGraderQuizSubmissionPage()
-    val webViewLoginPage = WebViewLoginPage()
-    val announcementsListPage = AnnouncementsListPage()
-    val peopleListPage = PeopleListPage()
     val studentContextPage = StudentContextPage()
-    val pageListPage = PageListPage()
     val syllabusPage = SyllabusPage()
-    val calendarEventPage = CalendarEventPage()
-    val dashboardPage = DashboardPage()
-    val editSyllabusPage = EditSyllabusPage()
-    val editPageDetailsPage = EditPageDetailsPage()
-    val modulesPage = ModulesPage()
-    val editAnnouncementPage = EditAnnouncementPage()
+    val todoPage = TodoPage()
+    val webViewLoginPage = WebViewLoginPage()
 
 }
 

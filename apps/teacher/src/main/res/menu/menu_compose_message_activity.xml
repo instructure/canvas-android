@@ -22,7 +22,7 @@
         android:icon="@drawable/ic_attachment"
         android:title="@string/attachment"
         android:visible="false"
-        android:tint="#8B969E"
+        android:tint="@color/discussionLiking"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_send"

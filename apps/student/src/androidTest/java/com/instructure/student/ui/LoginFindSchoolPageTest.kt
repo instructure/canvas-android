@@ -17,8 +17,10 @@
 package com.instructure.student.ui
 
 import com.instructure.student.ui.utils.StudentTest
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class LoginFindSchoolPageTest: StudentTest() {
 
     // Runs live; no MockCanvas

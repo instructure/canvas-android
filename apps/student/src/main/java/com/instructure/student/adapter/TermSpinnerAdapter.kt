@@ -31,7 +31,8 @@ import com.instructure.student.R
 class TermSpinnerAdapter(
     context: Context,
     resource: Int,
-    private val gradingPeriods: List<GradingPeriod>
+    private val gradingPeriods: List<GradingPeriod>,
+    private val showDropdownArrow: Boolean = true
 ) : ArrayAdapter<GradingPeriod>(context, resource, gradingPeriods) {
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -54,7 +55,7 @@ class TermSpinnerAdapter(
             holder = view.tag as TermSpinnerViewHolder
         }
 
-        holder.dropDown.setVisible(!isLoading)
+        holder.dropDown.setVisible(!isLoading && showDropdownArrow)
         holder.progressBar.setVisible(isLoading)
         holder.periodName.text = gradingPeriods[position].title
 

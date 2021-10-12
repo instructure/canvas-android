@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.APIHelper
-
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

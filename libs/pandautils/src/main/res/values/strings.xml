@@ -430,4 +430,57 @@
 
     <string name="selected">Selected</string>
 
+    <string name="notificationChannelNameInAppUpdate">App update notifications</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas notifications for in-app updates.</string>
+    <string name="appUpdateReadyTitle">App ready to update</string>
+    <string name="appUpdateReadyDescription">Restart the app to install the new version</string>
+    <string name="nothing_planned_yet">Nothing planned yet</string>
+    <string name="schedule_tag_graded">Graded</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d Reply</item>
+        <item quantity="other">%d Replies></item>
+    </plurals>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">Late</string>
+    <string name="schedule_tag_redo">Redo</string>
+    <string name="schedule_tag_excused">Excused</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="schedule_calendar_event_due_text">At %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s to %2$s</string>
+    <string name="schedule_todo_due_text">To Do: %s</string>
+    <string name="schedule_due_text">Due: %s</string>
+    <string name="show_missing_items_title">Show %d missing items</string>
+    <string name="hide_missing_items_title">Hide %d missing items</string>
+    <string name="schedule_error_message">Unable to fetch your schedule</string>
+    <string name="schedule_todo_title">To Do</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s pts</item>
+    </plurals>
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f points</item>
+        <item quantity="one">%.1f point</item>
+        <item quantity="other">%.1f points</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">All Day</string>
+    <string name="schedule_tag_missing">Missing</string>
+    <string name="previous_week">Previous Week</string>
+    <string name="next_week">Next Week</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Course %s</string>
+    <string name="a11y_announcement">Announcement</string>
+    <string name="a11y_discussion_topic">Discussion</string>
+    <string name="a11y_calendar_event">Calendar event</string>
+    <string name="a11y_assignment">Assignment</string>
+    <string name="a11y_planner_note">Planner note</string>
+    <string name="a11y_quiz">Quiz</string>
+    <string name="a11y_todo">To Do</string>
+    <string name="a11y_page">Page</string>
+    <string name="a11y_marked_as_done">Marked as done</string>
+    <string name="a11y_not_marked_as_done">Not marked as done</string>
+    <string name="a11y_mark_as_done">Mark as done</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+
 </resources>

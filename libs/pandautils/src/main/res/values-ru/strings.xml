@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Выбрать медиа</string>
     <string name="takeVideo">Снять видео</string>
     <string name="noCameraOnDevice">Нет камеры</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Загрузить уведомления</string>
     <string name="notificationChannelNameFileUploadsDescription">Уведомления Canvas для текущих загрузок.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Добавить файл</string>
+
     <string name="fromCamera">Камера</string>
     <string name="fromGallery">Галерея</string>
     <string name="fromDevice">Устройство</string>
@@ -53,7 +55,6 @@
     <string name="file">Файл</string>
     <string name="fileTalkBack">Файл %s</string>
     <string name="folderTalkBack">Папка %s</string>
-
     <string name="addItem">Добавить элемент</string>
     <string name="assignment">Задание</string>
     <string name="attachedFiles">Прикрепленные файлы</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Загрузка отправки для %s</string>
     <string name="assignmentSubmissionError">Сбой отправки для %s</string>
     <string name="assignmentSubmissionComplete">Успешно отправлено %s</string>
+
     <!--Errors-->
     <string name="errorOccurred">Произошла непредвиденная ошибка.</string>
     <string name="serverError">Произошла ошибка сервера.</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">Похоже, что модули еще не создавались.</string>
     <string name="noPages">Страницы отсутствуют</string>
     <string name="noPagesSubtext">Похоже, что страницы еще не создавались.</string>
-
     <string name="modulesLockedSubtext">Модули были отключены для этого курса.</string>
     <string name="modulesLocked">Что-то пошло не так</string>
+
     <!--General-->
     <string name="yes">Да</string>
     <string name="no">Нет</string>
@@ -227,7 +229,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Преподаватель Canvas</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Опросы Canvas</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -333,6 +334,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Дата разблокирования не может быть позже даты выполнения</string>
     <string name="utils_lockBeforeDueDateError">Дата блокировки не может быть раньше даты выполнения</string>
     <string name="utils_lockAfterUnlockError">Дата блокирования не может быть раньше даты разблокирования</string>
@@ -386,15 +388,16 @@
     <string name="utils_uploadToSubmissionComment">Загрузить в комментарий к отправке</string>
     <string name="utils_attachFile">Прикрепить файл</string>
     <string name="utils_with">с</string>
+
     <string name="notificationPrimaryInboxTitle">Уведомление Canvas</string>
     <string name="notificationChannelNamePrimary">Общие уведомления Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Дополнительная настройка уведомлений осуществляется в разделе настроек уведомлений Canvas.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="few">%d новых уведомлений</item>
         <item quantity="many">%d новых уведомлений</item>
         <item quantity="other">%d новых уведомлений</item>
     </plurals>
+
     <string name="copyLinkAddress">Копировать адрес ссылки</string>
     <string name="copyLink">Копировать ссылку</string>
     <string name="linkCopied">Ссылка скопирована</string>
@@ -424,7 +427,6 @@
     <string name="image_uploading">Выполняется загрузка изображения...</string>
     <string name="image_upload_error">Ошибка при загрузке изображения</string>
     <string name="retry">Повторить</string>
-
     <string name="search">Поиск</string>
     <string name="searchAssignmentsHint">Поиск заданий</string>
     <string name="searchAnnouncementsHint">Поиск объявлений</string>
@@ -432,6 +434,35 @@
     <string name="searchPagesHint">Поиск страниц</string>
     <string name="searchQuizzesHint">Поиск тестов</string>
     <string name="noItemsMatchingQuery">Нет совпадений по элементам \"%s\"</string>
+
     <string name="selected">Выбрано</string>
+
+    <string name="notificationChannelNameInAppUpdate">Уведомления об обновлениях приложения</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Уведомления Canvas для обновлений в приложении.</string>
+    <string name="appUpdateReadyTitle">Приложение готово к обновлению</string>
+    <string name="appUpdateReadyDescription">Перезапустите приложение, чтобы установить новую версию</string>
+    <string name="nothing_planned_yet">Пока ничего не запланировано</string>
+    <string name="schedule_tag_graded">С оценкой</string>
+    <string name="schedule_tag_replies">Ответы</string>
+    <string name="schedule_tag_feedback">Оценка</string>
+    <string name="schedule_tag_late">Поздно</string>
+    <string name="schedule_tag_redo">Повторить</string>
+    <string name="schedule_tag_excused">По уважительной причине</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="yesterday">Вчера</string>
+    <string name="schedule_calendar_event_due_text">В %s</string>
+    <string name="schedule_todo_due_text">Задачи: %s</string>
+    <string name="schedule_due_text">Срок: %s</string>
+    <string name="show_missing_items_title">Показать %d отсутствующие элементы</string>
+    <string name="hide_missing_items_title">Скрыть %d отсутствующие элементы</string>
+    <string name="schedule_error_message">Не удалось получить ваше расписание</string>
+    <string name="schedule_todo_title">Задачи</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s баллов</item>
+        <item quantity="one">%s баллов</item>
+        <item quantity="few">%s баллов</item>
+        <item quantity="many">%s баллов</item>
+        <item quantity="other">%s баллов</item>
+    </plurals>
 
 </resources>

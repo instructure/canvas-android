@@ -21,13 +21,12 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuItemCompat
@@ -39,10 +38,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.LocaleUtils
-import com.instructure.canvasapi2.utils.MasqueradeHelper
-import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -50,12 +46,15 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.Identity
 import com.instructure.interactions.InitActivityInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.dialogs.RatingDialog
+import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.toast
@@ -74,6 +73,7 @@ import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.utils.AppType
 import com.instructure.teacher.viewinterface.InitActivityView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_init.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import kotlinx.coroutines.Job
@@ -82,10 +82,15 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Locale
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(), InitActivityView,
     CoursesFragment.CourseListCallback, AllCoursesFragment.CourseBrowserCallback, InitActivityInteractions,
-    MasqueradingDialog.OnMasqueradingSet {
+    MasqueradingDialog.OnMasqueradingSet, ErrorReportDialog.ErrorReportDialogResultListener {
+
+    @Inject
+    lateinit var updateManager: UpdateManager
 
     private var selectedTab = 0
     private var drawerItemSelectedJob: Job? = null
@@ -163,6 +168,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         }
 
         RatingDialog.showRatingDialog(this, com.instructure.pandautils.utils.AppType.TEACHER)
+
+        updateManager.checkForInAppUpdate(this)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -246,6 +253,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                     )
                     RouteMatcher.route(this@InitActivity, Route(LtiLaunchFragment::class.java, canvasContext, route))
                 }
+                R.id.navigationDrawerItem_help -> HelpDialogFragment.show(this@InitActivity)
                 R.id.navigationDrawerItem_changeUser -> TeacherLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@InitActivity)
@@ -267,9 +275,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     fun attachNavigationDrawer(toolbar: Toolbar) {
-        ColorUtils.colorIt(ThemePrefs.primaryColor, navigationDrawerInstitutionImage.background)
-        navigationDrawerInstitutionImage.loadUri(Uri.parse(ThemePrefs.logoUrl), R.mipmap.ic_launcher_foreground)
-
         // Navigation items
         navigationDrawerItem_files.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_gauge.setOnClickListener(navDrawerOnClick)
@@ -277,6 +282,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItem_changeUser.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_logout.setOnClickListener(navDrawerOnClick)
         navigationDrawerSettings.setOnClickListener(navDrawerOnClick)
+        navigationDrawerItem_help.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_stopMasquerading.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_startMasquerading.setOnClickListener(navDrawerOnClick)
 
@@ -594,7 +600,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     private fun hasUnreadPushNotification(extras: Bundle?): Boolean {
         return (extras != null && extras.containsKey(PushExternalReceiver.NEW_PUSH_NOTIFICATION)
-                && extras.getBoolean(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false))
+            && extras.getBoolean(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false))
     }
 
     private fun setPushNotificationAsRead() {
@@ -604,6 +610,27 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     //endregion
 
+    override fun onTicketPost() {
+        dismissHelpDialog()
+        Toast.makeText(applicationContext, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onTicketError() {
+        dismissHelpDialog()
+        Toast.makeText(applicationContext, R.string.errorOccurred, Toast.LENGTH_LONG).show()
+    }
+
+    private fun dismissHelpDialog() {
+        val fragment = supportFragmentManager.findFragmentByTag(HelpDialogFragment.TAG)
+        if (fragment is HelpDialogFragment) {
+            try {
+                fragment.dismiss()
+            } catch (e: IllegalStateException) {
+                Logger.e("Committing a transaction after activities saved state was called: " + e)
+            }
+        }
+    }
+
     companion object {
         private const val SELECTED_TAB = "selectedTab"
 
@@ -612,11 +639,11 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         private const val INBOX_TAB = 2
 
         fun createIntent(context: Context, intentExtra: Bundle?): Intent =
-        Intent(context, InitActivity::class.java).apply {
-            if (intentExtra != null) {
-                // Used for passing up push notification intent
-                this.putExtras(intentExtra)
+            Intent(context, InitActivity::class.java).apply {
+                if (intentExtra != null) {
+                    // Used for passing up push notification intent
+                    this.putExtras(intentExtra)
+                }
             }
-        }
     }
 }

@@ -57,7 +57,7 @@
     <color name="defaultUnselectedDonutGray">#F5F5F5</color>
     <color name="disabledText">#9D9FA2</color>
     <color name="publishedGreen">#00ac18</color>
-    <color name="textLightGray">#8B969E</color>
+    <color name="textLightGray">#556572</color>
     <color name="semiTransparentDark">#50000000</color>
     <color name="progressBarBackground">#F5F5F5</color>
     <color name="recordButtonStroke">#EBEDEE</color>
@@ -122,7 +122,7 @@
     <color name="login_loginFlowBlue">#008ee2</color>
     <color name="login_helpLinkBlue">#0f78db</color>
     <color name="login_grayCanvasLogo">#c7cdd1</color>
-    <color name="login_grayText">#8b969e</color>
+    <color name="login_grayText">#556572</color>
     <color name="login_darkText">#2d3b45</color>
     <color name="login_mediumText">#78848c</color>
     <color name="login_dividerColor">#E0E0E0</color>
@@ -214,7 +214,7 @@
     <color name="widgetLightColor">#FAFAFA</color>
 
     <!--Discussions-->
-    <color name="discussionLiking">#8b969e</color>
+    <color name="discussionLiking">#556572</color>
     <color name="profileBorderColor">#d8dcdf</color>
 
     <!--Attachment View-->
@@ -243,9 +243,9 @@
     <color name="canvasEditTextColor">#C7CDD1</color>
     <color name="defaultThumbColor">#EBEDEE</color>
     <color name="defaultTrackColor">#C7CDD1</color>
-    <color name="avatarGray">#8b969e</color>
+    <color name="avatarGray">#556572</color>
     <color name="defaultTextDark">#2d3b45</color>
-    <color name="defaultTextGray">#8b969e</color>
+    <color name="defaultTextGray">#556572</color>
     <color name="mediaOverlayBackground">#AA000000</color>
 
     <!-- Override these colors to change the text colors of the date picker -->
@@ -253,5 +253,8 @@
     <color name="darker_blue">@color/defaultPrimaryDark</color>
 
     <color name="speed_grader_button_text_color">#008EE2</color>
+    <color name="nav_drawer_text_color">#2D3B45</color>
+
+    <color name="k5SeparatorColor">#C6C6C8</color>
 
 </resources>

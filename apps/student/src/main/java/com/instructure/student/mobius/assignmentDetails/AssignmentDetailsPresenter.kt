@@ -17,6 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import android.content.Context
+import android.view.accessibility.AccessibilityManager
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
@@ -178,7 +179,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.allowedAttempts = assignment.allowedAttempts != -1L
         visibilities.submitButtonEnabled = assignment.allowedAttempts == -1L || (assignment.submission?.attempt?.let{ it < assignment.allowedAttempts } ?: true)
 
-        if (isObserver || !course.isReadOnlyForCurrentDate()) {
+        if (isObserver || !course.isBetweenValidDateRange()) {
             // Observers shouldn't see the submit button
             // OR if the course is soft concluded
             visibilities.submitButton = false

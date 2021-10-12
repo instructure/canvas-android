@@ -20,6 +20,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.waitForView
 import com.instructure.teacher.R
@@ -109,6 +110,11 @@ class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
         gradedDonut.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_graded).format(1, 1))
     }
 
+    fun assertNeedsGrading() {
+        val resources = InstrumentationRegistry.getTargetContext()
+        ungradedDonut.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_needs_grading).format(1, 1))
+    }
+
     fun assertNotSubmitted() {
         val resources = InstrumentationRegistry.getTargetContext()
         notSubmittedDonut.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_unsubmitted).format(1, 1))
@@ -125,5 +131,17 @@ class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
 
     fun waitForRender() {
         waitForView(withId(R.id.quizDetailsPage))
+    }
+
+    fun refresh() {
+        waitForView(withId(R.id.swipeRefreshLayout)).swipeDown()
+    }
+
+    fun assertQuizUnpublished() {
+        onView(withId(R.id.publishStatusTextView)).assertHasText("Unpublished")
+    }
+
+    fun assertQuizPublished() {
+        onView(withId(R.id.publishStatusTextView)).assertHasText("Published")
     }
 }

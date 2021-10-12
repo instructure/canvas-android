@@ -22,12 +22,18 @@ import android.net.Uri
 import com.google.firebase.iid.FirebaseInstanceId
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater
 
-class StudentLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
+class StudentLogoutTask(
+    type: Type,
+    uri: Uri? = null,
+    canvasForElementaryFeatureFlag: Boolean = false,
+    typefaceBehavior: TypefaceBehavior? = null
+) : LogoutTask(type, uri, canvasForElementaryFeatureFlag, typefaceBehavior) {
 
     override fun onCleanup() {
         FlutterComm.reset()

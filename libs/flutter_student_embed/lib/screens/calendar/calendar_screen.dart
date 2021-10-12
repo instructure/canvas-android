@@ -114,7 +114,7 @@ class CalendarScreenState extends State<CalendarScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(initialDate: _currentDay));
+          var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(initialDate: _currentDay, channelId: widget.channelId));
           _refreshDates(updatedDates);
         },
         child: Icon(Icons.add, semanticLabel: L10n(context).newToDo),
@@ -147,7 +147,7 @@ class CalendarScreenState extends State<CalendarScreen> {
           return CalendarDayPlanner(day, onItemSelected: (item) async {
             if (item.plannableType == 'planner_note') {
               // Display planner to-do details in flutter, refreshing changed dates if necessary
-              var updatedDates = await locator<QuickNav>().push(context, ToDoDetailsScreen(item));
+              var updatedDates = await locator<QuickNav>().push(context, ToDoDetailsScreen(item, channelId: widget.channelId));
               _refreshDates(updatedDates);
             } else {
               _channel.nativeRouteToItem(item);

@@ -244,7 +244,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "domainSearchHelpBody": "Försök med att söka efter namnet på skolan eller distrikten du vill ansluta till, t.ex. “Allmänna skolan” eller “Skolor i Skåne”. Du kan även ange en Canvas-domän direkt, t.ex. “smith.instructure.com.”\n\nMer information om hur du kan hitta din institutions Canvas-konto finns på {canvasGuides} eller kontakta {canvasSupport} eller din skola för att få hjälp.",
+  "domainSearchHelpBody": "Försök med att söka efter namnet på skolan eller distrikten du vill ansluta till, t.ex. “Allmänna skolan” eller “Skolor i Skåne”. Du kan även ange en Canvas-domän direkt, t.ex. “smith.instructure.com.”\n\nMer information om hur du kan hitta din lärosätes Canvas-konto finns på {canvasGuides} eller kontakta {canvasSupport} eller din skola för att få hjälp.",
   "@domainSearchHelpBody": {
     "description": "The body text shown in the help dialog on the domain search screen",
     "type": "text",
@@ -511,7 +511,7 @@
       "howMany": {}
     }
   },
-  "Download": "Ladda ned",
+  "Download": "Ladda ner",
   "@Download": {
     "description": "Label for the button that will begin downloading a file",
     "type": "text",
@@ -965,7 +965,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Institution Announcement": "Institutionsmeddelande",
+  "Institution Announcement": "Meddelande från lärosätet",
   "@Institution Announcement": {
     "description": "Title for alerts when there is an institution announcement",
     "type": "text",
@@ -1081,7 +1081,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Incomplete": "Ej fullständig",
+  "Incomplete": "Inte färdig",
   "@Incomplete": {
     "description": "Grading status for an assignment marked as incomplete",
     "type": "text",
@@ -1154,7 +1154,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Institution Announcements": "Institutionsannonseringar",
+  "Institution Announcements": "Meddelande från lärosätet",
   "@Institution Announcements": {
     "type": "text",
     "placeholders": {}
@@ -2025,7 +2025,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Interactions on this page are limited by your institution.": "Interaktioner på den här sidan har begränsats av din institution.",
+  "Interactions on this page are limited by your institution.": "Interaktioner på den här sidan har begränsats av ditt lärosäte.",
   "@Interactions on this page are limited by your institution.": {
     "description": "Message describing how the webview has limited access due to an instution setting",
     "type": "text",
@@ -2128,7 +2128,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Det går inte att visa den här länken. Den kan tillhöra en institution du för närvarande inte är inloggad på.",
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Det går inte att visa den här länken. Den kan tillhöra ett lärosäte du för närvarande inte är inloggad på.",
   "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
     "description": "Description for error page shown when clicking a link",
     "type": "text",

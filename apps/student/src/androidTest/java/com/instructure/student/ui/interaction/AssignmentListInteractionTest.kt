@@ -24,8 +24,10 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class AssignmentListInteractionTest : StudentTest() {
 
     @Test
@@ -47,6 +49,26 @@ class AssignmentListInteractionTest : StudentTest() {
     fun displaysAssignment() {
         val assignment = getToAssignmentsPage()[0]
         assignmentListPage.assertHasAssignment(assignment)
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun sortAssignmentsByTimeByDefault() {
+        val assignment = getToAssignmentsPage()[0]
+        assignmentListPage.assertHasAssignment(assignment)
+        assignmentListPage.assertSortByButtonShowsSortByTime()
+        assignmentListPage.assertFindsUndatedAssignmentLabel()
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun sortAssignmentsByTypeWhenTypeIsSelectedInTheDialog() {
+        val assignment = getToAssignmentsPage()[0]
+
+        assignmentListPage.selectSortByType()
+
+        assignmentListPage.assertHasAssignment(assignment)
+        assignmentListPage.assertSortByButtonShowsSortByType()
     }
 
     private fun getToAssignmentsPage(assignmentCount: Int = 1): List<Assignment> {

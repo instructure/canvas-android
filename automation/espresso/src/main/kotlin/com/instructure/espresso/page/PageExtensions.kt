@@ -22,11 +22,11 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers
 import android.view.View
+import com.adevinta.android.barista.interaction.BaristaScrollInteractions
+import com.adevinta.android.barista.interaction.BaristaSleepInteractions
 import com.instructure.espresso.actions.ViewCallOnClick
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher
-import com.schibsted.spain.barista.interaction.BaristaScrollInteractions
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 
@@ -43,6 +43,8 @@ fun BasePage.withId(id: Int): Matcher<View> = ViewMatchers.withId(id)
 fun BasePage.withParent(id: Int): Matcher<View> = ViewMatchers.withParent(withId(id))
 
 fun BasePage.withAncestor(id: Int): Matcher<View> = ViewMatchers.isDescendantOfA(withId(id))
+
+fun BasePage.withDescendant(descendantMatcher: Matcher<View>): Matcher<View> = ViewMatchers.hasDescendant(descendantMatcher)
 
 fun BasePage.withText(arg0: String): Matcher<View> = ViewMatchers.withText(arg0)
 

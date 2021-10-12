@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">เลิกทำ</string>
+    <string name="rce_contentDescription_redo">ทำซ้ำ</string>
+    <string name="rce_contentDescription_bold">ตัวหนา</string>
+    <string name="rce_contentDescription_italic">ตัวเอียง</string>
+    <string name="rce_contentDescription_strikethrough">ขีดฆ่า</string>
+    <string name="rce_contentDescription_underline">ขีดเส้นใต้</string>
+    <string name="rce_contentDescription_format_text_color">กำหนดสีข้อความ</string>
+    <string name="rce_contentDescription_border_color">กำหนดสีกรอบข้อความ</string>
+    <string name="rce_contentDescription_indent_increase">เพิ่มการเยื้อง</string>
+    <string name="rce_contentDescription_indent_decrease">ลดการเยื้อง</string>
+    <string name="rce_contentDescription_align_left">ชิดซ้าย</string>
+    <string name="rce_contentDescription_align_right">ชิดขวา</string>
+    <string name="rce_contentDescription_align_center">จัดกลาง</string>
+    <string name="rce_contentDescription_insert_bullets">แทรกรายการหัวข้อย่อย</string>
+    <string name="rce_contentDescription_insert_numbers">แทรกรายการหมายเลขกำกับ</string>
+    <string name="rce_contentDescription_insert_photo">แทรกภาพ</string>
+    <string name="rce_contentDescription_upload_photo">อัพโหลดภาพจากอุปกรณ์</string>
+    <string name="rce_contentDescription_insert_link">แทรกลิงค์</string>
+    <string name="rce_contentDescription_block_quote">บล็อคการเสนอราคา</string>
+
+    <string name="rce_contentDescription_color_none">สี ไม่มี</string>
+    <string name="rce_contentDescription_color_white">สี ขาว</string>
+    <string name="rce_contentDescription_color_black">สี ดำ</string>
+    <string name="rce_contentDescription_color_blue">สี น้ำเงิน</string>
+    <string name="rce_contentDescription_color_red">สี แดง</string>
+    <string name="rce_contentDescription_color_green">สี เขียว</string>
+    <string name="rce_contentDescription_color_gray">สี เทา</string>
+    <string name="rce_contentDescription_color_magenta">สี ม่วงแดง</string>
+    <string name="rce_contentDescription_color_cyan">สี ฟ้า</string>
+    <string name="rce_contentDescription_color_orange">สี ส้ม</string>
+    <string name="rce_contentDescription_color_yellow">สี เหลือง</string>
+    <string name="rce_contentDescription_color_purple">สี ม่วง</string>
+
+    <string name="rce_editTextUrlHint">ลิงค์</string>
+    <string name="rce_editTextALTHint">ข้อความ</string>
+    <string name="rce_dialogDone">เสร็จสิ้น</string>
+    <string name="rce_dialogCancel">ยกเลิก</string>
+    <string name="rce_insertLink">แทรกลิงค์</string>
+    <string name="rce_insertImage">แทรกภาพ</string>
+    <string name="rce_uploadImage">อัพโหลดภาพ</string>
+
+    <string name="rce_done">เสร็จสิ้น</string>
+    <string name="rce_cancel">ยกเลิก</string>
+    <string name="rce_exit">ออก</string>
+    <string name="rce_dialog_exit_title">ออกจากการแก้ไขภารกิจหรือไม่</string>
+    <string name="rce_dialog_exit_message">แน่ใจว่าต้องการออกหรือไม่ ข้อมูลที่ไม่ได้บันทึกไว้จะหายไป</string>
+    <string name="rce_empty_message">ข้อความ</string>
+    <string name="rce_empty_description">เพิ่มรายละเอียด</string>
+    <string name="rce_scrollInstructions">เลื่อนรายการเพื่อดูเครื่องมือแก้ไขทั้งหมด</string>
+
+    <string name="rce_emptyUrlError">Url ปล่อยว่างไม่ได้</string>
+    <string name="rce_httpNotAllowed">เฉพาะ https url ที่ใช้ได้</string>
+</resources>

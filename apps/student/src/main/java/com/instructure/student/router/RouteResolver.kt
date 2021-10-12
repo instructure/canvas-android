@@ -6,6 +6,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.student.features.dashboard.edit.EditDashboardFragment
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
@@ -17,6 +18,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
+import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 
 object RouteResolver {
@@ -56,12 +58,12 @@ object RouteResolver {
 
         return when {
             cls.isA<DashboardFragment>() -> DashboardFragment.newInstance(route)
+            cls.isA<ElementaryDashboardFragment>() -> ElementaryDashboardFragment.newInstance(route)
             cls.isA<ToDoListFragment>() -> ToDoListFragment.newInstance(route)
             cls.isA<NotificationListFragment>() -> NotificationListFragment.newInstance(route)
             cls.isA<InboxFragment>() -> InboxFragment.newInstance(route)
             cls.isA<CourseBrowserFragment>() -> CourseBrowserFragment.newInstance(route)
-            cls.isA<AllCoursesFragment>() -> AllCoursesFragment.newInstance(route)
-            cls.isA<EditFavoritesFragment>() -> EditFavoritesFragment.newInstance(route)
+            cls.isA<EditDashboardFragment>() -> EditDashboardFragment.newInstance(route)
             cls.isA<ModuleQuizDecider>() -> ModuleQuizDecider.newInstance(route)
             cls.isA<EditPageDetailsFragment>() -> EditPageDetailsFragment.newInstance(route)
             cls.isA<InboxConversationFragment>() -> InboxConversationFragment.newInstance(route)

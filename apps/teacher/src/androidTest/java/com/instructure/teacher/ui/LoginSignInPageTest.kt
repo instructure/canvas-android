@@ -20,8 +20,10 @@ package com.instructure.teacher.ui
 import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.enterDomain
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class LoginSignInPageTest: TeacherTest() {
 
     // Runs live; no MockCanvas

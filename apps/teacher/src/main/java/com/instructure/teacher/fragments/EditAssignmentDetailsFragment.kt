@@ -293,6 +293,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                     sectionsMapped += sections.associateBy { it.id }
                     studentsMapped += students.associateBy { it.id }
                 }
+                setupAddOverrideButton()
                 setupOverrides()
 
                 if (mScrollToDates) {
@@ -314,6 +315,10 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    private fun setupAddOverrideButton() {
+        addOverride.setVisible(true)
 
         // Theme add button and plus image
         addOverrideText.setTextColor(ThemePrefs.buttonColor)
@@ -342,7 +347,10 @@ class EditAssignmentDetailsFragment : BaseFragment() {
             dueDateGroup.groupIds.forEach { assignees.add(groupsMapped[it]?.name!!) }
             dueDateGroup.sectionIds.forEach { assignees.add(sectionsMapped[it]?.name!!) }
             dueDateGroup.studentIds.forEach {
-                assignees.add(studentsMapped[it]!!.let { user -> Pronouns.span(user.name, user.pronouns) })
+                val student = studentsMapped[it]
+                if (student != null) {
+                    assignees.add(student.let { user -> Pronouns.span(user.name, user.pronouns) })
+                }
             }
 
             v.setupOverride(index, dueDateGroup, mEditDateGroups.size > 1, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
@@ -453,7 +461,11 @@ class EditAssignmentDetailsFragment : BaseFragment() {
             } catch (e: Throwable) {
                 saveButton?.setVisible()
                 savingProgressBar.setGone()
-                toast(R.string.error_saving_assignment)
+                if (mAssignment.inClosedGradingPeriod) {
+                    toast(R.string.error_saving_assignment_closed_grading_period)
+                } else {
+                    toast(R.string.error_saving_assignment)
+                }
             }
         }
     }

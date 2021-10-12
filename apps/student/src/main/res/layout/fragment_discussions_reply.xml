@@ -44,6 +44,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:focusable="true"
+        android:contentDescription="@string/a11y_discussionReplyEditor"
         app:rce_controls_margin_start="0dp"
         app:rce_controls_margin_end="0dp"
         app:rce_editor_padding="12dp"

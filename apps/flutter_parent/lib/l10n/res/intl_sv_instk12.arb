@@ -511,7 +511,7 @@
       "howMany": {}
     }
   },
-  "Download": "Ladda ned",
+  "Download": "Ladda ner",
   "@Download": {
     "description": "Label for the button that will begin downloading a file",
     "type": "text",

@@ -17,6 +17,7 @@
 
 package com.instructure.student.fragment
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -69,10 +70,8 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val color = ColorKeeper.getOrGenerateColor(canvasContext)
-        compose.colorNormal = color
-        compose.colorPressed = color
-
-        compose.setIconDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, Color.WHITE))
+        compose.backgroundTintList = ColorStateList.valueOf(color)
+        compose.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, Color.WHITE))
         compose.setOnClickListener {
             // Messaging other users is not available in Student view
             val route = if (ApiPrefs.isStudentView) NothingToSeeHereFragment.makeRoute() else {

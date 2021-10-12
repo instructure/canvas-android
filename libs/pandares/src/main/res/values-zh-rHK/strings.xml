@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,6 +44,7 @@
     <string name="submissionStatusFailedTitle">提交項目失敗</string>
     <string name="submissionStatusFailedSubtitle">點選以檢視詳情</string>
     <string name="submissionAndRubric">提交項目及評分標準</string>
+    <string name="commentsAndRubric">評論及評分標準</string>
     <string name="errorLoadingAssignment">載入此作業時出現問題。請檢查您的連接然後重試。</string>
     <string name="submitted">已提交</string>
     <string name="notSubmitted">未提交</string>
@@ -54,10 +54,8 @@
     <string name="attemptsUsedLabel">已使用的遞交嘗試次數</string>
     <string name="noAttemptsLeft">不可再次嘗試</string>
     <string name="resubmitAssignment">重新提交作業</string>
-
     <string name="launchingExternalTool">啟動外部工具中&#8230;</string>
     <string name="launchExternalTool">啟動外部工具</string>
-
     <string name="preview">預覽</string>
     <string name="submissionUploadFailedMessage">上傳一個或多個檔案失敗。檢查您的網際網路連線並重試提交。</string>
     <string name="submissionUploadByteProgress">%1$s / %2$s</string>
@@ -68,18 +66,20 @@
     <string name="submissionDeleted">已刪除提交項目</string>
     <string name="missingSubmissionLabel">缺少</string>
     <string name="gradedSubmissionLabel">已評分</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">沒有使用 \'http://\' 的 URL 的可用預覽</string>
     <string name="submissionUrlNotAUrlError">請輸入有效的 URL</string>
     <string name="enterAUrlHereForYourSubmission">請在此輸入您的提交項目的 URL</string>
     <string name="addFileFabContentDesc">顯示添加檔案選項</string>
     <string name="recordAudio">錄製音訊</string>
-
     <string name="recordVideo">錄製視訊</string>
+    <string name="a11y_textSubmissionEditor">文字提交項目編輯器</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">寫入&#8230;</string>
     <string name="textSubmissionFailureMessage">上傳提交項目時出現問題。重新提交。</string>
+
     <!-- Student Submission Details -->
     <string name="submission">提交項目</string>
     <string name="submissionVersions">提交項目版本</string>
@@ -93,6 +93,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">您的作業由單元 \"%1$s\" 鎖定</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">您的作業由單元要求鎖定</string>
     <string name="submissionDetailsAssignmentLocked">作業已鎖定</string>
+    <string name="submissionDetailsNoSubmissionAllowed">不允許任何提交項目</string>
     <string name="webPreview">預覽輸入的 URL</string>
     <string name="websiteUrl">網站 URL</string>
     <string name="noneContentMessage">此作業不允許線上提交項目</string>
@@ -100,6 +101,8 @@
     <string name="noOnlineSubmissions">沒有線上提交項目</string>
     <string name="speedGraderExternalToolMessage">此作業已連結至外部工具以供提交。</string>
     <string name="openTool">開啟工具</string>
+    <string name="a11y_submissionText">提交項目文字</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">滿分為 %s 分</string>
     <string name="outOfPointsAbbreviatedFormatted">滿分為 %s 分</string>
@@ -111,10 +114,12 @@
     <string name="scoreStatisticsLow">低：%s</string>
     <string name="scoreStatisticsMean">平均：%s</string>
     <string name="scoreStatisticsHigh">高：%s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">自訂分數</string>
     <string name="rubricEmptyMessage">此作業沒有評分標準</string>
     <string name="rubricViewLongDescription">檢視完整說明</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">正在上傳 %1$d / %2$d 檔案</string>
     <string name="assignmentSubmissionCommentUpload">正在上傳 %s 的評論</string>
@@ -123,6 +128,7 @@
     <string name="chooseFileForCommentSubtext">輕點以下的一個選項，將檔案附加到您的評論中</string>
     <string name="emptySubmissionCommentsSubtext">有與您的作業有關的問題嗎？\n傳送訊息給您的導師。</string>
     <string name="submissionCommentErrorMessage">無法傳送訊息。輕點以重試。</string>
+    <string name="mediaUpload">媒體上傳</string>
     <string name="mediaUploadAudio">媒體上傳 — 音訊</string>
     <string name="mediaUploadVideo">媒體上傳 — 視訊</string>
     <string name="commentSubmissionTypeText">文字提交項目</string>
@@ -133,6 +139,7 @@
     <string name="commentSubmissionTypeMediaFile">媒體檔案</string>
     <string name="commentSubmissionTypeAudio">音訊</string>
     <string name="commentSubmissionTypeVideo">視訊</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">版本：</string>
 
@@ -182,6 +189,8 @@
     <string name="submissionDetailsDueAt">截止於 %1$s 的 %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">上午</string>
     <string name="lowercasePM">下午</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">已鎖定</string>
     <string name="assignments">作業列表</string>
@@ -189,14 +198,28 @@
     <string name="noAssignmentsInGroup">在本群組中沒有作業</string>
     <string name="excusedAssignment">該作業已被免除，不予計入總評分</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">排序依據</string>
+    <string name="sortByDialogTimeOption">時間</string>
+    <string name="sortByDialogTypeOption">類型</string>
+    <string name="sortByTime">依時間排序</string>
+    <string name="sortByType">依類型排序</string>
+    <string name="sortByDialogCancel">取消</string>
+    <string name="assignmentsListAllGradingPeriods">全部</string>
+    <string name="a11y_sortByTimeButton">排列作業列表按鈕，依時間排序</string>
+    <string name="a11y_sortByTypeButton">排列作業列表按鈕，依類型排序</string>
+    <string name="a11y_assignmentsSortedByTime">依時間排序的作業列表</string>
+    <string name="a11y_assignmentsSortedByType">依類型排序的作業列表</string>
+
     <!-- Assignment editing -->
     <string name="points">分數\u0020</string>
     <string name="save">儲存</string>
     <string name="cancel">取消</string>
+
     <!-- Discussions -->
     <string name="forbidden">只有曾發送一個或以上回覆的才能查閱回覆。</string>
-
     <string name="fileCurrentlyLocked">此檔案目前已鎖定</string>
+    <string name="a11y_discussionReplyEditor">討論區回覆編輯器</string>
+
     <!-- Events -->
     <string name="Starts">開始</string>
     <string name="Ends">結束</string>
@@ -215,8 +238,6 @@
     <string name="whatIfDialogText">可能得分</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">得分為 %1$s，滿分為 %2$s，%3$s</string>
-
-
     <string name="inbox">收件匣</string>
     <string name="unread">未讀</string>
     <string name="archived">已存檔</string>
@@ -247,6 +268,7 @@
     <string name="createFolder">創建資料夾</string>
     <string name="createAFile">創建檔案</string>
     <string name="createFileFolderFabContentDesc">顯示創建檔案與創建資料夾按鈕</string>
+    <string name="hideCreateFileFolderFabContentDesc">隱藏建立檔案與建立資料夾按鈕</string>
     <string name="folderCreationError">創建資料夾時發生錯誤。</string>
     <string name="rename">重命名</string>
     <string name="renameFile">重命名檔案</string>
@@ -376,8 +398,8 @@
     <string name="students">學生</string>
     <string name="observers">觀察者</string>
     <string name="syllabusMissing">尚未添加課程大綱。</string>
-
     <string name="syllabusEventsError">載入單元時發生錯誤。</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">選擇收件人</string>
     <string name="messageHasNoRecipients">本訊息目前無收件人。</string>
@@ -403,6 +425,7 @@
 
     <!-- Notifications -->
     <string name="deleted">已刪除</string>
+
     <string name="loadingCanvas">載入 Canvas 內容&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -419,9 +442,11 @@
     <string name="stopMasquerading">停止作為使用者</string>
     <string name="userId">使用者 ID</string>
     <string name="masqueradeFail">嘗試作為使用者時出現錯誤</string>
+
     <string name="emptyId">ID 不可為空白</string>
 
     <string name="goToQuiz">前往測驗</string>
+
     <string name="quizzes">測驗</string>
 
     <string name="lastDiscussionPost">最後發布</string>
@@ -480,8 +505,8 @@
     <string name="goToModules">前往單元</string>
     <string name="markDone">標記為已完成</string>
     <string name="moduleItemNotFound">無法找到單元項目</string>
-
     <string name="errorLoadingModules">載入單元時發生錯誤。</string>
+
     <string name="help">支援</string>
     <string name="instructor_question">導師提問</string>
     <string name="link">連結</string>
@@ -497,11 +522,11 @@
     <string name="textEntry">文字條目</string>
     <string name="onlineURL">線上 URL</string>
     <string name="oneFileOnly">此提交項目只接受上載一個檔案</string>
-
-
     <string name="websiteEntry">添加網站條目</string>
     <string name="mediaRecordingEntry">媒體錄製</string>
     <string name="submit">提交</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">進度未儲存</string>
     <string name="informationLost">未儲存的資料將丟失。您確定要繼續嗎？</string>
@@ -516,6 +541,7 @@
     <!-- Submission Details Strings -->
     <string name="next">下一個</string>
     <string name="addComment">添加評論&#8230;</string>
+
     <string name="home">首頁</string>
     <string name="Notifications">通知</string>
 
@@ -545,6 +571,8 @@
     <string name="clickToViewSubmission">您提交時的網站截圖已儲存。點選並抓取下方圖片，或下載完整圖片。</string>
     <string name="urlSubmissionNoPreview">此提交項目是連結至外部頁面的 URL。請謹記，自從最初提交之後，此頁面可能已變更。</string>
     <string name="contentDescriptionPreviewImage">預覽已提交的 url</string>
+
+
     <string name="isNotSupportedFeature">不支援 %1$s。</string>
     <string name="isNotSupported">不支援連結。</string>
     <string name="openInBrowser">在瀏覽器中打開</string>
@@ -560,15 +588,19 @@
     <string name="panda_fact_string">關於熊貓的事實：&#160;</string>
     <string name="remove">移除</string>
     <string name="founders">創始人</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">隱私政策</string>
     <string name="termsOfUse">使用條款</string>
     <string name="canvasOnGithub">GitHub 上的 Canvas</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">作業測驗</string>
     <string name="practiceQuizzes">練習測驗</string>
     <string name="gradedSurveys">已評分的調查</string>
     <string name="surveys">調查</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">待辦事項</string>
     <string name="gradesWidgetTitle">成績</string>
@@ -614,12 +646,12 @@
     <string name="profileSettings">個人檔案設定</string>
     <string name="accountPreferences">帳戶偏好</string>
     <string name="pinAndFingerprint">PIN 和指紋</string>
-
     <string name="pairWithObserver">與觀察者配對</string>
     <string name="pairWithObserverDetails">讓您的父母在 Canvas Parent 應用程式掃描此二維碼與您配對。此代碼將在七天後過期，或使用一次後過期。</string>
     <string name="pairingCodeLabel">配對代碼：\u0020</string>
     <string name="pairingCodeErrorTitle">配對代碼錯誤</string>
     <string name="pairingCodeErrorDescription">無法取得配對代碼。此功能僅支援學生。</string>
+
     <string name="launchSpeedgrader">打開 Speedgrader</string>
 
     <string name="search_todo">待辦事項清單</string>
@@ -690,8 +722,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-
     <string name="content_description_speed_grader_slider">評分滑條</string>
+
     <string name="createNewCalendarEvent">創建新活動</string>
     <string name="enableFunMode">關閉熊貓頭像</string>
 
@@ -778,6 +810,7 @@
     <string name="notification_desc_recording_ready">在會議錄製準備就緒時收到通知。</string>
 
     <string name="unlimited">無限制</string>
+
     <string name="question">問題</string>
     <plurals name="question_count">
         <item quantity="other">%d 個問題</item>
@@ -786,15 +819,16 @@
     <plurals name="pointCount">
         <item quantity="other">%s 分</item>
     </plurals>
+
     <string name="timeLimit">時間限制</string>
     <string name="newPushNotifications">%1$s 個新通知</string>
     <string name="like">贊</string>
     <string name="likeEntryLabel">「讚好」條目</string>
     <string name="likes">贊</string>
-
     <plurals name="likeCountLabel">
         <item quantity="other">%s 讚好</item>
     </plurals>
+
     <string name="color_1">紅色</string>
     <string name="color_2">亮粉色</string>
     <string name="color_3">薰衣草色</string>
@@ -853,6 +887,7 @@
     <string name="editDashboard">編輯控制面板</string>
     <string name="editDashboardDescriptor">選擇要在控制面板上查看哪些課程。</string>
     <string name="a11y_editYourCourseList">編輯您的課程清單</string>
+
     <string name="dashboard">控制面板</string>
     <string name="previous">上一個</string>
     <string name="pageNum" formatted="false">第 %d 頁，共 %d 頁</string>
@@ -880,8 +915,8 @@
     <string name="tapToViewAnnouncement">點選檢視通告</string>
     <string name="acceptCourseInvitation">接受</string>
     <string name="declineCourseInvitation">拒絕</string>
-
     <string name="outOf">滿分為</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">沒有與此課程關聯的檔案。</string>
     <string name="noFilesSubtextGroup">沒有與此群組關聯的檔案。</string>
@@ -940,6 +975,7 @@
     <string name="unableToViewInBrowser">我們未能找到外部應用程式以檢視此 LTI 工具。</string>
 
     <string name="commentUpload">上載評論</string>
+
     <string name="frontPage">標題頁</string>
     <string name="editPage">編輯內容頁</string>
     <string name="description">說明</string>
@@ -952,10 +988,10 @@
     <string name="conferencesNotSupported">移動設備尚未支援會議。</string>
     <string name="filePreviewContentDescription">檔案預覽圖像</string>
     <string name="pdfError">嘗試載入此 PDF 時發生錯誤。</string>
-
     <string name="featureNotAllowedInStudentView">很抱歉！此功能無法於學生視圖中使用。</string>
     <string name="nothingToSeeHere">這裡沒有內容供瀏覽</string>
     <string name="unsupportedFeature">不支援的功能</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">添加學生</string>
     <string name="addChildSubTitle">輸入已提供予您的學生配對代碼。</string>
@@ -963,6 +999,7 @@
     <string name="addChildErrorMessage">配對失敗。請確保您的配對代碼正確，並在使用限期內。</string>
     <string name="gradeComplete">完成</string>
     <string name="gradeIncomplete">未完成</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">公佈設定</string>
     <string name="postGradesTab">公佈成績</string>
@@ -991,9 +1028,9 @@
     <string name="gradeAfterPosting">公佈後評分</string>
     <string name="gradeOverride">評分重寫</string>
     <string name="currentGrade">目前評分</string>
-
     <string name="opensInCanvasStudent">在 Canvas Student 中開啟</string>
     <string name="tab_student_view">學生視圖</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">選擇的頁首：%s</string>
@@ -1048,7 +1085,6 @@
 
     <string name="addVideoComment">添加視訊評論</string>
     <string name="addAudioComment">添加音訊評論</string>
-
     <string name="audioRecordingError">在嘗試錄製音訊時發生意外錯誤。</string>
     <string name="videoRecordingError">在嘗試錄製視訊時發生意外錯誤。</string>
 
@@ -1067,6 +1103,7 @@
     <string name="a11y_letterGrade">%s。</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="other">%s 分鐘</item>
     </plurals>
@@ -1086,4 +1123,86 @@
     <string name="conferenceDetails">會議詳情</string>
     <string name="recordings">記錄</string>
     <string name="conferenceInProgress">會議進行中</string>
+
+    <string name="a11y_criterion_content_description">標準評級%s</string>
+    <string name="a11y_criterion_description_content_description">%s，%s</string>
+    <string name="a11y_criterion_button_click_description">更多資訊</string>
+    <string name="a11y_create_file_folder_visible">建立檔案與資料夾按鈕顯示</string>
+    <string name="a11y_create_file_folder_gone">建立檔案與資料夾按鈕隱藏</string>
+    <string name="unselect_all">取消全選</string>
+    <string name="select_all">全選</string>
+    <string name="all_courses">所有課程</string>
+    <string name="all_groups">所有群組</string>
+    <string name="edit_dashboard_course_description">選擇控制面板的課程或導航到課程詳細資料。</string>
+    <string name="edit_dashboard_group_description">選擇控制面板的群組或導航到課程詳細資料。</string>
+    <string name="current_enrollments">目前註冊</string>
+    <string name="past_enrollments">過去註冊</string>
+    <string name="future_enrollments">未來註冊</string>
+    <string name="added_to_dashboard">添加到控制面板中</string>
+    <string name="removed_from_dashboard">從控制面板移除</string>
+    <string name="all_added_to_dashboard">全部添加到控制面板中</string>
+    <string name="all_removed_from_dashboard">全部從控制面板移除</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">無法將未啟用的課程添加到控制面板中。</string>
+    <string name="edit_dashboard">編輯控制面板</string>
+    <string name="edit_dashboard_empty_title">此處沒有課程</string>
+    <string name="edit_dashboard_empty_message">您必須註冊課程才能將其添加到控制面板中。</string>
+    <string name="a11y_content_description_remove_from_dashboard">從控制面板移除</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">全部從控制面板移除</string>
+    <string name="a11y_content_description_add_to_dashboard">添加到控制面板中</string>
+    <string name="a11y_content_description_add_all_to_dashboard">全部添加到控制面板中</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">帳戶</string>
+    <string name="dashboardTabHomeroom">主教室</string>
+    <string name="dashboardTabSchedule">排程</string>
+    <string name="dashboardTabGrades">成績</string>
+    <string name="dashboardTabResources">資源</string>
+    <string name="homeroomWelcomeMessage">歡迎，%1$s！</string>
+    <string name="homeroomMySubjects">我的主題</string>
+    <string name="viewPreviousAnnouncements">檢視之前的通告</string>
+    <string name="homeroomError">未能載入主教室</string>
+    <string name="homeroomRefreshFail">未能重新整理主教室</string>
+    <string name="nothingDueToday">今天沒有任何內容截止</string>
+    <string name="dueToday">%1$s 今天截止</string>
+    <string name="missing">%1$s 缺失</string>
+    <string name="homeroomEmptyTitle">歡迎！</string>
+    <string name="homeroomEmptyMessage">您的主題在此顯示。</string>
+    <string name="homeroomNoSubjects">您目前沒有任何主題。</string>
+    <string name="settingsElementaryViewSubtitle">需要重新啟動應用程式</string>
+    <string name="gradesSelect">選擇</string>
+    <string name="selectGradingPeriod">選擇評分期</string>
+    <string name="currentGradingPeriod">目前評分期</string>
+    <string name="failedToLoadGrades">無法載入成績</string>
+    <string name="failedToLoadGradesForGradingPeriod">無法載入評分期的成績</string>
+    <string name="failedToRefreshGrades">無法重新整理成績</string>
+    <string name="noGradesToDisplay">沒有可顯示的成績</string>
+    <string name="notGraded">未評分</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">變更評分期</string>
+    <string name="a11y_gradesNotAvailableContentDescription">不提供成績</string>
+    <string name="bottomBarHomeroom">主教室</string>
+
+    <string name="settingsHomeroomView">主教室檢視</string>
+    <string name="importantLinksTitle">重要連結</string>
+    <string name="studentApplications">學生應用程式</string>
+    <string name="staffContactInfo">員工聯絡資料</string>
+    <string name="chooseACourse">選擇一個課程</string>
+    <string name="webViewImportantLinksTitle">重要連結</string>
+    <string name="staffRoleTeacher">教師</string>
+    <string name="staffRoleTeacherAssistant">助教</string>
+    <string name="resourcesEmptyMessage">您的資源在此顯示。</string>
+    <string name="failedToLoadResources">無法載入資源</string>
+    <string name="failedToRefreshResources">無法重新整理資源</string>
+    <string name="open_alternate_view">開啟更容易存取的替代視圖</string>
+
+    <string name="a11y_content_description_message_recipients">收件人</string>
+    <string name="a11y_content_description_inbox_subject">主題</string>
+    <string name="a11y_content_description_inbox_course_spinner">選擇課程，%s</string>
+
+    <string name="speedGraderAnonymousSubmissionMessage">這名學生的回覆已隱藏，因為此作業為匿名狀態。</string>
+
+    <string name="studentAnnotationUnsupported">學生註釋（不支援）</string>
+    <string name="studentAnnotationUnsupportedDescription">流動電話目前不支援學生註釋。</string>
+    <string name="unsupportedSubmissionType">不支援提交項目類型</string>
+    <string name="studentAnnotationUnsupportedMessage">提交項目無法顯示，因為流動電話目前不支援學生註釋。</string>
+    <string name="schedule_marked_as_done">您已將其標示為完成。</string>
 </resources>

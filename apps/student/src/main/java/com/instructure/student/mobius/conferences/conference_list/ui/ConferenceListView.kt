@@ -18,17 +18,14 @@ package com.instructure.student.mobius.conferences.conference_list.ui
 
 import android.app.Activity
 import android.net.Uri
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.ViewGroup
-import android.widget.ProgressBar
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -105,8 +102,12 @@ class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInfla
     }
 
     fun launchUrl(url: String) {
-        var intent = CustomTabsIntent.Builder()
+        val colorSchemeParams = CustomTabColorSchemeParams.Builder()
             .setToolbarColor(canvasContext.color)
+            .build()
+
+        var intent = CustomTabsIntent.Builder()
+            .setDefaultColorSchemeParams(colorSchemeParams)
             .setShowTitle(true)
             .build()
             .intent

@@ -25,4 +25,5 @@ interface EditQuizDetailsView : FragmentViewInterface {
     fun errorSavingQuiz()
     fun quizSavedSuccessfully()
     fun populateQuizDetails()
+    fun setupAddOverridesButton()
 }

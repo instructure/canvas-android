@@ -22,8 +22,10 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.DiscussionSubmissionViewFragment
 import com.instructure.student.ui.pages.renderPages.DiscussionSubmissionViewRenderPage
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class DiscussionSubmissionViewRenderTest : StudentRenderTest() {
 
     private val page = DiscussionSubmissionViewRenderPage()

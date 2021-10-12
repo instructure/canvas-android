@@ -56,6 +56,7 @@
     <string name="canvasAPI_onlineURL">URL spletnega mesta</string>
     <string name="canvasAPI_mediaRecording">Medijski posnetek</string>
     <string name="canvasAPI_attendance">Prisotnost</string>
+    <string name="canvasAPI_studentAnnotation">Opomba študenta</string>
     <string name="quiz_scoring_policy_highest">Najvišje</string>
     <string name="quiz_scoring_policy_average">Povprečje</string>
     <string name="quiz_scoring_policy_latest">Najnovejše</string>

@@ -886,4 +886,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">Impossibile caricare questo strumento LTI in questo momento.</string>
     <string name="downloading">Download in corso...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Programma Piano di studio aggiornato correttamente.</string>
+    <string name="errorSavingSyllabus">Si è verificato un errore durante il tentativo di salvare il Programma Piano di studio. Riprova.</string>
+    <string name="editSyllabusTitle">Modifica Programma Piano di studio</string>
+    <string name="editSyllabusContent">Contenuto</string>
+    <string name="editSyllabusDetails">Dettagli</string>
+    <string name="editSyllabusShowCourseSummary">Mostra riepilogo corsi</string>
+    <string name="editSyllabusContentAccessibilityLabel">Contenuto Programma Piano di studio</string>
+
+    <string name="no_grade">Nessun voto</string>
+    <string name="excuse">Giustifica</string>
+    <string name="speed_grader_overgraded_by">Assegnato voto più alto da %s</string>
 </resources>

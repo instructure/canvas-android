@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">选择媒体</string>
     <string name="takeVideo">录制视频</string>
     <string name="noCameraOnDevice">无摄像头</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">上传通知</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas关于正在上传项的通知。</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">添加文件</string>
+
     <string name="fromCamera">摄像机、照相机</string>
     <string name="fromGallery">画廊</string>
     <string name="fromDevice">设备</string>
@@ -53,7 +55,6 @@
     <string name="file">文件</string>
     <string name="fileTalkBack">文件%s</string>
     <string name="folderTalkBack">文件夹%s</string>
-
     <string name="addItem">添加项目</string>
     <string name="assignment">作业</string>
     <string name="attachedFiles">附加文件</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">正在为%s上传提交项</string>
     <string name="assignmentSubmissionError">为%s提交失败</string>
     <string name="assignmentSubmissionComplete">已成功提交%s</string>
+
     <!--Errors-->
     <string name="errorOccurred">发生意外错误。</string>
     <string name="serverError">发生服务器错误。</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">似乎没有创建任何单元。</string>
     <string name="noPages">无页面</string>
     <string name="noPagesSubtext">似乎没有创建任何页面。</string>
-
     <string name="modulesLockedSubtext">已对此课程禁用模块。</string>
     <string name="modulesLocked">遇到错误</string>
+
     <!--General-->
     <string name="yes">是</string>
     <string name="no">否</string>
@@ -227,7 +229,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas 教师</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas 投票</string>
     <string name="utils_speedgrader">快速评分</string>
 
     <!-- Rating Dialog -->
@@ -324,6 +325,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">解锁时间不能晚于截止日期</string>
     <string name="utils_lockBeforeDueDateError">锁定时间不能早于截止时间</string>
     <string name="utils_lockAfterUnlockError">锁定时间不能早于解锁时间</string>
@@ -377,13 +379,14 @@
     <string name="utils_uploadToSubmissionComment">上传到提交项评论</string>
     <string name="utils_attachFile">附加文件</string>
     <string name="utils_with">与</string>
+
     <string name="notificationPrimaryInboxTitle">Canvas 通知</string>
     <string name="notificationChannelNamePrimary">常规 Canvas 通知</string>
     <string name="notificationChannelDescriptionPrimary">在 Canvas 通知首选项部分可对通知进行进一步配置。</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d 条新通知</item>
     </plurals>
+
     <string name="copyLinkAddress">复制链接地址</string>
     <string name="copyLink">复制链接</string>
     <string name="linkCopied">已复制链接</string>
@@ -413,7 +416,6 @@
     <string name="image_uploading">正在上传图像...</string>
     <string name="image_upload_error">图像上传错误</string>
     <string name="retry">重试</string>
-
     <string name="search">搜索</string>
     <string name="searchAssignmentsHint">搜索作业</string>
     <string name="searchAnnouncementsHint">搜索公告</string>
@@ -421,6 +423,32 @@
     <string name="searchPagesHint">搜索页面</string>
     <string name="searchQuizzesHint">搜索测验</string>
     <string name="noItemsMatchingQuery">无项目匹配\"%s\"</string>
+
     <string name="selected">已选择</string>
+
+    <string name="notificationChannelNameInAppUpdate">应用程序更新通知</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas应用内更新通知。</string>
+    <string name="appUpdateReadyTitle">可更新的应用程序</string>
+    <string name="appUpdateReadyDescription">重启应用程序以安装新版本</string>
+    <string name="nothing_planned_yet">暂无任何计划</string>
+    <string name="schedule_tag_graded">已评分</string>
+    <string name="schedule_tag_replies">回复</string>
+    <string name="schedule_tag_feedback">反馈</string>
+    <string name="schedule_tag_late">迟交</string>
+    <string name="schedule_tag_redo">重新操作</string>
+    <string name="schedule_tag_excused">已免除</string>
+    <string name="tomorrow">明天</string>
+    <string name="yesterday">昨天</string>
+    <string name="schedule_calendar_event_due_text">%s</string>
+    <string name="schedule_todo_due_text">待办事项：%s</string>
+    <string name="schedule_due_text">到期：%s</string>
+    <string name="show_missing_items_title">显示 %d 个缺失的项目</string>
+    <string name="hide_missing_items_title">隐藏 %d 个缺失的项目</string>
+    <string name="schedule_error_message">无法获取您的日程计划</string>
+    <string name="schedule_todo_title">待办事项</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s 分</item>
+        <item quantity="other">%s 分</item>
+    </plurals>
 
 </resources>

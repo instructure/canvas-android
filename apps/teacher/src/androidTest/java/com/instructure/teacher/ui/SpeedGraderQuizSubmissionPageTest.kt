@@ -26,8 +26,10 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class SpeedGraderQuizSubmissionPageTest : TeacherTest() {
 
     @Test

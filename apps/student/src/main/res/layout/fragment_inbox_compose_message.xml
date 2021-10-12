@@ -67,6 +67,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/selectCourse"
                     android:minHeight="48dp"/>
 
             </RelativeLayout>
@@ -143,6 +144,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
+                android:importantForAccessibility="yes"
+                android:contentDescription="@string/a11y_content_description_inbox_subject"
                 android:hint="@string/noSubject"
                 android:lines="1"
                 android:padding="16dp"

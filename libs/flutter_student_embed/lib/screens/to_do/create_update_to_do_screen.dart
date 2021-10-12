@@ -17,6 +17,7 @@ import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/course.dart';
 import 'package:flutter_student_embed/models/planner_item.dart';
 import 'package:flutter_student_embed/screens/to_do/create_update_to_do_screen_interactor.dart';
+import 'package:flutter_student_embed/utils/alert_dialog_channel.dart';
 import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
 import 'package:flutter_student_embed/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_student_embed/utils/common_widgets/colored_status_bar.dart';
@@ -29,8 +30,9 @@ import 'package:flutter_student_embed/utils/service_locator.dart';
 class CreateUpdateToDoScreen extends StatefulWidget with ColoredStatusBar {
   final DateTime initialDate;
   final PlannerItem editToDo;
+  final String channelId;
 
-  const CreateUpdateToDoScreen({Key key, this.editToDo, this.initialDate}) : super(key: key);
+  const CreateUpdateToDoScreen({Key key, this.editToDo, this.initialDate, this.channelId}) : super(key: key);
 
   @override
   _CreateUpdateToDoScreenState createState() => _CreateUpdateToDoScreenState();
@@ -45,9 +47,13 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
   bool _saving = false;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   FocusScopeNode _focusScopeNode = FocusScopeNode();
+  AlertDialogChannel _channel;
 
   @override
   void initState() {
+    if (widget.channelId != null) {
+      _channel = AlertDialogChannel(widget.channelId);
+    }
     _coursesFuture = locator<CreateUpdateToDoScreenInteractor>().getCoursesForUser();
     _date = widget.editToDo?.plannable?.toDoDate?.toLocal() ?? widget.initialDate ?? DateTime.now();
     _titleController = TextEditingController(text: widget.editToDo?.plannable?.title);
@@ -280,24 +286,15 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
   Future<bool> _onWillPop() async {
     if (_saving) return false;
     if (!_hasUnsavedChanges()) return true;
-    return await showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text(L10n(context).unsavedChangesDialogTitle),
-            content: new Text(L10n(context).unsavedChangesDialogBody),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text(L10n(context).no.toUpperCase()),
-              ),
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: new Text(L10n(context).yes.toUpperCase()),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+
+    bool yesClicked = await _channel.showDialog(
+        L10n(context).unsavedChangesDialogTitle,
+        L10n(context).unsavedChangesDialogBody, L10n(context).yes,
+        L10n(context).no);
+    if (yesClicked) {
+      Navigator.of(context).pop(true);
+    }
+    return false;
   }
 
   Future<void> _save() async {
@@ -325,5 +322,11 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
       setState(() => _saving = false);
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(L10n(context).errorSavingToDo)));
     }
+  }
+
+  @override
+  void dispose() {
+    _channel?.dispose();
+    super.dispose();
   }
 }

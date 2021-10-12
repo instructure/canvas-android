@@ -25,8 +25,8 @@ interface Navigation {
     val currentFragment: Fragment?
 
     fun popCurrentFragment()
-    fun updateCalendarStartDay()
     fun addBookmark()
+    fun canBookmark(): Boolean
 
     fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions
 }

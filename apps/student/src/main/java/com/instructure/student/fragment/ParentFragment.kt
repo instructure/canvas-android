@@ -67,7 +67,7 @@ import com.instructure.student.util.FileUtils
 import com.instructure.student.util.LoggingUtility
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.util.onMainThread
-import com.instructure.student.view.EmptyView
+import com.instructure.pandautils.views.EmptyView
 import java.io.File
 import java.io.FileOutputStream
 
@@ -253,7 +253,9 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
     }
 
     private fun addBookmarkMenuIfAllowed(toolbar: Toolbar) {
-        if (this is Bookmarkable && this.bookmark.canBookmark && toolbar.menu.findItem(R.id.bookmark) == null) {
+        val navigation = activity as? Navigation
+        val bookmarkFeatureAllowed = navigation?.canBookmark() ?: false
+        if (bookmarkFeatureAllowed && this is Bookmarkable && this.bookmark.canBookmark && toolbar.menu.findItem(R.id.bookmark) == null) {
             toolbar.inflateMenu(R.menu.bookmark_menu)
         }
     }

@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">الإبلاغ عن مشكلة</string>
     <string name="errorReportSubject">الموضوع</string>
     <string name="errorReportDescription">الوصف</string>
-    <string name="errorReportWriteSomething">اكتب شيئًا ما...</string>
     <string name="errorReportSend">إرسال</string>
     <string name="errorReportThankyou">شكرًا للإبلاغ عن مشكلتك لفريق الدعم.  ستستلم رسالة تحقق وتحديثات عبر البريد الإلكتروني.</string>
     <string name="errorReportSeverityText">كيف يؤثر عليك ذلك؟</string>
@@ -85,7 +84,6 @@
     <string name="errorSeverityCantGetThingsDone">ليس بمقدوري أن أنجز الأمر إلا بعد أن أحصل على استجابة منكم.</string>
     <string name="errorSeverityExtremelyCritical">حالة طارئة حرجة للغاية!!</string>
     <string name="errorReportEmailAddress">عنوان البريد الإلكتروني</string>
-    <string name="errorReportEnterEmail">أدخل عنوان البريد الإلكتروني...</string>
     <string name="errorReportUnknown">غير معروف</string>
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 ميل (1.6 كم)</string>

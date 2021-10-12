@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (C)  - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="25dp"
+    android:viewportWidth="24"
+    android:viewportHeight="25">
+  <path
+      android:pathData="M21.958,10.2351C22.0722,10.5859 21.948,10.9667 21.6505,11.1834L16.4913,14.9309L18.463,20.9943C18.5764,21.3451 18.4522,21.726 18.1539,21.9426C17.8555,22.1593 17.4547,22.1576 17.1572,21.941L11.9996,18.1943L6.8421,21.941C6.6929,22.0501 6.5188,22.1043 6.3429,22.1043C6.1688,22.1043 5.9946,22.0501 5.8463,21.9426C5.5479,21.726 5.4238,21.3451 5.5371,20.9943L7.5079,14.9309L2.3496,11.1826C2.0512,10.9667 1.9279,10.5859 2.0421,10.2351C2.1554,9.885 2.4796,9.6492 2.8471,9.6492H9.2238L11.1938,3.5858C11.308,3.2358 11.6313,3 11.9996,3C12.368,3 12.6921,3.2358 12.8063,3.5858L14.7763,9.6492H21.1522C21.5205,9.6492 21.8447,9.885 21.958,10.2351ZM15.6063,14.1192L20.1397,10.8259H14.5372C14.168,10.8259 13.8447,10.5901 13.7313,10.2392L11.9996,4.9125L10.2688,10.2409C10.1555,10.5901 9.8313,10.8259 9.4621,10.8259H3.8596L8.393,14.1192C8.6904,14.3351 8.8138,14.7159 8.7013,15.0659L6.9696,20.3951L11.5021,17.1018C11.7996,16.8851 12.1996,16.8851 12.4988,17.1018L17.0305,20.3951L15.2988,15.0676C15.1863,14.7159 15.3097,14.3351 15.6063,14.1192Z"
+      android:fillColor="#2D3B45"
+      android:fillType="evenOdd"/>
+</vector>

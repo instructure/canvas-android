@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Choose media</string>
     <string name="takeVideo">Take video</string>
     <string name="noCameraOnDevice">No camera</string>
@@ -46,6 +45,7 @@
 
     <!-- Turn in Files -->
     <string name="addFile">Add file</string>
+
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Gallery</string>
     <string name="fromDevice">Device</string>
@@ -121,6 +121,7 @@
     <string name="oneOrMoreExtensionNotAllowed">One or more files has a file extension that isn\'t allowed</string>
     <string name="extensionNotAllowed">The selected file type is not allowed.</string>
     <string name="allowedExtensions">Allowed extensions:&#160;</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Please check your data connection and try again. </string>
     <string name="noApps">Your device doesn\'t have any applications installed that can handle this file.</string>
@@ -184,9 +185,9 @@
     <string name="noModulesSubtext">It looks like there aren\'t any units created yet.</string>
     <string name="noPages">No pages</string>
     <string name="noPagesSubtext">It looks like no pages have been created yet.</string>
-
     <string name="modulesLockedSubtext">Units have been disabled for this module.</string>
     <string name="modulesLocked">Something Went Wrong</string>
+
     <!--General-->
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -228,7 +229,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas teacher</string>
     <string name="utils_canvasParent">Canvas parent</string>
-    <string name="utils_polls">Canvas polls</string>
     <string name="utils_speedgrader">Speed grader</string>
 
     <!-- Rating Dialog -->
@@ -328,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Unlock date cannot be after due date</string>
     <string name="utils_lockBeforeDueDateError">Lock date cannot be before due date</string>
     <string name="utils_lockAfterUnlockError">Lock date cannot be before the unlock date</string>
@@ -385,10 +386,10 @@
     <string name="notificationPrimaryInboxTitle">Canvas notification</string>
     <string name="notificationChannelNamePrimary">General Canvas notifications</string>
     <string name="notificationChannelDescriptionPrimary">Further configuration of notifications can be done within the Canvas notification preferences section.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d new notifications</item>
     </plurals>
+
     <string name="copyLinkAddress">Copy link address</string>
     <string name="copyLink">Copy link</string>
     <string name="linkCopied">Link copied</string>
@@ -427,5 +428,31 @@
     <string name="noItemsMatchingQuery">No items match \"%s\"</string>
 
     <string name="selected">Selected</string>
+
+    <string name="notificationChannelNameInAppUpdate">App update notifications</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas notifications for in-app updates.</string>
+    <string name="appUpdateReadyTitle">App ready to update</string>
+    <string name="appUpdateReadyDescription">Restart the app to install the new version</string>
+    <string name="nothing_planned_yet">Nothing planned yet</string>
+    <string name="schedule_tag_graded">Graded</string>
+    <string name="schedule_tag_replies">Replies</string>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">Late</string>
+    <string name="schedule_tag_redo">Re-do</string>
+    <string name="schedule_tag_excused">Excused</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="schedule_calendar_event_due_text">At %s</string>
+    <string name="schedule_todo_due_text">To-do: %s</string>
+    <string name="schedule_due_text">Due: %s</string>
+    <string name="show_missing_items_title">Show %d missing items</string>
+    <string name="hide_missing_items_title">Hide %d missing items</string>
+    <string name="schedule_error_message">Unable to fetch your schedule</string>
+    <string name="schedule_todo_title">To-do</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s pts</item>
+    </plurals>
 
 </resources>

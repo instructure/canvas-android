@@ -17,27 +17,19 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withChild
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withParent
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvasapi2.models.Assignment
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.WaitForViewWithText
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -46,12 +38,12 @@ import org.hamcrest.Matchers.containsString
 class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
 
     private val assignmentListToolbar by OnViewWithId(R.id.toolbar)
+    private val gradingPeriodHeader by WaitForViewWithId(R.id.termSpinnerLayout)
+    private val sortByButton by OnViewWithId(R.id.sortByButton)
+    private val sortByTextView by OnViewWithId(R.id.sortByTextView)
 
     // Only displayed when assignment list is empty
     private val emptyView by WaitForViewWithId(R.id.emptyView, autoAssert = false)
-
-    // Only displayed when there are grading periods
-    private val gradingPeriodHeader by WaitForViewWithId(R.id.termSpinnerLayout, autoAssert = false)
 
     // Only displayed when there are no assignments
     private val emptyText by WaitForViewWithText(R.string.noItemsToDisplayShort, autoAssert = false)
@@ -83,7 +75,7 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
 
     private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedGrade: String? = null) {
         waitForMatcherWithRefreshes(withText(assignmentName))
-        waitForViewWithText(assignmentName).assertDisplayed()
+        waitForView(allOf(withText(assignmentName), isDescendantOfA(withId(R.id.assignmentListPage)))).assertDisplayed()
 
         // Check that either the assignment due date is present, or "No Due Date" is displayed
         if(assignmentDueAt != null) {
@@ -139,5 +131,22 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
 
     fun assertHasGradingPeriods() {
         gradingPeriodHeader.assertDisplayed()
+    }
+
+    fun assertSortByButtonShowsSortByTime() {
+        sortByTextView.check(matches(withText(R.string.sortByTime)))
+    }
+
+    fun assertSortByButtonShowsSortByType() {
+        sortByTextView.check(matches(withText(R.string.sortByType)))
+    }
+
+    fun assertFindsUndatedAssignmentLabel() {
+        onView(withText(R.string.undatedAssignments)).assertVisible()
+    }
+
+    fun selectSortByType() {
+        sortByButton.click()
+        onView(withText(R.string.sortByDialogTypeOption)).click()
     }
 }

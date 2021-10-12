@@ -77,12 +77,12 @@ class RequestInterceptor : Interceptor {
 
         // Masquerade if necessary
         if (ApiPrefs.isMasquerading) {
-            val url = request.url().newBuilder().addQueryParameter("as_user_id", java.lang.Long.toString(ApiPrefs.masqueradeId)).build()
+            val url = request.url.newBuilder().addQueryParameter("as_user_id", java.lang.Long.toString(ApiPrefs.masqueradeId)).build()
             request = request.newBuilder().url(url).build()
         }
 
         if (params.usePerPageQueryParam) {
-            val url = request.url().newBuilder().addQueryParameter("per_page", Integer.toString(ApiPrefs.perPageCount)).build()
+            val url = request.url.newBuilder().addQueryParameter("per_page", Integer.toString(ApiPrefs.perPageCount)).build()
             request = request.newBuilder().url(url).build()
         }
 

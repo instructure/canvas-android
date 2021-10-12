@@ -41,8 +41,14 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available")
         val firstPageCourses: Call<List<Course>>
 
+        @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=current_and_concluded")
+        val firstPageCoursesWithConcluded: Call<List<Course>>
+
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users")
         val firstPageCoursesWithSyllabus: Call<List<Course>>
+
+        @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=license&include[]=is_public&include[]=permissions&enrollment_state=active")
+        val firstPageCoursesWithSyllabusWithActiveEnrollment: Call<List<Course>>
 
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&state[]=unpublished")
         val firstPageCoursesTeacher: Call<List<Course>>
@@ -101,6 +107,9 @@ object CourseAPI {
 
         @GET("courses/{courseId}/rubrics/{rubricId}")
         fun getRubricSettings(@Path("courseId") courseId: Long, @Path("rubricId") rubricId: Long): Call<RubricSettings>
+
+        @GET("courses?include[]=total_scores&include[]=current_grading_period_scores&include[]=grading_periods&include[]=course_image&enrollment_state=active")
+        fun getFirstPageCoursesWithGrades(): Call<List<Course>>
     }
 
     @Throws(IOException::class)
@@ -139,14 +148,6 @@ object CourseAPI {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).next(nextUrl)).enqueue(callback)
     }
 
-    fun getCourses(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
-        if (StatusCallback.isFirstPage(callback.linkHeaders)) {
-            callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCourses).enqueue(callback)
-        } else if (callback.linkHeaders != null && StatusCallback.moreCallsExist(callback.linkHeaders)) {
-            callback.addCall(adapter.build(CoursesInterface::class.java, params).next(callback.linkHeaders!!.nextUrl!!)).enqueue(callback)
-        }
-    }
-
     fun getDashboardCourses(adapter: RestBuilder, callback: StatusCallback<List<DashboardCard>>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).dashboardCourses).enqueue(callback)
     }
@@ -155,8 +156,16 @@ object CourseAPI {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCourses).enqueue(callback)
     }
 
+    fun getFirstPageCoursesWithConcluded(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCoursesWithConcluded).enqueue(callback)
+    }
+
     fun getFirstPageCoursesWithSyllabus(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCoursesWithSyllabus).enqueue(callback)
+    }
+
+    fun getFirstPageCoursesWithSyllabusWithActiveEnrollment(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCoursesWithSyllabusWithActiveEnrollment).enqueue(callback)
     }
 
     fun getFirstPageCoursesTeacher(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
@@ -241,5 +250,9 @@ object CourseAPI {
 
     fun getRubricSettings(courseId: Long, rubricId: Long, adapter: RestBuilder, callback: StatusCallback<RubricSettings>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).getRubricSettings(courseId, rubricId)).enqueue(callback)
+    }
+
+    fun getFirstPageCoursesWithGrades(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).getFirstPageCoursesWithGrades()).enqueue(callback)
     }
 }

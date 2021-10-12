@@ -885,4 +885,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">Zouti LTI sa a paka chaje pou kounye a.</string>
     <string name="downloading">Telechajman...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Pwogram nan aktyalize avèk siksè.</string>
+    <string name="errorSavingSyllabus">Gen yon erè ki fèt pandan y ap eseye anrejistre pwogram nan. Eseye ankò.</string>
+    <string name="editSyllabusTitle">Chanje Pwogram</string>
+    <string name="editSyllabusContent">Kontni</string>
+    <string name="editSyllabusDetails">Detay</string>
+    <string name="editSyllabusShowCourseSummary">Afiche rezime kou</string>
+    <string name="editSyllabusContentAccessibilityLabel">Kontni pwogram</string>
+
+    <string name="no_grade">Okenn nòt</string>
+    <string name="excuse">Eskiz</string>
+    <string name="speed_grader_overgraded_by">Evalyasyon depase pa %s</string>
 </resources>

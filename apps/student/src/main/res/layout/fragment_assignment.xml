@@ -50,7 +50,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/tabLayout" />
 
-    <com.instructure.student.view.EmptyView
+    <com.instructure.pandautils.views.EmptyView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/emptyView"

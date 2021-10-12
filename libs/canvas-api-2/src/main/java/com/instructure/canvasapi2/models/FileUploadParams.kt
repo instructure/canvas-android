@@ -19,7 +19,9 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 @Parcelize
 data class FileUploadParams(
@@ -31,5 +33,5 @@ data class FileUploadParams(
         @SerializedName("attachments")
         var list: List<FileUploadParams>? = null
 ) : Parcelable {
-    fun getPlainTextUploadParams() = uploadParams.mapValues { RequestBody.create(MediaType.parse("text/plain"), it.value) }
+    fun getPlainTextUploadParams() = uploadParams.mapValues { it.value.toRequestBody("text/plain".toMediaTypeOrNull()) }
 }

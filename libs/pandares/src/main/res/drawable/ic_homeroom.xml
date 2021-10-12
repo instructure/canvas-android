@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C)  - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="25dp"
+    android:viewportWidth="24"
+    android:viewportHeight="25">
+  <path
+      android:pathData="M19.7143,21.9287H4.2858L16.8533,7.6157L19.7143,10.3573V21.9287Z"
+      android:strokeAlpha="0.1"
+      android:fillColor="#008EE2"
+      android:fillAlpha="0.1"/>
+  <path
+      android:pathData="M10.8203,10.8305C10.8203,10.1706 11.3489,9.635 12.0003,9.635C12.6516,9.635 13.1803,10.1706 13.1803,10.8305C13.1803,11.4904 12.6516,12.026 12.0003,12.026C11.3489,12.026 10.8203,11.4904 10.8203,10.8305ZM14.3603,10.8305C14.3603,9.5118 13.3018,8.4395 12.0003,8.4395C10.6987,8.4395 9.6403,9.5118 9.6403,10.8305C9.6403,12.1492 10.6987,13.2216 12.0003,13.2216C13.3018,13.2216 14.3603,12.1492 14.3603,10.8305Z"
+      android:strokeAlpha="0.6"
+      android:fillColor="#008EE2"
+      android:fillType="evenOdd"
+      android:fillAlpha="0.6"/>
+  <path
+      android:pathData="M12.0006,2.2144L2.1428,12.2018L2.9783,13.0458L12.0006,3.9048L21.0228,13.0458L21.8571,12.2018L12.0006,2.2144ZM18.4904,13.2216V21.5903H14.9493V15.6126H9.0504V21.5903H5.5104V13.2216H4.3292V22.7858H9.0504H14.9493H19.6704V13.2216H18.4904ZM10.2304,21.5914V16.8081H13.7704V21.5914H10.2304Z"
+      android:fillColor="#008EE2"
+      android:fillType="evenOdd"/>
+</vector>

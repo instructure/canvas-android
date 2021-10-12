@@ -23,12 +23,13 @@ import android.webkit.CookieManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs.isMasquerading
 import com.instructure.loginapi.login.activities.BaseLoginSignInActivity
-import com.instructure.pandautils.services.PushNotificationRegistrationService.Companion.scheduleJob
-import com.instructure.teacher.BuildConfig
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SignInActivity : BaseLoginSignInActivity() {
     override fun launchApplicationMainActivityIntent(): Intent {
-        scheduleJob(this, isMasquerading)
+        PushNotificationRegistrationWorker.scheduleJob(this, isMasquerading)
         CookieManager.getInstance().flush()
         return SplashActivity.createIntent(this, null)
     }
@@ -37,6 +38,13 @@ class SignInActivity : BaseLoginSignInActivity() {
 
     override fun refreshWidgets() {
         //No Widgets in Teacher
+    }
+
+    override fun handleLaunchApplicationMainActivityIntent() {
+        val intent = launchApplicationMainActivityIntent()
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     companion object {

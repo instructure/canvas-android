@@ -941,4 +941,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">تعذر تحميل أداة LTI في الوقت الحالي.</string>
     <string name="downloading">جارٍ التنزيل...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">تم تحديث المخطط الدراسي بنجاح.</string>
+    <string name="errorSavingSyllabus">حدث خطأ أثناء محاولة حفظ المخطط الدراسي. حاول مرة أخرى.</string>
+    <string name="editSyllabusTitle">تحرير المنهج الدراسي</string>
+    <string name="editSyllabusContent">المحتوى</string>
+    <string name="editSyllabusDetails">التفاصيل</string>
+    <string name="editSyllabusShowCourseSummary">إظهار موجز المساق</string>
+    <string name="editSyllabusContentAccessibilityLabel">محتوى المخطط الدراسي</string>
+
+    <string name="no_grade">لا يوجد تقدير</string>
+    <string name="excuse">إعفاء</string>
+    <string name="speed_grader_overgraded_by">تقدير مبالغ فيه بواسطة %s</string>
 </resources>

@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Tilkynna vandamál</string>
     <string name="errorReportSubject">Efni</string>
     <string name="errorReportDescription">Lýsing</string>
-    <string name="errorReportWriteSomething">Skrifaðu eitthvað&#8230;</string>
     <string name="errorReportSend">Senda</string>
     <string name="errorReportThankyou">Takk fyrir að láta þjónustudeild okkar vita af vandamálinu.  Þú færð staðfestingu og uppfærslur með tölvupósti.</string>
     <string name="errorReportSeverityText">Hvaða áhrif hefur þetta á þig?</string>
@@ -86,7 +85,6 @@
     <string name="errorSeverityExtremelyCritical">GÍFURLEGT NEYÐARÁSTAND!!</string>
 
     <string name="errorReportEmailAddress">Netfang</string>
-    <string name="errorReportEnterEmail">Settu inn netfangið þitt&#8230;</string>
     <string name="errorReportUnknown">Óþekkt</string>
 
     <!-- Distance Strings -->

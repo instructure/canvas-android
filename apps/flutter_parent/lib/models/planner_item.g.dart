@@ -24,9 +24,6 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
       'plannable',
       serializers.serialize(object.plannable,
           specifiedType: const FullType(Plannable)),
-      'plannable_date',
-      serializers.serialize(object.plannableDate,
-          specifiedType: const FullType(DateTime)),
     ];
     result.add('course_id');
     if (object.courseId == null) {
@@ -48,6 +45,13 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
     } else {
       result.add(serializers.serialize(object.contextName,
           specifiedType: const FullType(String)));
+    }
+    result.add('plannable_date');
+    if (object.plannableDate == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.plannableDate,
+          specifiedType: const FullType(DateTime)));
     }
     result.add('submissions');
     if (object.submissionStatusRaw == null) {
@@ -168,9 +172,6 @@ class _$PlannerItem extends PlannerItem {
     }
     if (plannable == null) {
       throw new BuiltValueNullFieldError('PlannerItem', 'plannable');
-    }
-    if (plannableDate == null) {
-      throw new BuiltValueNullFieldError('PlannerItem', 'plannableDate');
     }
   }
 

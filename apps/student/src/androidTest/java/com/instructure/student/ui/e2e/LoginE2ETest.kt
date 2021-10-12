@@ -30,8 +30,10 @@ import com.instructure.dataseeding.util.CanvasRestAdapter
 import com.instructure.panda_annotations.*
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class LoginE2ETest : StudentTest() {
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

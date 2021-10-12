@@ -15,7 +15,7 @@ enum class RemoteConfigParam(val rc_name: String, val safeValueAsString: String)
     TEST_FLOAT("test_float", "0f"),
     TEST_LONG("test_long", "42"),
     TEST_STRING("test_string", "hey there"),
-    SHOW_TEACHER_SYLLABUS("show_teacher_syllabus", "false")
+    K5_DESIGN("k5", "false")
 }
 
 /**

@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
-import com.instructure.canvasapi2.utils.weave.awaitApi
 
 object UserManager {
 
@@ -59,6 +58,8 @@ object UserManager {
 
         UserAPI.getSelf(adapter, params, callback)
     }
+
+    fun getSelfAsync(forceNetwork: Boolean) = apiAsync<User> { getSelf(forceNetwork, it) }
 
     fun getSelfSettings(forceNetwork: Boolean) = apiAsync<UserSettings> { callback ->
         UserAPI.getSelfSettings(
@@ -263,6 +264,33 @@ object UserManager {
     private fun getSystemAcceptLanguage(): String {
         val systemLocale = ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0]
         return "${systemLocale.toLanguageTag()},${systemLocale.language}"
+    }
+
+    fun getAllMissingSubmissionsAsync(forceNetwork: Boolean) = apiAsync<List<Assignment>> { getAllMissingSubmissions(forceNetwork, it) }
+
+    private fun getAllMissingSubmissions(forceNetwork: Boolean, callback: StatusCallback<List<Assignment>>) {
+        val adapter = RestBuilder(callback)
+        val depaginatedCallback = object : ExhaustiveListCallback<Assignment>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Assignment>>, nextUrl: String, isCached: Boolean) {
+                UserAPI.getNextPageMissingSubmissions(nextUrl, adapter, forceNetwork, callback)
+            }
+        }
+        adapter.statusCallback = depaginatedCallback
+        UserAPI.getMissingSubmissions(forceNetwork, adapter, depaginatedCallback)
+    }
+
+    fun getTeacherListForCourseAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<List<User>> { getTeacherListForCourse(courseId, it, forceNetwork) }
+
+    private fun getTeacherListForCourse(courseId: Long, callback: StatusCallback<List<User>>, forceNetwork: Boolean) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        val adapter = RestBuilder(callback)
+        val depaginatedCallback = object : ExhaustiveListCallback<User>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<User>>, nextUrl: String, isCached: Boolean) {
+                UserAPI.getTeacherListForCourse(adapter, params, courseId, callback)
+            }
+        }
+        adapter.statusCallback = depaginatedCallback
+        UserAPI.getTeacherListForCourse(adapter, params, courseId, depaginatedCallback)
     }
 
 }

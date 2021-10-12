@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C)  - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.instructure.pandautils.features.elementary.homeroom.HomeroomViewModel" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/homeroomPage">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/homeroomSwipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:onRefreshListener="@{() -> viewModel.refresh()}"
+            app:refreshState="@{viewModel.state}">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/homeroomContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingTop="16dp"
+                    android:visibility="@{viewModel.data.empty ? View.GONE : View.VISIBLE}">
+
+                    <TextView
+                        android:id="@+id/welcomeText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.data.greetingMessage}"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:textColor="@color/defaultTextDark"
+                        android:textSize="34sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp"
+                        tools:text="Welcome, Student" />
+
+                    <LinearLayout
+                        android:id="@+id/announcementsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:itemViewModels="@{viewModel.data.announcements}"
+                        app:onItemsAdded="@{() -> viewModel.onAnnouncementViewsReady()}"
+                        app:shouldUpdate="@{viewModel.shouldUpdateAnnouncements}"/>
+
+                    <TextView
+                        android:id="@+id/mySubjectsTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/homeroomMySubjects"
+                        android:textColor="@color/defaultTextDark"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/noSubjectsText"
+                        style="@style/TextFont.Regular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/defaultTextGray"
+                        android:textSize="@dimen/message_text_size"
+                        android:text="@string/homeroomNoSubjects"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:visibility="@{viewModel.data.courseCards.empty ? View.VISIBLE : View.GONE}"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/coursesRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingStart="@dimen/homeroomCardSpacing"
+                        android:paddingEnd="@dimen/homeroomCardSpacing"
+                        android:paddingBottom="@dimen/homeroomCardSpacing"
+                        android:visibility="@{viewModel.data.courseCards.empty ? View.GONE : View.VISIBLE}"
+                        app:recyclerViewItemViewModels="@{viewModel.data.courseCards}"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="2"/>
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:emptyViewState="@{viewModel.state}" />
+    </FrameLayout>
+
+</layout>

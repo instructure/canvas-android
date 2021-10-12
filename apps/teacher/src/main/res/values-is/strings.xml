@@ -886,4 +886,16 @@
     <string name="gauge">Mælir</string>
     <string name="ltiLaunchFailure">Ekki var hægt að hlaða inn LTI verkfærinu í augnablikinu.</string>
     <string name="downloading">Sæki&#8230;</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Kennsluáætlun uppfærð.</string>
+    <string name="errorSavingSyllabus">Villa kom upp við að vista kennsluáætlunina. Reyndu aftur.</string>
+    <string name="editSyllabusTitle">Breyta kennsluáætlun</string>
+    <string name="editSyllabusContent">Efni</string>
+    <string name="editSyllabusDetails">Upplýsingar</string>
+    <string name="editSyllabusShowCourseSummary">Sýna samantekt námskeiðs</string>
+    <string name="editSyllabusContentAccessibilityLabel">Innihald kennsluáætlunar</string>
+
+    <string name="no_grade">Engin einkunn</string>
+    <string name="excuse">Gefa undanþágu</string>
+    <string name="speed_grader_overgraded_by">Of há einkunn gefin um %s</string>
 </resources>

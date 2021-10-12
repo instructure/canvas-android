@@ -47,4 +47,8 @@
     <dimen name="file_upload_panda_top">56dp</dimen>
     <dimen name="file_upload_panda_bottom">24dp</dimen>
 
+    <dimen name="homeroomCardSpacing">8dp</dimen>
+    <dimen name="homeroomCardMinRequiredSpace">320dp</dimen>
+
+    <dimen name="ltiAppsBottomMargin">28dp</dimen>
 </resources>

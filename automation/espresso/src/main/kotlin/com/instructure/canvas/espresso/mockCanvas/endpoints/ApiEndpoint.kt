@@ -20,10 +20,7 @@ import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.QuizSubmissionQuestion
-import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.*
 import okio.Buffer
 
 /**
@@ -68,7 +65,7 @@ object ApiEndpoint : Endpoint(
                                     // More or less punting on this for now.  The unauthorized response doesn't seem
                                     // to hurt us.
                                     val buffer = Buffer()
-                                    request.body()!!.writeTo(buffer)
+                                    request.body!!.writeTo(buffer)
                                     val body = buffer.readUtf8()
                                     Log.d("submissionQuestions", "submission question post body: $body")
                                     //val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
@@ -84,10 +81,10 @@ object ApiEndpoint : Endpoint(
             Segment("") to Endpoint( // Our call has an extra "/" at the end, thus the blank segment
                 response = {
                     GET {
-                        val contextCodes = request.url().queryParameter("context_codes[]")
+                        val contextCodes = request.url.queryParameter("context_codes[]")
                         // TODO: Assumes that the context prefix is "course".  We may need to support other possibilities.
                         val courseId = contextCodes?.substringAfter("_")?.toLong()
-                        val eventType = request.url().queryParameter("type") ?: "event"
+                        val eventType = request.url.queryParameter("type") ?: "event"
                         if(courseId != null) {
                             val events = when(eventType) {
                                 "assignment" -> data
@@ -107,6 +104,42 @@ object ApiEndpoint : Endpoint(
                     }
                 }
             )
+    ),
+    Segment("announcements") to Endpoint(
+        response = {
+            GET {
+                val contextCodes = request.url.queryParameter("context_codes[]")
+                val courseId = contextCodes?.substringAfter("_")?.toLong()
+
+                val firstAnnouncement = data.courseDiscussionTopicHeaders[courseId]
+                    ?.filter { it.announcement }
+                    ?.firstOrNull()
+
+                val result = firstAnnouncement?.let { listOf(it) } ?: emptyList()
+                request.successResponse(result)
+            }
+        }
+    ),
+    Segment("external_tools") to Endpoint(
+        Segment("visible_course_nav_tools") to Endpoint {
+            GET {
+                val contextCodes = request.url.queryParameterValues("context_codes[]")
+                val courseIds = contextCodes.map { it?.substringAfter("_")?.toLong() }
+
+                val ltiToolsForCourse = data.ltiTools.filter {
+                    courseIds.contains(it.contextId ?: 0)
+                }
+                request.successResponse(ltiToolsForCourse)
+            }
+        }
+    ),
+    Segment("planner") to Endpoint(
+        Segment("overrides") to Endpoint {
+            POST {
+                val plannerOverride = getJsonFromRequestBody<PlannerOverride>(request.body)
+                request.successResponse(plannerOverride!!)
+            }
+        }
     )
 )
 
@@ -168,7 +201,7 @@ object GroupsEndpoint : Endpoint (
                         configure = {
                             GET {
                                 // TODO: Merge this logic with course discussion_topics logic
-                                val announcementsOnly = request.url().queryParameter("only_announcements")?.equals("1") ?: false
+                                val announcementsOnly = request.url.queryParameter("only_announcements")?.equals("1") ?: false
                                 var topics = data.groupDiscussionTopicHeaders[pathVars.groupId]
                                 if(topics != null) {
                                     if(announcementsOnly) {

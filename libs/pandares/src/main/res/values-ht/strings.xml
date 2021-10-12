@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Soumisyon Echwe</string>
     <string name="submissionStatusFailedSubtitle">Tape pou afiche detay</string>
     <string name="submissionAndRubric">Soumisyon &amp; Ribrik</string>
+    <string name="commentsAndRubric">Kòmantè &amp; Ribrik</string>
     <string name="errorLoadingAssignment">Te gen yon pwobl pouchaje devwa sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
     <string name="submitted">Soumèt</string>
     <string name="notSubmitted">Pa Soumèt</string>
@@ -55,10 +55,8 @@
     <string name="attemptsUsedLabel">Tantativ Itilize</string>
     <string name="noAttemptsLeft">Pa Rete Tantativ</string>
     <string name="resubmitAssignment">Resoumèt Sesyon</string>
-
     <string name="launchingExternalTool">Lansman Zouti Ekstèn</string>
     <string name="launchExternalTool">Lanse Zouti Eksteryè</string>
-
     <string name="preview">Apèsi</string>
     <string name="submissionUploadFailedMessage">Gen yonn oswa plizyè fichye pa rive transfere. Verifye koneksyon entènèt ou a epi eseye re voye yo ankò</string>
     <string name="submissionUploadByteProgress">%1$s de %2$s</string>
@@ -69,18 +67,20 @@
     <string name="submissionDeleted">Soumisyon Efase</string>
     <string name="missingSubmissionLabel">Manke</string>
     <string name="gradedSubmissionLabel">Klase</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Okenn apèsi disponib pou URL ki itilize \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Tanpri antre yon URL ki valid</string>
     <string name="enterAUrlHereForYourSubmission">Antre yon URL la a pou soumisyon an</string>
     <string name="addFileFabContentDesc">Afiche Opsyon Ajoute Fichye</string>
     <string name="recordAudio">Anrejistre Son</string>
-
     <string name="recordVideo">Anrejistre Videyo</string>
+    <string name="a11y_textSubmissionEditor">Editè Soumisyon Tèks</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Ekri&#8230;</string>
     <string name="textSubmissionFailureMessage">Gen yon bagay ki pase mal pandan soumisyon ap transfere. Soumèt ankò.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Soumisyon</string>
     <string name="submissionVersions">Vèsyon soumisyon</string>
@@ -94,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Devwa w la bloke pa modil \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Devwa w la bloke pa yon egzijans modil </string>
     <string name="submissionDetailsAssignmentLocked">Sesyon Bloke</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Okenn Soumisyon pa Otorize</string>
     <string name="webPreview">Apèsi URL ki antre a</string>
     <string name="websiteUrl">URL sit Web</string>
     <string name="noneContentMessage">Devwa sa a pa otorize soumisyon an liy.</string>
@@ -101,6 +102,8 @@
     <string name="noOnlineSubmissions">Pa Gen Soumisyon an Liy</string>
     <string name="speedGraderExternalToolMessage">Sesyon sa a relye a yon zouti ekstèn pou soumisyon.</string>
     <string name="openTool">Ouvri Zouti</string>
+    <string name="a11y_submissionText">Tèks soumisyon</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Sou %s pwen</string>
     <string name="outOfPointsAbbreviatedFormatted">Sou %s pts</string>
@@ -112,10 +115,12 @@
     <string name="scoreStatisticsLow">Ba: %s</string>
     <string name="scoreStatisticsMean">Mwayen: %s</string>
     <string name="scoreStatisticsHigh">Wo: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Nòt pèsonalize</string>
     <string name="rubricEmptyMessage">Pa gen ribrik pou devwa sa a</string>
     <string name="rubricViewLongDescription">Afiche tout deskripsyon</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">Transfè fichye %1$d de %2$d</string>
     <string name="assignmentSubmissionCommentUpload">Transfè Kòmantè pou %s</string>
@@ -124,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Klike sou yonn nan opsyon pi ba yo pou ka atache fichye nan kòmantè w</string>
     <string name="emptySubmissionCommentsSubtext">Ou gen kesyon ki gen rapò a devwa ou a?\nEkri enstriktè w la.</string>
     <string name="submissionCommentErrorMessage">Mesaj sa a pa t ka ale. Tape pou eseye ankò.</string>
+    <string name="mediaUpload">Transfè Medya</string>
     <string name="mediaUploadAudio">Transfè Medya - Odyo</string>
     <string name="mediaUploadVideo">Transfè Medya - Videyo</string>
     <string name="commentSubmissionTypeText">Soumisyon Tèks</string>
@@ -134,6 +140,7 @@
     <string name="commentSubmissionTypeMediaFile">Fichye Miltimedya</string>
     <string name="commentSubmissionTypeAudio">Odyo</string>
     <string name="commentSubmissionTypeVideo">Videyo</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Vèsyon:</string>
 
@@ -183,6 +190,8 @@
     <string name="submissionDetailsDueAt">Delè %1$s a %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Bloke</string>
     <string name="assignments">Sesyon</string>
@@ -190,14 +199,28 @@
     <string name="noAssignmentsInGroup">Pa gen Sesyon nan gwoup sa a</string>
     <string name="excusedAssignment">Yo egzante sesyon sa a ni yo pa p konsidere li nan kalkil total la.</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Klase pa</string>
+    <string name="sortByDialogTimeOption">Tan</string>
+    <string name="sortByDialogTypeOption">Tip</string>
+    <string name="sortByTime">Triye pa Lè</string>
+    <string name="sortByType">Triye pa Tip</string>
+    <string name="sortByDialogCancel">Anile</string>
+    <string name="assignmentsListAllGradingPeriods">Tout</string>
+    <string name="a11y_sortByTimeButton">Bouton pou triye devwa yo, triye pa lè</string>
+    <string name="a11y_sortByTypeButton">Bouton pou triye devwa yo, triye pa tip</string>
+    <string name="a11y_assignmentsSortedByTime">Devwa triye pa lè</string>
+    <string name="a11y_assignmentsSortedByType">Devwa triye pa tip</string>
+
     <!-- Assignment editing -->
     <string name="points">Pwen\u0020</string>
     <string name="save">Anrejistre</string>
     <string name="cancel">Anile</string>
+
     <!-- Discussions -->
     <string name="forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
-
     <string name="fileCurrentlyLocked">Fichye sa a bloke pou kounye a</string>
+    <string name="a11y_discussionReplyEditor">Editè Repons Diskisyon</string>
+
     <!-- Events -->
     <string name="Starts">Kòmanse</string>
     <string name="Ends">Fini</string>
@@ -216,8 +239,6 @@
     <string name="whatIfDialogText">Kisa-Si Nòt</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s sou %2$s pwen, %3$s</string>
-
-
     <string name="inbox">Bwat resepsyon</string>
     <string name="unread">Poko li</string>
     <string name="archived">Achive</string>
@@ -249,6 +270,7 @@
     <string name="createFolder">Kreye Dosye</string>
     <string name="createAFile">Kreye yon Fichye</string>
     <string name="createFileFolderFabContentDesc">Afiche Bouton Kreye Fichye epi Kreye Dosye</string>
+    <string name="hideCreateFileFolderFabContentDesc">Kache Bouton Kreye Fichye ak Kreye Dosye a</string>
     <string name="folderCreationError">Gen yon erè ki fèt pandan kreyasyon dosye a.</string>
     <string name="rename">Chanje non</string>
     <string name="renameFile">Chanje non fichye</string>
@@ -382,8 +404,8 @@
     <string name="students">Elèv</string>
     <string name="observers">Obsèvatè</string>
     <string name="syllabusMissing">Pa gen yon pwogram ki ajoute.</string>
-
     <string name="syllabusEventsError">Te gen yon erè pandan chajman modil ou yo.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Chwazi Destinatè...</string>
     <string name="messageHasNoRecipients">Mesaj sa a pa gen destinatè.</string>
@@ -409,6 +431,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Efase</string>
+
     <string name="loadingCanvas">Chajman Kontni Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -425,9 +448,11 @@
     <string name="stopMasquerading">Sispann Pase Pou Itilizatè</string>
     <string name="userId">ID Itilizatè</string>
     <string name="masqueradeFail">Te gen erè pandan w ap eseye pase pou itilizatè</string>
+
     <string name="emptyId">ID a pa kapab vid</string>
 
     <string name="goToQuiz">Ale nan Quiz</string>
+
     <string name="quizzes">Quiz</string>
 
     <string name="lastDiscussionPost">Dènye piblikasyon</string>
@@ -486,8 +511,8 @@
     <string name="goToModules">Ale nan Modil</string>
     <string name="markDone">Make tankou li fini</string>
     <string name="moduleItemNotFound">Eleman Modil Entwouvab</string>
-
     <string name="errorLoadingModules">Te gen yon erè pandan chajman modil ou yo.</string>
+
     <string name="help">Èd</string>
     <string name="instructor_question">Kesyon Enstriktè</string>
     <string name="link">Lyen</string>
@@ -503,11 +528,11 @@
     <string name="textEntry">Antre Tèks</string>
     <string name="onlineURL">URL an liy</string>
     <string name="oneFileOnly">Soumisyon sa a aksepte transfè yon fichye sèlman</string>
-
-
     <string name="websiteEntry">Ajoute Antre Sit</string>
     <string name="mediaRecordingEntry">Anrejistreman Medya</string>
     <string name="submit">Soumèt</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Pwogrè non Anrejistre</string>
     <string name="informationLost">Enfòmasyon ki pa sovgade ap pèdi. Èske w vle kontinye?</string>
@@ -522,6 +547,7 @@
     <!-- Submission Details Strings -->
     <string name="next">Pwochen</string>
     <string name="addComment">Ajoute yon kòmantè&#8230;</string>
+
     <string name="home">Akèy</string>
     <string name="Notifications">Notifikasyon</string>
 
@@ -551,6 +577,8 @@
     <string name="clickToViewSubmission">Yo te pran yon apèsi sit entènèt la lè w aktive li a. Tape epi kenbe imaj pi ba a pou ouvri oswa telechaje imaj la an antye.</string>
     <string name="urlSubmissionNoPreview">Soumisyon sa a se te yon URL a yon paj ekstèn. Sonje ke sa ka rive ke paj sa a chanje aprè soumisyon orijinal la.</string>
     <string name="contentDescriptionPreviewImage">Yon apèsi url ki te soumèt la</string>
+
+
     <string name="isNotSupportedFeature">%1$s pa sipòte.</string>
     <string name="isNotSupported">Lyen an pa sipòte.</string>
     <string name="openInBrowser">Ouvri nan Navigatè</string>
@@ -566,15 +594,19 @@
     <string name="panda_fact_string">Panda Fact:&#160;</string>
     <string name="remove">Elimine</string>
     <string name="founders">Fondatè</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Politik Konfidansyalite</string>
     <string name="termsOfUse">Kondisyon Itilizasyon</string>
     <string name="canvasOnGithub">Canvas sou GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Sesyon Quiz</string>
     <string name="practiceQuizzes">Quiz Pratik</string>
     <string name="gradedSurveys">Ankèt Klase</string>
     <string name="surveys">Ankèt</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Pou Fè</string>
     <string name="gradesWidgetTitle">Nòt</string>
@@ -620,12 +652,12 @@
     <string name="profileSettings">Paramèt Pwofi</string>
     <string name="accountPreferences">Preferans Kont</string>
     <string name="pinAndFingerprint">PIN ak Anprent</string>
-
     <string name="pairWithObserver">Asosye avèk Obsèvatè</string>
     <string name="pairWithObserverDetails">Fè paran w eskane Kòd QR sa a ak app Canvas Parent lan pou li kapab asosye ak ou. Kòd sa a ap ekspire nan sèt jou oswa aprè yon itilizasyon.</string>
     <string name="pairingCodeLabel">Kòd Kouplaj:\u0020</string>
     <string name="pairingCodeErrorTitle">Erè Kòd Kouplaj</string>
     <string name="pairingCodeErrorDescription">Enposib pou rekipere kòd kouplaj la. Fonksyon sa a se sèlman pou elèv.</string>
+
     <string name="launchSpeedgrader">Ouvri Speedgrader</string>
 
     <string name="search_todo">lis tout sa pou fè</string>
@@ -696,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-
     <string name="content_description_speed_grader_slider">Ba klasman</string>
+
     <string name="createNewCalendarEvent">Kreye Nouvo Aktivite</string>
     <string name="enableFunMode">Fèmen Panda a</string>
 
@@ -784,6 +816,7 @@
     <string name="notification_desc_recording_ready">Resevwa avètisman lè anrejistreman yon konferans pare.</string>
 
     <string name="unlimited">Ilimite</string>
+
     <string name="question">Kesyon</string>
     <plurals name="question_count">
         <item quantity="one">%d kesyon</item>
@@ -794,16 +827,17 @@
         <item quantity="one">%s pwen</item>
         <item quantity="other">%s pwen</item>
     </plurals>
+
     <string name="timeLimit">Limit Tan</string>
     <string name="newPushNotifications">%1$s Nouvo Avètisman</string>
     <string name="like">jèm</string>
     <string name="likeEntryLabel">Like Antre</string>
     <string name="likes">jèm</string>
-
     <plurals name="likeCountLabel">
         <item quantity="one">%s like</item>
         <item quantity="other">%s likes</item>
     </plurals>
+
     <string name="color_1">Wouj</string>
     <string name="color_2">Woz</string>
     <string name="color_3">Lavand</string>
@@ -862,6 +896,7 @@
     <string name="editDashboard">Modifye Tablo</string>
     <string name="editDashboardDescriptor">Seleksyone ki kou ou ta renmen wè nan Tablo a</string>
     <string name="a11y_editYourCourseList">Modifye lis kou w la</string>
+
     <string name="dashboard">Tablo</string>
     <string name="previous">Anvan</string>
     <string name="pageNum" formatted="false">Paj %d sou %d</string>
@@ -889,8 +924,8 @@
     <string name="tapToViewAnnouncement">Tape pou afiche anons.</string>
     <string name="acceptCourseInvitation">Aksepte</string>
     <string name="declineCourseInvitation">Refize</string>
-
     <string name="outOf">sou</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Pa gen fichye ki asosye ak kou sa a.</string>
     <string name="noFilesSubtextGroup">Pa gen fichye ki asosye ak gwoup sa a.</string>
@@ -951,6 +986,7 @@
     <string name="unableToViewInBrowser">Nou pa an mezi pou nou jwenn yon app ekstèn pou afiche zouti LTI sa a.</string>
 
     <string name="commentUpload">Kòmantè Soumèt</string>
+
     <string name="frontPage">Premye Paj</string>
     <string name="editPage">Modifye Paj</string>
     <string name="description">Deskripsyon</string>
@@ -963,10 +999,10 @@
     <string name="conferencesNotSupported">Konferans yo pa posib sou aparèy mobil.</string>
     <string name="filePreviewContentDescription">Fichye apèsi imaj</string>
     <string name="pdfError">Gen yon erè ki fèt pandan esè chajman PDF sa a.</string>
-
     <string name="featureNotAllowedInStudentView">Nou byen regrèt sa! Yo pa otorize fonksyon sa a nan afichaj elèv.</string>
     <string name="nothingToSeeHere">Pa Gen Anyen pou Wè La a</string>
     <string name="unsupportedFeature">Fonksyon ki pa Valide</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Ajoute Elèv</string>
     <string name="addChildSubTitle">Antre kòd kouplaj elèv yo ba ou a.</string>
@@ -974,6 +1010,7 @@
     <string name="addChildErrorMessage">Asosyasyon Echwe... asire w ke kòd kouplaj ou a kòrèke li pa depase limit itilizasyon an.</string>
     <string name="gradeComplete">Fini</string>
     <string name="gradeIncomplete">Enkonplè</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Paramèt Piblikasyon</string>
     <string name="postGradesTab">Piblikasyon Nòt</string>
@@ -1004,9 +1041,9 @@
     <string name="gradeAfterPosting">Nòt aprè piblikasyon</string>
     <string name="gradeOverride">Ranplasman nòt</string>
     <string name="currentGrade">Nòt aktyèl</string>
-
     <string name="opensInCanvasStudent">Ouvri nan Canvas Student</string>
     <string name="tab_student_view">Afichaj Elèv</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Antèt chwazi: %s</string>
@@ -1061,7 +1098,6 @@
 
     <string name="addVideoComment">Ajoute yon kòmantè videyo</string>
     <string name="addAudioComment">Ajoute yon kòmantè odyo</string>
-
     <string name="audioRecordingError">Gen yon erè ki fèt sanzatann pandan y ap eseye anrejistre yon odyo.</string>
     <string name="videoRecordingError">Gen yon erè ki fèt sanzatann pandan y ap eseye anrejistre yon videyo.</string>
 
@@ -1080,6 +1116,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Minit</item>
         <item quantity="other">%s Minit</item>
@@ -1100,4 +1137,86 @@
     <string name="conferenceDetails">Detay Konferans</string>
     <string name="recordings">Anrejistreman</string>
     <string name="conferenceInProgress">Konferans ap fèt</string>
+
+    <string name="a11y_criterion_content_description">Evalyasyon kritè %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">plis enfòmasyon</string>
+    <string name="a11y_create_file_folder_visible">Bouton Kreye Fichye ak Dosye yo vizib</string>
+    <string name="a11y_create_file_folder_gone">Bouton Kreye Fichye ak Dosye yo envizib</string>
+    <string name="unselect_all">Deseleksyone Tout</string>
+    <string name="select_all">Seleksyone Tout</string>
+    <string name="all_courses">Tout kpi</string>
+    <string name="all_groups">Tout Gwoup</string>
+    <string name="edit_dashboard_course_description">Seleksyone kou pou Tablo a oswa navige nan detay kou yo.</string>
+    <string name="edit_dashboard_group_description">Seleksyone gwoup pou Tablo a oswa navige nan detay kou yo.</string>
+    <string name="current_enrollments">Enskripsyon aktyèl</string>
+    <string name="past_enrollments">Enskripsyon pase</string>
+    <string name="future_enrollments">Pwochen enskripsyon</string>
+    <string name="added_to_dashboard">Ajoute nan Tablo</string>
+    <string name="removed_from_dashboard">Elimine nan Tablo</string>
+    <string name="all_added_to_dashboard">Tout ajoute nan Tablo</string>
+    <string name="all_removed_from_dashboard">Tout elimine nan Tablo</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Kou ki pa aktif yo pa t kapab ajoute nan Tablo.</string>
+    <string name="edit_dashboard">Modifye Tablo</string>
+    <string name="edit_dashboard_empty_title">Pa gen kou la a</string>
+    <string name="edit_dashboard_empty_message">Ou dwe enskri nan yon kou pou w ka ajoute l nan Tablo a.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Elimine nan tablo</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Elimine tout nan tablo</string>
+    <string name="a11y_content_description_add_to_dashboard">Ajoute nan tablo</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Ajoute tout nan tablo</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Kont</string>
+    <string name="dashboardTabHomeroom">Sal kou</string>
+    <string name="dashboardTabSchedule">Orè</string>
+    <string name="dashboardTabGrades">Nòt</string>
+    <string name="dashboardTabResources">Resous</string>
+    <string name="homeroomWelcomeMessage">Byenvini, %1$s!</string>
+    <string name="homeroomMySubjects">Sijè Pa m</string>
+    <string name="viewPreviousAnnouncements">Afiche Ansyen Anons</string>
+    <string name="homeroomError">Echèk chajman Sal akèy</string>
+    <string name="homeroomRefreshFail">Echèk pou rafrechi Sal akèy</string>
+    <string name="nothingDueToday">Pa gen Anyen ki gen Delè pou Jodi a</string>
+    <string name="dueToday">%1$s delè jodi a</string>
+    <string name="missing">%1$s manke</string>
+    <string name="homeroomEmptyTitle">Bienveni!</string>
+    <string name="homeroomEmptyMessage">Matyè ou yo afiche la a.</string>
+    <string name="homeroomNoSubjects">Pou kounye a ou pa gen matyè.</string>
+    <string name="settingsElementaryViewSubtitle">App la bezwen redemare</string>
+    <string name="gradesSelect">Seleksyone</string>
+    <string name="selectGradingPeriod">Seleksyone Peryòd Klasman</string>
+    <string name="currentGradingPeriod">Peryòd Klasman Aktyèl</string>
+    <string name="failedToLoadGrades">Pa reyisi chaje nòt yo</string>
+    <string name="failedToLoadGradesForGradingPeriod">Enposib pou chaje nòt yo pou peryòd notasyon an</string>
+    <string name="failedToRefreshGrades">Echèk aktyalizasyon nòt yo</string>
+    <string name="noGradesToDisplay">Okenn nòt pou afiche</string>
+    <string name="notGraded">Pa Klase</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Chanje peryòd klasman</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Nòt pa disponib</string>
+    <string name="bottomBarHomeroom">Sal kou</string>
+
+    <string name="settingsHomeroomView">Apèsi Sal la</string>
+    <string name="importantLinksTitle">Lyen Enpòtan</string>
+    <string name="studentApplications">Aplikasyon Elèv</string>
+    <string name="staffContactInfo">Kontakte Anplwaye</string>
+    <string name="chooseACourse">Chwazi yon Kou</string>
+    <string name="webViewImportantLinksTitle">Lyen Enpòtan</string>
+    <string name="staffRoleTeacher">Pwofesè</string>
+    <string name="staffRoleTeacherAssistant">Asistan Pwofesè</string>
+    <string name="resourcesEmptyMessage">Resous ou yo ap afiche la a.</string>
+    <string name="failedToLoadResources">Enposib pou chaje resous yo</string>
+    <string name="failedToRefreshResources">Enposib pou aktyalize resous yo</string>
+    <string name="open_alternate_view">Ouvri yon lòt afichaj ki pi aksesib</string>
+
+    <string name="a11y_content_description_message_recipients">Destinatè</string>
+    <string name="a11y_content_description_inbox_subject">Sijè</string>
+    <string name="a11y_content_description_inbox_course_spinner">Seleksyone yon kou, %s</string>
+
+    <string name="speedGraderAnonymousSubmissionMessage">Repons elèv sa a kache paske devwa sa a anonim.</string>
+
+    <string name="studentAnnotationUnsupported">Nòt Elèv (Pa sipòte)</string>
+    <string name="studentAnnotationUnsupportedDescription">Nòt Elèv yo pa disponib sou mobil.</string>
+    <string name="unsupportedSubmissionType">Tip Soumisyon Pa Sipòte</string>
+    <string name="studentAnnotationUnsupportedMessage">Soumisyon an pa kapab afiche paske Nòt Elèv yo pa disponib sou mobil.</string>
+    <string name="schedule_marked_as_done">Ou te make li konplè.</string>
 </resources>

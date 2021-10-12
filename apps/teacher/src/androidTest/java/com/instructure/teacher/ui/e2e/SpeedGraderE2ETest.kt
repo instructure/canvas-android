@@ -34,8 +34,10 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.*
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class SpeedGraderE2ETest : TeacherTest() {
     override fun displaysPageObjects() = Unit
 
@@ -96,7 +98,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         courseBrowserPage.openAssignmentsTab()
 
         assignmentListPage.clickAssignment(assignment[0])
-        assignmentDetailsPage.assertHasSubmitted(actual = 1, outOf = 3)
+        assignmentDetailsPage.assertNeedsGrading(actual = 1, outOf = 3)
         assignmentDetailsPage.assertNotSubmitted(actual = 1, outOf = 3)
         assignmentDetailsPage.openNotSubmittedSubmissions()
         assignmentSubmissionListPage.assertHasStudentSubmission(canvasUser = noSubStudent)

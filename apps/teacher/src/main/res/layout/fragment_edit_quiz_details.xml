@@ -98,7 +98,8 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/description"
-                android:textColor="@color/defaultTextGray" />
+                android:textColor="@color/defaultTextGray"
+                android:focusable="true"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -256,7 +257,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:layout_marginBottom="16dp"
-                android:layout_marginStart="10dp">
+                android:layout_marginStart="10dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/plus"

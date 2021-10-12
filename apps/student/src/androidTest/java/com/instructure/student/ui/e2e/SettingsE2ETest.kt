@@ -27,8 +27,10 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class SettingsE2ETest : StudentTest() {
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -53,11 +55,6 @@ class SettingsE2ETest : StudentTest() {
 
         legalPage.assertPageObjects()
         Espresso.pressBack() // Exit legal page
-
-        settingsPage.launchHelpPage()
-
-        // May be brittle.  See comments in HelpPage.kt.
-        helpPage.assertPageObjects()
     }
 
     // The remote config settings page (only available on debug builds) used to do some

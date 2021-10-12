@@ -92,6 +92,8 @@ object CalendarEventManager {
         CalendarEventAPI.getCalendarEvent(eventId, adapter, params, callback)
     }
 
+    fun getCalendarEventAsync(eventId: Long, forceNetwork: Boolean) = apiAsync<ScheduleItem> { getCalendarEvent(eventId, it, forceNetwork) }
+
     fun deleteCalendarEvent(eventId: Long, cancelReason: String, callback: StatusCallback<ScheduleItem>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()

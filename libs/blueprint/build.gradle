@@ -78,4 +78,5 @@ dependencies {
     /* Support Dependencies */
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_APPCOMPAT
+    implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
 }

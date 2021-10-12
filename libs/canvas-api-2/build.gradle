@@ -20,6 +20,8 @@ apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'au.com.dius.pact'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -69,11 +71,6 @@ apollo {
     ]
 }
 
-ext {
-    retrofitVersion = '2.5.0'
-    okhttpVersion = '3.13.1'
-}
-
 dependencies {
     api project(path: ':pandares')
 
@@ -86,22 +83,22 @@ dependencies {
     implementation Libs.FIREBASE_CORE
 
     /* Retrofit / GSON */
-    api("com.squareup.retrofit2:retrofit:$retrofitVersion") {
+    api(Libs.RETROFIT) {
         exclude module: 'okhttp'
     }
-    implementation 'com.google.code.gson:gson:2.8.5'
-    api "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation("com.squareup.retrofit2:converter-simplexml:$retrofitVersion") {
+    implementation Libs.GSON
+    api Libs.RETROFIT_GSON_ADAPTER
+    implementation(Libs.RETROFIT_XML_ADAPTER) {
         exclude module: 'stax-api'
         exclude module: 'stax'
         exclude module: 'xpp3'
     }
 
     /* OKHttp */
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
-    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersion"
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    implementation 'com.squareup.okio:okio:1.17.3'
+    implementation Libs.OKHTTP
+    implementation Libs.OKHTTP_LOGGING
+    implementation Libs.OKHTTP_URL_CONNECTION
+    implementation Libs.OKIO
 
     /* GraphQL */
     /* NOTE: Newer versions of OkHttp affect the encoding of square brackets in @Query names. We're excluding the
@@ -116,15 +113,13 @@ dependencies {
         exclude module: 'okhttp'
     }
 
-    compileOnly 'javax.annotation:jsr250-api:1.0'
-
     /* EventBus */
-    api 'org.greenrobot:eventbus:3.1.1'
+    api Libs.EVENTBUS
 
     /* Date/time/calendar */
-    api 'com.jakewharton.threetenabp:threetenabp:1.1.2'
+    api Libs.JW_THREETEN_BP
 
-    api 'com.jakewharton:process-phoenix:2.0.0'
+    api Libs.PROCESS_PHOENIX
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT
@@ -139,10 +134,13 @@ dependencies {
     implementation Libs.ANDROIDX_ANNOTATION
 
     /* Paper No SQl Storage */
-    api 'io.paperdb:paperdb:2.6'
+    api Libs.PAPERDB
 
     // Remote Config
     implementation Libs.FIREBASE_CONFIG
+
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
 }
 
 // Define our pact-publish object

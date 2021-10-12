@@ -25,8 +25,10 @@ import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class AssignmentListPageTest : TeacherTest() {
 
     @Test

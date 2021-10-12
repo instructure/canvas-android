@@ -149,4 +149,5 @@ class EditQuizDetailsPage : BasePage() {
     fun clickEditLockDate() = waitScrollClick(R.id.toDate)
     fun clickEditLockTime() = waitScrollClick(R.id.toTime)
     fun clickAddOverride() = addOverrideButton().scrollTo().click()
+    fun switchPublish() = waitScrollClick(R.id.publishSwitch)
 }

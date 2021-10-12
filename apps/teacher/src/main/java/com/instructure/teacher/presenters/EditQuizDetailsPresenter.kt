@@ -80,6 +80,7 @@ class EditQuizDetailsPresenter(var mQuiz: Quiz, var mAssignment: Assignment, val
                     studentsMapped += students.associateBy { it.id }
                 }
 
+                viewCallback?.setupAddOverridesButton()
                 viewCallback?.setupOverrides()
                 viewCallback?.scrollCheck()
 

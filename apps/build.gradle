@@ -23,9 +23,7 @@ buildscript {
         google()
         mavenCentral()
         maven { url "https://www.jitpack.io" }
-        jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://dl.bintray.com/instructure/maven" }
     }
 
     dependencies {
@@ -34,9 +32,9 @@ buildscript {
         classpath Plugins.GOOGLE_SERVICES
         classpath Plugins.KOTLIN
         classpath Plugins.FIREBASE_CRASHLYTICS
-        classpath Plugins.BUILD_SCAN
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
         classpath Plugins.SQLDELIGHT
+        classpath Plugins.HILT
     }
 }
 
@@ -44,7 +42,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://www.jitpack.io" }
+        maven { url 'https://jitpack.io' }
         maven {
             credentials {
                 username pspdfMavenUser
@@ -53,8 +51,6 @@ allprojects {
             url 'https://customers.pspdfkit.com/maven/'
         }
         maven { url "https://maven.google.com/" }
-        jcenter()
-        maven { url "https://dl.bintray.com/instructure/maven" }
     }
 }
 

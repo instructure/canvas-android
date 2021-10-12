@@ -30,8 +30,11 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 import kotlinx.coroutines.Deferred
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 object CourseManager {
+
+    fun getAllFavoriteCoursesAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getAllFavoriteCourses(forceNetwork, it) }
 
     fun getAllFavoriteCourses(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         val adapter = RestBuilder(callback)
@@ -46,6 +49,8 @@ object CourseManager {
         adapter.statusCallback = depaginatedCallback
         CourseAPI.getFirstPageFavoriteCourses(adapter, depaginatedCallback, params)
     }
+
+    fun getCoursesAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCourses(forceNetwork, it) }
 
     fun getCourses(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         if (ApiPrefs.isStudentView) {
@@ -66,6 +71,29 @@ object CourseManager {
         CourseAPI.getFirstPageCourses(adapter, depaginatedCallback, params)
     }
 
+    fun getCoursesWithConcluded(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        if (ApiPrefs.isStudentView) {
+            getCoursesTeacher(forceNetwork, callback)
+            return
+        }
+
+        val adapter = RestBuilder(callback)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
+                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CourseAPI.getFirstPageCoursesWithConcluded(adapter, depaginatedCallback, params)
+    }
+
+    fun getCoursesWithConcludedAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithConcluded(forceNetwork, it) }
+
+    fun getDashboardCoursesAsync(forceNetwork: Boolean) = apiAsync<List<DashboardCard>> { getDashboardCourses(forceNetwork, it) }
+
     fun getDashboardCourses(forceNetwork: Boolean, callback: StatusCallback<List<DashboardCard>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -85,6 +113,22 @@ object CourseManager {
 
         adapter.statusCallback = depaginatedCallback
         CourseAPI.getFirstPageCoursesWithSyllabus(adapter, depaginatedCallback, params)
+    }
+
+    fun getCoursesWithSyllabusAsyncWithActiveEnrollmentAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithSyllabusWithActiveEnrollment(forceNetwork, it) }
+
+    private fun getCoursesWithSyllabusWithActiveEnrollment(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
+                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CourseAPI.getFirstPageCoursesWithSyllabusWithActiveEnrollment(adapter, depaginatedCallback, params)
     }
 
     fun getCoursesTeacher(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
@@ -172,12 +216,16 @@ object CourseManager {
         CourseAPI.addCourseToFavorites(courseId, adapter, callback, params)
     }
 
+    fun addCourseToFavoritesAsync(courseId: Long) = apiAsync<Favorite> { addCourseToFavorites(courseId, it, true) }
+
     fun removeCourseFromFavorites(courseId: Long, callback: StatusCallback<Favorite>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         CourseAPI.removeCourseFromFavorites(courseId, adapter, callback, params)
     }
+
+    fun removeCourseFromFavoritesAsync(courseId: Long) = apiAsync<Favorite> { removeCourseFromFavorites(courseId, it, true) }
 
     fun editCourseName(courseId: Long, newCourseName: String, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val queryParams = HashMap<String, String>()
@@ -288,6 +336,22 @@ object CourseManager {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         CourseAPI.getRubricSettings(courseId, rubricId, adapter, callback, params)
+    }
+
+    fun getCoursesWithGradesAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithGrades(forceNetwork, it) }
+
+    private fun getCoursesWithGrades(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
+                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CourseAPI.getFirstPageCoursesWithGrades(adapter, callback, params)
     }
 
 }

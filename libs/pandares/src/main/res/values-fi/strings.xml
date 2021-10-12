@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +45,7 @@
     <string name="submissionStatusFailedTitle">Lähetys epäonnistui</string>
     <string name="submissionStatusFailedSubtitle">Napauta tarkastellaksesi tietoja</string>
     <string name="submissionAndRubric">Lähetys &amp; Rubriikki</string>
+    <string name="commentsAndRubric">Kommentit &amp; Rubriikki</string>
     <string name="errorLoadingAssignment">Tämän tehtävän lataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
     <string name="submitted">Lähetetty</string>
     <string name="notSubmitted">Ei lähetetty</string>
@@ -75,6 +75,7 @@
     <string name="addFileFabContentDesc">Näytä Lisää tiedosto -asetukset</string>
     <string name="recordAudio">Nauhoita ääni</string>
     <string name="recordVideo">Nauhoita video</string>
+    <string name="a11y_textSubmissionEditor">Tekstin lähetyksen editori</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Kirjoita&#8230;</string>
@@ -93,14 +94,16 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Tehtäväsi lukittiin moduulilla \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Tehtäväsi lukittiin moduulin vaatimuksella </string>
     <string name="submissionDetailsAssignmentLocked">Tehtävä lukittu</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Lähetyksiä ei sallita</string>
     <string name="webPreview">Syötetyn URL-linkin esikatselu</string>
     <string name="websiteUrl">Verkkosivuston URL</string>
     <string name="noneContentMessage">Tämä tehtävä ei salli verkkolähetyksiä.</string>
     <string name="onPaperContentMessage">Tämä tehtävä ei salli verkkolähetyksiä.</string>
     <string name="noOnlineSubmissions">Ei verkkolähetyksiä</string>
-
     <string name="speedGraderExternalToolMessage">Tämä tehtävä linkittää ulkoisen työkalun lähetyksiin.</string>
     <string name="openTool">Avaa työkalu</string>
+    <string name="a11y_submissionText">Lähetyksen testi</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s pisteestä</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s pistettä</string>
@@ -109,10 +112,10 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s/%2$s pistettä</string>
     <string name="enterWhatIfScore">Syötä Mitä jos -pistemäärä.</string>
-
     <string name="scoreStatisticsLow">Matala: %s</string>
     <string name="scoreStatisticsMean">Keskiarvo: %s</string>
     <string name="scoreStatisticsHigh">Korkea: %s</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Mukautettu pistemäärä </string>
     <string name="rubricEmptyMessage">Tälle tehtävälle ei ole rubriikkia</string>
@@ -126,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Liitä tiedostoja kommenttiisi napauttamalla alla olevaa vaihtoehtoa</string>
     <string name="emptySubmissionCommentsSubtext">Onko sinulla kysyttävää tehtävästäsi?\nLähetä viesti ohjaajallesi.</string>
     <string name="submissionCommentErrorMessage">Tämän viestin lähettäminen epäonnistui. Yritä uudelleen napauttamalla.</string>
+    <string name="mediaUpload">Mediatiedoston lataus</string>
     <string name="mediaUploadAudio">Median lataus - ääni</string>
     <string name="mediaUploadVideo">Median lataus - video</string>
     <string name="commentSubmissionTypeText">Tekstin lähetys</string>
@@ -195,6 +199,17 @@
     <string name="noAssignmentsInGroup">Tässä ryhmässä ei ole tehtäviä</string>
     <string name="excusedAssignment">Tämän tehtävän annetaan mennä eikä sitä oteta huomioon koko laskelmassa</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Lajitteluperuste</string>
+    <string name="sortByDialogTimeOption">Aika</string>
+    <string name="sortByDialogTypeOption">Tyyppi</string>
+    <string name="sortByTime">Lajittele ajan perusteella</string>
+    <string name="sortByType">Lajittele tyypin perusteella</string>
+    <string name="sortByDialogCancel">Peruuta</string>
+    <string name="assignmentsListAllGradingPeriods">Kaikki</string>
+    <string name="a11y_sortByTimeButton">Lajittele tehtävät -painike, lajittele ajan perusteella</string>
+    <string name="a11y_sortByTypeButton">Lajittele tehtävät -painike, lajittele tyypin perusteella</string>
+    <string name="a11y_assignmentsSortedByTime">Tehtävät lajiteltu ajan perusteella</string>
+    <string name="a11y_assignmentsSortedByType">Tehtävät lajiteltu tyypin perusteella</string>
 
     <!-- Assignment editing -->
     <string name="points">Pisteitä\u0020</string>
@@ -203,8 +218,9 @@
 
     <!-- Discussions -->
     <string name="forbidden">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
-
     <string name="fileCurrentlyLocked">Tämä tiedosto on parhaillaan lukittu</string>
+    <string name="a11y_discussionReplyEditor">Keskustelun lähetyksen editori</string>
+
     <!-- Events -->
     <string name="Starts">Alkaa</string>
     <string name="Ends">Päättyy</string>
@@ -254,6 +270,7 @@
     <string name="createFolder">Kansion luonti</string>
     <string name="createAFile">Luo tiedosto</string>
     <string name="createFileFolderFabContentDesc">Näytä Luo tiedosto - ja Luo kansio -painikkeet</string>
+    <string name="hideCreateFileFolderFabContentDesc">Piilota Luo tiedosto - ja Luo kansio -painikkeet</string>
     <string name="folderCreationError">Kansion luonnin aikana tapahtui virhe.</string>
     <string name="rename">Nimeä uudelleen</string>
     <string name="renameFile">Tiedostojen nimeäminen uudelleen</string>
@@ -431,6 +448,7 @@
     <string name="stopMasquerading">Lopeta toimiminen käyttäjänä</string>
     <string name="userId">Käyttäjätunnus</string>
     <string name="masqueradeFail">Ilmeni virhe yritettäessä toimia tänä käyttäjänä.</string>
+
     <string name="emptyId">Tunnus ei voi olla tyhjä.</string>
 
     <string name="goToQuiz">Siirry tietovisaan</string>
@@ -587,6 +605,8 @@
     <string name="practiceQuizzes">Harjoittelutietovisat</string>
     <string name="gradedSurveys">Arvostellut kyselyt</string>
     <string name="surveys">Kyselyt</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tehtävä</string>
     <string name="gradesWidgetTitle">Arvosanat</string>
@@ -632,12 +652,12 @@
     <string name="profileSettings">Profiiliasetukset</string>
     <string name="accountPreferences">Tilin asetukset</string>
     <string name="pinAndFingerprint">PIN ja sormenjälki</string>
-
     <string name="pairWithObserver">Yhdistä havaitsijan kanssa</string>
     <string name="pairWithObserverDetails">Pyydä vanhempiasi skannaamaan tämä viivakoodi Canvas Parent -sovelluksesta, jotta he saavat yhteyden sovellukseen. Tämä koodi vanhenee seitsemässä päivässä tai yhden käytön jälkeen.</string>
     <string name="pairingCodeLabel">Parinmuodostuskoodi:\u0020</string>
     <string name="pairingCodeErrorTitle">Parimuodostuskoofin virhe</string>
     <string name="pairingCodeErrorDescription">Parinmuodostuskoodin nouto epäonnistui. Tämä ominaisuutta tuetaan vain opiskelijoille.</string>
+
     <string name="launchSpeedgrader">Avaa Speedgrader</string>
 
     <string name="search_todo">mitätehdä mitä tehdä mitä tehdä -luettelo</string>
@@ -708,8 +728,8 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mittari</string>
-
     <string name="content_description_speed_grader_slider">Arvosanojen liukuasteikko</string>
+
     <string name="createNewCalendarEvent">Luo uusi tapahtuma</string>
     <string name="enableFunMode">Kytke pandat pois päältä</string>
 
@@ -796,6 +816,7 @@
     <string name="notification_desc_recording_ready">Saa ilmoitus, kun konferessin äänitys on valmis.</string>
 
     <string name="unlimited">Rajoittamaton</string>
+
     <string name="question">Kysymys</string>
     <plurals name="question_count">
         <item quantity="one">%d kysymys</item>
@@ -806,6 +827,7 @@
         <item quantity="one">%s piste</item>
         <item quantity="other">%s pistettä</item>
     </plurals>
+
     <string name="timeLimit">Aikaraja</string>
     <string name="newPushNotifications">%1$s Uudet ilmoitukset</string>
     <string name="like">tykkäys</string>
@@ -977,10 +999,10 @@
     <string name="conferencesNotSupported">Konferensseja ei vielä tueta matkapuhelimessa.</string>
     <string name="filePreviewContentDescription">Tiedoston esikatselukuva</string>
     <string name="pdfError">Tämän PDF-tiedoston lataamisen yhteydessä ilmeni virhe.</string>
-
     <string name="featureNotAllowedInStudentView">Pahoittelut! Tätä ominaisuutta ei sallita opiskelijanäkymässä.</string>
     <string name="nothingToSeeHere">Täällä ei ole mitään nähtävää.</string>
     <string name="unsupportedFeature">Tukematon ominaisuus</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Lisää opiskelija</string>
     <string name="addChildSubTitle">Pane opiskelijan parinmuodostuskoodi, joka on toimitettu sinulle.</string>
@@ -1019,9 +1041,9 @@
     <string name="gradeAfterPosting">Arvosana lähetyksen jälkeen</string>
     <string name="gradeOverride">Korvaa arvosana</string>
     <string name="currentGrade">Nykyinen arvosana </string>
-
     <string name="opensInCanvasStudent">Avautuu Canvas Studentissa</string>
     <string name="tab_student_view">Opiskelijanäkymä</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valittu pää: %s</string>
@@ -1094,6 +1116,7 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
     <plurals name="minutes">
         <item quantity="one">%s Minuutti</item>
         <item quantity="other">%s minuuttia</item>
@@ -1114,4 +1137,86 @@
     <string name="conferenceDetails">Konferenssin tiedot</string>
     <string name="recordings">Nauhoitukset</string>
     <string name="conferenceInProgress">Kokous käynnissä</string>
+
+    <string name="a11y_criterion_content_description">Kriteerien luokitukset %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">lisätietoja</string>
+    <string name="a11y_create_file_folder_visible">Luo tiedosto ja kansio -painikkeet näkyvissä</string>
+    <string name="a11y_create_file_folder_gone">Luo tiedosto ja kansio -painikkeet eivät näkyvissä</string>
+    <string name="unselect_all">Poista kaikki valinnat</string>
+    <string name="select_all">Valitse kaikki</string>
+    <string name="all_courses">Kaikki kurssit</string>
+    <string name="all_groups">Kaikki ryhmät</string>
+    <string name="edit_dashboard_course_description">Valitse kurssit koontinäyttöön tai siirry kurssin tietoihin.</string>
+    <string name="edit_dashboard_group_description">Valitse ryhmät koontinäyttöön tai siirry kurssin tietoihin.</string>
+    <string name="current_enrollments">Tämänhetkiset ilmoittautumiset</string>
+    <string name="past_enrollments">Aiemmat ilmoittautumiset</string>
+    <string name="future_enrollments">Tulevat ilmoittautumiset</string>
+    <string name="added_to_dashboard">Lisätty koontinäyttöön</string>
+    <string name="removed_from_dashboard">Poistettu koontinäytöstä</string>
+    <string name="all_added_to_dashboard">Kaikki lisätty koontinäyttöön</string>
+    <string name="all_removed_from_dashboard">Kaikki poistettu koontinäytöstä</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Passiivisten kurssien lisäys koontinäyttöön ei onnistunut.</string>
+    <string name="edit_dashboard">Muokkaa koontinäyttöä</string>
+    <string name="edit_dashboard_empty_title">Ei kursseja täällä</string>
+    <string name="edit_dashboard_empty_message">Sinun täytyy olla ilmoittautunut kurssille, jotta voisit lisätä sen koontinäyttöön.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Poista koontinäytöstä</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Poista widget koontinäytöstä</string>
+    <string name="a11y_content_description_add_to_dashboard">Lisää koontinäytölle</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Lisää kaikki koontinäyttöön</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Tili</string>
+    <string name="dashboardTabHomeroom">Homeroom</string>
+    <string name="dashboardTabSchedule">Aikataulu</string>
+    <string name="dashboardTabGrades">Arvosanat</string>
+    <string name="dashboardTabResources">Resurssit</string>
+    <string name="homeroomWelcomeMessage">Tervetuloa, %1$s!</string>
+    <string name="homeroomMySubjects">Omat aiheet</string>
+    <string name="viewPreviousAnnouncements">Näytä edelliset ilmoitukset</string>
+    <string name="homeroomError">Homeroomin lataus epäonnistui</string>
+    <string name="homeroomRefreshFail">Homeroomin päivitys epäonnistui</string>
+    <string name="nothingDueToday">Tänään ei eräänny mitään</string>
+    <string name="dueToday">%1$s erääntyy tänään</string>
+    <string name="missing">%1$s puuttuu</string>
+    <string name="homeroomEmptyTitle">Tervetuloa!</string>
+    <string name="homeroomEmptyMessage">Aiheesi näkyvät täällä.</string>
+    <string name="homeroomNoSubjects">Sinulla ei tällä hetkellä ole aiheita.</string>
+    <string name="settingsElementaryViewSubtitle">Vaatii sovelluksen uudelleenkäynnistyksen</string>
+    <string name="gradesSelect">Valitse</string>
+    <string name="selectGradingPeriod">Valitse arvosanojen antojakso</string>
+    <string name="currentGradingPeriod">Nykyinen arvosanojen antojakso</string>
+    <string name="failedToLoadGrades">arvosanojen lataus epäonnistui</string>
+    <string name="failedToLoadGradesForGradingPeriod">Arvosanojen lataus pyydetylle arvosanojen antojaksolle epäonnistui</string>
+    <string name="failedToRefreshGrades">Arvosanojen päivitys epäonnistui</string>
+    <string name="noGradesToDisplay">Ei esitettäviä arvosanoja</string>
+    <string name="notGraded">Ei arvioida</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Vaihda arvosanojen antojakso</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Arvosanat eivät ole käytettävissä</string>
+    <string name="bottomBarHomeroom">Homeroom</string>
+
+    <string name="settingsHomeroomView">Homeroom-näkymä</string>
+    <string name="importantLinksTitle">Tärkeitä linkkejä</string>
+    <string name="studentApplications">Opiskeluhakemukset</string>
+    <string name="staffContactInfo">Henkilökunnan yhteistiedot</string>
+    <string name="chooseACourse">Valitse kurssi</string>
+    <string name="webViewImportantLinksTitle">Tärkeitä linkkejä</string>
+    <string name="staffRoleTeacher">Opettaja</string>
+    <string name="staffRoleTeacherAssistant">Apuopettaja</string>
+    <string name="resourcesEmptyMessage">Resurssisi näkyvät täällä.</string>
+    <string name="failedToLoadResources">Resurssien lataus epäonnistui</string>
+    <string name="failedToRefreshResources">Resurssien päivitys epäonnistui</string>
+    <string name="open_alternate_view">Avaa lähestyttävämpi vaihtoehtoinen näkymä</string>
+
+    <string name="a11y_content_description_message_recipients">Vastaanottajat</string>
+    <string name="a11y_content_description_inbox_subject">Aihe</string>
+    <string name="a11y_content_description_inbox_course_spinner">Valitse kurssi, %s</string>
+
+    <string name="speedGraderAnonymousSubmissionMessage">Tämän opiskelijan vastaukset on kätketty, koska tehtävä on nimetön.</string>
+
+    <string name="studentAnnotationUnsupported">Opiskelijan huomautusasiakirjat (tukematon)</string>
+    <string name="studentAnnotationUnsupportedDescription">Opiskelijan huomautuksia ei tällä hetkellä tueta matkapuhelimessa.</string>
+    <string name="unsupportedSubmissionType">Lähetystyyppiä ei tueta</string>
+    <string name="studentAnnotationUnsupportedMessage">Lähetystä ei voida näyttää, koska opiskelijan huomautuksia ei tällä hetkellä tueta matkapuhelimessa.</string>
+    <string name="schedule_marked_as_done">Olet merkinnyt sen tehdyksi.</string>
 </resources>

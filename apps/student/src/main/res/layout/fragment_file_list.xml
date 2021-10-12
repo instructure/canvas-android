@@ -63,7 +63,7 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.instructure.student.view.EmptyView
+    <com.instructure.pandautils.views.EmptyView
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -80,6 +80,7 @@
         android:contentDescription="@string/createAFolder"
         android:visibility="invisible"
         android:layout_marginEnd="16dp"
+        android:accessibilityTraversalAfter="@id/addFileFab"
         app:elevation="4dp"
         app:srcCompat="@drawable/ic_files" />
 
@@ -95,6 +96,7 @@
         android:contentDescription="@string/createAFile"
         android:visibility="invisible"
         android:layout_marginEnd="16dp"
+        android:accessibilityTraversalAfter="@id/addFab"
         app:elevation="4dp"
         app:srcCompat="@drawable/ic_file_upload" />
 

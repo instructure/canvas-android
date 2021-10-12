@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Dewiswch Gyfryngau</string>
     <string name="takeVideo">Gwnewch Fideo</string>
     <string name="noCameraOnDevice">Dim Camera</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Llwytho Hysbysiadau i fyny</string>
     <string name="notificationChannelNameFileUploadsDescription">Hysbysiadau Canvas ar gyfer ffeiliau sy’n cael eu llwytho i fyny ar hyn o bryd.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Ychwanegu Ffeil</string>
+
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Oriel</string>
     <string name="fromDevice">Dyfais</string>
@@ -53,7 +55,6 @@
     <string name="file">Ffeil</string>
     <string name="fileTalkBack">Ffeil %s</string>
     <string name="folderTalkBack">Ffolder %s</string>
-
     <string name="addItem">Ychwanegu Eitem</string>
     <string name="assignment">Aseiniad</string>
     <string name="attachedFiles">Ffeiliau wedi’u hatodi</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Wrthi\'n llwytho cyflwyniad i fyny ar gyfer %s</string>
     <string name="assignmentSubmissionError">Cyflwyniad wedi methu ar gyfer %s</string>
     <string name="assignmentSubmissionComplete">Wedi llwyddo i gyflwyno %s</string>
+
     <!--Errors-->
     <string name="errorOccurred">Gwall annisgwyl.</string>
     <string name="serverError">Gwall ar y gweinydd.</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">Mae’n edrych yn debyg nad oes unrhyw fodiwlau wedi’u creu eto.</string>
     <string name="noPages">Dim Tudalennau</string>
     <string name="noPagesSubtext">Mae’n edrych yn debyg nad os tudalennau wedi’u creu eto.</string>
-
     <string name="modulesLockedSubtext">Mae modiwlau wedi’u hanalluogi ar gyfer y cwrs hwn.</string>
     <string name="modulesLocked">Aeth rhywbeth o’i le</string>
+
     <!--General-->
     <string name="yes">Iawn</string>
     <string name="no">Na</string>
@@ -227,7 +229,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -327,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Does dim modd i’r dyddiad datgloi fod ar ôl y dyddiad erbyn</string>
     <string name="utils_lockBeforeDueDateError">Does dim modd i’r dyddiad cloi fod cyn y dyddiad erbyn</string>
     <string name="utils_lockAfterUnlockError">Does dim modd i’r dyddiad cloi fod cyn y dyddiad datgloi</string>
@@ -380,13 +382,14 @@
     <string name="utils_uploadToSubmissionComment">Llwytho i fyny i Sylw ar y cyflwyniad</string>
     <string name="utils_attachFile">Atodi ffeil</string>
     <string name="utils_with">gyda</string>
+
     <string name="notificationPrimaryInboxTitle">Hysbysiad Canvas</string>
     <string name="notificationChannelNamePrimary">Hysbysiadau Cyffredinol Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Gellir ffurfweddu hysbysiadau ymhellach o fewn yr adran Dewisiadau Hysbysiadau Canvas.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d hysbysiad newydd</item>
     </plurals>
+
     <string name="copyLinkAddress">Copïo cyfeiriad dolen</string>
     <string name="copyLink">Copïo Dolen</string>
     <string name="linkCopied">Wedi copïo dolen</string>
@@ -416,7 +419,6 @@
     <string name="image_uploading">Wrthi’n Llwytho’r Ddelwedd i Fyny...</string>
     <string name="image_upload_error">Gwall wrth Lwytho’r Ddelwedd i Fyny</string>
     <string name="retry">Rhoi cynnig arall arni</string>
-
     <string name="search">Chwilio</string>
     <string name="searchAssignmentsHint">Chwilio Aseiniadau</string>
     <string name="searchAnnouncementsHint">Chwilio Cyhoeddiadau</string>
@@ -424,6 +426,33 @@
     <string name="searchPagesHint">Chwilio Tudalennau</string>
     <string name="searchQuizzesHint">Chwilio Cwisiau</string>
     <string name="noItemsMatchingQuery">Dim eitemau’n cyfateb \"%s\"</string>
+
     <string name="selected">Wedi dewis</string>
+
+    <string name="notificationChannelNameInAppUpdate">Hysbysiadau diweddaru ap</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Hysbysiadau Canvas ar gyfer diweddariadau mewn ap</string>
+    <string name="appUpdateReadyTitle">Ap yn barod i’w ddiweddaru</string>
+    <string name="appUpdateReadyDescription">Ail-gychwynnwch yr ap i osod y fersiwn newydd</string>
+    <string name="nothing_planned_yet">Does dim byd wedi’i drefnu hyd yma</string>
+    <string name="schedule_tag_graded">Wedi graddio</string>
+    <string name="schedule_tag_replies">Ateb</string>
+    <string name="schedule_tag_feedback">Adborth</string>
+    <string name="schedule_tag_late">Yn Hwyr</string>
+    <string name="schedule_tag_redo">Ail-wneud</string>
+    <string name="schedule_tag_excused">Wedi esgusodi</string>
+    <string name="tomorrow">Yfory</string>
+    <string name="yesterday">Ddoe</string>
+    <string name="schedule_calendar_event_due_text">Am %s</string>
+    <string name="schedule_todo_due_text">Tasgau i’w Gwneud: %s</string>
+    <string name="schedule_due_text">Erbyn: %s</string>
+    <string name="show_missing_items_title">Dangos %d eitem coll</string>
+    <string name="hide_missing_items_title">Cuddio %d eitem coll</string>
+    <string name="schedule_error_message">Doedd dim modd nôl eich amserlen</string>
+    <string name="schedule_todo_title">Tasgau i’w Gwneud</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pwynt</item>
+        <item quantity="one">%s pwynt</item>
+        <item quantity="other">%s pwynt</item>
+    </plurals>
 
 </resources>

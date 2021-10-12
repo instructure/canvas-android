@@ -24,13 +24,15 @@ import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
 import com.instructure.loginapi.login.snicker.SnickerDoodle
-import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.teacher.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading)
+        PushNotificationRegistrationWorker.scheduleJob(this, ApiPrefs.isMasquerading)
         return SplashActivity.createIntent(this, null)
     }
 
@@ -47,6 +49,13 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
     override fun themeColor(): Int = ContextCompat.getColor(this, R.color.login_teacherAppTheme)
 
     override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent = SignInActivity.createIntent(this, AccountDomain(snickerDoodle.domain))
+
+    override fun startApp() {
+        val intent = launchApplicationMainActivityIntent()
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
 
     companion object {
         fun createIntent(context: Context): Intent {

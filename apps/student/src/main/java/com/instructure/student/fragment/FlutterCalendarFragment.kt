@@ -24,10 +24,12 @@ import com.google.gson.Gson
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.util.AppManager
+import com.instructure.student.util.BaseAppManager
 import io.flutter.embedding.android.FlutterFragment
 import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.*
 
@@ -35,7 +37,7 @@ class FlutterCalendarFragment : FlutterFragment() {
     var calendarScreenChannel = CalendarScreenChannel()
     var hidden: Boolean = false
 
-    override fun provideFlutterEngine(context: Context): FlutterEngine? = AppManager.flutterEngine
+    override fun provideFlutterEngine(context: Context): FlutterEngine? = BaseAppManager.flutterEngine
 
     // Use texture mode instead of surface mode so the FlutterView doesn't render on top of the nav drawer and a11y borders
     override fun getRenderMode() = RenderMode.texture
@@ -87,7 +89,7 @@ class FlutterCalendarFragment : FlutterFragment() {
             return flutterViewField.get(delegate) as FlutterView
         }
 
-        if (resuming) getFlutterView().attachToFlutterEngine(AppManager.flutterEngine)
+        if (resuming) getFlutterView().attachToFlutterEngine(BaseAppManager.flutterEngine)
 
         val lifecycle1 = delegate::class.java.getDeclaredMethod(if (resuming) "onStart" else "onPause")
         lifecycle1.isAccessible = true
@@ -107,7 +109,9 @@ class FlutterCalendarFragment : FlutterFragment() {
 
         // Perform onBackPressed on the FlutterFragment, which will attempt to pop the current route and update
         // the 'shouldPop' value for future use.
-        onBackPressed()
+        if (!shouldPop) {
+            onBackPressed()
+        }
 
         // If 'shouldPop' was true it means we just popped a CalendarScreen in Flutter and that we should also
         // allow this fragment to be popped
@@ -122,20 +126,23 @@ class FlutterCalendarFragment : FlutterFragment() {
 
 class CalendarScreenChannel {
     val channelId: String = UUID.randomUUID().toString()
-    private val channel = MethodChannel(AppManager.flutterEngine.dartExecutor.binaryMessenger, channelId)
+    private val channel = MethodChannel(BaseAppManager.flutterEngine.dartExecutor.binaryMessenger, channelId)
 
     var onRouteToItem: ((item: PlannerItem) -> Unit)? = null
 
     var onOpenDrawer: (() -> Unit)? = null
 
+    var onShowDialog: ((call: MethodCall, result: MethodChannel.Result) -> Unit)? = null
+
     init {
-        channel.setMethodCallHandler { call, _ ->
+        channel.setMethodCallHandler { call: MethodCall, result: MethodChannel.Result ->
             when (call.method) {
                 "openDrawer" -> onOpenDrawer?.invoke()
                 "routeToItem" -> {
                     val item = Gson().fromJson(call.arguments as String, PlannerItem::class.java)
                     onRouteToItem?.invoke(item)
                 }
+                "showDialog" -> onShowDialog?.invoke(call, result)
             }
         }
     }

@@ -1,12 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -15,12 +15,7 @@ buildscript {
 }
 
 repositories {
-    jcenter()
-}
-
-ext {
-    retrofitVersion = '2.5.0'
-    okhttpVersion = '3.13.1'
+    mavenCentral()
 }
 
 dependencies {
@@ -28,14 +23,14 @@ dependencies {
     implementation Libs.KOTLIN_STD_LIB
 
     /* Networking */
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation Libs.RETROFIT
+    implementation Libs.RETROFIT_GSON_ADAPTER
+    implementation Libs.RETROFIT_SCALAR_CONVERTER
+    implementation Libs.OKHTTP
+    implementation Libs.OKHTTP_LOGGING
 
     /* Serialization */
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation Libs.GSON
 
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.github.javafaker:javafaker:0.17.2'

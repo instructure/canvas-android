@@ -36,7 +36,6 @@ import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.activity.NotificationPreferencesActivity
 import com.instructure.student.activity.SettingsActivity
-import com.instructure.student.dialog.HelpDialogStyled
 import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
 import com.instructure.student.util.Analytics
@@ -82,15 +81,16 @@ class ApplicationSettingsFragment : ParentFragment() {
         }
 
         legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
-        help.onClick { HelpDialogStyled.show(requireActivity()) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
-        pairObserver.setVisible()
-        pairObserver.onClick {
-            if (APIHelper.hasNetworkConnection()) {
-                addFragment(PairObserverFragment.newInstance())
-            } else {
-                NoInternetConnectionDialog.show(requireFragmentManager())
+        if (ApiPrefs.canGeneratePairingCode == true) {
+            pairObserver.setVisible()
+            pairObserver.onClick {
+                if (APIHelper.hasNetworkConnection()) {
+                    addFragment(PairObserverFragment.newInstance())
+                } else {
+                    NoInternetConnectionDialog.show(requireFragmentManager())
+                }
             }
         }
 
@@ -101,15 +101,24 @@ class ApplicationSettingsFragment : ParentFragment() {
 
         about.onClick {
             AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.about)
-                    .setView(R.layout.dialog_about)
-                    .show()
-                    .apply {
-                        domain.text = ApiPrefs.domain
-                        loginId.text = ApiPrefs.user!!.loginId
-                        email.text = ApiPrefs.user!!.email ?: ApiPrefs.user!!.primaryEmail
-                        version.text = "${getString(R.string.canvasVersionNum)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-                    }
+                .setTitle(R.string.about)
+                .setView(R.layout.dialog_about)
+                .show()
+                .apply {
+                    domain.text = ApiPrefs.domain
+                    loginId.text = ApiPrefs.user!!.loginId
+                    email.text = ApiPrefs.user!!.email ?: ApiPrefs.user!!.primaryEmail
+                    version.text = "${getString(R.string.canvasVersionNum)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+                }
+        }
+
+        if (ApiPrefs.canvasForElementary) {
+            elementaryViewSwitch.isChecked = ApiPrefs.elementaryDashboardEnabledOverride
+            elementaryViewLayout.setVisible()
+            ViewStyler.themeSwitch(requireContext(), elementaryViewSwitch, ThemePrefs.brandColor)
+            elementaryViewSwitch.setOnCheckedChangeListener { _, isChecked ->
+                ApiPrefs.elementaryDashboardEnabledOverride = isChecked
+            }
         }
 
         if (BuildConfig.DEBUG) {

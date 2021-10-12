@@ -28,8 +28,10 @@ import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class SyllabusPageTest : TeacherTest() {
 
     override fun displaysPageObjects() = Unit
@@ -37,9 +39,6 @@ class SyllabusPageTest : TeacherTest() {
     // Tests that we can open an assignment from the syllabus/summary, and does some verification of the calendar event.
     @Test
     fun testSyllabus_openAssignmentDetails() {
-        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
-        Thread.sleep(3000)
-        RemoteConfigPrefs.putString(RemoteConfigParam.SHOW_TEACHER_SYLLABUS.rc_name, "true")
         val data = goToSyllabus(eventCount = 0, assignmentCount = 1)
 
         val assignment = data.assignments.values.first()
@@ -53,9 +52,6 @@ class SyllabusPageTest : TeacherTest() {
     // Tests that we can open a calendar event from the syllabus/summary, and does some verification of the calendar event.
     @Test
     fun testSyllabus_openCalendarEvent() {
-        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
-        Thread.sleep(3000)
-        RemoteConfigPrefs.putString(RemoteConfigParam.SHOW_TEACHER_SYLLABUS.rc_name, "true")
         val data = goToSyllabus(eventCount = 1, assignmentCount = 0)
 
         val course = data.courses.values.first()
@@ -71,9 +67,6 @@ class SyllabusPageTest : TeacherTest() {
     // Tests that we can open the edit syllabus.
     @Test
     fun testSyllabus_openEditSyllabus() {
-        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
-        Thread.sleep(3000)
-        RemoteConfigPrefs.putString(RemoteConfigParam.SHOW_TEACHER_SYLLABUS.rc_name, "true")
         goToSyllabus(eventCount = 0, assignmentCount = 1)
 
         syllabusPage.openEditSyllabus()

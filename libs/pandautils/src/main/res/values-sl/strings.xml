@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Izberi medij</string>
     <string name="takeVideo">Posnemi videoposnetek</string>
     <string name="noCameraOnDevice">Ni fotoaparata.</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Obvestila o nalaganju</string>
     <string name="notificationChannelNameFileUploadsDescription">Obvestila sistema Canvas za nalaganja v teku.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Dodaj datoteko</string>
+
     <string name="fromCamera">Fotoaparat</string>
     <string name="fromGallery">Galerija</string>
     <string name="fromDevice">Naprava</string>
@@ -96,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Nalagam oddaje za %s</string>
     <string name="assignmentSubmissionError">Oddaja za %s ni uspela</string>
     <string name="assignmentSubmissionComplete">%s uspešno poslana</string>
+
     <!--Errors-->
     <string name="errorOccurred">Prišlo je do nepričakovane napake.</string>
     <string name="serverError">Prišlo je do napake strežnika.</string>
@@ -182,9 +185,9 @@
     <string name="noModulesSubtext">Zdi se, da ni ustvarjen še noben modul.</string>
     <string name="noPages">Ni strani.</string>
     <string name="noPagesSubtext">Zdi se, da ni ustvarjene še nobene strani.</string>
-
     <string name="modulesLockedSubtext">Za ta predmet so bili nekateri moduli onemogočeni.</string>
     <string name="modulesLocked">Prišlo je do težav</string>
+
     <!--General-->
     <string name="yes">Da</string>
     <string name="no">Ne</string>
@@ -226,7 +229,6 @@
     <string name="utils_canvas">Sistem Canvas</string>
     <string name="utils_canvasTeacher">Izvajalec v sistemu Canvas</string>
     <string name="utils_canvasParent">Aplikacija Canvas Parent</string>
-    <string name="utils_polls">Ankete sistema Canvas</string>
     <string name="utils_speedgrader">Aplikacija SpeedGrader</string>
 
     <!-- Rating Dialog -->
@@ -326,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Datum sprostitve zapore ne more biti po roku.</string>
     <string name="utils_lockBeforeDueDateError">Datum zapore objave ne more biti pred rokom.</string>
     <string name="utils_lockAfterUnlockError">Datum zapore objave ne more biti pred datumom sprostitve zapore.</string>
@@ -379,13 +382,14 @@
     <string name="utils_uploadToSubmissionComment">Naloži v komentar oddaje</string>
     <string name="utils_attachFile">Dodaj datoteko</string>
     <string name="utils_with">s/z</string>
+
     <string name="notificationPrimaryInboxTitle">Sporočila sistema Canvas</string>
     <string name="notificationChannelNamePrimary">Splošna sporočila sistema Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Dodatno konfiguriranje sporočil je mogoče v sekciji sistema Canvas »Prednostne nastavitve«.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d novih obvestil</item>
     </plurals>
+
     <string name="copyLinkAddress">Kopiraj naslov povezave</string>
     <string name="copyLink">Kopiraj povezavo</string>
     <string name="linkCopied">Povezava je kopirana.</string>
@@ -424,5 +428,31 @@
     <string name="noItemsMatchingQuery">Noben element ne ustreza »%s«.</string>
 
     <string name="selected">Izbrano</string>
+
+    <string name="notificationChannelNameInAppUpdate">Obvestila o posodobitvi aplikacije</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Obvestila Canvas za posodobitve v aplikaciji.</string>
+    <string name="appUpdateReadyTitle">Aplikacija pripravljena za posodobitev</string>
+    <string name="appUpdateReadyDescription">Aplikacijo zaženite znova, da namestite novo različico</string>
+    <string name="nothing_planned_yet">Nič še ni načrtovano</string>
+    <string name="schedule_tag_graded">Ocenjeno</string>
+    <string name="schedule_tag_replies">Odgovori</string>
+    <string name="schedule_tag_feedback">Povratne informacije</string>
+    <string name="schedule_tag_late">Zamuda</string>
+    <string name="schedule_tag_redo">Uveljavi</string>
+    <string name="schedule_tag_excused">Opravičeno</string>
+    <string name="tomorrow">Jutri</string>
+    <string name="yesterday">Včeraj</string>
+    <string name="schedule_calendar_event_due_text">Ob %s</string>
+    <string name="schedule_todo_due_text">Čakajoča opravila: %s</string>
+    <string name="schedule_due_text">Rok: %s</string>
+    <string name="show_missing_items_title">Prikaži %d manjkajočih elementov</string>
+    <string name="hide_missing_items_title">Skrij %d manjkajočih elementov</string>
+    <string name="schedule_error_message">Vašega urnika ni mogoče pridobiti</string>
+    <string name="schedule_todo_title">Čakajoča opravila</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s točka</item>
+        <item quantity="one">%s točka</item>
+        <item quantity="other">%s točk</item>
+    </plurals>
 
 </resources>

@@ -17,9 +17,10 @@ package com.instructure.teacher.ui
 
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.slowLogInAsStudent
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
-
+@HiltAndroidTest
 class NotATeacherPageTest : TeacherTest() {
 
     // Runs live; no MockCanvas

@@ -32,6 +32,7 @@ import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
+import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
 import com.instructure.student.mobius.assignmentDetails.chooseMediaIntent
 import com.instructure.student.mobius.assignmentDetails.getVideoIntent
 import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
@@ -366,6 +367,19 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `ShowCreateSubmissionView with student annotation submissionType shows student annotation view`() {
+        val submissionType = Assignment.SubmissionType.STUDENT_ANNOTATION
+        assignment = assignment.copy(htmlUrl = "www.instructure.com")
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
+
+        verify(timeout = 100) {
+            view.showStudentAnnotationView("www.instructure.com")
+        }
+        confirmVerified(view)
+    }
+
+    @Test
     fun `ShowCreateSubmissionView event with EXTERNAL_TOOL submissionType calls showLTIView() on the view`() {
         val submissionType = Assignment.SubmissionType.EXTERNAL_TOOL
         val ltiUrl = "https://www.instructure.com"
@@ -488,6 +502,22 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `Displays student annotation type in dialog when submission type is student annotation`() {
+        val course = Course()
+        val assignment = assignment.copy(
+            submissionTypesRaw = listOf("student_annotation")
+        )
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
+
+        verify(timeout = 100) {
+            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(studentAnnotation = true))
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
     fun `ShowSubmitDialogView event calls showSubmitDialogView() with mediaRecording == true when submission type is MEDIA_RECORDING`() {
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("media_recording")
@@ -508,7 +538,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     @Test
     fun `ShowSubmitDialogView event calls showSubmitDialogView() with all submission types == true when submission type is all submittable submission types`() {
         val assignment = assignment.copy(
-                submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload")
+                submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload", "student_annotation")
         )
 
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, true))
@@ -521,7 +551,8 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
                     urlEntry = true,
                     fileUpload = true,
                     mediaRecording = true,
-                    studioUpload = true)
+                    studioUpload = true,
+                    studentAnnotation = true)
             )
         }
 

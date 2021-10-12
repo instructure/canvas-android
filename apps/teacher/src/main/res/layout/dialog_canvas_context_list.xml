@@ -25,7 +25,7 @@
         android:cacheColorHint="@android:color/transparent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <com.instructure.teacher.view.EmptyPandaView
+    <com.instructure.pandautils.views.EmptyView
         android:id="@+id/emptyPandaView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

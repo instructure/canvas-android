@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Segnala un problema</string>
     <string name="errorReportSubject">Oggetto</string>
     <string name="errorReportDescription">Descrizione</string>
-    <string name="errorReportWriteSomething">Scrivi qualcosa&#8230;</string>
     <string name="errorReportSend">Invia</string>
     <string name="errorReportThankyou">Grazie per aver segnalato il tuo problema al nostro team di assistenza.  Riceverai la verifica e gli aggiornamenti tramite e-mail.</string>
     <string name="errorReportSeverityText">Quali sono le ripercussioni per te?</string>
@@ -86,7 +85,6 @@
     <string name="errorSeverityExtremelyCritical">EMERGENZA CRITICA.</string>
 
     <string name="errorReportEmailAddress">Indirizzo e-mail</string>
-    <string name="errorReportEnterEmail">Inserisci il tuo indirizzo e-mail&#8230;</string>
     <string name="errorReportUnknown">Sconosciuto</string>
 
     <!-- Distance Strings -->

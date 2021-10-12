@@ -1,9 +1,9 @@
 package com.instructure.teacher.ui.utils
 
-import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import androidx.test.espresso.web.model.Atom
 import androidx.test.espresso.web.model.Evaluation
 import androidx.test.espresso.web.sugar.Web
+import com.adevinta.android.barista.interaction.BaristaSleepInteractions.sleep
 
 private fun execute(block: () -> Any): Boolean {
     return try {

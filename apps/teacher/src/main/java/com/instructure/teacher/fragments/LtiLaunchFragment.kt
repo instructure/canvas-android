@@ -21,6 +21,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -111,8 +112,12 @@ class LtiLaunchFragment : BaseFragment() {
             .appendQueryParameter("platform", "android")
             .build()
 
-        var intent = CustomTabsIntent.Builder()
+        val colorSchemeParams = CustomTabColorSchemeParams.Builder()
             .setToolbarColor(canvasContext?.color ?: ThemePrefs.primaryColor)
+            .build()
+
+        var intent = CustomTabsIntent.Builder()
+            .setDefaultColorSchemeParams(colorSchemeParams)
             .setShowTitle(true)
             .build()
             .intent

@@ -17,7 +17,6 @@
 package com.instructure.student.ui.utils
 
 import android.app.Activity
-import android.content.Context
 import android.os.Environment
 import androidx.test.espresso.Espresso
 import android.view.View
@@ -26,21 +25,32 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.espresso.ScreenshotTestRule
 import com.instructure.espresso.swipeRight
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.*
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.processor.internal.aggregateddeps.AggregatedDeps
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.junit.Before
+import org.junit.Rule
+import org.junit.rules.RuleChain
+import org.junit.rules.TestRule
 import java.io.File
 
 abstract class StudentTest : CanvasTest() {
 
     override val activityRule: InstructureActivityTestRule<out Activity> =
         StudentActivityTestRule(LoginActivity::class.java)
+
     lateinit var originalActivity : Activity
+
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
 
     // Sometimes activityRule.activity can get nulled out over time, probably as we
     // navigate away from the original login screen.  Capture the activity here so
@@ -55,49 +65,54 @@ abstract class StudentTest : CanvasTest() {
     /**
      * Required for auto complete of page objects within tests
      */
+    val annotationCommentListPage = AnnotationCommentListPage()
+    val announcementListPage = AnnouncementListPage()
+    val assignmentDetailsPage = AssignmentDetailsPage()
     val assignmentListPage = AssignmentListPage()
-    val dashboardPage = DashboardPage()
-    val allCoursesPage = AllCoursesPage()
-    val editFavoritesPage = EditFavoritesPage()
+    val bookmarkPage = BookmarkPage()
+    val calendarEventPage = CalendarEventPage()
     val calendarPage = CalendarPage()
-    val todoPage = TodoPage()
-    val inboxPage = InboxPage()
-    val inboxConversationPage = InboxConversationPage()
-    val newMessagePage = NewMessagePage()
-    val settingsPage = SettingsPage()
-    val pairObserverPage = PairObserverPage()
-    val legalPage = LegalPage()
+    val canvasWebViewPage = CanvasWebViewPage()
+    val courseBrowserPage = CourseBrowserPage()
+    val courseGradesPage = CourseGradesPage()
+    val dashboardPage = DashboardPage()
+    val discussionDetailsPage = DiscussionDetailsPage()
+    val discussionListPage = DiscussionListPage()
+    val editDashboardPage = EditDashboardPage()
+    val fileListPage = FileListPage()
+    val fileUploadPage = FileUploadPage()
     val helpPage = HelpPage()
+    val inboxConversationPage = InboxConversationPage()
+    val inboxPage = InboxPage()
+    val legalPage = LegalPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
     val loginSignInPage = LoginSignInPage()
-    val qrLoginPage = QRLoginPage()
-    val courseBrowserPage = CourseBrowserPage()
-    val assignmentDetailsPage = AssignmentDetailsPage()
-    val submissionDetailsPage = SubmissionDetailsPage()
+    val moduleProgressionPage = ModuleProgressionPage()
+    val modulesPage = ModulesPage()
+    val newMessagePage = NewMessagePage()
+    val notificationPage = NotificationPage()
+    val pageListPage = PageListPage()
+    val pairObserverPage = PairObserverPage()
+    val pandaAvatarPage = PandaAvatarPage()
     val peopleListPage = PeopleListPage()
     val personDetailsPage = PersonDetailsPage()
-    val modulesPage = ModulesPage()
-    val syllabusPage = SyllabusPage()
-    val fileListPage = FileListPage()
-    val discussionListPage = DiscussionListPage()
-    val discussionDetailsPage = DiscussionDetailsPage()
-    val pageListPage = PageListPage()
-    val quizListPage = QuizListPage()
-    val urlSubmissionUploadPage = UrlSubmissionUploadPage()
-    val courseGradesPage = CourseGradesPage()
-    val moduleProgressionPage = ModuleProgressionPage()
-    val canvasWebViewPage = CanvasWebViewPage()
-    val fileUploadPage = FileUploadPage()
-    val annotationCommentListPage = AnnotationCommentListPage()
     val pickerSubmissionUploadPage = PickerSubmissionUploadPage()
-    val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val profileSettingsPage = ProfileSettingsPage()
-    val calendarEventPage = CalendarEventPage()
+    val qrLoginPage = QRLoginPage()
+    val quizListPage = QuizListPage()
     val quizTakingPage = QuizTakingPage()
-    val pandaAvatarPage = PandaAvatarPage()
-    val notificationPage = NotificationPage()
-    val bookmarkPage = BookmarkPage()
+    val remoteConfigSettingsPage = RemoteConfigSettingsPage()
+    val settingsPage = SettingsPage()
+    val submissionDetailsPage = SubmissionDetailsPage()
+    val syllabusPage = SyllabusPage()
+    val todoPage = TodoPage()
+    val urlSubmissionUploadPage = UrlSubmissionUploadPage()
+    val elementaryDashboardPage = ElementaryDashboardPage()
+    val homeroomPage = HomeroomPage()
+    val schedulePage = SchedulePage()
+    val gradesPage = GradesPage()
+    val resourcesPage = ResourcesPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

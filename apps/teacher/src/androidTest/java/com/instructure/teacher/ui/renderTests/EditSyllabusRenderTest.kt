@@ -22,8 +22,10 @@ import com.instructure.teacher.features.syllabus.edit.EditSyllabusViewState
 import com.instructure.teacher.ui.renderTests.pages.EditSyllabusRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class EditSyllabusRenderTest : TeacherRenderTest() {
 
     private val editSyllabusRenderPage = EditSyllabusRenderPage()

@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.*
 import java.util.*
 import java.util.regex.Pattern
 
+private const val WORKFLOW_STATE_DELETED = "deleted"
+
 fun Assignment.SubmissionType.prettyPrint(context: Context): String
         = Assignment.submissionTypeToPrettyPrintString(this, context) ?: ""
 
@@ -50,6 +52,13 @@ fun Course.isValidTerm(): Boolean = term?.endDate?.after(Date()) ?: true || hasV
 fun Course.hasValidSection(): Boolean = sections.any { it.endDate?.after(Date()) ?: false }
 fun Course.hasActiveEnrollment(): Boolean = enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE } ?: false
 fun Course.isInvited(): Boolean = enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_INVITED } ?: false
+fun Course.isCompleted(): Boolean = enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_COMPLETED } ?: false
+fun Course.isEnrollmentDeleted(): Boolean = enrollments?.all { it.enrollmentState == EnrollmentAPI.STATE_DELETED } ?: false
+fun Course.isCreationPending(): Boolean = enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_CREATION_PENDING } ?: false
+fun Course.isNotDeleted(): Boolean = workflowState != Course.WorkflowState.DELETED
+fun Course.isPublished(): Boolean = workflowState != Course.WorkflowState.UNPUBLISHED
+
+fun ModuleItem.isLocked(): Boolean = moduleDetails?.lockedForUser ?: false || moduleDetails?.lockExplanation.isValid() && moduleDetails?.lockDate?.before(Date()) == true && moduleDetails.unlockDate?.after(Date()) == true
 
 fun MediaComment.asAttachment() = Attachment().also {
     it.contentType = contentType ?: ""

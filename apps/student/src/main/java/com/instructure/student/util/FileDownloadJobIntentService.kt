@@ -124,7 +124,7 @@ class FileDownloadJobIntentService : JobIntentService() {
         try {
             val okHttp = OkHttpClient.Builder().build()
             val request = Request.Builder().url(fileUrl).build()
-            val source = okHttp.newCall(request).execute().body()?.source() ?: return DownloadFailed()
+            val source = okHttp.newCall(request).execute().body?.source() ?: return DownloadFailed()
             val sink = downloadedFile.sink().buffer()
 
             var startTime = System.currentTimeMillis()

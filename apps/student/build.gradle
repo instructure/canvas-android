@@ -24,7 +24,9 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'dagger.hilt.android.plugin'
 
+def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
@@ -57,12 +59,12 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 225
-        versionName = '6.10.0'
+        versionCode = 231
+        versionName = '6.14.1'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
-        testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
+        testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
         buildConfigField "boolean", "IS_TESTING", "false"
 
@@ -184,8 +186,7 @@ android {
         */
         resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
 
-        // Fix for Robolectric 4.x
-        resolutionStrategy.force "org.ow2.asm:asm:7.0"
+        resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
     }
 
     /*
@@ -210,7 +211,7 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
-                    new LocaleTransformer(),
+                    new LocaleTransformer(project),
                     new FlutterA11yOffsetTransformer(),
                     new FlutterTextureDisconnectFix()
             )
@@ -219,6 +220,18 @@ android {
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    buildFeatures {
+        dataBinding true
+    }
+
+    hilt {
+        enableTransformForLocalTests = true
     }
 }
 
@@ -241,11 +254,6 @@ dependencies {
     androidTestImplementation project(path: ':espresso')
     androidTestImplementation project(':dataseedingapi')
 
-    /* OkHttp Idling Resource */
-    implementation('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
-        exclude module: 'espresso-idling-resource'
-    }
-
     /* Unit Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
@@ -255,6 +263,7 @@ dependencies {
     testImplementation Libs.KOTLIN_COROUTINES_TEST
     testImplementation Libs.FIREBASE_CORE
     testImplementation Libs.THREETEN_BP
+    testImplementation Libs.ANDROIDX_CORE_TESTING
 
     implementation (Libs.FIREBASE_ANALYTICS) {
         transitive = true
@@ -274,15 +283,14 @@ dependencies {
     implementation Libs.MOBIUS_EXTRAS
 
     /* Media Handling */
-    implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation Libs.PHOTO_VIEW
-    implementation 'com.airbnb.android:lottie:3.4.1'
+    implementation Libs.LOTTIE
 
     /* Sliding Panel */
-    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation Libs.SLIDING_UP_PANEL
 
     /* Apache Commons */
-    implementation 'org.apache.commons:commons-text:1.6'
+    implementation Libs.APACHE_COMMONS_TEXT
 
     /* Support dependencies */
     implementation Libs.ANDROIDX_ANNOTATION
@@ -297,16 +305,29 @@ dependencies {
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_CORE
 
-    /* Job Scheduler */
-    implementation Libs.FIREBASE_JOB_DISPATCHER
-
     /* Database */
-    implementation "com.squareup.sqldelight:android-driver:1.4.3"
+    implementation Libs.SQLDELIGHT
 
     /* Qr Code */
     implementation(Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.ZXING
-    implementation "com.google.firebase:firebase-crashlytics-ndk:17.2.1"
+
+    /* AAC */
+    implementation Libs.VIEW_MODEL
+    implementation Libs.LIVE_DATA
+    implementation Libs.VIEW_MODE_SAVED_STATE
+    implementation Libs.FRAGMENT_KTX
+    kapt Libs.LIFECYCLE_COMPILER
+
+    /* DI */
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
+    androidTestImplementation Libs.HILT_TESTING
+    kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
+
+    androidTestImplementation Libs.UI_AUTOMATOR
+
+    implementation Libs.FIREBASE_CRASHLYTICS_NDK
 }
 
 // Comment out this line if the reporting logic starts going wonky.

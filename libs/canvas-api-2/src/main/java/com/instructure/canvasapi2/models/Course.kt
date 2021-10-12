@@ -69,7 +69,13 @@ data class Course(
         @SerializedName("restrict_enrollments_to_course_dates")
         val restrictEnrollmentsToCourseDate: Boolean = false,
         @SerializedName("workflow_state")
-        val workflowState: String? = null
+        val workflowState: WorkflowState? = null,
+        @SerializedName("homeroom_course")
+        val homeroomCourse: Boolean = false,
+        @SerializedName("course_color")
+        val courseColor: String? = null,
+        @SerializedName("grading_periods")
+        val gradingPeriods: List<GradingPeriod>? = null
 ) : CanvasContext(), Comparable<CanvasContext> {
     override val type: Type get() = Type.COURSE
 
@@ -206,30 +212,24 @@ data class Course(
      *
      * Useful for setting content to read-only, such as submissions
      */
-    fun isReadOnlyForCurrentDate(): Boolean {
+    fun isBetweenValidDateRange(): Boolean {
         val now = Date()
         if (accessRestrictedByDate) return false
 
-        if (workflowState == "completed") return false
+        if (workflowState == WorkflowState.COMPLETED) return false
 
-        val isValidForCourse = isWithinDates(
-                startAt.toDate(),
-                endAt.toDate(),
-                now
-        )
-
-        return if (restrictEnrollmentsToCourseDate && !isValidForCourse) {
-            false
+        return if (restrictEnrollmentsToCourseDate) {
+            isWithinDates(startAt.toDate(), endAt.toDate(), now)
         } else {
             val isValidForTerm = isWithinDates(term?.startDate, term?.endDate, now)
 
-            if(isValidForTerm) {
+            if (isValidForTerm) {
                 // check the sections
                 if (sections.isEmpty()) {
                     true
                 } else {
                     // All we need is one valid section
-                    sections.any { section -> isWithinDates(section.startAt.toDate(), section.endAt.toDate(), now) }
+                    sections.any { section -> !section.restrictEnrollmentsToSectionDates || isWithinDates(section.startAt.toDate(), section.endAt.toDate(), now) }
                 }
             } else {
                 false
@@ -281,5 +281,13 @@ data class Course(
         @SerializedName("cc_by_sa") CC_ATTRIBUTION_SHARE_ALIKE("cc_by_sa", "CC Attribution Share Alike"),
         @SerializedName("cc_by") CC_ATTRIBUTION("cc_by", "CC Attribution"),
         @SerializedName("public_domain") PUBLIC_DOMAIN("public_domain", "Public Domain")
+    }
+
+    enum class WorkflowState(val apiString: String) {
+        @SerializedName("unpublished") UNPUBLISHED("unpublished"),
+        @SerializedName("available") AVAILABLE("available"),
+        @SerializedName("completed") COMPLETED("completed"),
+        @SerializedName("deleted") DELETED("deleted")
+
     }
 }

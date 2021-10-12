@@ -24,8 +24,10 @@ import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+@HiltAndroidTest
 class GradesE2ETest: StudentTest() {
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

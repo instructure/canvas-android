@@ -31,6 +31,10 @@ object EnrollmentAPI {
 
     const val STATE_ACTIVE = "active"
     const val STATE_INVITED = "invited"
+    const val STATE_COMPLETED = "completed"
+    const val STATE_DELETED = "deleted"
+    const val STATE_CREATION_PENDING = "creation_pending"
+    const val STATE_CURRENT_AND_FUTURE = "current_and_future"
 
     internal interface EnrollmentInterface {
 
@@ -58,6 +62,9 @@ object EnrollmentAPI {
 
         @POST("courses/{courseId}/enrollments/{enrollmentId}/{action}")
         fun handleInvite(@Path("courseId") courseId: Long, @Path("enrollmentId") enrollmentId: Long, @Path("action") action: String): Call<Void>
+
+        @GET("users/self/enrollments?state[]=active&type[]=StudentEnrollment")
+        fun getFirstPageEnrollmentsForGradingPeriod(@Query("grading_period_id") gradingPeriodId: Long): Call<List<Enrollment>>
     }
 
     fun getFirstPageEnrollmentsForCourse(
@@ -112,5 +119,17 @@ object EnrollmentAPI {
 
     fun handleInvite(courseId: Long, enrollmentId: Long, acceptInvite: Boolean, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Void>) {
         callback.addCall(adapter.build(EnrollmentInterface::class.java, params).handleInvite(courseId, enrollmentId, if (acceptInvite) "accept" else "reject")).enqueue(callback)
+    }
+
+    fun getEnrollmentsForGradingPeriod(
+        gradingPeriodId: Long,
+        adapter: RestBuilder,
+        params: RestParams,
+        callback: StatusCallback<List<Enrollment>>) {
+        if (StatusCallback.isFirstPage(callback.linkHeaders)) {
+            callback.addCall(adapter.build(EnrollmentInterface::class.java, params).getFirstPageEnrollmentsForGradingPeriod(gradingPeriodId)).enqueue(callback)
+        } else if (callback.linkHeaders != null && StatusCallback.moreCallsExist(callback.linkHeaders)) {
+            callback.addCall(adapter.build(EnrollmentInterface::class.java, params).getNextPage(callback.linkHeaders!!.nextUrl!!)).enqueue(callback)
+        }
     }
 }

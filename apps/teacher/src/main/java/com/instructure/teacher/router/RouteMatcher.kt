@@ -45,6 +45,7 @@ import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentList
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.*
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
@@ -72,14 +73,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/"), CoursesFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id"), CourseBrowserFragment::class.java))
 
-        val showSyllabus = RemoteConfigUtils.getBoolean(RemoteConfigParam.SHOW_TEACHER_SYLLABUS)
-        val syllabusRoute = if (showSyllabus) {
-            Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusFragment::class.java)
-        } else {
-            // We don't want to route to the syllabus, but this needs to be above the other assignments routing so it catches here first
-            Route(courseOrGroup("/:course_id/assignments/syllabus"), RouteContext.DO_NOT_ROUTE)
-        }
-        routes.add(syllabusRoute)
+        routes.add(Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/assignments"), AssignmentListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/assignments/:assignment_id"), AssignmentListFragment::class.java, AssignmentDetailsFragment::class.java))
@@ -104,6 +98,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         routes.add(Route(courseOrGroup("/:course_id/files"), FileListFragment::class.java))
 
+        routes.add(Route(courseOrGroup("/:course_id/modules/:module_id"), ModuleListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/pages/"), PageListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/pages/:page_id/"), PageListFragment::class.java, PageDetailsFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/wiki/"), PageListFragment::class.java))

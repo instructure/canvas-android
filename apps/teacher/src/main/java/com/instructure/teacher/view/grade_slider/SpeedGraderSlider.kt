@@ -36,7 +36,7 @@ import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
 class SpeedGraderSlider @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     var onGradeChanged: (String, Boolean) -> Unit by Delegates.notNull()
@@ -44,6 +44,7 @@ class SpeedGraderSlider @JvmOverloads constructor(
     private lateinit var assignment: Assignment
     private var submission: Submission? = null
     private lateinit var assignee: Assignee
+    private var maxGradeValue: Int = 0
 
     private var isExcused: Boolean = false
     private var notGraded: Boolean = false
@@ -68,7 +69,25 @@ class SpeedGraderSlider @JvmOverloads constructor(
             accessibleTouchTarget()
         }
 
-        slider.max = 0
+        minGrade.apply {
+            setOnClickListener {
+                updateGrade(0)
+                notGraded = false
+                isExcused = false
+            }
+            accessibleTouchTarget()
+        }
+
+        maxGrade.apply {
+            setOnClickListener {
+                updateGrade(maxGradeValue)
+                notGraded = false
+                isExcused = false
+            }
+            accessibleTouchTarget()
+        }
+
+        slider.max = maxGradeValue
     }
 
     fun setData(assignment: Assignment, submission: Submission?, assignee: Assignee) {
@@ -111,17 +130,26 @@ class SpeedGraderSlider @JvmOverloads constructor(
                 pointsPossibleView.setGone()
             }
             slider.progress = this.submission?.score?.div(this.assignment.pointsPossible)?.times(100)?.toInt()
-                    ?: 0
+                ?: 0
             minGrade.text = "0%"
         }
+
+        maxGradeValue = slider.max
 
         slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (!isExcused && !notGraded) {
                     if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.PERCENT) {
-                        EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, "$progress%"))
+                        EventBus.getDefault()
+                            .post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, "$progress%"))
                     } else {
-                        EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, progress.toString()))
+                        EventBus.getDefault().post(
+                            ShowSliderGradeEvent(
+                                seekBar,
+                                this@SpeedGraderSlider.assignee.id,
+                                progress.toString()
+                            )
+                        )
                     }
                 }
 
@@ -188,7 +216,8 @@ class SpeedGraderSlider @JvmOverloads constructor(
 
             val label: String
             if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
-                anchorRect.left = anchorRect.left + slider.paddingLeft + (this.assignment.pointsPossible.toInt() * stepWidth).roundToInt()
+                anchorRect.left =
+                    anchorRect.left + slider.paddingLeft + (this.assignment.pointsPossible.toInt() * stepWidth).roundToInt()
                 label = NumberHelper.formatDecimal(this.assignment.pointsPossible, 0, true)
             } else {
                 anchorRect.left = anchorRect.left + slider.paddingLeft + width / 2

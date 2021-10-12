@@ -14,6 +14,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/plannable.dart';
 import 'package:flutter_student_embed/models/planner_item.dart';
@@ -151,9 +152,10 @@ void main() {
 
   group('PopupMenu delete', () {
     testWidgetsWithAccessibilityChecks('shows and dismisses when cancelled', (tester) async {
+      final String channelId = "ToDoChannel";
       final item = simplePlannerItem;
 
-      await tester.pumpWidget(TestApp(ToDoDetailsScreen(item)));
+      await tester.pumpWidget(TestApp(ToDoDetailsScreen(item, channelId: channelId)));
       await tester.pump();
 
       final popupMenu = find.byType(typeOf<PopupMenuButton<int>>());
@@ -165,29 +167,33 @@ void main() {
       final deleteButton = find.text(AppLocalizations().delete);
       expect(deleteButton, findsOneWidget);
 
+      MethodCall methodCall;
+      MethodChannel(channelId).setMockMethodCallHandler((MethodCall call) async {
+        methodCall = call;
+        return false; // We return false from the platform dialog if the user dismisses it or clicks cancel.
+      });
+
       await tester.tap(deleteButton);
       await tester.pumpAndSettle();
 
-      expect(find.byType(AlertDialog), findsOneWidget);
-      expect(find.text(AppLocalizations().areYouSure), findsOneWidget);
-      expect(find.text(AppLocalizations().deleteToDoConfirmationMessage), findsOneWidget);
-      expect(find.text(AppLocalizations().cancel.toUpperCase()), findsOneWidget);
-      expect(find.text(AppLocalizations().delete.toUpperCase()), findsOneWidget);
-
-      await tester.tap(find.text(AppLocalizations().cancel.toUpperCase()));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(AlertDialog), findsNothing);
+      expect(methodCall.method, 'showDialog');
+      expect(methodCall.arguments, {
+        "title": AppLocalizations().areYouSure,
+        "message": AppLocalizations().deleteToDoConfirmationMessage,
+        "positiveButtonText": AppLocalizations().delete,
+        "negativeButtonText": AppLocalizations().cancel
+      });
 
       verifyNever(plannerApi.deletePlannerNote(any));
     });
 
     testWidgetsWithAccessibilityChecks('shows loading and errors', (tester) async {
+      final String channelId = "ToDoChannel";
       final completer = Completer<Plannable>();
       final item = simplePlannerItem;
       when(plannerApi.deletePlannerNote(any)).thenAnswer((_) => completer.future);
 
-      await tester.pumpWidget(TestApp(ToDoDetailsScreen(item)));
+      await tester.pumpWidget(TestApp(ToDoDetailsScreen(item, channelId: channelId)));
       await tester.pump();
 
       final popupMenu = find.byType(typeOf<PopupMenuButton<int>>());
@@ -199,38 +205,39 @@ void main() {
       final deleteButton = find.text(AppLocalizations().delete);
       expect(deleteButton, findsOneWidget);
 
+      MethodCall methodCall;
+      MethodChannel(channelId).setMockMethodCallHandler((MethodCall call) async {
+        methodCall = call;
+        return true; // We return true from the platform dialog if the user clicks delete.
+      });
+
       await tester.tap(deleteButton);
-      await tester.pumpAndSettle();
-
-      expect(find.byType(AlertDialog), findsOneWidget);
-      expect(find.text(AppLocalizations().areYouSure), findsOneWidget);
-      expect(find.text(AppLocalizations().deleteToDoConfirmationMessage), findsOneWidget);
-      expect(find.text(AppLocalizations().cancel.toUpperCase()), findsOneWidget);
-      expect(find.text(AppLocalizations().delete.toUpperCase()), findsOneWidget);
-
-      await tester.tap(find.text(AppLocalizations().delete.toUpperCase()));
       await tester.pump();
 
-      expect(find.text(AppLocalizations().cancel.toUpperCase()), findsNothing);
-      expect(find.text(AppLocalizations().delete.toUpperCase()), findsNothing);
+      expect(methodCall.method, 'showDialog');
+      expect(methodCall.arguments, {
+        "title": AppLocalizations().areYouSure,
+        "message": AppLocalizations().deleteToDoConfirmationMessage,
+        "positiveButtonText": AppLocalizations().delete,
+        "negativeButtonText": AppLocalizations().cancel
+      });
+
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
       completer.completeError('Intentional Test Error');
       await tester.pump();
 
+      expect(find.byType(SnackBar), findsOneWidget);
       expect(find.text(AppLocalizations().errorDeletingToDo), findsOneWidget);
-      expect(find.text(AppLocalizations().cancel.toUpperCase()), findsOneWidget);
-      expect(find.text(AppLocalizations().delete.toUpperCase()), findsOneWidget);
-      expect(find.byType(CircularProgressIndicator), findsNothing);
-
       verify(plannerApi.deletePlannerNote(any)).called(1);
     });
 
     testWidgetsWithAccessibilityChecks('can delete items', (tester) async {
+      final String channelId = "ToDoChannel";
       final item = simplePlannerItem;
       when(plannerApi.deletePlannerNote(any)).thenAnswer((_) async => item.plannable);
 
-      await tester.pumpWidget(TestApp(ToDoDetailsScreen(item)));
+      await tester.pumpWidget(TestApp(ToDoDetailsScreen(item, channelId: channelId)));
       await tester.pump();
 
       final popupMenu = find.byType(typeOf<PopupMenuButton<int>>());
@@ -239,22 +246,30 @@ void main() {
       await tester.tap(popupMenu);
       await tester.pumpAndSettle();
 
+      MethodCall methodCall;
+      MethodChannel(channelId).setMockMethodCallHandler((MethodCall call) async {
+        methodCall = call;
+        return true; // We return true from the platform dialog if the user clicks delete.
+      });
+
       final deleteButton = find.text(AppLocalizations().delete);
       expect(deleteButton, findsOneWidget);
 
       await tester.tap(deleteButton);
-      await tester.pumpAndSettle();
+      await tester.pump();
 
-      expect(find.byType(AlertDialog), findsOneWidget);
-      expect(find.text(AppLocalizations().areYouSure), findsOneWidget);
-      expect(find.text(AppLocalizations().deleteToDoConfirmationMessage), findsOneWidget);
-      expect(find.text(AppLocalizations().cancel.toUpperCase()), findsOneWidget);
-      expect(find.text(AppLocalizations().delete.toUpperCase()), findsOneWidget);
+      expect(methodCall.method, 'showDialog');
+      expect(methodCall.arguments, {
+        "title": AppLocalizations().areYouSure,
+        "message": AppLocalizations().deleteToDoConfirmationMessage,
+        "positiveButtonText": AppLocalizations().delete,
+        "negativeButtonText": AppLocalizations().cancel
+      });
 
-      await tester.tap(find.text(AppLocalizations().delete.toUpperCase()));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(AlertDialog), findsNothing);
+      // Loading finished and there is no error
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byType(SnackBar), findsNothing);
+      expect(find.text(AppLocalizations().errorDeletingToDo), findsNothing);
       verify(plannerApi.deletePlannerNote(any)).called(1);
     });
   });

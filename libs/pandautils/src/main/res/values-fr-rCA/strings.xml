@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Choisir un média</string>
     <string name="takeVideo">Enregistrer une vidéo</string>
     <string name="noCameraOnDevice">Aucune caméra</string>
@@ -42,8 +41,11 @@
 
     <string name="notificationChannelNameFileUploadsName">Notifications de téléversement</string>
     <string name="notificationChannelNameFileUploadsDescription">Notifications de Canvas pour les téléversements en cours.</string>
+
+
     <!-- Turn in Files -->
     <string name="addFile">Ajouter un fichier</string>
+
     <string name="fromCamera">Caméra</string>
     <string name="fromGallery">Galerie</string>
     <string name="fromDevice">Dispositif</string>
@@ -53,7 +55,6 @@
     <string name="file">Fichier</string>
     <string name="fileTalkBack">Fichier %s</string>
     <string name="folderTalkBack">Dossier %s</string>
-
     <string name="addItem">Ajouter un élément</string>
     <string name="assignment">Tâche</string>
     <string name="attachedFiles">Fichiers joints</string>
@@ -97,6 +98,7 @@
     <string name="assignmentSubmissionUpload">Téléversement de l’envoi pour %s</string>
     <string name="assignmentSubmissionError">Échec de l’envoi pour %s</string>
     <string name="assignmentSubmissionComplete">%s envoyé avec succès!</string>
+
     <!--Errors-->
     <string name="errorOccurred">Une erreur inattendue s’est produite.</string>
     <string name="serverError">Une erreur de serveur s\'est produite.</string>
@@ -183,9 +185,9 @@
     <string name="noModulesSubtext">Il semblerait qu\'il n\'y ait aucun module créé pour le moment.</string>
     <string name="noPages">Aucune page</string>
     <string name="noPagesSubtext">Il semblerait qu\'aucune page n\'ait encore été créée.</string>
-
     <string name="modulesLockedSubtext">Les modules ont été désactivés pour ce cours.</string>
     <string name="modulesLocked">Une erreur est survenue</string>
+
     <!--General-->
     <string name="yes">Oui</string>
     <string name="no">Non</string>
@@ -227,7 +229,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Enseignant Canvas</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Enquêtes Canvas</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
@@ -327,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">La date de déverrouillage ne peut pas être postérieure à la date d’échéance.</string>
     <string name="utils_lockBeforeDueDateError">La date de verrouillage ne peut pas être antérieure à la date d’échéance.</string>
     <string name="utils_lockAfterUnlockError">La date de verrouillage ne peut pas être antérieure à la date de déverrouillage.</string>
@@ -380,13 +382,14 @@
     <string name="utils_uploadToSubmissionComment">Téléverser au commentaire de soumission</string>
     <string name="utils_attachFile">Joindre un fichier</string>
     <string name="utils_with">avec</string>
+
     <string name="notificationPrimaryInboxTitle">Notification de Canvas</string>
     <string name="notificationChannelNamePrimary">Notifications générales de Canvas</string>
     <string name="notificationChannelDescriptionPrimary">D\'autres configurations de notifications peuvent être effectuées dans la section Préférences de notification de Canvas.</string>
-
     <plurals name="notificationGroupContent">
         <item quantity="other">%d nouvelles notifications</item>
     </plurals>
+
     <string name="copyLinkAddress">Copier l’adresse du lien</string>
     <string name="copyLink">Copier le lien</string>
     <string name="linkCopied">Lien copié</string>
@@ -416,7 +419,6 @@
     <string name="image_uploading">Téléversement d’image(s) en cours...</string>
     <string name="image_upload_error">Erreur de téléversement d’image</string>
     <string name="retry">Réessayer</string>
-
     <string name="search">Rechercher</string>
     <string name="searchAssignmentsHint">Rechercher des tâches</string>
     <string name="searchAnnouncementsHint">Recherche des annonces</string>
@@ -424,6 +426,33 @@
     <string name="searchPagesHint">Rechercher des pages</string>
     <string name="searchQuizzesHint">Rechercher des questionnaires</string>
     <string name="noItemsMatchingQuery">Aucun élément ne correspond à \"%s\"</string>
+
     <string name="selected">Sélectionné</string>
+
+    <string name="notificationChannelNameInAppUpdate">Notification de mise à jour de l’application</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Notifications Canvas pour les mises à jour intégrées à l\'application.</string>
+    <string name="appUpdateReadyTitle">Application prête à être mise à jour</string>
+    <string name="appUpdateReadyDescription">Redémarrez l\'application pour installer la nouvelle version</string>
+    <string name="nothing_planned_yet">Rien de planifié en ce moment</string>
+    <string name="schedule_tag_graded">Noté</string>
+    <string name="schedule_tag_replies">Réponses</string>
+    <string name="schedule_tag_feedback">Rétroaction</string>
+    <string name="schedule_tag_late">En retard</string>
+    <string name="schedule_tag_redo">Rétablir</string>
+    <string name="schedule_tag_excused">Exempté</string>
+    <string name="tomorrow">Demain</string>
+    <string name="yesterday">Hier</string>
+    <string name="schedule_calendar_event_due_text">À %s</string>
+    <string name="schedule_todo_due_text">À faire : %s</string>
+    <string name="schedule_due_text">Échéance : %s</string>
+    <string name="show_missing_items_title">Afficher les %d éléments manquants</string>
+    <string name="hide_missing_items_title">Masquer les %d éléments manquants</string>
+    <string name="schedule_error_message">Impossible d\'obtenir votre horaire</string>
+    <string name="schedule_todo_title">À faire</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s pts</item>
+    </plurals>
 
 </resources>

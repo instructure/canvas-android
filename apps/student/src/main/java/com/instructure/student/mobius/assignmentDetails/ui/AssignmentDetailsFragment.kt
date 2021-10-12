@@ -16,8 +16,10 @@
  */
 package com.instructure.student.mobius.assignmentDetails.ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityManager
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -56,7 +58,7 @@ class AssignmentDetailsFragment :
     override fun makeUpdate() = AssignmentDetailsUpdate()
 
     override fun makeView(inflater: LayoutInflater, parent: ViewGroup) =
-        AssignmentDetailsView(canvasContext, inflater, parent)
+        AssignmentDetailsView(canvasContext, isAccessibilityEnabled(requireContext()), inflater, parent)
 
     override fun makePresenter() = AssignmentDetailsPresenter
 
