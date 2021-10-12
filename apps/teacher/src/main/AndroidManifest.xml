@@ -233,4 +233,8 @@
         </service>
     </application>
 
+    <queries>
+        <package android:name="com.instructure.candroid" />
+    </queries>
+
 </manifest>
