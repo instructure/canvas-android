@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.Event
@@ -50,7 +51,7 @@ class ElementaryCourseViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<CourseAction>>()
 
-    fun getData(canvasContext: CanvasContext, forceNetwork: Boolean = false) {
+    fun getData(canvasContext: CanvasContext, forceNetwork: Boolean = true) {
         viewModelScope.launch {
             try {
                 val tabs = tabManager.getTabsForElementaryAsync(canvasContext, forceNetwork).await().dataOrThrow
@@ -62,6 +63,7 @@ class ElementaryCourseViewModel @Inject constructor(
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
                 _state.postValue(ViewState.Error())
+                Logger.e("Failed to load tabs")
             }
         }
     }
