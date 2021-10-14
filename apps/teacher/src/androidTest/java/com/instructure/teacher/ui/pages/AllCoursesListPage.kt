@@ -19,12 +19,7 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Course
-import com.instructure.espresso.OnViewWithContentDescription
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.OnViewWithText
-import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.teacher.R
@@ -45,6 +40,10 @@ class AllCoursesListPage : BasePage() {
     fun assertHasCourses(mCourses: List<Course>) {
         coursesRecyclerView.check(RecyclerViewItemCountAssertion(mCourses.size))
         for (course in mCourses) onView(withText(course.name)).assertDisplayed()
+    }
+
+    fun navigateBack() {
+        backButton.click()
     }
 
 }

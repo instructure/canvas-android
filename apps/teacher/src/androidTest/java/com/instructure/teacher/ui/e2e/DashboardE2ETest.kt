@@ -29,7 +29,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class DashboardE2ETest: TeacherTest() {
+class DashboardE2ETest : TeacherTest() {
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -39,7 +39,7 @@ class DashboardE2ETest: TeacherTest() {
     @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testDashboardE2E() {
 
-        val data = seedData(teachers = 1, courses = 2, favoriteCourses = 1)
+        val data = seedData(teachers = 1, courses = 2)
         val teacher = data.teachersList[0]
 
         tokenLogin(teacher)
@@ -51,17 +51,18 @@ class DashboardE2ETest: TeacherTest() {
 
         dashboardPage.clickSeeAll()
         refresh()
-        for(course in data.coursesList) {
+        for (course in data.coursesList) {
             dashboardPage.assertDisplaysCourse(course)
         }
-        dashboardPage.navigateBack()
-        
-        dashboardPage.editFavoriteCoursesWithCourse(data.coursesList[1])
-        refresh()
-        for(course in data.coursesList) {
-            dashboardPage.assertDisplaysCourse(course)
-        }
+        allCoursesListPage.navigateBack()
 
-        dashboardPage.assertOpensCourse(data.coursesList[0])
+        dashboardPage.editFavoriteCoursesWithCourse(data.coursesList[1])
+        allCoursesListPage.navigateBack()
+        refresh()
+
+        dashboardPage.assertDisplaysCourse(data.coursesList[1])
+
+        dashboardPage.assertOpensCourse(data.coursesList[1])
+        allCoursesListPage.navigateBack()
     }
 }
