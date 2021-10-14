@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentElementaryCourseBinding
@@ -44,6 +45,11 @@ class ElementaryCourseFragment : Fragment() {
     ): View {
         val binding = FragmentElementaryCourseBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
+
+        if (canvasContext.isCourse) {
+            binding.course = canvasContext as Course
+        }
+
         binding.viewModel = viewModel
         return binding.root
     }
@@ -52,6 +58,12 @@ class ElementaryCourseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
         viewModel.getData(canvasContext)
+    }
+
+    private fun applyTheme() {
+        toolbar.title = canvasContext.name
+        toolbar.setupAsBackButton(this)
+        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
     }
 
     companion object {
@@ -63,11 +75,5 @@ class ElementaryCourseFragment : Fragment() {
         private fun validateRoute(route: Route) = route.canvasContext != null
 
         fun makeRoute(canvasContext: CanvasContext?) = Route(ElementaryCourseFragment::class.java, canvasContext)
-    }
-
-    private fun applyTheme() {
-        toolbar.title = canvasContext.name
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
     }
 }

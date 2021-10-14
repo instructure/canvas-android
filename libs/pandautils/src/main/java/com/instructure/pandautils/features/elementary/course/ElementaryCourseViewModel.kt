@@ -51,7 +51,8 @@ class ElementaryCourseViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<CourseAction>>()
 
-    fun getData(canvasContext: CanvasContext, forceNetwork: Boolean = true) {
+    fun getData(canvasContext: CanvasContext, forceNetwork: Boolean = false) {
+        _state.postValue(ViewState.Loading)
         viewModelScope.launch {
             try {
                 val tabs = tabManager.getTabsForElementaryAsync(canvasContext, forceNetwork).await().dataOrThrow
