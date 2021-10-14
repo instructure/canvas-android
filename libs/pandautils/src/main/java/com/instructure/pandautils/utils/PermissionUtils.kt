@@ -36,7 +36,6 @@ object PermissionUtils {
 
     const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
     const val WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE
-    const val READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE
 
     const val CAMERA = Manifest.permission.CAMERA
     const val RECORD_AUDIO = Manifest.permission.RECORD_AUDIO

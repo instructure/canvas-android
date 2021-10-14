@@ -136,11 +136,6 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
-        <activity
-            android:name="com.instructure.pandautils.activities.NotoriousMediaUploadPicker"
-            android:theme="@style/Theme.Notorious"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
-
         <activity android:name=".activity.VideoViewActivity"
             android:label="@string/student_app_name"
             android:theme="@style/CanvasMaterialTheme_Default"
