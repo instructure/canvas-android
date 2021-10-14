@@ -47,23 +47,18 @@ class ElementaryCourseViewModel @Inject constructor(
         get() = _data
     private val _data = MutableLiveData<ElementaryCourseViewData>()
 
-    val events: LiveData<Event<CourseAction>>
-        get() = _events
-    private val _events = MutableLiveData<Event<CourseAction>>()
-
     fun getData(canvasContext: CanvasContext, forceNetwork: Boolean = false) {
         _state.postValue(ViewState.Loading)
         viewModelScope.launch {
             try {
                 val tabs = tabManager.getTabsForElementaryAsync(canvasContext, forceNetwork).await().dataOrThrow
-                tabs.filter { it.isHidden }
-                    .sortedBy { it.position }
+                val filteredTabs = tabs.filter { !it.isHidden }.sortedBy { it.position }
 
-                val tabViewData = createTabs(tabs)
+                val tabViewData = createTabs(filteredTabs)
                 _data.postValue(ElementaryCourseViewData(tabViewData))
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
-                _state.postValue(ViewState.Error())
+                _state.postValue(ViewState.Error(resources.getString(R.string.error_loading_course_details)))
                 Logger.e("Failed to load tabs")
             }
         }

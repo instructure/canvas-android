@@ -27,5 +27,3 @@ data class ElementaryCourseTab(
     val text: String?,
     val url: String?
 )
-
-sealed class CourseAction()
