@@ -17,12 +17,14 @@
 
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import android.view.View
 import com.instructure.canvasapi2.models.Course
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers
+import org.hamcrest.Matcher
 
 @Suppress("unused")
 class AllCoursesListPage : BasePage() {
@@ -44,6 +46,25 @@ class AllCoursesListPage : BasePage() {
 
     fun navigateBack() {
         backButton.click()
+    }
+
+    fun assertDisplaysCourse(course: CourseApiModel) {
+        val matcher = CoreMatchers.allOf(
+            withText(course.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        scrollAndAssertDisplayed(matcher)
+    }
+
+    private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
+        onView(matcher).assertDisplayed()
+    }
+
+    fun editFavoriteCoursesWithCourse(course: CourseApiModel) {
+        onView(withId(R.id.menu_edit_favorite_courses)).click()
+        onView(withParent(R.id.toolbar) + withText(R.string.edit_courses)).assertDisplayed()
+        onView(withText(course.name)).click()
     }
 
 }

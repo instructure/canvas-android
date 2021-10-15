@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.panda_annotations.FeatureCategory
@@ -49,20 +50,27 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.assertDisplaysCourses()
         dashboardPage.assertDisplaysCourse(data.coursesList[0])
 
-        dashboardPage.clickSeeAll()
+        dashboardPage.clickSeeAll() //allCoursesListPage appearing as the result of this operation
         refresh()
         for (course in data.coursesList) {
-            dashboardPage.assertDisplaysCourse(course)
+            allCoursesListPage.assertDisplaysCourse(course)
         }
-        allCoursesListPage.navigateBack()
 
-        dashboardPage.editFavoriteCoursesWithCourse(data.coursesList[1])
-        allCoursesListPage.navigateBack()
+        allCoursesListPage.navigateBack() //navigate back to the dashboard
+
+        dashboardPage.editFavoriteCoursesWithCourse(data.coursesList[1]) //navigate to edit courses list page and select second course as favourite
+        editCoursesListPage.navigateBack() //navigate back to the dashboard
         refresh()
 
         dashboardPage.assertDisplaysCourse(data.coursesList[1])
-
         dashboardPage.assertOpensCourse(data.coursesList[1])
-        allCoursesListPage.navigateBack()
+        Espresso.pressBack()
+
+        dashboardPage.editFavoriteCoursesWithCourse(data.coursesList[1])
+        editCoursesListPage.navigateBack()
+        refresh()
+
+        dashboardPage.assertDisplaysCourse(data.coursesList[0])
+        dashboardPage.assertDisplaysCourse(data.coursesList[1])
     }
 }
