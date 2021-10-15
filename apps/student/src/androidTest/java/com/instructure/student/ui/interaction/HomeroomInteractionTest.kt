@@ -228,8 +228,8 @@ class HomeroomInteractionTest : StudentTest() {
 
         homeroomPage.openCourse(courses[0].name)
 
-        courseBrowserPage.assertPageObjects()
-        courseBrowserPage.assertTitleCorrect(courses[0])
+        elementaryCoursePage.assertPageObjects()
+        elementaryCoursePage.assertTitleCorrect(courses[0])
     }
 
     @Test

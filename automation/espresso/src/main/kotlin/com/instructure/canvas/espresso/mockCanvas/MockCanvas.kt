@@ -497,7 +497,8 @@ fun MockCanvas.addCourse(
         sections = if (section != null) listOf(section) else listOf<Section>(),
         isPublic = isPublic,
         homeroomCourse = isHomeroom,
-        gradingPeriods = gradingPeriodList
+        gradingPeriods = gradingPeriodList,
+        courseColor = "#008EE2"
     )
     courses += course.id to course
 
