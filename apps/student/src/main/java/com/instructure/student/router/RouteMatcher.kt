@@ -29,6 +29,7 @@ import androidx.loader.content.Loader
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -37,11 +38,10 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.elementary.course.ElementaryCourseFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.LoaderUtils
-import com.instructure.pandautils.utils.RouteUtils
-import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.*
+import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.*
 import com.instructure.student.fragment.*
@@ -50,10 +50,12 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFrag
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.util.FileUtils
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 import java.util.regex.Pattern
+import javax.inject.Inject
 
 object RouteMatcher : BaseRouteMatcher() {
 
@@ -79,7 +81,11 @@ object RouteMatcher : BaseRouteMatcher() {
         //////////////////////////
         routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java, NotificationListFragment::class.java, Arrays.asList(":${RouterParams.RECENT_ACTIVITY}"))) // Recent Activity
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java))
+        if (BuildConfig.IS_DEBUG && ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), ElementaryCourseFragment::class.java))
+        } else {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java))
+        }
 
         // region Modules
 

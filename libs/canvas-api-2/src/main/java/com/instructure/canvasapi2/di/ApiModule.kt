@@ -1,9 +1,6 @@
 package com.instructure.canvasapi2.di
 
-import com.instructure.canvasapi2.apis.CalendarEventAPI
-import com.instructure.canvasapi2.apis.HelpLinksAPI
-import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.apis.ToDoAPI
+import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -103,5 +100,10 @@ object ApiModule {
     @Provides
     fun provideCalendarEventManager(): CalendarEventManager {
         return CalendarEventManager
+    }
+
+    @Provides
+    fun provideTabManager(): TabManager {
+        return TabManager
     }
 }

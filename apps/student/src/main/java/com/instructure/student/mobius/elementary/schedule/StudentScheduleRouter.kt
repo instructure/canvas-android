@@ -20,7 +20,9 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.pandautils.features.elementary.course.ElementaryCourseFragment
 import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
+import com.instructure.student.BuildConfig
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.fragment.CourseBrowserFragment
@@ -54,6 +56,7 @@ class StudentScheduleRouter(private val activity: FragmentActivity) : ScheduleRo
     }
 
     override fun openCourse(course: Course) {
-        RouteMatcher.route(activity, CourseBrowserFragment.makeRoute(course))
+        val route = if (BuildConfig.IS_DEBUG) ElementaryCourseFragment.makeRoute(course) else CourseBrowserFragment.makeRoute(course)
+        RouteMatcher.route(activity, route)
     }
 }
