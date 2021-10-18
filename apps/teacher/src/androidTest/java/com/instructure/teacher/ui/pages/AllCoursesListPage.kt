@@ -17,17 +17,14 @@
 
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import android.view.View
 import com.instructure.canvasapi2.models.Course
-import com.instructure.espresso.OnViewWithContentDescription
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.OnViewWithText
-import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.espresso.*
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers
+import org.hamcrest.Matcher
 
 @Suppress("unused")
 class AllCoursesListPage : BasePage() {
@@ -45,6 +42,23 @@ class AllCoursesListPage : BasePage() {
     fun assertHasCourses(mCourses: List<Course>) {
         coursesRecyclerView.check(RecyclerViewItemCountAssertion(mCourses.size))
         for (course in mCourses) onView(withText(course.name)).assertDisplayed()
+    }
+
+    fun navigateBack() {
+        backButton.click()
+    }
+
+    fun assertDisplaysCourse(course: CourseApiModel) {
+        val matcher = CoreMatchers.allOf(
+            withText(course.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        scrollAndAssertDisplayed(matcher)
+    }
+
+    private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
+        onView(matcher).assertDisplayed()
     }
 
 }
