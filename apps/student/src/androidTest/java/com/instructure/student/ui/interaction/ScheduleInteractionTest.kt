@@ -240,7 +240,7 @@ class ScheduleInteractionTest : StudentTest() {
         schedulePage.clickCourseHeader(courses[0].name)
 
         elementaryCoursePage.assertPageObjects()
-        elementaryCoursePage.assertTitleCorrect(courses[0])
+        elementaryCoursePage.assertTitleCorrect(courses[0].originalName!!)
     }
 
     @Test

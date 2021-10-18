@@ -27,7 +27,7 @@ import org.hamcrest.Matchers
 
 class ElementaryCoursePage : BasePage(R.id.elementaryCoursePage) {
 
-    fun assertTitleCorrect(course: Course) {
-        Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.courseName), ViewMatchers.isDisplayed())).assertHasText(course.originalName!!)
+    fun assertTitleCorrect(courseName: String) {
+        Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.courseName), ViewMatchers.isDisplayed())).assertHasText(courseName)
     }
 }
