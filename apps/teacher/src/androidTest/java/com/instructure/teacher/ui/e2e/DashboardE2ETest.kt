@@ -58,7 +58,8 @@ class DashboardE2ETest : TeacherTest() {
 
         allCoursesListPage.navigateBack() //navigate back to the dashboard
 
-        dashboardPage.editFavoriteCoursesWithCourse(data.coursesList[1]) //navigate to edit courses list page and select second course as favourite
+        dashboardPage.openEditCoursesListPage()
+        editCoursesListPage.toggleFavoritingCourse(data.coursesList[1].name) //navigate to edit courses list page and select second course as favourite
         editCoursesListPage.navigateBack() //navigate back to the dashboard
         refresh()
 
@@ -66,7 +67,8 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.assertOpensCourse(data.coursesList[1])
         Espresso.pressBack()
 
-        dashboardPage.editFavoriteCoursesWithCourse(data.coursesList[1])
+        dashboardPage.openEditCoursesListPage()
+        editCoursesListPage.toggleFavoritingCourse(data.coursesList[1].name) //unfavourite course
         editCoursesListPage.navigateBack()
         refresh()
 

@@ -61,10 +61,4 @@ class AllCoursesListPage : BasePage() {
         onView(matcher).assertDisplayed()
     }
 
-    fun editFavoriteCoursesWithCourse(course: CourseApiModel) {
-        onView(withId(R.id.menu_edit_favorite_courses)).click()
-        onView(withParent(R.id.toolbar) + withText(R.string.edit_courses)).assertDisplayed()
-        onView(withText(course.name)).click()
-    }
-
 }

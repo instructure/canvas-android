@@ -58,8 +58,8 @@ class EditCoursesListPage : BasePage() {
         onViewWithText(course.name).check(matches(withContentDescription(match)))
     }
 
-    fun toggleFavoritingCourse(course: Course) {
-        waitForViewWithText(course.name).click()
+    fun toggleFavoritingCourse(courseName: String) {
+        waitForViewWithText(courseName).click()
     }
 
     fun navigateBack() {

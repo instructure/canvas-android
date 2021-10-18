@@ -71,15 +71,12 @@ class DashboardPage : BasePage() {
         onView(withId(R.id.seeAllTextView)).click()
     }
 
-    fun editFavoriteCoursesWithCourse(course: CourseApiModel) {
+    fun openEditCoursesListPage() {
         onView(withId(R.id.menu_edit_favorite_courses)).click()
-        onView(withParent(R.id.toolbar) + withText(R.string.edit_courses)).assertDisplayed()
-        onView(withText(course.name)).click()
     }
 
     fun navigateBack(toolbarId: Int = R.id.toolbar) {
         onView(withParent(toolbarId) + withContentDescription("Navigate up")).click()
-
     }
 
     fun openCourse(courseName: String) {
