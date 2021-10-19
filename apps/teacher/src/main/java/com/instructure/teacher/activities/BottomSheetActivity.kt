@@ -257,10 +257,8 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
         val htmlResult = data?.getStringExtra(HTML_RESULT)
         if (activityResult == Activity.RESULT_OK && htmlResult != null) {
             EventBus.getDefault().postSticky(AssignmentDescriptionEvent(htmlResult))
-            super.onBackPressed()
-        } else {
-            super.onBackPressed()
         }
+        super.onBackPressed()
     }
 
     private fun keyboardHidden() {

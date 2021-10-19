@@ -27,6 +27,7 @@ import com.instructure.pandautils.activities.BaseActionBarActivity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ViewStyler.themeToolbar
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
@@ -50,10 +51,15 @@ class InternalWebViewActivity : BaseActionBarActivity() {
                     supportActionBar?.title = canvasContext.name
                 }
             }
-            val fragment = newInstance(makeRoute(bundle!!))
-            val ft = supportFragmentManager.beginTransaction()
-            ft.add(R.id.container, fragment, InternalWebviewFragment::class.java.name)
-            ft.commitAllowingStateLoss()
+
+            if (bundle != null) {
+                val fragment = newInstance(makeRoute(bundle))
+                val ft = supportFragmentManager.beginTransaction()
+                ft.add(R.id.container, fragment, InternalWebviewFragment::class.java.name)
+                ft.commitAllowingStateLoss()
+            } else {
+                toast(R.string.somethingWentWrong)
+            }
         }
     }
 

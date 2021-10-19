@@ -100,7 +100,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     private var httpAuthHandler: HttpAuthHandler? = null
     private var shouldShowProgressBar = false
 
-    private val accountDomain: AccountDomain by lazy { intent.getParcelableExtra<AccountDomain>(ACCOUNT_DOMAIN)!! }
+    private val accountDomain: AccountDomain by lazy { intent.getParcelableExtra<AccountDomain>(ACCOUNT_DOMAIN) ?: AccountDomain() }
     private val progressBarHandler = Handler()
 
     private val viewModel: LoginViewModel by viewModels()
@@ -385,7 +385,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
             deviceName = getString(R.string.unknownDevice)
         }
         // Remove spaces
-        deviceName = deviceName!!.replace(" ", "_")
+        deviceName = deviceName.replace(" ", "_")
         // Changed for the online update to have an actual formatted login page
         var domain = accountDomain!!.domain
         if (domain != null && domain.endsWith("/")) {
