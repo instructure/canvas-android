@@ -17,27 +17,18 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withParent
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.DirectlyPopulateEditText
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.swipeDown
-import com.instructure.espresso.typeText
+import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
@@ -52,10 +43,15 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         waitForView(matcher)
 
     }
+
     fun assertTopicDisplayed(topicTitle: String) {
         val matcher = allOf(withText(topicTitle), withId(R.id.discussionTitle))
         scrollRecyclerView(R.id.discussionRecyclerView, matcher)
         onView(matcher).assertDisplayed()
+    }
+
+    fun assertTopicNotDisplayed(topicTitle: String?) {
+        onView(allOf(withText(topicTitle))).check(ViewAssertions.doesNotExist())
     }
 
     fun assertEmpty() {
@@ -126,6 +122,18 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         onView(withContentDescription("Close")).click()
     }
 
+    fun clickOnSearchButton() {
+        onView(withId(R.id.search)).click()
+    }
+
+    fun typeToSearchBar(textToType: String) {
+        waitForViewWithId(R.id.search_src_text).replaceText(textToType)
+    }
+
+    fun clickOnClearSearchButton() {
+        onView(withId(R.id.search_close_btn)).click()
+    }
+
     fun verifyExitWithoutSavingDialog() {
         onView(withText(R.string.exitWithoutSavingMessage)).check(matches(isDisplayed()))
     }
@@ -142,6 +150,10 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
 
     fun assertOnNewAnnouncementPage() {
         onView(withText(R.string.newAnnouncement)).assertDisplayed()
+    }
+
+    fun assertOnAnnouncementListPage() {
+        onView(withText("Announcements")).assertDisplayed()
     }
 
 }
