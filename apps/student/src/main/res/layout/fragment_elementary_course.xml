@@ -25,7 +25,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.pandautils.features.elementary.course.ElementaryCourseViewModel" />
+            type="com.instructure.student.features.elementary.course.ElementaryCourseViewModel" />
 
         <variable
             name="course"

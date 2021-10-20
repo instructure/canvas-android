@@ -32,9 +32,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
-import com.google.android.material.tabs.TabLayout
 import com.instructure.pandautils.BR
-import com.instructure.pandautils.features.elementary.course.ElementaryCourseTab
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
@@ -187,16 +185,5 @@ fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: Strin
 fun bindAccessibleTouchTarget(view: View, accessibleTouchTarget: Boolean?) {
     if (accessibleTouchTarget == true) {
         view.accessibleTouchTarget()
-    }
-}
-
-@BindingAdapter("tabs")
-fun bindCourseTabs(tabLayout: TabLayout, tabs: List<ElementaryCourseTab>?) {
-    tabLayout.removeAllTabs()
-    tabs?.forEach { tab ->
-        tabLayout.addTab(tabLayout.newTab().apply {
-            icon = tab.icon
-            text = tab.text
-        })
     }
 }

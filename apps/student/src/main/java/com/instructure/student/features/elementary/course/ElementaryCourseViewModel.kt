@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.elementary.course
+package com.instructure.student.features.elementary.course
 
 import android.content.res.Resources
 import androidx.lifecycle.LiveData

@@ -27,6 +27,9 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.student.features.elementary.course.ElementaryCourseTab
+import com.instructure.student.features.elementary.course.ElementaryCourseViewData
+import com.instructure.student.features.elementary.course.ElementaryCourseViewModel
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

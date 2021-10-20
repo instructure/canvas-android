@@ -14,26 +14,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.elementary.course
+package com.instructure.student.features.elementary.course
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.R
-import com.instructure.pandautils.databinding.FragmentElementaryCourseBinding
+import com.instructure.student.databinding.FragmentElementaryCourseBinding
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_elementary_course.*
 
 @AndroidEntryPoint
 class ElementaryCourseFragment : Fragment() {
+
+    lateinit var apiPrefs: ApiPrefs
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -58,6 +60,14 @@ class ElementaryCourseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
         viewModel.getData(canvasContext)
+
+        viewModel.data.observe(viewLifecycleOwner, Observer { data ->
+            data?.let {
+                val webViews = it.tabs.map {
+
+                }
+            }
+        })
     }
 
     private fun applyTheme() {
