@@ -80,6 +80,8 @@ data class Tab(
         const val OUTCOMES_ID = "outcomes"
         const val NOTIFICATIONS_ID = "notifications"
         const val HOME_ID = "home"
+        const val SCHEDULE_ID = "schedule"
+        const val RESOURCES_ID = "resources"
         const val SETTINGS_ID = "settings"
         const val STUDENT_VIEW = "student_view" // This is an extra tab we're adding that isn't returned by the API
     }

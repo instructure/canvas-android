@@ -18,28 +18,23 @@ package com.instructure.student.ui.utils
 
 import android.app.Activity
 import android.os.Environment
-import androidx.test.espresso.Espresso
 import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
-import com.instructure.espresso.ScreenshotTestRule
 import com.instructure.espresso.swipeRight
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.*
 import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.processor.internal.aggregateddeps.AggregatedDeps
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
-import org.junit.rules.RuleChain
-import org.junit.rules.TestRule
 import java.io.File
 
 abstract class StudentTest : CanvasTest() {
@@ -74,6 +69,7 @@ abstract class StudentTest : CanvasTest() {
     val calendarPage = CalendarPage()
     val canvasWebViewPage = CanvasWebViewPage()
     val courseBrowserPage = CourseBrowserPage()
+    val elementaryCoursePage = ElementaryCoursePage()
     val courseGradesPage = CourseGradesPage()
     val dashboardPage = DashboardPage()
     val discussionDetailsPage = DiscussionDetailsPage()
