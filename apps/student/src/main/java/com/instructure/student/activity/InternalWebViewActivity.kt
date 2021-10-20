@@ -43,7 +43,7 @@ class InternalWebViewActivity : BaseActionBarActivity() {
                 // Currently we use an empty context when showing the EULA, privacy policy, etc., in which case we
                 // want the internalWebViewFragment to hide its toolbar
                 if (canvasContext.id == 0L) {
-                    bundle.putBoolean(HIDE_TOOLBAR, true)
+                    bundle.putBoolean(Const.HIDDEN_TOOLBAR, true)
                 } else {
                     val color = canvasContext.color
                     setActionBarStatusBarColors(color, color)
@@ -77,7 +77,6 @@ class InternalWebViewActivity : BaseActionBarActivity() {
     }
 
     companion object {
-        const val HIDE_TOOLBAR = "hide_toolbar"
 
         fun createIntent(context: Context?, url: String?, title: String?, authenticate: Boolean): Intent {
             // Assumes no CanvasContext

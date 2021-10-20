@@ -65,6 +65,8 @@ open class InternalWebviewFragment : ParentFragment() {
     var url: String? by NullableStringArg(key = Const.INTERNAL_URL)
     var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
 
+    var hideToolbar: Boolean by BooleanArg(key = Const.HIDDEN_TOOLBAR)
+
     // Used for external urls that reject the candroid user agent string
     var originalUserAgentString: String = ""
 
@@ -172,7 +174,6 @@ open class InternalWebviewFragment : ParentFragment() {
             else if (html?.isNotBlank() == true) loadUrl(html)
         }
 
-        val hideToolbar = arguments?.getBoolean(InternalWebViewActivity.HIDE_TOOLBAR, false) ?: false
         toolbar.setVisible(!hideToolbar)
 
         if (isLTITool) {
@@ -445,6 +446,16 @@ open class InternalWebviewFragment : ParentFragment() {
                             putString(Const.INTERNAL_URL, url)
                             putBoolean(Const.AUTHENTICATE, authenticate)
                         })
+
+        fun makeRoute(canvasContext: CanvasContext, url: String, authenticate: Boolean, hideToolbar: Boolean = false, allowRoutingTheSameUrlInternally: Boolean = false, shouldRouteInternally: Boolean = false): Route =
+            Route(InternalWebviewFragment::class.java, canvasContext,
+                canvasContext.makeBundle().apply {
+                    putString(Const.INTERNAL_URL, url)
+                    putBoolean(Const.AUTHENTICATE, authenticate)
+                    putBoolean(Const.HIDDEN_TOOLBAR, hideToolbar)
+                    putBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, allowRoutingTheSameUrlInternally)
+                    putBoolean(SHOULD_ROUTE_INTERNALLY, shouldRouteInternally)
+                })
 
         fun makeRoute(
             canvasContext: CanvasContext,
