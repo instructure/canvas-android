@@ -89,7 +89,7 @@ class ElementaryCourseFragment : Fragment() {
                         )
                     )
                 }
-
+                courseTabPager.offscreenPageLimit = it.tabs.size
                 courseTabPager.adapter = ElementaryCoursePagerAdapter(webViews, childFragmentManager)
             }
         })
