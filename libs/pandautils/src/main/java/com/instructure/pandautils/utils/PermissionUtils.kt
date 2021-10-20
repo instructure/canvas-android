@@ -36,7 +36,6 @@ object PermissionUtils {
 
     const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
     const val WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE
-    const val READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE
 
     const val CAMERA = Manifest.permission.CAMERA
     const val RECORD_AUDIO = Manifest.permission.RECORD_AUDIO
@@ -48,8 +47,9 @@ object PermissionUtils {
      * @return a boolean telling if the user has the necessary permissions
      */
     fun hasPermissions(activity: Activity, vararg permissions: String): Boolean {
+        val validPermissions = filterStoragePermission(permissions)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return permissions
+            return validPermissions
                     .map { activity.checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
                     .all { it }
         }
@@ -57,10 +57,18 @@ object PermissionUtils {
         return true
     }
 
+    fun filterStoragePermission(permissions: Array<out String>): List<String> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            permissions.filter { it != WRITE_EXTERNAL_STORAGE }
+        } else {
+            permissions.toList()
+        }
+    }
+
     // Helper to make an array
     @Suppress("UNCHECKED_CAST")
     fun makeArray(vararg items: String): Array<String> {
-        return items as Array<String>
+        return filterStoragePermission(items as Array<String>).toTypedArray()
     }
 
     /**
@@ -87,8 +95,9 @@ object PermissionUtils {
  * Extension method on [Context] to check for permissions
  */
 fun Context.hasPermissions(vararg permissions: String): Boolean {
+    val validPermissions = PermissionUtils.filterStoragePermission(permissions)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        return permissions
+        return validPermissions
                 .map { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
                 .all { it }
     }
@@ -127,7 +136,8 @@ fun Activity.requestWebPermissions(request: PermissionRequest) {
  * and delegate it to an instance of [PermissionReceiver].
  */
 fun Activity.requestPermissions(permissions: Set<String>, onComplete: (permissions: Map<String, Boolean>) -> Unit) {
-    PermissionRequester(permissions).request(this, onComplete)
+    val validPermissions = PermissionUtils.filterStoragePermission(permissions.toTypedArray())
+    PermissionRequester(validPermissions.toSet()).request(this, onComplete)
 }
 
 /**

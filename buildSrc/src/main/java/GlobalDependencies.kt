@@ -2,13 +2,13 @@
 
 object Versions {
     /* SDK Versions */
-    const val COMPILE_SDK = 29
+    const val COMPILE_SDK = 30
     const val MIN_SDK = 23
-    const val TARGET_SDK = 29
+    const val TARGET_SDK = 30
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "3.5.1"
-    const val BUILD_TOOLS = "28.0.3"
+    const val BUILD_TOOLS = "30.0.2"
     const val BUILD_SCAN = "1.16"
 
     /* Testing */

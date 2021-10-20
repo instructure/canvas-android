@@ -152,11 +152,11 @@ class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPres
     private fun fetchAdditionalRecipients(constraint: String) {
         if (mRun != null) {
             mRun?.kill()
-            mHandler.removeCallbacks(mRun)
+            mHandler.removeCallbacks(mRun!!)
 
         }
         mRun = RecipientRunnable(constraint)
-        mHandler.post(mRun)
+        mHandler.post(mRun!!)
     }
 
     fun searchPeopleList(searchTerm: String) {

@@ -449,12 +449,12 @@ class CanvasWebView @JvmOverloads constructor(
         }
     }
 
-    override fun loadData(data: String?, mimeType: String?, encoding: String?) {
+    override fun loadData(data: String, mimeType: String?, encoding: String?) {
         addJavascriptInterface()
         super.loadData(data, mimeType, encoding)
     }
 
-    override fun loadDataWithBaseURL(url: String?, data: String?, mimeType: String?, encoding: String?, history: String?) {
+    override fun loadDataWithBaseURL(url: String?, data: String, mimeType: String?, encoding: String?, history: String?) {
         addJavascriptInterface()
         super.loadDataWithBaseURL(url, data, mimeType, encoding, history)
     }
