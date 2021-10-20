@@ -139,7 +139,7 @@ open class InternalWebviewFragment : ParentFragment() {
                 // will be routed to the same screen again. To prevent this we check if the loaded url is the same as the url what we opened the Fragment with.
                 // We need to check if it contains the loaded url, because when authenticating it can contain additional params, so they won't be exactly the same.
                 private fun shouldRouteIfUrlIsTheSame(url: String): Boolean {
-                    val sameUrl = this@InternalWebviewFragment.url?.contains(url) ?: false
+                    val sameUrl = this@InternalWebviewFragment.url?.contains(url.replace("https://", "")) ?: false
                     return !sameUrl || allowRoutingTheSameUrlInternally
                 }
 
@@ -447,14 +447,13 @@ open class InternalWebviewFragment : ParentFragment() {
                             putBoolean(Const.AUTHENTICATE, authenticate)
                         })
 
-        fun makeRoute(canvasContext: CanvasContext, url: String, authenticate: Boolean, hideToolbar: Boolean = false, allowRoutingTheSameUrlInternally: Boolean = false, shouldRouteInternally: Boolean = false): Route =
+        fun makeRoute(canvasContext: CanvasContext, url: String, authenticate: Boolean, hideToolbar: Boolean = false, allowRoutingTheSameUrlInternally: Boolean = false): Route =
             Route(InternalWebviewFragment::class.java, canvasContext,
                 canvasContext.makeBundle().apply {
                     putString(Const.INTERNAL_URL, url)
                     putBoolean(Const.AUTHENTICATE, authenticate)
                     putBoolean(Const.HIDDEN_TOOLBAR, hideToolbar)
                     putBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, allowRoutingTheSameUrlInternally)
-                    putBoolean(SHOULD_ROUTE_INTERNALLY, shouldRouteInternally)
                 })
 
         fun makeRoute(
