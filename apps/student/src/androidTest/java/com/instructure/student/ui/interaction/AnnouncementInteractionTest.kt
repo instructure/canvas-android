@@ -183,9 +183,7 @@ class AnnouncementInteractionTest : StudentTest() {
     @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_missingTitle() {
         getToAnnouncementList()
-
         discussionListPage.createAnnouncement("", "description")
-        discussionListPage.assertOnNewAnnouncementPage()
     }
 
     @Test
