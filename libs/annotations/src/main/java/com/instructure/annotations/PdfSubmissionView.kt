@@ -559,6 +559,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     //region Annotation Manipulation
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun createNewAnnotation(annotation: Annotation) {
+        if (docSession.annotationMetadata?.canWrite() != true) return
+
         // This is a new annotation; Post it
         commentsButton.isEnabled = false
 
@@ -593,6 +595,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun updateAnnotation(annotation: Annotation) {
+        if (docSession.annotationMetadata?.canWrite() != true) return
+
         // Don't want to update if we just created a stamp.
         if(annotation.type == AnnotationType.STAMP && !stampRaceFlag) return
         // Annotation modified; Update it
