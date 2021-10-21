@@ -64,6 +64,7 @@ open class InternalWebviewFragment : ParentFragment() {
     var title: String? by NullableStringArg(key = Const.ACTION_BAR_TITLE)
     var url: String? by NullableStringArg(key = Const.INTERNAL_URL)
     var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
+    var allowRoutingToLogin: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_TO_LOGIN)
 
     var hideToolbar: Boolean by BooleanArg(key = Const.HIDDEN_TOOLBAR)
 
@@ -130,6 +131,7 @@ open class InternalWebviewFragment : ParentFragment() {
                 override fun canRouteInternallyDelegate(url: String): Boolean {
                     if (activity == null) return false
                     return shouldRouteInternally
+                        && shouldRouteToLogin(url)
                         && shouldRouteIfUrlIsTheSame(url)
                         && !isUnsupportedFeature
                         && RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false, allowUnsupportedRouting)
@@ -141,6 +143,10 @@ open class InternalWebviewFragment : ParentFragment() {
                 private fun shouldRouteIfUrlIsTheSame(url: String): Boolean {
                     val sameUrl = this@InternalWebviewFragment.url?.contains(url.replace("https://", "")) ?: false
                     return !sameUrl || allowRoutingTheSameUrlInternally
+                }
+
+                private fun shouldRouteToLogin(url: String?): Boolean {
+                    return (url?.contains("login") ?: false) && allowRoutingToLogin
                 }
 
                 override fun routeInternallyCallback(url: String) {
@@ -330,6 +336,7 @@ open class InternalWebviewFragment : ParentFragment() {
                         // Get an authenticated session so the user doesn't have to log in
                         url = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url!!, it) }.sessionUrl
                     } catch (e: StatusCallbackError) {
+                        e.printStackTrace()
                     }
                 } else {
                     // External URL, use the non-Canvas specific user agent string
@@ -344,6 +351,11 @@ open class InternalWebviewFragment : ParentFragment() {
                             .build().toString()
                 }
 
+                if (url?.startsWith("http://") == true) {
+                    url = url?.replace("http://", "https://")
+                } else if (url?.startsWith("https://") == false) {
+                    url = "https://${url}"
+                }
                 canvasWebView?.loadUrl(url, getReferer())
             }
         }
@@ -361,6 +373,7 @@ open class InternalWebviewFragment : ParentFragment() {
     companion object {
         internal const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
         const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
+        const val ALLOW_ROUTING_TO_LOGIN = "allowRoutingToLogin"
 
         fun newInstance(route: Route): InternalWebviewFragment {
             return InternalWebviewFragment().withArgs(route.argsWithContext)
@@ -447,13 +460,14 @@ open class InternalWebviewFragment : ParentFragment() {
                             putBoolean(Const.AUTHENTICATE, authenticate)
                         })
 
-        fun makeRoute(canvasContext: CanvasContext, url: String, authenticate: Boolean, hideToolbar: Boolean = false, allowRoutingTheSameUrlInternally: Boolean = false): Route =
+        fun makeRoute(canvasContext: CanvasContext, url: String, authenticate: Boolean, hideToolbar: Boolean = false, allowRoutingTheSameUrlInternally: Boolean = false, shouldRouteToLogin: Boolean = false): Route =
             Route(InternalWebviewFragment::class.java, canvasContext,
                 canvasContext.makeBundle().apply {
                     putString(Const.INTERNAL_URL, url)
                     putBoolean(Const.AUTHENTICATE, authenticate)
                     putBoolean(Const.HIDDEN_TOOLBAR, hideToolbar)
                     putBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, allowRoutingTheSameUrlInternally)
+                    putBoolean(ALLOW_ROUTING_TO_LOGIN, shouldRouteToLogin)
                 })
 
         fun makeRoute(

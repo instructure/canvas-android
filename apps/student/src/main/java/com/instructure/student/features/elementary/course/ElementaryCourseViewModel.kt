@@ -54,7 +54,7 @@ class ElementaryCourseViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val tabs = tabManager.getTabsForElementaryAsync(canvasContext, forceNetwork).await().dataOrThrow
-                val filteredTabs = tabs.filter { !it.isHidden }.sortedBy { it.position }
+                val filteredTabs = tabs.filter { !it.isHidden && !it.isExternal }.sortedBy { it.position }
 
                 val tabViewData = createTabs(canvasContext, filteredTabs)
                 _data.postValue(ElementaryCourseViewData(tabViewData))
