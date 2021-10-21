@@ -167,7 +167,10 @@ open class InternalWebviewFragment : ParentFragment() {
                 }
 
             })
-            canvasWebView?.restoreState(savedInstanceState)
+
+            if (savedInstanceState != null) {
+                canvasWebView?.restoreState(savedInstanceState)
+            }
         }
 
         return rootView

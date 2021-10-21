@@ -254,12 +254,11 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
      * Handles RCEFragment results and passes them along
      */
     override fun onResult(activityResult: Int, data: Intent?) {
-        if (activityResult == Activity.RESULT_OK && data != null) {
-            EventBus.getDefault().postSticky(AssignmentDescriptionEvent(data.getStringExtra(HTML_RESULT)))
-            super.onBackPressed()
-        } else {
-            super.onBackPressed()
+        val htmlResult = data?.getStringExtra(HTML_RESULT)
+        if (activityResult == Activity.RESULT_OK && htmlResult != null) {
+            EventBus.getDefault().postSticky(AssignmentDescriptionEvent(htmlResult))
         }
+        super.onBackPressed()
     }
 
     private fun keyboardHidden() {

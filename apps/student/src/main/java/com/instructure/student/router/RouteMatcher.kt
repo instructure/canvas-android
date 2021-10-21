@@ -196,6 +196,8 @@ object RouteMatcher : BaseRouteMatcher() {
         //Single Detail Pages (Typically routing from To-dos (may not be handling every use case)
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentDetailsFragment::class.java, null))
 
+        routes.add(Route("/enroll/.*", RouteContext.DO_NOT_ROUTE))
+
         // Catch all (when nothing has matched, these take over)
         // Note: Catch all only happens with supported domains such as instructure.com
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/.*"), UnsupportedFeatureFragment::class.java)) // course_id fetches the course context
