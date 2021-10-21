@@ -155,7 +155,6 @@ class AnnouncementInteractionTest : StudentTest() {
         val announcement = data.courseDiscussionTopicHeaders[course.id]!!.first()
         discussionListPage.assertTopicDisplayed(announcement.title!!)
         discussionListPage.createAnnouncement("Announcement Topic", "Awesome announcement topic")
-        discussionListPage.assertOnAnnouncementListPage()
     }
 
     // Tests code around closing / aborting announcement creation

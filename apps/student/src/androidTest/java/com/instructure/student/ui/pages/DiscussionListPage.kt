@@ -152,8 +152,4 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         onView(withText(R.string.newAnnouncement)).assertDisplayed()
     }
 
-    fun assertOnAnnouncementListPage() {
-        onView(withText("Announcements")).assertDisplayed()
-    }
-
 }
