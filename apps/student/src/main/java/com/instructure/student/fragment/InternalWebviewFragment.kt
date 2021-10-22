@@ -359,7 +359,7 @@ open class InternalWebviewFragment : ParentFragment() {
                 } else if (url?.startsWith("https://") == false) {
                     url = "https://${url}"
                 }
-                canvasWebView?.loadUrl(url, getReferer())
+                canvasWebView?.loadUrl(url!!, getReferer())
             }
         }
     }
