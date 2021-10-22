@@ -22,24 +22,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
-import com.instructure.student.databinding.FragmentElementaryCourseBinding
 import com.instructure.pandautils.utils.*
+import com.instructure.student.databinding.FragmentElementaryCourseBinding
 import com.instructure.student.fragment.InternalWebviewFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_elementary_course.*
-import kotlinx.android.synthetic.main.fragment_elementary_course.toolbar
-import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
 @AndroidEntryPoint
 class ElementaryCourseFragment : Fragment() {
-
-    lateinit var apiPrefs: ApiPrefs
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -83,9 +77,13 @@ class ElementaryCourseFragment : Fragment() {
                     InternalWebviewFragment.newInstance(
                         InternalWebviewFragment.makeRoute(
                             canvasContext = canvasContext,
-                            url = "${ApiPrefs.domain}${it.url}",
+                            url = it.url!!,
                             authenticate = true,
-                            hideToolbar = true
+                            hideToolbar = true,
+                            allowEmbedRouting = false,
+                            allowRoutingTheSameUrlInternally = false,
+                            isUnsupportedFeature = false,
+                            shouldRouteToLogin = false
                         )
                     )
                 }

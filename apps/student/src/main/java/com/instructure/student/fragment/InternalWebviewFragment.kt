@@ -65,6 +65,7 @@ open class InternalWebviewFragment : ParentFragment() {
     var url: String? by NullableStringArg(key = Const.INTERNAL_URL)
     var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
     var allowRoutingToLogin: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_TO_LOGIN)
+    var allowEmbedRouting: Boolean by BooleanArg(default = true, key = ALLOW_EMBED_ROUTING)
 
     var hideToolbar: Boolean by BooleanArg(key = Const.HIDDEN_TOOLBAR)
 
@@ -132,6 +133,7 @@ open class InternalWebviewFragment : ParentFragment() {
                     if (activity == null) return false
                     return shouldRouteInternally
                         && shouldRouteToLogin(url)
+                        && shouldRouteEmbedded(url)
                         && shouldRouteIfUrlIsTheSame(url)
                         && !isUnsupportedFeature
                         && RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false, allowUnsupportedRouting)
@@ -141,12 +143,24 @@ open class InternalWebviewFragment : ParentFragment() {
                 // will be routed to the same screen again. To prevent this we check if the loaded url is the same as the url what we opened the Fragment with.
                 // We need to check if it contains the loaded url, because when authenticating it can contain additional params, so they won't be exactly the same.
                 private fun shouldRouteIfUrlIsTheSame(url: String): Boolean {
-                    val sameUrl = this@InternalWebviewFragment.url?.contains(url.replace("https://", "")) ?: false
+                    val sameUrl = this@InternalWebviewFragment.url?.contains(url) ?: false
                     return !sameUrl || allowRoutingTheSameUrlInternally
                 }
 
                 private fun shouldRouteToLogin(url: String?): Boolean {
-                    return (url?.contains("login") ?: false) && allowRoutingToLogin
+                    return if (url?.contains("login") == true) {
+                        allowRoutingToLogin
+                    } else {
+                        true
+                    }
+                }
+
+                private fun shouldRouteEmbedded(url: String?): Boolean {
+                    return if (url?.contains("embed=true") == true) {
+                        allowEmbedRouting
+                    } else {
+                        true
+                    }
                 }
 
                 override fun routeInternallyCallback(url: String) {
@@ -354,11 +368,6 @@ open class InternalWebviewFragment : ParentFragment() {
                             .build().toString()
                 }
 
-                if (url?.startsWith("http://") == true) {
-                    url = url?.replace("http://", "https://")
-                } else if (url?.startsWith("https://") == false) {
-                    url = "https://${url}"
-                }
                 canvasWebView?.loadUrl(url!!, getReferer())
             }
         }
@@ -377,6 +386,7 @@ open class InternalWebviewFragment : ParentFragment() {
         internal const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
         const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
         const val ALLOW_ROUTING_TO_LOGIN = "allowRoutingToLogin"
+        const val ALLOW_EMBED_ROUTING = "allowEmbedRouting"
 
         fun newInstance(route: Route): InternalWebviewFragment {
             return InternalWebviewFragment().withArgs(route.argsWithContext)
@@ -463,7 +473,16 @@ open class InternalWebviewFragment : ParentFragment() {
                             putBoolean(Const.AUTHENTICATE, authenticate)
                         })
 
-        fun makeRoute(canvasContext: CanvasContext, url: String, authenticate: Boolean, hideToolbar: Boolean = false, allowRoutingTheSameUrlInternally: Boolean = false, shouldRouteToLogin: Boolean = false): Route =
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            url: String,
+            authenticate: Boolean,
+            hideToolbar: Boolean,
+            allowRoutingTheSameUrlInternally: Boolean,
+            shouldRouteToLogin: Boolean,
+            allowEmbedRouting: Boolean,
+            isUnsupportedFeature: Boolean
+        ): Route =
             Route(InternalWebviewFragment::class.java, canvasContext,
                 canvasContext.makeBundle().apply {
                     putString(Const.INTERNAL_URL, url)
@@ -471,6 +490,8 @@ open class InternalWebviewFragment : ParentFragment() {
                     putBoolean(Const.HIDDEN_TOOLBAR, hideToolbar)
                     putBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, allowRoutingTheSameUrlInternally)
                     putBoolean(ALLOW_ROUTING_TO_LOGIN, shouldRouteToLogin)
+                    putBoolean(ALLOW_EMBED_ROUTING, allowEmbedRouting)
+                    putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
                 })
 
         fun makeRoute(

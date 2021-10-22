@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.R
@@ -38,7 +39,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ElementaryCourseViewModel @Inject constructor(
     private val tabManager: TabManager,
-    private val resources: Resources
+    private val resources: Resources,
+    private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -67,7 +69,7 @@ class ElementaryCourseViewModel @Inject constructor(
     }
 
     private fun createTabs(canvasContext: CanvasContext, tabs: List<Tab>): List<ElementaryCourseTab> {
-        val prefix = if (canvasContext.isCourse) "/courses/${canvasContext.id}?embed=true" else "/groups/${canvasContext.id}?embed=true"
+        val prefix = if (canvasContext.isCourse) "${apiPrefs.fullDomain}/courses/${canvasContext.id}?embed=true" else "${apiPrefs.fullDomain}/groups/${canvasContext.id}?embed=true"
         return tabs.map {
             val drawable: Drawable?
             val url: String?
