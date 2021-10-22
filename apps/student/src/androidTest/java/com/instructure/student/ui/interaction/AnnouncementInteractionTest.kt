@@ -21,7 +21,6 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
@@ -199,7 +198,8 @@ class AnnouncementInteractionTest : StudentTest() {
 
         discussionListPage.clickOnSearchButton()
         discussionListPage.typeToSearchBar(testAnnouncementName)
-        refresh()
+
+        discussionListPage.refreshPage()
         discussionListPage.assertTopicDisplayed(testAnnouncementName)
         discussionListPage.assertTopicNotDisplayed(existingAnnouncementName)
 
