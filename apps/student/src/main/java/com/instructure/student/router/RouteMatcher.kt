@@ -29,7 +29,6 @@ import androidx.loader.content.Loader
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -40,7 +39,10 @@ import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.elementary.course.ElementaryCourseFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.RouteUtils
+import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.*
@@ -50,12 +52,10 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFrag
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.util.FileUtils
-import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 import java.util.regex.Pattern
-import javax.inject.Inject
 
 object RouteMatcher : BaseRouteMatcher() {
 

@@ -18,7 +18,6 @@ package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
