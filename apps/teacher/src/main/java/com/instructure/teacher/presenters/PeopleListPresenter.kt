@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.teacher.viewinterface.PeopleListView
 import instructure.androidblueprint.SyncPresenter
 import retrofit2.Response
-import java.util.ArrayList
+import java.util.*
 
 
 class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPresenter<User, PeopleListView>(User::class.java) {
