@@ -47,6 +47,7 @@ class AnnouncementInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncement_replyToSectionSpecificAnnouncement() {
+
         val data = getToCourse(createSections = true)
         val announcement = data.addDiscussionTopicToCourse(
                 course = course,
@@ -84,6 +85,7 @@ class AnnouncementInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncement_previewAttachment() {
+
         val data = getToCourse()
         val announcement = data.addDiscussionTopicToCourse(
                 course = course,
@@ -125,6 +127,7 @@ class AnnouncementInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncement_reply() {
+
         val data = getToCourse()
         val announcement = data.addDiscussionTopicToCourse(
                 course = course,

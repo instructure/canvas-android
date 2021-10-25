@@ -28,6 +28,8 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.withId
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
@@ -42,15 +44,10 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         waitForView(matcher)
 
     }
-
     fun assertTopicDisplayed(topicTitle: String) {
         val matcher = allOf(withText(topicTitle), withId(R.id.discussionTitle))
         scrollRecyclerView(R.id.discussionRecyclerView, matcher)
         onView(matcher).assertDisplayed()
-    }
-
-    fun assertTopicNotDisplayed(topicTitle: String?) {
-        onView(allOf(withText(topicTitle))).check(ViewAssertions.doesNotExist())
     }
 
     fun assertEmpty() {
