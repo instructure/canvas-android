@@ -25,5 +25,5 @@ data class ElementaryCourseViewData(
 data class ElementaryCourseTab(
     val icon: Drawable?,
     val text: String?,
-    val url: String?
+    val url: String
 )

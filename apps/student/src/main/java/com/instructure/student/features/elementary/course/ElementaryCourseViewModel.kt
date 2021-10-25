@@ -70,7 +70,7 @@ class ElementaryCourseViewModel @Inject constructor(
         val prefix = if (canvasContext.isCourse) "${apiPrefs.fullDomain}/courses/${canvasContext.id}?embed=true" else "${apiPrefs.fullDomain}/groups/${canvasContext.id}?embed=true"
         return tabs.map {
             val drawable: Drawable?
-            val url: String?
+            val url: String
             when (it.tabId) {
                 Tab.HOME_ID -> {
                     drawable = resources.getDrawable(R.drawable.ic_home)
@@ -94,7 +94,7 @@ class ElementaryCourseViewModel @Inject constructor(
                 }
                 else -> {
                     drawable = null
-                    url = it.htmlUrl
+                    url = it.htmlUrl ?: ""
                 }
             }
             ElementaryCourseTab(drawable, it.label, url)
