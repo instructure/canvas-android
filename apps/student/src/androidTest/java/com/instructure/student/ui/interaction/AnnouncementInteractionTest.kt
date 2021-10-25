@@ -199,7 +199,7 @@ class AnnouncementInteractionTest : StudentTest() {
         discussionListPage.clickOnSearchButton()
         discussionListPage.typeToSearchBar(testAnnouncementName)
 
-        discussionListPage.refreshPage()
+        discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(testAnnouncementName)
         discussionListPage.assertTopicNotDisplayed(existingAnnouncementName)
 

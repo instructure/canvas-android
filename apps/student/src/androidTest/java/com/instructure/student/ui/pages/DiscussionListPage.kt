@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.*
 import com.instructure.espresso.*
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withId
 import com.instructure.student.R
@@ -148,10 +149,6 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
 
     fun assertOnNewAnnouncementPage() {
         onView(withText(R.string.newAnnouncement)).assertDisplayed()
-    }
-
-    fun refreshPage() {
-        refresh(withId(R.id.discussionRecyclerView))
     }
 
 }
