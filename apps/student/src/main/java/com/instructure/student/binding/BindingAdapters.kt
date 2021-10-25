@@ -14,16 +14,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.elementary.course
+package com.instructure.student.binding
 
-import android.graphics.drawable.Drawable
+import androidx.databinding.BindingAdapter
+import com.google.android.material.tabs.TabLayout
+import com.instructure.student.features.elementary.course.ElementaryCourseTab
 
-data class ElementaryCourseViewData(
-    val tabs: List<ElementaryCourseTab>
-)
-
-data class ElementaryCourseTab(
-    val icon: Drawable?,
-    val text: String?,
-    val url: String?
-)
+@BindingAdapter("tabs")
+fun bindCourseTabs(tabLayout: TabLayout, tabs: List<ElementaryCourseTab>?) {
+    tabLayout.removeAllTabs()
+    tabs?.forEach { tab ->
+        tabLayout.addTab(tabLayout.newTab().apply {
+            icon = tab.icon
+            text = tab.text
+        })
+    }
+}

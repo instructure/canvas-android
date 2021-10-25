@@ -24,9 +24,13 @@ import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.student.features.elementary.course.ElementaryCourseTab
+import com.instructure.student.features.elementary.course.ElementaryCourseViewData
+import com.instructure.student.features.elementary.course.ElementaryCourseViewModel
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -53,6 +57,7 @@ class ElementaryCourseViewModelTest {
 
     private val tabManager: TabManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private lateinit var viewModel: ElementaryCourseViewModel
 
@@ -63,9 +68,10 @@ class ElementaryCourseViewModelTest {
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
+        every { apiPrefs.fullDomain } returns "https://mockk.instructure.com"
         setupStrings()
 
-        viewModel = ElementaryCourseViewModel(tabManager, resources)
+        viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs)
     }
 
     @Test
@@ -80,11 +86,11 @@ class ElementaryCourseViewModelTest {
 
         val expectedData = ElementaryCourseViewData(
             listOf(
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "/home"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "/schedule"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_modules), "Modules", "/modules"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_grades), "Grades", "/grades"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "/resources")
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
             )
         )
 
@@ -92,7 +98,7 @@ class ElementaryCourseViewModelTest {
             coEvery { await() } returns DataResult.Success(tabs)
         }
 
-        viewModel.getData(CanvasContext.defaultCanvasContext())
+        viewModel.getData(CanvasContext.emptyCourseContext())
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(expectedData, viewModel.data.value)
     }
@@ -109,11 +115,11 @@ class ElementaryCourseViewModelTest {
 
         val expectedData = ElementaryCourseViewData(
             listOf(
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "/home"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "/schedule"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_modules), "Modules", "/modules"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_grades), "Grades", "/grades"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "/resources")
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
             )
         )
 
@@ -121,7 +127,7 @@ class ElementaryCourseViewModelTest {
             coEvery { await() } returns DataResult.Success(tabs)
         }
 
-        viewModel.getData(CanvasContext.defaultCanvasContext())
+        viewModel.getData(CanvasContext.emptyCourseContext())
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(expectedData, viewModel.data.value)
     }
@@ -138,9 +144,9 @@ class ElementaryCourseViewModelTest {
 
         val expectedData = ElementaryCourseViewData(
             listOf(
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "/home"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "/schedule"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "/resources")
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
             )
         )
 
@@ -148,7 +154,7 @@ class ElementaryCourseViewModelTest {
             coEvery { await() } returns DataResult.Success(tabs)
         }
 
-        viewModel.getData(CanvasContext.defaultCanvasContext())
+        viewModel.getData(CanvasContext.emptyCourseContext())
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(expectedData, viewModel.data.value)
     }
@@ -160,7 +166,7 @@ class ElementaryCourseViewModelTest {
         }
 
 
-        viewModel.getData(CanvasContext.defaultCanvasContext())
+        viewModel.getData(CanvasContext.emptyCourseContext())
         assertEquals(ViewState.Error("Uh oh! An error occurred while loading the course details."), viewModel.state.value)
     }
 

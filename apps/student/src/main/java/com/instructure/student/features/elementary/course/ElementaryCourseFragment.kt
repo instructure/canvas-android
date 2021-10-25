@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.elementary.course
+package com.instructure.student.features.elementary.course
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,11 +22,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.databinding.FragmentElementaryCourseBinding
 import com.instructure.pandautils.utils.*
+import com.instructure.student.databinding.FragmentElementaryCourseBinding
+import com.instructure.student.fragment.InternalWebviewFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_elementary_course.*
 
@@ -56,6 +58,39 @@ class ElementaryCourseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
         viewModel.getData(canvasContext)
+
+        courseTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                tab?.let {
+                    courseTabPager.setCurrentItem(it.position, !isTablet)
+                }
+            }
+        })
+
+        viewModel.data.observe(viewLifecycleOwner, { data ->
+            data?.let {
+                val webViews = it.tabs.map {
+                    InternalWebviewFragment.newInstance(
+                        InternalWebviewFragment.makeRoute(
+                            canvasContext = canvasContext,
+                            url = it.url!!,
+                            authenticate = true,
+                            hideToolbar = true,
+                            allowEmbedRouting = false,
+                            allowRoutingTheSameUrlInternally = false,
+                            isUnsupportedFeature = false,
+                            shouldRouteToLogin = false
+                        )
+                    )
+                }
+                courseTabPager.offscreenPageLimit = it.tabs.size
+                courseTabPager.adapter = ElementaryCoursePagerAdapter(webViews, childFragmentManager)
+            }
+        })
     }
 
     private fun applyTheme() {
