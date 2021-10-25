@@ -21,12 +21,14 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.canvas.espresso.*
+import com.instructure.canvas.espresso.DirectlyPopulateEditText
+import com.instructure.canvas.espresso.explicitClick
+import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.espresso.*
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithId
-import com.instructure.espresso.page.withId
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
@@ -53,7 +55,12 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
     }
 
     fun assertEmpty() {
-        onView(allOf(withId(R.id.emptyView), withParent(withId(R.id.discussionListPage)))).assertDisplayed()
+        onView(
+            allOf(
+                withId(R.id.emptyView),
+                withParent(withId(R.id.discussionListPage))
+            )
+        ).assertDisplayed()
     }
 
     fun selectTopic(topicTitle: String) {
@@ -148,10 +155,6 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
 
     fun assertOnNewAnnouncementPage() {
         onView(withText(R.string.newAnnouncement)).assertDisplayed()
-    }
-
-    fun refreshPage() {
-        refresh(withId(R.id.discussionRecyclerView))
     }
 
 }
