@@ -170,8 +170,39 @@ class ElementaryCourseViewModelTest {
         assertEquals(ViewState.Error("Uh oh! An error occurred while loading the course details."), viewModel.state.value)
     }
 
+    @Test
+    fun `Resources tab is visible instead of external tools`() {
+        val tabs = listOf(
+            Tab(tabId = "home", label = "Home", htmlUrl = "/home", isHidden = false, position = 1),
+            Tab(tabId = "schedule", label = "Schedule", htmlUrl = "/schedule", isHidden = false, position = 2),
+            Tab(tabId = "modules", label = "Modules", htmlUrl = "/modules", isHidden = false, position = 3),
+            Tab(tabId = "grades", label = "Grades", htmlUrl = "/grades", isHidden = false, position = 4),
+            Tab(tabId = "external_tool_google_drive", label = "Google Drive", htmlUrl = "/google_drive", isHidden = false, position = 5, type = Tab.TYPE_EXTERNAL),
+            Tab(tabId = "external_tool_name_coach", label = "NameCoach", htmlUrl = "/name_coach", isHidden = false, position = 6, type = Tab.TYPE_EXTERNAL)
+        )
+
+        val expectedData = ElementaryCourseViewData(
+            listOf(
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
+                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
+            )
+        )
+
+        every { tabManager.getTabsForElementaryAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(tabs)
+        }
+
+        viewModel.getData(CanvasContext.emptyCourseContext())
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(expectedData, viewModel.data.value)
+    }
+
     private fun setupStrings() {
         every { resources.getString(R.string.error_loading_course_details) } returns "Uh oh! An error occurred while loading the course details."
+        every { resources.getString(R.string.dashboardTabResources) } returns "Resources"
     }
 
 }
