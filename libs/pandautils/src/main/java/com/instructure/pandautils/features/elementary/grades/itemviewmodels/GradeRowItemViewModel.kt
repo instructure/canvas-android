@@ -43,7 +43,7 @@ class GradeRowItemViewModel(
 
     val percentage: Float
         get() {
-            if (data.score == null) return 0.0f
+            if (data.score == null || data.score < 0) return 0f
             return data.score.toFloat() / 100
         }
 }
