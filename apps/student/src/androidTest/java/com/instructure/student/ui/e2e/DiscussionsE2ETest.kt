@@ -19,7 +19,6 @@ package com.instructure.student.ui.e2e
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -56,13 +55,18 @@ class DiscussionsE2ETest: StudentTest() {
         )
 
         val topic2 = DiscussionTopicsApi.createDiscussion(
-                courseId = course.id,
-                token = teacher.token
+            courseId = course.id,
+            token = teacher.token
         )
 
         val announcement = DiscussionTopicsApi.createAnnouncement(
-                courseId = course.id,
-                token = teacher.token
+            courseId = course.id,
+            token = teacher.token
+        )
+
+        val announcement2 = DiscussionTopicsApi.createAnnouncement(
+            courseId = course.id,
+            token = teacher.token
         )
 
         // Sign in our student
@@ -80,8 +84,25 @@ class DiscussionsE2ETest: StudentTest() {
         // Note that DiscussionListPage, DiscussionDetailsPage are reused for announcements
         courseBrowserPage.selectAnnouncements()
         discussionListPage.assertTopicDisplayed(announcement.title)
+        discussionListPage.assertTopicDisplayed(announcement2.title)
         discussionListPage.selectTopic(announcement.title)
         discussionDetailsPage.assertTitleText(announcement.title)
+        Espresso.pressBack()
+
+        //Search for an announcement and check if the search works.
+        //Also, checking that not matching announcement is disappearing after typing a string into the search field.
+        discussionListPage.clickOnSearchButton()
+        discussionListPage.typeToSearchBar(announcement2.title)
+
+        discussionListPage.pullToUpdate()
+        discussionListPage.assertTopicDisplayed(announcement2.title)
+        discussionListPage.assertTopicNotDisplayed(announcement.title)
+
+        discussionListPage.clickOnClearSearchButton()
+        discussionListPage.waitForDiscussionTopicToDisplay(announcement.title!!)
+        discussionListPage.assertTopicDisplayed(announcement2.title)
+
+        Espresso.pressBack() // Click away from Search input
         Espresso.pressBack() // Back to announcement list
         Espresso.pressBack() // Back to course browser page
 
