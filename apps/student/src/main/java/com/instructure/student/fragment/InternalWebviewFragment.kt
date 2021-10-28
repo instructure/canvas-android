@@ -104,6 +104,7 @@ open class InternalWebviewFragment : ParentFragment() {
             originalUserAgentString = canvasWebView.settings.userAgentString
             canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
+            webViewLoading?.setVisible(true)
 
             canvasWebView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
                 override fun onProgressChangedCallback(view: WebView?, newProgress: Int) {

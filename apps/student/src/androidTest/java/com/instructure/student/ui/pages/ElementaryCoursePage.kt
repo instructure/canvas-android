@@ -18,8 +18,13 @@ package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
+import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
+import com.instructure.espresso.matchers.WaitForViewMatcher
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import org.hamcrest.Matchers
 
@@ -27,6 +32,6 @@ import org.hamcrest.Matchers
 class ElementaryCoursePage : BasePage(R.id.elementaryCoursePage) {
 
     fun assertTitleCorrect(courseName: String) {
-        Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.courseName), ViewMatchers.isDisplayed())).assertHasText(courseName)
+        WaitForViewMatcher.waitForView(withParent(R.id.toolbar) + withText(courseName)).assertDisplayed()
     }
 }

@@ -80,15 +80,64 @@
                 android:background="@color/dividerColor"
                 app:layout_constraintTop_toBottomOf="@id/courseTabLayout" />
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/courseHeader"
+                android:layout_width="match_parent"
+                android:layout_height="113dp"
+                android:layout_margin="16dp"
+                android:visibility="@{course == null ? View.GONE : View.VISIBLE}"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@{ColorUtils.parseColor(course.courseColor)}"
+                        android:importantForAccessibility="no"
+                        android:scaleType="centerCrop"
+                        app:imageUrl="@{course.imageUrl}"
+                        app:overlayColor="@{ColorUtils.parseColor(course.courseColor)}"
+                        tools:background="@color/alertOrange" />
+
+                    <TextView
+                        android:id="@+id/courseName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/course_name_gradient"
+                        android:paddingStart="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="5dp"
+                        android:text="@{course.name}"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:text="Math" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
             <com.instructure.pandautils.views.ViewPagerNonSwipeable
                 android:id="@+id/courseTabPager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider"
+                app:layout_constraintTop_toBottomOf="@id/courseHeader"
                 app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
