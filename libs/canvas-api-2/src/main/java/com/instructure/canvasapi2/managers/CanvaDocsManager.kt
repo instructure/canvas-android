@@ -69,11 +69,11 @@ object CanvaDocsManager {
         CanvaDocsAPI.deleteAnnotation(sessionId, annotationId, adapter, params, callback)
     }
 
-    fun createCanvaDocSessionAsync(submissionId: Long, attempt: Long) = apiAsync<CanvaDocSessionResponseBody> { createCanvaDocSession(submissionId, attempt, it) }
+    fun createCanvaDocSessionAsync(submissionId: Long, attempt: String) = apiAsync<CanvaDocSessionResponseBody> { createCanvaDocSession(submissionId, attempt, it) }
 
     private fun createCanvaDocSession(
         submissionId: Long,
-        attempt: Long,
+        attempt: String,
         callback: StatusCallback<CanvaDocSessionResponseBody>
     ) {
         val adapter = RestBuilder(callback)
@@ -81,7 +81,7 @@ object CanvaDocsManager {
         CanvaDocsAPI.createCanvaDocSession(
             CanvaDocSessionRequestBody(
                 submissionId.toString(),
-                attempt.toString()
+                attempt
             ), adapter, params, callback
         )
     }

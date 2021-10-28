@@ -105,12 +105,13 @@ object SubmissionAPI {
                 @Query("submission[submission_type]") submissionType: String,
                 @Query("submission[file_ids][]") attachments: List<Long>): Call<Submission>
 
+        @FormUrlEncoded
         @POST("{contextId}/assignments/{assignmentId}/submissions")
         fun postStudentAnnotationSubmission(
             @Path("contextId") contextId: Long,
             @Path("assignmentId") assignmentId: Long,
-            @Field("submission_type") submissionType: String,
-            @Field("annotatable_attachment_id") annotatableAttachmentId: Long
+            @Field("submission[submission_type]") submissionType: String,
+            @Field("submission[annotatable_attachment_id]") annotatableAttachmentId: Long
         ): Call<Submission>
 
         @GET

@@ -28,6 +28,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val DRAFT_ATTEMPT = "draft"
+
 @HiltViewModel
 class AnnotationSubmissionViewModel @Inject constructor(
     private val canvaDocsManager: CanvaDocsManager,
@@ -42,7 +44,7 @@ class AnnotationSubmissionViewModel @Inject constructor(
         get() = _pdfUrl
     private val _pdfUrl = MutableLiveData<String>()
 
-    fun loadAnnotatedPdfUrl(submissionId: Long, attempt: Long) {
+    fun loadAnnotatedPdfUrl(submissionId: Long, attempt: String = DRAFT_ATTEMPT) {
         _state.value = ViewState.Loading
         viewModelScope.launch {
             try {

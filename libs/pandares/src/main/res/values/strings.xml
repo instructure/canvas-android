@@ -1228,4 +1228,6 @@
     <string name="somethingWentWrong">Something went wrong</string>
     <string name="failedToLoadQuiz">Failed to load quiz</string>
     <string name="failedToLoadSubmission">Failed to load submission</string>
+    <string name="studentAnnotationToolbarTitle">Student Annotation</string>
+    <string name="submissionTypeStudentAnnotation">Student Annotation</string>
 </resources>
