@@ -16,10 +16,12 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.annnotation
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
@@ -27,7 +29,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentAnnotationSubmissionUploadBinding
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.AnnotationSubmissionViewModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.PdfStudentSubmissionView
 import com.instructure.student.mobius.common.ui.SubmissionService
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,8 +62,14 @@ class AnnotationSubmissionUploadFragment : Fragment() {
             )
         })
 
-        binding.annotationSubmissionToolbar.setupAsBackButton { requireActivity().onBackPressed() }
-        binding.annotationSubmissionToolbar.setMenu(R.menu.menu_submit_generic) {
+        setUpToolbar(binding.annotationSubmissionToolbar)
+
+        return binding.root
+    }
+
+    private fun setUpToolbar(toolbar: Toolbar) {
+        toolbar.setupAsBackButton { requireActivity().onBackPressed() }
+        toolbar.setMenu(R.menu.menu_submit_generic) {
             when (it.itemId) {
                 R.id.menuSubmit -> {
                     SubmissionService.startStudentAnnotationSubmission(requireContext(), canvasContext, assignmentId, assignmentName, annotatableAttachmentId)
@@ -70,8 +77,7 @@ class AnnotationSubmissionUploadFragment : Fragment() {
                 }
             }
         }
-
-        return binding.root
+        ViewStyler.themeToolbarBottomSheet(requireActivity(), false, toolbar, Color.BLACK, false)
     }
 
     companion object {

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails.content
+package com.instructure.student.mobius.assignmentDetails.submission.annnotation
 
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
