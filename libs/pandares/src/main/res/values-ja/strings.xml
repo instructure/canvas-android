@@ -1200,9 +1200,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">この課題は匿名であるため、この学生の応答は表示されません。</string>
 
-    <string name="studentAnnotationUnsupported">学生の注釈（サポートされていません）</string>
-    <string name="studentAnnotationUnsupportedDescription">現在、学生の注釈はモバイルではサポートされていません。</string>
-    <string name="unsupportedSubmissionType">サポートされていない提出タイプ</string>
-    <string name="studentAnnotationUnsupportedMessage">現在、学生の注釈はモバイルでサポートされていないため、提出物を表示できません。</string>
     <string name="schedule_marked_as_done">「終了」としてマークしました。</string>
 </resources>

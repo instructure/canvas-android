@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Kei te hunahia ngā whakautu a tēnei ākonga no te mea he ingoamuna tēnei whakataunga.</string>
 
-    <string name="studentAnnotationUnsupported">Ākonga Tuhipoka (Kaore e tautokotia)</string>
-    <string name="studentAnnotationUnsupportedDescription">Ākonga Tuhipoka kaore i te tautokotia i tēnei wā i runga i te waea haerere.</string>
-    <string name="unsupportedSubmissionType">Kaore i Tautokotia tēnei Momo Tapaetanga</string>
-    <string name="studentAnnotationUnsupportedMessage">Kaore e taea te whakaatu atu i te tāpaetanga no te mea Ākonga Tuhipoka kaore i te tautokotia i tēnei wā i runga i te waea haerere.</string>
     <string name="schedule_marked_as_done">Kua tohua e koe kua oti.</string>
 </resources>
