@@ -58,7 +58,7 @@ class AnnotationSubmissionUploadFragment : Fragment() {
 
         viewModel.pdfUrl.observe(viewLifecycleOwner, {
             binding.annotationSubmissionViewContainer.addView(
-                PdfStudentSubmissionView(requireActivity(), it)
+                PdfStudentSubmissionView(requireActivity(), it, true)
             )
         })
 
