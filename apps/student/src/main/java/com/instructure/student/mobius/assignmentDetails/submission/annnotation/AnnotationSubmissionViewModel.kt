@@ -51,7 +51,7 @@ class AnnotationSubmissionViewModel @Inject constructor(
                 val docSession = canvaDocsManager.createCanvaDocSessionAsync(submissionId, attempt)
                     .await().dataOrThrow
                 val sessionUrl = docSession.canvadocsSessionUrl
-                if (sessionUrl != null) {
+                if (sessionUrl != null && sessionUrl.isNotEmpty()) {
                     _pdfUrl.value = sessionUrl
                     _state.value = ViewState.Success
                 } else {
