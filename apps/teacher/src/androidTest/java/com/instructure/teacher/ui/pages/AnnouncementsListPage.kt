@@ -89,7 +89,7 @@ class AnnouncementsListPage : BasePage() {
 
     fun clickOnCreateAnnouncementThenClose() {
         clickOnCreateNewAnnouncementButton()
-        Espresso.onView(ViewMatchers.withContentDescription("Close")).click()
+        onViewWithContentDescription("Close").click()
     }
 
     fun clickOnCreateNewAnnouncementButton() {
@@ -97,11 +97,14 @@ class AnnouncementsListPage : BasePage() {
     }
 
     fun verifyExitWithoutSavingDialog() {
-        Espresso.onView(ViewMatchers.withText(R.string.exitWithoutSavingMessage))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onViewWithText(R.string.exitWithoutSavingMessage).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     fun assertOnNewAnnouncementPage() {
         Espresso.onView(ViewMatchers.withText(R.string.newAnnouncement)).assertDisplayed()
+    }
+
+    fun acceptExitWithoutSaveDialog() {
+        onViewWithText(R.string.exitUnsaved).click()
     }
 }

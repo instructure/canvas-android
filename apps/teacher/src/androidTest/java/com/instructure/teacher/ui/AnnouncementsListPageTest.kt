@@ -21,6 +21,7 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.panda_annotations.FeatureCategory
@@ -47,6 +48,7 @@ class AnnouncementsListPageTest : TeacherTest() {
         val data = getToAnnouncementsListPage()
         val course = data.courses.values.first()
         val announcement = data.courseDiscussionTopicHeaders[course.id]!!.filter { th -> th.announcement }.first()
+
         announcementsListPage.assertHasAnnouncement(announcement)
     }
 
@@ -57,6 +59,7 @@ class AnnouncementsListPageTest : TeacherTest() {
         val announcements =
             data.courseDiscussionTopicHeaders[course.id]!!.filter { th -> th.announcement }
         val searchAnnouncement = announcements[2]
+
         announcementsListPage.assertAnnouncementCount(announcements.size + 1) // +1 to account for header
         announcementsListPage.openSearch()
         announcementsListPage.enterSearchQuery(searchAnnouncement.title!!.take(searchAnnouncement.title!!.length / 2))
@@ -70,8 +73,10 @@ class AnnouncementsListPageTest : TeacherTest() {
     fun createNewAnnouncementTest() {
         getToAnnouncementsListPage(announcementCount = 1)
         announcementsListPage.assertAnnouncementCount(2) // header + the one test announcement
-        announcementsListPage.createAnnouncement(Lorem.getWords(4), Lorem.getWords(12))
-        announcementsListPage.assertHasAnnouncement(Lorem.getWords(4))
+        val announcementName = Randomizer.getLoremWords(4)
+
+        announcementsListPage.createAnnouncement(announcementName, Randomizer.getLoremWords(12))
+        announcementsListPage.assertHasAnnouncement(announcementName)
         announcementsListPage.assertAnnouncementCount(3) //header + the existing and the newly created one
     }
 
@@ -83,10 +88,14 @@ class AnnouncementsListPageTest : TeacherTest() {
         val course = data.courses.values.first()
         val announcement =
             data.courseDiscussionTopicHeaders[course.id]!!.filter { th -> th.announcement }.first()
+
         announcementsListPage.assertHasAnnouncement(announcement)
         announcementsListPage.assertAnnouncementCount(2) // header + the one test announcement
         announcementsListPage.clickOnCreateAnnouncementThenClose()
         announcementsListPage.verifyExitWithoutSavingDialog()
+        announcementsListPage.acceptExitWithoutSaveDialog()
+        announcementsListPage.assertHasAnnouncement(announcement)
+        announcementsListPage.assertAnnouncementCount(2) // header + the one test announcement
     }
 
     @Test
@@ -94,6 +103,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createNewAnnouncementWithMissingDescriptionTest() {
         getToAnnouncementsListPage(announcementCount = 1)
+
         announcementsListPage.createAnnouncement(Lorem.getWords(4), "")
         announcementsListPage.assertOnNewAnnouncementPage()
     }
@@ -103,6 +113,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createNewAnnouncementWithMissingTitleTest() {
         getToAnnouncementsListPage(announcementCount = 1)
+
         announcementsListPage.createAnnouncement("", Lorem.getWords(12))
         announcementsListPage.assertOnNewAnnouncementPage()
     }
