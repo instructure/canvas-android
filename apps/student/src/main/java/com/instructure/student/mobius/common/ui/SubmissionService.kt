@@ -581,6 +581,17 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         private fun getUserId() = ApiPrefs.user!!.id
 
+        private fun insertDraft(assignmentId: Long, context: Context, insertBlock: (StudentDb) -> Unit): Long {
+            val db = Db.getInstance(context)
+            deleteDraftsForAssignment(assignmentId, db)
+            insertBlock(db)
+            return db.submissionQueries.getLastInsert().executeAsOne()
+        }
+
+        private fun deleteDraftsForAssignment(id: Long, db: StudentDb) {
+            db.submissionQueries.deleteDraftById(id, getUserId())
+        }
+
         private fun insertNewSubmission(assignmentId: Long, context: Context, files: List<FileSubmitObject> = emptyList(), insertBlock: (StudentDb) -> Unit): Long {
             val db = Db.getInstance(context)
             deleteSubmissionsForAssignment(assignmentId, db, files)
@@ -625,7 +636,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             text: String
         ) {
             val dbSubmissionId = insertNewSubmission(assignmentId, context) {
-                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
+                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now(), false)
             }
 
             val bundle = Bundle().apply {
@@ -633,6 +644,21 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             }
 
             startService(context, Action.TEXT_ENTRY, bundle)
+        }
+
+        fun saveDraft(
+            context: Context,
+            canvasContext: CanvasContext,
+            assignmentId: Long,
+            assignmentName: String?,
+            text: String
+        ) {
+            val dbSubmissionId = insertDraft(assignmentId, context) {
+                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now(), true)
+            }
+
+            val i = 1+1
+            i.toDouble()
         }
 
         fun startUrlSubmission(

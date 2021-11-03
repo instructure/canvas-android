@@ -22,6 +22,7 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -38,8 +39,10 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         parent
     ) {
 
+    private lateinit var confirmationDialog: AlertDialog
+
     init {
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        toolbar.setupAsBackButton { showExitConfirmation() }
         toolbar.title = context.getString(R.string.textEntry)
     }
 
@@ -60,6 +63,21 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         rce.actionUploadImageCallback = {
             MediaUploadUtils.showPickImageDialog(null, context as Activity)
         }
+
+        confirmationDialog = AlertDialog.Builder(context)
+            .setTitle(R.string.textSubmissionExitConfirmationTitle)
+            .setMessage(R.string.textSubmissionExitConfirmationMessage)
+            .setPositiveButton(R.string.save) {dialog, _ ->
+                output.accept(TextSubmissionUploadEvent.SaveDraft(rce.html))
+            }
+            .setNegativeButton(R.string.dontSave) {dialog, _ ->
+                dialog.dismiss()
+                (context as? Activity)?.onBackPressed()
+            }
+            .setNeutralButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
     }
 
     override fun render(state: TextSubmissionUploadViewState) {
@@ -85,6 +103,11 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         (context as? Activity)?.onBackPressed()
     }
 
+    fun saveDraft(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
+        SubmissionService.saveDraft(context, canvasContext, assignmentId, assignmentName, text)
+        (context as? Activity)?.onBackPressed()
+    }
+
     fun retrieveCameraImage(): Uri? {
         return (context as? Activity)?.let { activity ->
             MediaUploadUtils.handleCameraPicResult(activity, null)
@@ -102,6 +125,14 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
 
     private fun insertImage(text: String, alt: String) {
         rce.insertImage(text, alt)
+    }
+
+    private fun showExitConfirmation() {
+        if (rce.html.isNotEmpty() || rce.html.isNotBlank()) {
+            confirmationDialog.show()
+        } else {
+            (context as? Activity)?.onBackPressed()
+        }
     }
 
     fun showFailedImageMessage() {
