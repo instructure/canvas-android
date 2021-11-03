@@ -56,7 +56,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testShowCorrectHeaderItems() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -80,7 +80,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testShowScheduledAssignments() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -98,7 +98,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testShowMissingAssignments() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -114,7 +114,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testShowToDoEvents() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -130,7 +130,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testRefresh() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -159,7 +159,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testGoBack2Weeks() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -182,7 +182,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testGoForward2Weeks() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -205,7 +205,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testOpenAssignment() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -225,7 +225,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testOpenCourse() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -244,7 +244,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testMarkAsDone() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)

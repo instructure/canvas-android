@@ -92,7 +92,7 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
         swipeRefreshLayout.swipeDown()
     }
 
-    fun openHomeroomAnnouncements() {
+    fun clickOnViewPreviousAnnouncements() {
         onViewWithId(R.id.viewPreviousAnnouncements)
                 .click()
     }

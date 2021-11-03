@@ -26,7 +26,6 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
-import com.instructure.student.util.FeatureFlagPrefs
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -36,7 +35,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testNavigateToElementaryDashboard() {
         // User should be able to tap and navigate to dashboard page
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
@@ -48,7 +47,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testTabsNavigation() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.assertHomeroomTabVisibleAndSelected()
@@ -72,7 +71,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testOnlyElementarySpecificNavigationItemsShownInTheNavigationDrawer() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.openDrawer()

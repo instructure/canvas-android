@@ -40,7 +40,7 @@ class GradesInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testShowGrades() {
         val data = createMockData(courseCount = 3)
         goToGrades(data)
@@ -53,7 +53,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testRefresh() {
         val data = createMockData(courseCount = 3)
         goToGrades(data)
@@ -72,7 +72,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testEmptyView() {
         val data = createMockData(homeroomCourseCount = 1)
         goToGrades(data)
@@ -82,7 +82,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testOpenCourseGrades() {
         val data = createMockData(courseCount = 3)
         goToGrades(data)
@@ -95,7 +95,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
     fun testChangeGradingPeriod() {
         val data = createMockData(courseCount = 3, withGradingPeriods = true)
         goToGrades(data)
