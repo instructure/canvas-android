@@ -28,7 +28,6 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.teacher.ui.utils.Lorem
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -104,7 +103,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     fun createNewAnnouncementWithMissingDescriptionTest() {
         getToAnnouncementsListPage(announcementCount = 1)
 
-        announcementsListPage.createAnnouncement(Lorem.getWords(4), "")
+        announcementsListPage.createAnnouncement(Randomizer.getLoremWords(4), "")
         announcementsListPage.assertOnNewAnnouncementPage()
     }
 
@@ -114,7 +113,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     fun createNewAnnouncementWithMissingTitleTest() {
         getToAnnouncementsListPage(announcementCount = 1)
 
-        announcementsListPage.createAnnouncement("", Lorem.getWords(12))
+        announcementsListPage.createAnnouncement("", Randomizer.getLoremWords(12))
         announcementsListPage.assertOnNewAnnouncementPage()
     }
 
