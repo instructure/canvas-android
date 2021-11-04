@@ -345,7 +345,8 @@ class DefaultParentTheme extends StatelessWidget {
     final theme = Theme.of(context);
     return AppBarTheme(
       color: theme.scaffoldBackgroundColor,
-      textTheme: theme.textTheme,
+      toolbarTextStyle: theme.textTheme.bodyText2,
+      titleTextStyle: theme.textTheme.headline6,
       iconTheme: theme.iconTheme,
       elevation: 0,
     );
