@@ -19,14 +19,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
-import com.instructure.student.db.Db
-import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submission.text.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.spotify.mobius.EventSource
 
 class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, TextSubmissionUploadEvent, TextSubmissionUploadEffect, TextSubmissionUploadView, TextSubmissionUploadViewState>() {
 
@@ -45,9 +41,7 @@ class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, T
     override fun makePresenter() = TextSubmissionUploadPresenter
 
     override fun makeInitModel(): TextSubmissionUploadModel {
-        val draft = Db.getInstance(requireContext()).submissionQueries.getDraftById(assignmentId, ApiPrefs.user!!.id).executeAsList()
-        val text = if (draft.isNotEmpty()) draft[0].submissionEntry ?: initialText else initialText
-        return TextSubmissionUploadModel(course, assignmentId, assignmentName, text, isFailure)
+        return TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText, isFailure)
     }
 
     override fun getExternalEventSources() = listOf(TextSubmissionUploadEventBusSource())

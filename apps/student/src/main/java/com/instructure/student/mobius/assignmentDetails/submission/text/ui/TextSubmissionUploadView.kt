@@ -41,6 +41,8 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
 
     private lateinit var confirmationDialog: AlertDialog
 
+    private var initialText: String? = ""
+
     init {
         toolbar.setupAsBackButton { showExitConfirmation() }
         toolbar.title = context.getString(R.string.textEntry)
@@ -93,6 +95,7 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     fun setInitialSubmissionText(text: String?) {
+        initialText = text
         rce.setHtml(text ?: "", context.getString(R.string.textEntry), context.getString(R.string.submissionWrite), ThemePrefs.brandColor, ThemePrefs.buttonColor)
         toolbar.menu.findItem(R.id.menuSubmit).isEnabled = !text.isNullOrBlank()
     }
@@ -128,7 +131,7 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     private fun showExitConfirmation() {
-        if (rce.html.isNotEmpty() || rce.html.isNotBlank()) {
+        if (rce.html.isNotEmpty() && rce.html.isNotBlank() && initialText != rce.html) {
             confirmationDialog.show()
         } else {
             (context as? Activity)?.onBackPressed()
