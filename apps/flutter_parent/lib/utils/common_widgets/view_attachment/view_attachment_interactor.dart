@@ -44,11 +44,9 @@ class ViewAttachmentInteractor {
   }
 
   Future<bool> checkStoragePermission() async {
-    var permissionHandler = locator<PermissionHandler>();
-    PermissionStatus permission = await permissionHandler.checkPermissionStatus(PermissionGroup.storage);
+    PermissionStatus permission = await Permission.storage.status;
     if (permission != PermissionStatus.granted) {
-      var permissions = await permissionHandler.requestPermissions([PermissionGroup.storage]);
-      if (permissions[PermissionGroup.storage] == PermissionStatus.granted) return true;
+      await Permission.storage.request().isGranted;
     } else {
       return true;
     }

@@ -13,37 +13,37 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:android_intent/android_intent.dart';
-import 'package:intent/action.dart' as android;
-import 'package:intent/extra.dart' as android;
-import 'package:intent/intent.dart' as android;
+// import 'package:intent/action.dart' as android;
+// import 'package:intent/extra.dart' as android;
+// import 'package:intent/intent.dart' as android;
 
 class AndroidIntentVeneer {
   launch(AndroidIntent intent) => intent.launch();
 
   launchPhone(String phoneNumber) {
-    android.Intent()
-      ..setAction(android.Action.ACTION_DIAL)
-      ..setData(Uri.parse(phoneNumber))
-      ..startActivity(createChooser: false);
+    // android.Intent()
+    //   ..setAction(android.Action.ACTION_DIAL)
+    //   ..setData(Uri.parse(phoneNumber))
+    //   ..startActivity(createChooser: false);
   }
 
   launchEmail(String url) {
-    android.Intent()
-      ..setAction(android.Action.ACTION_SENDTO)
-      ..setData(Uri.parse(url))
-      ..startActivity(createChooser: true);
+    // android.Intent()
+    //   ..setAction(android.Action.ACTION_SENDTO)
+    //   ..setData(Uri.parse(url))
+    //   ..startActivity(createChooser: true);
   }
 
   // TODO: Switch to AndroidIntent once it supports emails properly (either can't specify 'to' email, or body doesn't support multiline)
   launchEmailWithBody(String subject, String emailBody, {String recipientEmail = 'mobilesupport@instructure.com'}) {
 //    _launchEmailWithBody(canvasEmail, subject, emailBody); // Can't do until it supports email better
-    android.Intent()
-      ..setAction(android.Action.ACTION_SENDTO)
-      ..setData(Uri(scheme: 'mailto'))
-      ..putExtra(android.Extra.EXTRA_EMAIL, [recipientEmail])
-      ..putExtra(android.Extra.EXTRA_SUBJECT, subject)
-      ..putExtra(android.Extra.EXTRA_TEXT, emailBody)
-      ..startActivity(createChooser: true);
+//     android.Intent()
+//       ..setAction(android.Action.ACTION_SENDTO)
+//       ..setData(Uri(scheme: 'mailto'))
+//       ..putExtra(android.Extra.EXTRA_EMAIL, [recipientEmail])
+//       ..putExtra(android.Extra.EXTRA_SUBJECT, subject)
+//       ..putExtra(android.Extra.EXTRA_TEXT, emailBody)
+//       ..startActivity(createChooser: true);
   }
 
   // Can't use yet, this doesn't set the 'email' field properly. Also can't specify all components via the data uri, as

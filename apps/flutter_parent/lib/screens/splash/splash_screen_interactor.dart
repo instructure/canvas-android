@@ -59,18 +59,19 @@ class SplashScreenInteractor {
     var isObserver = students.isNotEmpty;
 
     // Check for masquerade permissions if we haven't already
-    if (ApiPrefs.getCurrentLogin().canMasquerade == null) {
-      if (ApiPrefs.getDomain().contains(MasqueradeScreenInteractor.siteAdminDomain)) {
-        ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = true);
-      } else {
-        try {
-          var permissions = await locator<AccountsApi>().getAccountPermissions();
-          ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = permissions.becomeUser);
-        } catch (e) {
-          ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = false);
-        }
-      }
-    }
+    // TODO
+    // if (ApiPrefs.getCurrentLogin().canMasquerade == null) {
+    //   if (ApiPrefs.getDomain().contains(MasqueradeScreenInteractor.siteAdminDomain)) {
+    //     ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = true);
+    //   } else {
+    //     try {
+    //       var permissions = await locator<AccountsApi>().getAccountPermissions();
+    //       ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = permissions.becomeUser);
+    //     } catch (e) {
+    //       ApiPrefs.updateCurrentLogin((b) => b..canMasquerade = false);
+    //     }
+    //   }
+    // }
 
     SplashScreenData data = SplashScreenData(isObserver, ApiPrefs.getCurrentLogin().canMasquerade);
 

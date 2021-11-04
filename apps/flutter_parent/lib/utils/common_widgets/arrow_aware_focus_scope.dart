@@ -11,6 +11,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 
@@ -19,23 +20,23 @@ FocusOnKeyCallback _onDirectionKeyCallback = (node, event) {
   if(event is RawKeyDownEvent) {
     if(event.logicalKey == LogicalKeyboardKey.arrowDown) {
       node.focusInDirection(TraversalDirection.down);
-      return true; // event handled
+      return KeyEventResult.handled; // event handled
     }
     if(event.logicalKey == LogicalKeyboardKey.arrowUp) {
       node.focusInDirection(TraversalDirection.up);
-      return true; // event handled
+      return KeyEventResult.handled; // event handled
     }
     if(event.logicalKey == LogicalKeyboardKey.arrowLeft) {
       node.focusInDirection(TraversalDirection.left);
-      return true; // event handled
+      return KeyEventResult.handled; // event handled
     }
     if(event.logicalKey == LogicalKeyboardKey.arrowRight) {
       node.focusInDirection(TraversalDirection.right);
-      return true; // event handled
+      return KeyEventResult.handled; // event handled
     }
   }
 
-  return false; // event not handled
+  return KeyEventResult.ignored; // event not handled
 };
 
 

@@ -220,7 +220,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
       } else {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-          child: Text(widget.emptyDescription, style: Theme.of(context).textTheme.body1),
+          child: Text(widget.emptyDescription, style: Theme.of(context).textTheme.bodyText2),
         );
       }
     }
@@ -241,7 +241,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
       javascriptMode: JavascriptMode.unrestricted,
       onPageFinished: _handlePageLoaded,
       onWebViewCreated: _handleWebViewCreated,
-      darkMode: ParentTheme.of(context).isWebViewDarkMode,
+      // darkMode: ParentTheme.of(context).isWebViewDarkMode,
       navigationDelegate: _handleNavigation,
       gestureRecognizers: _webViewGestures(),
       javascriptChannels: _webViewChannels(),

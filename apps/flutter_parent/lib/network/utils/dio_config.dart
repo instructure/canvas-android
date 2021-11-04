@@ -17,7 +17,7 @@ import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
-import 'package:dio_retry/dio_retry.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
@@ -100,9 +100,7 @@ class DioConfig {
     if (retries > 0) {
       dio.interceptors.add(RetryInterceptor(
           dio: dio,
-          options: RetryOptions(
-            retries: retries,
-          )));
+          retries: retries));
     }
 
     // Cache manager
@@ -130,13 +128,13 @@ class DioConfig {
   }
 
   void _configureDebugProxy(Dio dio) {
-    const proxyIp = String.fromEnvironment('PROXY_IP', defaultValue: null);
-    const proxyPort = String.fromEnvironment('PROXY_PORT', defaultValue: null);
-    if (proxyIp == null) return;
+    // const proxyIp = String.fromEnvironment('PROXY_IP', defaultValue: null);
+    // const proxyPort = String.fromEnvironment('PROXY_PORT', defaultValue: null);
+    // if (proxyIp == null) return;
 
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (client) {
-      client.findProxy = (uri) => "PROXY $proxyIp:$proxyPort;";
+      client.findProxy = (uri) => "PROXY 192.168.0.101:8888;";
       client.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
     };
@@ -145,9 +143,9 @@ class DioConfig {
   Interceptor _cacheInterceptor() {
     Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
     return InterceptorsWrapper(
-      onRequest: (RequestOptions options) => options.method == 'GET' ? interceptor.onRequest(options) : options,
-      onResponse: (Response response) => response.request.method == 'GET' ? interceptor.onResponse(response) : response,
-      onError: (DioError e) => e, // interceptor falls back to cache on error, a behavior we currently don't want
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
+      onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
+      onError: (DioError e, ErrorInterceptorHandler handler) => e, // interceptor falls back to cache on error, a behavior we currently don't want
     );
   }
 

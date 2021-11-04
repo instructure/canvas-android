@@ -16,7 +16,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/serializers.dart';
@@ -43,17 +42,20 @@ class ApiPrefs {
   static const String KEY_RATING_DONT_SHOW_AGAIN = 'dont_show_again';
   static const String KEY_RATING_NEXT_SHOW_DATE = 'next_show_date';
 
-  static EncryptedSharedPreferences _prefs;
+  // TODO
+  static SharedPreferences _prefs;
   static PackageInfo _packageInfo;
   static Login _currentLogin;
 
   static Future<void> init() async {
-    if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
+    if (_prefs == null) _prefs = await SharedPreferences.getInstance();
     _packageInfo = await PackageInfo.fromPlatform();
     await _migrateToEncryptedPrefs();
   }
 
   static void _migrateToEncryptedPrefs() async {
+    return;
+
     if (_prefs.getBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS) ?? false) {
       return;
     }

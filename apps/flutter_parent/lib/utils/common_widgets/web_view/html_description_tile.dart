@@ -68,7 +68,7 @@ class HtmlDescriptionTile extends StatelessWidget {
                 _title(context),
                 Text(
                   buttonLabel ?? L10n(context).viewDescription,
-                  style: Theme.of(context).textTheme.subhead.copyWith(color: ParentTheme.of(context).studentColor),
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(color: ParentTheme.of(context).studentColor),
                 ),
               ],
             ),
@@ -108,7 +108,7 @@ class HtmlDescriptionTile extends StatelessWidget {
             child: Center(
               child: Text(
                 emptyDescription,
-                style: Theme.of(context).textTheme.subtitle.copyWith(color: parentTheme.onSurfaceColor),
+                style: Theme.of(context).textTheme.subtitle2.copyWith(color: parentTheme.onSurfaceColor),
               ),
             ),
           ),

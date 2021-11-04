@@ -22,8 +22,8 @@ class EnrollmentsApi {
   Future<List<Enrollment>> getObserveeEnrollments({bool forceRefresh = false}) async {
     var dio = canvasDio(pageSize: PageSize.canvasMax, forceRefresh: forceRefresh);
     var params = {
-      'include': ['observed_users', 'avatar_url'],
-      'state': ['creation_pending', 'invited', 'active', 'completed', 'current_and_future']
+      'include[]': ['observed_users', 'avatar_url'],
+      'state[]': ['creation_pending', 'invited', 'active', 'completed', 'current_and_future']
     };
     return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
   }
@@ -31,7 +31,7 @@ class EnrollmentsApi {
   Future<List<Enrollment>> getSelfEnrollments({bool forceRefresh = false}) async {
     var dio = canvasDio(pageSize: PageSize.canvasMax, forceRefresh: forceRefresh);
     var params = {
-      'state': ['creation_pending', 'invited', 'active', 'completed']
+      'state[]': ['creation_pending', 'invited', 'active', 'completed']
     };
     return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
   }
@@ -40,7 +40,7 @@ class EnrollmentsApi {
       {bool forceRefresh = false}) {
     final dio = canvasDio(forceRefresh: forceRefresh);
     final params = {
-      'state': ['active', 'completed'], // current_and_concluded state not supported for observers
+      'state[]': ['active', 'completed'], // current_and_concluded state not supported for observers
       'user_id': studentId,
       if (gradingPeriodId?.isNotEmpty == true)
         'grading_period_id': gradingPeriodId,
@@ -63,7 +63,7 @@ class EnrollmentsApi {
       return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
     } on DioError catch (e) {
       // The API returns status code 422 on pairing failure
-      if (e.type == DioErrorType.RESPONSE && e.response.statusCode == 422) return false;
+      if (e.type == DioErrorType.response && e.response.statusCode == 422) return false;
       return null;
     }
   }

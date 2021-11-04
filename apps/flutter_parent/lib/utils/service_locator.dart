@@ -153,7 +153,6 @@ void setupLocator() {
   locator.registerLazySingleton<FlutterSnackbarVeneer>(() => FlutterSnackbarVeneer());
   locator.registerLazySingleton<FirebaseCrashlytics>(() => FirebaseCrashlytics.instance);
   locator.registerLazySingleton<PathProviderVeneer>(() => PathProviderVeneer());
-  locator.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
   locator.registerLazySingleton<UrlLauncher>(() => UrlLauncher());
 
   // Other

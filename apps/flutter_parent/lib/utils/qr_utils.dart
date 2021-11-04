@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'package:barcode_scan/barcode_scan.dart';
+// import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
@@ -51,23 +51,23 @@ class QRUtils {
 
   /// Opens the bar code scanner and attempts to scan for a pairing QR code
   static Future<QRPairingScanResult> scanPairingCode() async {
-    try {
-      ScanResult scanResult = await locator<BarcodeScanVeneer>().scanBarcode();
-      switch (scanResult.type) {
-        case ResultType.Barcode:
-          return QRUtils.parsePairingInfo(scanResult.rawContent);
-        case ResultType.Cancelled:
-          return QRPairingScanResult.error(QRPairingScanErrorType.canceled);
-        case ResultType.Error:
-          return QRPairingScanResult.error(QRPairingScanErrorType.invalidCode);
-      }
-    } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.cameraAccessDenied) {
-        return QRPairingScanResult.error(QRPairingScanErrorType.cameraError);
-      }
-    } catch (e) {
-      // Intentionally left blank
-    }
+    // try {
+    //   ScanResult scanResult = await locator<BarcodeScanVeneer>().scanBarcode();
+    //   switch (scanResult.type) {
+    //     case ResultType.Barcode:
+    //       return QRUtils.parsePairingInfo(scanResult.rawContent);
+    //     case ResultType.Cancelled:
+    //       return QRPairingScanResult.error(QRPairingScanErrorType.canceled);
+    //     case ResultType.Error:
+    //       return QRPairingScanResult.error(QRPairingScanErrorType.invalidCode);
+    //   }
+    // } on PlatformException catch (e) {
+    //   if (e.code == BarcodeScanner.cameraAccessDenied) {
+    //     return QRPairingScanResult.error(QRPairingScanErrorType.cameraError);
+    //   }
+    // } catch (e) {
+    //   // Intentionally left blank
+    // }
     return QRPairingScanResult.error(QRPairingScanErrorType.unknown);
   }
 
