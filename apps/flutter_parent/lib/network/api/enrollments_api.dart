@@ -49,7 +49,7 @@ class EnrollmentsApi {
       dio.get(
         'courses/$courseId/enrollments',
         queryParameters: params,
-      ),
+        options: Options(validateStatus: (status) => status < 500)), // Workaround, because this request fails for some legacy users, but we can't catch the error.
       depaginateWith: dio,
     );
   }
