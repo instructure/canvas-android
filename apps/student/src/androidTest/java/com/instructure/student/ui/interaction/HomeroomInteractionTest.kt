@@ -47,7 +47,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertPageObjects()
 
@@ -68,7 +68,7 @@ class HomeroomInteractionTest : StudentTest() {
     fun testOnlyCoursesShowUpOnHomeroomIfNoHomeroomAnnouncement() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3, homeroomCourseCount = 0)
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertPageObjects()
 
@@ -93,7 +93,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         val student = data.students[0]
         homeroomPage.assertWelcomeText(student.shortName!!)
@@ -108,7 +108,7 @@ class HomeroomInteractionTest : StudentTest() {
     fun testEmptyState() {
         val data = createMockDataWithHomeroomCourse()
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertHomeroomContentNotDisplayed()
         homeroomPage.assertCourseItemsCount(0)
@@ -120,7 +120,7 @@ class HomeroomInteractionTest : StudentTest() {
     fun testRefresh() {
         val data = createMockDataWithHomeroomCourse()
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertHomeroomContentNotDisplayed()
         homeroomPage.assertCourseItemsCount(0)
@@ -157,7 +157,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertPageObjects()
 
@@ -183,7 +183,7 @@ class HomeroomInteractionTest : StudentTest() {
         val courses = data.courses.values.filter { !it.homeroomCourse }
         val courseAnnouncement = data.addDiscussionTopicToCourse(courses[0], user, isAnnouncement = true)
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertPageObjects()
 
@@ -201,7 +201,7 @@ class HomeroomInteractionTest : StudentTest() {
         val courses = data.courses.values.filter { !it.homeroomCourse }
         val courseAnnouncement = data.addDiscussionTopicToCourse(courses[0], user, isAnnouncement = true)
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertPageObjects()
 
@@ -222,7 +222,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertPageObjects()
 
@@ -246,7 +246,7 @@ class HomeroomInteractionTest : StudentTest() {
         data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertPageObjects()
 
@@ -272,7 +272,7 @@ class HomeroomInteractionTest : StudentTest() {
         val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
 
-        goToHomeroom(data)
+        goToHomeroomPage(data)
 
         homeroomPage.assertPageObjects()
         homeroomPage.openAssignments("2 due today | 2 missing")
@@ -303,7 +303,7 @@ class HomeroomInteractionTest : StudentTest() {
         return data
     }
 
-    private fun goToHomeroom(data: MockCanvas) {
+    private fun goToHomeroomPage(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLoginElementary(data.domain, token, student)
