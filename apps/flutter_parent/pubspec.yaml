@@ -90,7 +90,7 @@ dependencies:
   package_info: 0.4.3+2
   permission_handler: ^4.0.0
   shared_preferences: 0.5.12+4 # Used to cache remote config properties
-  #webview_flutter: 0.3.19+5
+  #webview_flutter: 1.0.7
   webview_flutter: # TODO: Remove once the flutter plugin supports baseUrl https://github.com/flutter/plugins/pull/2463
     path: ./plugins/webview_flutter
 
