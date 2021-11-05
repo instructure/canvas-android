@@ -54,6 +54,7 @@ class RemoteConfigUtils {
       throw StateError('double-initialization of RemoteConfigUtils');
 
     _remoteConfig = remoteConfig;
+    _remoteConfig.settings.minimumFetchInterval = Duration(hours: 1);
 
     // fetch data from Firebase
     var updated = false;
