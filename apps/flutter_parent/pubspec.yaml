@@ -83,7 +83,8 @@ dependencies:
   # Platform interactions
   android_intent: ^2.0.2
   device_info: ^2.0.3
-  encrypted_shared_preferences: ^2.0.0 # Used by ApiPrefs to securely store data
+  encrypted_shared_preferences: # Used by ApiPrefs to securely store data
+    path: ./plugins/encrypted_shared_preferences
   flutter_local_notifications: ^9.0.2
   package_info: ^2.0.2
   permission_handler: ^8.2.5
