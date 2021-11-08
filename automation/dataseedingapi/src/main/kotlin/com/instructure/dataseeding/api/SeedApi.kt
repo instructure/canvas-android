@@ -32,6 +32,8 @@ object SeedApi {
             val courses: Int = 0,
             val pastCourses: Int = 0,
             val favoriteCourses: Int = 0,
+            val homeroomCourses: Int = 0,
+            val accountId: Long? = null,
             val gradingPeriods: Boolean = false,
             val discussions: Int = 0,
             val announcements: Int = 0,
@@ -96,9 +98,10 @@ object SeedApi {
         val seededData = SeededDataApiModel()
 
         with(seededData) {
-            for (c in 0 until maxOf(request.courses + request.pastCourses, request.favoriteCourses)) {
+            for (c in 0 until maxOf(request.courses + request.pastCourses, request.favoriteCourses, request.homeroomCourses)) {
                 // Seed course
-                addCourses(createCourse(request.gradingPeriods, request.publishCourses))
+                if(request.homeroomCourses > 0) addCourses(createCourse(request.gradingPeriods, request.publishCourses, true, request.accountId))
+                else addCourses(createCourse(request.gradingPeriods, request.publishCourses))
 
                 // Seed users
                 for (t in 0 until request.teachers) {
@@ -206,7 +209,7 @@ object SeedApi {
     }
 
     // Private course-creation method that does some special handling for grading periods
-    private fun createCourse(gradingPeriods: Boolean = false, publishCourses: Boolean = true) : CourseApiModel {
+    private fun createCourse(gradingPeriods: Boolean = false, publishCourses: Boolean = true, isHomeroomCourse: Boolean = false, accountId: Long? = null) : CourseApiModel {
         return if(gradingPeriods) {
             val enrollmentTerm = EnrollmentTermsApi.createEnrollmentTerm()
             val gradingPeriodSetWrapper = GradingPeriodsApi.createGradingPeriodSet(enrollmentTerm.id)
@@ -215,7 +218,7 @@ object SeedApi {
             courseWithTerm
         }
         else {
-            val course = CoursesApi.createCourse()
+            val course = CoursesApi.createCourse(accountId = accountId, homeroomCourse = isHomeroomCourse)
             course
         }
     }

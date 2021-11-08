@@ -35,6 +35,9 @@ object CoursesApi {
         @POST("accounts/self/courses")
         fun createCourse(@Body createCourseApiModel: CreateCourseWrapper): Call<CourseApiModel>
 
+        @POST("accounts/{account_id}/courses")
+        fun createCourseInSubAccount(@Path("account_id") accountId: Long, @Body createCourseApiModel: CreateCourseWrapper): Call<CourseApiModel>
+
         @POST("users/self/favorites/courses/{courseId}")
         fun addCourseToFavorites(@Path("courseId") courseId: Long): Call<FavoriteApiModel>
 
@@ -52,7 +55,9 @@ object CoursesApi {
     fun createCourse(
             enrollmentTermId: Long? = null,
             publish: Boolean = true,
-            coursesService: CoursesService = adminCoursesService
+            coursesService: CoursesService = adminCoursesService,
+            homeroomCourse: Boolean = false,
+            accountId: Long? = null
     ): CourseApiModel {
         val randomCourseName = Randomizer.randomCourseName()
         val course = CreateCourseWrapper(
@@ -60,9 +65,17 @@ object CoursesApi {
             course = CreateCourse(
                 name = randomCourseName,
                 courseCode = randomCourseName.substring(0, 2),
-                enrollmentTermId = enrollmentTermId
+                enrollmentTermId = enrollmentTermId,
+                homeroomCourse = homeroomCourse,
+                accountId = accountId
             )
         )
+        if(homeroomCourse) {
+            return coursesService
+                .createCourseInSubAccount(accountId!!,course)
+                .execute()
+                .body()!!
+        }
         return coursesService
             .createCourse(course)
             .execute()

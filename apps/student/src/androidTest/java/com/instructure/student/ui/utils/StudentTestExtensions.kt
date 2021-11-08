@@ -62,6 +62,8 @@ fun StudentTest.seedData(
     courses: Int = 0,
     students: Int = 0,
     favoriteCourses: Int = 0,
+    homeroomCourses: Int = 0,
+    accountId: Long? = null,
     announcements: Int = 0,
     discussions: Int = 0,
     gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
@@ -73,6 +75,8 @@ fun StudentTest.seedData(
             pastCourses = pastCourses,
             courses = courses,
             favoriteCourses = favoriteCourses,
+            homeroomCourses = homeroomCourses,
+            accountId = accountId,
             gradingPeriods = gradingPeriods,
             discussions = discussions,
             announcements = announcements
@@ -143,6 +147,24 @@ fun StudentTest.tokenLoginElementary(domain: String, token: String, user: User) 
     // Sometimes, especially on slow FTL emulators, it can take a bit for the dashboard to show
     // up after a token login.  Add some tolerance for that.
     waitForMatcherWithSleeps(withId(R.id.elementaryDashboardPage), 20000).check(matches(isDisplayed()))
+    elementaryDashboardPage.assertPageObjects()
+}
+
+fun StudentTest.tokenLoginElementary(user: CanvasUserApiModel) {
+    activityRule.runOnUiThread {
+        (originalActivity as LoginActivity).loginWithToken(
+            user.token,
+            user.domain,
+            User(
+                id = user.id,
+                name = user.name,
+                shortName = user.shortName,
+                avatarUrl = user.avatarUrl,
+                effective_locale = "en" // Needed so we don't restart for custom languages (system.exit(0) kills the test process)
+            ),
+            canvasForElementary = true
+        )
+    }
     elementaryDashboardPage.assertPageObjects()
 }
 
