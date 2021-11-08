@@ -14,7 +14,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:test/test.dart';
 
 import '../test_app.dart';

@@ -15,13 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.2"
-  android_intent:
+  android_intent_plus:
     dependency: "direct main"
     description:
-      name: android_intent
+      name: android_intent_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "3.0.2"
   archive:
     dependency: transitive
     description:

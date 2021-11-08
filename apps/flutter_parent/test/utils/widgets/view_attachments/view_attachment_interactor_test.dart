@@ -17,7 +17,7 @@ import 'dart:io';
 import 'package:android_intent/android_intent.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
-import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
 import 'package:mockito/mockito.dart';

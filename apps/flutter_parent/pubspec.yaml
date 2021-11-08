@@ -81,7 +81,7 @@ dependencies:
   built_collection: ^5.1.1
 
   # Platform interactions
-  android_intent: ^2.0.2
+  android_intent_plus: ^3.0.2
   device_info: ^2.0.3
   encrypted_shared_preferences: # Used by ApiPrefs to securely store data
     path: ./plugins/encrypted_shared_preferences

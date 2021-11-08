@@ -73,7 +73,7 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
-import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
