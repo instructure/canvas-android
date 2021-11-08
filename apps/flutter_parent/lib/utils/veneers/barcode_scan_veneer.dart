@@ -14,16 +14,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 
-// TODO
 class BarcodeScanVeneer {
-  // Future<ScanResult> scanBarcode() {
-  //   return BarcodeScanner.scan();
-  // }
+  Future<ScanResult> scanBarcode() {
+    return BarcodeScanner.scan();
+  }
 
   Future<int> getNumberOfCameras() {
-    return Future.value(1);
-    // return BarcodeScanner.numberOfCameras;
+    return BarcodeScanner.numberOfCameras;
   }
 }
