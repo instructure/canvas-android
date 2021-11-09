@@ -42,6 +42,9 @@ object Randomizer {
     /** Creates random name for a course */
     fun randomCourseName(): String = faker.educator().course() + " " + randomUUID()
 
+    /** Creates a random string from Lorem from the first 'wordCount' words of it. */
+    fun getLoremWords(wordCount: Int): String = faker.lorem().sentence(wordCount - 1)
+
     /** Creates a random description for a course */
     fun randomCourseDescription() : String = faker.lorem().sentence()
 
