@@ -101,6 +101,7 @@ class SettingsInteractionTest : StudentTest() {
         dashboardPage.launchSettingsPage()
         settingsPage.launchLegalPage()
         legalPage.openPrivacyPolicy()
+        Thread.sleep(10000)
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
         canvasWebViewPage.runTextChecks(
                 // Potentially brittle, as this content could be changed by another team.
