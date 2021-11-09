@@ -1162,7 +1162,7 @@ packages:
       path: "plugins/webview_flutter"
       relative: true
     source: path
-    version: "0.3.19+4"
+    version: "1.0.7"
   win32:
     dependency: transitive
     description:
