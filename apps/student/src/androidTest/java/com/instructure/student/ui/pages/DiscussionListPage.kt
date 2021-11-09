@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -25,10 +24,9 @@ import com.instructure.canvas.espresso.DirectlyPopulateEditText
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.espresso.*
-import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
@@ -37,6 +35,7 @@ import org.hamcrest.Matchers.containsString
 class DiscussionListPage : BasePage(R.id.discussionListPage) {
 
     private val createNewDiscussion by OnViewWithId(R.id.createNewDiscussion)
+    private val announcementsRecyclerView by OnViewWithId(R.id.discussionRecyclerView)
 
     fun waitForDiscussionTopicToDisplay(topicTitle: String) {
         val matcher = allOf(withText(topicTitle), withId(R.id.discussionTitle))
@@ -155,6 +154,22 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
 
     fun assertOnNewAnnouncementPage() {
         onView(withText(R.string.newAnnouncement)).assertDisplayed()
+    }
+
+    fun acceptExitWithoutSaveDialog() {
+        onViewWithText(R.string.exitUnsaved).click()
+    }
+
+    fun assertHasAnnouncement(discussion: DiscussionTopicHeader) {
+        assertHasAnnouncement(discussion.title!!)
+    }
+
+    fun assertAnnouncementCount(count: Int) {
+        announcementsRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
+    }
+
+    fun assertHasAnnouncement(announcementName: String) {
+        onView(withText(announcementName)).assertDisplayed()
     }
 
 }

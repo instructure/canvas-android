@@ -35,7 +35,7 @@ class ResourcesInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testImportantLinksAndActionItemsShowUpInResourcesScreen() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -64,7 +64,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testImportantLinksForTwoCourses() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -88,7 +88,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyActionItemsShowIfSyllabusIsEmpty() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -116,7 +116,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyLtiToolsShowIfNoHomeroomCourse() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
 
@@ -138,7 +138,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testEmptyState() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
 
@@ -151,7 +151,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testRefresh() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
 
@@ -186,7 +186,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenLtiToolShowsCourseSelector() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -209,7 +209,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD_HOMEROOM, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenComposeMessageScreen() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
