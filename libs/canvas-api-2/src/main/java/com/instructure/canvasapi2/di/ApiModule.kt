@@ -76,6 +76,11 @@ object ApiModule {
     }
 
     @Provides
+    fun provideCanvaDocsManager(): CanvaDocsManager {
+        return CanvaDocsManager
+    }
+
+    @Provides
     @Singleton
     fun provideHelpLinksApi(): HelpLinksAPI {
         return HelpLinksAPI

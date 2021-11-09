@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">De antwoorden van deze cursist zijn verborgen omdat deze opdracht anoniem is.</string>
 
-    <string name="studentAnnotationUnsupported">Cursistaantekening (niet ondersteund)</string>
-    <string name="studentAnnotationUnsupportedDescription">Cursistaantekening wordt momenteel niet ondersteund op mobiel apparaat.</string>
-    <string name="unsupportedSubmissionType">Niet-ondersteund inleveringstype</string>
-    <string name="studentAnnotationUnsupportedMessage">Inlevering kan niet worden weergegeven omdat cursistaantekening momenteel niet wordt ondersteund op mobiel apparaat.</string>
     <string name="schedule_marked_as_done">Je hebt het als klaar gemarkeerd.</string>
 </resources>

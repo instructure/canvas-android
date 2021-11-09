@@ -96,8 +96,8 @@
         android:text="@string/submitAssignment"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/textRight"
-        app:layout_constraintRight_toRightOf="@id/textLeft" />
+        app:layout_constraintEnd_toStartOf="@id/textRight"
+        app:layout_constraintStart_toEndOf="@id/textLeft" />
 
     <com.instructure.pandautils.views.FloatingRecordingView
         android:id="@+id/floatingRecordingView"

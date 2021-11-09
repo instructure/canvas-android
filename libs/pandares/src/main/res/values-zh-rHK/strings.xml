@@ -1200,9 +1200,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">這名學生的回覆已隱藏，因為此作業為匿名狀態。</string>
 
-    <string name="studentAnnotationUnsupported">學生註釋（不支援）</string>
-    <string name="studentAnnotationUnsupportedDescription">流動電話目前不支援學生註釋。</string>
-    <string name="unsupportedSubmissionType">不支援提交項目類型</string>
-    <string name="studentAnnotationUnsupportedMessage">提交項目無法顯示，因為流動電話目前不支援學生註釋。</string>
     <string name="schedule_marked_as_done">您已將其標示為完成。</string>
 </resources>

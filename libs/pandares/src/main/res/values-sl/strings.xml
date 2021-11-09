@@ -1215,9 +1215,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Odgovori tega študenta so skriti, ker je ta naloga anonimna.</string>
 
-    <string name="studentAnnotationUnsupported">Opomba študenta (ni podprto)</string>
-    <string name="studentAnnotationUnsupportedDescription">Opomba študenta v mobilnem prikazu trenutno ni podprta.</string>
-    <string name="unsupportedSubmissionType">Nepodprta vrsta oddaje</string>
-    <string name="studentAnnotationUnsupportedMessage">Oddaje ni mogoče prikazati, ker funkcija Opomba študenta v mobilnem prikazu trenutno ni podprta.</string>
     <string name="schedule_marked_as_done">To ste označili kot končano.</string>
 </resources>

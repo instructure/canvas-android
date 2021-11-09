@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Den här elevens svar är dolda eftersom uppgiften är anonym.</string>
 
-    <string name="studentAnnotationUnsupported">Elevnotering (stöds inte)</string>
-    <string name="studentAnnotationUnsupportedDescription">Elevnotering stöds för närvarande inte på mobila enheter.</string>
-    <string name="unsupportedSubmissionType">Inlämningstyp som inte stöds</string>
-    <string name="studentAnnotationUnsupportedMessage">Inlämningen kan inte visas eftersom elevnotering inte stöds på mobila enheter.</string>
     <string name="schedule_marked_as_done">Du har markerat den som färdig.</string>
 </resources>

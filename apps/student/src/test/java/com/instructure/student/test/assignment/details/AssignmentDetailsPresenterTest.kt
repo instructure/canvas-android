@@ -580,7 +580,8 @@ class AssignmentDetailsPresenterTest : Assert() {
             userId = 0,
             currentFile = 0,
             fileCount = 0,
-            progress = null
+            progress = null,
+            annotatableAttachmentId = null
         )
         val assignment = baseAssignment.copy(
             submission = baseSubmission.copy(
@@ -611,7 +612,8 @@ class AssignmentDetailsPresenterTest : Assert() {
             userId = 0,
             currentFile = 0,
             fileCount = 0,
-            progress = null
+            progress = null,
+            annotatableAttachmentId = null
         )
         val assignment = baseAssignment.copy(
             submission = baseSubmission.copy(
@@ -639,7 +641,8 @@ class AssignmentDetailsPresenterTest : Assert() {
             userId = 0,
             currentFile = 0,
             fileCount = 0,
-            progress = null
+            progress = null,
+            annotatableAttachmentId = null
         )
         val assignment = baseAssignment.copy(
             submission = baseSubmission.copy(
@@ -667,7 +670,8 @@ class AssignmentDetailsPresenterTest : Assert() {
             userId = 0,
             currentFile = 0,
             fileCount = 0,
-            progress = null
+            progress = null,
+            annotatableAttachmentId = null
         )
         val model = baseModel.copy(
             assignmentResult = DataResult.Success(baseAssignment),
@@ -692,7 +696,8 @@ class AssignmentDetailsPresenterTest : Assert() {
             userId = 0,
             currentFile = 0,
             fileCount = 0,
-            progress = null
+            progress = null,
+            annotatableAttachmentId = null
         )
         val model = baseModel.copy(
             assignmentResult = DataResult.Success(baseAssignment),

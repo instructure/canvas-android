@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">การตอบกลับของผู้เรียนรายนี้ถูกซ่อนไว้เนื่องจากภารกิจไม่เปิดเผยตัว</string>
 
-    <string name="studentAnnotationUnsupported">หมายเหตุกำกับของผู้เรียน (ไม่รองรับ)</string>
-    <string name="studentAnnotationUnsupportedDescription">หมายเหตุกำกับของผู้เรียนปัจจุบันไม่รองรับสำหรับอุปกรณ์พกพา</string>
-    <string name="unsupportedSubmissionType">ประเภทการจัดส่งที่ไม่รองรับ</string>
-    <string name="studentAnnotationUnsupportedMessage">ไม่สามารถแสดงผลงานจัดส่งได้เนื่องจากหมายเหตุกำกับของผู้เรียนปัจจุบันไม่รองรับกับอุปกรณ์พกพา</string>
     <string name="schedule_marked_as_done">คุณกำกับว่าเสร็จสิ้นแล้ว</string>
 </resources>

@@ -1200,9 +1200,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">该学生的回答已隐藏，因为该作业已匿名。</string>
 
-    <string name="studentAnnotationUnsupported">学生注释（不支持）</string>
-    <string name="studentAnnotationUnsupportedDescription">目前在移动设备上不支持学生注释。</string>
-    <string name="unsupportedSubmissionType">不受支持的提交项类型</string>
-    <string name="studentAnnotationUnsupportedMessage">无法显示提交项，因为目前在移动设备上不支持学生注释。</string>
     <string name="schedule_marked_as_done">您已将其标记为“完成”。</string>
 </resources>

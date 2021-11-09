@@ -1242,9 +1242,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Ответы студентов скрыты, поскольку это задание анонимно.</string>
 
-    <string name="studentAnnotationUnsupported">Аннотация учащегося (не поддерживается)</string>
-    <string name="studentAnnotationUnsupportedDescription">В настоящее время функция Аннотация учащегося не поддерживается на мобильных устройствах.</string>
-    <string name="unsupportedSubmissionType">Неподдерживаемый тип отправки</string>
-    <string name="studentAnnotationUnsupportedMessage">Невозможно отобразить отправку, так как Аннотация учащегося в настоящее время не поддерживается на мобильном устройстве.</string>
     <string name="schedule_marked_as_done">Вы отметили это как выполненное.</string>
 </resources>
