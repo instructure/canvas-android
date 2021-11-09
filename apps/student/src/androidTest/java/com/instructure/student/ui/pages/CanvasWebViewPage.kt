@@ -55,7 +55,7 @@ open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
     fun acceptCookiePolicyIfNecessary() {
         try {
             onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
-                    .withElementRepeat(findElement(Locator.ID, "gdprAccept"))
+                    .withElementRepeat(findElement(Locator.XPATH, "//div[@id='onetrust-button-group']//button[@id='onetrust-accept-btn-handler']"))
                     .perform(webClick())
         }
         catch(t: Throwable) {
