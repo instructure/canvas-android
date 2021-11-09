@@ -13,7 +13,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:io';
 
+import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,7 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +54,13 @@ void main() async {
     NotificationUtil.init(_appCompleter);
 
     await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
+
+    if (Platform.isAndroid) {
+      final AndroidDeviceInfo info = await DeviceInfoPlugin().androidInfo;
+      if (info.version.sdkInt >= 29) {
+        WebView.platform = SurfaceAndroidWebView();
+      }
+    }
 
     // Set environment properties for analytics. No need to await this.
     locator<Analytics>().setEnvironmentProperties();
