@@ -31,7 +31,7 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
   @override
   Future<void> onError(DioError error, ErrorInterceptorHandler handler) async {
     // Only proceed if it was an authentication error
-    if (error.response?.statusCode != 401) handler.next(error);
+    if (error.response?.statusCode != 401) return handler.next(error);
 
     final currentLogin = ApiPrefs.getCurrentLogin();
 
@@ -60,10 +60,11 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
 
     if (tokens == null) {
       _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID);
-      handler.next(error);
 
       _dio.interceptors?.requestLock?.unlock();
       _dio.interceptors?.responseLock?.unlock();
+
+      return handler.next(error);
     } else {
       Login login = currentLogin.rebuild((b) => b..accessToken = tokens.accessToken);
       ApiPrefs.addLogin(login);
@@ -71,21 +72,16 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
 
       // Update the header and make the request again
       RequestOptions requestOptions = error.requestOptions;
-      Options newOptions = Options(method: requestOptions.method, sendTimeout: requestOptions.sendTimeout, receiveTimeout: requestOptions.receiveTimeout,
-      extra: requestOptions.extra, headers: requestOptions.headers, responseType: requestOptions.responseType, contentType: requestOptions.contentType,
-      validateStatus: requestOptions.validateStatus, receiveDataWhenStatusError: requestOptions.receiveDataWhenStatusError, followRedirects: requestOptions.followRedirects,
-      maxRedirects: requestOptions.maxRedirects, requestEncoder: requestOptions.requestEncoder, responseDecoder: requestOptions.responseDecoder,
-          listFormat: requestOptions.listFormat); // TODO Check this again
 
-      newOptions.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
-      newOptions.headers[_RETRY_HEADER] = _RETRY_HEADER; // Mark retry to prevent infinite recursion
+      requestOptions.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
+      requestOptions.headers[_RETRY_HEADER] = _RETRY_HEADER; // Mark retry to prevent infinite recursion
 
       _dio.interceptors?.requestLock?.unlock();
       _dio.interceptors?.responseLock?.unlock();
 
-      Response result = await _dio.request(requestOptions.path, queryParameters: requestOptions.queryParameters, options: newOptions);
-      if (result.statusCode == 200 || result.statusCode == 201) {
-        handler.resolve(result);
+      final response = await _dio.fetch(requestOptions);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return handler.resolve(response);
       } else {
         handler.next(error);
       }

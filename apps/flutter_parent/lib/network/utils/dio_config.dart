@@ -145,7 +145,7 @@ class DioConfig {
     return InterceptorsWrapper(
       onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
       onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
-      onError: (DioError e, ErrorInterceptorHandler handler) => e, // interceptor falls back to cache on error, a behavior we currently don't want
+      onError: (DioError e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
     );
   }
 
