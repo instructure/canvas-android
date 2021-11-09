@@ -291,7 +291,7 @@ class SubmissionDetailsView(
             SubmissionDetailsContentType.NoneContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions,  subtitle = R.string.noneContentMessage)
             SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions, subtitle = R.string.onPaperContentMessage)
             SubmissionDetailsContentType.LockedContent -> SubmissionMessageFragment.newInstance(title = R.string.submissionDetailsAssignmentLocked, subtitle = R.string.could_not_route_locked)
-            SubmissionDetailsContentType.StudentAnnotationContent -> SubmissionMessageFragment.newInstance(title = R.string.unsupportedSubmissionType, message = R.string.studentAnnotationUnsupportedMessage)
+            is SubmissionDetailsContentType.StudentAnnotationContent -> AnnotationSubmissionViewFragment.newInstance(type.subissionId, type.submissionAttempt)
             is SubmissionDetailsContentType.UnsupportedContent -> {
                 // Users shouldn't get here, but we'll handle the case and send up some analytics if they do
                 val bundle = Bundle().apply {

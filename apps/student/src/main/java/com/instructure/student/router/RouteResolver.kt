@@ -10,6 +10,7 @@ import com.instructure.student.features.dashboard.edit.EditDashboardFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
@@ -117,6 +118,7 @@ object RouteResolver {
             cls.isA<UploadStatusSubmissionFragment>() -> UploadStatusSubmissionFragment.newInstance(route)
             cls.isA<AnnotationCommentListFragment>() -> AnnotationCommentListFragment.newInstance(route)
             cls.isA<NothingToSeeHereFragment>() -> NothingToSeeHereFragment.newInstance()
+            cls.isA<AnnotationSubmissionUploadFragment>() -> AnnotationSubmissionUploadFragment.newInstance(route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

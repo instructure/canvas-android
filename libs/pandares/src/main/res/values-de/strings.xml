@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Die Antworten dieses Studenten sind ausgeblendet, weil diese Aufgabe anonym ist.</string>
 
-    <string name="studentAnnotationUnsupported">Studentenanmerkung (Nicht unterstützt)</string>
-    <string name="studentAnnotationUnsupportedDescription">Studentenanmerkungen werden derzeit auf Mobilgeräten nicht unterstützt.</string>
-    <string name="unsupportedSubmissionType">Nicht unterstützte Abgabeart</string>
-    <string name="studentAnnotationUnsupportedMessage">Abgabe kann nicht angezeigt werden, weil Studentenanmerkungen derzeit auf Mobilgeräten nicht unterstützt werden.</string>
     <string name="schedule_marked_as_done">Sie haben es es als erledigt markiert.</string>
 </resources>

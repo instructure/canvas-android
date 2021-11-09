@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Denne elevens svar er skjult fordi denne oppgaven er anonym.</string>
 
-    <string name="studentAnnotationUnsupported">Elevmerknad (ikke støttet)</string>
-    <string name="studentAnnotationUnsupportedDescription">Elevmerknader støttes for øyeblikket ikke på mobil.</string>
-    <string name="unsupportedSubmissionType">Ustøttet innleveringstype</string>
-    <string name="studentAnnotationUnsupportedMessage">Innlevering kan ikke vises fordi Elevmerknader for øyeblikket ikke støttes på mobil.</string>
     <string name="schedule_marked_as_done">Du har merket det som fullført.</string>
 </resources>

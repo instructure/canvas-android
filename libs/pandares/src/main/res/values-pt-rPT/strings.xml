@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">As respostas deste aluno são ocultas porque esta tarefa é anónima.</string>
 
-    <string name="studentAnnotationUnsupported">Anotação do aluno (Sem suporte)</string>
-    <string name="studentAnnotationUnsupportedDescription">A anotação do aluno não é actualmente suportada em telemóvel.</string>
-    <string name="unsupportedSubmissionType">Tipo de apresentação não suportada</string>
-    <string name="studentAnnotationUnsupportedMessage">A submissão não pode ser exibida, porque a Anotação do aluno não é atualmente suportada em telemóvel.</string>
     <string name="schedule_marked_as_done">Marcou-o como feito.</string>
 </resources>

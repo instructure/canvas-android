@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Les réponses de cet étudiant sont masquées du fait que cette tâche est anonyme.</string>
 
-    <string name="studentAnnotationUnsupported">Annotation d’étudiant (non pris en charge)</string>
-    <string name="studentAnnotationUnsupportedDescription">L’annotation d’étudiant n’est actuellement pas prise en charge sur les mobiles.</string>
-    <string name="unsupportedSubmissionType">Type d’envoi non pris en charge</string>
-    <string name="studentAnnotationUnsupportedMessage">L’envoi ne peut pas être affiché, car l’annotation d’étudiant n’est actuellement pas prise en charge sur mobile.</string>
     <string name="schedule_marked_as_done">Vous l’avez marqué comme terminé.</string>
 </resources>

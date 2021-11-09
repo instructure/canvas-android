@@ -1269,9 +1269,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">استجابات هذا الطالب مخفية لأن هذه المهمة مجهولة الاسم.</string>
 
-    <string name="studentAnnotationUnsupported">التعليق التوضيحي للطالب (غير مدعوم)</string>
-    <string name="studentAnnotationUnsupportedDescription">التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
-    <string name="unsupportedSubmissionType">نوع إرسال غير مدعوم</string>
-    <string name="studentAnnotationUnsupportedMessage">لا يمكن عرض الإرسال، لأن التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
     <string name="schedule_marked_as_done">قمت بتمييزه بأنه تم.</string>
 </resources>

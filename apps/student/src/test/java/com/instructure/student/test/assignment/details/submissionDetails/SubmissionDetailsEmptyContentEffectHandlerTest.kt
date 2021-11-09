@@ -369,12 +369,12 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     @Test
     fun `ShowCreateSubmissionView with student annotation submissionType shows student annotation view`() {
         val submissionType = Assignment.SubmissionType.STUDENT_ANNOTATION
-        assignment = assignment.copy(htmlUrl = "www.instructure.com")
+        val assignmentWithStudentAnnotation = assignment.copy(annotatableAttachmentId = 123L)
 
-        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignmentWithStudentAnnotation))
 
         verify(timeout = 100) {
-            view.showStudentAnnotationView("www.instructure.com")
+            view.showStudentAnnotationView(assignmentWithStudentAnnotation)
         }
         confirmVerified(view)
     }
