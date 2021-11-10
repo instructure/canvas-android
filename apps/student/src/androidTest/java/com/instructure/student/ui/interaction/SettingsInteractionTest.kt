@@ -18,19 +18,13 @@ package com.instructure.student.ui.interaction
 import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
-import android.util.Log
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.endpoints.pairingCodeCount
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigPrefs
-
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -101,7 +95,6 @@ class SettingsInteractionTest : StudentTest() {
         dashboardPage.launchSettingsPage()
         settingsPage.launchLegalPage()
         legalPage.openPrivacyPolicy()
-        Thread.sleep(10000)
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
         canvasWebViewPage.runTextChecks(
                 // Potentially brittle, as this content could be changed by another team.
