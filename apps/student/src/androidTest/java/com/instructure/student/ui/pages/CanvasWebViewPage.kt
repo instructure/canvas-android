@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import androidx.annotation.StringRes
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.model.Atoms.getCurrentUrl
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.*
 import androidx.test.espresso.web.webdriver.Locator
@@ -52,11 +53,16 @@ open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
         }
     }
 
+    fun checkWebViewURL(expectedURL: String) {
+        onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+            .check(webMatches(getCurrentUrl(), containsString(expectedURL)))
+    }
+
     fun acceptCookiePolicyIfNecessary() {
         try {
             onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
-                    .withElement(findElement(Locator.ID, "gdprAccept"))
-                    .perform(webClick())
+                .withElementRepeat(findElement(Locator.ID, "onetrust-accept-btn-handler"))
+                .perform(webClick())
         }
         catch(t: Throwable) {
             // Take no action if gdprAccept is not displayed
