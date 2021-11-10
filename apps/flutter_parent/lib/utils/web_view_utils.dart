@@ -35,7 +35,7 @@ extension WebViewUtils on WebViewController {
     html = _addProtocolToLinks(html);
     html = fileText.replaceAll('{CANVAS_CONTENT}', html);
     html = html.replaceAll('{PADDING}', horizontalPadding.toString());
-    this.loadRawHtml(html, headers); // TODO Fix this
+    this.loadData(baseUrl, html, 'text/html', 'utf-8');
   }
 
   /**

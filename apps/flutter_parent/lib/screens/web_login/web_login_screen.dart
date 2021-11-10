@@ -130,9 +130,9 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             navigationDelegate: (request) =>
                 _navigate(context, request, verifyResult),
             javascriptMode: JavascriptMode.unrestricted,
-            // darkMode: ParentTheme
-            //     .of(context)
-            //     .isWebViewDarkMode,
+            darkMode: ParentTheme
+                .of(context)
+                .isWebViewDarkMode,
             userAgent: ApiPrefs.getUserAgent(),
             onPageFinished: (url) => _pageFinished(url, verifyResult),
             onPageStarted: (url) => _showLoadingState(),
@@ -225,13 +225,13 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     CookieManager().clearCookies();
 
     if (widget.loginFlow == LoginFlow.siteAdmin) {
-      // await _controller?.setAcceptThirdPartyCookies(true);
+      await _controller?.setAcceptThirdPartyCookies(true);
       if (_domain.contains('.instructure.com')) {
         String cookie = 'canvas_sa_delegated=1;domain=.instructure.com;path=/;';
-        // await _controller?.setCookie(_domain, cookie);
-        // await _controller?.setCookie('.instructure.com', cookie);
+        await _controller?.setCookie(_domain, cookie);
+        await _controller?.setCookie('.instructure.com', cookie);
       } else {
-        // await _controller?.setCookie(_domain, 'canvas_sa_delegated=1');
+        await _controller?.setCookie(_domain, 'canvas_sa_delegated=1');
       }
     }
 

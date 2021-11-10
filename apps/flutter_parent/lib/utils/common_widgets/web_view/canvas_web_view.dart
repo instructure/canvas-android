@@ -241,7 +241,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
       javascriptMode: JavascriptMode.unrestricted,
       onPageFinished: _handlePageLoaded,
       onWebViewCreated: _handleWebViewCreated,
-      // darkMode: ParentTheme.of(context).isWebViewDarkMode,
+      darkMode: ParentTheme.of(context).isWebViewDarkMode,
       navigationDelegate: _handleNavigation,
       gestureRecognizers: _webViewGestures(),
       javascriptChannels: _webViewChannels(),

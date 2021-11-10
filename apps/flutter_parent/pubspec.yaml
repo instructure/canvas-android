@@ -90,7 +90,8 @@ dependencies:
   permission_handler: ^8.2.5
   shared_preferences: ^2.0.8 # Used to cache remote config properties
   #webview_flutter: 0.3.19+5
-  webview_flutter: ^2.1.2 # TODO: Remove once the flutter plugin supports baseUrl https://github.com/flutter/plugins/pull/2463
+  webview_flutter: # TODO: Remove once the flutter plugin supports baseUrl https://github.com/flutter/plugins/pull/2463
+    path: ./plugins/webview_flutter
 
   # Routing
   fluro: ^2.0.3
