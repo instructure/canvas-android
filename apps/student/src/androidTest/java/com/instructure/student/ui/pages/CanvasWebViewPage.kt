@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import androidx.annotation.StringRes
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.model.Atoms.getCurrentUrl
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.*
 import androidx.test.espresso.web.webdriver.Locator
@@ -50,6 +51,11 @@ open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
                         .check(webMatches(getText(), containsString(check.textValue)))
             }
         }
+    }
+
+    fun checkWebViewURL(expectedURL: String) {
+        onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+            .check(webMatches(getCurrentUrl(), containsString(expectedURL)))
     }
 
     fun acceptCookiePolicyIfNecessary() {

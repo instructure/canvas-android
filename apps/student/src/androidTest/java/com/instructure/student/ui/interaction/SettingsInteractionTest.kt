@@ -96,10 +96,8 @@ class SettingsInteractionTest : StudentTest() {
         settingsPage.launchLegalPage()
         legalPage.openPrivacyPolicy()
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
-        canvasWebViewPage.runTextChecks(
-                // Potentially brittle, as this content could be changed by another team.
-                WebViewTextCheck(Locator.ID, "pour-commitment-span-classemphasisto-privacyspanp", "Our Commitment to Privacy", 20)
-        )
+        canvasWebViewPage.checkWebViewURL("https://www.instructure.com/canvas/privacy")
+
     }
 
     // Should open a page and have a pairing code that can be refreshed
