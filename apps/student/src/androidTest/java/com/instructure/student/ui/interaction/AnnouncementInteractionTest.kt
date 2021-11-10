@@ -163,10 +163,18 @@ class AnnouncementInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_abort() {
-        getToAnnouncementList()
+        val data = getToAnnouncementList()
+        val course = data.courses.values.first()
+        val announcement =
+            data.courseDiscussionTopicHeaders[course.id]!!.filter { th -> th.announcement }.first()
 
+        discussionListPage.assertHasAnnouncement(announcement)
+        discussionListPage.assertAnnouncementCount(2) // header + the one test announcement
         discussionListPage.launchCreateAnnouncementThenClose()
         discussionListPage.verifyExitWithoutSavingDialog()
+        discussionListPage.acceptExitWithoutSaveDialog()
+        discussionListPage.assertHasAnnouncement(announcement)
+        discussionListPage.assertAnnouncementCount(2) // header + the one test announcement
     }
 
     // Tests code around creating an announcement with no description

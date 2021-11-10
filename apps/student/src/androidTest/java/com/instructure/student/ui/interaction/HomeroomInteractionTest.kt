@@ -116,7 +116,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         goToHomeroomPage(data)
 
-        homeroomPage.assertPageObjects()
+        goToHomeroomPage(data)
 
         homeroomPage.openCourse(courses[0].name)
 
@@ -179,6 +179,27 @@ class HomeroomInteractionTest : StudentTest() {
 
         announcementListPage.assertToolbarTitle()
         announcementListPage.assertAnnouncementTitleVisible(homeroomAnnouncement.title!!)
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testShowCourseCardWithAnnouncement() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 3)
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+        val courseAnnouncement = data.addDiscussionTopicToCourse(courses[0], user, isAnnouncement = true)
+
+        goToHomeroomPage(data)
+
+        homeroomPage.assertPageObjects()
+
+        homeroomPage.assertCourseDisplayed(courses[0].name, homeroomPage.getStringFromResource(R.string.nothingDueToday), courseAnnouncement.title!!)
+        homeroomPage.assertCourseDisplayed(courses[1].name, homeroomPage.getStringFromResource(R.string.nothingDueToday), "")
+        homeroomPage.assertCourseDisplayed(courses[2].name, homeroomPage.getStringFromResource(R.string.nothingDueToday), "")
     }
 
     @Test

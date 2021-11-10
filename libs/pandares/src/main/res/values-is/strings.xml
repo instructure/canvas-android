@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Svör nemanda eru falin því þetta verkefni er nafnlaust.</string>
 
-    <string name="studentAnnotationUnsupported">Athugasemd nemanda (Enginn stuðningur)</string>
-    <string name="studentAnnotationUnsupportedDescription">Ekki er stuðningur við athugasemd nemanda á farsímum.</string>
-    <string name="unsupportedSubmissionType">Gerð skila ekki studd</string>
-    <string name="studentAnnotationUnsupportedMessage">Ekki hægt að birta skil því ekki er stuðningur við athugasemd nemanda á farsímum.</string>
     <string name="schedule_marked_as_done">Þú hefur merkt þetta sem lokið.</string>
 </resources>

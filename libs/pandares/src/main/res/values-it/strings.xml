@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Le risposte di questo studente sono nascoste perché questo compito è anonimo.</string>
 
-    <string name="studentAnnotationUnsupported">Annotazione studente (non supportata)</string>
-    <string name="studentAnnotationUnsupportedDescription">L’annotazione studente non è attualmente supportata sui dispositivi mobili.</string>
-    <string name="unsupportedSubmissionType">Tipo di consegna non supportato</string>
-    <string name="studentAnnotationUnsupportedMessage">Impossibile visualizzare consegna perché l’annotazione studente non è attualmente supportata sui dispositivi mobili.</string>
     <string name="schedule_marked_as_done">È stato contrassegnato come fatto.</string>
 </resources>
