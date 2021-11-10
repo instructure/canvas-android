@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Den studerendes svar er skjult, fordi denne opgave er anonym.</string>
 
-    <string name="studentAnnotationUnsupported">Studerendes anmærkninger (ikke understøttet)</string>
-    <string name="studentAnnotationUnsupportedDescription">Studerendes anmærkninger understøttes i øjeblikket ikke på mobil.</string>
-    <string name="unsupportedSubmissionType">Ikke-understøttet afleveringsform</string>
-    <string name="studentAnnotationUnsupportedMessage">Aflevering kan ikke vises, fordi studerendes anmærkninger i øjeblikket ikke understøttes på mobil.</string>
     <string name="schedule_marked_as_done">Du har markeret det som udført.</string>
 </resources>

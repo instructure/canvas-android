@@ -16,7 +16,10 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.*
@@ -31,6 +34,7 @@ class AnnouncementsListPage : BasePage() {
     private val announcementsRecyclerView by OnViewWithId(R.id.discussionRecyclerView)
     private val searchButton by OnViewWithId(R.id.search)
     private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
+    private val createNewDiscussion by OnViewWithId(R.id.createNewDiscussion)
 
     fun clickDiscussion(discussion: DiscussionApiModel) {
         clickDiscussion(discussion.title)
@@ -77,9 +81,30 @@ class AnnouncementsListPage : BasePage() {
     }
 
     fun createAnnouncement(announcementName: String, announcementDetails: String) {
-        onView(withId(R.id.createNewDiscussion)).click()
+        clickOnCreateNewAnnouncementButton()
         onView(withId(R.id.announcementNameEditText)).replaceText(announcementName)
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(announcementDetails))
         onView(withId(R.id.menuSaveAnnouncement)).click()
+    }
+
+    fun clickOnCreateAnnouncementThenClose() {
+        clickOnCreateNewAnnouncementButton()
+        onViewWithContentDescription("Close").click()
+    }
+
+    fun clickOnCreateNewAnnouncementButton() {
+        createNewDiscussion.click()
+    }
+
+    fun verifyExitWithoutSavingDialog() {
+        onViewWithText(R.string.exitWithoutSavingMessage).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    fun assertOnNewAnnouncementPage() {
+        Espresso.onView(ViewMatchers.withText(R.string.newAnnouncement)).assertDisplayed()
+    }
+
+    fun acceptExitWithoutSaveDialog() {
+        onViewWithText(R.string.exitUnsaved).click()
     }
 }

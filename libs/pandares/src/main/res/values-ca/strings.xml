@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Les respostes d\'aquest estudiant estan amagades perquè la tasca és anònima.</string>
 
-    <string name="studentAnnotationUnsupported">Anotació de l’estudiant (no admesa)</string>
-    <string name="studentAnnotationUnsupportedDescription">En aquest moment, no s\'admet l’anotació de l\'estudiant al dispositiu mòbil.</string>
-    <string name="unsupportedSubmissionType">Tipus de entrega no admès</string>
-    <string name="studentAnnotationUnsupportedMessage">No es pot mostrar l’entrega, perquè en aquest moment no s\'admet l’anotació de l\'estudiant al dispositiu mòbil.</string>
     <string name="schedule_marked_as_done">L’heu marcat com a fet.</string>
 </resources>

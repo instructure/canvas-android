@@ -1214,9 +1214,5 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Repons elèv sa a kache paske devwa sa a anonim.</string>
 
-    <string name="studentAnnotationUnsupported">Nòt Elèv (Pa sipòte)</string>
-    <string name="studentAnnotationUnsupportedDescription">Nòt Elèv yo pa disponib sou mobil.</string>
-    <string name="unsupportedSubmissionType">Tip Soumisyon Pa Sipòte</string>
-    <string name="studentAnnotationUnsupportedMessage">Soumisyon an pa kapab afiche paske Nòt Elèv yo pa disponib sou mobil.</string>
     <string name="schedule_marked_as_done">Ou te make li konplè.</string>
 </resources>
