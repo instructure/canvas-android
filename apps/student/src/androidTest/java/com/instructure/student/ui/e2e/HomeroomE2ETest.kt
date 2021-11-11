@@ -36,14 +36,25 @@ class HomeroomE2ETest : StudentTest() {
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
-    fun dataSeedingAPIPOC() {
+    fun homeroomE2ETest() {
 
         // Seed basic data
-        val data = seedData(students = 1, courses = 1, homeroomCourses = 1, accountId = 181364L) //K5 Sub Account accountId on mobileqa.beta domain
+        val data = seedData(
+            teachers = 1,
+            students = 1,
+            courses = 2,
+            homeroomCourses = 1,
+            announcements = 1,
+            accountId = 181364L
+        ) //K5 Sub Account accountId on mobileqa.beta domain
         val student = data.studentsList[0]
+        val homeroomCourse = data.coursesList[0]
 
         // Sign in with lone student
         tokenLoginElementary(student)
+        homeroomPage.assertPageObjects()
+
+        homeroomPage.assertWelcomeText(student.shortName!!)
 
     }
 }

@@ -98,9 +98,10 @@ object SeedApi {
         val seededData = SeededDataApiModel()
 
         with(seededData) {
+            var homeroomCourses = request.homeroomCourses
             for (c in 0 until maxOf(request.courses + request.pastCourses, request.favoriteCourses, request.homeroomCourses)) {
                 // Seed course
-                if(request.homeroomCourses > 0) addCourses(createCourse(request.gradingPeriods, request.publishCourses, true, request.accountId))
+                if(homeroomCourses > 0) addCourses(createCourse(request.gradingPeriods, request.publishCourses, true, request.accountId))
                 else addCourses(createCourse(request.gradingPeriods, request.publishCourses))
 
                 // Seed users
@@ -118,6 +119,7 @@ object SeedApi {
                     addTAs(UserApi.createCanvasUser())
                     addEnrollments(EnrollmentsApi.enrollUserAsTA(coursesList[c].id, taList[ta].id))
                 }
+                homeroomCourses--
             }
 
             // Make the last x courses concluded to keep the first ones as favorites

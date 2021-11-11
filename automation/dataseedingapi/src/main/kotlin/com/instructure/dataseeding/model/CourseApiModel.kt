@@ -24,7 +24,7 @@ data class CourseApiModel(
         val name: String,
         @SerializedName("course_code")
         var courseCode: String,
-        @SerializedName("homeroom")
+        @SerializedName("homeroom_course")
         val homeroomCourse: Boolean,
         @SerializedName("account_id")
         val accountId: Long?
@@ -37,7 +37,7 @@ data class CreateCourse(
         @SerializedName("enrollment_term_id")
         val enrollmentTermId: Long? = null,
         val role: String = Role.TEACHER.name,
-        @SerializedName("homeroom")
+        @SerializedName("homeroom_course")
         val homeroomCourse: Boolean = false,
         @SerializedName("account_id")
         val accountId: Long? = null,
