@@ -294,7 +294,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
                   Text(DateFormat.y().format(selectedDay), style: Theme.of(context).textTheme.overline),
                   Row(
                     children: <Widget>[
-                      Text(DateFormat.MMMM().format(selectedDay), style: Theme.of(context).textTheme.display1),
+                      Text(DateFormat.MMMM().format(selectedDay), style: Theme.of(context).textTheme.headline4),
                       SizedBox(width: 10),
                       Visibility(
                         visible: _canExpandMonth,
