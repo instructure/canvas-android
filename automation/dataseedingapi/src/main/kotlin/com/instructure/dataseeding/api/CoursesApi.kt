@@ -80,8 +80,7 @@ object CoursesApi {
     fun createCourse(
         enrollmentTermId: Long? = null,
         publish: Boolean = true,
-        coursesService: CoursesService = adminCoursesService,
-        homeroomCourse: Boolean = false,
+        coursesService: CoursesService = adminCoursesService
     ): CourseApiModel {
         val randomCourseName = Randomizer.randomCourseName()
         val course = CreateCourseWrapper(
@@ -89,8 +88,7 @@ object CoursesApi {
             course = CreateCourse(
                 name = randomCourseName,
                 courseCode = randomCourseName.substring(0, 2),
-                enrollmentTermId = enrollmentTermId,
-                homeroomCourse = homeroomCourse
+                enrollmentTermId = enrollmentTermId
             )
         )
         return coursesService
