@@ -49,56 +49,12 @@ class HomeroomE2ETest : StudentTest() {
         )
 
         val student = data.studentsList[0]
-        val homeroomCourse = data.coursesList[0]
-        val homeroomAnnouncement = data.announcementsList[0]
-        val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
         // Sign in with lone student
         tokenLoginElementary(student)
 
         homeroomPage.assertWelcomeText(student.shortName!!)
-        homeroomPage.assertAnnouncementDisplayed(
-            homeroomCourse.name,
-            homeroomAnnouncement.title!!,
-            homeroomAnnouncement.message!!
-        )
 
-        homeroomPage.assertCourseItemsCount(3) //gives back the number of courses under 'My Subject' list
-        homeroomPage.clickOnViewPreviousAnnouncements()
-        announcementListPage.assertToolbarTitle()
-        announcementListPage.assertAnnouncementTitleVisible(homeroomAnnouncement.title!!)
-        Espresso.pressBack()
-
-        var noHomeroomCourseTitleIndex = 1
-
-        for (i in 0 until 3) {
-            if (i == 2) {
-                homeroomPage.assertCourseDisplayed(
-                    nonHomeroomCourses[2].name,
-                    homeroomPage.getStringFromResource(R.string.nothingDueToday),
-                    ""
-                )
-            } else {
-                homeroomPage.assertCourseDisplayed(
-                    nonHomeroomCourses[i].name,
-                    homeroomPage.getStringFromResource(R.string.nothingDueToday),
-                    data.announcementsList[noHomeroomCourseTitleIndex++].title
-                )
-            }
-        }
-
-        homeroomPage.openCourse(nonHomeroomCourses[0].name)
-
-        elementaryCoursePage.assertPageObjects()
-        elementaryCoursePage.assertTitleCorrect(nonHomeroomCourses[0].name!!)
-        Espresso.pressBack()
-        homeroomPage.assertPageObjects()
-        homeroomPage.openCourseAnnouncement(data.announcementsList[1].title!!)
-
-        discussionDetailsPage.assertTitleText(data.announcementsList[1].title!!)
-        Espresso.pressBack()
-        // homeroomPage.swipeToTop() -- maybe not working well
-        //seedAssignments()
     }
 }
 
