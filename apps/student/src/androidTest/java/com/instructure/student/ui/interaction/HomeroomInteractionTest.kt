@@ -116,7 +116,6 @@ class HomeroomInteractionTest : StudentTest() {
 
         goToHomeroomPage(data)
 
-        goToHomeroomPage(data)
         homeroomPage.assertPageObjects()
 
         homeroomPage.openCourse(courses[0].name)
