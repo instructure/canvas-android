@@ -66,9 +66,9 @@ class HomeroomE2ETest : StudentTest() {
         calendar.set(Calendar.MINUTE,59)
         calendar.set(Calendar.SECOND,55)
 
-        val letterGradeTextAssignment = AssignmentsApi.createAssignment(
+        val testAssignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
-            courseId = nonHomeroomCourses[0].id,
+            courseId = nonHomeroomCourses[2].id,
             submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
             gradingType = GradingType.LETTER_GRADE,
             teacherToken = teacher.token,
@@ -76,9 +76,9 @@ class HomeroomE2ETest : StudentTest() {
             dueAt = calendar.time.toApiString()
         ))
 
-        val letterGradeTextAssignmentMissing = AssignmentsApi.createAssignment(
+        val testAssignmentMissing = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
-                courseId = nonHomeroomCourses[0].id,
+                courseId = nonHomeroomCourses[2].id,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
                 gradingType = GradingType.PERCENT,
                 teacherToken = teacher.token,
@@ -86,7 +86,7 @@ class HomeroomE2ETest : StudentTest() {
                 dueAt = Date().toApiString()
             ))
 
-        // Sign in with lone student
+        // Sign in with elementary (K5) student
         tokenLoginElementary(student)
 
         homeroomPage.assertWelcomeText(student.shortName!!)
@@ -104,22 +104,14 @@ class HomeroomE2ETest : StudentTest() {
 
         var noHomeroomCourseTitleIndex = 1
 
-        for (i in 0 until 3) {
-            if (i == 2) {
-                homeroomPage.assertCourseDisplayed(
-                    nonHomeroomCourses[2].name,
-                    homeroomPage.getStringFromResource(R.string.nothingDueToday),
-                    ""
-                )
-            } else {
+        for (i in 0 until 2) {
                 homeroomPage.assertCourseDisplayed(
                     nonHomeroomCourses[i].name,
                     homeroomPage.getStringFromResource(R.string.nothingDueToday),
                     data.announcementsList[noHomeroomCourseTitleIndex++].title
                 )
-            }
         }
-
+        homeroomPage.assertToDoText("1 due today | 1 missing")
         homeroomPage.openCourse(nonHomeroomCourses[0].name)
 
         elementaryCoursePage.assertPageObjects()
@@ -131,19 +123,11 @@ class HomeroomE2ETest : StudentTest() {
         discussionDetailsPage.assertTitleText(data.announcementsList[1].title!!)
         Espresso.pressBack()
 
-
-
-        assignmentListPage.assertPageObjects()
-       /* val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
-        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
-
-        goToHomeroomPage(data)
-
-        homeroomPage.assertPageObjects()
-        homeroomPage.openAssignments("2 due today | 2 missing")
+        homeroomPage.openAssignments("1 due today | 1 missing")
 
         assignmentListPage.assertPageObjects()
-        assignmentListPage.assertHasAssignment(assignment1)*/
+        assignmentListPage.assertHasAssignment(testAssignment)
+        assignmentListPage.assertHasAssignment(testAssignmentMissing)
     }
 }
 

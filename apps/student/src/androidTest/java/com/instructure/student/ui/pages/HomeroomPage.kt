@@ -118,6 +118,7 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
     fun openAssignments(todoText: String) {
         swipeRefreshLayout.swipeUp()
         onView(withId(R.id.todoText) + withText(todoText))
+            .scrollTo()
                 .click()
     }
 }
