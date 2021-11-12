@@ -16,14 +16,15 @@
  */
 package com.instructure.student.ui.e2e
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.student.ui.utils.StudentTest
-import com.instructure.student.ui.utils.seedData
-import com.instructure.student.ui.utils.tokenLoginElementary
+import com.instructure.student.R
+import com.instructure.student.ui.utils.*
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -38,23 +39,66 @@ class HomeroomE2ETest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun homeroomE2ETest() {
 
-        // Seed basic data
-        val data = seedData(
+        // Seed data for K5 sub-account
+        val data = seedDataForK5(
             teachers = 1,
             students = 1,
-            courses = 2,
+            courses = 4,
             homeroomCourses = 1,
-            announcements = 1,
-            accountId = 181364L
-        ) //K5 Sub Account accountId on mobileqa.beta domain
+            announcements = 3
+        )
+
         val student = data.studentsList[0]
         val homeroomCourse = data.coursesList[0]
+        val homeroomAnnouncement = data.announcementsList[0]
+        val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
         // Sign in with lone student
         tokenLoginElementary(student)
-        homeroomPage.assertPageObjects()
 
         homeroomPage.assertWelcomeText(student.shortName!!)
+        homeroomPage.assertAnnouncementDisplayed(
+            homeroomCourse.name,
+            homeroomAnnouncement.title!!,
+            homeroomAnnouncement.message!!
+        )
 
+        homeroomPage.assertCourseItemsCount(3) //gives back the number of courses under 'My Subject' list
+        homeroomPage.clickOnViewPreviousAnnouncements()
+        announcementListPage.assertToolbarTitle()
+        announcementListPage.assertAnnouncementTitleVisible(homeroomAnnouncement.title!!)
+        Espresso.pressBack()
+
+        var noHomeroomCourseTitleIndex = 1
+
+        for (i in 0 until 3) {
+            if (i == 2) {
+                homeroomPage.assertCourseDisplayed(
+                    nonHomeroomCourses[2].name,
+                    homeroomPage.getStringFromResource(R.string.nothingDueToday),
+                    ""
+                )
+            } else {
+                homeroomPage.assertCourseDisplayed(
+                    nonHomeroomCourses[i].name,
+                    homeroomPage.getStringFromResource(R.string.nothingDueToday),
+                    data.announcementsList[noHomeroomCourseTitleIndex++].title
+                )
+            }
+        }
+
+        homeroomPage.openCourse(nonHomeroomCourses[0].name)
+
+        elementaryCoursePage.assertPageObjects()
+        elementaryCoursePage.assertTitleCorrect(nonHomeroomCourses[0].name!!)
+        Espresso.pressBack()
+        homeroomPage.assertPageObjects()
+        homeroomPage.openCourseAnnouncement(data.announcementsList[1].title!!)
+
+        discussionDetailsPage.assertTitleText(data.announcementsList[1].title!!)
+        Espresso.pressBack()
+        // homeroomPage.swipeToTop() -- maybe not working well
+        //seedAssignments()
     }
 }
+

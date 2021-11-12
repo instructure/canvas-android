@@ -55,6 +55,34 @@ fun StudentTest.slowLogIn(enrollmentType: String = EnrollmentTypes.STUDENT_ENROL
     return user
 }
 
+fun StudentTest.seedDataForK5(
+    teachers: Int = 0,
+    tas: Int = 0,
+    pastCourses: Int = 0,
+    courses: Int = 0,
+    students: Int = 0,
+    favoriteCourses: Int = 0,
+    homeroomCourses: Int = 0,
+    announcements: Int = 0,
+    discussions: Int = 0,
+    gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
+
+    val request = SeedApi.SeedDataRequest (
+        teachers = teachers,
+        TAs = tas,
+        students = students,
+        pastCourses = pastCourses,
+        courses = courses,
+        favoriteCourses = favoriteCourses,
+        homeroomCourses = homeroomCourses,
+        accountId = 181364L, //K5 Sub Account accountId on mobileqa.beta domain
+        gradingPeriods = gradingPeriods,
+        discussions = discussions,
+        announcements = announcements
+    )
+    return SeedApi.seedDataForSubAccount(request)
+}
+
 fun StudentTest.seedData(
     teachers: Int = 0,
     tas: Int = 0,
@@ -63,7 +91,6 @@ fun StudentTest.seedData(
     students: Int = 0,
     favoriteCourses: Int = 0,
     homeroomCourses: Int = 0,
-    accountId: Long? = null,
     announcements: Int = 0,
     discussions: Int = 0,
     gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
@@ -76,7 +103,6 @@ fun StudentTest.seedData(
             courses = courses,
             favoriteCourses = favoriteCourses,
             homeroomCourses = homeroomCourses,
-            accountId = accountId,
             gradingPeriods = gradingPeriods,
             discussions = discussions,
             announcements = announcements

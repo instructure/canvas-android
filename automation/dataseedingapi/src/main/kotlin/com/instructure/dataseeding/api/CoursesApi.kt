@@ -49,15 +49,15 @@ object CoursesApi {
         CanvasRestAdapter.adminRetrofit.create(CoursesService::class.java)
     }
 
-    private fun coursesService(token: String): CoursesService
-            = CanvasRestAdapter.retrofitWithToken(token).create(CoursesService::class.java)
+    private fun coursesService(token: String): CoursesService =
+        CanvasRestAdapter.retrofitWithToken(token).create(CoursesService::class.java)
 
-    fun createCourse(
-            enrollmentTermId: Long? = null,
-            publish: Boolean = true,
-            coursesService: CoursesService = adminCoursesService,
-            homeroomCourse: Boolean = false,
-            accountId: Long? = null
+    fun createCourseInSubAccount(
+        enrollmentTermId: Long? = null,
+        publish: Boolean = true,
+        coursesService: CoursesService = adminCoursesService,
+        homeroomCourse: Boolean = false,
+        accountId: Long? = null
     ): CourseApiModel {
         val randomCourseName = Randomizer.randomCourseName()
         val course = CreateCourseWrapper(
@@ -70,12 +70,29 @@ object CoursesApi {
                 accountId = accountId
             )
         )
-        if(homeroomCourse) {
-            return coursesService
-                .createCourseInSubAccount(accountId!!,course)
-                .execute()
-                .body()!!
-        }
+        return coursesService
+            .createCourseInSubAccount(accountId!!, course)
+            .execute()
+            .body()!!
+
+    }
+
+    fun createCourse(
+        enrollmentTermId: Long? = null,
+        publish: Boolean = true,
+        coursesService: CoursesService = adminCoursesService,
+        homeroomCourse: Boolean = false,
+    ): CourseApiModel {
+        val randomCourseName = Randomizer.randomCourseName()
+        val course = CreateCourseWrapper(
+            offer = publish,
+            course = CreateCourse(
+                name = randomCourseName,
+                courseCode = randomCourseName.substring(0, 2),
+                enrollmentTermId = enrollmentTermId,
+                homeroomCourse = homeroomCourse
+            )
+        )
         return coursesService
             .createCourse(course)
             .execute()
