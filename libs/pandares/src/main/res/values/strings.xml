@@ -1226,4 +1226,6 @@
     <string name="failedToLoadSubmission">Failed to load submission</string>
     <string name="studentAnnotationToolbarTitle">Student Annotation</string>
     <string name="submissionTypeStudentAnnotation">Student Annotation</string>
+    <string name="gradesNoDueDate">No due date</string>
+    <string name="missingAssignment">Missing</string>
 </resources>
