@@ -39,6 +39,8 @@ import com.instructure.student.router.RouteMatcher
 import java.io.File
 import java.io.FileWriter
 
+const val SUB_ACCOUNT_ID = 181364L
+
 fun StudentTest.enterDomain(enrollmentType: String = EnrollmentTypes.STUDENT_ENROLLMENT): CanvasUserApiModel {
     val user = UserApi.createCanvasUser()
     val course = CoursesApi.createCourse()
@@ -75,7 +77,7 @@ fun StudentTest.seedDataForK5(
         courses = courses,
         favoriteCourses = favoriteCourses,
         homeroomCourses = homeroomCourses,
-        accountId = 181364L, //K5 Sub Account accountId on mobileqa.beta domain
+        accountId = SUB_ACCOUNT_ID, //K5 Sub Account accountId on mobileqa.beta domain
         gradingPeriods = gradingPeriods,
         discussions = discussions,
         announcements = announcements

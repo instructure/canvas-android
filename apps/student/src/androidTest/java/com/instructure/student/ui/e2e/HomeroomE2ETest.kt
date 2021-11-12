@@ -18,15 +18,22 @@ package com.instructure.student.ui.e2e
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
-import com.instructure.student.ui.utils.*
+import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.seedDataForK5
+import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.util.*
 
 @HiltAndroidTest
 class HomeroomE2ETest : StudentTest() {
@@ -49,9 +56,35 @@ class HomeroomE2ETest : StudentTest() {
         )
 
         val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
         val homeroomCourse = data.coursesList[0]
         val homeroomAnnouncement = data.announcementsList[0]
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
+
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY,23)
+        calendar.set(Calendar.MINUTE,59)
+        calendar.set(Calendar.SECOND,55)
+
+        val letterGradeTextAssignment = AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+            courseId = nonHomeroomCourses[0].id,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            gradingType = GradingType.LETTER_GRADE,
+            teacherToken = teacher.token,
+            pointsPossible = 100.0,
+            dueAt = calendar.time.toApiString()
+        ))
+
+        val letterGradeTextAssignmentMissing = AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = nonHomeroomCourses[0].id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.PERCENT,
+                teacherToken = teacher.token,
+                pointsPossible = 100.0,
+                dueAt = Date().toApiString()
+            ))
 
         // Sign in with lone student
         tokenLoginElementary(student)
@@ -97,8 +130,20 @@ class HomeroomE2ETest : StudentTest() {
 
         discussionDetailsPage.assertTitleText(data.announcementsList[1].title!!)
         Espresso.pressBack()
-        // homeroomPage.swipeToTop() -- maybe not working well
-        //seedAssignments()
+
+
+
+        assignmentListPage.assertPageObjects()
+       /* val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+
+        goToHomeroomPage(data)
+
+        homeroomPage.assertPageObjects()
+        homeroomPage.openAssignments("2 due today | 2 missing")
+
+        assignmentListPage.assertPageObjects()
+        assignmentListPage.assertHasAssignment(assignment1)*/
     }
 }
 
