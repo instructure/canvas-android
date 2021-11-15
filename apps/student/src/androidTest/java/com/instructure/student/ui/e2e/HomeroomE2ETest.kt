@@ -62,19 +62,25 @@ class HomeroomE2ETest : StudentTest() {
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY,23)
-        calendar.set(Calendar.MINUTE,59)
-        calendar.set(Calendar.SECOND,55)
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 55)
+
+        val missingCalendar = Calendar.getInstance()
+        missingCalendar.set(Calendar.HOUR_OF_DAY, 0)
+        missingCalendar.set(Calendar.MINUTE, 1)
+        missingCalendar.set(Calendar.SECOND, 10)
 
         val testAssignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
-            courseId = nonHomeroomCourses[2].id,
-            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-            gradingType = GradingType.LETTER_GRADE,
-            teacherToken = teacher.token,
-            pointsPossible = 100.0,
-            dueAt = calendar.time.toApiString()
-        ))
+                courseId = nonHomeroomCourses[2].id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.LETTER_GRADE,
+                teacherToken = teacher.token,
+                pointsPossible = 100.0,
+                dueAt = calendar.time.toApiString()
+            )
+        )
 
         val testAssignmentMissing = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
@@ -83,44 +89,42 @@ class HomeroomE2ETest : StudentTest() {
                 gradingType = GradingType.PERCENT,
                 teacherToken = teacher.token,
                 pointsPossible = 100.0,
-                dueAt = Date().toApiString()
+                dueAt = missingCalendar.time.toApiString()
             ))
 
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
 
-        homeroomPage.assertWelcomeText(student.shortName!!)
+        homeroomPage.assertWelcomeText(student.shortName)
         homeroomPage.assertAnnouncementDisplayed(
             homeroomCourse.name,
-            homeroomAnnouncement.title!!,
-            homeroomAnnouncement.message!!
+            homeroomAnnouncement.title,
+            homeroomAnnouncement.message
         )
 
         homeroomPage.assertCourseItemsCount(3) //gives back the number of courses under 'My Subject' list
         homeroomPage.clickOnViewPreviousAnnouncements()
         announcementListPage.assertToolbarTitle()
-        announcementListPage.assertAnnouncementTitleVisible(homeroomAnnouncement.title!!)
+        announcementListPage.assertAnnouncementTitleVisible(homeroomAnnouncement.title)
         Espresso.pressBack()
 
-        var noHomeroomCourseTitleIndex = 1
-
-        for (i in 0 until 2) {
-                homeroomPage.assertCourseDisplayed(
-                    nonHomeroomCourses[i].name,
-                    homeroomPage.getStringFromResource(R.string.nothingDueToday),
-                    data.announcementsList[noHomeroomCourseTitleIndex++].title
-                )
+        for (i in 0 until nonHomeroomCourses.size - 1) {
+            homeroomPage.assertCourseDisplayed(
+                nonHomeroomCourses[i].name,
+                homeroomPage.getStringFromResource(R.string.nothingDueToday),
+                data.announcementsList[i + 1].title
+            )
         }
         homeroomPage.assertToDoText("1 due today | 1 missing")
         homeroomPage.openCourse(nonHomeroomCourses[0].name)
 
         elementaryCoursePage.assertPageObjects()
-        elementaryCoursePage.assertTitleCorrect(nonHomeroomCourses[0].name!!)
+        elementaryCoursePage.assertTitleCorrect(nonHomeroomCourses[0].name)
         Espresso.pressBack()
         homeroomPage.assertPageObjects()
-        homeroomPage.openCourseAnnouncement(data.announcementsList[1].title!!)
+        homeroomPage.openCourseAnnouncement(data.announcementsList[1].title)
 
-        discussionDetailsPage.assertTitleText(data.announcementsList[1].title!!)
+        discussionDetailsPage.assertTitleText(data.announcementsList[1].title)
         Espresso.pressBack()
 
         homeroomPage.openAssignments("1 due today | 1 missing")
