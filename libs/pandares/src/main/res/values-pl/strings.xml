@@ -1242,5 +1242,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Odpowiedzi tego uczestnika są ukryte, ponieważ to zadanie jest anonimowe.</string>
 
+    <string name="studentAnnotationUnsupported">Adnotacja uczestnika (nieobsługiwana)</string>
+    <string name="studentAnnotationUnsupportedDescription">Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
+    <string name="unsupportedSubmissionType">Nieobsługiwany typ zgłoszenia</string>
+    <string name="studentAnnotationUnsupportedMessage">Przesyłki nie można wyświetlić, ponieważ Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
     <string name="schedule_marked_as_done">Oznaczono je jako gotowe.</string>
+    <string name="error_saving_assignment_closed_grading_period">Nie można zmienić terminu, gdy termin znajduje się w zamkniętym okresie oceniania.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Przejdź do dnia dzisiejszego</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">wyślij wiadomość</string>
+    <string name="somethingWentWrong">Coś poszło nie tak</string>
+    <string name="failedToLoadQuiz">Nie udało się wczytać testu</string>
 </resources>

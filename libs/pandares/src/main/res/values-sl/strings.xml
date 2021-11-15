@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Ni najdenih datotek.</string>
     <string name="searchFilesHint">Poišči datoteke</string>
     <string name="fileSearchInstructions">Vnesite iskalno besedo s tremi ali več znaki.</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Izbrano: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Podrobnosti o nalogi</string>
     <string name="submission_types">Vrste oddaj</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Izbrana glava: %s</string>
     <string name="content_description_chosen_body">Izbrano telo: %s</string>
     <string name="content_description_chosen_feet">Izbrane noge: %s</string>
@@ -1215,5 +1214,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Odgovori tega študenta so skriti, ker je ta naloga anonimna.</string>
 
+    <string name="studentAnnotationUnsupported">Opomba študenta (ni podprto)</string>
+    <string name="studentAnnotationUnsupportedDescription">Opomba študenta v mobilnem prikazu trenutno ni podprta.</string>
+    <string name="unsupportedSubmissionType">Nepodprta vrsta oddaje</string>
+    <string name="studentAnnotationUnsupportedMessage">Oddaje ni mogoče prikazati, ker funkcija Opomba študenta v mobilnem prikazu trenutno ni podprta.</string>
     <string name="schedule_marked_as_done">To ste označili kot končano.</string>
+    <string name="error_saving_assignment_closed_grading_period">Ni mogoče spremeniti roka, če zapade v zaprtem ocenjevalnem obdobju.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Preskoči na danes</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">pošlji sporočilo</string>
+    <string name="somethingWentWrong">Prišlo je do težav</string>
+    <string name="failedToLoadQuiz">Nalaganje kviza ni uspelo</string>
 </resources>

@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Media kiezen</string>
     <string name="takeVideo">Video maken</string>
     <string name="noCameraOnDevice">Geen camera</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Vergrendeldatum kan niet na inleverdatum vallen</string>
     <string name="utils_lockBeforeDueDateError">Vergrendeldatum kan niet voor vervaldatum vallen</string>
     <string name="utils_lockAfterUnlockError">Vergrendeldatum kan niet voor ontgrendeldatum vallen</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Start de app opnieuw om de nieuwe versie te installeren</string>
     <string name="nothing_planned_yet">Nog niets gepland</string>
     <string name="schedule_tag_graded">Beoordeeld</string>
-    <string name="schedule_tag_replies">Antwoorden</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d antwoord</item>
+        <item quantity="other">%d antwoorden></item>
+    </plurals>
     <string name="schedule_tag_feedback">Feedback</string>
     <string name="schedule_tag_late">Te laat</string>
     <string name="schedule_tag_redo">Opnieuw</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">Morgen</string>
     <string name="yesterday">Gisteren</string>
     <string name="schedule_calendar_event_due_text">Om %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s tot %2$s</string>
     <string name="schedule_todo_due_text">Takenlijst: %s</string>
     <string name="schedule_due_text">Inleverdatum: %s</string>
     <string name="show_missing_items_title">%d ontbrekende items tonen</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s punten</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f punten</item>
+        <item quantity="one">%.1f punt</item>
+        <item quantity="other">%.1f punten</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">De hele dag</string>
+    <string name="schedule_tag_missing">Ontbrekend</string>
+    <string name="previous_week">Vorige week</string>
+    <string name="next_week">Volgende week</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Cursus %s</string>
+    <string name="a11y_announcement">Aankondiging</string>
+    <string name="a11y_discussion_topic">Discussie</string>
+    <string name="a11y_calendar_event">Kalendergebeurtenis</string>
+    <string name="a11y_assignment">Opdracht</string>
+    <string name="a11y_planner_note">Planneraantekening</string>
+    <string name="a11y_quiz">Toets</string>
+    <string name="a11y_todo">Takenlijst</string>
+    <string name="a11y_page">Pagina</string>
+    <string name="a11y_marked_as_done">Gemarkeerd als klaar</string>
+    <string name="a11y_not_marked_as_done">Niet gemarkeerd als klaar</string>
+    <string name="a11y_mark_as_done">Markeren als klaar</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Let op! Er is een fout opgetreden tijdens het laden van de cursusdetails.</string>
 </resources>
