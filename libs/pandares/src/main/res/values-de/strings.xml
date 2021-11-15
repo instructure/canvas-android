@@ -1214,5 +1214,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Die Antworten dieses Studenten sind ausgeblendet, weil diese Aufgabe anonym ist.</string>
 
+    <string name="studentAnnotationUnsupported">Studentenanmerkung (Nicht unterstützt)</string>
+    <string name="studentAnnotationUnsupportedDescription">Studentenanmerkungen werden derzeit auf Mobilgeräten nicht unterstützt.</string>
+    <string name="unsupportedSubmissionType">Nicht unterstützte Abgabeart</string>
+    <string name="studentAnnotationUnsupportedMessage">Abgabe kann nicht angezeigt werden, weil Studentenanmerkungen derzeit auf Mobilgeräten nicht unterstützt werden.</string>
     <string name="schedule_marked_as_done">Sie haben es es als erledigt markiert.</string>
+    <string name="error_saving_assignment_closed_grading_period">Das Fälligkeitsdatum kann nicht geändert werden, wenn es in einem geschlossenen Benotungszeitraums liegt.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Heutigen Tag aufrufen</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">Nachricht senden</string>
+    <string name="somethingWentWrong">Etwas ging schief.</string>
+    <string name="failedToLoadQuiz">Quiz konnte nicht geladen werden.</string>
 </resources>

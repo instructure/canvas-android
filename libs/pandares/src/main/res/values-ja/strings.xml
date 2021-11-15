@@ -1200,5 +1200,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">この課題は匿名であるため、この学生の応答は表示されません。</string>
 
+    <string name="studentAnnotationUnsupported">学生の注釈（サポートされていません）</string>
+    <string name="studentAnnotationUnsupportedDescription">現在、学生の注釈はモバイルではサポートされていません。</string>
+    <string name="unsupportedSubmissionType">サポートされていない提出タイプ</string>
+    <string name="studentAnnotationUnsupportedMessage">現在、学生の注釈はモバイルでサポートされていないため、提出物を表示できません。</string>
     <string name="schedule_marked_as_done">「終了」としてマークしました。</string>
+    <string name="error_saving_assignment_closed_grading_period">締め切り日を終了した採点期間の締め切り後に変更することはできません。</string>
+    <string name="a11y_content_description_schedule_jump_to_today">本日に移動</string>
+    <string name="a11y_contact_info_content_description">%1$s、%2$s</string>
+    <string name="a11y_contact_info_click_description">メッセージを送信</string>
+    <string name="somethingWentWrong">なにかが失敗しました</string>
+    <string name="failedToLoadQuiz">クイズ読み込みに失敗しました</string>
 </resources>

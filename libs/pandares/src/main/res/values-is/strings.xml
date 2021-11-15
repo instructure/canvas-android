@@ -1214,5 +1214,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Svör nemanda eru falin því þetta verkefni er nafnlaust.</string>
 
+    <string name="studentAnnotationUnsupported">Athugasemd nemanda (Enginn stuðningur)</string>
+    <string name="studentAnnotationUnsupportedDescription">Ekki er stuðningur við athugasemd nemanda á farsímum.</string>
+    <string name="unsupportedSubmissionType">Gerð skila ekki studd</string>
+    <string name="studentAnnotationUnsupportedMessage">Ekki hægt að birta skil því ekki er stuðningur við athugasemd nemanda á farsímum.</string>
     <string name="schedule_marked_as_done">Þú hefur merkt þetta sem lokið.</string>
+    <string name="error_saving_assignment_closed_grading_period">Getur ekki breytt eindaga þegar hann er með eindaga í lokuðu einkunnatímabili.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Fara á daginn í dag</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">senda skilaboð</string>
+    <string name="somethingWentWrong">Eitthvað mistókst</string>
+    <string name="failedToLoadQuiz">Mistókst að hlaða inn prófi</string>
 </resources>
