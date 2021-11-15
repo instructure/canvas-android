@@ -1214,5 +1214,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Le risposte di questo studente sono nascoste perché questo compito è anonimo.</string>
 
+    <string name="studentAnnotationUnsupported">Annotazione studente (non supportata)</string>
+    <string name="studentAnnotationUnsupportedDescription">L’annotazione studente non è attualmente supportata sui dispositivi mobili.</string>
+    <string name="unsupportedSubmissionType">Tipo di consegna non supportato</string>
+    <string name="studentAnnotationUnsupportedMessage">Impossibile visualizzare consegna perché l’annotazione studente non è attualmente supportata sui dispositivi mobili.</string>
     <string name="schedule_marked_as_done">È stato contrassegnato come fatto.</string>
+    <string name="error_saving_assignment_closed_grading_period">Impossibile cambiare la data di scadenza quando ricade in un periodo di valutazione chiuso.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Passa a oggi</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">invia messaggio</string>
+    <string name="somethingWentWrong">Si è verificato un problema</string>
+    <string name="failedToLoadQuiz">Impossibile caricare il quiz</string>
 </resources>

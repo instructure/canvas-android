@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Tria un element multimèdia</string>
     <string name="takeVideo">Enregistra vídeo</string>
     <string name="noCameraOnDevice">Sense càmera</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">La data de desbloqueig no pot ser posterior a la data de venciment</string>
     <string name="utils_lockBeforeDueDateError">La data de bloqueig no pot ser anterior a la data de venciment</string>
     <string name="utils_lockAfterUnlockError">La data de bloqueig no pot ser anterior a la data de desbloqueig</string>
@@ -436,7 +436,10 @@
     <string name="appUpdateReadyDescription">Reinicieu l’aplicació per instal·lar la versió nova</string>
     <string name="nothing_planned_yet">Encara no hi ha res planificat</string>
     <string name="schedule_tag_graded">Qualificat</string>
-    <string name="schedule_tag_replies">Respostes</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d Resposta</item>
+        <item quantity="other">%d Respostes></item>
+    </plurals>
     <string name="schedule_tag_feedback">Suggeriments</string>
     <string name="schedule_tag_late">Tardà</string>
     <string name="schedule_tag_redo">Refés</string>
@@ -444,6 +447,7 @@
     <string name="tomorrow">Demà</string>
     <string name="yesterday">Ahir</string>
     <string name="schedule_calendar_event_due_text">A les %s</string>
+    <string name="schedule_calendar_event_interval_text">De %1$s a %2$s</string>
     <string name="schedule_todo_due_text">Tasques pendents: %s</string>
     <string name="schedule_due_text">Venciment: %s</string>
     <string name="show_missing_items_title">Mostra %d elements que falten</string>
@@ -456,4 +460,28 @@
         <item quantity="other">%s punts</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f punts</item>
+        <item quantity="one">%.1f punt</item>
+        <item quantity="other">%.1f punts</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Tot el dia</string>
+    <string name="schedule_tag_missing">Falta</string>
+    <string name="previous_week">La setmana anterior</string>
+    <string name="next_week">La setmana que ve</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Curs %s</string>
+    <string name="a11y_announcement">Anunci</string>
+    <string name="a11y_discussion_topic">Debat</string>
+    <string name="a11y_calendar_event">Esdeveniment del calendari</string>
+    <string name="a11y_assignment">Tasca</string>
+    <string name="a11y_planner_note">Nota del planificador</string>
+    <string name="a11y_quiz">Qüestionari</string>
+    <string name="a11y_todo">Tasques pendents</string>
+    <string name="a11y_page">Pàgina</string>
+    <string name="a11y_marked_as_done">Marcada com a feta</string>
+    <string name="a11y_not_marked_as_done">No marcada com a feta</string>
+    <string name="a11y_mark_as_done">Marca com a feta</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Oh! S\'ha produït un error en carregar els detalls del curs.</string>
 </resources>

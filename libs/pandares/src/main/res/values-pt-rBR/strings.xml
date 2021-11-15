@@ -219,7 +219,7 @@
     <!-- Discussions -->
     <string name="forbidden">As respostas são visíveis apenas àqueles que postaram pelo menos uma resposta.</string>
     <string name="fileCurrentlyLocked">Este arquivo está travado no momento</string>
-    <string name="a11y_discussionReplyEditor">Editor de resposta da discussão</string>
+    <string name="a11y_discussionReplyEditor">Editor de resposta do fórum</string>
 
     <!-- Events -->
     <string name="Starts">Começa</string>
@@ -458,7 +458,7 @@
     <string name="lastDiscussionPost">Último post</string>
 
     <string name="newAnnouncement">Novo Aviso</string>
-    <string name="newDiscussion">Nova fórum</string>
+    <string name="newDiscussion">Novo fórum</string>
     <string name="composeDiscussion">Criar Fórum</string>
     <string name="composeAnnouncement">Criar Aviso</string>
 
@@ -466,12 +466,12 @@
     <string name="postDiscussion">Postar fórum</string>
 
     <string name="postAnnouncementSuccess">O aviso foi postado com sucesso.</string>
-    <string name="postDiscussionSuccess">A fórum foi postada com sucesso.</string>
-    <string name="updateDiscussionSuccess">A fórum foi criada com sucesso.</string>
-    <string name="draftDiscussionSuccess">Rascunho de fórum criada com sucesso.</string>
+    <string name="postDiscussionSuccess">O fórum foi postado com sucesso.</string>
+    <string name="updateDiscussionSuccess">O fórum foi criado com sucesso.</string>
+    <string name="draftDiscussionSuccess">Rascunho de fórum criado com sucesso.</string>
 
     <string name="errorPostingAnnouncement">Houve um erro ao postar o aviso.</string>
-    <string name="errorPostingDiscussion">Houve um erro ao postar a fórum.</string>
+    <string name="errorPostingDiscussion">Houve um erro ao postar o fórum.</string>
     <string name="allowThreading">Permitir Respostas Vinculadas</string>
     <string name="usersMustPost">Os usuários devem postar antes de ver as respostas</string>
     <string name="allowUserComments">Permitir que os usuários comentem</string>
@@ -1214,5 +1214,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">As respostas deste aluno estão ocultas porque esta tarefa é anônima.</string>
 
+    <string name="studentAnnotationUnsupported">Observação do aluno (não compatível)</string>
+    <string name="studentAnnotationUnsupportedDescription">Atualmente, a observação do aluno não é compatível com dispositivos móveis.</string>
+    <string name="unsupportedSubmissionType">Tipo de envio não suportado</string>
+    <string name="studentAnnotationUnsupportedMessage">O envio não pode ser exibido, porque a Observação do Aluno não é compatível com dispositivos móveis.</string>
     <string name="schedule_marked_as_done">Você marcou como concluído.</string>
+    <string name="error_saving_assignment_closed_grading_period">Não é possível alterar a data de vencimento quando devido em um período de avaliação encerrado.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Pular para hoje</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">enviar mensagem</string>
+    <string name="somethingWentWrong">Algo deu errado</string>
+    <string name="failedToLoadQuiz">Falha ao carregar teste</string>
 </resources>

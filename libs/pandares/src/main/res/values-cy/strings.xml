@@ -1214,5 +1214,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Mae atebion y myfyriwr hwn wedi’u cuddio gan fod yr aseiniad hwn yn ddienw.</string>
 
+    <string name="studentAnnotationUnsupported">Anodiad gan Fyfyriwr (Anghydnaws)</string>
+    <string name="studentAnnotationUnsupportedDescription">Does dim modd delio ag anodiadau gan fyfyrwyr ar ddyfeisiau symudol ar hyn o bryd.</string>
+    <string name="unsupportedSubmissionType">Math o Gyflwyniad Anghydnaws</string>
+    <string name="studentAnnotationUnsupportedMessage">Does dim modd dangos y cyflwyniad, oherwydd does dim modd delio ag anodiadau gan fyfyrwyr ar ddyfeisiau symudol ar hyn o bryd.</string>
     <string name="schedule_marked_as_done">Rydych chi wedi’i farcio fel wedi’i orffen.</string>
+    <string name="error_saving_assignment_closed_grading_period">Does dim modd newid dyddiad erbyn sydd o fewn cyfnod graddio sydd wedi dod i ben.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Neidio i Heddiw</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">anfon neges</string>
+    <string name="somethingWentWrong">Aeth rhywbeth o’i le</string>
+    <string name="failedToLoadQuiz">Wedi methu llwytho’r cwis</string>
 </resources>

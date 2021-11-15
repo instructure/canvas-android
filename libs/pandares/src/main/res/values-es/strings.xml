@@ -1214,5 +1214,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Las respuestas del estudiante están ocultas porque esta tarea es anónima.</string>
 
+    <string name="studentAnnotationUnsupported">Anotación del estudiante (no admitida)</string>
+    <string name="studentAnnotationUnsupportedDescription">La anotación del estudiante actualmente no se admite en el móvil.</string>
+    <string name="unsupportedSubmissionType">Tipo de entrega no admitida</string>
+    <string name="studentAnnotationUnsupportedMessage">La entrega no se puede mostrar porque la Anotación del estudiante actualmente no se admite en el móvil.</string>
     <string name="schedule_marked_as_done">Lo marcó como terminado.</string>
+    <string name="error_saving_assignment_closed_grading_period">No se puede cambiar la fecha de entrega en un período de calificaciones cerrado.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Saltar a hoy</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">enviar mensaje</string>
+    <string name="somethingWentWrong">Se produjo un error.</string>
+    <string name="failedToLoadQuiz">No se pudo cargar el examen</string>
 </resources>
