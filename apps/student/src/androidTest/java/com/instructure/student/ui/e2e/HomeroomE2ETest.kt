@@ -109,6 +109,8 @@ class HomeroomE2ETest : StudentTest() {
         announcementListPage.assertToolbarTitle()
         announcementListPage.assertAnnouncementTitleVisible(homeroomAnnouncement.title)
         Espresso.pressBack()
+        homeroomPage.assertPageObjects()
+        elementaryDashboardPage.waitForRender()
 
         for (i in 0 until nonHomeroomCourses.size - 1) {
             homeroomPage.assertCourseDisplayed(
