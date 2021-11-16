@@ -43,9 +43,9 @@ void main() {
   });
 
   group('createReply calls InboxApi with correct params', () {
-    test('for conversation reply', () {
+    test('for conversation reply', () async {
       var api = _MockInboxApi();
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
 
@@ -65,7 +65,7 @@ void main() {
       var api = _MockInboxApi();
       var enrollmentsApi = MockEnrollmentsApi();
       var courseApi = MockCourseApi();
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
         locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentsApi);
         locator.registerLazySingleton<CourseApi>(() => courseApi);
@@ -88,9 +88,9 @@ void main() {
       verify(api.addMessage(conversation.id, body, [], attachmentIds, [])).called(1);
     });
 
-    test('for message reply', () {
+    test('for message reply', () async {
       var api = _MockInboxApi();
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
 
@@ -111,7 +111,7 @@ void main() {
       var api = _MockInboxApi();
       var enrollmentsApi = MockEnrollmentsApi();
       var courseApi = MockCourseApi();
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
         locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentsApi);
         locator.registerLazySingleton<CourseApi>(() => courseApi);
@@ -149,7 +149,7 @@ void main() {
       var api = _MockInboxApi();
       var enrollmentsApi = MockEnrollmentsApi();
       var courseApi = MockCourseApi();
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
         locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentsApi);
         locator.registerLazySingleton<CourseApi>(() => courseApi);
@@ -187,9 +187,9 @@ void main() {
       ).called(1);
     });
 
-    test('for self-authored message reply', () {
+    test('for self-authored message reply', () async {
       var api = _MockInboxApi();
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
 
@@ -208,9 +208,9 @@ void main() {
       ).called(1);
     });
 
-    test('for self-authored conversation reply', () {
+    test('for self-authored conversation reply', () async {
       var api = _MockInboxApi();
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
 
@@ -234,9 +234,9 @@ void main() {
       ).called(1);
     });
 
-    test('for monologue message reply', () {
+    test('for monologue message reply', () async {
       var api = _MockInboxApi();
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
 
@@ -262,9 +262,9 @@ void main() {
       ).called(1);
     });
 
-    test('for monologue conversation reply', () {
+    test('for monologue conversation reply', () async {
       var api = _MockInboxApi();
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
       });
 

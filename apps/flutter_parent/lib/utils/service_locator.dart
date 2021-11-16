@@ -71,6 +71,7 @@ import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/db/user_colors_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
+import 'package:flutter_parent/utils/permission_handler.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
@@ -153,6 +154,7 @@ void setupLocator() {
   locator.registerLazySingleton<FlutterSnackbarVeneer>(() => FlutterSnackbarVeneer());
   locator.registerLazySingleton<FirebaseCrashlytics>(() => FirebaseCrashlytics.instance);
   locator.registerLazySingleton<PathProviderVeneer>(() => PathProviderVeneer());
+  locator.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
   locator.registerLazySingleton<UrlLauncher>(() => UrlLauncher());
 
   // Other

@@ -66,7 +66,12 @@ import 'package:sqflite/sqflite.dart';
 MockRemoteConfig setupMockRemoteConfig({Map<String, String> valueSettings = null}) {
   final mockRemoteConfig = MockRemoteConfig();
   when(mockRemoteConfig.fetch()).thenAnswer((_) => Future.value());
-  when(mockRemoteConfig.activateFetched()).thenAnswer((_) => Future.value(valueSettings != null));
+  when(mockRemoteConfig.activate())
+      .thenAnswer((_) => Future.value(valueSettings != null));
+  when(mockRemoteConfig.settings).thenAnswer((realInvocation) =>
+      RemoteConfigSettings(
+          fetchTimeout: Duration(milliseconds: 100),
+          minimumFetchInterval: Duration(milliseconds: 100)));
   if (valueSettings != null) {
     valueSettings.forEach((key, value) {
       when(mockRemoteConfig.getString(key)).thenAnswer((_) => value);

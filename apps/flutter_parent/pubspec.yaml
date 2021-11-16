@@ -43,7 +43,7 @@ dependencies:
   firebase_remote_config: ^0.11.0+2
   firebase_core: ^1.8.0
   firebase_crashlytics: ^2.2.4
-  get_it: ^7.2.0
+  get_it: 6.1.1
   intl: ^0.17.0
   provider: ^5.0.0
   vector_math: ^2.1.0

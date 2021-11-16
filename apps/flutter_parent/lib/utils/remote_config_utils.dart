@@ -77,7 +77,9 @@ class RemoteConfigUtils {
         String rcPreferencesName = _getSharedPreferencesName(rc);
         print(
             'RemoteConfigUtils.initialize(): fetched $rcParamName=${rcParamValue == null ? 'null' : '\"$rcParamValue\"'}');
-        _prefs.setString(rcPreferencesName, rcParamValue);
+        if (rcParamValue != null) {
+          _prefs.setString(rcPreferencesName, rcParamValue);
+        }
       });
     } else {
       // Otherwise, some log info.  The log info here and above will serve as a substitute for

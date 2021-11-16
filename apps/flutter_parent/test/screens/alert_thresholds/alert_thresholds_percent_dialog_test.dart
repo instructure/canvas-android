@@ -354,9 +354,9 @@ void main() {
 
 class MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}
 
-void _setupLocator({AlertThresholdsInteractor thresholdsInteractor}) {
+void _setupLocator({AlertThresholdsInteractor thresholdsInteractor}) async {
   var locator = GetIt.instance;
-  locator.reset();
+  await locator.reset();
 
   locator.registerFactory<AlertThresholdsInteractor>(() => thresholdsInteractor ?? MockAlertThresholdsInteractor());
 }

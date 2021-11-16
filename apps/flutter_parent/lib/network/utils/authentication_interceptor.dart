@@ -83,7 +83,7 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return handler.resolve(response);
       } else {
-        handler.next(error);
+        return handler.next(error);
       }
     }
   }

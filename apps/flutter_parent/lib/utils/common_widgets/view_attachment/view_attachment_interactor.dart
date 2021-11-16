@@ -14,6 +14,7 @@
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter_parent/models/attachment.dart';
+import 'package:flutter_parent/utils/permission_handler.dart';
 import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
@@ -44,9 +45,11 @@ class ViewAttachmentInteractor {
   }
 
   Future<bool> checkStoragePermission() async {
-    PermissionStatus permission = await Permission.storage.status;
+    var permissionHandler = locator<PermissionHandler>();
+    PermissionStatus permission = await permissionHandler.checkPermissionStatus(Permission.storage);
     if (permission != PermissionStatus.granted) {
-      await Permission.storage.request().isGranted;
+      var permission = await permissionHandler.requestPermission(Permission.storage);
+      if (permission == PermissionStatus.granted) return true;
     } else {
       return true;
     }
