@@ -27,6 +27,7 @@ import com.instructure.pandautils.activities.BaseActionBarActivity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ViewStyler.themeToolbar
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
@@ -38,22 +39,27 @@ class InternalWebViewActivity : BaseActionBarActivity() {
         toolbar?.let { themeToolbar(this, it, Color.WHITE, Color.BLACK, false) }
         if (savedInstanceState == null) {
             val bundle = intent.getBundleExtra(Const.EXTRAS)
-            bundle.getString(Const.ACTION_BAR_TITLE)?.let { toolbar?.title = it }
-            bundle.getParcelable<CanvasContext>(Const.CANVAS_CONTEXT)?.let { canvasContext ->
+            bundle?.getString(Const.ACTION_BAR_TITLE)?.let { toolbar?.title = it }
+            bundle?.getParcelable<CanvasContext>(Const.CANVAS_CONTEXT)?.let { canvasContext ->
                 // Currently we use an empty context when showing the EULA, privacy policy, etc., in which case we
                 // want the internalWebViewFragment to hide its toolbar
                 if (canvasContext.id == 0L) {
-                    bundle.putBoolean(HIDE_TOOLBAR, true)
+                    bundle.putBoolean(Const.HIDDEN_TOOLBAR, true)
                 } else {
                     val color = canvasContext.color
                     setActionBarStatusBarColors(color, color)
                     supportActionBar?.title = canvasContext.name
                 }
             }
-            val fragment = newInstance(makeRoute(bundle))
-            val ft = supportFragmentManager.beginTransaction()
-            ft.add(R.id.container, fragment, InternalWebviewFragment::class.java.name)
-            ft.commitAllowingStateLoss()
+
+            if (bundle != null) {
+                val fragment = newInstance(makeRoute(bundle))
+                val ft = supportFragmentManager.beginTransaction()
+                ft.add(R.id.container, fragment, InternalWebviewFragment::class.java.name)
+                ft.commitAllowingStateLoss()
+            } else {
+                toast(R.string.somethingWentWrong)
+            }
         }
     }
 
@@ -77,7 +83,6 @@ class InternalWebViewActivity : BaseActionBarActivity() {
     }
 
     companion object {
-        const val HIDE_TOOLBAR = "hide_toolbar"
 
         fun createIntent(context: Context?, url: String?, title: String?, authenticate: Boolean): Intent {
             // Assumes no CanvasContext

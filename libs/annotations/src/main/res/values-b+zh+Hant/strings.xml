@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">輸入文字</string>
+    <string name="cancel">取消</string>
+    <string name="comment">評論</string>
+    <string name="skip">跳過</string>
+    <string name="comments">評論</string>
+    <string name="error_loading_submission">載入提交件時發生問題。</string>
+    <string name="retry">重試</string>
+    <string name="annotationErrorOccurred">載入註釋時發生意外錯誤。</string>
+    <string name="annotationError">註釋錯誤</string>
+    <string name="annotationDialogMessage">註釋已從另一來源刪除。</string>
+    <string name="errorSendingMessage">無法傳送訊息。輕點以重試。</string>
+    <string name="addAnnotationComment">添加評論</string>
+    <string name="editComment">編輯評論</string>
+    <string name="deleteComment">刪除評論</string>
+    <string name="deleteAnnotation">刪除註釋</string>
+    <string name="deleteCommentConfirmation">您是否確定要刪除此評論？</string>
+    <string name="deleteHeadCommentConfirmation">刪除此評論將會刪除與此註釋相關的所有評論。是否確定要這樣做？</string>
+    <string name="sendingSimple">正在發送</string>
+    <string name="pspdf__annotation_type_stamp">注釋顏色</string>
+
+    <string name="removedComment">%1$s 由 %2$s移除</string>
+
+</resources>

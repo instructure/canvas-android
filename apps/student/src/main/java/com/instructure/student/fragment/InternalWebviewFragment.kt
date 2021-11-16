@@ -64,6 +64,10 @@ open class InternalWebviewFragment : ParentFragment() {
     var title: String? by NullableStringArg(key = Const.ACTION_BAR_TITLE)
     var url: String? by NullableStringArg(key = Const.INTERNAL_URL)
     var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
+    var allowRoutingToLogin: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_TO_LOGIN)
+    var allowEmbedRouting: Boolean by BooleanArg(default = true, key = ALLOW_EMBED_ROUTING)
+
+    var hideToolbar: Boolean by BooleanArg(key = Const.HIDDEN_TOOLBAR)
 
     // Used for external urls that reject the candroid user agent string
     var originalUserAgentString: String = ""
@@ -100,6 +104,7 @@ open class InternalWebviewFragment : ParentFragment() {
             originalUserAgentString = canvasWebView.settings.userAgentString
             canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
+            webViewLoading?.setVisible(true)
 
             canvasWebView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
                 override fun onProgressChangedCallback(view: WebView?, newProgress: Int) {
@@ -128,6 +133,8 @@ open class InternalWebviewFragment : ParentFragment() {
                 override fun canRouteInternallyDelegate(url: String): Boolean {
                     if (activity == null) return false
                     return shouldRouteInternally
+                        && shouldRouteToLogin(url)
+                        && shouldRouteEmbedded(url)
                         && shouldRouteIfUrlIsTheSame(url)
                         && !isUnsupportedFeature
                         && RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false, allowUnsupportedRouting)
@@ -139,6 +146,22 @@ open class InternalWebviewFragment : ParentFragment() {
                 private fun shouldRouteIfUrlIsTheSame(url: String): Boolean {
                     val sameUrl = this@InternalWebviewFragment.url?.contains(url) ?: false
                     return !sameUrl || allowRoutingTheSameUrlInternally
+                }
+
+                private fun shouldRouteToLogin(url: String?): Boolean {
+                    return if (url?.contains("login") == true) {
+                        allowRoutingToLogin
+                    } else {
+                        true
+                    }
+                }
+
+                private fun shouldRouteEmbedded(url: String?): Boolean {
+                    return if (url?.contains("embed=true") == true) {
+                        allowEmbedRouting
+                    } else {
+                        true
+                    }
                 }
 
                 override fun routeInternallyCallback(url: String) {
@@ -159,7 +182,10 @@ open class InternalWebviewFragment : ParentFragment() {
                 }
 
             })
-            canvasWebView?.restoreState(savedInstanceState)
+
+            if (savedInstanceState != null) {
+                canvasWebView?.restoreState(savedInstanceState)
+            }
         }
 
         return rootView
@@ -172,7 +198,6 @@ open class InternalWebviewFragment : ParentFragment() {
             else if (html?.isNotBlank() == true) loadUrl(html)
         }
 
-        val hideToolbar = arguments?.getBoolean(InternalWebViewActivity.HIDE_TOOLBAR, false) ?: false
         toolbar.setVisible(!hideToolbar)
 
         if (isLTITool) {
@@ -329,6 +354,7 @@ open class InternalWebviewFragment : ParentFragment() {
                         // Get an authenticated session so the user doesn't have to log in
                         url = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url!!, it) }.sessionUrl
                     } catch (e: StatusCallbackError) {
+                        e.printStackTrace()
                     }
                 } else {
                     // External URL, use the non-Canvas specific user agent string
@@ -343,7 +369,7 @@ open class InternalWebviewFragment : ParentFragment() {
                             .build().toString()
                 }
 
-                canvasWebView?.loadUrl(url, getReferer())
+                canvasWebView?.loadUrl(url!!, getReferer())
             }
         }
     }
@@ -360,6 +386,8 @@ open class InternalWebviewFragment : ParentFragment() {
     companion object {
         internal const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
         const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
+        const val ALLOW_ROUTING_TO_LOGIN = "allowRoutingToLogin"
+        const val ALLOW_EMBED_ROUTING = "allowEmbedRouting"
 
         fun newInstance(route: Route): InternalWebviewFragment {
             return InternalWebviewFragment().withArgs(route.argsWithContext)
@@ -445,6 +473,27 @@ open class InternalWebviewFragment : ParentFragment() {
                             putString(Const.INTERNAL_URL, url)
                             putBoolean(Const.AUTHENTICATE, authenticate)
                         })
+
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            url: String,
+            authenticate: Boolean,
+            hideToolbar: Boolean,
+            allowRoutingTheSameUrlInternally: Boolean,
+            shouldRouteToLogin: Boolean,
+            allowEmbedRouting: Boolean,
+            isUnsupportedFeature: Boolean
+        ): Route =
+            Route(InternalWebviewFragment::class.java, canvasContext,
+                canvasContext.makeBundle().apply {
+                    putString(Const.INTERNAL_URL, url)
+                    putBoolean(Const.AUTHENTICATE, authenticate)
+                    putBoolean(Const.HIDDEN_TOOLBAR, hideToolbar)
+                    putBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, allowRoutingTheSameUrlInternally)
+                    putBoolean(ALLOW_ROUTING_TO_LOGIN, shouldRouteToLogin)
+                    putBoolean(ALLOW_EMBED_ROUTING, allowEmbedRouting)
+                    putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
+                })
 
         fun makeRoute(
             canvasContext: CanvasContext,

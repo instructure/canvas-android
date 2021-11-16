@@ -20,10 +20,7 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.LTITool
-import com.instructure.canvasapi2.models.RubricCriterionAssessment
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.models.SubmissionSummary
+import com.instructure.canvasapi2.models.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -108,6 +105,15 @@ object SubmissionAPI {
                 @Query("submission[submission_type]") submissionType: String,
                 @Query("submission[file_ids][]") attachments: List<Long>): Call<Submission>
 
+        @FormUrlEncoded
+        @POST("{contextId}/assignments/{assignmentId}/submissions")
+        fun postStudentAnnotationSubmission(
+            @Path("contextId") contextId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Field("submission[submission_type]") submissionType: String,
+            @Field("submission[annotatable_attachment_id]") annotatableAttachmentId: Long
+        ): Call<Submission>
+
         @GET
         fun getLtiFromAuthenticationUrl(@Url url: String): Call<LTITool>
 
@@ -186,6 +192,24 @@ object SubmissionAPI {
         } catch (e: Exception) {
             null
         }
+    }
+
+    fun postStudentAnnotationSubmission(
+        canvasContextId: Long,
+        assignmentId: Long,
+        annotatableAttachmentId: Long,
+        adapter: RestBuilder,
+        params: RestParams,
+        callback: StatusCallback<Submission>
+    ) {
+        callback.addCall(
+            adapter.build(SubmissionInterface::class.java, params).postStudentAnnotationSubmission(
+                canvasContextId,
+                assignmentId,
+                Assignment.SubmissionType.STUDENT_ANNOTATION.apiString,
+                annotatableAttachmentId
+            )
+        ).enqueue(callback)
     }
 
     private fun generateRubricAssessmentQueryMap(rubricAssessment: Map<String, RubricCriterionAssessment>): Map<String, String> {

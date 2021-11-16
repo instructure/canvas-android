@@ -267,7 +267,7 @@ fun waitForMatcherWithRefreshes(target: Matcher<View>) {
 fun refresh() {
     val swipeRefreshLayoutMatcher = getSwipeRefreshLayoutMatcher()
     onView(swipeRefreshLayoutMatcher)
-            .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(5)))
+        .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(5)))
 }
 
 /** A better version of the shared espresso lib's WaitForViewMatcher.waitForView()

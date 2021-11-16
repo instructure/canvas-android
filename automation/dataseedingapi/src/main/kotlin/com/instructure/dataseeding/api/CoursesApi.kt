@@ -35,6 +35,9 @@ object CoursesApi {
         @POST("accounts/self/courses")
         fun createCourse(@Body createCourseApiModel: CreateCourseWrapper): Call<CourseApiModel>
 
+        @POST("accounts/{account_id}/courses")
+        fun createCourseInSubAccount(@Path("account_id") accountId: Long, @Body createCourseApiModel: CreateCourseWrapper): Call<CourseApiModel>
+
         @POST("users/self/favorites/courses/{courseId}")
         fun addCourseToFavorites(@Path("courseId") courseId: Long): Call<FavoriteApiModel>
 
@@ -46,13 +49,38 @@ object CoursesApi {
         CanvasRestAdapter.adminRetrofit.create(CoursesService::class.java)
     }
 
-    private fun coursesService(token: String): CoursesService
-            = CanvasRestAdapter.retrofitWithToken(token).create(CoursesService::class.java)
+    private fun coursesService(token: String): CoursesService =
+        CanvasRestAdapter.retrofitWithToken(token).create(CoursesService::class.java)
+
+    fun createCourseInSubAccount(
+        enrollmentTermId: Long? = null,
+        publish: Boolean = true,
+        coursesService: CoursesService = adminCoursesService,
+        homeroomCourse: Boolean = false,
+        accountId: Long? = null
+    ): CourseApiModel {
+        val randomCourseName = Randomizer.randomCourseName()
+        val course = CreateCourseWrapper(
+            offer = publish,
+            course = CreateCourse(
+                name = randomCourseName,
+                courseCode = randomCourseName.substring(0, 2),
+                enrollmentTermId = enrollmentTermId,
+                homeroomCourse = homeroomCourse,
+                accountId = accountId
+            )
+        )
+        return coursesService
+            .createCourseInSubAccount(accountId!!, course)
+            .execute()
+            .body()!!
+
+    }
 
     fun createCourse(
-            enrollmentTermId: Long? = null,
-            publish: Boolean = true,
-            coursesService: CoursesService = adminCoursesService
+        enrollmentTermId: Long? = null,
+        publish: Boolean = true,
+        coursesService: CoursesService = adminCoursesService
     ): CourseApiModel {
         val randomCourseName = Randomizer.randomCourseName()
         val course = CreateCourseWrapper(

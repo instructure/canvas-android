@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Välj media</string>
     <string name="takeVideo">Spela in video</string>
     <string name="noCameraOnDevice">Ingen kamera</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Upplåsningsdatumet kan inte vara efter sista inlämningsdatumet</string>
     <string name="utils_lockBeforeDueDateError">Låsdatumet kan inte vara före inlämningsdatumet</string>
     <string name="utils_lockAfterUnlockError">Låsdatumet kan inte vara före upplåsningsdatumet</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Starta om appen för att installera den nya versionen</string>
     <string name="nothing_planned_yet">Inget planerat ännu</string>
     <string name="schedule_tag_graded">Har bedömts</string>
-    <string name="schedule_tag_replies">Svar</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d svar</item>
+        <item quantity="other">%d svar></item>
+    </plurals>
     <string name="schedule_tag_feedback">Feedback</string>
     <string name="schedule_tag_late">Sen</string>
     <string name="schedule_tag_redo">Gör om</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">I morgon</string>
     <string name="yesterday">I går</string>
     <string name="schedule_calendar_event_due_text">kl. %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s till %2$s</string>
     <string name="schedule_todo_due_text">Att göra: %s</string>
     <string name="schedule_due_text">Förfallodatum: %s</string>
     <string name="show_missing_items_title">Visa %d saknade objekt</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s poäng</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f poäng</item>
+        <item quantity="one">%.1f poäng</item>
+        <item quantity="other">%.1f poäng</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Hela dagen</string>
+    <string name="schedule_tag_missing">Saknad</string>
+    <string name="previous_week">Föregående vecka</string>
+    <string name="next_week">Nästa vecka</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Kurs %s</string>
+    <string name="a11y_announcement">Anslag</string>
+    <string name="a11y_discussion_topic">Diskussion</string>
+    <string name="a11y_calendar_event">Kalenderhändelse</string>
+    <string name="a11y_assignment">Uppgift</string>
+    <string name="a11y_planner_note">Planeringsanteckning</string>
+    <string name="a11y_quiz">Quiz</string>
+    <string name="a11y_todo">Att göra</string>
+    <string name="a11y_page">Sida</string>
+    <string name="a11y_marked_as_done">Markera som färdig</string>
+    <string name="a11y_not_marked_as_done">Inte markerad som färdig</string>
+    <string name="a11y_mark_as_done">Markera som färdig</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Oj då! Ett fel uppstod vid inläsning av kursinformationen:</string>
 </resources>

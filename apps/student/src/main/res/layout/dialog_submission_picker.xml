@@ -136,7 +136,7 @@
             style="@style/TextFont.Regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/studentAnnotationUnsupported"
+            android:text="@string/submissionTypeStudentAnnotation"
             android:textSize="16sp"/>
 
     </LinearLayout>

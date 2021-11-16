@@ -29,6 +29,9 @@ object TabAPI {
     internal interface TabsInterface {
         @GET("{contextId}/tabs")
         fun getTabs(@Path("contextId") contextId: Long): Call<List<Tab>>
+
+        @GET("{contextId}/tabs?include[]=course_subject_tabs")
+        fun getTabsForElementary(@Path("contextId") contextId: Long): Call<List<Tab>>
     }
 
     fun getTabs(
@@ -37,5 +40,13 @@ object TabAPI {
             callback: StatusCallback<List<Tab>>,
             params: RestParams) {
         callback.addCall(adapter.build(TabsInterface::class.java, params).getTabs(contextId)).enqueue(callback)
+    }
+
+    fun getTabsForElementary(
+        contextId: Long,
+        adapter: RestBuilder,
+        callback: StatusCallback<List<Tab>>,
+        params: RestParams) {
+        callback.addCall(adapter.build(TabsInterface::class.java, params).getTabsForElementary(contextId)).enqueue(callback)
     }
 }

@@ -83,6 +83,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             Action.URL_ENTRY -> uploadUrl(db, submission, false)
             Action.STUDIO_ENTRY -> uploadUrl(db, submission, true)
             Action.COMMENT_ENTRY -> uploadComment(intent)
+            Action.STUDENT_ANNOTATION -> uploadStudentAnnotation(db, submission)
         }.exhaustive
     }
 
@@ -427,6 +428,27 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
     }
 
+    private fun uploadStudentAnnotation(db: StudentDb, submission: com.instructure.student.Submission) {
+        showProgressNotification(submission.assignmentName, submission.id)
+        val annotatableAttachmentIt = submission.annotatableAttachmentId
+
+        if (annotatableAttachmentIt == null) {
+            showErrorNotification(this, submission)
+            return
+        }
+
+        GlobalScope.launch {
+            val uploadResult = SubmissionManager.postStudentAnnotationSubmissionAsync(submission.canvasContext, submission.assignmentId, annotatableAttachmentIt).await()
+            uploadResult.onSuccess {
+                db.submissionQueries.deleteSubmissionById(submission.id)
+                if (!it.late) showConfetti()
+            }.onFailure {
+                db.submissionQueries.setSubmissionError(true, submission.id)
+                showErrorNotification(this@SubmissionService, submission)
+            }
+        }
+    }
+
     // region Notifications
 
     private fun handleFileError(db: StudentDb, submission: com.instructure.student.Submission, completedCount: Int, attachments: List<FileSubmission>, errorMessage: String?) {
@@ -570,7 +592,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     // endregion
 
     enum class Action {
-        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, STUDIO_ENTRY, COMMENT_ENTRY
+        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, STUDIO_ENTRY, COMMENT_ENTRY, STUDENT_ANNOTATION
     }
 
     companion object {
@@ -802,6 +824,24 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val db = Db.getInstance(context)
             db.pendingSubmissionCommentQueries.deleteCommentById(commentId)
             db.submissionCommentFileQueries.deleteFilesForCommentId(commentId)
+        }
+
+        fun startStudentAnnotationSubmission(
+            context: Context,
+            canvasContext: CanvasContext,
+            assignmentId: Long,
+            assignmentName: String?,
+            annotatableAttachmentIt: Long
+        ) {
+            val dbSubmissionId = insertNewSubmission(assignmentId, context) {
+                it.submissionQueries.insertStudentAnnotationSubmission(annotatableAttachmentIt, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
+            }
+
+            val bundle = Bundle().apply {
+                putLong(Const.SUBMISSION_ID, dbSubmissionId)
+            }
+
+            startService(context, Action.STUDENT_ANNOTATION, bundle)
         }
         // endregion
     }

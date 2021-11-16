@@ -148,7 +148,9 @@ open class InternalWebViewFragment : BaseFragment() {
             }
         }
 
-        canvasWebView.restoreState(savedInstanceState)
+        if (savedInstanceState != null) {
+            canvasWebView.restoreState(savedInstanceState)
+        }
         if (shouldLoadUrl) {
             loadUrl(url)
         }

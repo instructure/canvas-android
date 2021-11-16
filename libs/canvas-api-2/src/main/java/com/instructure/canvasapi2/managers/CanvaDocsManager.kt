@@ -22,7 +22,10 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotationResponse
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionRequestBody
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import okhttp3.ResponseBody
 
 object CanvaDocsManager {
@@ -66,4 +69,20 @@ object CanvaDocsManager {
         CanvaDocsAPI.deleteAnnotation(sessionId, annotationId, adapter, params, callback)
     }
 
+    fun createCanvaDocSessionAsync(submissionId: Long, attempt: String) = apiAsync<CanvaDocSessionResponseBody> { createCanvaDocSession(submissionId, attempt, it) }
+
+    private fun createCanvaDocSession(
+        submissionId: Long,
+        attempt: String,
+        callback: StatusCallback<CanvaDocSessionResponseBody>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(domain = ApiPrefs.fullDomain)
+        CanvaDocsAPI.createCanvaDocSession(
+            CanvaDocSessionRequestBody(
+                submissionId.toString(),
+                attempt
+            ), adapter, params, callback
+        )
+    }
 }

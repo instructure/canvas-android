@@ -56,7 +56,7 @@ class QuizSubmissionViewFragment : InternalWebviewFragment() {
             return QuizSubmissionViewFragment().apply {
                 arguments = Bundle().apply {
                     putString(Const.INTERNAL_URL, quizUrl)
-                    putBoolean(InternalWebViewActivity.HIDE_TOOLBAR, true)
+                    putBoolean(Const.HIDDEN_TOOLBAR, true)
                     putBoolean(Const.AUTHENTICATE, true)
                     putBoolean(SHOULD_ROUTE_INTERNALLY, false)
                 }

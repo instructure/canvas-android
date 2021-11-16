@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">เลือกไฟล์สื่อ</string>
     <string name="takeVideo">ถ่ายวิดีโอ</string>
     <string name="noCameraOnDevice">ไม่มีกล้อง</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">วันที่ปลดล็อคจะอยู่หลังจากวันครบกำหนดไม่ได้</string>
     <string name="utils_lockBeforeDueDateError">วันที่ล็อคจะอยู่ก่อนวันครบกำหนดไม่ได้</string>
     <string name="utils_lockAfterUnlockError">วันที่ล็อคจะอยู่ก่อนวันที่ปลดล็อคไม่ได้</string>
@@ -436,7 +436,10 @@
     <string name="appUpdateReadyDescription">รีสตาร์ทแอพเพื่อติดตั้งเวอร์ชั่นใหม่</string>
     <string name="nothing_planned_yet">ยังไม่มีแผนตอนนี้</string>
     <string name="schedule_tag_graded">ให้เกรดแล้ว</string>
-    <string name="schedule_tag_replies">การตอบกลับ</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d การตอบกลับ</item>
+        <item quantity="other">%d การตอบกลับ></item>
+    </plurals>
     <string name="schedule_tag_feedback">ผลตอบรับ</string>
     <string name="schedule_tag_late">ล่าช้า</string>
     <string name="schedule_tag_redo">ทำซ้ำ</string>
@@ -444,6 +447,7 @@
     <string name="tomorrow">พรุ่งนี้</string>
     <string name="yesterday">เมื่อวานนี้</string>
     <string name="schedule_calendar_event_due_text">เมื่อ %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s ถึง %2$s</string>
     <string name="schedule_todo_due_text">สิ่งที่ต้องทำ: %s</string>
     <string name="schedule_due_text">ครบกำหนด: %s</string>
     <string name="show_missing_items_title">แสดง %d รายการที่ขาดหาย</string>
@@ -456,4 +460,28 @@
         <item quantity="other">%s คะแนน</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f คะแนน</item>
+        <item quantity="one">%.1f คะแนน</item>
+        <item quantity="other">%.1f คะแนน</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">ทั้งวัน</string>
+    <string name="schedule_tag_missing">ขาดหาย</string>
+    <string name="previous_week">สัปดาห์ก่อนหน้า</string>
+    <string name="next_week">สัปดาห์ถัดไป</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">บทเรียน %s</string>
+    <string name="a11y_announcement">ประกาศ</string>
+    <string name="a11y_discussion_topic">การพูดคุย</string>
+    <string name="a11y_calendar_event">กิจกรรมในปฏิทิน</string>
+    <string name="a11y_assignment">งาน</string>
+    <string name="a11y_planner_note">หมายเหตุสำหรับแผนงาน</string>
+    <string name="a11y_quiz">แบบทดสอบ</string>
+    <string name="a11y_todo">สิ่งที่ต้องทำ</string>
+    <string name="a11y_page">หน้าเพจ</string>
+    <string name="a11y_marked_as_done">กำกับว่าเสร็จสิ้นแล้ว</string>
+    <string name="a11y_not_marked_as_done">ไม่ได้กำกับว่าเสร็จสิ้นแล้ว</string>
+    <string name="a11y_mark_as_done">กำกับว่าเสร็จสิ้นแล้ว</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">โอ๊ะ โอ! เกิดข้อผิดพลาดขณะโหลดรายละเอียดบทเรียน</string>
 </resources>

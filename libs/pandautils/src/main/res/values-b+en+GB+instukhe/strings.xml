@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Upload successful</string>
     <string name="noNetwork">Network not available - please try again later.</string>
     <string name="uploadMessage">Upload in progress. Check notifications for upload status.</string>
-    <string name="mediaUpload">Media upload</string>
     <string name="uploadingFile">Uploading file&#8230;</string>
     <string name="errorUploadingFile">An error occurred uploading your file. Please try again.</string>
     <string name="fileSubmission">Submit file(s)</string>
@@ -41,14 +40,12 @@
     <string name="upload">Upload</string>
     <string name="errorSendingMessage">An error occurred sending your message. Please try again.</string>
 
-    <string name="notificationChannelNameFileUploadsName">File upload notifications</string>
-    <string name="notificationChannelNameFileUploadsDescription">Canvas notifications for ongoing file uploads.</string>
+    <string name="notificationChannelNameFileUploadsName">Upload Notifications</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas notifications for ongoing uploads.</string>
 
 
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Choose file from&#8230;</string>
     <string name="addFile">Add file</string>
-    <string name="choose_a_file">Choose a file</string>
 
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Gallery</string>
@@ -59,7 +56,6 @@
     <string name="file">File</string>
     <string name="fileTalkBack">File %s</string>
     <string name="folderTalkBack">Folder %s</string>
-
     <string name="addItem">Add item</string>
     <string name="assignment">Assignment</string>
     <string name="attachedFiles">Attached files</string>
@@ -99,7 +95,10 @@
     <string name="filePermissionGranted">File is now ready to download. Please try again.</string>
     <string name="filePermissionDenied">File cannot be downloaded without granting permission.</string>
     <string name="pleaseTryAgain">Permission granted, please try again.</string>
-    <string name="pickVideo">Select a video</string>
+    <string name="pickFile">Select a file</string>
+    <string name="assignmentSubmissionUpload">Uploading submission for %s</string>
+    <string name="assignmentSubmissionError">Submission failed for %s</string>
+    <string name="assignmentSubmissionComplete">Successfully submitted %s</string>
 
     <!--Errors-->
     <string name="errorOccurred">An unexpected error occurred.</string>
@@ -162,19 +161,19 @@
     <string name="noAssignmentsSubtext">It looks like assignments haven\'t been created in this space. Time to go out and explore.</string>
     <string name="noAssignmentsTeacher">It looks like no assignments have been published yet.</string>
     <string name="noFiles">No files</string>
+    <string name="noFilesForAssignment">There are no files for this submission</string>
     <string name="noFilesSubtext">There are no files associated with this account.</string>
+    <string name="emptyFolder">This folder is empty</string>
     <string name="notSupported">Not supported</string>
     <string name="noEvents">No events today!</string>
     <string name="noEventsSubtext">It looks like a great day to rest and relax.</string>
     <string name="noSubmission">No submission</string>
-    <string name="noSubmissionSubtext">Submit your assignment by %1$s at %2$s.</string>
     <string name="noSubmissionTeacher">This student doesn\'t have a submission yet.</string>
-    <string name="noDueDate">This assignment doesn\'t have a due date.</string>
     <string name="locked">Locked</string>
     <string name="lockedSubtext">This assignment is locked until %1$s at %2$s.</string>
-    <string name="lockedModule">This assignment is part of the unit \"%1$s\" and hasn\'t been unlocked yet.</string>
     <string name="chooseFile">Choose a file</string>
     <string name="chooseFileSubtext">Attach a file to your submission by tapping an option below.</string>
+    <string name="chooseFileForUploadSubtext">Select a file to upload by tapping an option below</string>
     <string name="noNotifications">No notifications</string>
     <string name="noNotificationsSubtext">There\'s nothing to be notified of yet.</string>
     <string name="noTodos">Well done!</string>
@@ -187,6 +186,8 @@
     <string name="noModulesSubtext">It looks like there aren\'t any units created yet.</string>
     <string name="noPages">No pages</string>
     <string name="noPagesSubtext">It looks like no pages have been created yet.</string>
+    <string name="modulesLockedSubtext">Units have been disabled for this module.</string>
+    <string name="modulesLocked">Something Went Wrong</string>
 
     <!--General-->
     <string name="yes">Yes</string>
@@ -204,7 +205,7 @@
     <string name="likes">Likes</string>
     <string name="lockedAssignmentNotModule">This assignment is locked.</string>
     <string name="deletedEntryNoChildren">This deleted discussion entry has no replies.</string>
-    <string name="deleted">[Deleted]</string>
+    <string name="deleted">Deleted</string>
     <string name="deleted_by">[Deleted by %1$s]</string>
     <string name="lockedDiscussionDesc">This discussion is part of the unit %s and has not been unlocked yet.</string>
     <string name="gradedDiscussion">Marked discussion</string>
@@ -222,6 +223,7 @@
     <string name="noInternetConnectionTitle">No internet connection</string>
     <string name="noInternetConnectionMessage">This action requires an internet connection.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">View user details for %s.</string>
 
     <!-- App Names -->
@@ -376,14 +378,17 @@
     <string name="utils_uploadToCanvas">Upload to Canvas</string>
     <string name="utils_uploadMyFiles">My files</string>
     <string name="utils_uploadCourseFiles">Module files</string>
+    <string name="utils_uploadGroupFiles">Group Files</string>
     <string name="utils_uploadToSubmissionComment">Upload to submission comment</string>
     <string name="utils_attachFile">Attach a file</string>
     <string name="utils_with">with</string>
-    <string name="utils_dotWithSpaces">\u0020\u0020\u2022\u0020\u0020</string>
 
     <string name="notificationPrimaryInboxTitle">Canvas notification</string>
     <string name="notificationChannelNamePrimary">General Canvas notifications</string>
     <string name="notificationChannelDescriptionPrimary">Further configuration of notifications can be done within the Canvas notification preferences section.</string>
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d new notifications</item>
+    </plurals>
 
     <string name="copyLinkAddress">Copy link address</string>
     <string name="copyLink">Copy link</string>
@@ -414,7 +419,6 @@
     <string name="image_uploading">Image uploading...</string>
     <string name="image_upload_error">Image upload error</string>
     <string name="retry">Retry</string>
-
     <string name="search">Search</string>
     <string name="searchAssignmentsHint">Search assignments</string>
     <string name="searchAnnouncementsHint">Search announcements</string>
@@ -422,6 +426,61 @@
     <string name="searchPagesHint">Search pages</string>
     <string name="searchQuizzesHint">Search quizzes</string>
     <string name="noItemsMatchingQuery">No items match \"%s\"</string>
+
     <string name="selected">Selected</string>
 
+    <string name="notificationChannelNameInAppUpdate">App update notifications</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas notifications for in-app updates.</string>
+    <string name="appUpdateReadyTitle">App ready to update</string>
+    <string name="appUpdateReadyDescription">Restart the app to install the new version</string>
+    <string name="nothing_planned_yet">Nothing planned yet</string>
+    <string name="schedule_tag_graded">Graded</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d reply</item>
+        <item quantity="other">%d Replies></item>
+    </plurals>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">Late</string>
+    <string name="schedule_tag_redo">Re-do</string>
+    <string name="schedule_tag_excused">Excused</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="schedule_calendar_event_due_text">At %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s to %2$s</string>
+    <string name="schedule_todo_due_text">To-do: %s</string>
+    <string name="schedule_due_text">Due: %s</string>
+    <string name="show_missing_items_title">Show %d missing items</string>
+    <string name="hide_missing_items_title">Hide %d missing items</string>
+    <string name="schedule_error_message">Unable to fetch your schedule</string>
+    <string name="schedule_todo_title">To-do</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s pts</item>
+    </plurals>
+
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f points</item>
+        <item quantity="one">%.1f point</item>
+        <item quantity="other">%.1f points</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">All day</string>
+    <string name="schedule_tag_missing">Missing</string>
+    <string name="previous_week">Previous Week</string>
+    <string name="next_week">Next Week</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Module %s</string>
+    <string name="a11y_announcement">Announcement</string>
+    <string name="a11y_discussion_topic">Discussion</string>
+    <string name="a11y_calendar_event">Calendar event</string>
+    <string name="a11y_assignment">Assignment</string>
+    <string name="a11y_planner_note">Planner note</string>
+    <string name="a11y_quiz">Quiz</string>
+    <string name="a11y_todo">To-do</string>
+    <string name="a11y_page">Page</string>
+    <string name="a11y_marked_as_done">Marked as done</string>
+    <string name="a11y_not_marked_as_done">Not marked as done</string>
+    <string name="a11y_mark_as_done">Mark as done</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Uh oh! An error occurred while loading the module details.</string>
 </resources>

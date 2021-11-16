@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Tip Soumisyon Pa Sipòte</string>
     <string name="studentAnnotationUnsupportedMessage">Soumisyon an pa kapab afiche paske Nòt Elèv yo pa disponib sou mobil.</string>
     <string name="schedule_marked_as_done">Ou te make li konplè.</string>
+    <string name="error_saving_assignment_closed_grading_period">Li pa posib pou chanje delè a lè li tonbe nan yon peryòd klasman ki fèmen.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Ale nan Jodi a</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">voye mesaj</string>
+    <string name="somethingWentWrong">Gen yon bagay ki pase mal</string>
+    <string name="failedToLoadQuiz">Chajman quiz echwe</string>
 </resources>

@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">اختيار الوسائط</string>
     <string name="takeVideo">التقاط فيديو</string>
     <string name="noCameraOnDevice">لا توجد كاميرا</string>
@@ -339,7 +340,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">لا يمكن أن يكون تاريخ إلغاء التأمين بعد تاريخ الاستحقاق</string>
     <string name="utils_lockBeforeDueDateError">لا يمكن أن يكون تاريخ التأمين قبل تاريخ الاستحقاق</string>
     <string name="utils_lockAfterUnlockError">لا يمكن أن يكون تاريخ التأمين قبل تاريخ إلغاء التأمين</string>
@@ -449,7 +449,14 @@
     <string name="appUpdateReadyDescription">إعادة تشغيل التطبيق لتثبيت الإصدار الجديد</string>
     <string name="nothing_planned_yet">لم يتم تخطيط أي شيء بعد</string>
     <string name="schedule_tag_graded">تم تقييم الدرجة</string>
-    <string name="schedule_tag_replies">ردود</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="zero">%d من الردود></item>
+        <item quantity="one">%d رد</item>
+        <item quantity="two">%d من الردود></item>
+        <item quantity="few">%d من الردود></item>
+        <item quantity="many">%d من الردود></item>
+        <item quantity="other">%d من الردود></item>
+    </plurals>
     <string name="schedule_tag_feedback">الملاحظات</string>
     <string name="schedule_tag_late">متأخر</string>
     <string name="schedule_tag_redo">إعادة</string>
@@ -457,6 +464,7 @@
     <string name="tomorrow">غدًا</string>
     <string name="yesterday">أمس</string>
     <string name="schedule_calendar_event_due_text">في %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s إلى %2$s</string>
     <string name="schedule_todo_due_text">قائمة المهام: %s</string>
     <string name="schedule_due_text">تاريخ الاستحقاق: %s</string>
     <string name="show_missing_items_title">إظهار %d من العناصر المفقودة</string>
@@ -464,7 +472,7 @@
     <string name="schedule_error_message">لا يمكن إحضار جدولك</string>
     <string name="schedule_todo_title">قائمة المهام</string>
     <plurals name="schedule_points">
-        <item quantity="zero">%s نقاط</item>
+        <item quantity="zero">%s نقطة</item>
         <item quantity="one">%s نقطة</item>
         <item quantity="two">%s نقاط</item>
         <item quantity="few">%s نقاط</item>
@@ -472,4 +480,31 @@
         <item quantity="other">%s نقاط</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f من النقاط</item>
+        <item quantity="one">%.1f نقطة</item>
+        <item quantity="two">%.1f من النقاط</item>
+        <item quantity="few">%.1f من النقاط</item>
+        <item quantity="many">%.1f من النقاط</item>
+        <item quantity="other">%.1f من النقاط</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">طوال اليوم</string>
+    <string name="schedule_tag_missing">مفقود</string>
+    <string name="previous_week">الأسبوع السابق</string>
+    <string name="next_week">الأسبوع القادم</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s، %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">المساق %s</string>
+    <string name="a11y_announcement">الإعلان</string>
+    <string name="a11y_discussion_topic">النقاش</string>
+    <string name="a11y_calendar_event">حدث التقويم</string>
+    <string name="a11y_assignment">المهمة</string>
+    <string name="a11y_planner_note">ملاحظة المخطِط</string>
+    <string name="a11y_quiz">الاختبار الموجز</string>
+    <string name="a11y_todo">قائمة المهام</string>
+    <string name="a11y_page">صفحة</string>
+    <string name="a11y_marked_as_done">تم وضع علامة "تم"</string>
+    <string name="a11y_not_marked_as_done">لم يتم وضع علامة "تم"</string>
+    <string name="a11y_mark_as_done">وضع علامة "تم"</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">عذرًا! حدث خطأ أثناء تحميل تفاصيل المساق.</string>
 </resources>
