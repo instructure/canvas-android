@@ -120,7 +120,7 @@ class HomeroomE2ETest : StudentTest() {
             )
         }
         homeroomPage.assertPageObjects()
-        homeroomPage.assertToDoText("1 due today | 1 missing")
+        homeroomPage.assertToDoText("Nothing Due Today | 1 missing")
         homeroomPage.openCourse(nonHomeroomCourses[0].name)
 
         elementaryCoursePage.assertPageObjects()
@@ -132,7 +132,7 @@ class HomeroomE2ETest : StudentTest() {
         discussionDetailsPage.assertTitleText(data.announcementsList[1].title)
         Espresso.pressBack()
         homeroomPage.assertPageObjects()
-        homeroomPage.openAssignments("1 due today | 1 missing")
+        homeroomPage.openAssignments("Nothing Due Today | 1 missing")
 
         assignmentListPage.assertPageObjects()
         assignmentListPage.assertHasAssignment(testAssignment)
