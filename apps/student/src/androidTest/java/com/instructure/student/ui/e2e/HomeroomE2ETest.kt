@@ -121,7 +121,6 @@ class HomeroomE2ETest : StudentTest() {
         }
         refresh()
         homeroomPage.assertPageObjects()
-        homeroomPage.assertToDoText("1 due today | 1 missing")
         homeroomPage.openCourse(nonHomeroomCourses[0].name)
 
         elementaryCoursePage.assertPageObjects()
