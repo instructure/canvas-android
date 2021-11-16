@@ -18,6 +18,7 @@ package com.instructure.student.ui.e2e
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
@@ -116,6 +117,7 @@ class HomeroomE2ETest : StudentTest() {
                 data.announcementsList[i + 1].title
             )
         }
+        refresh()
         homeroomPage.assertPageObjects()
         homeroomPage.assertToDoText("1 due today | 1 missing")
         homeroomPage.openCourse(nonHomeroomCourses[0].name)
