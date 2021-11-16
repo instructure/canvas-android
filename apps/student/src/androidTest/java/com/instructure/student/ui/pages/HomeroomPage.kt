@@ -110,7 +110,7 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
     }
 
     fun assertToDoText(todoText: String) {
-        waitForView(withId(R.id.todoText) + withText(todoText))
+        onView(withId(R.id.todoText) + withText(todoText))
                 .scrollTo()
                 .assertDisplayed()
     }
