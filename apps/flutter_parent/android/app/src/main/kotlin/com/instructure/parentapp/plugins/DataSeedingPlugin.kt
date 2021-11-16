@@ -5,6 +5,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.FormElement
@@ -62,7 +63,7 @@ object DataSeedingPlugin {
                 val authFormResponse = loginForm.submit().cookies(loginPageResponse.cookies()).execute()
                 val authForm = authFormResponse.parse().select("form").first() as FormElement
                 val responseUrl = authForm.submit().cookies(authFormResponse.cookies()).execute().url().toString()
-                authCode = HttpUrl.parse(responseUrl)?.queryParameter("code")
+                authCode = responseUrl?.toHttpUrlOrNull()?.queryParameter("code")
                     ?: throw RuntimeException("/login/oauth2/auth failed!")
 
                 return null
