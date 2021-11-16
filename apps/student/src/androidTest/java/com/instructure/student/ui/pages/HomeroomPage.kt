@@ -100,6 +100,7 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
     fun openCourseAnnouncement(announcementText: String) {
         swipeRefreshLayout.swipeUp()
         onView(withId(R.id.announcementText) + withText(announcementText))
+                .scrollTo()
                 .click()
     }
 
