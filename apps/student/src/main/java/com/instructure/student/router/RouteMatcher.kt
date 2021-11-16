@@ -81,7 +81,7 @@ object RouteMatcher : BaseRouteMatcher() {
         //////////////////////////
         routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java, NotificationListFragment::class.java, Arrays.asList(":${RouterParams.RECENT_ACTIVITY}"))) // Recent Activity
-        if (BuildConfig.IS_DEBUG && ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+        if (ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), ElementaryCourseFragment::class.java))
         } else {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java))
