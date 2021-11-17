@@ -107,7 +107,7 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
 
     fun onTextSubmitted(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
         SubmissionService.startTextSubmission(context, canvasContext, assignmentId, assignmentName, text)
-
+        canPressBack = true
         (context as? Activity)?.onBackPressed()
     }
 
