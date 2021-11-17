@@ -488,5 +488,10 @@ object RouteMatcher : BaseRouteMatcher() {
     fun getContextIdFromURL(url: String?): String? {
         return getContextIdFromURL(url, routes)
     }
+
+    fun resetRoutes() {
+        routes.clear()
+        initRoutes()
+    }
 }
 
