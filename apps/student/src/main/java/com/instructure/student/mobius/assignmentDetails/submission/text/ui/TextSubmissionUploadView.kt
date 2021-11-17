@@ -43,8 +43,10 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
 
     private var initialText: String? = ""
 
+    private var canPressBack = false
+
     init {
-        toolbar.setupAsBackButton { showExitConfirmation() }
+        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         toolbar.title = context.getString(R.string.textEntry)
     }
 
@@ -70,13 +72,16 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
             .setTitle(R.string.textSubmissionExitConfirmationTitle)
             .setMessage(R.string.textSubmissionExitConfirmationMessage)
             .setPositiveButton(R.string.save) {dialog, _ ->
+                canPressBack = true
                 output.accept(TextSubmissionUploadEvent.SaveDraft(rce.html))
             }
             .setNegativeButton(R.string.dontSave) {dialog, _ ->
+                canPressBack = true
                 dialog.dismiss()
                 (context as? Activity)?.onBackPressed()
             }
             .setNeutralButton(R.string.cancel) { dialog, _ ->
+                canPressBack = false
                 dialog.dismiss()
             }
             .create()
@@ -130,15 +135,16 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         rce.insertImage(text, alt)
     }
 
-    private fun showExitConfirmation() {
-        if (rce.html.isNotEmpty() && rce.html.isNotBlank() && initialText != rce.html) {
-            confirmationDialog.show()
-        } else {
-            (context as? Activity)?.onBackPressed()
-        }
-    }
-
     fun showFailedImageMessage() {
         Toast.makeText(context, R.string.errorGettingPhoto, Toast.LENGTH_LONG).show()
+    }
+
+    fun onBackPressed(): Boolean {
+        return if (rce.html.isNotEmpty() && rce.html.isNotBlank() && initialText != rce.html && !canPressBack) {
+            confirmationDialog.show()
+            true
+        } else {
+            false
+        }
     }
 }

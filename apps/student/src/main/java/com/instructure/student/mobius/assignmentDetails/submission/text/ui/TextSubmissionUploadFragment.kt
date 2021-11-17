@@ -46,6 +46,10 @@ class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, T
 
     override fun getExternalEventSources() = listOf(TextSubmissionUploadEventBusSource())
 
+    override fun handleBackPressed(): Boolean {
+        return view.onBackPressed()
+    }
+
     companion object {
 
         fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialText: String? = null, isFailure: Boolean = false): Route {
