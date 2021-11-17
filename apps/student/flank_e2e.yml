@@ -15,7 +15,7 @@ gcloud:
   - annotation com.instructure.canvas.espresso.E2E
   - notAnnotation com.instructure.canvas.espresso.Stub
   device:
-  - model: Pixel 3
+  - model: Pixel3
     version: 28
     locale: en_US
     orientation: portrait
