@@ -89,6 +89,7 @@ class AssignmentDetailsView(
 
         submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
+        draftAvailableSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
         submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
@@ -113,6 +114,7 @@ class AssignmentDetailsView(
     override fun onConnect(output: Consumer<AssignmentDetailsEvent>) {
         submissionStatusFailed.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionStatusUploading.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
+        draftAvailableContainer.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         submitButton.onClick {
@@ -182,6 +184,7 @@ class AssignmentDetailsView(
             submitButton.importantForAccessibility = if (visibilities.submitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
             submitButton.setVisible(visibilities.submitButton)
             submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
+            draftAvailableContainer.setVisible(visibilities.draftSubmissionAvailable)
             submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
             submissionStatusFailed.setVisible(visibilities.submissionUploadStatusFailed)
             descriptionContainer.setVisible(visibilities.description || visibilities.noDescriptionLabel)

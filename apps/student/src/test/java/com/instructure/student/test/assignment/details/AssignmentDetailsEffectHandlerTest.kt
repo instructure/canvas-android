@@ -133,7 +133,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             currentFile = 0,
             fileCount = 0,
             progress = null,
-            annotatableAttachmentId = null
+            annotatableAttachmentId = null,
+            isDraft = false
         )
     }
 
