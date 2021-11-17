@@ -66,11 +66,7 @@ class HomeroomE2ETest : StudentTest() {
         val utcTimeZone = TimeZone.getTimeZone("UTC")
         val calendar = Calendar.getInstance(utcTimeZone)
 
-        calendar.set(Calendar.HOUR_OF_DAY, 13)
-        calendar.set(Calendar.MINUTE, 59)
-        calendar.set(Calendar.SECOND, 55)
-
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.HOUR_OF_DAY, 21)
         calendar.set(Calendar.MINUTE, 59)
         calendar.set(Calendar.SECOND, 55)
 
