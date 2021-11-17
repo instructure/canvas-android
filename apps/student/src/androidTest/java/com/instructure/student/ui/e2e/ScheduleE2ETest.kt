@@ -30,6 +30,7 @@ import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.text.SimpleDateFormat
 import java.util.*
 
 @HiltAndroidTest
@@ -88,5 +89,13 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.assertScheduleItemDisplayed(homeroomAnnouncement.title)
     }
 
+    fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
+        val formatter = SimpleDateFormat(format, locale)
+        return formatter.format(this)
+    }
+
+    fun getCurrentDateTime(): Date {
+        return Calendar.getInstance().time
+    }
 }
 
