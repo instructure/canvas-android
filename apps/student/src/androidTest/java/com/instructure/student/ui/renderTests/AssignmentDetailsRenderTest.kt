@@ -419,12 +419,13 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
                 "online_text_entry",
                 "online_url",
                 "media_recording",
-                "attendance"
+                "attendance",
+                "student_annotation"
             )
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
-        val expected = "External Tool, File Upload, Text Entry, Website URL, Media Recording, Attendance"
+        val expected = "External Tool, File Upload, Text Entry, Website URL, Media Recording, Attendance, Student Annotation"
         assignmentDetailsRenderPage.assertDisplaysSubmissionTypes(expected)
     }
 
@@ -759,6 +760,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         0,
         0,
         null,
+        1,
         false
     )
 

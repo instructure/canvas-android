@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Tipo de apresentação não suportada</string>
     <string name="studentAnnotationUnsupportedMessage">A submissão não pode ser exibida, porque a Anotação do aluno não é atualmente suportada em telemóvel.</string>
     <string name="schedule_marked_as_done">Marcou-o como feito.</string>
+    <string name="error_saving_assignment_closed_grading_period">Não é possível alterar a data de vencimento quando vencida em um período de classificação fechado.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Saltar para hoje</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">enviar mensagem</string>
+    <string name="somethingWentWrong">Algo deu errado</string>
+    <string name="failedToLoadQuiz">Falha no teste de carregamento</string>
 </resources>

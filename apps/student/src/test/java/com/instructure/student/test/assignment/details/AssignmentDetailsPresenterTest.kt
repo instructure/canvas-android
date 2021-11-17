@@ -581,6 +581,7 @@ class AssignmentDetailsPresenterTest : Assert() {
             currentFile = 0,
             fileCount = 0,
             progress = null,
+            annotatableAttachmentId = null,
             isDraft = false
         )
         val assignment = baseAssignment.copy(
@@ -613,6 +614,7 @@ class AssignmentDetailsPresenterTest : Assert() {
             currentFile = 0,
             fileCount = 0,
             progress = null,
+            annotatableAttachmentId = null,
             isDraft = false
         )
         val assignment = baseAssignment.copy(
@@ -642,6 +644,7 @@ class AssignmentDetailsPresenterTest : Assert() {
             currentFile = 0,
             fileCount = 0,
             progress = null,
+            annotatableAttachmentId = null,
             isDraft = false
         )
         val assignment = baseAssignment.copy(
@@ -671,6 +674,7 @@ class AssignmentDetailsPresenterTest : Assert() {
             currentFile = 0,
             fileCount = 0,
             progress = null,
+            annotatableAttachmentId = null,
             isDraft = false
         )
         val model = baseModel.copy(
@@ -697,6 +701,7 @@ class AssignmentDetailsPresenterTest : Assert() {
             currentFile = 0,
             fileCount = 0,
             progress = null,
+            annotatableAttachmentId = null,
             isDraft = false
         )
         val model = baseModel.copy(

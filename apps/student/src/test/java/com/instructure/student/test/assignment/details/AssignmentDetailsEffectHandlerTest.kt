@@ -133,6 +133,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             currentFile = 0,
             fileCount = 0,
             progress = null,
+            annotatableAttachmentId = null,
             isDraft = false
         )
     }
@@ -871,12 +872,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `ShowCreateSubmissionView with student annotation submissionType shows student annotation view`() {
         val submissionType = Assignment.SubmissionType.STUDENT_ANNOTATION
-        assignment = assignment.copy(htmlUrl = "www.instructure.com")
 
         connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showStudentAnnotationView("www.instructure.com")
+            view.showStudentAnnotationView(assignment)
         }
         confirmVerified(view)
     }
@@ -884,11 +884,12 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `ShowCreateSubmissionView with mediaRecording submissionType calls showMediaRecordingView`() {
         val submissionType = Assignment.SubmissionType.MEDIA_RECORDING
+        val assignmentWithStudentAnnotation = assignment.copy(annotatableAttachmentId = 123L)
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignmentWithStudentAnnotation))
 
         verify(timeout = 100) {
-            view.showMediaRecordingView(assignment)
+            view.showMediaRecordingView(assignmentWithStudentAnnotation)
         }
         confirmVerified(view)
     }

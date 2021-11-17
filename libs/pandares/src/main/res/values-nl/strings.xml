@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Niet-ondersteund inleveringstype</string>
     <string name="studentAnnotationUnsupportedMessage">Inlevering kan niet worden weergegeven omdat cursistaantekening momenteel niet wordt ondersteund op mobiel apparaat.</string>
     <string name="schedule_marked_as_done">Je hebt het als klaar gemarkeerd.</string>
+    <string name="error_saving_assignment_closed_grading_period">Kan de inleverdatum niet wijzigen wanneer deze binnen een afgesloten beoordelingsperiode valt.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Naar vandaag springen</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">bericht verzenden</string>
+    <string name="somethingWentWrong">Er is iets misgegaan</string>
+    <string name="failedToLoadQuiz">Kan toets niet laden</string>
 </resources>

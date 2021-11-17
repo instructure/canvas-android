@@ -1247,4 +1247,10 @@
     <string name="unsupportedSubmissionType">Неподдерживаемый тип отправки</string>
     <string name="studentAnnotationUnsupportedMessage">Невозможно отобразить отправку, так как Аннотация учащегося в настоящее время не поддерживается на мобильном устройстве.</string>
     <string name="schedule_marked_as_done">Вы отметили это как выполненное.</string>
+    <string name="error_saving_assignment_closed_grading_period">Невозможно изменить дату истечения срока выполнения, наступающую в закрытом периоде оценки успеваемости.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Перейти к сегодняшнему дню</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">отправить сообщение</string>
+    <string name="somethingWentWrong">Что-то пошло не так</string>
+    <string name="failedToLoadQuiz">Не удалось загрузить тест</string>
 </resources>

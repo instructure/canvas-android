@@ -22,7 +22,8 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
 
   final MethodChannel _channel;
 
-  static const MethodChannel _cookieManagerChannel = MethodChannel('plugins.flutter.io/cookie_manager');
+  static const MethodChannel _cookieManagerChannel =
+      MethodChannel('plugins.flutter.io/cookie_manager');
 
   Future<bool> _onMethodCall(MethodCall call) async {
     switch (call.method) {
@@ -42,8 +43,29 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
       case 'onPageStarted':
         _platformCallbacksHandler.onPageStarted(call.arguments['url']);
         return null;
+      case 'onWebResourceError':
+        _platformCallbacksHandler.onWebResourceError(
+          WebResourceError(
+            errorCode: call.arguments['errorCode'],
+            description: call.arguments['description'],
+            domain: call.arguments['domain'],
+            failingUrl: call.arguments['failingUrl'],
+            errorType: call.arguments['errorType'] == null
+                ? null
+                : WebResourceErrorType.values.firstWhere(
+                    (WebResourceErrorType type) {
+                      return type.toString() ==
+                          '$WebResourceErrorType.${call.arguments['errorType']}';
+                    },
+                  ),
+          ),
+        );
+        return null;
     }
-    throw MissingPluginException('${call.method} was invoked but has no handler');
+
+    throw MissingPluginException(
+      '${call.method} was invoked but has no handler',
+    );
   }
 
   @override
@@ -116,25 +138,52 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
 
   @override
   Future<String> evaluateJavascript(String javascriptString) {
-    return _channel.invokeMethod<String>('evaluateJavascript', javascriptString);
+    return _channel.invokeMethod<String>(
+        'evaluateJavascript', javascriptString);
   }
 
   @override
   Future<void> addJavascriptChannels(Set<String> javascriptChannelNames) {
-    return _channel.invokeMethod<void>('addJavascriptChannels', javascriptChannelNames.toList());
+    return _channel.invokeMethod<void>(
+        'addJavascriptChannels', javascriptChannelNames.toList());
   }
 
   @override
   Future<void> removeJavascriptChannels(Set<String> javascriptChannelNames) {
-    return _channel.invokeMethod<void>('removeJavascriptChannels', javascriptChannelNames.toList());
+    return _channel.invokeMethod<void>(
+        'removeJavascriptChannels', javascriptChannelNames.toList());
   }
 
   @override
   Future<String> getTitle() => _channel.invokeMethod<String>("getTitle");
 
+  @override
+  Future<void> scrollTo(int x, int y) {
+    return _channel.invokeMethod<void>('scrollTo', <String, int>{
+      'x': x,
+      'y': y,
+    });
+  }
+
+  @override
+  Future<void> scrollBy(int x, int y) {
+    return _channel.invokeMethod<void>('scrollBy', <String, int>{
+      'x': x,
+      'y': y,
+    });
+  }
+
+  @override
+  Future<int> getScrollX() => _channel.invokeMethod<int>("getScrollX");
+
+  @override
+  Future<int> getScrollY() => _channel.invokeMethod<int>("getScrollY");
+
   /// Method channel implementation for [WebViewPlatform.clearCookies].
   static Future<bool> clearCookies() {
-    return _cookieManagerChannel.invokeMethod<bool>('clearCookies').then<bool>((dynamic result) => result);
+    return _cookieManagerChannel
+        .invokeMethod<bool>('clearCookies')
+        .then<bool>((dynamic result) => result);
   }
 
   static Map<String, dynamic> _webSettingsToMap(WebSettings settings) {
@@ -157,7 +206,8 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
     _addIfNonNull('hasNavigationDelegate', settings.hasNavigationDelegate);
     _addIfNonNull('darkMode', settings.darkMode);
     _addIfNonNull('debuggingEnabled', settings.debuggingEnabled);
-    _addIfNonNull('gestureNavigationEnabled', settings.gestureNavigationEnabled);
+    _addIfNonNull(
+        'gestureNavigationEnabled', settings.gestureNavigationEnabled);
     _addSettingIfPresent('userAgent', settings.userAgent);
     return map;
   }
@@ -166,7 +216,8 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   ///
   /// This is used for the `creationParams` argument of the platform views created by
   /// [AndroidWebViewBuilder] and [CupertinoWebViewBuilder].
-  static Map<String, dynamic> creationParamsToMap(CreationParams creationParams) {
+  static Map<String, dynamic> creationParamsToMap(
+      CreationParams creationParams) {
     return <String, dynamic>{
       'initialUrl': creationParams.initialUrl,
       'settings': _webSettingsToMap(creationParams.webSettings),

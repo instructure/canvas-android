@@ -82,6 +82,7 @@ class AssignmentDetailsUpdateTest : Assert() {
             currentFile = 0,
             fileCount = 0,
             progress = null,
+            annotatableAttachmentId = null,
             isDraft = false
         )
     }

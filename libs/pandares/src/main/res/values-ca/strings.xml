@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Tipus de entrega no admès</string>
     <string name="studentAnnotationUnsupportedMessage">No es pot mostrar l’entrega, perquè en aquest moment no s\'admet l’anotació de l\'estudiant al dispositiu mòbil.</string>
     <string name="schedule_marked_as_done">L’heu marcat com a fet.</string>
+    <string name="error_saving_assignment_closed_grading_period">No pot canviar la data de venciment si venç dins d\'un període de qualificació tancat.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Salta a avui</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">envia el missatge</string>
+    <string name="somethingWentWrong">Alguna cosa no ha anat bé</string>
+    <string name="failedToLoadQuiz">No s\'ha pogut carregar el qüestionari</string>
 </resources>

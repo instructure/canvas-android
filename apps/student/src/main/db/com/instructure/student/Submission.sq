@@ -16,7 +16,6 @@
 
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.student.db.sqlColAdapters.Date;
-import com.instructure.student.db.sqlColAdapters.ErrorColAdapter;
 
 CREATE TABLE submission (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -33,6 +32,7 @@ CREATE TABLE submission (
     currentFile INTEGER NOT NULL DEFAULT 0,
     fileCount INTEGER NOT NULL DEFAULT 0,
     progress REAL,
+    annotatableAttachmentId INTEGER,
     isDraft INTEGER as Boolean DEFAULT 0
 );
 
@@ -51,6 +51,10 @@ VALUES (?, ?, ?, ?, ?, ?, "online_upload", 0);
 insertMediaUploadSubmission:
 INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, userId, lastActivityDate, submissionType, isDraft)
 VALUES (?, ?, ?, ?, ?, ?, "media_recording", 0);
+
+insertStudentAnnotationSubmission:
+INSERT INTO submission (annotatableAttachmentId, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType, isDraft)
+VALUES (?, ?, ?, ?, ?, ?, "student_annotation", 0);
 
 getAllSubmissions:
 SELECT *
