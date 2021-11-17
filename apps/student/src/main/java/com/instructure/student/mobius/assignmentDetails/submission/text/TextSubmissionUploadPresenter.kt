@@ -16,10 +16,8 @@
 package com.instructure.student.mobius.assignmentDetails.submission.text
 
 import android.content.Context
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadViewState
 import com.instructure.student.mobius.common.ui.Presenter
-import com.instructure.student.mobius.common.ui.SubmissionService
 
 object TextSubmissionUploadPresenter :
     Presenter<TextSubmissionUploadModel, TextSubmissionUploadViewState> {

@@ -653,12 +653,9 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             assignmentName: String?,
             text: String
         ) {
-            val dbSubmissionId = insertDraft(assignmentId, context) {
+            insertDraft(assignmentId, context) {
                 it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now(), true)
             }
-
-            val i = 1+1
-            i.toDouble()
         }
 
         fun startUrlSubmission(
