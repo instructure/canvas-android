@@ -50,6 +50,14 @@ class TextSubmissionUploadUpdate :
             is TextSubmissionUploadEvent.ImageAdded -> Next.dispatch(
                 effects(TextSubmissionUploadEffect.AddImage(event.uri, model.canvasContext))
             )
+            is TextSubmissionUploadEvent.SaveDraft -> Next.dispatch(
+                effects(TextSubmissionUploadEffect.SaveDraft(
+                    event.text,
+                    model.canvasContext,
+                    model.assignmentId,
+                    model.assignmentName
+                ))
+            )
             TextSubmissionUploadEvent.CameraImageTaken -> Next.dispatch(
                 effects(TextSubmissionUploadEffect.ProcessCameraImage)
             )

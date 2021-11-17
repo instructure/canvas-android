@@ -220,8 +220,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             visibilities.grade = gradeState != GradeCellViewState.Empty
         } else {
             visibilities.grade = gradeState is GradeCellViewState.GradeData
-            visibilities.submissionUploadStatusInProgress = !databaseSubmission.errorFlag
+            visibilities.submissionUploadStatusInProgress = !databaseSubmission.errorFlag && !(databaseSubmission.isDraft ?: false)
             visibilities.submissionUploadStatusFailed = databaseSubmission.errorFlag
+            visibilities.draftSubmissionAvailable = databaseSubmission.isDraft ?: false
         }
 
         val showSubmissionsAndRubric = showSubmissionsAndRubric(assignment)
