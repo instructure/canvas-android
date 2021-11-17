@@ -18,15 +18,23 @@ package com.instructure.student.ui.e2e
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.refresh
+import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
-import com.instructure.student.ui.utils.*
+import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.seedDataForK5
+import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.util.*
 
 @HiltAndroidTest
 class HomeroomE2ETest : StudentTest() {
@@ -49,12 +57,86 @@ class HomeroomE2ETest : StudentTest() {
         )
 
         val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val homeroomCourse = data.coursesList[0]
+        val homeroomAnnouncement = data.announcementsList[0]
+        val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
-        // Sign in with lone student
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 55)
+
+        val missingCalendar = Calendar.getInstance()
+        missingCalendar.set(Calendar.HOUR_OF_DAY, 0)
+        missingCalendar.set(Calendar.MINUTE, 1)
+        missingCalendar.set(Calendar.SECOND, 10)
+
+        val testAssignment = AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = nonHomeroomCourses[2].id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.LETTER_GRADE,
+                teacherToken = teacher.token,
+                pointsPossible = 100.0,
+                dueAt = calendar.time.toApiString()
+            )
+        )
+
+        val testAssignmentMissing = AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = nonHomeroomCourses[2].id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.PERCENT,
+                teacherToken = teacher.token,
+                pointsPossible = 100.0,
+                dueAt = missingCalendar.time.toApiString()
+            ))
+
+        // Sign in with elementary (K5) student
         tokenLoginElementary(student)
+        homeroomPage.assertPageObjects()
 
-        homeroomPage.assertWelcomeText(student.shortName!!)
+        homeroomPage.assertWelcomeText(student.shortName)
+        homeroomPage.assertAnnouncementDisplayed(
+            homeroomCourse.name,
+            homeroomAnnouncement.title,
+            homeroomAnnouncement.message
+        )
 
+        homeroomPage.assertCourseItemsCount(3) //gives back the number of courses under 'My Subject' list
+        homeroomPage.clickOnViewPreviousAnnouncements()
+        announcementListPage.assertToolbarTitle()
+        announcementListPage.assertAnnouncementTitleVisible(homeroomAnnouncement.title)
+        Espresso.pressBack()
+        homeroomPage.assertPageObjects()
+        elementaryDashboardPage.waitForRender()
+
+        for (i in 0 until nonHomeroomCourses.size - 1) {
+            homeroomPage.assertCourseDisplayed(
+                nonHomeroomCourses[i].name,
+                homeroomPage.getStringFromResource(R.string.nothingDueToday),
+                data.announcementsList[i + 1].title
+            )
+        }
+        homeroomPage.assertPageObjects()
+        homeroomPage.assertToDoText("1 due today | 1 missing")
+        homeroomPage.openCourse(nonHomeroomCourses[0].name)
+
+        elementaryCoursePage.assertPageObjects()
+        elementaryCoursePage.assertTitleCorrect(nonHomeroomCourses[0].name)
+        Espresso.pressBack()
+        homeroomPage.assertPageObjects()
+        homeroomPage.openCourseAnnouncement(data.announcementsList[1].title)
+
+        discussionDetailsPage.assertTitleText(data.announcementsList[1].title)
+        Espresso.pressBack()
+        homeroomPage.assertPageObjects()
+        homeroomPage.openAssignments("1 due today | 1 missing")
+
+        assignmentListPage.assertPageObjects()
+        assignmentListPage.assertHasAssignment(testAssignment)
+        assignmentListPage.assertHasAssignment(testAssignmentMissing)
     }
 }
 
