@@ -760,7 +760,8 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         0,
         0,
         null,
-        1
+        1,
+        false
     )
 
     private fun loadPageWithModel(model: AssignmentDetailsModel) {

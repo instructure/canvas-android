@@ -1228,4 +1228,9 @@
     <string name="submissionTypeStudentAnnotation">Student Annotation</string>
     <string name="gradesNoDueDate">No due date</string>
     <string name="missingAssignment">Missing</string>
+    <string name="dontSave">Don\'t save</string>
+    <string name="textSubmissionExitConfirmationTitle">Save draft?</string>
+    <string name="textSubmissionExitConfirmationMessage">Your changes will not be saved otherwise</string>
+    <string name="submissionDraftAvailableSubtitle">Tap here to continue</string>
+    <string name="submissionDraftAvailableTitle">Draft Available</string>
 </resources>

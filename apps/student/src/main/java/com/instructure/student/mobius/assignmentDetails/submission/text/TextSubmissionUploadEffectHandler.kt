@@ -35,6 +35,12 @@ class TextSubmissionUploadEffectHandler :
                 effect.uri,
                 effect.canvasContext
             )
+            is TextSubmissionUploadEffect.SaveDraft -> view?.saveDraft(
+                effect.text,
+                effect.canvasContext,
+                effect.assignmentId,
+                effect.assignmentName
+            )
             TextSubmissionUploadEffect.ProcessCameraImage -> processCameraImage()
             TextSubmissionUploadEffect.ShowFailedImageMessage -> view?.showFailedImageMessage()
         }.exhaustive
