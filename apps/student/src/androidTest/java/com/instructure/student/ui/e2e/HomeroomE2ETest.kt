@@ -63,7 +63,7 @@ class HomeroomE2ETest : StudentTest() {
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.HOUR_OF_DAY, 13)
         calendar.set(Calendar.MINUTE, 59)
         calendar.set(Calendar.SECOND, 55)
 
