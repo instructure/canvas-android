@@ -101,8 +101,6 @@ class HomeroomE2ETest : StudentTest() {
 
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
-        homeroomPage.assertPageObjects()
-
         homeroomPage.assertWelcomeText(student.shortName)
         homeroomPage.assertAnnouncementDisplayed(
             homeroomCourse.name,
