@@ -121,20 +121,20 @@ class DioConfig {
     ));
 
     if (DebugFlags.isDebug) {
-      // _configureDebugProxy(dio);
+      _configureDebugProxy(dio);
     }
 
     return dio;
   }
 
+  // To use proxy add the following run args to run configuration: --dart-define=PROXY={your proxy io}:{proxy port}
   void _configureDebugProxy(Dio dio) {
-    // const proxyIp = String.fromEnvironment('PROXY_IP', defaultValue: null);
-    // const proxyPort = String.fromEnvironment('PROXY_PORT', defaultValue: null);
-    // if (proxyIp == null) return;
+    const proxy = String.fromEnvironment('PROXY', defaultValue: null);
+    if (proxy == null) return;
 
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (client) {
-      client.findProxy = (uri) => "PROXY 192.168.0.101:8888;";
+      client.findProxy = (uri) => "PROXY $proxy;";
       client.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
     };
