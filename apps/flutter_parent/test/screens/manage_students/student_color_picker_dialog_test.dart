@@ -95,7 +95,7 @@ void main() {
 
     var resultFuture = showDialog(
       context: context,
-      child: StudentColorPickerDialog(initialColor: Colors.white, studentId: ''),
+      builder:(_) => StudentColorPickerDialog(initialColor: Colors.white, studentId: ''),
     );
     await tester.pumpAndSettle();
 
@@ -120,7 +120,7 @@ void main() {
     // Set initial color to 'shamrock'
     var resultFuture = showDialog(
       context: context,
-      child: StudentColorPickerDialog(initialColor: StudentColorSet.shamrock.light, studentId: ''),
+      builder:(_) => StudentColorPickerDialog(initialColor: StudentColorSet.shamrock.light, studentId: ''),
     );
     await tester.pumpAndSettle();
 
@@ -143,7 +143,7 @@ void main() {
     BuildContext context = tester.state(find.byType(DummyWidget)).context;
     var resultFuture = showDialog(
       context: context,
-      child: StudentColorPickerDialog(initialColor: Colors.white, studentId: ''),
+      builder:(_) => StudentColorPickerDialog(initialColor: Colors.white, studentId: ''),
     );
     await tester.pumpAndSettle();
 

@@ -243,7 +243,7 @@ void main() {
                 child: RaisedButton(onPressed: () async {
                   result = await showDialog(
                       context: context,
-                      child: AlertThresholdsPercentageDialog([initial], AlertType.courseGradeLow, ''));
+                      builder:(_) => AlertThresholdsPercentageDialog([initial], AlertType.courseGradeLow, ''));
                 }),
               )));
 
@@ -271,7 +271,7 @@ void main() {
           builder: (context) => Container(
                 child: RaisedButton(onPressed: () async {
                   showDialog(
-                      context: context, child: AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''));
+                      context: context, builder:(_) => AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''));
                 }),
               )));
 

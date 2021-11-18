@@ -121,7 +121,7 @@ class DioConfig {
     ));
 
     if (DebugFlags.isDebug) {
-      _configureDebugProxy(dio);
+      // _configureDebugProxy(dio);
     }
 
     return dio;
