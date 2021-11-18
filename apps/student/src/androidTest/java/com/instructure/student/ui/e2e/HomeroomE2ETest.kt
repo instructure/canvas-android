@@ -34,6 +34,7 @@ import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.text.SimpleDateFormat
 import java.util.*
 
 @HiltAndroidTest
@@ -62,10 +63,15 @@ class HomeroomE2ETest : StudentTest() {
         val homeroomAnnouncement = data.announcementsList[0]
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        val utcTimeZone = TimeZone.getTimeZone("UTC")
+        val calendar = Calendar.getInstance(utcTimeZone)
+
+        calendar.set(Calendar.HOUR_OF_DAY, 21)
         calendar.set(Calendar.MINUTE, 59)
         calendar.set(Calendar.SECOND, 55)
+
+        val simpleDateFormat = SimpleDateFormat("EE MMM dd HH:mm:ss zzz yyyy", Locale.US)
+        simpleDateFormat.setTimeZone(utcTimeZone)
 
         val missingCalendar = Calendar.getInstance()
         missingCalendar.set(Calendar.HOUR_OF_DAY, 0)
@@ -95,8 +101,6 @@ class HomeroomE2ETest : StudentTest() {
 
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
-        homeroomPage.assertPageObjects()
-
         homeroomPage.assertWelcomeText(student.shortName)
         homeroomPage.assertAnnouncementDisplayed(
             homeroomCourse.name,
