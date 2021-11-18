@@ -41,7 +41,7 @@ class EnrollmentsApi {
     final dio = canvasDio(forceRefresh: forceRefresh);
     final params = {
       'state': ['active', 'completed'], // current_and_concluded state not supported for observers
-      'user_id': studentId,
+      //'user_id': studentId, <-- add this back when the api is fixed
       if (gradingPeriodId?.isNotEmpty == true)
         'grading_period_id': gradingPeriodId,
     };

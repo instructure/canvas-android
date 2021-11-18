@@ -98,6 +98,8 @@ class CourseDetailsModel extends BaseModel {
     final enrollmentsFuture = _interactor()
         .loadEnrollmentsForGradingPeriod(courseId, student.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh)
         ?.then((enrollments) {
+      enrollments = enrollments
+          .where((element) => element.userId == student.id).toList();
       return enrollments.length > 0 ? enrollments.first : null;
     })?.catchError((_) => null); // Some 'legacy' parents can't read grades for students, so catch and return null
 
