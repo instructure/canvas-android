@@ -103,7 +103,7 @@ class ElementaryCourseViewModel @Inject constructor(
                     url = it.htmlUrl ?: ""
                 }
             }
-            ElementaryCourseTab(drawable, it.label, url)
+            ElementaryCourseTab(it.tabId, drawable, it.label, url)
         }
     }
 }
