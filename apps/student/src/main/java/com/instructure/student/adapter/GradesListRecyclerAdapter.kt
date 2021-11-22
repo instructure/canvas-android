@@ -284,6 +284,7 @@ open class GradesListRecyclerAdapter(
             } catch (e: CancellationException) {
                 //We cancelled the job, nothing to do here
             } catch (e: Throwable) {
+                e.printStackTrace()
                 Toast.makeText(context, R.string.errorOccurred, Toast.LENGTH_SHORT).show()
             }
         }
@@ -363,7 +364,7 @@ open class GradesListRecyclerAdapter(
 
     override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<AssignmentGroup, Assignment> {
         return object : GroupSortedList.ItemComparatorCallback<AssignmentGroup, Assignment> {
-            override fun compare(group: AssignmentGroup, o1: Assignment, o2: Assignment) = o1.dueDate?.compareTo(o2.dueDate) ?: -1
+            override fun compare(group: AssignmentGroup, o1: Assignment, o2: Assignment) = o2.dueDate?.let { o1.dueDate?.compareTo(o2.dueDate) ?: -1 } ?: -1
             override fun areContentsTheSame(oldItem: Assignment, newItem: Assignment) = compareAssignments(oldItem, newItem)
             override fun areItemsTheSame(item1: Assignment, item2: Assignment) = item1.id == item2.id
             override fun getUniqueItemId(item: Assignment) = item.id
