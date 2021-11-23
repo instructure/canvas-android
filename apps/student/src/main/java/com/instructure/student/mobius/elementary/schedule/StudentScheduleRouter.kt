@@ -56,7 +56,6 @@ class StudentScheduleRouter(private val activity: FragmentActivity) : ScheduleRo
     }
 
     override fun openCourse(course: Course) {
-        val route = if (BuildConfig.IS_DEBUG) ElementaryCourseFragment.makeRoute(course) else CourseBrowserFragment.makeRoute(course)
-        RouteMatcher.route(activity, route)
+        RouteMatcher.route(activity, ElementaryCourseFragment.makeRoute(course))
     }
 }
