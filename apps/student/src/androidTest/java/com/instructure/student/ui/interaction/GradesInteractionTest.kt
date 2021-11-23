@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
@@ -94,6 +95,7 @@ class GradesInteractionTest : StudentTest() {
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("B+"))
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testChangeGradingPeriod() {
