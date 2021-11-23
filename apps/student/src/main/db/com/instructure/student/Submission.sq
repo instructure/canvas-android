@@ -56,10 +56,6 @@ insertStudentAnnotationSubmission:
 INSERT INTO submission (annotatableAttachmentId, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType, isDraft)
 VALUES (?, ?, ?, ?, ?, ?, "student_annotation", 0);
 
-insertStudentAnnotationSubmission:
-INSERT INTO submission (annotatableAttachmentId, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType)
-VALUES (?, ?, ?, ?, ?, ?, "student_annotation");
-
 getAllSubmissions:
 SELECT *
 FROM submission;
