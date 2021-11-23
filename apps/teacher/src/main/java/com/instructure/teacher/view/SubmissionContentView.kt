@@ -116,6 +116,7 @@ class SubmissionContentView(
 
     private var initJob: Job? = null
     private var deleteJob: Job? = null
+    private var studentAnnotationJob: Job? = null
 
     private var mIsCleanedUp = false
     private val activity: SpeedGraderActivity get() = context as SpeedGraderActivity
@@ -252,6 +253,7 @@ class SubmissionContentView(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         initJob?.cancel()
+        studentAnnotationJob?.cancel()
         mBottomViewPager.adapter = null
         EventBus.getDefault().unregister(this)
     }
@@ -336,6 +338,10 @@ class SubmissionContentView(
 
                 // Discussion Submission
                 SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submission.previewUrl)
+
+                SubmissionType.STUDENT_ANNOTATION -> {
+                    StudentAnnotationContent(submission.id, submission.attempt)
+                }
 
                 // Unsupported type
                 else -> UnsupportedContent
@@ -558,6 +564,17 @@ class SubmissionContentView(
             is OnPaperContent -> showMessageFragment(R.string.speedGraderOnPaperMessage)
             is DiscussionContent -> setFragment(SimpleWebViewFragment.newInstance(content.previewUrl!!))
             is AnonymousSubmissionContent -> showMessageFragment(R.string.speedGraderAnonymousSubmissionMessage)
+            is StudentAnnotationContent -> {
+                studentAnnotationJob = tryWeave {
+                    val canvaDocSession = CanvaDocsManager.createCanvaDocSessionAsync(
+                        content.submissionId,
+                        content.attempt.toString()
+                    ).await().dataOrThrow
+                    handlePdfContent(canvaDocSession.canvadocsSessionUrl ?: "")
+                } catch {
+                    toast(R.string.errorLoadingSubmission)
+                }
+            }
         }.exhaustive
     }
 
@@ -937,18 +954,21 @@ class TextContent(val text: String) : GradeableContent()
 class ImageContent(val url: String, val contentType: String) : GradeableContent()
 class UrlContent(val url: String, val previewUrl: String?) : GradeableContent()
 class DiscussionContent(val previewUrl: String?) : GradeableContent()
+class StudentAnnotationContent(val submissionId: Long, val attempt: Long) : GradeableContent()
+object AnonymousSubmissionContent : GradeableContent()
+
 class MediaCommentDialogClosedEvent
 class AudioPermissionGrantedEvent(val assigneeId: Long)
 class VideoPermissionGrantedEvent(val assigneeId: Long)
-object AnonymousSubmissionContent : GradeableContent()
 
 
 class QuizContent(
-        val courseId: Long,
-        val assignmentId: Long,
-        val studentId: Long,
-        val url: String,
-        val pendingReview: Boolean) : GradeableContent()
+    val courseId: Long,
+    val assignmentId: Long,
+    val studentId: Long,
+    val url: String,
+    val pendingReview: Boolean
+) : GradeableContent()
 
 class MediaContent(
         val uri: Uri,
