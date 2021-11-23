@@ -90,6 +90,18 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         pager.swipeLeft()
     }
 
+    fun swipeDown() {
+        swipeRefreshLayout.swipeUp()
+    }
+
+    fun assertTodayButtonDisplayed() {
+        onView(withId(R.id.todayButton)).assertDisplayed()
+    }
+
+    fun clickOnTodayButton() {
+        onView(withId(R.id.todayButton)).click()
+    }
+
     fun clickCourseHeader(courseName: String) {
         onView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).click()
     }
