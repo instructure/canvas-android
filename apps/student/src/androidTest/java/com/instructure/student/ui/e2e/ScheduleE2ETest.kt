@@ -117,9 +117,6 @@ class ScheduleE2ETest : StudentTest() {
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 7)
         schedulePage.assertDayHeaderShownScrollToByItemName(concatDayString(tomorrowCalendar), schedulePage.getStringFromResource(R.string.tomorrow), schedulePage.getStringFromResource(R.string.tomorrow))
 
-        schedulePage.scrollToPosition(0)
-        schedulePage.assertNothingPlannedYetDisplayed() //Depends on how we handle Sunday, need to clarify with calendar team
-
         schedulePage.scrollToItem(R.id.scheduleCourseItemLayout,nonHomeroomCourses[2].name)
         schedulePage.assertCourseHeaderDisplayed(nonHomeroomCourses[2].name)
         schedulePage.scrollToItem(R.id.title,testMissingAssignment.name, schedulePage.withAncestor(R.id.plannerItems))
@@ -138,17 +135,14 @@ class ScheduleE2ETest : StudentTest() {
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 7)
         schedulePage.assertDayHeaderShownScrollToByItemName(concatDayString(tomorrowCalendar), schedulePage.getStringFromResource(R.string.tomorrow), schedulePage.getStringFromResource(R.string.tomorrow))
 
-        schedulePage.scrollToPosition(0)
-        schedulePage.assertNothingPlannedYetDisplayed() //Depends on how we handle Sunday, need to clarify with calendar team
-
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
-
+        Thread.sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
         if(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
-            schedulePage.assertDayHeaderShown(
+            schedulePage.assertDayHeaderShownScrollToByItemName(
                 concatDayString(twoWeeksBeforeCalendar),
                 getDayString(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK)),
-                10
+                getDayString(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK))
             )
             schedulePage.scrollToItem(R.id.scheduleCourseItemLayout,nonHomeroomCourses[1].name)
             schedulePage.assertCourseHeaderDisplayed(nonHomeroomCourses[1].name)
@@ -160,22 +154,17 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.swipeLeft()
         schedulePage.nextWeekButtonClick()
         schedulePage.swipeLeft()
-        schedulePage.assertPageObjects()
+        Thread.sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
         if(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
-            schedulePage.scrollToItem(
-                R.id.title,
-                testTwoWeeksAfterAssignment.name,
-                schedulePage.withAncestor(R.id.plannerItems)
-            )
-            schedulePage.assertScheduleItemDisplayed(testTwoWeeksAfterAssignment.name)
             schedulePage.assertDayHeaderShownScrollToByItemName(
-                concatDayString(
-                    twoWeeksAfterCalendar
-                ),
+                concatDayString(twoWeeksAfterCalendar),
                 getDayString(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK)),
                 getDayString(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK))
             )
+            schedulePage.scrollToItem(R.id.scheduleCourseItemLayout,nonHomeroomCourses[0].name)
             schedulePage.assertCourseHeaderDisplayed(nonHomeroomCourses[0].name)
+            schedulePage.scrollToItem(R.id.title,testTwoWeeksAfterAssignment.name, schedulePage.withAncestor(R.id.plannerItems))
+            schedulePage.assertScheduleItemDisplayed(testTwoWeeksAfterAssignment.name)
             schedulePage.clickCourseHeader(nonHomeroomCourses[0].name)
             elementaryCoursePage.assertPageObjects()
             elementaryCoursePage.assertTitleCorrect(nonHomeroomCourses[0].name)
@@ -185,11 +174,9 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
         Thread.sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
-        schedulePage.assertPageObjects()
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
             schedulePage.scrollToItem(R.id.scheduleCourseItemLayout, nonHomeroomCourses[2].name)
             schedulePage.assertCourseHeaderDisplayed(nonHomeroomCourses[2].name)
-
             schedulePage.scrollToItem(R.id.title,testMissingAssignment.name, schedulePage.withAncestor(R.id.plannerItems))
             schedulePage.assertScheduleItemDisplayed(testMissingAssignment.name)
             schedulePage.clickScheduleItem(testMissingAssignment.name)
@@ -206,10 +193,7 @@ class ScheduleE2ETest : StudentTest() {
             schedulePage.clickDoneCheckbox()
             schedulePage.swipeDown()
             schedulePage.assertMarkedAsDoneShown()
-
         }
-
-
     }
 
     fun concatDayString(calendar: Calendar): String {
