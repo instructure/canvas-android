@@ -75,22 +75,8 @@ class ElementaryCourseFragment : Fragment() {
 
         viewModel.data.observe(viewLifecycleOwner, { data ->
             data?.let {
-                val webViews = it.tabs.map {
-                    InternalWebviewFragment.newInstance(
-                        InternalWebviewFragment.makeRoute(
-                            canvasContext = canvasContext,
-                            url = it.url,
-                            authenticate = true,
-                            hideToolbar = true,
-                            allowEmbedRouting = false,
-                            allowRoutingTheSameUrlInternally = false,
-                            isUnsupportedFeature = false,
-                            shouldRouteToLogin = false
-                        )
-                    )
-                }
                 courseTabPager.offscreenPageLimit = it.tabs.size
-                courseTabPager.adapter = ElementaryCoursePagerAdapter(webViews, childFragmentManager)
+                courseTabPager.adapter = ElementaryCoursePagerAdapter(it.tabs)
 
                 val selectedTab = it.tabs.find { it.tabId == tabId }
                 val selectedTabPosition = it.tabs.indexOf(selectedTab)
