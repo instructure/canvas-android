@@ -66,6 +66,14 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         onViewWithText(R.string.nothing_planned_yet).assertDisplayed()
     }
 
+    fun assertTodayButtonDisplayed() {
+        onView(withId(R.id.todayButton)).assertDisplayed()
+    }
+
+    fun clickOnTodayButton() {
+        onView(withId(R.id.todayButton)).click()
+    }
+
     fun scrollToPosition(position: Int) {
         recyclerView.perform(RecyclerViewActions.scrollToPosition<BindableViewHolder>(position))
     }
