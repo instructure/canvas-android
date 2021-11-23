@@ -95,8 +95,8 @@ class GradesInteractionTest : StudentTest() {
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("B+"))
     }
 
-    @Stub
     @Test
+    @Stub
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testChangeGradingPeriod() {
         val data = createMockData(courseCount = 3, withGradingPeriods = true)
