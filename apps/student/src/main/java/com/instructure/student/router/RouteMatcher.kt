@@ -95,7 +95,11 @@ object RouteMatcher : BaseRouteMatcher() {
         !  CAUTION: Order matters, these are purposely placed above the pages, quizzes, disscussions, assignments, and files so they are matched if query params exist and routed to Modules
         !!!!!!!!!!!!
         */
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ModuleListFragment::class.java))
+        if (ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ElementaryCourseFragment::class.java, tabId = Tab.MODULES_ID))
+        } else {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ModuleListFragment::class.java))
+        }
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"), ModuleListFragment::class.java)) // Just route to modules list. API does not have a way to fetch a module item without knowing the module id (even though web canvas can do it)
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/:${RouterParams.MODULE_ID}"), ModuleListFragment::class.java))
 
@@ -110,7 +114,11 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/notifications"), NotificationListFragment::class.java))
 
         // Grades
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
+        if (ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), ElementaryCourseFragment::class.java, tabId = Tab.GRADES_ID))
+        } else {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
+        }
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades/:${RouterParams.ASSIGNMENT_ID}"), GradesListFragment::class.java, AssignmentDetailsFragment::class.java))
 
         // People

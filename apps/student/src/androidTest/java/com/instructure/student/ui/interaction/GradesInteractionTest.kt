@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
@@ -82,6 +83,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
+    @Stub
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCourseGrades() {
         val data = createMockData(courseCount = 3)
