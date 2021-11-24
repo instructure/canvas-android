@@ -60,6 +60,7 @@ class ElementaryCoursePagerAdapter(
     private fun setupViews(webView: CanvasWebView, progressBar: ProgressBar) {
         val activity = (webView.context as? FragmentActivity)
         activity?.let { webView.addVideoClient(it) }
+        webView.setZoomSettings(false)
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(activity, url)
