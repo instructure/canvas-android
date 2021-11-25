@@ -84,19 +84,6 @@ class SchedulePage : BasePage(R.id.schedulePage) {
             }
         }
     }
-    fun scrollToItem(itemId: Int) {
-        var i: Int = 0
-        while (true) {
-            scrollToPosition(i)
-            Thread.sleep(1000)
-            try {
-                onView(withId(itemId)).scrollTo()
-                break
-            } catch(e: NoMatchingViewException) {
-                i++
-            }
-        }
-    }
 
     fun assertCourseHeaderDisplayed(courseName: String) {
         waitForView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).assertDisplayed()
