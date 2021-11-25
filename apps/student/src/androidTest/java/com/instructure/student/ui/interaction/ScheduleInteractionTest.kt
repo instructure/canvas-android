@@ -260,6 +260,26 @@ class ScheduleInteractionTest : StudentTest() {
         schedulePage.assertMarkedAsDoneShown()
     }
 
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testTodayButton() {
+        setDate(2021, Calendar.AUGUST, 11)
+        val data = createMockData(courseCount = 1)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+        courses[0].name = "Course 1"
+
+        val currentDate = dateTimeProvider.getCalendar().time.toApiString()
+        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
+
+        goToSchedule(data)
+        schedulePage.swipeUp()
+        schedulePage.assertTodayButtonDisplayed()
+        schedulePage.clickOnTodayButton()
+        schedulePage.assertCourseHeaderDisplayed(courses[0].name)
+        schedulePage.assertScheduleItemDisplayed(assignment1.name!!)
+    }
+
     private fun createMockData(
         courseCount: Int = 0,
         withGradingPeriods: Boolean = false,
