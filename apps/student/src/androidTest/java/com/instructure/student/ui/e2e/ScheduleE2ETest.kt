@@ -128,7 +128,8 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.swipeRight()
         Thread.sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
         if(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
-            schedulePage.assertDayHeaderShownByItemName(concatDayString(twoWeeksBeforeCalendar), getDayString(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK)), getDayString(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK)))
+            val twoWeeksBeforeDayString = twoWeeksBeforeCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
+            schedulePage.assertDayHeaderShownByItemName(concatDayString(twoWeeksBeforeCalendar), twoWeeksBeforeDayString, twoWeeksBeforeDayString)
             verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[1].name,testTwoWeeksBeforeAssignment.name)
         }
 
@@ -139,7 +140,8 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.swipeLeft()
         Thread.sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
         if(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
-            schedulePage.assertDayHeaderShownByItemName(concatDayString(twoWeeksAfterCalendar), getDayString(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK)), getDayString(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK)))
+            val twoWeeksAfterDayString = twoWeeksAfterCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
+            schedulePage.assertDayHeaderShownByItemName(concatDayString(twoWeeksAfterCalendar), twoWeeksAfterDayString, twoWeeksAfterDayString)
 
             verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[0].name,testTwoWeeksAfterAssignment.name)
 
@@ -204,19 +206,5 @@ class ScheduleE2ETest : StudentTest() {
         return cal
     }
 
-    private fun getDayString(calculatedDayIntValue: Int): String {
-        when (calculatedDayIntValue) {
-            1 -> return "Sunday"
-            2 -> return "Monday"
-            3 -> return "Tuesday"
-            4 -> return "Wednesday"
-            5 -> return "Thursday"
-            6 -> return "Friday"
-            7 -> return "Saturday"
-            else -> {
-                return ""
-            }
-        }
-    }
 }
 
