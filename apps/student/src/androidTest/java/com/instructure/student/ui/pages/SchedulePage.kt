@@ -90,7 +90,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         pager.swipeLeft()
     }
 
-    fun swipeDown() {
+    fun swipeUp() {
         swipeRefreshLayout.swipeUp()
     }
 

@@ -273,7 +273,7 @@ class ScheduleInteractionTest : StudentTest() {
         val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
 
         goToSchedule(data)
-        schedulePage.swipeDown()
+        schedulePage.swipeUp()
         schedulePage.assertTodayButtonDisplayed()
         schedulePage.clickOnTodayButton()
         schedulePage.assertCourseHeaderDisplayed(courses[0].name)
