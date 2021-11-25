@@ -34,7 +34,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     private val recyclerView by OnViewWithId(R.id.scheduleRecyclerView)
     private val swipeRefreshLayout by OnViewWithId(R.id.scheduleSwipeRefreshLayout)
 
-    fun assertDayHeaderShown(dateText: String, dayText: String, position: Int, recyclerViewMatcherText: String? = null) {
+    fun assertDayHeaderShownByPosition(dateText: String, dayText: String, position: Int, recyclerViewMatcherText: String? = null) {
         val dateTextMatcher = withId(R.id.dateText) + withText(dateText)
         val dayTextMatcher = withId(R.id.dayText) + withText(dayText)
 
@@ -48,7 +48,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         waitForView(todayHeaderMatcher).assertDisplayed()
     }
 
-    fun assertDayHeaderShownScrollToByItemName(dateText: String, dayText: String, itemName: String, ) {
+    fun assertDayHeaderShownByItemName(dateText: String, dayText: String, itemName: String) {
         val dateTextMatcher = withId(R.id.dateText) + withText(dateText)
         val dayTextMatcher = withId(R.id.dayText) + withText(dayText)
 
@@ -74,7 +74,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         var i: Int = 0
         while (true) {
             scrollToPosition(i)
-            Thread.sleep(1000)
+            Thread.sleep(100)
             try {
                 if(target == null) onView(withParent(itemId) + withText(itemName)).scrollTo()
                 else onView(target + withText(itemName)).scrollTo()

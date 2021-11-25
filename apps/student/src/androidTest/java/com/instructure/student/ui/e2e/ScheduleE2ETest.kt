@@ -47,24 +47,21 @@ class ScheduleE2ETest : StudentTest() {
     fun scheduleE2ETest() {
 
         // Seed data for K5 sub-account
-        val data = seedDataForK5(
-            teachers = 1,
-            students = 1,
-            courses = 4,
-            homeroomCourses = 1,
-            announcements = 3
-        )
+        val data = seedDataForK5(teachers = 1, students = 1, courses = 4, homeroomCourses = 1, announcements = 3)
+
+        //Extract data from seeded data
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val homeroomCourse = data.coursesList[0]
         val homeroomAnnouncement = data.announcementsList[0]
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
-        val yesterDayCalendar = getYesterdayDateCalendar("UTC")
-        val tomorrowCalendar = getTomorrowDateCalendar("UTC")
-        val currentDateCalendar = getCurrentDateCalendar("UTC")
-        val twoWeeksBeforeCalendar = getCustomDateCalendar("UTC", -15)
-        val twoWeeksAfterCalendar = getCustomDateCalendar("UTC", 15)
+        //Note that all of the calendars are set to UTC timezone
+        val yesterDayCalendar = getCustomDateCalendar(-1)
+        val tomorrowCalendar = getCustomDateCalendar(1)
+        val currentDateCalendar = getCustomDateCalendar(0)
+        val twoWeeksBeforeCalendar = getCustomDateCalendar(-15)
+        val twoWeeksAfterCalendar = getCustomDateCalendar(15)
 
         val testMissingAssignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
@@ -99,152 +96,115 @@ class ScheduleE2ETest : StudentTest() {
             )
         )
 
-        // Sign in with elementary (K5) student
+        // Sign in with elementary (K5) student and navigate to Schedule tab
         tokenLoginElementary(student)
         elementaryDashboardPage.waitForRender()
         elementaryDashboardPage.selectScheduleTab()
         schedulePage.assertPageObjects()
 
-        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
-            schedulePage.scrollToItem(R.id.scheduleCourseItemLayout, homeroomCourse.name)
-            schedulePage.assertCourseHeaderDisplayed(homeroomCourse.name)
-            schedulePage.scrollToItem(R.id.title,homeroomAnnouncement.title, schedulePage.withAncestor(R.id.plannerItems))
-            schedulePage.assertScheduleItemDisplayed(homeroomAnnouncement.title)
-        }
-        schedulePage.assertDayHeaderShownScrollToByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
-        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1)
-        schedulePage.assertDayHeaderShownScrollToByItemName(concatDayString(yesterDayCalendar), schedulePage.getStringFromResource(R.string.yesterday), schedulePage.getStringFromResource(R.string.yesterday))
-        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 7)
-        schedulePage.assertDayHeaderShownScrollToByItemName(concatDayString(tomorrowCalendar), schedulePage.getStringFromResource(R.string.tomorrow), schedulePage.getStringFromResource(R.string.tomorrow))
+        //Depends on how we handle Sunday, need to clarify with calendar team
+        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {  verifyIfCourseHeaderAndScheduleItemDisplayed(homeroomCourse.name,homeroomAnnouncement.title) }
+        schedulePage.assertDayHeaderShownByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
 
-        schedulePage.scrollToItem(R.id.scheduleCourseItemLayout,nonHomeroomCourses[2].name)
-        schedulePage.assertCourseHeaderDisplayed(nonHomeroomCourses[2].name)
-        schedulePage.scrollToItem(R.id.title,testMissingAssignment.name, schedulePage.withAncestor(R.id.plannerItems))
-        schedulePage.assertScheduleItemDisplayed(testMissingAssignment.name)
+        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { schedulePage.assertDayHeaderShownByItemName(concatDayString(yesterDayCalendar), schedulePage.getStringFromResource(R.string.yesterday), schedulePage.getStringFromResource(R.string.yesterday))}
+        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 7) { schedulePage.assertDayHeaderShownByItemName(concatDayString(tomorrowCalendar), schedulePage.getStringFromResource(R.string.tomorrow), schedulePage.getStringFromResource(R.string.tomorrow))}
+        verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name,testMissingAssignment.name)
 
+        //Scroll to missing item's section and verify that a missing assignment is appearing there
         schedulePage.scrollToItem(R.id.missingItemLayout,testMissingAssignment.name)
         schedulePage.assertMissingItemDisplayed(testMissingAssignment.name, nonHomeroomCourses[2].name, "100 pts")
 
+        //Refresh the page and assert that it's items are still displayed
         schedulePage.scrollToPosition(0)
         schedulePage.refresh()
-
         schedulePage.assertPageObjects()
-        schedulePage.assertDayHeaderShownScrollToByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
-        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1)
-        schedulePage.assertDayHeaderShownScrollToByItemName(concatDayString(yesterDayCalendar), schedulePage.getStringFromResource(R.string.yesterday), schedulePage.getStringFromResource(R.string.yesterday))
-        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 7)
-        schedulePage.assertDayHeaderShownScrollToByItemName(concatDayString(tomorrowCalendar), schedulePage.getStringFromResource(R.string.tomorrow), schedulePage.getStringFromResource(R.string.tomorrow))
+        schedulePage.assertDayHeaderShownByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
 
+        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { schedulePage.assertDayHeaderShownByItemName(concatDayString(yesterDayCalendar), schedulePage.getStringFromResource(R.string.yesterday), schedulePage.getStringFromResource(R.string.yesterday)) }
+        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 7) { schedulePage.assertDayHeaderShownByItemName(concatDayString(tomorrowCalendar), schedulePage.getStringFromResource(R.string.tomorrow), schedulePage.getStringFromResource(R.string.tomorrow)) }
+
+        //Swipe to 2 week befeore current week
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
         Thread.sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
         if(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
-            schedulePage.assertDayHeaderShownScrollToByItemName(
-                concatDayString(twoWeeksBeforeCalendar),
-                getDayString(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK)),
-                getDayString(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK))
-            )
-            schedulePage.scrollToItem(R.id.scheduleCourseItemLayout,nonHomeroomCourses[1].name)
-            schedulePage.assertCourseHeaderDisplayed(nonHomeroomCourses[1].name)
-            schedulePage.scrollToItem(R.id.title,testTwoWeeksBeforeAssignment.name, schedulePage.withAncestor(R.id.plannerItems))
-            schedulePage.assertScheduleItemDisplayed(testTwoWeeksBeforeAssignment.name)
+            schedulePage.assertDayHeaderShownByItemName(concatDayString(twoWeeksBeforeCalendar), getDayString(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK)), getDayString(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK)))
+            verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[1].name,testTwoWeeksBeforeAssignment.name)
         }
 
+        //Swipe from 2 weeks before current week to 2 weeks after current week
         schedulePage.nextWeekButtonClick()
         schedulePage.swipeLeft()
         schedulePage.nextWeekButtonClick()
         schedulePage.swipeLeft()
         Thread.sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
         if(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
-            schedulePage.assertDayHeaderShownScrollToByItemName(
-                concatDayString(twoWeeksAfterCalendar),
-                getDayString(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK)),
-                getDayString(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK))
-            )
-            schedulePage.scrollToItem(R.id.scheduleCourseItemLayout,nonHomeroomCourses[0].name)
-            schedulePage.assertCourseHeaderDisplayed(nonHomeroomCourses[0].name)
-            schedulePage.scrollToItem(R.id.title,testTwoWeeksAfterAssignment.name, schedulePage.withAncestor(R.id.plannerItems))
-            schedulePage.assertScheduleItemDisplayed(testTwoWeeksAfterAssignment.name)
+            schedulePage.assertDayHeaderShownByItemName(concatDayString(twoWeeksAfterCalendar), getDayString(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK)), getDayString(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK)))
+
+            verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[0].name,testTwoWeeksAfterAssignment.name)
+
+            //Open course and verify if we are landing on the course details page by checking it's title
             schedulePage.clickCourseHeader(nonHomeroomCourses[0].name)
             elementaryCoursePage.assertPageObjects()
             elementaryCoursePage.assertTitleCorrect(nonHomeroomCourses[0].name)
             Espresso.pressBack()
         }
 
+        //Swipe back to current week
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
         Thread.sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
+
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
-            schedulePage.scrollToItem(R.id.scheduleCourseItemLayout, nonHomeroomCourses[2].name)
-            schedulePage.assertCourseHeaderDisplayed(nonHomeroomCourses[2].name)
-            schedulePage.scrollToItem(R.id.title,testMissingAssignment.name, schedulePage.withAncestor(R.id.plannerItems))
-            schedulePage.assertScheduleItemDisplayed(testMissingAssignment.name)
+
+            verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name, testMissingAssignment.name)
+
+            //Open assignment and verify if we are landing on the assignment details page by checking it's title
             schedulePage.clickScheduleItem(testMissingAssignment.name)
             assignmentDetailsPage.assertPageObjects()
             assignmentDetailsPage.verifyAssignmentTitle(testMissingAssignment.name)
             Espresso.pressBack()
             schedulePage.assertPageObjects()
+
+            //Swipe to 2 weeks after current week
             schedulePage.nextWeekButtonClick()
             schedulePage.swipeLeft()
             Thread.sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
             schedulePage.assertPageObjects()
-            schedulePage.scrollToItem(R.id.title,testTwoWeeksAfterAssignment.name, schedulePage.withAncestor(R.id.plannerItems))
-            schedulePage.assertMarkedAsDoneNotShown()
-            schedulePage.clickDoneCheckbox()
-            schedulePage.swipeDown()
-            schedulePage.assertMarkedAsDoneShown()
+
+            //Click on 'Marked as Done' checkbox and assert if 'You've marked as done' string appears
+            clickAndAssertMarkedAsDone(testTwoWeeksAfterAssignment.name)
         }
     }
 
-    fun concatDayString(calendar: Calendar): String {
+    private fun verifyIfCourseHeaderAndScheduleItemDisplayed(courseName: String, assignmentName: String) {
+        schedulePage.scrollToItem(R.id.scheduleCourseItemLayout, courseName)
+        schedulePage.assertCourseHeaderDisplayed(courseName)
+        schedulePage.scrollToItem(R.id.title, assignmentName, schedulePage.withAncestor(R.id.plannerItems))
+        schedulePage.assertScheduleItemDisplayed(assignmentName)
+    }
+
+    private fun clickAndAssertMarkedAsDone(assignmentName: String) {
+        schedulePage.scrollToItem(R.id.title, assignmentName, schedulePage.withAncestor(R.id.plannerItems))
+        schedulePage.assertMarkedAsDoneNotShown()
+        schedulePage.clickDoneCheckbox()
+        schedulePage.swipeDown()
+        schedulePage.assertMarkedAsDoneShown()
+    }
+
+    private fun concatDayString(calendar: Calendar): String {
         val dayOfMonthIntValue = calendar.get(Calendar.DAY_OF_MONTH)
-        return if(dayOfMonthIntValue < 10) getMonthString(calendar) + " 0" + calendar.get(Calendar.DAY_OF_MONTH).toString()
-        else getMonthString(calendar) + " " + calendar.get(Calendar.DAY_OF_MONTH).toString()
+        return if(dayOfMonthIntValue < 10) calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US) + " 0" + calendar.get(Calendar.DAY_OF_MONTH).toString()
+        else calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US) + " " + calendar.get(Calendar.DAY_OF_MONTH).toString()
     }
 
-    fun getCurrentDateCalendar(timeZone: String): Calendar {
-        return Calendar.getInstance(TimeZone.getTimeZone(timeZone))
-    }
-
-    fun getYesterdayDateCalendar(timeZone: String): Calendar {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone(timeZone))
-        cal.add(Calendar.DATE, -1);
-        return cal;
-    }
-
-    fun getTomorrowDateCalendar(timeZone: String): Calendar {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone(timeZone))
-        cal.add(Calendar.DATE, 1);
-        return cal;
-    }
-
-    fun getCustomDateCalendar(timeZone: String, dayDiffFromToday: Int): Calendar {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone(timeZone))
+    private fun getCustomDateCalendar(dayDiffFromToday: Int): Calendar {
+        val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         cal.add(Calendar.DATE, dayDiffFromToday)
         return cal
     }
 
-    fun getMonthString(calendar: Calendar): String {
-        when (calendar.get(Calendar.MONTH)) {
-            0 -> return "January"
-            1 -> return "February"
-            2 -> return "March"
-            3 -> return "April"
-            4 -> return "May"
-            5 -> return "June"
-            6 -> return "July"
-            7 -> return "August"
-            8 -> return "September"
-            9 -> return "October"
-            10 -> return "November"
-            11 -> return "December"
-            else -> {
-                return ""
-            }
-        }
-    }
-
-    fun getDayString(calculatedDayIntValue: Int): String {
+    private fun getDayString(calculatedDayIntValue: Int): String {
         when (calculatedDayIntValue) {
             1 -> return "Sunday"
             2 -> return "Monday"
