@@ -63,19 +63,19 @@ class ScheduleInteractionTest : StudentTest() {
         goToSchedule(data)
 
         schedulePage.assertPageObjects()
-        schedulePage.assertDayHeaderShown("August 08", "Sunday", 0)
-        schedulePage.assertDayHeaderShown("August 09", "Monday", 2)
+        schedulePage.assertDayHeaderShownByPosition("August 08", "Sunday", 0)
+        schedulePage.assertDayHeaderShownByPosition("August 09", "Monday", 2)
         schedulePage.assertNoScheduleItemDisplayed()
 
-        schedulePage.assertDayHeaderShown("August 10", schedulePage.getStringFromResource(R.string.yesterday), 4)
-        schedulePage.assertDayHeaderShown("August 11", schedulePage.getStringFromResource(R.string.today), 6)
+        schedulePage.assertDayHeaderShownByPosition("August 10", schedulePage.getStringFromResource(R.string.yesterday), 4)
+        schedulePage.assertDayHeaderShownByPosition("August 11", schedulePage.getStringFromResource(R.string.today), 6)
         schedulePage.assertNoScheduleItemDisplayed()
 
-        schedulePage.assertDayHeaderShown("August 12", schedulePage.getStringFromResource(R.string.tomorrow), 8)
-        schedulePage.assertDayHeaderShown("August 13", "Friday", 10)
+        schedulePage.assertDayHeaderShownByPosition("August 12", schedulePage.getStringFromResource(R.string.tomorrow), 8)
+        schedulePage.assertDayHeaderShownByPosition("August 13", "Friday", 10)
         schedulePage.assertNoScheduleItemDisplayed()
 
-        schedulePage.assertDayHeaderShown("August 14", "Saturday", 12)
+        schedulePage.assertDayHeaderShownByPosition("August 14", "Saturday", 12)
         schedulePage.assertNoScheduleItemDisplayed()
     }
 
@@ -166,19 +166,19 @@ class ScheduleInteractionTest : StudentTest() {
 
         goToSchedule(data)
 
-        schedulePage.assertDayHeaderShown("August 08", "Sunday", 0)
-        schedulePage.assertDayHeaderShown("August 09", "Monday", 2)
+        schedulePage.assertDayHeaderShownByPosition("August 08", "Sunday", 0)
+        schedulePage.assertDayHeaderShownByPosition("August 09", "Monday", 2)
 
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
 
-        schedulePage.assertDayHeaderShown("July 25", "Sunday", 0, recyclerViewMatcherText = "July 25")
-        schedulePage.assertDayHeaderShown("July 26", "Monday", 2, recyclerViewMatcherText = "July 25")
-        schedulePage.assertDayHeaderShown("July 27", "Tuesday", 4, recyclerViewMatcherText = "July 26")
-        schedulePage.assertDayHeaderShown("July 28", "Wednesday", 6, recyclerViewMatcherText = "July 27")
-        schedulePage.assertDayHeaderShown("July 29", "Thursday", 8, recyclerViewMatcherText = "July 28")
-        schedulePage.assertDayHeaderShown("July 30", "Friday", 10, recyclerViewMatcherText = "July 29")
-        schedulePage.assertDayHeaderShown("July 31", "Saturday", 12, recyclerViewMatcherText = "July 30")
+        schedulePage.assertDayHeaderShownByPosition("July 25", "Sunday", 0, recyclerViewMatcherText = "July 25")
+        schedulePage.assertDayHeaderShownByPosition("July 26", "Monday", 2, recyclerViewMatcherText = "July 25")
+        schedulePage.assertDayHeaderShownByPosition("July 27", "Tuesday", 4, recyclerViewMatcherText = "July 26")
+        schedulePage.assertDayHeaderShownByPosition("July 28", "Wednesday", 6, recyclerViewMatcherText = "July 27")
+        schedulePage.assertDayHeaderShownByPosition("July 29", "Thursday", 8, recyclerViewMatcherText = "July 28")
+        schedulePage.assertDayHeaderShownByPosition("July 30", "Friday", 10, recyclerViewMatcherText = "July 29")
+        schedulePage.assertDayHeaderShownByPosition("July 31", "Saturday", 12, recyclerViewMatcherText = "July 30")
     }
 
     @Test
@@ -189,19 +189,19 @@ class ScheduleInteractionTest : StudentTest() {
 
         goToSchedule(data)
 
-        schedulePage.assertDayHeaderShown("August 08", "Sunday", 0)
-        schedulePage.assertDayHeaderShown("August 09", "Monday", 2)
+        schedulePage.assertDayHeaderShownByPosition("August 08", "Sunday", 0)
+        schedulePage.assertDayHeaderShownByPosition("August 09", "Monday", 2)
 
         schedulePage.nextWeekButtonClick()
         schedulePage.swipeLeft()
 
-        schedulePage.assertDayHeaderShown("August 22", "Sunday", 0, recyclerViewMatcherText = "August 22")
-        schedulePage.assertDayHeaderShown("August 23", "Monday", 2, recyclerViewMatcherText = "August 22")
-        schedulePage.assertDayHeaderShown("August 24", "Tuesday", 4, recyclerViewMatcherText = "August 23")
-        schedulePage.assertDayHeaderShown("August 25", "Wednesday", 6, recyclerViewMatcherText = "August 24")
-        schedulePage.assertDayHeaderShown("August 26", "Thursday", 8, recyclerViewMatcherText = "August 25")
-        schedulePage.assertDayHeaderShown("August 27", "Friday", 10, recyclerViewMatcherText = "August 26")
-        schedulePage.assertDayHeaderShown("August 28", "Saturday", 12, recyclerViewMatcherText = "August 27")
+        schedulePage.assertDayHeaderShownByPosition("August 22", "Sunday", 0, recyclerViewMatcherText = "August 22")
+        schedulePage.assertDayHeaderShownByPosition("August 23", "Monday", 2, recyclerViewMatcherText = "August 22")
+        schedulePage.assertDayHeaderShownByPosition("August 24", "Tuesday", 4, recyclerViewMatcherText = "August 23")
+        schedulePage.assertDayHeaderShownByPosition("August 25", "Wednesday", 6, recyclerViewMatcherText = "August 24")
+        schedulePage.assertDayHeaderShownByPosition("August 26", "Thursday", 8, recyclerViewMatcherText = "August 25")
+        schedulePage.assertDayHeaderShownByPosition("August 27", "Friday", 10, recyclerViewMatcherText = "August 26")
+        schedulePage.assertDayHeaderShownByPosition("August 28", "Saturday", 12, recyclerViewMatcherText = "August 27")
     }
 
     @Test
