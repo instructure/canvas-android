@@ -53,13 +53,13 @@ class HttpResponder(
     }
 
     fun handle(): Response {
-        val method = request.method()
+        val method = request.method
         return when {
             method == "GET" && getMethod != null -> getMethod!!()
             method == "POST" && postMethod != null -> postMethod!!()
             method == "PUT" && putMethod != null -> putMethod!!()
             method == "DELETE" && deleteMethod != null -> deleteMethod!!()
-            else -> throw NoSuchMethodError("Unhandled HTTP method '$method' for request ${request.url()}")
+            else -> throw NoSuchMethodError("Unhandled HTTP method '$method' for request ${request.url}")
         }
     }
 

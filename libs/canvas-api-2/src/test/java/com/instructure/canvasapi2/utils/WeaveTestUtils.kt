@@ -17,6 +17,8 @@ package com.instructure.canvasapi2.utils
 
 import com.instructure.canvasapi2.StatusCallback
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody.Companion.toResponseBody
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -36,7 +38,7 @@ object WeaveTestManager {
                 .code(200)
                 .message("todo")
                 .protocol(Protocol.HTTP_1_0)
-                .body(ResponseBody.create(MediaType.parse("application/json"), "todo".toByteArray()))
+                .body("todo".toByteArray().toResponseBody("application/json".toMediaTypeOrNull()))
                 .addHeader("content-type", "application/json")
                 .build()
 
@@ -53,11 +55,11 @@ object WeaveTestManager {
                 .code(errorCode)
                 .message("todo")
                 .protocol(Protocol.HTTP_1_0)
-                .body(ResponseBody.create(MediaType.parse("application/json"), """{"error": "Fake error"}"""))
+                .body("""{"error": "Fake error"}""".toResponseBody("application/json".toMediaTypeOrNull()))
                 .addHeader("content-type", "application/json")
                 .build()
 
-            val retrofitResponse = retrofit2.Response.error<T>(errorCode, response.body()!!)
+            val retrofitResponse = retrofit2.Response.error<T>(errorCode, response.body!!)
             callback.onFail(null, RuntimeException("Mock error!"), retrofitResponse)
         }
     }

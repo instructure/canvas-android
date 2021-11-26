@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Kaore i Tautokotia tēnei Momo Tapaetanga</string>
     <string name="studentAnnotationUnsupportedMessage">Kaore e taea te whakaatu atu i te tāpaetanga no te mea Ākonga Tuhipoka kaore i te tautokotia i tēnei wā i runga i te waea haerere.</string>
     <string name="schedule_marked_as_done">Kua tohua e koe kua oti.</string>
+    <string name="error_saving_assignment_closed_grading_period">Kāore e taea te huri i te rā e tika ana ka tika i roto i te wā kōeke kua katia.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Peke ki tēnei rā</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">tuku karere</string>
+    <string name="somethingWentWrong">I raruraru tētahi mea</string>
+    <string name="failedToLoadQuiz">I rahua te uta kairoro</string>
 </resources>

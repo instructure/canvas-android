@@ -274,12 +274,12 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
         val request = requestBuilder.build()
         val response = client.newCall(request).execute()
         if (!response.isSuccessful) {
-            response.body()?.close()
-            throw IOException("Unable to download. Error code ${response.code()}")
+            response.body?.close()
+            throw IOException("Unable to download. Error code ${response.code}")
         }
         toWriteTo.parentFile.mkdirs()
         val sink = toWriteTo.sink().buffer()
-        val source: Source = response.body()!!.source()
+        val source: Source = response.body!!.source()
         sink.writeAll(source)
         sink.flush()
         sink.close()

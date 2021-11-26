@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">メディアを選択</string>
     <string name="takeVideo">動画を撮影する</string>
     <string name="noCameraOnDevice">カメラが使用出来ません</string>
@@ -325,7 +326,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">ロック解除日を締切日より後にすることはできません</string>
     <string name="utils_lockBeforeDueDateError">ロック日を締切日より前にすることはできません</string>
     <string name="utils_lockAfterUnlockError">ロック日をロック解除日より前にすることはできません</string>
@@ -432,7 +432,9 @@
     <string name="appUpdateReadyDescription">アプリを再開して、新しいバージョンをインストールする</string>
     <string name="nothing_planned_yet">計画はまだありません</string>
     <string name="schedule_tag_graded">採点済み</string>
-    <string name="schedule_tag_replies">返信</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="other">%d の返信></item>
+    </plurals>
     <string name="schedule_tag_feedback">フィードバック</string>
     <string name="schedule_tag_late">提出遅れ</string>
     <string name="schedule_tag_redo">やり直し</string>
@@ -440,6 +442,7 @@
     <string name="tomorrow">明日</string>
     <string name="yesterday">昨日</string>
     <string name="schedule_calendar_event_due_text">%sで</string>
+    <string name="schedule_calendar_event_interval_text">%1$sから%2$s</string>
     <string name="schedule_todo_due_text">タスク：%s</string>
     <string name="schedule_due_text">期限：%s</string>
     <string name="show_missing_items_title">%d欠如アイテムを表示する</string>
@@ -451,4 +454,27 @@
         <item quantity="other">%s 点</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f 点</item>
+        <item quantity="other">%.1f 点</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">全日</string>
+    <string name="schedule_tag_missing">提出なし</string>
+    <string name="previous_week">前の週</string>
+    <string name="next_week">次週</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s、%2$s</string>
+    <string name="a11y_schedule_course_header_content_description">コース%s</string>
+    <string name="a11y_announcement">発表</string>
+    <string name="a11y_discussion_topic">ディスカッション</string>
+    <string name="a11y_calendar_event">予定表のイベント</string>
+    <string name="a11y_assignment">課題</string>
+    <string name="a11y_planner_note">計画者のメモ</string>
+    <string name="a11y_quiz">クイズ</string>
+    <string name="a11y_todo">タスク</string>
+    <string name="a11y_page">ページ</string>
+    <string name="a11y_marked_as_done">完了としてマークする</string>
+    <string name="a11y_not_marked_as_done">完了とマークされていない</string>
+    <string name="a11y_mark_as_done">完了にする</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">エラーです！コース詳細の読み込み中にエラーが発生しました：</string>
 </resources>

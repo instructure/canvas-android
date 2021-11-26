@@ -39,6 +39,8 @@ import com.instructure.student.router.RouteMatcher
 import java.io.File
 import java.io.FileWriter
 
+const val SUB_ACCOUNT_ID = 181364L
+
 fun StudentTest.enterDomain(enrollmentType: String = EnrollmentTypes.STUDENT_ENROLLMENT): CanvasUserApiModel {
     val user = UserApi.createCanvasUser()
     val course = CoursesApi.createCourse()
@@ -55,6 +57,34 @@ fun StudentTest.slowLogIn(enrollmentType: String = EnrollmentTypes.STUDENT_ENROL
     return user
 }
 
+fun StudentTest.seedDataForK5(
+    teachers: Int = 0,
+    tas: Int = 0,
+    pastCourses: Int = 0,
+    courses: Int = 0,
+    students: Int = 0,
+    favoriteCourses: Int = 0,
+    homeroomCourses: Int = 0,
+    announcements: Int = 0,
+    discussions: Int = 0,
+    gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
+
+    val request = SeedApi.SeedDataRequest (
+        teachers = teachers,
+        TAs = tas,
+        students = students,
+        pastCourses = pastCourses,
+        courses = courses,
+        favoriteCourses = favoriteCourses,
+        homeroomCourses = homeroomCourses,
+        accountId = SUB_ACCOUNT_ID, //K5 Sub Account accountId on mobileqa.beta domain
+        gradingPeriods = gradingPeriods,
+        discussions = discussions,
+        announcements = announcements
+    )
+    return SeedApi.seedDataForSubAccount(request)
+}
+
 fun StudentTest.seedData(
     teachers: Int = 0,
     tas: Int = 0,
@@ -62,6 +92,7 @@ fun StudentTest.seedData(
     courses: Int = 0,
     students: Int = 0,
     favoriteCourses: Int = 0,
+    homeroomCourses: Int = 0,
     announcements: Int = 0,
     discussions: Int = 0,
     gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
@@ -73,6 +104,7 @@ fun StudentTest.seedData(
             pastCourses = pastCourses,
             courses = courses,
             favoriteCourses = favoriteCourses,
+            homeroomCourses = homeroomCourses,
             gradingPeriods = gradingPeriods,
             discussions = discussions,
             announcements = announcements
@@ -143,6 +175,24 @@ fun StudentTest.tokenLoginElementary(domain: String, token: String, user: User) 
     // Sometimes, especially on slow FTL emulators, it can take a bit for the dashboard to show
     // up after a token login.  Add some tolerance for that.
     waitForMatcherWithSleeps(withId(R.id.elementaryDashboardPage), 20000).check(matches(isDisplayed()))
+    elementaryDashboardPage.assertPageObjects()
+}
+
+fun StudentTest.tokenLoginElementary(user: CanvasUserApiModel) {
+    activityRule.runOnUiThread {
+        (originalActivity as LoginActivity).loginWithToken(
+            user.token,
+            user.domain,
+            User(
+                id = user.id,
+                name = user.name,
+                shortName = user.shortName,
+                avatarUrl = user.avatarUrl,
+                effective_locale = "en" // Needed so we don't restart for custom languages (system.exit(0) kills the test process)
+            ),
+            canvasForElementary = true
+        )
+    }
     elementaryDashboardPage.assertPageObjects()
 }
 

@@ -22,15 +22,12 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotationResponse
 import com.instructure.canvasapi2.models.DocSession
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionRequestBody
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
 
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Url
+import retrofit2.http.*
 
 object CanvaDocsAPI {
 
@@ -46,6 +43,9 @@ object CanvaDocsAPI {
 
         @DELETE("/1/sessions/{sessionId}/annotations/{annotationId}")
         fun deleteAnnotation(@Path("sessionId") sessionId: String, @Path("annotationId") annotationId: String): Call<ResponseBody>
+
+        @POST("canvadoc_session")
+        fun createCanvaDocSession(@Body body: CanvaDocSessionRequestBody): Call<CanvaDocSessionResponseBody>
     }
 
     fun getCanvaDoc(
@@ -81,5 +81,13 @@ object CanvaDocsAPI {
             params: RestParams,
             callback: StatusCallback<ResponseBody>) {
         callback.addCall(adapter.build(CanvaDocsInterFace::class.java, params).deleteAnnotation(sessionId, annotationId)).enqueue(callback)
+    }
+
+    fun createCanvaDocSession(
+        body: CanvaDocSessionRequestBody,
+        adapter: RestBuilder,
+        params: RestParams,
+        callback: StatusCallback<CanvaDocSessionResponseBody>) {
+        callback.addCall(adapter.build(CanvaDocsInterFace::class.java, params).createCanvaDocSession(body)).enqueue(callback)
     }
 }

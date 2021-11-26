@@ -269,27 +269,27 @@ class MockCanvas {
         override fun dispatch(request: RecordedRequest): MockResponse {
             Log.d("WebView", "dispatch() request: $request")
             var path = request.path
-            if(path.startsWith("//")) path = path.substring(1)
+            if(path?.startsWith("//") == true) path = path.substring(1)
 
             // Test as to whether this is a /courses/{courseId}/files/{fileId}/preview request,
             // and if it is then service it.
             val courseFilePreviewRegex = """/courses/(\d+)/files/(\d+)/(preview|download)""".toRegex()
-            courseFilePreviewRegex.matchEntire(path)?.run {
+            courseFilePreviewRegex.matchEntire(path ?: "")?.run {
                 // groupValues[0] is the entire string, I think
                 Log.d("WebView", "Matched courseFilePreviewRegex: course=${groupValues[1]}, file=${groupValues[2]}")
                 val fileId = groupValues[2].toLong()
-                val contents = fileContents[fileId]
+                val contents = fileContents[fileId] ?: ""
                 return@dispatch MockResponse().setResponseCode(200).setBody(contents)
             }
 
             // Test as to whether this is a /groups/{courseId}/files/{fileId}/preview request,
             // and if it is then service it.
             val courseGroupFilePreviewRegex = """/groups/(\d+)/files/(\d+)/(preview|download)""".toRegex()
-            courseGroupFilePreviewRegex.matchEntire(path)?.run {
+            courseGroupFilePreviewRegex.matchEntire(path ?: "")?.run {
                 // groupValues[0] is the entire string, I think
                 Log.d("WebView", "Matched courseFilePreviewRegex: course=${groupValues[1]}, file=${groupValues[2]}")
                 val fileId = groupValues[2].toLong()
-                val contents = fileContents[fileId]
+                val contents = fileContents[fileId] ?: ""
                 return@dispatch MockResponse().setResponseCode(200).setBody(contents)
             }
 
@@ -497,7 +497,8 @@ fun MockCanvas.addCourse(
         sections = if (section != null) listOf(section) else listOf<Section>(),
         isPublic = isPublic,
         homeroomCourse = isHomeroom,
-        gradingPeriods = gradingPeriodList
+        gradingPeriods = gradingPeriodList,
+        courseColor = "#008EE2"
     )
     courses += course.id to course
 

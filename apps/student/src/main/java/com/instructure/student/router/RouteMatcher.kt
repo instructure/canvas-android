@@ -42,8 +42,10 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.*
+import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
@@ -79,7 +81,11 @@ object RouteMatcher : BaseRouteMatcher() {
         //////////////////////////
         routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java, NotificationListFragment::class.java, Arrays.asList(":${RouterParams.RECENT_ACTIVITY}"))) // Recent Activity
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java))
+        if (ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), ElementaryCourseFragment::class.java))
+        } else {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java))
+        }
 
         // region Modules
 
@@ -89,7 +95,11 @@ object RouteMatcher : BaseRouteMatcher() {
         !  CAUTION: Order matters, these are purposely placed above the pages, quizzes, disscussions, assignments, and files so they are matched if query params exist and routed to Modules
         !!!!!!!!!!!!
         */
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ModuleListFragment::class.java))
+        if (ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ElementaryCourseFragment::class.java, tabId = Tab.MODULES_ID))
+        } else {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ModuleListFragment::class.java))
+        }
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"), ModuleListFragment::class.java)) // Just route to modules list. API does not have a way to fetch a module item without knowing the module id (even though web canvas can do it)
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/:${RouterParams.MODULE_ID}"), ModuleListFragment::class.java))
 
@@ -104,7 +114,11 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/notifications"), NotificationListFragment::class.java))
 
         // Grades
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
+        if (ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), ElementaryCourseFragment::class.java, tabId = Tab.GRADES_ID))
+        } else {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
+        }
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades/:${RouterParams.ASSIGNMENT_ID}"), GradesListFragment::class.java, AssignmentDetailsFragment::class.java))
 
         // People
@@ -192,6 +206,8 @@ object RouteMatcher : BaseRouteMatcher() {
 
         //Single Detail Pages (Typically routing from To-dos (may not be handling every use case)
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentDetailsFragment::class.java, null))
+
+        routes.add(Route("/enroll/.*", RouteContext.DO_NOT_ROUTE))
 
         // Catch all (when nothing has matched, these take over)
         // Note: Catch all only happens with supported domains such as instructure.com
@@ -479,6 +495,11 @@ object RouteMatcher : BaseRouteMatcher() {
 
     fun getContextIdFromURL(url: String?): String? {
         return getContextIdFromURL(url, routes)
+    }
+
+    fun resetRoutes() {
+        routes.clear()
+        initRoutes()
     }
 }
 

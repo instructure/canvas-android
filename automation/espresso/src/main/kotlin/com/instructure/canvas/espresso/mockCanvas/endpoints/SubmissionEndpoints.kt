@@ -56,10 +56,10 @@ object SubmissionIndexEndpoint : Endpoint(
             val assignment = data.assignments[pathVars.assignmentId]!!
 
             // Grab our query parameters
-            val submissionUrl = request.url().queryParameter("submission[url]")
-            val submissionType = request.url().queryParameter("submission[submission_type]")
-            val submissionBody = request.url().queryParameter("submission[body]")
-            val submissionFileId = request.url().queryParameter("submission[file_ids][]")
+            val submissionUrl = request.url.queryParameter("submission[url]")
+            val submissionType = request.url.queryParameter("submission[submission_type]")
+            val submissionBody = request.url.queryParameter("submission[body]")
+            val submissionFileId = request.url.queryParameter("submission[file_ids][]")
 
             // Construct a submission (including an attachment, if necessary)
             var attachment: Attachment? = null
@@ -126,8 +126,10 @@ object SubmissionUserEndpoint : Endpoint(
                     // Copy the query parameters for this request to our response, to be used
                     // when the app uploads the actual file to the specified location.
                     val queryParams = mutableMapOf<String,String>()
-                    for(index in 0..request.url().querySize()-1) {
-                        queryParams.put(request.url().queryParameterName(index), request.url().queryParameterValue(index))
+                    for(index in 0..request.url.querySize - 1) {
+                        request.url.queryParameterValue(index)?.let {
+                            queryParams.put(request.url.queryParameterName(index), it)
+                        }
                     }
 
                     // Our response is a FileUploadParams object
@@ -163,10 +165,10 @@ object SubmissionUserEndpoint : Endpoint(
         PUT { // add a comment or grade the submission
             val submission = data.submissions[pathVars.assignmentId]?.find { it.userId == pathVars.userId }
             if (submission != null) {
-                val comment = request.url().queryParameter("comment[text_comment]")
+                val comment = request.url.queryParameter("comment[text_comment]")
                 val user = request.user!!
-                val grade = request.url().queryParameter("submission[posted_grade]")
-                val excused = request.url().queryParameter("submission[excuse]")
+                val grade = request.url.queryParameter("submission[posted_grade]")
+                val excused = request.url.queryParameter("submission[excuse]")
                 if (comment != null && comment.length > 0) {
                     val newCommentList = mutableListOf<SubmissionComment>().apply { addAll(submission.submissionComments) }
                     newCommentList.add(SubmissionComment(

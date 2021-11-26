@@ -25,7 +25,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'dagger.hilt.android.plugin'
 
-def updatePriority = 0
+def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
@@ -43,8 +43,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 42
-        versionName = '1.14.0'
+        versionCode = 43
+        versionName = '1.14.1'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -129,8 +129,6 @@ android {
     configurations.all {
         resolutionStrategy {
             force 'android.arch.lifecycle:runtime:1.0.3'
-            // Fix for Robolectric 4.x
-            force "org.ow2.asm:asm:7.0"
 
             force Libs.KOTLIN_COROUTINES_CORE
         }
@@ -203,8 +201,6 @@ dependencies {
     implementation project(path: ':annotations')
     implementation project(path: ':interactions')
 
-
-
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
 
@@ -222,11 +218,6 @@ dependencies {
         transitive = true
     }
 
-    /* OkHttp Idling Resource */
-    implementation('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
-        exclude module: 'espresso-idling-resource'
-    }
-
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
@@ -241,20 +232,20 @@ dependencies {
     androidTestImplementation Libs.JUNIT
     androidTestImplementation project(path: ':panda_annotations')
 
-    androidTestUtil('androidx.test:orchestrator:1.3.0') {
+    androidTestUtil(Libs.TEST_ORCHESTRATOR) {
         exclude module: 'support-annotations'
     }
 
     /* Sliding Panel */
-    implementation 'com.sothree.slidinguppanel:library:3.3.1'
+    implementation Libs.SLIDING_UP_PANEL
 
     /* Media handling */
     implementation Libs.ANDROID_SVG
     implementation Libs.PHOTO_VIEW
 
     /* Flexbox Layout */
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
-    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1'
+    implementation Libs.FLEXBOX_LAYOUT
+    implementation Libs.KEYBOARD_VISIBILITY_LISTENER
 
     /* Support libs */
     implementation Libs.ANDROIDX_APPCOMPAT
@@ -285,7 +276,7 @@ dependencies {
     androidTestImplementation Libs.HILT_TESTING
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
 
-    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
+    androidTestImplementation Libs.UI_AUTOMATOR
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -75,7 +75,7 @@ class SubmissionServiceTest : Assert() {
     }
 
 
-@Test
+    @Test
     fun `startTextSubmission starts the service with an intent`() {
         val text = "stuff"
         val intent = slot<Intent>()
@@ -189,5 +189,18 @@ class SubmissionServiceTest : Assert() {
         // Assert deleted
         assertNull(commentDb.getCommentById(commentId).executeAsOneOrNull())
         assertEquals(0, fileDb.getFilesForPendingComment(commentId).executeAsList().size)
+    }
+
+    @Test
+    fun `Student annotation submission starts the service with an intent`() {
+        val annotatableAttachmentId = 123L
+        val intent = slot<Intent>()
+
+        every { context.startService(capture(intent)) } returns null
+
+        SubmissionService.startStudentAnnotationSubmission(context, canvasContext, assignmentId, assignmentName, annotatableAttachmentId)
+
+        assertEquals(SubmissionService.Action.STUDENT_ANNOTATION.name, intent.captured.action)
+        assertTrue(intent.captured.hasExtra(Const.SUBMISSION_ID))
     }
 }

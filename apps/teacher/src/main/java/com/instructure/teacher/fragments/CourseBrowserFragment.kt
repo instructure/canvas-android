@@ -366,6 +366,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             putExtra(Const.DOMAIN, ApiPrefs.domain)
             putExtra(Const.CLIENT_ID, ApiPrefs.clientId)
             putExtra(Const.CLIENT_SECRET, ApiPrefs.clientSecret)
+            putExtra(Const.IS_ELEMENTARY, ApiPrefs.user?.k5User ?: false)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 

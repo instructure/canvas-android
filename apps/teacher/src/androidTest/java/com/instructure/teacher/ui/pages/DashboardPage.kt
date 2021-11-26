@@ -42,10 +42,15 @@ class DashboardPage : BasePage() {
     private val todoTab by WaitForViewWithId(R.id.tab_todo)
     private val inboxTab by WaitForViewWithId(R.id.tab_inbox)
 
-    private val hamburgerButtonMatcher = allOf(withContentDescription(R.string.navigation_drawer_open), isDisplayed())
+    private val hamburgerButtonMatcher =
+        allOf(withContentDescription(R.string.navigation_drawer_open), isDisplayed())
 
     fun assertDisplaysCourse(course: CourseApiModel) {
-        val matcher = allOf(withText(course.name), withId(R.id.titleTextView), withAncestor(R.id.swipeRefreshLayout))
+        val matcher = allOf(
+            withText(course.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
         scrollAndAssertDisplayed(matcher)
     }
 
@@ -60,23 +65,18 @@ class DashboardPage : BasePage() {
         assertDisplaysCourse(course)
         openCourse(courseName = course.name)
         onView(withId(R.id.courseBrowserTitle)).assertContainsText(course.name)
-        navigateBack(R.id.overlayToolbar)
     }
 
     fun clickSeeAll() {
         onView(withId(R.id.seeAllTextView)).click()
     }
 
-    fun editFavoriteCoursesWithCourse(course: CourseApiModel) {
+    fun openEditCoursesListPage() {
         onView(withId(R.id.menu_edit_favorite_courses)).click()
-        onView(withParent(R.id.toolbar) + withText(R.string.edit_courses)).assertDisplayed()
-        onView(withText(course.name)).click()
-        navigateBack()
     }
 
     fun navigateBack(toolbarId: Int = R.id.toolbar) {
         onView(withParent(toolbarId) + withContentDescription("Navigate up")).click()
-
     }
 
     fun openCourse(courseName: String) {

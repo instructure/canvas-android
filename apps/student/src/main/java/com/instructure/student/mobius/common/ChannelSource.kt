@@ -24,7 +24,6 @@ import com.spotify.mobius.functions.Consumer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.mapNotNull
 import kotlinx.coroutines.launch
 
 /**
@@ -35,8 +34,13 @@ import kotlinx.coroutines.launch
 abstract class ChannelSource<T : Any, E : Any> (private val channel: BroadcastChannel<T>) : EventSource<E> {
 
     override fun subscribe(eventConsumer: Consumer<E>): Disposable {
-        val receiveChannel = channel.openSubscription().mapNotNull { mapEvent(it) }
-        GlobalScope.launch { receiveChannel.consumeEach { eventConsumer.accept(it) } }
+        val receiveChannel = channel.openSubscription()
+        GlobalScope.launch {
+            receiveChannel.consumeEach {
+                val event = mapEvent(it)
+                event?.let { nunNullEvent -> eventConsumer.accept(nunNullEvent) }
+            }
+        }
         return Disposable { receiveChannel.cancel() }
     }
 

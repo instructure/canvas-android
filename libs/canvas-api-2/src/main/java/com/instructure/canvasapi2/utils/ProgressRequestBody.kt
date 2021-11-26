@@ -16,6 +16,7 @@
 package com.instructure.canvasapi2.utils
 
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okio.BufferedSink
 import org.threeten.bp.Duration
@@ -37,7 +38,7 @@ class ProgressRequestBody(
 
     override fun contentLength() = file.length()
 
-    override fun contentType() = MediaType.parse(contentType)
+    override fun contentType() = contentType.toMediaTypeOrNull()
 
     override fun writeTo(sink: BufferedSink) {
         val buffer = ByteArray(DEFAULT_BUFFER_SIZE)

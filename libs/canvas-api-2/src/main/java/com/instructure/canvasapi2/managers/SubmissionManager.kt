@@ -266,4 +266,31 @@ object SubmissionManager {
         )
     }
 
+    fun postStudentAnnotationSubmissionAsync(
+        canvasContext: CanvasContext,
+        assignmentId: Long,
+        annotatableAttachmentId: Long
+    ) = apiAsync<Submission> {
+        postStudentAnnotationSubmission(canvasContext, assignmentId, annotatableAttachmentId, it)
+    }
+
+    private fun postStudentAnnotationSubmission(
+        canvasContext: CanvasContext,
+        assignmentId: Long,
+        annotatableAttachmentId: Long,
+        callback: StatusCallback<Submission>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(canvasContext = canvasContext)
+
+        SubmissionAPI.postStudentAnnotationSubmission(
+            canvasContext.id,
+            assignmentId,
+            annotatableAttachmentId,
+            adapter,
+            params,
+            callback
+        )
+    }
+
 }

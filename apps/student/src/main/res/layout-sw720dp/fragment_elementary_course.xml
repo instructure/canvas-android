@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2021 - present Instructure, Inc.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.instructure.pandautils.utils.ColorUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.instructure.student.features.elementary.course.ElementaryCourseViewModel" />
+
+        <variable
+            name="course"
+            type="com.instructure.canvasapi2.models.Course" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/elementaryCoursePage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".features.elementary.course.ElementaryCourseFragment">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/defaultPrimary"
+                android:elevation="6dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:theme="@style/ToolBarStyle" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/courseTabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:tabContentStart="16dp"
+                app:tabIconTint="@color/tab_layout_icon_tint"
+                app:tabIndicator="@drawable/tab_bar_indicator"
+                app:tabIndicatorColor="@color/blueAnnotation"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="3dp"
+                app:tabInlineLabel="true"
+                app:tabMode="scrollable"
+                app:tabPaddingEnd="12dp"
+                app:tabPaddingStart="8dp"
+                app:tabSelectedTextColor="@color/blueAnnotation"
+                app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+                app:tabTextColor="@color/defaultTextDark"
+                app:tabs="@{viewModel.data.tabs}" />
+
+            <View
+                android:id="@+id/tabLayoutDivider"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/dividerColor"
+                app:layout_constraintTop_toBottomOf="@id/courseTabLayout" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/courseHeader"
+                android:layout_width="match_parent"
+                android:layout_height="113dp"
+                android:layout_margin="16dp"
+                android:visibility="@{course == null ? View.GONE : View.VISIBLE}"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@{ColorUtils.parseColor(course.courseColor)}"
+                        android:importantForAccessibility="no"
+                        android:scaleType="centerCrop"
+                        app:imageUrl="@{course.imageUrl}"
+                        app:overlayColor="@{ColorUtils.parseColor(course.courseColor)}"
+                        tools:background="@color/alertOrange" />
+
+                    <TextView
+                        android:id="@+id/courseName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/course_name_gradient"
+                        android:paddingStart="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="5dp"
+                        android:text="@{course.name}"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:text="Math" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.instructure.pandautils.views.ViewPagerNonSwipeable
+                android:id="@+id/courseTabPager"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseHeader"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/scheduleEmptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:emptyViewState="@{viewModel.state}" />
+    </FrameLayout>
+</layout>

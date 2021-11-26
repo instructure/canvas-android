@@ -79,6 +79,7 @@ import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.*
 import com.pspdfkit.ui.toolbar.grouping.MenuItemGroupingRule
 import kotlinx.coroutines.Job
+import okhttp3.Response
 import okhttp3.ResponseBody
 import java.io.File
 import java.util.*
@@ -558,6 +559,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     //region Annotation Manipulation
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun createNewAnnotation(annotation: Annotation) {
+        if (docSession.annotationMetadata?.canWrite() != true) return
+
         // This is a new annotation; Post it
         commentsButton.isEnabled = false
 
@@ -592,6 +595,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun updateAnnotation(annotation: Annotation) {
+        if (docSession.annotationMetadata?.canWrite() != true) return
+
         // Don't want to update if we just created a stamp.
         if(annotation.type == AnnotationType.STAMP && !stampRaceFlag) return
         // Annotation modified; Update it
@@ -602,7 +607,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             }
         } catch {
             if (it is StatusCallbackError) {
-                if (it.response?.raw()?.code() == 404) {
+                val rawResponse: Response? = it.response?.raw()
+                if (rawResponse?.code == 404) {
                     // Not found; Annotation has been deleted and no longer exists.
                     val dialog = AnnotationErrorDialog.getInstance(supportFragmentManager) {
                         // Delete annotation after user clicks OK on dialog

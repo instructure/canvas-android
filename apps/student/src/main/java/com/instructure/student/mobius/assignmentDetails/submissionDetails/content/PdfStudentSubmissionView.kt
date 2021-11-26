@@ -60,7 +60,8 @@ import java.util.ArrayList
 @SuppressLint("ViewConstructor")
 class PdfStudentSubmissionView(
         context: Context,
-        private val pdfUrl: String
+        private val pdfUrl: String,
+        private val studentAnnotation: Boolean = false
 ) : PdfSubmissionView(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private var initJob: Job? = null
@@ -97,6 +98,12 @@ class PdfStudentSubmissionView(
     }
 
     override fun configureCommentView(commentsButton: ImageView) {
+        // If we are making annotations position the comments button as we would position in the teacher.
+        if (studentAnnotation) {
+            super.configureCommentView(commentsButton)
+            return
+        }
+
         //we want to offset the comment button by the height of the action bar
         val marginDp = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 12f, context.resources.displayMetrics)
         val layoutParams = commentsButton.layoutParams as LayoutParams
@@ -142,12 +149,16 @@ class PdfStudentSubmissionView(
     }
 
     override fun attachDocListener() {
-        // Modify the session data permissions to make sure students can't annotate already submitted assignments
-        if (docSession.annotationMetadata?.canWrite() == true) {
-            docSession.annotationMetadata?.permissions = "read"
+        // We need to add this flag, because we want to show the toolbar in the student annotation, but hide when
+        // we open an already submitted file submission with a teacher's annotations.
+        if (!studentAnnotation) {
+            // Modify the session data permissions to make sure students can't annotate already submitted assignments
+            if (docSession.annotationMetadata?.canWrite() == true) {
+                docSession.annotationMetadata?.permissions = "read"
+            }
+            // Default is to have top inset, remove this since there will be no toolbar
+            pdfFragment?.setInsets(0, 0, 0, 0)
         }
-        // Default is to have top inset, remove this since there will be no toolbar
-        pdfFragment?.setInsets(0, 0, 0, 0)
         super.attachDocListener()
     }
 

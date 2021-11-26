@@ -164,7 +164,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         }
 
         // Latest activity
-        student.enrollments.mapNotNull { it.lastActivityAt }.max()?.let {
+        student.enrollments.mapNotNull { it.lastActivityAt }.maxOrNull()?.let {
             val dateString = DateHelper.getFormattedDate(requireContext(), it)
             val timeString = DateHelper.getFormattedTime(requireContext(), it)
             lastActivityView.text = getString(R.string.latestStudentActivityAtFormatted, dateString, timeString)

@@ -22,20 +22,19 @@ import com.instructure.canvasapi2.managers.EnrollmentManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
 import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.getStudioLTITool
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -126,17 +125,17 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
         }
     }
 
-    @ExperimentalCoroutinesApi
+    @ObsoleteCoroutinesApi
     private fun uploadMediaComment(file: File) {
-        ChannelSource.getChannel<SubmissionCommentsSharedEvent>().offer(
-                SubmissionCommentsSharedEvent.SendMediaCommentClicked(file)
+        ChannelSource.getChannel<SubmissionCommentsSharedEvent>().trySend(
+            SubmissionCommentsSharedEvent.SendMediaCommentClicked(file)
         )
     }
 
-    @ExperimentalCoroutinesApi
+    @ObsoleteCoroutinesApi
     private fun mediaDialogClosed() {
-        ChannelSource.getChannel<SubmissionCommentsSharedEvent>().offer(
-                SubmissionCommentsSharedEvent.MediaCommentDialogClosed
+        ChannelSource.getChannel<SubmissionCommentsSharedEvent>().trySend(
+            SubmissionCommentsSharedEvent.MediaCommentDialogClosed
         )
     }
 }

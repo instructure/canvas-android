@@ -59,8 +59,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 231
-        versionName = '6.14.1'
+        versionCode = 232
+        versionName = '6.15.0'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -186,9 +186,6 @@ android {
         */
         resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
 
-        // Fix for Robolectric 4.x
-        resolutionStrategy.force "org.ow2.asm:asm:7.0"
-
         resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
     }
 
@@ -257,11 +254,6 @@ dependencies {
     androidTestImplementation project(path: ':espresso')
     androidTestImplementation project(':dataseedingapi')
 
-    /* OkHttp Idling Resource */
-    implementation('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
-        exclude module: 'espresso-idling-resource'
-    }
-
     /* Unit Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
@@ -291,15 +283,14 @@ dependencies {
     implementation Libs.MOBIUS_EXTRAS
 
     /* Media Handling */
-    implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation Libs.PHOTO_VIEW
-    implementation 'com.airbnb.android:lottie:3.4.1'
+    implementation Libs.LOTTIE
 
     /* Sliding Panel */
-    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation Libs.SLIDING_UP_PANEL
 
     /* Apache Commons */
-    implementation 'org.apache.commons:commons-text:1.6'
+    implementation Libs.APACHE_COMMONS_TEXT
 
     /* Support dependencies */
     implementation Libs.ANDROIDX_ANNOTATION
@@ -313,10 +304,9 @@ dependencies {
     implementation Libs.FIREBASE_MESSAGING
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_CORE
-    implementation Libs.PLAY_CORE_KTX
 
     /* Database */
-    implementation "com.squareup.sqldelight:android-driver:1.4.3"
+    implementation Libs.SQLDELIGHT
 
     /* Qr Code */
     implementation(Libs.JOURNEY_ZXING) { transitive = false }
@@ -335,9 +325,9 @@ dependencies {
     androidTestImplementation Libs.HILT_TESTING
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
 
-    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
+    androidTestImplementation Libs.UI_AUTOMATOR
 
-    implementation "com.google.firebase:firebase-crashlytics-ndk:17.2.1"
+    implementation Libs.FIREBASE_CRASHLYTICS_NDK
 }
 
 // Comment out this line if the reporting logic starts going wonky.

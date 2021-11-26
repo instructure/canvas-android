@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Escolher Mídia</string>
     <string name="takeVideo">Fazer Vídeo</string>
     <string name="noCameraOnDevice">Nenhuma Câmera</string>
@@ -285,17 +286,17 @@
     <string name="utils_discussionsOptions">Opções</string>
     <string name="utils_discussionsDeleteTitle">Excluir fórum?</string>
     <string name="utils_discussionsDelete">Excluir fórum</string>
-    <string name="utils_discussionsDeleteMessage">Isso excluirá a fórum inteira e o tópico.</string>
+    <string name="utils_discussionsDeleteMessage">Isso excluirá o fórum inteira e o tópico.</string>
     <string name="utils_discussionSentSuccess">A resposta do fórum foi bem-sucedida.</string>
     <string name="utils_discussionUpdateSuccess">A edição do fórum foi bem-sucedida.</string>
     <string name="utils_discussionSentEmpty">A resposta do fórum não pode estar em branco.</string>
     <string name="utils_discussionSentFailure">Não foi possível enviar a resposta do fórum nesse momento.</string>
-    <string name="utils_createDiscussion">Nova fórum</string>
+    <string name="utils_createDiscussion">Novo fórum</string>
     <string name="utils_editDiscussion">Editar fórum</string>
     <string name="utils_discussionDetails">Detalhes do fórum</string>
-    <string name="utils_discussionSuccessfullyUpdated">Fórum atualizada com sucesso.</string>
+    <string name="utils_discussionSuccessfullyUpdated">Fórum atualizado com sucesso.</string>
     <string name="utils_saving">Salvando</string>
-    <string name="utils_discussionSuccessfullyCreated">Fórum criada com sucesso.</string>
+    <string name="utils_discussionSuccessfullyCreated">Fórum criado com sucesso.</string>
     <string name="utils_discussionSuccessfulAttachmentNot">Não foi possível adicionar o anexo a este fórum. Verifique a sua cota de arquivos e tente novamente.</string>
     <string name="utils_noTitle">Sem título</string>
     <string name="utils_discussionsReplies_Title">Respostas</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">A data de desbloqueio não pode ser posterior ao prazo de entrega</string>
     <string name="utils_lockBeforeDueDateError">A data de bloqueio não pode ser anterior ao prazo de entrega</string>
     <string name="utils_lockAfterUnlockError">A data de bloqueio não pode ser anterior à data de desbloqueio</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Reinicie o aplicativo para instalar a nova versão</string>
     <string name="nothing_planned_yet">Nada planejado ainda</string>
     <string name="schedule_tag_graded">Avaliado</string>
-    <string name="schedule_tag_replies">Respostas</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d resposta</item>
+        <item quantity="other">%d Respostas></item>
+    </plurals>
     <string name="schedule_tag_feedback">Feedback</string>
     <string name="schedule_tag_late">Atrasado</string>
     <string name="schedule_tag_redo">Refazer</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">Amanhã</string>
     <string name="yesterday">Ontem</string>
     <string name="schedule_calendar_event_due_text">Em %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s a %2$s</string>
     <string name="schedule_todo_due_text">Para fazer: %s</string>
     <string name="schedule_due_text">Vencimento: %s</string>
     <string name="show_missing_items_title">Mostrar %d itens ausentes</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s pts</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f pontos</item>
+        <item quantity="one">%.1f ponto</item>
+        <item quantity="other">%.1f pontos</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Dia inteiro</string>
+    <string name="schedule_tag_missing">Faltante</string>
+    <string name="previous_week">Semana anterior</string>
+    <string name="next_week">Próxima Semana</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Curso %s</string>
+    <string name="a11y_announcement">Aviso</string>
+    <string name="a11y_discussion_topic">Fórum</string>
+    <string name="a11y_calendar_event">Evento do calendário</string>
+    <string name="a11y_assignment">Tarefa</string>
+    <string name="a11y_planner_note">Observação do planejador</string>
+    <string name="a11y_quiz">Teste</string>
+    <string name="a11y_todo">Lista de Tarefas</string>
+    <string name="a11y_page">Página</string>
+    <string name="a11y_marked_as_done">Marcado como concluído</string>
+    <string name="a11y_not_marked_as_done">Não marcado como concluído</string>
+    <string name="a11y_mark_as_done">Marcar como concluído</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Que difícil... Ocorreu um erro ao carregar os detalhes do curso.</string>
 </resources>

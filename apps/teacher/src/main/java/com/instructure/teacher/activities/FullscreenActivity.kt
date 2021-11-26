@@ -21,17 +21,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.os.PersistableBundle
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -47,7 +42,6 @@ import instructure.rceditor.RCEFragment
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
-import retrofit2.Response
 
 class FullscreenActivity : BaseAppCompatActivity(), RCEFragment.RCEFragmentCallbacks, FullScreenInteractions {
 
@@ -139,8 +133,9 @@ class FullscreenActivity : BaseAppCompatActivity(), RCEFragment.RCEFragmentCallb
      * Handles RCEFragment results and passes them along
      */
     override fun onResult(activityResult: Int, data: Intent?) {
-        if (activityResult == Activity.RESULT_OK && data != null) {
-            EventBus.getDefault().postSticky(AssignmentDescriptionEvent(data.getStringExtra(HTML_RESULT)))
+        val htmlResult = data?.getStringExtra(HTML_RESULT)
+        if (activityResult == Activity.RESULT_OK && htmlResult != null) {
+            EventBus.getDefault().postSticky(AssignmentDescriptionEvent(htmlResult))
             super.onBackPressed()
         } else {
             super.onBackPressed()

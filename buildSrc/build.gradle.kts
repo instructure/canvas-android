@@ -27,15 +27,6 @@ dependencies {
     implementation("org.javassist:javassist:3.24.1-GA")
 }
 
-configurations.all {
-    resolutionStrategy.eachDependency {
-        if (requested.group == "org.ow2.asm" && requested.name == "asm") {
-            useVersion("7.0")
-            because("Build fails otherwise when using Robolectric 4")
-        }
-    }
-}
-
 plugins {
     `kotlin-dsl`
 }

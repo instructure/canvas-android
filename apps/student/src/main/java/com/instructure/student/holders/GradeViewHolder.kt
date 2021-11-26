@@ -83,9 +83,21 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         if (assignment.dueAt != null) {
             date.text = DateHelper.getDayMonthDateString(context, assignment.dueDate!!)
         } else {
-            date.text = ""
+            date.text = context.getString(R.string.gradesNoDueDate)
         }
         date.setVisible(date.text.isNotBlank())
+
+        if (assignment.isMissing() && !isEdit) {
+            submissionState.text = context.getString(R.string.missingAssignment)
+            submissionState.setTextColor(ContextCompat.getColor(context, R.color.canvasRed))
+            submissionState.setVisible()
+        } else if (!assignment.isSubmitted && !isEdit) {
+            submissionState.text = context.getString(R.string.notSubmitted)
+            submissionState.setTextColor(ContextCompat.getColor(context, R.color.defaultTextGray))
+            submissionState.setVisible()
+        } else {
+            submissionState.setGone()
+        }
     }
 
     companion object {

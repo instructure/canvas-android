@@ -46,15 +46,15 @@ object ColorUtils {
 
     @JvmStatic
     @JvmOverloads
-    fun parseColor(colorCode: String, defaultColorCode: String = ColorApiHelper.K5_DEFAULT_COLOR): Int {
+    fun parseColor(colorCode: String?, defaultColorCode: String = ColorApiHelper.K5_DEFAULT_COLOR): Int {
         return try {
-            val fullColorCode = if (colorCode.length == 4 && colorCode[0].toString() == "#") {
+            val fullColorCode = if (colorCode?.length == 4 && colorCode[0].toString() == "#") {
                 "#${colorCode[1]}${colorCode[1]}${colorCode[2]}${colorCode[2]}${colorCode[3]}${colorCode[3]}"
             } else {
                 colorCode
             }
             Color.parseColor(fullColorCode)
-        } catch (e: IllegalArgumentException) {
+        } catch (e: Exception) {
             Color.parseColor(defaultColorCode)
         }
     }

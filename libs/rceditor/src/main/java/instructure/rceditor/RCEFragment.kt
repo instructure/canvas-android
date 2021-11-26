@@ -74,16 +74,16 @@ class RCEFragment : Fragment() {
     private val onUploadPicture = View.OnClickListener {
         val dialog = RCEInsertDialog.newInstance(
                 getString(R.string.rce_insertImage),
-                arguments!!.getInt(THEME_COLOR, Color.BLACK),
-                arguments!!.getInt(BUTTON_COLOR, Color.BLACK))
+                requireArguments().getInt(THEME_COLOR, Color.BLACK),
+                requireArguments().getInt(BUTTON_COLOR, Color.BLACK))
         dialog.setListener { url, alt -> rcEditor.insertImage(url, alt) }.show(requireFragmentManager(), RCEInsertDialog::class.java.simpleName)
     }
 
     private val onInsertLink = View.OnClickListener {
         val dialog = RCEInsertDialog.newInstance(
                 getString(R.string.rce_insertLink),
-                arguments!!.getInt(THEME_COLOR, Color.BLACK),
-                arguments!!.getInt(BUTTON_COLOR, Color.BLACK))
+                requireArguments().getInt(THEME_COLOR, Color.BLACK),
+                requireArguments().getInt(BUTTON_COLOR, Color.BLACK))
         dialog.setListener { url, alt -> rcEditor.insertLink(url, alt) }.show(requireFragmentManager(), RCEInsertDialog::class.java.simpleName)
     }
 
@@ -117,18 +117,18 @@ class RCEFragment : Fragment() {
     private fun setupViews() {
         rcEditor.setPadding(10, 10, 10, 10)
         rcEditor.applyHtml(
-                arguments!!.getString(HTML_CONTENT) ?: "",
-                arguments!!.getString(HTML_ACCESSIBILITY_TITLE) ?: "")
+                requireArguments().getString(HTML_CONTENT) ?: "",
+                requireArguments().getString(HTML_ACCESSIBILITY_TITLE) ?: "")
 
         with(rceToolbar) {
-            title = arguments!!.getString(HTML_TITLE)
+            title = requireArguments().getString(HTML_TITLE)
             inflateMenu(R.menu.rce_save_menu)
             setNavigationIcon(R.drawable.ic_rce_cancel)
             setNavigationContentDescription(R.string.rce_cancel)
             setNavigationOnClickListener(View.OnClickListener {
                 // Check to see if we made any changes. If we haven't, just close the fragment
-                if (rcEditor.html != null && arguments!!.getString(HTML_CONTENT) != null) {
-                    if (rcEditor.html == arguments!!.getString(HTML_CONTENT)) {
+                if (rcEditor.html != null && requireArguments().getString(HTML_CONTENT) != null) {
+                    if (rcEditor.html == requireArguments().getString(HTML_CONTENT)) {
                         callback?.onResult(RESULT_CANCELED, null)
                         return@OnClickListener
                     }
@@ -140,7 +140,7 @@ class RCEFragment : Fragment() {
                 if (item.itemId == R.id.rce_save) {
                     val data = Intent()
                     data.putExtra(HTML_RESULT, if (rcEditor.html == null)
-                        arguments!!.getString(HTML_CONTENT)
+                        requireArguments().getString(HTML_CONTENT)
                     else
                         rcEditor.html)
                     callback?.onResult(RESULT_OK, data)
@@ -198,8 +198,8 @@ class RCEFragment : Fragment() {
         }
     }
 
-    fun loadArguments(html: String, title: String, accessibilityTitle: String, @ColorInt themeColor: Int, @ColorInt buttonColor: Int) {
-        with (arguments!!) {
+    fun loadArguments(html: String?, title: String?, accessibilityTitle: String?, @ColorInt themeColor: Int, @ColorInt buttonColor: Int) {
+        with (requireArguments()) {
             putString(HTML_CONTENT, html)
             putString(HTML_TITLE, title)
             putString(HTML_ACCESSIBILITY_TITLE, accessibilityTitle)

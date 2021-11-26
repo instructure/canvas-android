@@ -46,6 +46,7 @@ import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
@@ -88,6 +89,7 @@ class AssignmentDetailsView(
 
         submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
+        draftAvailableSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
         submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
@@ -112,6 +114,7 @@ class AssignmentDetailsView(
     override fun onConnect(output: Consumer<AssignmentDetailsEvent>) {
         submissionStatusFailed.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionStatusUploading.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
+        draftAvailableContainer.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         submitButton.onClick {
@@ -181,6 +184,7 @@ class AssignmentDetailsView(
             submitButton.importantForAccessibility = if (visibilities.submitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
             submitButton.setVisible(visibilities.submitButton)
             submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
+            draftAvailableContainer.setVisible(visibilities.draftSubmissionAvailable)
             submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
             submissionStatusFailed.setVisible(visibilities.submissionUploadStatusFailed)
             descriptionContainer.setVisible(visibilities.description || visibilities.noDescriptionLabel)
@@ -278,7 +282,7 @@ class AssignmentDetailsView(
                 showStudioUploadView(assignment, ltiToolUrl!!, ltiToolName!!)
             }
             setupDialogRow(dialog, dialog.submissionEntryStudentAnnotation, visibilities.studentAnnotation) {
-                showStudentAnnotationView(assignment.htmlUrl ?: "")
+                showStudentAnnotationView(assignment)
             }
         }
         dialog.show()
@@ -401,10 +405,22 @@ class AssignmentDetailsView(
         RouteMatcher.route(context, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
     }
 
-    fun showStudentAnnotationView(assignmentUrl: String) {
+    fun showStudentAnnotationView(assignment: Assignment) {
         logEvent(AnalyticsEventConstants.SUBMIT_STUDENT_ANNOTATION_SELECTED)
-        RouteMatcher.route(context,
-            UnsupportedFeatureFragment.makeRoute(canvasContext, unsupportedDescription = context.getString(R.string.studentAnnotationUnsupportedDescription), url = assignmentUrl))
+
+        val submissionId = assignment.submission?.id
+        if (submissionId != null) {
+            RouteMatcher.route(
+                context,
+                AnnotationSubmissionUploadFragment.makeRoute(
+                    canvasContext,
+                    assignment.annotatableAttachmentId,
+                    submissionId,
+                    assignment.id,
+                    assignment.name ?: ""
+                )
+            )
+        }
     }
 
     fun showQuizOrDiscussionView(url: String) {

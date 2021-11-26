@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Velg media</string>
     <string name="takeVideo">Ta video</string>
     <string name="noCameraOnDevice">Ingen kamera</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Opplåsingsdatoen kan ikke være etter forfallsdato</string>
     <string name="utils_lockBeforeDueDateError">Låsedato kan ikke være før forfallsdato</string>
     <string name="utils_lockAfterUnlockError">Låsedato kan ikke være før opplåsingsdato</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Start appen på nytt for å installere den nye versjonen</string>
     <string name="nothing_planned_yet">Ingenting planlagt enda</string>
     <string name="schedule_tag_graded">Vurdert</string>
-    <string name="schedule_tag_replies">Svar</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d Svar</item>
+        <item quantity="other">%d Svar></item>
+    </plurals>
     <string name="schedule_tag_feedback">Tilbakemelding</string>
     <string name="schedule_tag_late">Sent</string>
     <string name="schedule_tag_redo">Gjør om</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">I morgen</string>
     <string name="yesterday">I går</string>
     <string name="schedule_calendar_event_due_text">Den %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s til %2$s</string>
     <string name="schedule_todo_due_text">Å gjøre: %s</string>
     <string name="schedule_due_text">Frist: %s</string>
     <string name="show_missing_items_title">Vis %d manglende elementer</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s poeng</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f poeng</item>
+        <item quantity="one">%.1f poeng</item>
+        <item quantity="other">%.1f poeng</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Hele dagen</string>
+    <string name="schedule_tag_missing">Mangler</string>
+    <string name="previous_week">Forrige uke</string>
+    <string name="next_week">Neste uke</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Emne %s</string>
+    <string name="a11y_announcement">Kunngjøring</string>
+    <string name="a11y_discussion_topic">Diskusjon</string>
+    <string name="a11y_calendar_event">Kalenderhendelse</string>
+    <string name="a11y_assignment">Oppgave</string>
+    <string name="a11y_planner_note">Planleggingsmerknad</string>
+    <string name="a11y_quiz">Test</string>
+    <string name="a11y_todo">Å gjøre</string>
+    <string name="a11y_page">Side</string>
+    <string name="a11y_marked_as_done">Merket som ferdig</string>
+    <string name="a11y_not_marked_as_done">Er ikke merket som ferdig</string>
+    <string name="a11y_mark_as_done">Merk som ferdig</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Oi sann! Det oppsto en feil ved lasting av emnedetaljer.</string>
 </resources>
