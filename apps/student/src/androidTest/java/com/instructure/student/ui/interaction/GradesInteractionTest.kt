@@ -136,20 +136,6 @@ class GradesInteractionTest : StudentTest() {
         gradesPage.assertCourseShownWithGrades(notGradedCourse.name, "0%")
     }
 
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testasdf() {
-        val data = createMockData(courseCount = 2, withGradingPeriods = true)
-        goToGradesTab(data)
-
-        gradesPage.assertSelectedGradingPeriod(gradesPage.getStringFromResource(R.string.currentGradingPeriod))
-        gradesPage.clickGradingPeriodSelector()
-
-        val gradingPeriod = data.courseGradingPeriods.values.first().first()
-        gradesPage.selectGradingPeriod(gradingPeriod.title!!)
-        gradesPage.assertSelectedGradingPeriod(gradingPeriod.title!!)
-    }
-
     private fun createMockData(
         courseCount: Int = 0,
         withGradingPeriods: Boolean = false,
