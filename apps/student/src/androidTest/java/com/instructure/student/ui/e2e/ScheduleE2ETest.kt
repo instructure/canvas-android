@@ -40,7 +40,7 @@ import java.util.*
 class ScheduleE2ETest : StudentTest() {
 
     override fun displaysPageObjects() = Unit
-
+/*
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
@@ -205,6 +205,6 @@ class ScheduleE2ETest : StudentTest() {
         cal.add(Calendar.DATE, dayDiffFromToday)
         return cal
     }
-
+*/
 }
 
