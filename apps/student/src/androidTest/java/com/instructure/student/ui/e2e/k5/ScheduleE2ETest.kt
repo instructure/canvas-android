@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.student.ui.e2e
+package com.instructure.student.ui.e2e.k5
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E

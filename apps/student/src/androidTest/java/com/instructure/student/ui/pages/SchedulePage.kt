@@ -74,7 +74,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         var i: Int = 0
         while (true) {
             scrollToPosition(i)
-            Thread.sleep(100)
+            Thread.sleep(5000)
             try {
                 if(target == null) onView(withParent(itemId) + withText(itemName)).scrollTo()
                 else onView(target + withText(itemName)).scrollTo()

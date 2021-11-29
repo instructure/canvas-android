@@ -60,6 +60,34 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
             .click()
     }
 
+    fun selectTab(elementaryTabType: ElementaryTabType) {
+        when(elementaryTabType) {
+            ElementaryTabType.HOMEROOM -> {
+                onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabHomeroom))
+                    .scrollTo()
+                    .click()
+            }
+
+            ElementaryTabType.SCHEDULE -> {
+                onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabSchedule))
+                    .scrollTo()
+                    .click()
+            }
+
+            ElementaryTabType.GRADES -> {
+                onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabGrades))
+                    .scrollTo()
+                    .click()
+            }
+
+            ElementaryTabType.RESOURES -> {
+                onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabResources))
+                    .scrollTo()
+                    .click()
+            }
+        }
+    }
+
     fun assertScheduleTabVisibleAndSelected() {
         onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabSchedule) + isDisplayed()).assertDisplayed()
         onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabSchedule) + isDisplayed()).assertSelected()
@@ -106,5 +134,12 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
     fun assertNotElementaryMenuItemsDontShowInDrawer() {
         onView(withText(R.string.showGrades)).assertNotDisplayed()
         onView(withText(R.string.colorOverlay)).assertNotDisplayed()
+    }
+
+    enum class ElementaryTabType(val tabType: Int) {
+        HOMEROOM(R.string.dashboardTabHomeroom),
+        SCHEDULE(R.string.dashboardTabSchedule),
+        GRADES(R.string.dashboardTabGrades),
+        RESOURES(R.string.dashboardTabResources)
     }
 }
