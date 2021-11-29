@@ -78,6 +78,9 @@ object EnrollmentManager {
         EnrollmentAPI.getSelfEnrollments(types, states, adapter, params, depaginatedCallback)
     }
 
+    fun getSelfEnrollmentsAsync(types: List<String>?, states: List<String>?, forceNetwork: Boolean) =
+        apiAsync<List<Enrollment>> { getSelfEnrollments(types, states, forceNetwork, it) }
+
     fun getObserveeEnrollments(forceNetwork: Boolean, callback: StatusCallback<List<Enrollment>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -90,8 +93,8 @@ object EnrollmentManager {
         EnrollmentAPI.getObserveeEnrollments(adapter, params, depaginatedCallback)
     }
 
-    fun getObserveeEnrollmentsAsync(forceNetwork: Boolean)
-            = apiAsync<List<Enrollment>> { getObserveeEnrollments(forceNetwork, it) }
+    fun getObserveeEnrollmentsAsync(forceNetwork: Boolean) =
+        apiAsync<List<Enrollment>> { getObserveeEnrollments(forceNetwork, it) }
 
 
     fun handleInvite(courseId: Long, enrollmentId: Long, acceptInvite: Boolean, callback: StatusCallback<Void>) {
