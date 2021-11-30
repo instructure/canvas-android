@@ -220,7 +220,8 @@ class WhiteAppBarTheme extends StatelessWidget {
     var theme = StudentTheme.of(context).defaultTheme.copyWith(
           appBarTheme: AppBarTheme(
             color: baseTheme.scaffoldBackgroundColor,
-            textTheme: baseTheme.textTheme,
+            toolbarTextStyle: baseTheme.textTheme.bodyText2,
+            titleTextStyle: baseTheme.textTheme.headline6,
             iconTheme: baseTheme.iconTheme,
             elevation: 2,
           ),
