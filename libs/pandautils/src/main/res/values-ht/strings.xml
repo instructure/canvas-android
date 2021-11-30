@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Chwazi Medya</string>
     <string name="takeVideo">Anrejistre Videyo</string>
     <string name="noCameraOnDevice">Pa gen Kamera</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Dat deblokaj la pa kapab aprè delè a</string>
     <string name="utils_lockBeforeDueDateError">Dat blokaj la pa dwe anvan delè a</string>
     <string name="utils_lockAfterUnlockError">Dat blokaj la pa dwe anvan dat deblokaj la</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Relanse app la pou ka enstale nouvo vèsyon an</string>
     <string name="nothing_planned_yet">Anyen poko planifye</string>
     <string name="schedule_tag_graded">Klase</string>
-    <string name="schedule_tag_replies">Repons</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d Reponn</item>
+        <item quantity="other">%d Repons></item>
+    </plurals>
     <string name="schedule_tag_feedback">Kòmantè</string>
     <string name="schedule_tag_late">An reta</string>
     <string name="schedule_tag_redo">Refè</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">Demen</string>
     <string name="yesterday">Yè</string>
     <string name="schedule_calendar_event_due_text">Nan %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s a %2$s</string>
     <string name="schedule_todo_due_text">Tach: %s</string>
     <string name="schedule_due_text">Delè: %s</string>
     <string name="show_missing_items_title">Afiche %d eleman ki manke</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s pwen</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f pwen</item>
+        <item quantity="one">%.1f pwen</item>
+        <item quantity="other">%.1f pwen</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Tout Jounen</string>
+    <string name="schedule_tag_missing">Manke</string>
+    <string name="previous_week">Semenn Pase</string>
+    <string name="next_week">Semenn Pwochen</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Kou %s</string>
+    <string name="a11y_announcement">Anons</string>
+    <string name="a11y_discussion_topic">Diskisyon</string>
+    <string name="a11y_calendar_event">Evènman kalandriye</string>
+    <string name="a11y_assignment">Sesyon</string>
+    <string name="a11y_planner_note">Nòt pou planifikatè</string>
+    <string name="a11y_quiz">Quiz</string>
+    <string name="a11y_todo">Pou Fè</string>
+    <string name="a11y_page">Paj</string>
+    <string name="a11y_marked_as_done">Make tankou li fini</string>
+    <string name="a11y_not_marked_as_done">Pa make tankou li fini</string>
+    <string name="a11y_mark_as_done">Make tankou li fini</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Uh oh! Gen yon erè ki fèt pandan chajman detay kou yo.</string>
 </resources>

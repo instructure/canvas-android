@@ -32,28 +32,29 @@ CREATE TABLE submission (
     currentFile INTEGER NOT NULL DEFAULT 0,
     fileCount INTEGER NOT NULL DEFAULT 0,
     progress REAL,
-    annotatableAttachmentId INTEGER
+    annotatableAttachmentId INTEGER,
+    isDraft INTEGER as Boolean DEFAULT 0
 );
 
 insertOnlineTextSubmission:
-INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType)
-VALUES (?, ?, ?, ?, ?, ?, "online_text_entry");
+INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType, isDraft)
+VALUES (?, ?, ?, ?, ?, ?, "online_text_entry", ?);
 
 insertOnlineUrlSubmission:
-INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType)
-VALUES (?, ?, ?, ?, ?, ?, "online_url"); --"basic_lti_launch" else "online_url"
+INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType, isDraft)
+VALUES (?, ?, ?, ?, ?, ?, "online_url", 0); --"basic_lti_launch" else "online_url"
 
 insertOnlineUploadSubmission:
-INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, userId, lastActivityDate, submissionType)
-VALUES (?, ?, ?, ?, ?, ?, "online_upload");
+INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, userId, lastActivityDate, submissionType, isDraft)
+VALUES (?, ?, ?, ?, ?, ?, "online_upload", 0);
 
 insertMediaUploadSubmission:
-INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, userId, lastActivityDate, submissionType)
-VALUES (?, ?, ?, ?, ?, ?, "media_recording");
+INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, userId, lastActivityDate, submissionType, isDraft)
+VALUES (?, ?, ?, ?, ?, ?, "media_recording", 0);
 
 insertStudentAnnotationSubmission:
-INSERT INTO submission (annotatableAttachmentId, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType)
-VALUES (?, ?, ?, ?, ?, ?, "student_annotation");
+INSERT INTO submission (annotatableAttachmentId, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType, isDraft)
+VALUES (?, ?, ?, ?, ?, ?, "student_annotation", 0);
 
 getAllSubmissions:
 SELECT *
@@ -95,3 +96,17 @@ WHERE id = ?;
 
 getLastInsert:
 SELECT last_insert_rowid();
+
+getDraftById:
+SELECT *
+FROM submission
+WHERE assignmentId = ?
+AND userId = ?
+AND isDraft = 1;
+
+deleteDraftById:
+DELETE
+FROM submission
+WHERE assignmentId = ?
+AND userId = ?
+AND isDraft = 1;

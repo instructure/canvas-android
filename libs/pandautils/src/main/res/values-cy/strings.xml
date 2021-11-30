@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Dewiswch Gyfryngau</string>
     <string name="takeVideo">Gwnewch Fideo</string>
     <string name="noCameraOnDevice">Dim Camera</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Does dim modd i’r dyddiad datgloi fod ar ôl y dyddiad erbyn</string>
     <string name="utils_lockBeforeDueDateError">Does dim modd i’r dyddiad cloi fod cyn y dyddiad erbyn</string>
     <string name="utils_lockAfterUnlockError">Does dim modd i’r dyddiad cloi fod cyn y dyddiad datgloi</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Ail-gychwynnwch yr ap i osod y fersiwn newydd</string>
     <string name="nothing_planned_yet">Does dim byd wedi’i drefnu hyd yma</string>
     <string name="schedule_tag_graded">Wedi graddio</string>
-    <string name="schedule_tag_replies">Ateb</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d Ateb</item>
+        <item quantity="other">%d Ateb></item>
+    </plurals>
     <string name="schedule_tag_feedback">Adborth</string>
     <string name="schedule_tag_late">Yn Hwyr</string>
     <string name="schedule_tag_redo">Ail-wneud</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">Yfory</string>
     <string name="yesterday">Ddoe</string>
     <string name="schedule_calendar_event_due_text">Am %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s i %2$s</string>
     <string name="schedule_todo_due_text">Tasgau i’w Gwneud: %s</string>
     <string name="schedule_due_text">Erbyn: %s</string>
     <string name="show_missing_items_title">Dangos %d eitem coll</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s pwynt</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f pwynt</item>
+        <item quantity="one">%.1f pwynt</item>
+        <item quantity="other">%.1f pwynt</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Drwy’r Dydd</string>
+    <string name="schedule_tag_missing">Ar goll</string>
+    <string name="previous_week">Wythnos Flaenorol</string>
+    <string name="next_week">Wythnos Nesaf</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Cwrs %s</string>
+    <string name="a11y_announcement">Cyhoeddiad</string>
+    <string name="a11y_discussion_topic">Trafodaeth</string>
+    <string name="a11y_calendar_event">Digwyddiad calendr</string>
+    <string name="a11y_assignment">Aseiniad</string>
+    <string name="a11y_planner_note">Nodyn gan y trefnydd</string>
+    <string name="a11y_quiz">Cwis</string>
+    <string name="a11y_todo">Tasgau i’w Gwneud</string>
+    <string name="a11y_page">Tudalen</string>
+    <string name="a11y_marked_as_done">Wedi ei farcio ei fod wedi’i wneud</string>
+    <string name="a11y_not_marked_as_done">Heb ei farcio ei fod wedi’i wneud</string>
+    <string name="a11y_mark_as_done">Marcio eu bod wedi’u gwneud</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">O na! Gwall wrth lwytho manylion y cwrs.</string>
 </resources>

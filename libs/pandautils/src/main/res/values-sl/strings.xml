@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Izberi medij</string>
     <string name="takeVideo">Posnemi videoposnetek</string>
     <string name="noCameraOnDevice">Ni fotoaparata.</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Datum sprostitve zapore ne more biti po roku.</string>
     <string name="utils_lockBeforeDueDateError">Datum zapore objave ne more biti pred rokom.</string>
     <string name="utils_lockAfterUnlockError">Datum zapore objave ne more biti pred datumom sprostitve zapore.</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Aplikacijo zaženite znova, da namestite novo različico</string>
     <string name="nothing_planned_yet">Nič še ni načrtovano</string>
     <string name="schedule_tag_graded">Ocenjeno</string>
-    <string name="schedule_tag_replies">Odgovori</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d odgovor</item>
+        <item quantity="other">%d odgovorov></item>
+    </plurals>
     <string name="schedule_tag_feedback">Povratne informacije</string>
     <string name="schedule_tag_late">Zamuda</string>
     <string name="schedule_tag_redo">Uveljavi</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">Jutri</string>
     <string name="yesterday">Včeraj</string>
     <string name="schedule_calendar_event_due_text">Ob %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s do %2$s</string>
     <string name="schedule_todo_due_text">Čakajoča opravila: %s</string>
     <string name="schedule_due_text">Rok: %s</string>
     <string name="show_missing_items_title">Prikaži %d manjkajočih elementov</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s točk</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f točk</item>
+        <item quantity="one">%.1f točka</item>
+        <item quantity="other">%.1f točk</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Ves dan</string>
+    <string name="schedule_tag_missing">Manjkajoče</string>
+    <string name="previous_week">Prejšnji teden</string>
+    <string name="next_week">Naslednji teden</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Predmet %s</string>
+    <string name="a11y_announcement">Obvestilo</string>
+    <string name="a11y_discussion_topic">Razprava</string>
+    <string name="a11y_calendar_event">Dogodek koledarja</string>
+    <string name="a11y_assignment">Naloga</string>
+    <string name="a11y_planner_note">Opomba orodja Planner</string>
+    <string name="a11y_quiz">Kviz</string>
+    <string name="a11y_todo">Čakajoča opravila</string>
+    <string name="a11y_page">Stran</string>
+    <string name="a11y_marked_as_done">Označi kot dokončano</string>
+    <string name="a11y_not_marked_as_done">Ni označeno kot dokončano</string>
+    <string name="a11y_mark_as_done">Označi kot dokončano</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Ojoj! Pri nalaganju podrobnosti o predmetu je prišlo do napake.</string>
 </resources>

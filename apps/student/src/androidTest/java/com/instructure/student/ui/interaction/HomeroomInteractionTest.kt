@@ -66,7 +66,7 @@ class HomeroomInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyCoursesShowUpOnHomeroomIfNoHomeroomAnnouncement() {
-        val data = createMockDataWithHomeroomCourse(courseCount = 3, homeroomCourseCount = 0)
+        val data = createMockDataWithHomeroomCourse(courseCount = 3)
 
         goToHomeroomPage(data)
 
@@ -86,7 +86,7 @@ class HomeroomInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testOnlyAnnouncementShowsUpOnHomeroomIfNoHomeroomAnnouncement() {
+    fun testOnlyAnnouncementShowsUpOnHomeroomIfNoCourses() {
         val data = createMockDataWithHomeroomCourse()
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
         val user = data.users.values.first()
@@ -104,20 +104,29 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testEmptyState() {
-        val data = createMockDataWithHomeroomCourse()
+    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testOpenCourse() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 3)
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val user = data.users.values.first()
+
+        data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
+
+        val courses = data.courses.values.filter { !it.homeroomCourse }
 
         goToHomeroomPage(data)
 
-        homeroomPage.assertHomeroomContentNotDisplayed()
-        homeroomPage.assertCourseItemsCount(0)
-        homeroomPage.assertEmptyViewDisplayed()
+        homeroomPage.assertPageObjects()
+
+        homeroomPage.openCourse(courses[0].name)
+
+        elementaryCoursePage.assertPageObjects()
+        elementaryCoursePage.assertTitleCorrect(courses[0].originalName!!)
     }
 
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testRefresh() {
+    fun testRefreshAfterEnrolledToCourses() {
         val data = createMockDataWithHomeroomCourse()
 
         goToHomeroomPage(data)
@@ -151,9 +160,10 @@ class HomeroomInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenHomeroomCourseAnnouncements() {
-        val data = createMockDataWithHomeroomCourse(courseCount = 3)
+        val data = createMockDataWithHomeroomCourse(courseCount = 3, homeroomCourseCount = 2)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
         val user = data.users.values.first()
+
 
         val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
 
@@ -165,10 +175,29 @@ class HomeroomInteractionTest : StudentTest() {
         homeroomPage.assertWelcomeText(student.shortName!!)
         homeroomPage.assertAnnouncementDisplayed(homeroomCourse.name, homeroomAnnouncement.title!!, homeroomAnnouncement.message!!)
 
-        homeroomPage.openHomeroomAnnouncements()
+        homeroomPage.clickOnViewPreviousAnnouncements()
 
         announcementListPage.assertToolbarTitle()
         announcementListPage.assertAnnouncementTitleVisible(homeroomAnnouncement.title!!)
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testOpenCourseAnnouncements() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 1)
+
+        val user = data.users.values.first()
+        val courses = data.courses.values.filter { !it.homeroomCourse }
+        val courseAnnouncement = data.addDiscussionTopicToCourse(courses[0], user, isAnnouncement = true)
+
+        goToHomeroomPage(data)
+
+        homeroomPage.assertPageObjects()
+
+        homeroomPage.openCourseAnnouncement(courseAnnouncement.title!!)
+
+        discussionDetailsPage.assertPageObjects()
+        discussionDetailsPage.assertTitleText(courseAnnouncement.title!!)
     }
 
     @Test
@@ -194,46 +223,6 @@ class HomeroomInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testOpenCourseAnnouncements() {
-        val data = createMockDataWithHomeroomCourse(courseCount = 1)
-
-        val user = data.users.values.first()
-        val courses = data.courses.values.filter { !it.homeroomCourse }
-        val courseAnnouncement = data.addDiscussionTopicToCourse(courses[0], user, isAnnouncement = true)
-
-        goToHomeroomPage(data)
-
-        homeroomPage.assertPageObjects()
-
-        homeroomPage.openCourseAnnouncement(courseAnnouncement.title!!)
-
-        discussionDetailsPage.assertPageObjects()
-        discussionDetailsPage.assertTitleText(courseAnnouncement.title!!)
-    }
-
-    @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testOpenCourse() {
-        val data = createMockDataWithHomeroomCourse(courseCount = 3)
-        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
-        val user = data.users.values.first()
-
-        data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
-
-        val courses = data.courses.values.filter { !it.homeroomCourse }
-
-        goToHomeroomPage(data)
-
-        homeroomPage.assertPageObjects()
-
-        homeroomPage.openCourse(courses[0].name)
-
-        elementaryCoursePage.assertPageObjects()
-        elementaryCoursePage.assertTitleCorrect(courses[0].originalName!!)
-    }
-
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testDueTodayAndMissingAssignments() {
         val data = createMockDataWithHomeroomCourse(courseCount = 1)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -253,7 +242,7 @@ class HomeroomInteractionTest : StudentTest() {
         // With the current implementation of MockCanvas, all the assignments will show up as due today and missing, because both Mock endpoints will return all the assignments.
         // This cannot happen in normal circumstances, but for testing the UI it's fine.
         // We can add a more sophisticated approach when other tests will need it.
-        // Veryfing the logic that one can be due today or missing only is covered by unit tests.
+        // Verifying the logic that one can be due today or missing only is covered by unit tests.
         homeroomPage.assertToDoText("2 due today | 2 missing")
     }
 
@@ -279,6 +268,18 @@ class HomeroomInteractionTest : StudentTest() {
 
         assignmentListPage.assertPageObjects()
         assignmentListPage.assertHasAssignment(assignment1)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testEmptyState() {
+        val data = createMockDataWithHomeroomCourse()
+
+        goToHomeroomPage(data)
+
+        homeroomPage.assertHomeroomContentNotDisplayed()
+        homeroomPage.assertCourseItemsCount(0)
+        homeroomPage.assertEmptyViewDisplayed()
     }
 
     private fun createMockDataWithHomeroomCourse(

@@ -23,7 +23,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.submission.text.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.spotify.mobius.EventSource
 
 class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, TextSubmissionUploadEvent, TextSubmissionUploadEffect, TextSubmissionUploadView, TextSubmissionUploadViewState>() {
 
@@ -41,9 +40,15 @@ class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, T
 
     override fun makePresenter() = TextSubmissionUploadPresenter
 
-    override fun makeInitModel() = TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText, isFailure)
+    override fun makeInitModel(): TextSubmissionUploadModel {
+        return TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText, isFailure)
+    }
 
     override fun getExternalEventSources() = listOf(TextSubmissionUploadEventBusSource())
+
+    override fun handleBackPressed(): Boolean {
+        return view.onBackPressed()
+    }
 
     companion object {
 

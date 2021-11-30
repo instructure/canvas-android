@@ -23,18 +23,18 @@
     <string name="comments">Comentários</string>
     <string name="error_loading_submission">Houve um problema ao carregar este envio.</string>
     <string name="retry">Tentar novamente</string>
-    <string name="annotationErrorOccurred">Ocorreu um erro ao carregar anotações.</string>
-    <string name="annotationError">Erro da anotação</string>
-    <string name="annotationDialogMessage">A anotação foi excluída a partir de outra fonte.</string>
+    <string name="annotationErrorOccurred">Ocorreu um erro ao carregar observações.</string>
+    <string name="annotationError">Erro da observação</string>
+    <string name="annotationDialogMessage">A observação foi excluída a partir de outra fonte.</string>
     <string name="errorSendingMessage">Não foi possível enviar esta mensagem. Toque para tentar novamente.</string>
     <string name="addAnnotationComment">Adicionar comentário</string>
     <string name="editComment">Editar comentário</string>
     <string name="deleteComment">Excluir comentário</string>
-    <string name="deleteAnnotation">Excluir anotação</string>
+    <string name="deleteAnnotation">Excluir observação</string>
     <string name="deleteCommentConfirmation">Tem certeza de que deseja excluir este comentário?</string>
-    <string name="deleteHeadCommentConfirmation">Excluir este comentário excluirá todos os comentários associados a esta anotação. Tem certeza de que deseja fazer isso?</string>
+    <string name="deleteHeadCommentConfirmation">Excluir este comentário excluirá todos os comentários associados a esta observação. Tem certeza de que deseja fazer isso?</string>
     <string name="sendingSimple">Enviando</string>
-    <string name="pspdf__annotation_type_stamp">Cor da anotação</string>
+    <string name="pspdf__annotation_type_stamp">Cor da observação</string>
     <string name="removedComment">Removido %1$s por %2$s</string>
 
 </resources>

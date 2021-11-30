@@ -56,6 +56,10 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
                 .check(matches(containsTextCaseInsensitive(assignment.pointsPossible.toInt().toString())))
     }
 
+    fun verifyAssignmentTitle(assignmentName: String) {
+        onView(withId(R.id.assignmentName)).assertHasText(assignmentName)
+    }
+
     fun verifyAssignmentSubmitted() {
         onView(withText(R.string.submissionStatusSuccessTitle)).scrollTo().assertDisplayed()
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()

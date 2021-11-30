@@ -1,0 +1,40 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="inputText">Introducir texto</string>
+    <string name="cancel">Cancelar</string>
+    <string name="comment">Comentario</string>
+    <string name="skip">Saltar</string>
+    <string name="comments">Comentarios</string>
+    <string name="error_loading_submission">Ha habido un problema al cargar esta entrega.</string>
+    <string name="retry">Reintentar</string>
+    <string name="annotationErrorOccurred">Ha habido un error inesperado al cargar anotaciones.</string>
+    <string name="annotationError">Error de anotación</string>
+    <string name="annotationDialogMessage">La anotación se ha eliminado de otra fuente.</string>
+    <string name="errorSendingMessage">El mensaje no ha podido enviarse. Toque para volver a intentarlo.</string>
+    <string name="addAnnotationComment">Añadir comentario</string>
+    <string name="editComment">Editar comentario</string>
+    <string name="deleteComment">Eliminar comentario</string>
+    <string name="deleteAnnotation">Eliminar anotación</string>
+    <string name="deleteCommentConfirmation">¿Está seguro de que desea eliminar este comentario?</string>
+    <string name="deleteHeadCommentConfirmation">Al eliminar este comentario, se eliminarán todos los comentarios asociados con esta anotación. ¿Seguro de que desea realizar esta acción?</string>
+    <string name="sendingSimple">Enviando</string>
+    <string name="pspdf__annotation_type_stamp">Color de la nota</string>
+    <string name="removedComment">Eliminado %1$s por %2$s</string>
+
+</resources>
