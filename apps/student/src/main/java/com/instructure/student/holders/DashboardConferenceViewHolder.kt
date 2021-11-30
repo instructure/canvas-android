@@ -23,8 +23,6 @@ import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
-import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
-import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.viewholder_dashboard_conference_card.view.*
 import kotlinx.coroutines.*
