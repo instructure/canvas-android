@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.Conference
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class DashboardNotificationsViewData(
-    val items: List<ItemViewModel>?
+    val items: List<ItemViewModel>
 )
 
 data class InvitationViewData(

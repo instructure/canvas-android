@@ -33,6 +33,6 @@
         android:paddingStart="16dp"
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
-        android:visibility="@{viewModel.data.items == null ? View.GONE : View.VISIBLE}"
+        android:visibility="@{viewModel.data.items.size() == 0 ? View.GONE : View.VISIBLE}"
         app:itemViewModels="@{viewModel.data.items}" />
 </layout>
