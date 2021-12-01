@@ -32,9 +32,13 @@ import com.instructure.pandautils.features.elementary.homeroom.HomeroomAction
 import com.instructure.pandautils.utils.bind
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DashboardNotificationsFragment : Fragment() {
+
+    @Inject
+    lateinit var dashboardRouter: DashboardRouter
 
     companion object {
         fun newInstance() = DashboardNotificationsFragment()
@@ -73,6 +77,10 @@ class DashboardNotificationsFragment : Fragment() {
                 action.toast,
                 Toast.LENGTH_SHORT
             ).show()
+            is DashboardNotificationsActions.OpenAnnouncement -> dashboardRouter.routeToGlobalAnnouncement(
+                action.subject,
+                action.message
+            )
         }
     }
 }

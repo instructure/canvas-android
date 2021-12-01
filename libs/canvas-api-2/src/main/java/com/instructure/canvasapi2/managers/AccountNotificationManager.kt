@@ -57,6 +57,8 @@ object AccountNotificationManager {
         AccountNotificationAPI.deleteAccountNotification(notificationId, adapter, params, callback)
     }
 
+    fun deleteAccountNotificationsAsync(notificationId: Long) = apiAsync<AccountNotification> { deleteAccountNotification(notificationId, it) }
+
     fun getAccountNotification(
         accountNotificationId: Long,
         callback: StatusCallback<AccountNotification>,

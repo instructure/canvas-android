@@ -32,17 +32,20 @@ import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.internal.toHexString
 import org.threeten.bp.OffsetDateTime
 import java.util.*
 import javax.inject.Inject
@@ -88,14 +91,52 @@ class DashboardNotificationsViewModel @Inject constructor(
             val invitationViewModels = getInvitations(forceNetwork)
             items.addAll(invitationViewModels)
 
-            val accountNotifications =
-                accountNotificationManager.getAllAccountNotificationsAsync(true).await().dataOrNull
+            val accountNotificationViewModels = getAccountNotifications(forceNetwork)
+            items.addAll(accountNotificationViewModels)
 
             val conferenceViewModels = getConferences(forceNetwork)
             items.addAll(conferenceViewModels)
 
             _data.postValue(DashboardNotificationsViewData(items))
         }
+    }
+
+    private suspend fun getAccountNotifications(forceNetwork: Boolean): List<ItemViewModel> {
+        val accountNotifications =
+            accountNotificationManager.getAllAccountNotificationsAsync(forceNetwork).await().dataOrNull
+
+        return createAccountNotificationViewModels(accountNotifications)
+    }
+
+    private fun createAccountNotificationViewModels(accountNotifications: List<AccountNotification>?): List<ItemViewModel> {
+        return accountNotifications?.map {
+
+            val color = when (it.icon) {
+                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> resources.getColor(R.color.notificationTintError)
+                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> resources.getColor(R.color.notificationTintWarning)
+                else -> ThemePrefs.brandColor
+            }
+
+            val icon = when (it.icon) {
+                AccountNotification.ACCOUNT_NOTIFICATION_ERROR,
+                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> R.drawable.ic_warning
+                AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR -> R.drawable.ic_calendar
+                AccountNotification.ACCOUNT_NOTIFICATION_QUESTION -> R.drawable.ic_question_mark
+                else -> R.drawable.ic_info
+            }
+
+            AnnouncementItemViewModel(
+                AnnouncementViewData(
+                    id = it.id,
+                    subject = it.subject,
+                    message = it.message,
+                    color = "#${color.toHexString()}",
+                    icon = icon
+                ),
+                this@DashboardNotificationsViewModel::dismissAnnouncement,
+                this@DashboardNotificationsViewModel::openAnnouncement
+            )
+        } ?: emptyList()
     }
 
     private suspend fun getConferences(forceNetwork: Boolean): List<ItemViewModel> {
@@ -241,5 +282,21 @@ class DashboardNotificationsViewModel @Inject constructor(
         val blacklist = conferenceDashboardBlacklist.conferenceDashboardBlacklist + conference.id.toString()
         conferenceDashboardBlacklist.conferenceDashboardBlacklist = blacklist
         loadData(false)
+    }
+
+    private fun dismissAnnouncement(announcementId: Long) {
+        viewModelScope.launch {
+            try {
+                accountNotificationManager.deleteAccountNotificationsAsync(announcementId).await().dataOrThrow
+                loadData(true)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _events.postValue(Event(DashboardNotificationsActions.ShowToast(resources.getString(R.string.errorOccurred))))
+            }
+        }
+    }
+
+    private fun openAnnouncement(subject: String, message: String) {
+        _events.postValue(Event(DashboardNotificationsActions.OpenAnnouncement(subject, message)))
     }
 }
