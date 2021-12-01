@@ -24,6 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.FragmentDashboardNotificationsBinding
+import com.instructure.pandautils.utils.bind
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,8 +40,14 @@ class DashboardNotificationsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_dashboard_notifications, container, false)
+    ): View {
+        val binding = FragmentDashboardNotificationsBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        viewModel.loadData(true)
+
+        return binding.root
     }
 
 }

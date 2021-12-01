@@ -57,7 +57,7 @@ class CourseInvitationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemV
             buttonContainer.setInvisible()
             inviteProgressBar.setVisible()
             tryWeave {
-                awaitApi<Void> { EnrollmentManager.handleInvite(enrollment.courseId, enrollment.id, accepted, it) }
+                awaitApi<Unit> { EnrollmentManager.handleInvite(enrollment.courseId, enrollment.id, accepted, it) }
                 inviteDetails.setGone()
                 buttonContainer.setGone()
                 inviteProgressBar.setGone()

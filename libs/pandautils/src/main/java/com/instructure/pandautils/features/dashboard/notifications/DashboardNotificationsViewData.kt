@@ -16,7 +16,19 @@
 
 package com.instructure.pandautils.features.dashboard.notifications
 
+import com.instructure.pandautils.mvvm.ItemViewModel
+
+data class DashboardNotificationsViewData(
+    val items: List<ItemViewModel>?
+)
+
 data class InvitationViewData(
     val title: String,
-    val description: String
+    val description: String,
+    val enrollmentId: Long,
+    val courseId: Long
 )
+
+sealed class DashboardNotificationsActions {
+    data class ShowToast(val toast: String): DashboardNotificationsActions()
+}

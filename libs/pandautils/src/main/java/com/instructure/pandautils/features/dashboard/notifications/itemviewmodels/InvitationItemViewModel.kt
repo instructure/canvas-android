@@ -24,10 +24,14 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 
 class InvitationItemViewModel(
     val data: InvitationViewData,
-    val handleInvitation: (Boolean) -> Unit,
+    val handleInvitation: (Long, Long, InvitationItemViewModel, Boolean) -> Unit,
     @get:Bindable var inProgress: Boolean = false,
     @get:Bindable var accepted: Boolean? = null
 ) : ItemViewModel, BaseObservable() {
 
-    override val layoutId: Int = 0
+    override val layoutId: Int = R.layout.item_dashboard_invitation
+
+    fun handleInvitation(accepted: Boolean) {
+        handleInvitation(data.enrollmentId, data.courseId, this, accepted)
+    }
 }
