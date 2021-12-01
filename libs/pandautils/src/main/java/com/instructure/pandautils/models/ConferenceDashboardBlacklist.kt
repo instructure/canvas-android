@@ -16,6 +16,10 @@
 
 package com.instructure.pandautils.models
 
-data class ConferenceDashboardBlacklist(
-    val blacklist: Set<String>?
-)
+import com.instructure.canvasapi2.utils.PrefManager
+import com.instructure.canvasapi2.utils.StringSetPref
+
+object ConferenceDashboardBlacklist : PrefManager("conference_blacklist") {
+
+    var conferenceDashboardBlacklist by StringSetPref()
+}

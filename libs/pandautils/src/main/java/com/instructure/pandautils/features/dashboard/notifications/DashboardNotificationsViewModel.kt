@@ -17,34 +17,33 @@
 package com.instructure.pandautils.features.dashboard.notifications
 
 import android.content.res.Resources
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.AccountNotificationManager
-import com.instructure.canvasapi2.managers.ConferenceManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
-import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.notifyAll
 import org.threeten.bp.OffsetDateTime
-import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
@@ -52,7 +51,9 @@ import javax.inject.Inject
 class DashboardNotificationsViewModel @Inject constructor(
     private val resources: Resources,
     private val courseManager: CourseManager,
+    private val groupManager: GroupManager,
     private val enrollmentManager: EnrollmentManager,
+    private val conferenceManager: ConferenceManager,
     private val accountNotificationManager: AccountNotificationManager,
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist
 ) : ViewModel() {
@@ -70,50 +71,78 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val _events = MutableLiveData<Event<DashboardNotificationsActions>>()
 
     private var coursesMap: Map<Long, Course> = emptyMap()
+    private var groupMap: Map<Long, Group> = emptyMap()
 
     fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
 
+            val items = mutableListOf<ItemViewModel>()
+
             val courses = courseManager.getCoursesAsync(forceNetwork).await().dataOrNull
+            val groups = groupManager.getAllGroupsAsync(forceNetwork).await().dataOrNull
 
-            coursesMap = courses
-                ?.associateBy { it.id } ?: emptyMap()
+            coursesMap = courses?.associateBy { it.id } ?: emptyMap()
 
-            val invites = enrollmentManager.getSelfEnrollmentsAsync(
-                null,
-                listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE),
-                forceNetwork
-            ).await()
-                .dataOrNull
-                ?.filter { it.enrollmentState == EnrollmentAPI.STATE_INVITED && hasValidCourseForEnrollment(it) }
+            groupMap = groups?.associateBy { it.id } ?: emptyMap()
 
-            val invitationViewModels = createInvitationViewModels(invites)
+            val invitationViewModels = getInvitations(forceNetwork)
+            items.addAll(invitationViewModels)
 
             val accountNotifications =
                 accountNotificationManager.getAllAccountNotificationsAsync(true).await().dataOrNull
 
-            val blackList = conferenceDashboardBlacklist.blacklist
-            val conferences = ConferenceManager.getLiveConferencesAsync(forceNetwork).await().dataOrNull
-                ?.filter { conference ->
-                    // Remove blacklisted (i.e. 'dismissed') conferences
-                    blackList?.contains(conference.id.toString())?.not() ?: false
-                }
-                ?.onEach { conference ->
-                    // Attempt to add full canvas context to conference items, fall back to generic built context
-                    val contextType = conference.contextType.toLowerCase(Locale.US)
-                    val contextId = conference.contextId
-                    val genericContext = CanvasContext.fromContextCode("${contextType}_${contextId}")!!
-                    conference.canvasContext = when (genericContext) {
-                        is Course -> coursesMap[contextId] ?: genericContext
-                        else -> genericContext
-                    }
-                } ?: emptyList()
+            val conferenceViewModels = getConferences(forceNetwork)
+            items.addAll(conferenceViewModels)
 
-            _data.postValue(DashboardNotificationsViewData(invitationViewModels))
+            _data.postValue(DashboardNotificationsViewData(items))
         }
     }
 
-    private fun createInvitationViewModels(invites: List<Enrollment>?): List<ItemViewModel>? {
+    private suspend fun getConferences(forceNetwork: Boolean): List<ItemViewModel> {
+        val blackList = conferenceDashboardBlacklist.conferenceDashboardBlacklist
+        val conferences = conferenceManager.getLiveConferencesAsync(forceNetwork).await().dataOrNull
+            ?.filter { conference ->
+                // Remove blacklisted (i.e. 'dismissed') conferences
+                blackList.contains(conference.id.toString()).not() ?: false
+            }
+            ?.onEach { conference ->
+                // Attempt to add full canvas context to conference items, fall back to generic built context
+                val contextType = conference.contextType.toLowerCase(Locale.US)
+                val contextId = conference.contextId
+                val genericContext = CanvasContext.fromContextCode("${contextType}_${contextId}")!!
+                conference.canvasContext = when (genericContext) {
+                    is Course -> coursesMap[contextId] ?: genericContext
+                    is Group -> groupMap[contextId] ?: genericContext
+                    else -> genericContext
+                }
+            }
+
+        return createConferenceViewModels(conferences) ?: emptyList()
+    }
+
+    private fun createConferenceViewModels(conferences: List<Conference>?): List<ConferenceItemViewModel>? {
+        return conferences?.map {
+            ConferenceItemViewModel(
+                ConferenceViewData(subtitle = it.canvasContext.name ?: it.title, conference = it),
+                handleJoin = this@DashboardNotificationsViewModel::handleConferenceJoin,
+                handleDismiss = this@DashboardNotificationsViewModel::handleConferenceDismiss
+            )
+        }
+    }
+
+    private suspend fun getInvitations(forceNetwork: Boolean): List<ItemViewModel> {
+        val invites = enrollmentManager.getSelfEnrollmentsAsync(
+            null,
+            listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE),
+            forceNetwork
+        ).await()
+            .dataOrNull
+            ?.filter { it.enrollmentState == EnrollmentAPI.STATE_INVITED && hasValidCourseForEnrollment(it) }
+
+        return createInvitationViewModels(invites) ?: emptyList()
+    }
+
+    private fun createInvitationViewModels(invites: List<Enrollment>?): List<InvitationItemViewModel>? {
         return invites?.map { enrollment ->
             val course = coursesMap[enrollment.courseId]!!
             val section = course.sections.find { it.id == enrollment.courseSectionId }
@@ -127,7 +156,6 @@ class DashboardNotificationsViewModel @Inject constructor(
                 this@DashboardNotificationsViewModel::handleInvitation
             )
         }
-
     }
 
     private fun hasValidCourseForEnrollment(enrollment: Enrollment): Boolean {
@@ -169,5 +197,49 @@ class DashboardNotificationsViewModel @Inject constructor(
                 itemViewModel.notifyPropertyChanged(BR.inProgress)
             }
         }
+    }
+
+    private fun handleConferenceJoin(itemViewModel: ConferenceItemViewModel, conference: Conference) {
+        itemViewModel.isJoining = true
+        itemViewModel.notifyPropertyChanged(BR.joining)
+
+        viewModelScope.launch {
+            var url: String = conference.joinUrl
+                ?: "${ApiPrefs.fullDomain}${conference.canvasContext.toAPIString()}/conferences/${conference.id}/join"
+
+            if (url.startsWith(ApiPrefs.fullDomain)) {
+                try {
+                    val authSession = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }
+                    url = authSession.sessionUrl
+                } catch (e: Throwable) {
+                    // Try launching without authenticated URL
+                }
+            }
+
+            val colorSchemeParams = CustomTabColorSchemeParams.Builder()
+                .setToolbarColor(conference.canvasContext.color)
+                .build()
+
+            var intent = CustomTabsIntent.Builder()
+                .setDefaultColorSchemeParams(colorSchemeParams)
+                .setShowTitle(true)
+                .build()
+                .intent
+
+            intent.data = Uri.parse(url)
+
+            intent = intent.asChooserExcludingInstructure()
+            _events.postValue(Event(DashboardNotificationsActions.LaunchConference(intent)))
+
+            delay(3000)
+            itemViewModel.isJoining = false
+            itemViewModel.notifyPropertyChanged(BR.joining)
+        }
+    }
+
+    private fun handleConferenceDismiss(conference: Conference) {
+        val blacklist = conferenceDashboardBlacklist.conferenceDashboardBlacklist + conference.id.toString()
+        conferenceDashboardBlacklist.conferenceDashboardBlacklist = blacklist
+        loadData(false)
     }
 }

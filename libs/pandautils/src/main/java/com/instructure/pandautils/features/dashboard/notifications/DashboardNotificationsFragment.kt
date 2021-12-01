@@ -22,10 +22,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentDashboardNotificationsBinding
+import com.instructure.pandautils.discussions.DiscussionUtils
+import com.instructure.pandautils.features.elementary.homeroom.HomeroomAction
 import com.instructure.pandautils.utils.bind
+import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,4 +55,24 @@ class DashboardNotificationsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.events.observe(viewLifecycleOwner, { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
+    }
+
+    private fun handleAction(action: DashboardNotificationsActions) {
+        when (action) {
+            is DashboardNotificationsActions.LaunchConference -> requireContext().startActivity(action.intent)
+            is DashboardNotificationsActions.ShowToast -> Toast.makeText(
+                requireContext(),
+                action.toast,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 }

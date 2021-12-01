@@ -16,6 +16,8 @@
 
 package com.instructure.pandautils.features.dashboard.notifications
 
+import android.content.Intent
+import com.instructure.canvasapi2.models.Conference
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class DashboardNotificationsViewData(
@@ -29,6 +31,12 @@ data class InvitationViewData(
     val courseId: Long
 )
 
+data class ConferenceViewData(
+    val subtitle: String?,
+    val conference: Conference
+)
+
 sealed class DashboardNotificationsActions {
     data class ShowToast(val toast: String): DashboardNotificationsActions()
+    data class LaunchConference(val intent: Intent): DashboardNotificationsActions()
 }

@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.teacher.di
+package com.instructure.pandautils.di
 
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import dagger.Module
@@ -24,10 +24,10 @@ import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class UserModule {
+class DashboardNotificationsViewModelComponent {
 
     @Provides
-    fun provideConferenceDashboardBlacklist(): ConferenceDashboardBlacklist {
-        return ConferenceDashboardBlacklist(emptySet())
+    fun provideBlacklist(): ConferenceDashboardBlacklist {
+        return ConferenceDashboardBlacklist
     }
 }
