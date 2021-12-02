@@ -37,7 +37,6 @@
             android:id="@+id/homeroomSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:onRefreshListener="@{() -> viewModel.refresh()}"
             app:refreshState="@{viewModel.state}">
 
             <androidx.core.widget.NestedScrollView
@@ -54,7 +53,8 @@
                         android:id="@+id/notificationsFragment"
                         android:name="com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:tag="notifications_fragment"/>
 
                     <LinearLayout
                         android:id="@+id/homeroomContent"

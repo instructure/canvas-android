@@ -69,6 +69,10 @@ class DashboardNotificationsFragment : Fragment() {
         })
     }
 
+    fun refresh() {
+        viewModel.loadData(true)
+    }
+
     private fun handleAction(action: DashboardNotificationsActions) {
         when (action) {
             is DashboardNotificationsActions.LaunchConference -> requireContext().startActivity(action.intent)

@@ -18,6 +18,7 @@
     <data>
 
         <import type="com.instructure.pandautils.utils.ColorUtils" />
+
         <variable
             name="itemViewModel"
             type="com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel" />
@@ -28,21 +29,23 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/announcement_card_background"
         android:minHeight="55dp"
+        android:onClick="@{() -> itemViewModel.open()}"
         android:orientation="horizontal"
-        tools:backgroundTint="#00ACEC"
-        tools:layout_margin="16dp"
         app:borderColor="@{ColorUtils.parseColor(itemViewModel.data.color)}"
-        android:onClick="@{() -> itemViewModel.open()}">
+        tools:backgroundTint="#00ACEC"
+        tools:layout_margin="16dp">
 
         <FrameLayout
             android:id="@+id/announcementIconView"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="@drawable/announcement_card_icon_background"
-            tools:backgroundTint="#00ACEC"
-            android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.color)}">
+            android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.color)}"
+            tools:backgroundTint="#00ACEC">
 
             <ImageView
                 android:id="@+id/announcementIcon"
@@ -74,11 +77,11 @@
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
                     android:contentDescription="@string/dismiss"
+                    android:onClick="@{() -> itemViewModel.dismiss()}"
                     android:padding="12dp"
                     android:tint="@color/gray"
                     app:srcCompat="@drawable/ic_close"
-                    tools:visibility="gone"
-                    android:onClick="@{() -> itemViewModel.dismiss()}"/>
+                    tools:visibility="gone" />
 
             </FrameLayout>
 
@@ -94,10 +97,10 @@
                 android:ellipsize="end"
                 android:labelFor="@+id/cardView"
                 android:singleLine="true"
+                android:text="@{itemViewModel.data.subject}"
                 android:textColor="@color/defaultTextDark"
                 android:textSize="18sp"
-                tools:text="Permission Slips!"
-                android:text="@{itemViewModel.data.subject}"/>
+                tools:text="Permission Slips!" />
 
             <TextView
                 android:id="@+id/tapToView"
