@@ -40,6 +40,7 @@ class StudentViewStarterActivity : AppCompatActivity() {
         val clientId = extras.getString(Const.CLIENT_ID, ApiPrefs.clientId)
         val clientSecret = extras.getString(Const.CLIENT_SECRET, ApiPrefs.clientSecret)
         val courseId = extras.getLong(Const.COURSE_ID)
+        val isElementary = extras.getBoolean(Const.IS_ELEMENTARY, false)
 
         MasqueradeHelper.startMasquerading(
             masqueradingUserId = -1, // This will be retrieved when we get the test user
@@ -48,7 +49,8 @@ class StudentViewStarterActivity : AppCompatActivity() {
             masqueradeToken = token,
             masqueradeClientId = clientId,
             masqueradeClientSecret = clientSecret,
-            courseId = courseId
+            courseId = courseId,
+            isElementary = isElementary
         )
     }
 }

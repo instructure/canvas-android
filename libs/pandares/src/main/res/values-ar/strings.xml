@@ -1269,5 +1269,15 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">استجابات هذا الطالب مخفية لأن هذه المهمة مجهولة الاسم.</string>
 
+    <string name="studentAnnotationUnsupported">التعليق التوضيحي للطالب (غير مدعوم)</string>
+    <string name="studentAnnotationUnsupportedDescription">التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
+    <string name="unsupportedSubmissionType">نوع إرسال غير مدعوم</string>
+    <string name="studentAnnotationUnsupportedMessage">لا يمكن عرض الإرسال، لأن التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
     <string name="schedule_marked_as_done">قمت بتمييزه بأنه تم.</string>
+    <string name="error_saving_assignment_closed_grading_period">يتعذر تغيير تاريخ استحقاق عند استحقاقه في فترة منح مغلقة لمنح العلامات.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">ابدأ اليوم</string>
+    <string name="a11y_contact_info_content_description">%1$s، %2$s</string>
+    <string name="a11y_contact_info_click_description">إرسال رسالة</string>
+    <string name="somethingWentWrong">حدث خطأ ما</string>
+    <string name="failedToLoadQuiz">فشل تحميل الاختبار</string>
 </resources>

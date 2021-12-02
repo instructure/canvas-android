@@ -32,6 +32,8 @@ object SeedApi {
             val courses: Int = 0,
             val pastCourses: Int = 0,
             val favoriteCourses: Int = 0,
+            val homeroomCourses: Int = 0,
+            val accountId: Long? = null,
             val gradingPeriods: Boolean = false,
             val discussions: Int = 0,
             val announcements: Int = 0,
@@ -90,6 +92,75 @@ object SeedApi {
 
 
     }
+
+    // Seed data from a SeedDataRequest, return SeededDataApiModel
+    fun seedDataForSubAccount(request: SeedDataRequest) : SeededDataApiModel {
+        val seededData = SeededDataApiModel()
+
+        with(seededData) {
+            var homeroomCourses = request.homeroomCourses
+            var homeroomCoursesCountForAnnouncements = request.homeroomCourses
+            for (c in 0 until maxOf(request.courses + request.pastCourses, request.favoriteCourses, request.homeroomCourses)) {
+                // Seed course
+                if(homeroomCourses > 0) addCourses(createCourse(request.gradingPeriods, request.publishCourses, true, request.accountId, subAccountCourse = true))
+                else addCourses(createCourse(request.gradingPeriods, request.publishCourses, false, request.accountId, subAccountCourse = true))
+
+                // Seed users
+                for (t in 0 until request.teachers) {
+                    addTeachers(UserApi.createCanvasUser())
+                    addEnrollments(EnrollmentsApi.enrollUserAsTeacher(coursesList[c].id, teachersList[t].id))
+                }
+
+                for (s in 0 until request.students) {
+                    addStudents(UserApi.createCanvasUser())
+                    addEnrollments(EnrollmentsApi.enrollUserAsStudent(coursesList[c].id, studentsList[s].id))
+                }
+
+                for (ta in 0 until request.TAs) {
+                    addTAs(UserApi.createCanvasUser())
+                    addEnrollments(EnrollmentsApi.enrollUserAsTA(coursesList[c].id, taList[ta].id))
+                }
+                homeroomCourses--
+            }
+
+            // Make the last x courses concluded to keep the first ones as favorites
+            for (c in coursesList.size - request.pastCourses until coursesList.size) {
+                CoursesApi.concludeCourse(coursesList[c].id)
+            }
+
+            // Seed favorite courses
+            addAllFavorites(
+                (0 until minOf(request.favoriteCourses, coursesList.size))
+                    .map {
+                        CoursesApi.addCourseToFavorites(coursesList[it].id,teachersList[0].token)
+                    }
+            )
+
+            // Seed discussions
+            addAllDiscussions(
+                (0 until request.discussions).map {
+                    DiscussionTopicsApi.createDiscussion(coursesList[0].id, false, teachersList[0].token)
+                }
+            )
+
+            // Seed announcements
+            if(homeroomCoursesCountForAnnouncements > 0) {
+                addAllAnnouncements(
+                    (0 until homeroomCoursesCountForAnnouncements).map {
+                        DiscussionTopicsApi.createAnnouncement(coursesList[it].id, teachersList[0].token)
+                    }
+                )
+            }
+            addAllAnnouncements(
+                (homeroomCoursesCountForAnnouncements until request.announcements).map {
+                    DiscussionTopicsApi.createAnnouncement(coursesList[it].id, teachersList[0].token)
+                }
+            )
+        }
+
+        return seededData
+    }
+
 
     // Seed data from a SeedDataRequest, return SeededDataApiModel
     fun seedData(request: SeedDataRequest) : SeededDataApiModel {
@@ -206,7 +277,7 @@ object SeedApi {
     }
 
     // Private course-creation method that does some special handling for grading periods
-    private fun createCourse(gradingPeriods: Boolean = false, publishCourses: Boolean = true) : CourseApiModel {
+    private fun createCourse(gradingPeriods: Boolean = false, publishCourses: Boolean = true, isHomeroomCourse: Boolean = false, accountId: Long? = null, subAccountCourse: Boolean = false) : CourseApiModel {
         return if(gradingPeriods) {
             val enrollmentTerm = EnrollmentTermsApi.createEnrollmentTerm()
             val gradingPeriodSetWrapper = GradingPeriodsApi.createGradingPeriodSet(enrollmentTerm.id)
@@ -215,8 +286,13 @@ object SeedApi {
             courseWithTerm
         }
         else {
-            val course = CoursesApi.createCourse()
-            course
+            if(subAccountCourse) {
+                val course = CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse)
+                course
+            } else {
+                val course = CoursesApi.createCourse()
+                course
+            }
         }
     }
 }

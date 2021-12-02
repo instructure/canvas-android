@@ -14,6 +14,8 @@
 
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
+import 'package:flutter_parent/models/color_change_response.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/models/user_colors.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
@@ -34,9 +36,12 @@ class UserApi {
     return fetch(canvasDio(forceRefresh: refresh).get('users/self/colors'));
   }
 
-  Future<UserColors> setUserColor(String contextId, Color color) async {
+  Future<ColorChangeResponse> setUserColor(String contextId, Color color) async {
     var hexCode = '#' + color.value.toRadixString(16).substring(2);
     var queryParams = {'hexcode': hexCode};
-    return fetch(canvasDio().put('users/self/colors/$contextId', queryParameters: queryParams));
+    return fetch(canvasDio().put(
+        'users/self/colors/$contextId',
+        queryParameters: queryParams,
+        options: Options(validateStatus: (status) => status < 500))); // Workaround, because this request fails for some legacy users, but we can't catch the error.));
   }
 }

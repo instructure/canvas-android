@@ -211,6 +211,9 @@ data class Assignment(
 
     override fun describeContents(): Int = 0
 
+    fun isMissing(): Boolean {
+        return !isSubmitted && dueDate?.before(Date()) ?: false
+    }
 
     companion object {
 

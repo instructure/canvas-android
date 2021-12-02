@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Vælg medie</string>
     <string name="takeVideo">Tag video</string>
     <string name="noCameraOnDevice">Intet kamera</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Oplåsningsdatoen kan ikke ligge efter afleveringsdato</string>
     <string name="utils_lockBeforeDueDateError">Låsningsdato kan ikke ligge før afleveringsdatoer</string>
     <string name="utils_lockAfterUnlockError">Låsningsdato kan ikke ligge før oplåsningsdato</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Genstart appen for at installere den nye version</string>
     <string name="nothing_planned_yet">Intet planlagt endnu</string>
     <string name="schedule_tag_graded">Bedømt</string>
-    <string name="schedule_tag_replies">Svar</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d svar</item>
+        <item quantity="other">%d svar></item>
+    </plurals>
     <string name="schedule_tag_feedback">Feedback</string>
     <string name="schedule_tag_late">Sen</string>
     <string name="schedule_tag_redo">Annuller fortryd</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">I morgen</string>
     <string name="yesterday">I går</string>
     <string name="schedule_calendar_event_due_text">Kl. %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s til %2$s</string>
     <string name="schedule_todo_due_text">Opgaveliste: %s</string>
     <string name="schedule_due_text">Forfalder: %s</string>
     <string name="show_missing_items_title">Vis %d manglende elementer</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s point</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f point</item>
+        <item quantity="one">%.1f point</item>
+        <item quantity="other">%.1f point</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Hele dagen</string>
+    <string name="schedule_tag_missing">Mangler</string>
+    <string name="previous_week">Forrige uge</string>
+    <string name="next_week">Næste uge</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Fag %s</string>
+    <string name="a11y_announcement">Besked</string>
+    <string name="a11y_discussion_topic">Diskussion</string>
+    <string name="a11y_calendar_event">Kalenderbegivenhed</string>
+    <string name="a11y_assignment">Opgave</string>
+    <string name="a11y_planner_note">Planlægger-bemærkning</string>
+    <string name="a11y_quiz">Test</string>
+    <string name="a11y_todo">Opgaveliste</string>
+    <string name="a11y_page">Side</string>
+    <string name="a11y_marked_as_done">Markeret som færdig</string>
+    <string name="a11y_not_marked_as_done">Ikke markeret som færdig</string>
+    <string name="a11y_mark_as_done">Marker som færdig</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Åh ååh! Der opstod en fejl ved forsøg på at indlæse fagdetaljer.</string>
 </resources>

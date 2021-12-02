@@ -298,7 +298,7 @@
     <string name="teacher_upload">Carregar</string>
     <string name="settings">Configurações</string>
     <string name="edit_courses">Editar Cursos</string>
-    <string name="start_annotating">Começar anotação</string>
+    <string name="start_annotating">Começar observação</string>
     <string name="empty_speedgrader_content">Visualização SpeedGrader vazia, precisa de design</string>
 
     <!--Course Settings-->
@@ -431,7 +431,7 @@
     <string name="add_comment">Adicionar comentário</string>
     <string name="editComment">Editar comentário</string>
     <string name="deleteComment">Excluir comentário</string>
-    <string name="deleteAnnotation">Excluir anotação</string>
+    <string name="deleteAnnotation">Excluir observação</string>
     <string name="deleteCommentConfirmation">Tem certeza de que deseja excluir este comentário?</string>
     <string name="rubric_view_long_description">Visualizar descrição longa</string>
     <string name="rubric">Rubrica</string>
@@ -627,7 +627,7 @@
     <string name="discussions_forbidden">As respostas são visíveis apenas àqueles que postaram pelo menos uma resposta.</string>
     <string name="discussions_delete">Excluir fórum</string>
     <string name="discussions_delete_title">Excluir fórum?</string>
-    <string name="discussions_delete_message">Isso excluirá a fórum inteira e o tópico.</string>
+    <string name="discussions_delete_message">Isso excluirá o fórum inteira e o tópico.</string>
 
     <string name="dataUsageWarningTitle">Aviso de uso de dados</string>
     <string name="dataUsageWarningMessage">Esta ação poderia consumir uma grande quantidade de dados, potencialmente ocorrendo cobranças acima da média. Gostaria de continuar?</string>
@@ -658,8 +658,8 @@
     <string name="speedGraderOnPaperMessage">Esta tarefa permite apenas envios em papel.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Este envio era uma URL para uma página externa. Tenha em mente que esta página pode ter sido alterada desde o envio original.</string>
     <string name="speedGraderOpenUrl">Abrir URL</string>
-    <string name="annotationError">Erro da anotação</string>
-    <string name="annotationDialogMessage">A anotação foi excluída a partir de outra fonte.</string>
+    <string name="annotationError">Erro da observação</string>
+    <string name="annotationDialogMessage">A observação foi excluída a partir de outra fonte.</string>
 
     <string name="selectCourse">Selecionar um curso</string>
 
@@ -672,7 +672,7 @@
 
     <string name="discussion_update_success">A edição do fórum foi bem-sucedida.</string>
     <string name="discussion_update_empty">A mensagem do fórum não pode estar em branco.</string>
-    <string name="discussion_update_failure">Não foi possível editar a fórum nesse momento.</string>
+    <string name="discussion_update_failure">Não foi possível editar o fórum nesse momento.</string>
     <string name="discussion_sent_success">A resposta do fórum foi bem-sucedida.</string>
     <string name="discussion_sent_empty">A resposta do fórum não pode estar em branco.</string>
     <string name="discussion_sent_failure">Não foi possível enviar a resposta do fórum nesse momento.</string>
@@ -688,17 +688,17 @@
 
     <string name="on">em</string>
 
-    <string name="createDiscussion">Nova fórum</string>
+    <string name="createDiscussion">Novo fórum</string>
     <string name="options">Opções</string>
     <string name="subscribe">Assinar</string>
     <string name="allowThreadedReplies">Permitir respostas de tópicos</string>
     <string name="usersMustPost">Os usuários devem postar antes de ver as respostas</string>
     <string name="allowUserComments">Permitir que os usuários comentem</string>
     <string name="discussionTitleMustBeSet">Título do fórum deve ser definido.</string>
-    <string name="discussionSuccessfullyCreated">Fórum criada com sucesso.</string>
+    <string name="discussionSuccessfullyCreated">Fórum criado com sucesso.</string>
     <string name="errorCreatingDiscussion">Ocorreu um erro ao tentar criar esse fórum. Tente novamente.</string>
     <string name="editDiscussion">Editar fórum</string>
-    <string name="discussionSuccessfullyUpdated">Fórum atualizada com sucesso.</string>
+    <string name="discussionSuccessfullyUpdated">Fórum atualizado com sucesso.</string>
     <string name="input_text">Texto de entrada</string>
     <string name="announcementSuccessfullyCreated">Aviso criado com sucesso.</string>
     <string name="errorSavingAnnouncement">Ocorreu um erro ao tentar salvar este aviso. Tente novamente.</string>
@@ -710,7 +710,7 @@
     <string name="deleteAnnouncementDialogTitle">Excluir aviso?</string>
     <string name="deleteAnnouncementDialogMessage">Tem certeza de que deseja excluir este aviso?</string>
     <string name="deleteAnnouncement">Excluir aviso</string>
-    <string name="annotationErrorOccurred">Ocorreu um erro ao carregar as anotações.</string>
+    <string name="annotationErrorOccurred">Ocorreu um erro ao carregar as observações.</string>
 
     <string name="account">Conta</string>
     <string name="changeUser">Trocar Usuário</string>

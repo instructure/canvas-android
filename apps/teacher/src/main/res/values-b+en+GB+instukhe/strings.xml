@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Are you sure you want to delete this assignment?</string>
-    <string name="question">Question</string>
-    <string name="quizMatchingDefaultDisplay">[Choose]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Message Student</string>
 
@@ -347,6 +344,8 @@
     <string name="description">Description</string>
     <string name="grade_total">Grade Total</string>
     <string name="grade">Grade</string>
+    <string name="enter_grade">Enter Grade</string>
+    <string name="override">Override</string>
     <string name="calculated_by_rubric">Calculated by rubric</string>
     <string name="customize_grade">Customise Grade</string>
     <string name="out_of_points">Out of %1$s</string>
@@ -367,6 +366,7 @@
     <string name="announcement_name_must_be_set">Announcement title must be set.</string>
     <string name="quiz_title_must_be_set">Quiz title must be set.</string>
     <string name="assignment_points_must_be_set">Assignment points must be set.</string>
+    <string name="assignment_points_must_be_a_number">Points possible must be a number</string>
     <string name="quiz_points_must_be_set">Quiz points must be set.</string>
     <string name="assignee_type_course_sections">Module sections</string>
     <string name="assignee_type_groups">Groups</string>
@@ -385,6 +385,7 @@
     <string name="graded">Graded</string>
     <string name="needsGrading">Needs Grading</string>
     <string name="not_submitted">Not submitted</string>
+    <string name="a11y_viewSubmissionAction">view submission details</string>
     <string name="content_description_submission_donut_graded" formatted="false">Graded, %s of %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Needs grading, %s of %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Not submitted, %s of %s</string>
@@ -413,11 +414,10 @@
 
   <string name="not_a_teacher">Not a teacher?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">One of our other apps may be a better fit. Tap one to visit the Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Grade</string>
+    <string name="sg_tab_grade">Grade</string>
     <string name="sg_tab_comments">Comments</string>
     <string name="sg_tab_files">Files</string>
+    <string name="sg_tab_files_w_counter">Files (%d)</string>
     <string name="filter_submissions">Filter Submissions</string>
     <string name="all_submissions">All Submissions</string>
     <string name="submitted_late">Submitted Late</string>
@@ -498,7 +498,6 @@
         <item quantity="other">%d groups</item>
     </plurals>
     <string name="cmp_closed">Closed</string>
-    <string name="dot_with_spaces">  \u2022  </string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">favourite</string>
     <string name="content_description_not_favorite">not favourite</string>
@@ -508,7 +507,6 @@
 
     <string name="colorPickerDialogTitle">Module Colour</string>
     <string name="colorPickerDialogMessage">This is your personal colour setting. Only you will see this colour for the module.</string>
-
     <string name="colorPickerError">The module colour could not be set at this time.</string>
 
     <string name="contentDescriptionColorCottonCandy">Pink</string>
@@ -609,11 +607,6 @@
         <item quantity="other">%d questions</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minute</item>
-        <item quantity="other">%s Minutes</item>
-    </plurals>
-
     <string name="discussion_details">Discussion Details</string>
     <string name="discussions_pinned">Pinned</string>
     <string name="discussions_unpinned">Discussions</string>
@@ -631,7 +624,6 @@
     <string name="discussions_reply">Reply</string>
     <string name="discussions_edit">Edit</string>
     <string name="discussions_forbidden">Replies are only visible to those who have posted at least one reply.</string>
-    <string name="discussions_unknown_author">Unknown author</string>
     <string name="discussions_delete">Delete Discussion</string>
     <string name="discussions_delete_title">Delete Discussion?</string>
     <string name="discussions_delete_message">This will delete the whole discussion and thread.</string>
@@ -662,7 +654,6 @@
 
     <string name="unsupportedFileMessage">This file could not be displayed. Use the button below to open the file with another app on your device.</string>
     <string name="speedGraderNoneMessage">This assignment does not allow submissions.</string>
-    <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
     <string name="speedGraderOnPaperMessage">This assignment only allows on-paper submissions.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">This submission was a URL to an external page. Keep in mind that this page may have changed since the submission originally occurred.</string>
     <string name="speedGraderOpenUrl">Open URL</string>
@@ -702,7 +693,6 @@
     <string name="allowThreadedReplies">Allow threaded replies</string>
     <string name="usersMustPost">Users must post before seeing replies</string>
     <string name="allowUserComments">Allow users to comment</string>
-
     <string name="discussionTitleMustBeSet">Discussion title must be set.</string>
     <string name="discussionSuccessfullyCreated">Discussion successfully created.</string>
     <string name="errorCreatingDiscussion">An error occurred trying to create this discussion. Try again.</string>
@@ -729,7 +719,6 @@
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Terms of Use</string>
-    <string name="openSource">Open source</string>
     <string name="searchGuides">Search the Canvas Guides</string>
     <string name="searchGuidesDetails">Find answers to common questions</string>
     <string name="reportProblem">Report a problem</string>
@@ -757,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Quiz description</string>
     <string name="removeDueDate">Remove Due Date</string>
     <string name="removeDueDateMessage">This will remove the due date and all of the associated assignees.</string>
-    <string name="openTool">Open tool</string>
     <string name="email">Email</string>
     <string name="fullscreen">Full-screen</string>
     <string name="addNew">Add new</string>
@@ -783,7 +771,6 @@
     <string name="filterPeople">Filter people</string>
     <string name="loadMore">Load more</string>
     <string name="latestStudentActivityAtFormatted">Latest activity on %1$s at %2$s.</string>
-    <string name="sectionFormatted">Section: %s</string>
     <string name="errorLoadingStudentContextCard">Unable to load details for this user.</string>
     <string name="enrollmentTypeStudent">Student</string>
     <string name="enrollmentTypeTeacher">Teacher</string>
@@ -831,7 +818,6 @@
     <string name="createAFile">Create a file</string>
     <string name="createFileFolderFabContentDesc">Show create file and create folder buttons</string>
     <string name="hideCreateFileFolderFabContentDesc">Hide ‘create file’ and ‘create folder’ buttons</string>
-
     <string name="unpublish">Unpublish</string>
     <string name="restrictedAccess">Restricted Access</string>
     <string name="restricted">Restricted</string>
@@ -875,7 +861,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">for %s</string>
     <string name="filterBySection">Filter by section</string>
     <string name="filterSubmissionsLowercase">Filter submissions</string>
-
     <string name="latePenalty">Late penalty</string>
     <string name="finalGrade">Final Grade</string>
     <string name="moderatedGradingUnsupported">Moderated grading is not currently supported in mobile SpeedGrader.</string>
@@ -899,7 +884,17 @@
 
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">This LTI tool could not be loaded at this time.</string>
+    <string name="downloading">Downloading&#8230;</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Syllabus successfully updated.</string>
+    <string name="errorSavingSyllabus">An error occurred trying to save the syllabus. Try again.</string>
+    <string name="editSyllabusTitle">Edit Syllabus</string>
+    <string name="editSyllabusContent">Content</string>
+    <string name="editSyllabusDetails">Details</string>
+    <string name="editSyllabusShowCourseSummary">Show module summary</string>
+    <string name="editSyllabusContentAccessibilityLabel">Syllabus content</string>
 
-    <string name="downloading">Downloading...</string>
-
+    <string name="no_grade">No grade</string>
+    <string name="excuse">Excuse</string>
+    <string name="speed_grader_overgraded_by">Over graded by %s</string>
 </resources>
