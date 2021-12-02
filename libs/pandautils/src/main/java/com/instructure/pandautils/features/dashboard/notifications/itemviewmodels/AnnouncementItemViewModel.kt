@@ -16,19 +16,22 @@
 
 package com.instructure.pandautils.features.dashboard.notifications.itemviewmodels
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.AnnouncementViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class AnnouncementItemViewModel(
     val data: AnnouncementViewData,
-    val dismiss: (Long) -> Unit,
-    val open: (String, String) -> Unit
-) : ItemViewModel {
+    val dismiss: (AnnouncementItemViewModel, Long) -> Unit,
+    val open: (String, String) -> Unit,
+    @get:Bindable var inProgress: Boolean = false
+) : ItemViewModel, BaseObservable() {
     override val layoutId: Int = R.layout.item_dashboard_announcement
 
     fun dismiss() {
-        dismiss(data.id)
+        dismiss(this, data.id)
     }
 
     fun open() {

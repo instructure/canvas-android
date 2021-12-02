@@ -284,7 +284,9 @@ class DashboardNotificationsViewModel @Inject constructor(
         loadData(false)
     }
 
-    private fun dismissAnnouncement(announcementId: Long) {
+    private fun dismissAnnouncement(itemViewModel: AnnouncementItemViewModel, announcementId: Long) {
+        itemViewModel.inProgress = true
+        itemViewModel.notifyPropertyChanged(BR.inProgress)
         viewModelScope.launch {
             try {
                 accountNotificationManager.deleteAccountNotificationsAsync(announcementId).await().dataOrThrow
@@ -292,6 +294,8 @@ class DashboardNotificationsViewModel @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 _events.postValue(Event(DashboardNotificationsActions.ShowToast(resources.getString(R.string.errorOccurred))))
+                itemViewModel.inProgress = false
+                itemViewModel.notifyPropertyChanged(BR.inProgress)
             }
         }
     }
