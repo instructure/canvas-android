@@ -44,6 +44,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
@@ -95,6 +96,7 @@ class DashboardFragment : ParentFragment() {
 
             override fun onRefreshFinished() {
                 swipeRefreshLayout?.isRefreshing = false
+                notificationsFragment.setVisible()
             }
 
             override fun onSeeAllCourses() {
@@ -209,6 +211,8 @@ class DashboardFragment : ParentFragment() {
                 swipeRefreshLayout.isRefreshing = false
             } else {
                 recyclerAdapter?.refresh()
+                notificationsFragment.setGone()
+                (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment).refresh()
             }
         }
 
