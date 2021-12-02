@@ -92,18 +92,6 @@ class DashboardFragment : ParentFragment() {
         super.onActivityCreated(savedInstanceState)
 
         recyclerAdapter = DashboardRecyclerAdapter(requireActivity(), object : CourseAdapterToFragmentCallback {
-            override fun onHandleCourseInvitation(course: Course, accepted: Boolean) {
-                swipeRefreshLayout?.isRefreshing = true
-                recyclerAdapter?.refresh()
-            }
-
-            override fun onConferenceSelected(conference: Conference) {
-                launchConference(conference)
-            }
-
-            override fun onDismissConference(conference: Conference) {
-                recyclerAdapter?.removeItem(conference)
-            }
 
             override fun onRefreshFinished() {
                 swipeRefreshLayout?.isRefreshing = false
@@ -111,10 +99,6 @@ class DashboardFragment : ParentFragment() {
 
             override fun onSeeAllCourses() {
                 RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
-            }
-
-            override fun onRemoveAnnouncement(announcement: AccountNotification, position: Int) {
-                recyclerAdapter?.removeItem(announcement)
             }
 
             override fun onGroupSelected(group: Group) {

@@ -36,8 +36,7 @@
         android:onClick="@{() -> itemViewModel.open()}"
         android:orientation="horizontal"
         app:borderColor="@{ColorUtils.parseColor(itemViewModel.data.color)}"
-        tools:backgroundTint="#00ACEC"
-        tools:layout_margin="16dp">
+        tools:backgroundTint="#00ACEC">
 
         <FrameLayout
             android:id="@+id/announcementIconView"

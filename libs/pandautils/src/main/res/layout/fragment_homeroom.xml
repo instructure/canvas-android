@@ -54,7 +54,9 @@
                         android:name="com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:tag="notifications_fragment"/>
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:tag="notifications_fragment" />
 
                     <LinearLayout
                         android:id="@+id/homeroomContent"
