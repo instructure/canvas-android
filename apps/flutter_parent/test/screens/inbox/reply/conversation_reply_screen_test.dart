@@ -50,7 +50,7 @@ void main() {
   final l10n = AppLocalizations();
 
   testWidgetsWithAccessibilityChecks('displays "Reply" as as title for reply', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
 
     await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
@@ -59,7 +59,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('displays "Reply All" as as title for reply all', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
 
     await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, true)));
     await tester.pumpAndSettle();
@@ -68,7 +68,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('displays subject as subtitle', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
 
     final conversation = _makeConversation();
 
@@ -79,7 +79,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('displays details of message being replied to', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
 
     final conversation = _makeConversation();
     final message = conversation.messages[1];
@@ -91,7 +91,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('tapping attachment on message being replied to shows viewer', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
     GetIt.instance.registerLazySingleton<QuickNav>(() => QuickNav());
     GetIt.instance.registerLazySingleton<ViewAttachmentInteractor>(() => ViewAttachmentInteractor());
 
@@ -124,7 +124,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('displays details of top message if no message is specified', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
 
     final conversation = _makeConversation();
 
@@ -137,7 +137,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('sending disabled when no message is present', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
 
     await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
@@ -148,7 +148,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('can enter message text', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
 
     await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
@@ -162,7 +162,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('sending is enabled once message is present', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
 
     await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
@@ -177,7 +177,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('sending calls interactor with correct parameters', (tester) async {
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     final conversation = _makeConversation();
     final message = conversation.messages[0];
     final replyAll = true;
@@ -196,7 +196,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('backing out with text in the body will show confirmation dialog', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
 
     await _pumpTestableWidgetWithBackButton(tester, ConversationReplyScreen(_makeConversation(), null, false));
 
@@ -212,7 +212,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('backing out without text in the body does not show a dialog', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
     // Load up a temp page with a button to navigate to our screen so we are able to navigate backward
     await _pumpTestableWidgetWithBackButton(tester, ConversationReplyScreen(_makeConversation(), null, false));
 
@@ -223,7 +223,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('backing out and pressing yes on the dialog closes the screen', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
     final observer = MockNavigatorObserver();
 
     await _pumpTestableWidgetWithBackButton(
@@ -246,7 +246,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('choosing no on the dialog does not close the screen', (tester) async {
-    _setupInteractor();
+    await _setupInteractor();
     final observer = MockNavigatorObserver();
 
     await _pumpTestableWidgetWithBackButton(
@@ -269,7 +269,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows error on send fail', (tester) async {
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     when(interactor.createReply(any, any, any, any, any)).thenAnswer((_) => Future.error(''));
 
     await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
@@ -287,7 +287,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows sending indicator and closes after success', (tester) async {
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     final observer = MockNavigatorObserver();
 
     await _pumpTestableWidgetWithBackButton(
@@ -321,7 +321,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('send disabled for unsuccessful attachment, enabled on success', (tester) async {
     // Set up attachment handler in 'uploading' stage
     var handler = _MockAttachmentHandler()..stage = AttachmentUploadStage.UPLOADING;
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
 
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
@@ -370,7 +370,7 @@ void main() {
       ..stage = AttachmentUploadStage.UPLOADING
       ..progress = 0.25;
 
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
@@ -406,7 +406,7 @@ void main() {
     // Set up attachment handler in 'failed' stage
     var handler = _MockAttachmentHandler()..stage = AttachmentUploadStage.FAILED;
 
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
@@ -467,7 +467,7 @@ void main() {
         ..displayName = 'File'
         ..thumbnailUrl = 'fake url');
 
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
@@ -497,7 +497,7 @@ void main() {
       ..stage = AttachmentUploadStage.UPLOADING
       ..progress = 0.25;
 
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
@@ -520,7 +520,7 @@ void main() {
     // Set up attachment handler in 'uploading' stage
     var handler = AttachmentHandler(File('path/to/file.txt'))..stage = AttachmentUploadStage.FAILED;
 
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
@@ -545,7 +545,7 @@ void main() {
       ..attachment = Attachment((b) => b..displayName = 'upload.txt')
       ..stage = AttachmentUploadStage.FINISHED;
 
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
@@ -569,7 +569,7 @@ void main() {
       ..attachment = Attachment((b) => b..displayName = 'upload.txt')
       ..stage = AttachmentUploadStage.FINISHED;
 
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     Completer<Conversation> completer = Completer();
@@ -614,7 +614,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('tapping attachment button shows AttachmentPicker', (tester) async {
-    final interactor = _setupInteractor();
+    final interactor = await _setupInteractor();
     GetIt.instance.registerLazySingleton<AttachmentPickerInteractor>(() => AttachmentPickerInteractor());
     when(interactor.addAttachment(any))
         .thenAnswer((answer) => ConversationReplyInteractor().addAttachment(answer.positionalArguments[0]));
@@ -654,9 +654,9 @@ Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavig
   }
 }
 
-_MockInteractor _setupInteractor() {
+Future<_MockInteractor> _setupInteractor() async {
   final interactor = _MockInteractor();
-  setupTestLocator((locator) {
+  await setupTestLocator((locator) {
     locator.registerFactory<ConversationReplyInteractor>(() => interactor);
   });
   when(interactor.getCurrentUserId()).thenReturn('self');

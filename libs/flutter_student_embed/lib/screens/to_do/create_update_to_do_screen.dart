@@ -102,7 +102,7 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                         alignment: Alignment.center,
                         child: Text(
                           L10n(context).save.toUpperCase(),
-                          style: Theme.of(context).textTheme.subhead.copyWith(color: Theme.of(context).buttonColor),
+                          style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).buttonColor),
                         ),
                       ),
                     )
@@ -213,11 +213,11 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                         children: <Widget>[
                           Text(
                             L10n(context).date,
-                            style: Theme.of(context).textTheme.subhead,
+                            style: Theme.of(context).textTheme.subtitle1,
                           ),
                           Text(
                             _date.l10nFormat(L10n(context).dateAtTime),
-                            style: Theme.of(context).textTheme.subhead,
+                            style: Theme.of(context).textTheme.subtitle1,
                           ),
                         ],
                       ),
@@ -228,7 +228,7 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                     key: Key('description-input'),
                     controller: _descriptionController,
                     textCapitalization: TextCapitalization.sentences,
-                    style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
                     minLines: 8,
                     maxLines: 100,
                     decoration: InputDecoration(

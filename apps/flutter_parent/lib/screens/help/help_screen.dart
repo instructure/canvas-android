@@ -22,7 +22,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
-import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:package_info/package_info.dart';
 
 import 'help_screen_interactor.dart';

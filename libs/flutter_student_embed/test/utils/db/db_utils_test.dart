@@ -19,11 +19,6 @@ import 'package:sqflite/sqflite.dart';
 import '../../testutils/mock_helpers.dart';
 
 void main() {
-  // For coverage
-  test('init throws FlutterError in unit test', () async {
-    expect(() => DbUtil.init(), throwsFlutterError);
-  });
-
   test('instance throws StateError if not initialized', () async {
     expect(() => DbUtil.instance, throwsStateError);
   });
