@@ -16,17 +16,28 @@
  */
 package com.instructure.student.ui.e2e.k5
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.GradingPeriodsApi
+import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.util.*
 
 @HiltAndroidTest
 class GradesElementaryE2ETest : StudentTest() {
@@ -45,21 +56,86 @@ class GradesElementaryE2ETest : StudentTest() {
             students = 1,
             courses = 4,
             homeroomCourses = 1,
-            announcements = 3
+            announcements = 3,
+            gradingPeriods = true
         )
 
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
-        val homeroomCourse = data.coursesList[0]
-        val homeroomAnnouncement = data.announcementsList[0]
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        val testGradingPeriodListApiModel = GradingPeriodsApi.getGradingPeriodsOfCourse(nonHomeroomCourses[0].id)
+
+        val testAssignment = AssignmentsApi.createAssignment(
+             AssignmentsApi.CreateAssignmentRequest(
+                 courseId = nonHomeroomCourses[1].id,
+                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                 gradingType = GradingType.PERCENT,
+                 teacherToken = teacher.token,
+                 pointsPossible = 100.0,
+                 dueAt = calendar.time.toApiString()
+             )
+         )
+
+         val testAssignment2 = AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = nonHomeroomCourses[0].id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.LETTER_GRADE,
+                teacherToken = teacher.token,
+                pointsPossible = 100.0,
+                dueAt = calendar.time.toApiString()
+            )
+        )
+
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = nonHomeroomCourses[1].id,
+            assignmentId = testAssignment.id,
+            studentId = student.id,
+            postedGrade="9",
+            excused = false)
+
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = nonHomeroomCourses[0].id,
+            assignmentId = testAssignment2.id,
+            studentId = student.id,
+            postedGrade="A-",
+            excused = false)
 
         tokenLoginElementary(student)
         elementaryDashboardPage.waitForRender()
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.GRADES)
         gradesPage.assertPageObjects()
 
+        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "93%")
+        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
+        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
 
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = nonHomeroomCourses[0].id,
+            assignmentId = testAssignment2.id,
+            studentId = student.id,
+            postedGrade="C-",
+            excused = false)
+
+        Thread.sleep(3000) //This time is needed here to let the SubMissionApi does it's job.
+        gradesPage.refresh()
+        Thread.sleep(5000) //We need to wait here because sometimes if we refresh the page fastly, the old grade will be seen.
+        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "73%")
+        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
+
+        gradesPage.assertSelectedGradingPeriod(gradesPage.getStringFromResource(R.string.currentGradingPeriod))
+        gradesPage.clickGradingPeriodSelector()
+        gradesPage.selectGradingPeriod(testGradingPeriodListApiModel.gradingPeriods[0].title)
+        gradesPage.clickGradeRow(nonHomeroomCourses[0].name)
+        courseGradesPage.assertPageObjects()
+        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("73%"))
+
+        Espresso.pressBack()  //A11Y bug: MBL-15788. After it will be fixed, then clicking on gradeRow could happen before changing period, because it would be more intuitive.
+        gradesPage.assertPageObjects()
 
     }
 }
