@@ -19,15 +19,27 @@ import 'package:image_picker/image_picker.dart';
 
 /// Note: Currently excluded from code coverage. That may need to change if this file is updated with testable code.
 class AttachmentPickerInteractor {
+  final ImagePicker _imagePicker = ImagePicker();
+
   Future<File> getImageFromCamera() {
-    return ImagePicker.pickImage(source: ImageSource.camera);
+    return _imagePicker
+        .pickImage(source: ImageSource.camera)
+        .then((value) => File(value.path));
   }
 
   Future<File> getFileFromDevice() {
-    return FilePicker.getFile();
+    final result = FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      return result.then((value) => File(value.files.single.path));
+    } else {
+      return Future.error("");
+    }
   }
 
   Future<File> getImageFromGallery() {
-    return ImagePicker.pickImage(source: ImageSource.gallery);
+    return _imagePicker
+        .pickImage(source: ImageSource.gallery)
+        .then((value) => File(value.path));
   }
 }

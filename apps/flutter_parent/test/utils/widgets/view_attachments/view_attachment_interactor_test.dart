@@ -14,10 +14,11 @@
 
 import 'dart:io';
 
-import 'package:android_intent/android_intent.dart';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
-import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/permission_handler.dart';
+import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
 import 'package:mockito/mockito.dart';
@@ -30,7 +31,7 @@ import '../../test_app.dart';
 void main() {
   test('openExternally calls AndroidIntent with correct parameters', () async {
     var intentVeneer = _MockAndroidIntentVeneer();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<AndroidIntentVeneer>(() => intentVeneer);
     });
 
@@ -48,16 +49,16 @@ void main() {
 
   test('checkStoragePermission returns true when permission is already granted', () async {
     var permissionHandler = _MockPermissionHandler();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
     });
 
-    when(permissionHandler.checkPermissionStatus(PermissionGroup.storage))
+    when(permissionHandler.checkPermissionStatus(Permission.storage))
         .thenAnswer((_) => Future.value(PermissionStatus.granted));
 
     var isGranted = await ViewAttachmentInteractor().checkStoragePermission();
     // requestPermissions should not have been called
-    verifyNever(permissionHandler.requestPermissions(any));
+    verifyNever(permissionHandler.requestPermission(any));
 
     // Should return true
     expect(isGranted, isTrue);
@@ -65,20 +66,20 @@ void main() {
 
   test('checkStoragePermission returns false when permission is rejected', () async {
     var permissionHandler = _MockPermissionHandler();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
     });
 
-    when(permissionHandler.checkPermissionStatus(PermissionGroup.storage))
+    when(permissionHandler.checkPermissionStatus(Permission.storage))
         .thenAnswer((_) => Future.value(PermissionStatus.denied));
 
-    when(permissionHandler.requestPermissions([PermissionGroup.storage]))
-        .thenAnswer((_) => Future.value({PermissionGroup.storage: PermissionStatus.denied}));
+    when(permissionHandler.requestPermission(Permission.storage))
+        .thenAnswer((_) => Future.value(PermissionStatus.denied));
 
     var isGranted = await ViewAttachmentInteractor().checkStoragePermission();
 
     // requestPermissions should have been called once
-    verify(permissionHandler.requestPermissions([PermissionGroup.storage])).called(1);
+    verify(permissionHandler.requestPermission(Permission.storage)).called(1);
 
     // Should return true
     expect(isGranted, isFalse);
@@ -86,39 +87,39 @@ void main() {
 
   test('checkStoragePermission returns true when permission is request and granted', () async {
     var permissionHandler = _MockPermissionHandler();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
     });
 
-    when(permissionHandler.checkPermissionStatus(PermissionGroup.storage))
+    when(permissionHandler.checkPermissionStatus(Permission.storage))
         .thenAnswer((_) => Future.value(PermissionStatus.denied));
 
-    when(permissionHandler.requestPermissions([PermissionGroup.storage]))
-        .thenAnswer((_) => Future.value({PermissionGroup.storage: PermissionStatus.granted}));
+    when(permissionHandler.requestPermission(Permission.storage))
+        .thenAnswer((_) => Future.value(PermissionStatus.granted));
 
     var isGranted = await ViewAttachmentInteractor().checkStoragePermission();
 
     // requestPermissions should have been called once
-    verify(permissionHandler.requestPermissions([PermissionGroup.storage])).called(1);
+    verify(permissionHandler.requestPermission(Permission.storage)).called(1);
 
     // Should return true
     expect(isGranted, isTrue);
   });
 
-  test('downloadFile does nothing when permission is not granted', () {
+  test('downloadFile does nothing when permission is not granted', () async {
     var permissionHandler = _MockPermissionHandler();
     var pathProvider = _MockPathProvider();
     var downloader = _MockDownloader();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
       locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
       locator.registerLazySingleton<FlutterDownloaderVeneer>(() => downloader);
     });
 
-    when(permissionHandler.checkPermissionStatus(PermissionGroup.storage))
+    when(permissionHandler.checkPermissionStatus(Permission.storage))
         .thenAnswer((_) => Future.value(PermissionStatus.denied));
-    when(permissionHandler.requestPermissions([PermissionGroup.storage]))
-        .thenAnswer((_) => Future.value({PermissionGroup.storage: PermissionStatus.denied}));
+    when(permissionHandler.requestPermission(Permission.storage))
+        .thenAnswer((_) => Future.value(PermissionStatus.denied));
 
     ViewAttachmentInteractor().downloadFile(Attachment());
 
@@ -137,7 +138,7 @@ void main() {
     var permissionHandler = _MockPermissionHandler();
     var pathProvider = _MockPathProvider();
     var downloader = _MockDownloader();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<PermissionHandler>(() => permissionHandler);
       locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
       locator.registerLazySingleton<FlutterDownloaderVeneer>(() => downloader);
@@ -145,7 +146,7 @@ void main() {
 
     Attachment attachment = Attachment((a) => a..url = 'fake_url');
 
-    when(permissionHandler.checkPermissionStatus(PermissionGroup.storage))
+    when(permissionHandler.checkPermissionStatus(Permission.storage))
         .thenAnswer((_) => Future.value(PermissionStatus.granted));
 
     when(pathProvider.getExternalStorageDirectories(type: StorageDirectory.downloads))

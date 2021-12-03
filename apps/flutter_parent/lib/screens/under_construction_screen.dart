@@ -60,7 +60,7 @@ class UnderConstructionScreen extends StatelessWidget {
               Text(
                 L10n(context).currentlyBuildingThisFeature,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.subhead.copyWith(fontWeight: FontWeight.normal),
+                style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.normal),
               ),
             ],
           ),

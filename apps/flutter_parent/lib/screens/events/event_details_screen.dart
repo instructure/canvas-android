@@ -180,7 +180,7 @@ class _EventDetails extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       children: [
         SizedBox(height: 16),
-        Text(event.title ?? '', style: textTheme.display1, key: ValueKey('event_details_title')),
+        Text(event.title ?? '', style: textTheme.headline4, key: ValueKey('event_details_title')),
         SizedBox(height: 16),
         Divider(),
         _SimpleTile(label: l10n.eventDateLabel, line1: dateLine1, line2: dateLine2, keyPrefix: 'event_details_date'),
@@ -247,7 +247,7 @@ class _RemindMeState extends State<_RemindMe> {
           value: reminder != null,
           title: Text(
             reminder?.date == null ? L10n(context).eventRemindMeDescription : L10n(context).eventRemindMeSet,
-            style: textTheme.subhead,
+            style: textTheme.subtitle1,
           ),
           subtitle: reminder == null
               ? null
@@ -255,7 +255,7 @@ class _RemindMeState extends State<_RemindMe> {
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     reminder.date.l10nFormat(L10n(context).dateAtTime),
-                    style: textTheme.subhead.copyWith(color: ParentTheme.of(context).studentColor),
+                    style: textTheme.subtitle1.copyWith(color: ParentTheme.of(context).studentColor),
                   ),
                 ),
           onChanged: (checked) => _handleAlarmSwitch(context, widget.event, checked, reminder, widget.formattedDate),
@@ -323,9 +323,9 @@ class _SimpleTile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SimpleHeader(label: label),
-        Text(line1 ?? '', style: textTheme.subhead, key: ValueKey('${keyPrefix}_line1')),
+        Text(line1 ?? '', style: textTheme.subtitle1, key: ValueKey('${keyPrefix}_line1')),
         if (line2 != null) SizedBox(height: 8),
-        if (line2 != null) Text(line2, style: textTheme.subhead, key: ValueKey('${keyPrefix}_line2')),
+        if (line2 != null) Text(line2, style: textTheme.subtitle1, key: ValueKey('${keyPrefix}_line2')),
         SizedBox(height: 16),
       ],
     );

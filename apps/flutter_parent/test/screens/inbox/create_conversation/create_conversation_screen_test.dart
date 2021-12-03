@@ -51,8 +51,8 @@ void main() {
         AttachmentHandler attachmentHandler,
         int fetchFailCount: 0,
         int sendFailCount: 0,
-        bool pronouns: false}) {
-    setupTestLocator((locator) {
+        bool pronouns: false}) async {
+    await setupTestLocator((locator) {
       locator.registerFactory<CreateConversationInteractor>(
               () => _MockInteractor(recipientCount, attachmentHandler, fetchFailCount, sendFailCount, pronouns));
     });
@@ -67,7 +67,7 @@ void main() {
   }
 
   testWidgetsWithAccessibilityChecks('shows loading when retrieving participants', (tester) async {
-    _setupLocator();
+    await _setupLocator();
     await tester.pumpWidget(_testableWidget());
     await tester.pump();
     final matchedWidget = find.byType(CircularProgressIndicator);
@@ -75,7 +75,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('does not show loading when participants are loaded', (tester) async {
-    _setupLocator();
+    await _setupLocator();
 
     await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
@@ -85,7 +85,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('sending disabled when no message is present', (tester) async {
-    _setupLocator();
+    await _setupLocator();
 
     await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
@@ -96,7 +96,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows error state on fetch fail, allows retry', (tester) async {
-    _setupLocator(fetchFailCount: 1);
+    await _setupLocator(fetchFailCount: 1);
 
     await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
@@ -121,7 +121,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('can enter message text', (tester) async {
-    _setupLocator();
+    await _setupLocator();
 
     await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
@@ -135,7 +135,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('sending is enabled once message is present', (tester) async {
-    _setupLocator();
+    await _setupLocator();
 
     await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
@@ -151,7 +151,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('sending is disabled when subject is empty and message is present',
       (tester) async {
-    _setupLocator();
+    await _setupLocator();
 
     await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
@@ -175,7 +175,7 @@ void main() {
     // Set up attachment handler in 'uploading' stage
     var handler = _MockAttachmentHandler()..stage = AttachmentUploadStage.UPLOADING;
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
@@ -218,7 +218,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks(
       'sending is disabled when no participants are selected, but subject and message are present', (tester) async {
-    _setupLocator(recipientCount: 0);
+    await _setupLocator(recipientCount: 0);
 
     await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
@@ -234,7 +234,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('prepopulates course name as subject', (tester) async {
-    _setupLocator();
+    await _setupLocator();
 
     final course = _mockCourse('0');
     await tester.pumpWidget(_testableWidget(course: course));
@@ -245,7 +245,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('subject can be edited', (tester) async {
-    _setupLocator();
+    await _setupLocator();
 
     final course = _mockCourse('0');
     await tester.pumpWidget(_testableWidget(course: course));
@@ -260,7 +260,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('prepopulates recipients', (tester) async {
     final recipientCount = 2;
-    _setupLocator(recipientCount: recipientCount);
+    await _setupLocator(recipientCount: recipientCount);
 
     final course = _mockCourse('0');
     await tester.pumpWidget(_testableWidget(course: course));
@@ -273,7 +273,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('backing out without text in the body does not show a dialog', (tester) async {
-    _setupLocator();
+    await _setupLocator();
     final course = _mockCourse('0');
 
     // Load up a temp page with a button to navigate to our screen, that way the back button exists in the app bar
@@ -292,7 +292,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('backing out with text in the body will show confirmation dialog', (tester) async {
-    _setupLocator();
+    await _setupLocator();
     final course = _mockCourse('0');
 
     await _pumpTestableWidgetWithBackButton(
@@ -312,7 +312,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('backing out and pressing yes on the dialog closes the screen', (tester) async {
-    _setupLocator();
+    await _setupLocator();
     final course = _mockCourse('0');
     final observer = MockNavigatorObserver();
 
@@ -336,7 +336,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('backing out and pressing no on the dialog keeps screen open', (tester) async {
-    _setupLocator();
+    await _setupLocator();
     final course = _mockCourse('0');
     final observer = MockNavigatorObserver();
 
@@ -369,7 +369,7 @@ void main() {
       ..displayName = 'File'
       ..thumbnailUrl = 'fake url'));
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
     await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course.id, studentId, '', null));
@@ -389,7 +389,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('clicking the add participants button shows the modal', (tester) async {
-    _setupLocator();
+    await _setupLocator();
     final course = _mockCourse('0');
     final observer = MockNavigatorObserver();
 
@@ -416,7 +416,7 @@ void main() {
       ..stage = AttachmentUploadStage.UPLOADING
       ..progress = 0.25;
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
     await tester.pumpWidget(_testableWidget());
@@ -450,7 +450,7 @@ void main() {
     // Set up attachment handler in 'failed' stage
     var handler = _MockAttachmentHandler()..stage = AttachmentUploadStage.FAILED;
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
     await tester.pumpWidget(_testableWidget());
@@ -510,7 +510,7 @@ void main() {
         ..displayName = 'File'
         ..thumbnailUrl = 'fake url');
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
     await tester.pumpWidget(_testableWidget());
@@ -541,7 +541,7 @@ void main() {
       ..displayName = 'File'
       ..thumbnailUrl = 'fake url'));
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
     await tester.pumpWidget(_testableWidget());
@@ -568,7 +568,7 @@ void main() {
       ..stage = AttachmentUploadStage.UPLOADING
       ..progress = 0.25;
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
     await tester.pumpWidget(_testableWidget());
@@ -590,7 +590,7 @@ void main() {
     // Set up attachment handler in 'uploading' stage
     var handler = AttachmentHandler(File('path/to/file.txt'))..stage = AttachmentUploadStage.FAILED;
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
     await tester.pumpWidget(_testableWidget());
@@ -614,7 +614,7 @@ void main() {
       ..attachment = Attachment((b) => b..displayName = 'upload.txt')
       ..stage = AttachmentUploadStage.FINISHED;
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
     await tester.pumpWidget(_testableWidget());
@@ -640,7 +640,7 @@ void main() {
         ..displayName = 'File'
         ..thumbnailUrl = 'fake url');
 
-    _setupLocator(attachmentHandler: handler);
+    await _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
     await tester.pumpWidget(_testableWidget());
@@ -682,7 +682,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Expands and collapses recipient box', (tester) async {
-    _setupLocator();
+    await _setupLocator();
 
     await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
@@ -701,7 +701,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Selects recipients from list', (tester) async {
-    _setupLocator(recipientCount: 2); // One teacher, one student
+    await _setupLocator(recipientCount: 2); // One teacher, one student
     final course = _mockCourse('0');
 
     await tester.pumpWidget(_testableWidget(course: course));
@@ -729,7 +729,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows error on send fail', (tester) async {
-    _setupLocator(sendFailCount: 1);
+    await _setupLocator(sendFailCount: 1);
     final course = _mockCourse('0');
 
     await tester.pumpWidget(_testableWidget(course: course));
@@ -747,7 +747,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows sending indicator and closes after success', (tester) async {
-    _setupLocator();
+    await _setupLocator();
     final course = _mockCourse('0');
     final observer = MockNavigatorObserver();
 
@@ -778,7 +778,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays pronouns for recipients', (tester) async {
-    _setupLocator(recipientCount: 2, pronouns: true); // One teacher, one student
+    await _setupLocator(recipientCount: 2, pronouns: true); // One teacher, one student
     final course = _mockCourse('0');
 
     await tester.pumpWidget(_testableWidget(course: course));
@@ -795,7 +795,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays enrollment type in recipient chip', (tester) async {
-    _setupLocator(recipientCount: 2);
+    await _setupLocator(recipientCount: 2);
     final course = _mockCourse('0');
 
     await tester.pumpWidget(_testableWidget(course: course));
@@ -808,7 +808,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays enrollment types', (tester) async {
     var interactor = _MockedInteractor();
-    GetIt.instance.reset();
+    await GetIt.instance.reset();
     GetIt.instance.registerFactory<CreateConversationInteractor>(() => interactor);
 
     Recipient _makeRecipient(String id, String type) {
@@ -863,7 +863,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('passing in subject shows in subject text widget', (tester) async {
-    _setupLocator();
+    await _setupLocator();
 
     final course = _mockCourse('0');
     final subject = 'Instructure Rocks!';
@@ -888,7 +888,7 @@ void main() {
     var interactor = _MockedInteractor();
     final data = CreateConversationData(course, [_makeRecipient('123', 'TeacherEnrollment')]);
     when(interactor.loadData(any, any)).thenAnswer((_) async => data);
-    GetIt.instance.reset();
+    await GetIt.instance.reset();
     GetIt.instance.registerFactory<CreateConversationInteractor>(() => interactor);
 
     final subject = 'Regarding Instructure Pandas';

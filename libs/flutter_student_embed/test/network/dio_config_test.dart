@@ -66,7 +66,7 @@ void main() {
       final options = canvasDio().options;
       final expectedHeaders = ApiPrefs.getHeaderMap()
         ..putIfAbsent('accept', () => 'application/json+canvas-string-ids')
-        ..putIfAbsent('content-type', () => null);
+        ..putIfAbsent('content-type', () => 'application/json; charset=utf-8');
       expect(options.headers, expectedHeaders);
     });
 
@@ -77,7 +77,7 @@ void main() {
       final options = canvasDio(forceDeviceLanguage: true, overrideToken: overrideToken, extraHeaders: extras).options;
       final expected = ApiPrefs.getHeaderMap(forceDeviceLanguage: true, token: overrideToken, extraHeaders: extras)
         ..putIfAbsent('accept', () => 'application/json+canvas-string-ids')
-        ..putIfAbsent('content-type', () => null);
+        ..putIfAbsent('content-type', () => 'application/json; charset=utf-8');
 
       expect(options.headers, expected);
     });
@@ -128,7 +128,7 @@ void main() {
     });
 
     test('sets up headers', () async {
-      final headers = {'123': '123'};
+      final headers = {'123': '123', 'content-type' : 'application/json; charset=utf-8'};
       final options = DioConfig.core(headers: headers).dio.options;
       expect(options.headers, headers);
     });
