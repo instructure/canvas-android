@@ -412,7 +412,8 @@ void main() {
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
         ..htmlUrl = '$domain/courses/1234/discussion_topics/1234'
-        ..alertType = AlertType.courseAnnouncement);
+        ..alertType = AlertType.courseAnnouncement
+        ..lockedForUser = false);
 
       await _pumpAndTapAlert(tester, alert);
 
@@ -425,7 +426,8 @@ void main() {
         ..contextId = '12345'
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
-        ..alertType = AlertType.institutionAnnouncement);
+        ..alertType = AlertType.institutionAnnouncement
+        ..lockedForUser = false);
       await _pumpAndTapAlert(tester, alert);
 
       verify(mockNav.pushRoute(any, PandaRouter.institutionAnnouncementDetails(alert.contextId)));
@@ -437,7 +439,8 @@ void main() {
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
         ..alertType = AlertType.assignmentMissing
-        ..htmlUrl = '$domain/courses/1234/assignments/1234');
+        ..htmlUrl = '$domain/courses/1234/assignments/1234'
+        ..lockedForUser = false);
       await _pumpAndTapAlert(tester, alert);
 
       verify(mockNav.routeInternally(any, alert.htmlUrl));
@@ -450,7 +453,8 @@ void main() {
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
         ..alertType = AlertType.assignmentGradeHigh
-        ..htmlUrl = '$domain/courses/1234/assignments/1234');
+        ..htmlUrl = '$domain/courses/1234/assignments/1234'
+        ..lockedForUser = false);
       await _pumpAndTapAlert(tester, alert);
 
       verify(mockNav.routeInternally(any, alert.htmlUrl));
@@ -462,7 +466,8 @@ void main() {
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
         ..alertType = AlertType.assignmentGradeLow
-        ..htmlUrl = '$domain/courses/1234/assignments/1234');
+        ..htmlUrl = '$domain/courses/1234/assignments/1234'
+        ..lockedForUser = false);
       await _pumpAndTapAlert(tester, alert);
 
       verify(mockNav.routeInternally(any, alert.htmlUrl));
@@ -474,7 +479,8 @@ void main() {
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
         ..alertType = AlertType.courseGradeHigh
-        ..htmlUrl = '$domain/courses/1234');
+        ..htmlUrl = '$domain/courses/1234'
+        ..lockedForUser = false);
       await _pumpAndTapAlert(tester, alert);
 
       verify(mockNav.routeInternally(any, alert.htmlUrl));
@@ -486,7 +492,8 @@ void main() {
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
         ..alertType = AlertType.courseGradeLow
-        ..htmlUrl = '$domain/courses/1234');
+        ..htmlUrl = '$domain/courses/1234'
+        ..lockedForUser = false);
       await _pumpAndTapAlert(tester, alert);
 
       verify(mockNav.routeInternally(any, alert.htmlUrl));
@@ -533,7 +540,8 @@ List<Alert> _mockData(
         ..title = 'Alert $index'
         ..workflowState = state
         ..alertType = type ?? AlertType.institutionAnnouncement
-        ..htmlUrl = htmlUrl));
+        ..htmlUrl = htmlUrl
+        ..lockedForUser = false));
 }
 
 class _MockAlertsInteractor extends Mock implements AlertsInteractor {}
