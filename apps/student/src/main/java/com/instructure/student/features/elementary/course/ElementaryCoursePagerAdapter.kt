@@ -35,6 +35,8 @@ class ElementaryCoursePagerAdapter(
     private val tabs: List<ElementaryCourseTab>,
 ) : PagerAdapter() {
 
+    private fun getReferer(): Map<String, String> = mutableMapOf(Pair("Referer", ApiPrefs.domain))
+
     override fun getCount(): Int = tabs.size
 
     override fun isViewFromObject(view: View, any: Any): Boolean = view == any
@@ -48,7 +50,7 @@ class ElementaryCoursePagerAdapter(
 
         progressBar.setVisible()
         setupViews(webView, progressBar)
-        webView.loadUrl(tabs[position].url)
+        webView.loadUrl(tabs[position].url, getReferer())
 
         return view
     }
@@ -74,7 +76,7 @@ class ElementaryCoursePagerAdapter(
             }
 
             override fun canRouteInternallyDelegate(url: String): Boolean {
-                return RouteMatcher.canRouteInternally(webView.context, url, ApiPrefs.domain, false)
+                return !isUrlSame(webView, url) && RouteMatcher.canRouteInternally(webView.context, url, ApiPrefs.domain, false)
             }
 
             override fun routeInternallyCallback(url: String) {
@@ -84,12 +86,17 @@ class ElementaryCoursePagerAdapter(
         webView.canvasEmbeddedWebViewCallback =
             object : CanvasWebView.CanvasEmbeddedWebViewCallback {
                 override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
-                    return true
+                    return false
                 }
 
                 override fun launchInternalWebViewFragment(url: String) {
                     activity?.startActivity(InternalWebViewActivity.createIntent(webView.context, url, "", true))
                 }
             }
+    }
+
+    private fun isUrlSame(webView: CanvasWebView, url: String): Boolean {
+        val strippedUrl = webView.url?.replace(Regex("&session_token=[^&|^#\\s]+|session_token=[^&\\s]+&?"), "")
+        return strippedUrl?.contains(url) ?: false
     }
 }
