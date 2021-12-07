@@ -89,5 +89,5 @@ sealed class SubmissionDetailsContentType {
     data class UrlContent(val url: String, val previewUrl: String?) : SubmissionDetailsContentType()
     data class DiscussionContent(val previewUrl: String?) : SubmissionDetailsContentType()
     object LockedContent : SubmissionDetailsContentType()
-    object StudentAnnotationContent : SubmissionDetailsContentType()
+    data class StudentAnnotationContent(val subissionId: Long, val submissionAttempt: Long) : SubmissionDetailsContentType()
 }

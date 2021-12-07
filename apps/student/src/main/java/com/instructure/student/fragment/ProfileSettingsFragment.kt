@@ -325,7 +325,7 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
     private fun createLoaderBundle(
             name: String,
             contentType: String,
-            path: String,
+            path: String?,
             size: Long,
             deleteOnCompletion: Boolean
     ) = Bundle().apply {

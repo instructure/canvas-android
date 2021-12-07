@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Ustøttet innleveringstype</string>
     <string name="studentAnnotationUnsupportedMessage">Innlevering kan ikke vises fordi Studentmerknader for øyeblikket ikke støttes på mobil.</string>
     <string name="schedule_marked_as_done">Du har merket det som fullført.</string>
+    <string name="error_saving_assignment_closed_grading_period">Kan ikke endre en forfallsdato med en frist innenfor en stengt vurderingsperiode.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Hopp til i dag</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">send melding</string>
+    <string name="somethingWentWrong">Noe gikk galt</string>
+    <string name="failedToLoadQuiz">Kunne ikke laste inn test</string>
 </resources>

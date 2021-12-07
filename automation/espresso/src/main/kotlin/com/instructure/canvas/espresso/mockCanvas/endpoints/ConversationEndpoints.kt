@@ -38,7 +38,7 @@ object ConversationListEndpoint : Endpoint(
     LongId(PathVars::conversationId) to ConversationEndpoint,
     response = {
         GET {
-            val filter = request.url().queryParameter("filter")
+            val filter = request.url.queryParameter("filter")
             if(filter != null) {
                 val conversationList = data.conversationCourseMap[filter.substringAfter("course_").toLong()]
                 if(conversationList.isNullOrEmpty()) {
@@ -47,7 +47,7 @@ object ConversationListEndpoint : Endpoint(
                     request.successResponse(conversationList)
                 }
             } else {
-                var response = when(request.url().queryParameter("scope")) {
+                var response = when(request.url.queryParameter("scope")) {
                     "unread" -> {
                         data.conversations.values.toList().filter {
                             it.workflowState == Conversation.WorkflowState.UNREAD
@@ -98,8 +98,8 @@ object ConversationListEndpoint : Endpoint(
 
         PUT {
             // Assumes a single conversationId
-            val conversationId = request.url().queryParameter("conversation_ids[]")?.toLongOrNull()
-            val event = request.url().queryParameter("event")
+            val conversationId = request.url.queryParameter("conversation_ids[]")?.toLongOrNull()
+            val event = request.url.queryParameter("event")
             if(event == "mark_as_unread" && conversationId != null && data.conversations.containsKey(conversationId)) {
                 val conversation = data.conversations[conversationId]!!
                 val updatedConversation = conversation.copy(workflowState = Conversation.WorkflowState.UNREAD)
@@ -138,7 +138,7 @@ object ConversationEndpoint : Endpoint(
                     POST {
                         val conversationId = pathVars.conversationId
                         val conversation = data.conversations[conversationId]
-                        val messageId = request.url().queryParameter("remove[]")?.toLongOrNull()
+                        val messageId = request.url.queryParameter("remove[]")?.toLongOrNull()
                         if(conversation != null && messageId != null) {
                             val newMessages = conversation.messages.filter {m -> m.id != messageId}
                             val updatedConversation = conversation.copy(
@@ -163,17 +163,17 @@ object ConversationEndpoint : Endpoint(
             POST {
                 if (data.conversations.containsKey(pathVars.conversationId)) {
                     val conversation = data.conversations[pathVars.conversationId]!!
-                    val bodyParamsSize = (request.body() as? FormBody)?.size() ?: 0
+                    val bodyParamsSize = (request.body as? FormBody)?.size ?: 0
                     var bodyIndex = -1
                     for (index in 0..bodyParamsSize) {
-                        if ((request.body() as? FormBody)?.name(index) == "body") {
+                        if ((request.body as? FormBody)?.name(index) == "body") {
                             bodyIndex = index
                             break
                         }
                     }
 
                     val messageBody = if (bodyIndex != -1) {
-                        (request.body() as? FormBody)?.value(bodyIndex)
+                        (request.body as? FormBody)?.value(bodyIndex)
                     } else {
                         null
                     }
@@ -212,7 +212,7 @@ object ConversationEndpoint : Endpoint(
 
                     // Remove caller from audience
                     val result = conversation.copy(
-                            audience = conversation.audience?.toMutableList()?.filter { id -> id != userId },
+                            audience = conversation.audience?.toMutableList()?.filter { id -> id != userId }
                     )
 
                     request.successResponse(result)
@@ -226,8 +226,8 @@ object ConversationEndpoint : Endpoint(
         PUT {
             // Alter the conversation -- starring, archiving, etc...
             val conversationId = pathVars.conversationId
-            val newStarred = request.url().queryParameter("conversation[starred]")?.equals("true")
-            val newStateRaw = request.url().queryParameter("conversation[workflow_state]")
+            val newStarred = request.url.queryParameter("conversation[starred]")?.equals("true")
+            val newStateRaw = request.url.queryParameter("conversation[workflow_state]")
             val newState = when(newStateRaw) {
                 "read" -> Conversation.WorkflowState.UNREAD
                 "unread" -> Conversation.WorkflowState.UNREAD

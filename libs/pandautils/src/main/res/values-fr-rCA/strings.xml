@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Choisir un média</string>
     <string name="takeVideo">Enregistrer une vidéo</string>
     <string name="noCameraOnDevice">Aucune caméra</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">La date de déverrouillage ne peut pas être postérieure à la date d’échéance.</string>
     <string name="utils_lockBeforeDueDateError">La date de verrouillage ne peut pas être antérieure à la date d’échéance.</string>
     <string name="utils_lockAfterUnlockError">La date de verrouillage ne peut pas être antérieure à la date de déverrouillage.</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Redémarrez l\'application pour installer la nouvelle version</string>
     <string name="nothing_planned_yet">Rien de planifié en ce moment</string>
     <string name="schedule_tag_graded">Noté</string>
-    <string name="schedule_tag_replies">Réponses</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d Réponse</item>
+        <item quantity="other">%d Réponses></item>
+    </plurals>
     <string name="schedule_tag_feedback">Rétroaction</string>
     <string name="schedule_tag_late">En retard</string>
     <string name="schedule_tag_redo">Rétablir</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">Demain</string>
     <string name="yesterday">Hier</string>
     <string name="schedule_calendar_event_due_text">À %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s à %2$s</string>
     <string name="schedule_todo_due_text">À faire : %s</string>
     <string name="schedule_due_text">Échéance : %s</string>
     <string name="show_missing_items_title">Afficher les %d éléments manquants</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s pts</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f points</item>
+        <item quantity="one">%.1f point</item>
+        <item quantity="other">%.1f points</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Toute la journée</string>
+    <string name="schedule_tag_missing">Manquant</string>
+    <string name="previous_week">Semaine précédente</string>
+    <string name="next_week">La semaine prochaine</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Cours %s</string>
+    <string name="a11y_announcement">Annonce</string>
+    <string name="a11y_discussion_topic">Discussion</string>
+    <string name="a11y_calendar_event">Événement du calendrier</string>
+    <string name="a11y_assignment">Tâche</string>
+    <string name="a11y_planner_note">Remarque du planificateur</string>
+    <string name="a11y_quiz">Questionnaire</string>
+    <string name="a11y_todo">À faire</string>
+    <string name="a11y_page">Page</string>
+    <string name="a11y_marked_as_done">Marquer comme terminé</string>
+    <string name="a11y_not_marked_as_done">Non marqué comme terminé</string>
+    <string name="a11y_mark_as_done">Marquer comme terminé</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Oh oh! Une erreur s’est produite lors du chargement des détails du cours.</string>
 </resources>

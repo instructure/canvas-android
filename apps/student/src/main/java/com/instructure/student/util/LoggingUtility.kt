@@ -26,17 +26,6 @@ object LoggingUtility {
     private const val TAG = "canvasLog"
 
     /**
-     * Logs using the adb logcat tool using tag "candroid" [android.util.Log.d]
-     *
-     * @param msg The message to log to console
-     * @see android.util.Log.d
-     */
-    fun logConsole(msg: String?) {
-        // Only logcat.
-        android.util.Log.d(TAG, msg)
-    }
-
-    /**
      * Logs Console [android.util.Log.d] and Crashlytics [Crashlytics.log]}
      *
      * @param priority The priority of the logging. Examples are [android.util.Log.DEBUG] and [android.util.Log.ERROR]

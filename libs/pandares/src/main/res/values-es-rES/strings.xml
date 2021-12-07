@@ -1,0 +1,1229 @@
+﻿<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+
+    <string name="noFilesFound">No se han encontrado archivos</string>
+    <string name="searchFilesHint">Buscar archivos</string>
+    <string name="fileSearchInstructions">Introduzca un término de búsqueda con tres o más caracteres</string>
+    <plurals name="fileSearchResultCount">
+        <item quantity="zero">“No se han encontrado coincidencias”</item>
+        <item quantity="one">“Se ha encontrado %d coincidencia”</item>
+        <item quantity="other">“Se han encontrado %d coincidencias”</item>
+    </plurals>
+    <string name="contentDescriptionSuperPanda">Panda volador con capa</string>
+    <string name="troubleLoggingIn">¿Tiene problemas para iniciar sesión?</string>
+    <string name="requestLoginHelp">Solicitar ayuda para iniciar sesión</string>
+    <string name="loginHelpSubject">Tengo problemas para iniciar sesión</string>
+    <string name="errorReportInvalidEmail">Introduzca una dirección de correo electrónico válida</string>
+    <string name="announcementSections">Secciones: %s</string>
+    <string name="selectedListItem">Seleccionado: %s</string>
+
+    <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Detalles de la actividad</string>
+    <string name="submission_types">Tipos de entrega</string>
+    <string name="noAssignmentDescriptionStudent">No hay contenido</string>
+    <string name="dueLabel">Fecha de entrega</string>
+    <string name="submissionStatusSuccessTitle">Entrega realizada</string>
+    <string name="submissionStatusSuccessSubtitle">Su entrega está ahora esperando para ser evaluada</string>
+    <string name="submissionStatusUploadingTitle">La entrega se está cargando...</string>
+    <string name="submissionStatusUploadingSubtitle">Toque para ver el progreso</string>
+    <string name="submissionStatusFailedTitle">No se ha podido entregar</string>
+    <string name="submissionStatusFailedSubtitle">Toque para ver los detalles</string>
+    <string name="submissionAndRubric">Entrega y rúbrica</string>
+    <string name="commentsAndRubric">Comentarios y Rúbrica</string>
+    <string name="errorLoadingAssignment">Se ha producido un problema al cargar esta actividad. Compruebe su conexión y vuelva a intentarlo.</string>
+    <string name="submitted">Entregado</string>
+    <string name="notSubmitted">No entregado</string>
+    <string name="allowedFileTypes">Tipos de archivos permisibles</string>
+    <string name="attempts">Intentos</string>
+    <string name="attemptsAllowedLabel">Intentos permitidos</string>
+    <string name="attemptsUsedLabel">Intentos usados</string>
+    <string name="noAttemptsLeft">No quedan intentos</string>
+    <string name="resubmitAssignment">Volver a entregar la actividad</string>
+    <string name="launchingExternalTool">Iniciando herramienta externa&#8230;</string>
+    <string name="launchExternalTool">Iniciar la herramienta externa</string>
+    <string name="preview">Vista previa</string>
+    <string name="submissionUploadFailedMessage">No se han podido cargar uno o más archivos. Compruebe su conexión a Internet y vuelva a realizar la entrega.</string>
+    <string name="submissionUploadByteProgress">%1$s de %2$s</string>
+    <string name="submissionSuccessTitle">Se ha realizado la entrega</string>
+    <string name="submissionSuccessMessage">Su actividad se ha entregado correctamente. Que tenga un buen día</string>
+    <string name="submissionDeleteTitle">Cancelar entrega</string>
+    <string name="submissionDeleteMessage">Esta acción cancelará y eliminará su entrega.</string>
+    <string name="submissionDeleted">Entrega eliminada</string>
+    <string name="missingSubmissionLabel">Faltante</string>
+    <string name="gradedSubmissionLabel">Evaluado</string>
+
+    <!-- Student Submission -->
+    <string name="submissionUrlClearTextError">No hay vistas previas disponibles para las URL que usan \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Introduzca una URL válida</string>
+    <string name="enterAUrlHereForYourSubmission">Introduzca una URL aquí para la entrega</string>
+    <string name="addFileFabContentDesc">Mostrar opciones de añadir archivo</string>
+    <string name="recordAudio">Grabar audio</string>
+    <string name="recordVideo">Grabar video</string>
+    <string name="a11y_textSubmissionEditor">Editor de entrega de texto</string>
+
+    <!-- Student Submission -->
+    <string name="submissionWrite">Escribir&#8230;</string>
+    <string name="textSubmissionFailureMessage">Algo ha salido mal al cargar la entrega. Entregar nuevamente.</string>
+
+    <!-- Student Submission Details -->
+    <string name="submission">Entrega</string>
+    <string name="submissionVersions">Versiones de entrega</string>
+    <string name="submissionDetailsFileTabName">Archivos (%d)</string>
+    <string name="rubric">Rúbrica</string>
+    <string name="submissionDetailsErrorTitle">Error en la entrega</string>
+    <string name="urlSubmissionDisclaimer">Esta entrega era una URL hacia una página externa. Hemos incluido una captura de pantalla del aspecto de la página cuando se entregó.</string>
+    <string name="submissionDetailsNoSubmissionYet">Aún no hay entregas</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Su actividad se bloqueó el %1$s a las %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Su actividad se desbloqueará el %1$s a las %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Su actividad está bloqueada por el módulo \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Su actividad está bloqueada por un requisito del módulo</string>
+    <string name="submissionDetailsAssignmentLocked">Actividad bloqueada</string>
+    <string name="submissionDetailsNoSubmissionAllowed">No se permiten entregas</string>
+    <string name="webPreview">Vista previa de la URL introducida</string>
+    <string name="websiteUrl">URL de la página web</string>
+    <string name="noneContentMessage">Esta actividad no permite entregas en línea</string>
+    <string name="onPaperContentMessage">Esta actividad no permite entregas en línea</string>
+    <string name="noOnlineSubmissions">No hay entregas en línea</string>
+    <string name="speedGraderExternalToolMessage">Esta actividad se vincula con una herramienta externa para las entregas.</string>
+    <string name="openTool">Abrir herramienta</string>
+    <string name="a11y_submissionText">Texto de la entrega</string>
+
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">De %s puntos</string>
+    <string name="outOfPointsAbbreviatedFormatted">De %s puntos</string>
+    <string name="gradeExcused">Justificado</string>
+    <string name="finalGradeFormatted">Nota final: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s puntos</string>
+    <string name="enterWhatIfScore">Introducir puntaje hipotético</string>
+    <string name="scoreStatisticsLow">Bajo: %s</string>
+    <string name="scoreStatisticsMean">Promedio: %s</string>
+    <string name="scoreStatisticsHigh">Alto: %s</string>
+
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Puntuación personalizada</string>
+    <string name="rubricEmptyMessage">No hay ninguna rúbrica para esta actividad</string>
+    <string name="rubricViewLongDescription">Ver una descripción detallada</string>
+
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Cargando archivo %1$d de %2$d</string>
+    <string name="assignmentSubmissionCommentUpload">Cargando comentario para %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Cargando archivo multimedia</string>
+    <string name="assignmentSubmissionCommentError">Hubo un problema en la carga del comentario para %s</string>
+    <string name="chooseFileForCommentSubtext">Adjunte archivos a su comentario; para ello, toque una opción a continuación</string>
+    <string name="emptySubmissionCommentsSubtext">¿Tiene consultas sobre su actividad?\nEnvíe un mensaje a su profesor.</string>
+    <string name="submissionCommentErrorMessage">El mensaje no ha podido enviarse. Toque para volver a intentarlo.</string>
+    <string name="mediaUpload">Carga de contenido multimedia</string>
+    <string name="mediaUploadAudio">Carga de contenido multimedia: audio</string>
+    <string name="mediaUploadVideo">Carga de contenido multimedia: video</string>
+    <string name="commentSubmissionTypeText">Entrega de texto</string>
+    <string name="commentSubmissionTypeExternalTool">Entrega de herramientas externas</string>
+    <string name="commentSubmissionTypeDiscussion">Entrega del foro de discusión</string>
+    <string name="commentSubmissionTypeQuiz">Entrega del examen</string>
+    <string name="commentSubmissionTypeQuizAttempt">Intento %d</string>
+    <string name="commentSubmissionTypeMediaFile">Archivo multimedia</string>
+    <string name="commentSubmissionTypeAudio">Audio</string>
+    <string name="commentSubmissionTypeVideo">Video</string>
+
+    <!-- Profile Fragment Strings -->
+    <string name="canvasVersionNum">Versión:</string>
+
+    <!-- Content Descriptions -->
+    <string name="canvasLogo">Logotipo de Canvas</string>
+    <string name="enterURL">Introduzca su URL de Canvas:</string>
+    <string name="enterValue">Introduzca un valor</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="signIntoCanvasNetwork">¿Está intentando acceder a Canvas Network?</string>
+    <string name="mobileVerifyGeneral">Esta aplicación no está autorizada para su uso</string>
+    <string name="mobileVerifyDomainUnauthorized">El servidor introducido no está autorizado para esta aplicación.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">El agente de usuario para esta aplicación no está autorizado.</string>
+    <string name="mobileVerifyUnknownError">No hemos podido verificar el servidor para su uso con esta aplicación.</string>
+    <string name="okay">De acuerdo</string>
+    <string name="options">Opciones</string>
+
+    <string name="discussionAttachment">Adjuntar un archivo</string>
+    <string name="discussionPostEditing">Editar</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">¿Eliminar este usuario?</string>
+    <string name="removedForever">Tendrá que iniciar sesión en este usuario de nuevo para acceder a su contenido.</string>
+
+    <string name="bookmarksTitle">Favoritos</string>
+    <string name="addBookmark">Añadir favorito</string>
+    <string name="bookmarkName">Etiqueta</string>
+    <string name="bookmarkTitleRequired">Se requiere una etiqueta</string>
+    <string name="bookmarkAddedSuccess">Favorito creado</string>
+    <string name="bookmarkAddedFailure">El favorito no ha podido crearse</string>
+    <string name="bookmarkShortcut">Seleccione un favorito</string>
+    <string name="bookmarkDeleted">Favorito eliminado</string>
+    <string name="bookmarkDelete">¿Eliminar el favorito?</string>
+    <string name="bookmarkEdit">Editar favorito</string>
+    <string name="bookmarkUpdated">Favorito actualizado</string>
+    <string name="no_bookmarks">Puede ver aquí su favorito después de crearlo.</string>
+
+    <!-- Date strings -->
+    <string name="today">Hoy</string>
+    <string name="past">Pasado</string>
+    <string name="noDate">Sin fecha</string>
+    <string name="future">Futuro</string>
+    <string name="next7Days">Próximos 7 días</string>
+    <string name="submissionDetailsDueTodayAt">Vence hoy a las %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Vence mañana a las %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Venció ayer a las %s</string>
+    <string name="submissionDetailsHasNoDueDate">Su actividad no tiene fecha de entrega</string>
+    <string name="submissionDetailsDueAt">Fecha de entrega el %1$s a las %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">a. m.</string>
+    <string name="lowercasePM">p. m.</string>
+
+
+    <!-- Assignments -->
+    <string name="assignmentLocked">Bloqueado</string>
+    <string name="assignments">Actividades</string>
+    <string name="noDescription">No hay ninguna descripción para esta actividad</string>
+    <string name="noAssignmentsInGroup">No hay actividades en este grupo</string>
+    <string name="excusedAssignment">Esta actividad ha sido justificada y no se tendrá en cuenta para el cálculo total</string>
+    <string name="excused">EJ</string>
+    <string name="sortByDialogTitle">Ordenar por</string>
+    <string name="sortByDialogTimeOption">Hora</string>
+    <string name="sortByDialogTypeOption">Tipo</string>
+    <string name="sortByTime">Ordenar por hora</string>
+    <string name="sortByType">Ordenar por tipo</string>
+    <string name="sortByDialogCancel">Cancelar</string>
+    <string name="assignmentsListAllGradingPeriods">Todo</string>
+    <string name="a11y_sortByTimeButton">Botón ordenar actividades, ordenar por hora</string>
+    <string name="a11y_sortByTypeButton">Botón ordenar actividades, ordenar por tipo</string>
+    <string name="a11y_assignmentsSortedByTime">Actividades ordenadas por hora</string>
+    <string name="a11y_assignmentsSortedByType">Actividades ordenadas por tipo</string>
+
+    <!-- Assignment editing -->
+    <string name="points">Puntos\u0020</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+
+    <!-- Discussions -->
+    <string name="forbidden">Solamente pueden ver las respuestas las personas que hayan publicado al menos una respuesta.</string>
+    <string name="fileCurrentlyLocked">Este archivo está bloqueado</string>
+    <string name="a11y_discussionReplyEditor">Editor de respuesta de foro de discusión</string>
+
+    <!-- Events -->
+    <string name="Starts">Comienza</string>
+    <string name="Ends">Finaliza</string>
+    <string name="allDayEvent">Evento de todo el día</string>
+    <string name="at">a las</string>
+    <string name="PersonalCalendar">Calendario personal</string>
+    <string name="noLocation">No hay ninguna ubicación especificada</string>
+
+    <string name="discussion">Foros de discusión</string>
+    <string name="closed_discussion">No admite comentarios</string>
+    <string name="discussionUploadDialog">Carga de foro de discusión</string>
+    <string name="totalScore">Total:</string>
+    <string name="noGradeText">No procede</string>
+    <string name="checkBoxFinalGradeOption">Basarse en actividades evaluadas</string>
+    <string name="checkBoxWhatIfGradeOption">Mostrar el puntaje hipotético</string>
+    <string name="whatIfDialogText">Puntaje hipotético</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s puntos, %3$s</string>
+    <string name="inbox">Bandeja de entrada</string>
+    <string name="unread">No leído</string>
+    <string name="archived">Archivado</string>
+    <string name="sent">Enviado</string>
+    <string name="grade">Nota</string>
+    <string name="clearFilter">Borrar filtro</string>
+    <string name="addMessage">Añadir mensaje</string>
+    <string name="monologue">Monólogo</string>
+    <string name="noItemsToDisplayShort">No hay ítems para mostrar</string>
+    <string name="Todo">Pendiente</string>
+    <string name="todoFilter">Filtrar los cursos</string>
+    <string name="filterByEllipsis">Filtrar por...</string>
+    <string name="favoritedCoursesLabel">Cursos favoritos</string>
+    <string name="Event">Evento</string>
+    <string name="eventSuccessfulDeletion">Se ha eliminado el evento</string>
+    <string name="timeIconDescription">Icono de horario</string>
+    <string name="toDoTurnIn">Entregar</string>
+    <string name="toDoNoDueDate">No hay fecha de entrega</string>
+
+    <string name="dueAt">Vence a las</string>
+    <string name="dueAtTime">Vence a las %s</string>
+    <string name="toDoDue">Fecha de entrega</string>
+    <string name="due">Fecha de entrega %1$s</string>
+    <plurals name="to_do_needs_grading">
+        <item quantity="one">%d necesita evaluación</item>
+        <item quantity="other">%d necesitan evaluación</item>
+    </plurals>
+    <string name="createAFolder">Crear una carpeta</string>
+    <string name="createFolder">Crear carpeta</string>
+    <string name="createAFile">Crear un archivo</string>
+    <string name="createFileFolderFabContentDesc">Mostrar botones Crear archivo y Crear carpeta</string>
+    <string name="hideCreateFileFolderFabContentDesc">Ocultar los botones Crear archivo y Crear carpeta</string>
+    <string name="folderCreationError">Ha habido un error durante la creación de la carpeta.</string>
+    <string name="rename">Renombrar</string>
+    <string name="renameFile">Renombrar archivo</string>
+    <string name="renameFolder">Renombrar carpeta</string>
+    <string name="blankName">El nombre no puede quedar en blanco</string>
+    <string name="confirmDeleteFile">¿Está seguro de que desea eliminar el archivo \'%s\'? Esta acción no se puede deshacer.</string>
+    <string name="confirmDeleteEmptyFolder">¿Está seguro de que desea eliminar la carpeta \'%s\'? Esta acción no se puede deshacer.</string>
+    <plurals name="confirmDeleteFolder">
+        <item quantity="one">¿Está seguro de que desea eliminar la carpeta \'%1$s\', incluido el ítem %2$d que contiene? Esta acción no se puede deshacer.</item>
+        <item quantity="other">¿Está seguro de que desea eliminar la carpeta \'%1$s\', incluidos los ítems %2$d que contiene? Esta acción no se puede deshacer.</item>
+    </plurals>
+
+    <string name="settings">Configuraciones</string>
+    <string name="name">Nombre</string>
+    <string name="email">Correo electrónico</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="authenticationRequired">Se requiere autentificación</string>
+    <string name="invalidEmailPassword">Correo electrónico o contraseña no válidos</string>
+    <string name="loginId">Identificación de inicio de sesión</string>
+    <string name="domain">Dominio</string>
+    <string name="sendFeedback">Enviar comentarios</string>
+    <string name="sendMail">Enviar correo electrónico&#8230;</string>
+    <string name="edit">Editar</string>
+    <plurals name="item_count">
+        <item quantity="one">%d ítem</item>
+        <item quantity="other">%d ítems</item>
+    </plurals>
+    <string name="addToHomescreen">Añadir a inicio</string>
+    <string name="archive">Archivar</string>
+    <string name="moveToInbox">Mover a la bandeja de entrada</string>
+    <string name="markAsUnread">Marcar como no leído</string>
+    <string name="selectPeopleInbox">Seleccionar personas</string>
+    <string name="delete">Eliminar</string>
+    <string name="deleteEvent">Eliminar evento</string>
+    <string name="selected">Seleccionado</string>
+    <string name="errorSendingMessage">Se ha producido un error al intentar enviar su mensaje. Inténtelo de nuevo.</string>
+    <string name="deletedConversation">Esta conversación ha sido eliminada.</string>
+    <string name="uploadAvatarFailMsg">La nueva foto del avatar no se ha cargado</string>
+    <string name="editPhoto">Editar foto</string>
+    <string name="invalidUsername">Ese nombre de usuario no es válido.</string>
+    <string name="usernameChangeSuccess">Se ha actualizado el nombre de usuario</string>
+    <string name="takePhoto">Realizar foto</string>
+    <string name="choosePhotoFromGallery">Elegir una foto de la galería</string>
+    <string name="fileNotFound">Archivo no encontrado.</string>
+
+    <!-- Conversations -->
+    <string name="reply">Respuesta</string>
+    <string name="writeAMessage">Escribir un mensaje...</string>
+    <string name="compose">Componer</string>
+    <string name="composeMessage">Escribir un mensaje</string>
+    <string name="successSendingMessage">Se ha enviado el mensaje.</string>
+    <string name="emptyMessage">El mensaje no puede estar en blanco</string>
+    <string name="noRecipients">No hay destinatarios</string>
+    <string name="send">Enviar</string>
+    <string name="users">Usuarios</string>
+    <string name="individually">Individualmente</string>
+    <string name="versionNum">Versión:</string>
+    <string name="version" formatted="false">v. %s</string>
+    <string name="allCourses">Todos los cursos</string>
+    <string name="allGroups">Todos los grupos</string>
+    <string name="courseOptions">Opciones del curso</string>
+    <string name="courseOptionsFormatted">Opciones del curso para %s</string>
+    <string name="editNickname">Editar apodo</string>
+    <string name="editCourseColor">Editar el color del curso</string>
+    <string name="open">Abrir</string>
+    <string name="openAlternate">Abrir con aplicación alternativa</string>
+    <string name="opening">Abriendo archivo&#8230;</string>
+    <string name="download">Descargar</string>
+    <string name="messageAttachments">Enviar los archivos adjuntos en un mensaje</string>
+    <string name="discussionAttachmentLabel">Archivo adjunto</string>
+    <string name="attachmentIcon">Icono de archivo adjunto</string>
+    <string name="ok">Aceptar</string>
+    <string name="with">con</string>
+    <string name="starConversation">Marcar conversación como destacada</string>
+    <string name="deleteConversation">Eliminar conversación</string>
+    <string name="sharedWith">Compartido con \u0020</string>
+    <string name="sharedWithYou">Compartido con usted</string>
+    <string name="inboxEmptyMessage">Toque \"+\" para crear una nueva conversación.</string>
+    <string name="inboxAllMessages">Todo</string>
+    <string name="filterInbox">Filtrar bandeja de entrada</string>
+    <string name="selectCanvasContext">Seleccione un curso o grupo</string>
+    <string name="inboxEmptyTitle">No hay mensajes</string>
+    <string name="removeAttachment">Eliminar el archivo adjunto</string>
+    <string name="downloadAttachment">Descargar archivo adjunto</string>
+    <string name="messageOptions">Opciones del mensaje</string>
+    <string name="forward">Reenviar</string>
+    <string name="replyAll">Responder a todos</string>
+    <string name="unarchive">Desarchivar</string>
+    <string name="confirmDeleteMessage">¿Está seguro de que desea eliminar su copia de este mensaje? Esta acción no se puede deshacer.</string>
+    <string name="confirmDeleteConversation">¿Está seguro de que desea eliminar su copia de esta conversación? Esta acción no se puede deshacer.</string>
+    <string name="errorConversationGeneric">No se puede realizar esta acción. Compruebe su conexión y vuelva a intentarlo.</string>
+    <string name="conversationArchived">Conversación archivada</string>
+    <string name="conversationUnarchived">Conversación desarchivada</string>
+    <string name="messageDeleted">Mensaje eliminado</string>
+    <string name="sendIndividualMessage">Enviar un mensaje individual a cada destinatario</string>
+    <string name="invalidRecipients">No tiene permitido enviar mensajes a uno o más de los destinatarios seleccionados.</string>
+    <string name="newMessage">Mensaje nuevo</string>
+    <string name="forwardMessage">Reenviar mensaje</string>
+    <string name="addMorePeopleToMessage">Añadir otro destinatario. No se pueden enviar los mensajes dirigidos a usted solamente.</string>
+    <string name="selectRecipients">Seleccionar destinatarios</string>
+
+    <plurals name="people_count">
+        <item quantity="one">%d persona</item>
+        <item quantity="other">%d personas</item>
+    </plurals>
+
+    <plurals name="group_count">
+        <item quantity="one">%d grupo</item>
+        <item quantity="other">%d grupos</item>
+    </plurals>
+
+    <string name="exitWithoutSavingTitle">¿Salir sin guardar?</string>
+    <string name="exitWithoutSavingMessage">¿Está seguro de que desea salir sin guardar?</string>
+    <string name="exitUnsaved">Salir</string>
+
+    <!-- Groups -->
+    <string name="groupDialogTitle">¿Mensaje grupal?</string>
+    <string name="groupDialogMessage">¿Añadir a todos a una sola conversación de grupo o enviar un mensaje a cada uno individualmente?</string>
+    <string name="group">Grupo</string>
+    <string name="groups">Grupos</string>
+    <string name="groupMembers">Miembros del grupo</string>
+
+    <string name="loading">Cargando&#8230;</string>
+    <string name="select_item_to_display">Seleccionar desde la lista</string>
+
+    <string name="syllabus">Programa del curso</string>
+    <string name="summary">Resumen</string>
+    <string name="coursePeople">Personas</string>
+    <string name="teachersTas">Profesores y profesores auxiliares</string>
+    <string name="students">Alumnos</string>
+    <string name="observers">Observadores</string>
+    <string name="syllabusMissing">No se ha añadido un programa del curso.</string>
+    <string name="syllabusEventsError">Ha habido un error en la carga de los módulos.</string>
+
+    <string name="canvas">Canvas</string>
+    <string name="chooseRecipient">Elegir destinatario(s)</string>
+    <string name="messageHasNoRecipients">Este mensaje actualmente no tiene destinatarios.</string>
+    <string name="sendMessage">Enviar mensaje</string>
+    <string name="userAvatar">Avatar del usuario</string>
+
+    <string name="assignmentIcon">Icono de actividad</string>
+    <string name="announcementIcon">Icono de anuncio</string>
+    <string name="conversationIcon">Icono de conversación</string>
+    <string name="defaultIcon">Icono predeterminado</string>
+    <string name="discussionIcon">Icono de foro de discusión</string>
+    <string name="gradesIcon">Icono de notas</string>
+    <string name="grades">Notas</string>
+    <string name="allGradingPeriods">Todos los períodos de evaluación</string>
+    <string name="calendar">Calendario</string>
+    <string name="bookmarks">Favoritos</string>
+    <string name="showGrades">Mostrar notas</string>
+    <string name="colorOverlay">Superposición de colores</string>
+    <string name="gradesAreHidden">No se pueden ver las notas para este curso.</string>
+
+    <string name="entireGroupSelected">Todo este grupo ya ha sido seleccionado.</string>
+    <string name="noUsersInGroup">No hay usuarios en este grupo</string>
+
+    <!-- Notifications -->
+    <string name="deleted">Eliminado</string>
+
+    <string name="loadingCanvas">Cargando el contenido de Canvas&#8230;</string>
+
+    <string name="unknownDevice">UnknownDevice</string>
+
+    <string name="differentDomainFromLink">El enlace seleccionado es para un dominio diferente al que ha usado para iniciar sesión.</string>
+
+    <string name="pages">Páginas</string>
+    <string name="noPageFound">No hay información disponible de la página.</string>
+    <string name="noPagesInContext">No hay páginas disponibles para este</string>
+    <string name="modified">Modificado por última vez:</string>
+    <string name="lastModified">Modificado por última vez: %1$s</string>
+
+    <string name="startMasquerading">Empezar a actuar como usuario</string>
+    <string name="stopMasquerading">Dejar de actuar como usuario</string>
+    <string name="userId">Identificación de usuario</string>
+    <string name="masqueradeFail">Ha habido un error al intentar actuar como usuario</string>
+
+    <string name="emptyId">La identificación no puede estar en blanco</string>
+
+    <string name="goToQuiz">Ir al examen</string>
+
+    <string name="quizzes">Evaluaciones</string>
+
+    <string name="lastDiscussionPost">Última publicación</string>
+
+    <string name="newAnnouncement">Nuevo anuncio</string>
+    <string name="newDiscussion">Nuevo foro de discusión</string>
+    <string name="composeDiscussion">Crear foro de discusión</string>
+    <string name="composeAnnouncement">Crear anuncio</string>
+
+    <string name="postAnnouncement">Publicar anuncio</string>
+    <string name="postDiscussion">Publicar foro de discusión</string>
+
+    <string name="postAnnouncementSuccess">Se ha publicado el anuncio.</string>
+    <string name="postDiscussionSuccess">Se ha publicado el foro de discusión.</string>
+    <string name="updateDiscussionSuccess">Se ha actualizado el foro de discusión.</string>
+    <string name="draftDiscussionSuccess">Se creado el borrador del foro de discusión.</string>
+
+    <string name="errorPostingAnnouncement">Ha habido un error al publicar el anuncio.</string>
+    <string name="errorPostingDiscussion">Ha habido un error al publicar el foro de discusión.</string>
+    <string name="allowThreading">Permitir respuestas agrupadas</string>
+    <string name="usersMustPost">Los usuarios deben publicar antes de ver las respuestas</string>
+    <string name="allowUserComments">Permitir que los usuarios comenten</string>
+    <string name="message">Mensaje</string>
+    <string name="title">Título</string>
+
+
+    <string name="messageBlank">El mensaje no puede estar en blanco</string>
+
+    <string name="notAuthorizedAnnouncement">Lo sentimos. No está autorizado a publicar anuncios en este curso.</string>
+    <string name="notAuthorizedDiscussion">Lo sentimos. No está autorizado a publicar foros de discusión en este curso.</string>
+
+    <string name="announcements">Anuncios</string>
+
+    <string name="titleBlank">El título no puede estar en blanco</string>
+
+    <!-- Modules -->
+    <string name="modules">Módulos</string>
+    <string name="moduleItemMustView">Ver este ítem</string>
+    <string name="moduleItemViewed">Ha visto este ítem</string>
+    <string name="moduleItemSubmit">Debe entregar la actividad</string>
+    <string name="moduleItemSubmitted">Actividad entregada</string>
+    <string name="moduleItemContribute">Contribuir a esta página</string>
+    <string name="moduleItemContributed">Usted ha contribuido</string>
+    <string name="moduleItemMinScore">Obtenga una puntuación de al menos un</string>
+    <string name="moduleItemMinScoreMet">Puntuación mínima obtenida</string>
+    <string name="prerequisites">Prerrequisitos:</string>
+    <string name="unlocked">Desbloqueado:</string>
+    <string name="locked">Bloqueado</string>
+    <string name="lockedAssignmentDesc">Esta actividad es parte del módulo %s y aún no ha sido desbloqueada.</string>
+    <string name="lockedPageDesc">Esta página es parte del módulo %s y aún no ha sido desbloqueada.</string>
+    <string name="lockedFileDesc">Este archivo es parte del módulo %s y aún no ha sido desbloqueado.</string>
+    <string name="lockedQuizDesc">Este examen es parte del módulo %s y aún no ha sido desbloqueado.</string>
+    <string name="lockedDiscussionDesc">Este foro de discusión es parte del módulo %s y no ha sido desbloqueado todavía.</string>
+    <string name="mustComplete">Primero debe completar lo siguiente:</string>
+    <string name="unlockedAt">Se desbloqueará a las:</string>
+    <string name="goToModules">Ir a módulos</string>
+    <string name="markDone">Marcar como hecho</string>
+    <string name="moduleItemNotFound">No se ha encontrado el ítem del módulo</string>
+    <string name="errorLoadingModules">Ha habido un error en la carga de los módulos.</string>
+
+    <string name="help">Ayuda</string>
+    <string name="instructor_question">Pregunta del profesor</string>
+    <string name="link">Enlace</string>
+
+    <!-- LockInfoHTMLHelper Strings -->
+    <string name="lockedAssignmentNotModule">Esta actividad está bloqueada.</string>
+
+    <!-- New Course Layout Strings -->
+    <string name="myCourses">Mis cursos</string>
+
+
+    <!-- New Submission Strings -->
+    <string name="textEntry">Entrada de texto</string>
+    <string name="onlineURL">URL en línea</string>
+    <string name="oneFileOnly">Esta entrega solo acepta la carga de un solo archivo</string>
+    <string name="websiteEntry">Añadir entrada de sitio web</string>
+    <string name="mediaRecordingEntry">Grabaciones multimedia</string>
+    <string name="submit">Entregar</string>
+
+
+    <!-- DataLoss Fragment Strings -->
+    <string name="unsavedProgress">Progreso no guardado</string>
+    <string name="informationLost">La información que no se haya guardado se perderá. ¿Desea continuar?</string>
+    <string name="slash"> / </string>
+
+    <!-- Delete Notification Strings -->
+    <string name="confirm">Confirmar</string>
+
+    <!-- Dismiss To do String -->
+    <string name="markAsDone">Marcar como hecho</string>
+
+    <!-- Submission Details Strings -->
+    <string name="next">Siguiente</string>
+    <string name="addComment">Añadir un comentario&#8230;</string>
+
+    <string name="home">Página de inicio</string>
+    <string name="Notifications">Notificaciones</string>
+
+    <string name="icon">Icono</string>
+    <string name="rootUser">Carpeta raíz del usuario</string>
+    <string name="rootCourse">Carpeta raíz del curso</string>
+    <string name="rootGroup">Carpeta raíz del grupo</string>
+
+    <!-- Course Settings -->
+    <string name="privatelyAvailable">Disponible privadamente</string>
+    <string name="publiclyAvailable">Disponible públicamente</string>
+    <string name="starts">Comienza: \u0020</string>
+    <string name="courseCode">Código del curso: \u0020</string>
+    <string name="ends">Finaliza: \u0020</string>
+    <string name="visibility">Visibilidad: \u0020</string>
+    <string name="license">Licencia: \u0020</string>
+
+
+    <!-- Navigation String -->
+    <string name="collaborations">Colaboraciones</string>
+    <string name="conferences">Conferencias</string>
+    <string name="chat">Chat</string>
+    <string name="outcomes">Competencias</string>
+
+    <!-- Submission View Strings -->
+    <string name="visitPage">Visitar página:</string>
+    <string name="clickToViewSubmission">Se realizó una captura de pantalla de la página web cuando la entregó. Mantenga pulsada la imagen de abajo para abrir o descargar la imagen completa.</string>
+    <string name="urlSubmissionNoPreview">Esta entrega era una URL hacia una página externa. Recuerde que esta página puede haber cambiado desde que se realizó la entrega original.</string>
+    <string name="contentDescriptionPreviewImage">Una vista previa de la URL enviada</string>
+
+
+    <string name="isNotSupportedFeature">%1$s no son compatibles.</string>
+    <string name="isNotSupported">El enlace no es compatible.</string>
+    <string name="openInBrowser">Abrir en el navegador</string>
+    <string name="unsupported">No compatible</string>
+
+
+    <!-- Profile Strings -->
+    <string name="profile">Perfil</string>
+
+    <string name="noSubject">(Sin asunto)</string>
+    <string name="subject">Asunto</string>
+    <string name="sadPanda">Imagen de un panda triste</string>
+    <string name="panda_fact_string">Datos del panda:&#160;</string>
+    <string name="remove">Eliminar</string>
+    <string name="founders">Fundadores</string>
+
+    <string name="EULA">EULA</string>
+    <string name="privacyPolicy">Política de privacidad</string>
+    <string name="termsOfUse">Términos de uso</string>
+    <string name="canvasOnGithub">Canvas en GitHub</string>
+
+    <!-- Quiz Strings -->
+    <string name="assignmentQuizzes">Evaluaciones para actividades</string>
+    <string name="practiceQuizzes">Evaluaciones de práctica</string>
+    <string name="gradedSurveys">Encuestas evaluadas</string>
+    <string name="surveys">Encuestas</string>
+
+
+    <!-- Widget Strings -->
+    <string name="todoWidgetTitle">Pendiente</string>
+    <string name="gradesWidgetTitle">Notas</string>
+    <string name="notificationWidgetTitle">Notificaciones</string>
+    <string name="todoWidgetTitleLong">Canvas: Pendiente</string>
+    <string name="gradesWidgetTitleLong">Canvas: Notas</string>
+    <string name="notificationWidgetTitleLong">Canvas: Notificaciones</string>
+    <string name="notLoggedIn">No ha iniciado sesión</string>
+    <string name="widgetStyle">Elija el estilo de los componentes</string>
+    <string name="widgetMinimumStyle">Ocultar los detalles en el componente</string>
+    <string name="light">Iluminado</string>
+    <string name="dark">Oscuro</string>
+
+    <!-- Help dialog strings -->
+    <string name="askInstructor">Realice una pregunta a su profesor</string>
+    <string name="askInstructorDetails">Las preguntas han sido entregadas a su profesor.</string>
+    <string name="searchGuides">Buscar en las guías de Canvas</string>
+    <string name="canvasGuides">Guías de Canvas</string>
+    <string name="searchGuidesDetails">Encontrar respuestas a preguntas comunes</string>
+    <string name="reportProblem">Informar sobre un problema</string>
+    <string name="reportProblemDetails">Infórmenos si el comportamiento de la aplicación tiene errores</string>
+    <string name="requestFeature">Solicitar una funcionalidad</string>
+    <string name="requestFeatureDetails">¿Tiene una idea para mejorar la aplicación?</string>
+    <string name="shareYourLove">Comparta su amor por la aplicación</string>
+    <string name="shareYourLoveDetails">Díganos cuáles son las partes de la aplicación que le gustan más</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Ideas para Canvas [Android]</string>
+    <string name="understandRequest">La siguiente información nos ayudará a comprender mejor su idea:</string>
+
+    <!-- Ask Instructor -->
+    <string name="whichCourse">¿A qué curso corresponde esta pregunta?</string>
+    <string name="allTeachers">Este mensaje se enviará a todos los profesores y profesores auxiliares del curso</string>
+    <string name="sending">Enviando&#8230;</string>
+    <string name="error">Error</string>
+
+    <!-- Tablet Strings -->
+    <string name="courses">Cursos</string>
+    <string name="toDoList">Lista de pendientes</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="pushNotifications">Notificaciones automáticas</string>
+    <string name="pushNotificationsError">No se han registrado notificaciones automáticas para este dispositivo.</string>
+    <string name="profileSettings">Configuración del perfil</string>
+    <string name="accountPreferences">Preferencias de la cuenta</string>
+    <string name="pinAndFingerprint">PIN y huella digital</string>
+    <string name="pairWithObserver">Emparejar con un observador</string>
+    <string name="pairWithObserverDetails">Pídale a su padre/madre que escanee este código QR desde la aplicación Canvas Parent para emparejarse con usted. Este código caducará en siete días, o después de usarse.</string>
+    <string name="pairingCodeLabel">Código de emparejamiento:\u0020</string>
+    <string name="pairingCodeErrorTitle">Ha habido un error con el código de emparejamiento</string>
+    <string name="pairingCodeErrorDescription">No se ha podido obtener un código de emparejamiento. Esta funcionalidad solo es compatible para los alumnos.</string>
+
+    <string name="launchSpeedgrader">Abrir SpeedGrader</string>
+
+    <string name="search_todo">Lista de pendientes</string>
+    <string name="search_course">curso cursos clase clases</string>
+    <string name="search_grades">evaluar notas</string>
+
+    <!-- ShareFileOptions Dialog -->
+    <string name="uploadTo">Cargar a </string>
+    <string name="uploadToCanvas">Cargar a Canvas</string>
+    <string name="uploadMyFiles">Mis archivos</string>
+    <string name="uploadCourseFiles">Archivos del curso</string>
+    <string name="uploadToSubmissionComment">Cargar a los comentarios de la entrega</string>
+    <!-- ChangeLog Dialog -->
+    <string name="changelog">Historial de cambios</string>
+
+    <string name="editUserName">Editar nombre de usuario</string>
+    <!-- Choose Profile Image -->
+    <string name="takeANewPhoto">Realizar una nueva foto</string>
+    <string name="chooseFromGallery">Seleccionar de la galería</string>
+    <string name="setToDefault">Establecer de la forma predeterminada</string>
+    <string name="chooseBackgroundImage">Seleccionar imagen de fondo</string>
+
+    <string name="no_courses">Toque para añadir un curso</string>
+    <string name="no_courses_available">No hay cursos aquí, ¡puede tomarse el día libre!</string>
+    <string name="no_courses_grades">Inscríbase en un curso para ver sus notas</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Abrir cajón de navegación</string>
+    <string name="navigation_drawer_close">Cerrar cajón de navegación</string>
+
+    <string name="preferred_land_page">Página de inicio</string>
+    <string name="could_not_route_course">No se ha podido encontrar la inscripción a los cursos.</string>
+    <string name="could_not_route_group">No se ha podido encontrar la inscripción al grupo.</string>
+    <string name="could_not_route_unknown">Ha habido un error inesperado.</string>
+    <string name="could_not_route_locked">Esta página está oculta o bloqueada y no se puede acceder.</string>
+
+    <string name="close">Cerrar</string>
+    <string name="closed">Cerrado</string>
+
+    <string name="overdueAssignments">Actividades atrasadas</string>
+    <string name="upcomingAssignments">Próximas actividades</string>
+    <string name="undatedAssignments">Actividades sin fecha</string>
+    <string name="pastAssignments">Actividades anteriores</string>
+
+    <string name="could_not_find_course">Se ha producido un error al obtener el curso para este ítem.</string>
+    <string name="could_not_find_group">Se ha producido un error al obtener el grupo para este ítem.</string>
+
+    <string name="selectBackground">Seleccione un fondo</string>
+
+    <string name="notoriousSubmissionInProgress">Entregando archivos&#8230; Compruebe la barra de notificaciones por si hay actualizaciones.</string>
+    <string name="notoriousSubmissionSuccessful">Se ha terminado de entregar el archivo</string>
+
+    <string name="bio">Biografía</string>
+    <string name="draft">Borrador</string>
+    <string name="publish">Publicar</string>
+
+    <string name="createPandaAvatar">Crear un avatar de panda</string>
+    <string name="back">Volver</string>
+    <string name="setAsAvatar">Establecer como avatar</string>
+    <string name="avatarSuccessfullySaved">Se ha guardado el avatar del panda</string>
+    <string name="regularAvatarSuccessfullySaved">Se ha guardado el avatar.</string>
+    <string name="errorSavingAvatar">Ha habido un error al guardar el avatar del panda</string>
+    <string name="pandaAvatar">Avatar del panda</string>
+    <string name="pandaHead">Cabeza del avatar del panda</string>
+    <string name="pandaBody">Cuerpo del avatar del panda</string>
+    <string name="pandaLegs">Piernas del avatar del panda</string>
+    <string name="pandaAvatarsFolderName">PandaAvatars</string>
+    <string name="share">Compartir</string>
+
+    <string name="speedgrader">SpeedGrader</string>
+    <string name="gauge">Indicador</string>
+    <string name="content_description_speed_grader_slider">Control deslizante de notas</string>
+
+    <string name="createNewCalendarEvent">Crear nuevo evento</string>
+    <string name="enableFunMode">Apagar los pandas</string>
+
+    <string name="accountNotifications">Anuncios</string>
+    <string name="addAccount">Añadir Cuenta</string>
+
+    <string name="changeUser">Cambiar usuario</string>
+
+    <string name="no_data_connection">Compruebe su conexión de datos y vuelva a intentarlo.</string>
+
+    <!-- Notification Preferences -->
+    <string name="notification_primary_inbox_title">Notificación de Canvas</string>
+    <string name="notification_channel_name_primary">Notificaciones generales de Canvas</string>
+    <string name="notification_channel_description_primary">Se puede realizar una configuración posterior de las notificaciones dentro de la sección de Preferencias de notificaciones de Canvas.</string>
+
+    <string name="notification_cat_course_activities">Actividades del curso</string>
+    <string name="notification_cat_discussions">Foros de discusión</string>
+    <string name="notification_cat_conversations">Conversaciones</string>
+    <string name="notification_cat_scheduling">Planificación</string>
+    <string name="notification_cat_groups">Grupos</string>
+    <string name="notification_cat_alerts">Alertas</string>
+    <string name="notification_cat_conferences">Conferencias</string>
+
+    <string name="notification_pref_due_date">Fecha de entrega</string>
+    <string name="notification_pref_grading_policies">Políticas de evaluación</string>
+    <string name="notification_pref_course_content">Contenido del curso</string>
+    <string name="notification_pref_files">Archivos</string>
+    <string name="notification_pref_announcement">Anuncio</string>
+    <string name="notification_pref_announcement_created_by_you">Anuncio creado por usted</string>
+    <string name="notification_pref_grading">Evaluación</string>
+    <string name="notification_pref_invitation">Invitación</string>
+    <string name="notification_pref_all_submissions">Todas las entregas</string>
+    <string name="notification_pref_late_grading">Evaluación con retraso</string>
+    <string name="notification_pref_submission_comment">Comentario de la entrega</string>
+
+    <string name="notification_pref_discussion">Foro de discusión</string>
+    <string name="notification_pref_discussion_post">Publicación del foro de discusión</string>
+
+    <string name="notification_pref_add_to_conversation">Añadir a conversación</string>
+    <string name="notification_pref_conversation_message">Mensaje de conversación</string>
+    <string name="notification_pref_conversations_created_by_you">Conversaciones creadas por usted</string>
+
+    <string name="notification_pref_student_appointment_signups">Registros de citas para alumnos</string>
+    <string name="notification_pref_appointment_signups">Registros para citas</string>
+    <string name="notification_pref_appointment_cancelations">Cancelaciones de citas</string>
+    <string name="notification_pref_appointment_availability">Disponibilidad de citas</string>
+    <string name="notification_pref_calendar">Calendario</string>
+
+    <string name="notification_pref_membership_update">Actualización de membresía</string>
+    <string name="notification_pref_admin">Notificaciones administrativas</string>
+    <string name="notification_pref_recording_ready">Grabación lista</string>
+
+    <string name="notification_pref_type_email">Correo electrónico</string>
+    <string name="notification_pref_type_push">Dispositivo</string>
+    <string name="notification_pref_type_sms">SMS</string>
+
+    <string name="notification_pref_dialog_title">Notificaciones del dispositivo</string>
+    <string name="notification_pref_dialog_message">¿Desea activar las notificaciones en el dispositivo? Estas configuraciones pueden modificarse más adelante en Configuraciones de las &gt; notificaciones &gt; para todos los dispositivos</string>
+    <string name="notification_pref_toast_success">Las notificaciones han sido habilitadas</string>
+
+    <string name="notification_desc_due_date">Reciba notificaciones cuando cambie la fecha de entrega de una actividad.</string>
+    <string name="notification_desc_grading_policies">Reciba notificaciones cuando cambien las políticas de evaluación de un curso.</string>
+    <string name="notification_desc_course_content">Reciba notificaciones cuando cambie el contenido de un curso en WikiPages, Evaluaciones y Actividades.</string>
+    <string name="notification_desc_files">Reciba notificaciones cuando se añada un nuevo archivo a su curso.</string>
+    <string name="notification_desc_announcement">Reciba notificaciones cuando haya un nuevo anuncio en su curso.</string>
+    <string name="notification_desc_announcement_created_by_you">Reciba notificaciones al crear un anuncio y cuando alguien responda a su anuncio.</string>
+    <string name="notification_desc_grading">Reciba notificaciones cuando se evalúe/cambie una actividad/entrega y cuando se cambie el peso de la nota.</string>
+    <string name="notification_desc_invitation">Reciba notificaciones para invitaciones a conferencias web, grupos, colaboraciones, revisiones entre compañeros y recordatorios.</string>
+    <string name="notification_desc_all_submissions">Profesor y administrador solamente. Reciba una notificación cuando se entregue o se vuelva a entregar una actividad.</string>
+    <string name="notification_desc_late_grading">Profesor y administrador solamente. Reciba una notificación cuando se entregue una actividad retrasada.</string>
+    <string name="notification_desc_submission_comment">Reciba una notificación cuando se realice un comentario en su entrega.</string>
+    <string name="notification_desc_discussion">Reciba una notificación cuando haya un nuevo tema de foro de discusión en su curso.</string>
+    <string name="notification_desc_discussion_post">Reciba una notificación cuando haya una nueva publicación en un foro de discusión en el que tenga una suscripción.</string>
+    <string name="notification_desc_add_to_conversation">Reciba una notificación cuando se le añada a una conversación.</string>
+    <string name="notification_desc_conversation_message">Reciba una notificación cuando tenga un nuevo mensaje en la bandeja de entrada.</string>
+    <string name="notification_desc_conversations_created_by_you">Reciba una notificación cuando cree una nueva conversación.</string>
+    <string name="notification_desc_student_appointment_signups">Profesor y administrador solamente. Reciba una notificación cuando haya un registro para una cita.</string>
+    <string name="notification_desc_appointment_signups">Reciba una notificación cuando haya un nuevo registro en su calendario.</string>
+    <string name="notification_desc_appointment_cancelations">Reciba una notificación cuando se cancele una cita.</string>
+    <string name="notification_desc_appointment_availability">Reciba una notificación cuando haya disponible un espacio horario para una cita.</string>
+    <string name="notification_desc_calendar">Reciba una notificación sobre ítems nuevos y actualizados del calendario.</string>
+    <string name="notification_desc_membership_update">Solo para administradores, activación de inscripciones pendientes. Reciba una notificación cuando se acepte o rechace una inscripción de grupo.</string>
+    <string name="notification_desc_admin">Profesor y administrador solamente. Reciba notificaciones sobre inscripciones del curso, informes generados, contenido exportado, informes de migración, nuevos usuarios de cuenta y nuevos grupos de alumnos.</string>
+    <string name="notification_desc_recording_ready">Reciba notificaciones cuando esté lista la grabación de una conferencia.</string>
+
+    <string name="unlimited">Ilimitado</string>
+
+    <string name="question">Pregunta</string>
+    <plurals name="question_count">
+        <item quantity="one">%d pregunta</item>
+        <item quantity="other">%d preguntas</item>
+    </plurals>
+
+    <plurals name="pointCount">
+        <item quantity="one">%s punto</item>
+        <item quantity="other">%s puntos</item>
+    </plurals>
+
+    <string name="timeLimit">Límite de tiempo</string>
+    <string name="newPushNotifications">%1$s Nuevas notificaciones</string>
+    <string name="like">me gusta</string>
+    <string name="likeEntryLabel">Dar Me gusta a la entrada</string>
+    <string name="likes">me gustan</string>
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s Me gusta</item>
+        <item quantity="other">%s Me gusta</item>
+    </plurals>
+
+    <string name="color_1">Rojo</string>
+    <string name="color_2">Rosa intenso</string>
+    <string name="color_3">Lavanda</string>
+    <string name="color_4">Violeta</string>
+    <string name="color_5">Morado</string>
+    <string name="color_6">Pizarra</string>
+    <string name="color_7">Azul</string>
+    <string name="color_8">Turquesa</string>
+    <string name="color_9">Verde</string>
+    <string name="color_10">Verde amarillento</string>
+    <string name="color_11">Amarillo</string>
+    <string name="color_12">Oro</string>
+    <string name="color_13">Naranja</string>
+    <string name="color_14">Rosa</string>
+    <string name="color_15">Gris</string>
+
+    <string name="edit_course_nickname">Editar el apodo del curso</string>
+    <string name="courseNicknameError">No se ha podido establecer el apodo del curso en este momento.</string>
+
+    <string name="colorPickerDialogTitle">Color del curso</string>
+    <string name="colorPickerDialogMessage">Personalice su curso estableciendo un nuevo color.</string>
+    <string name="colorPickerError">No se ha podido establecer el color del curso en este momento.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Rosa</string>
+    <string name="contentDescriptionColorBarbie">Rosa intenso</string>
+    <string name="contentDescriptionColorBarneyPurple">Violeta</string>
+    <string name="contentDescriptionColorEggplant">Morado</string>
+    <string name="contentDescriptionColorUltramarine">Azul oscuro</string>
+    <string name="contentDescriptionColorOcean11">Azul</string>
+    <string name="contentDescriptionColorCyan">Turquesa</string>
+    <string name="contentDescriptionColorAquaMarine">Azul agua</string>
+    <string name="contentDescriptionColorEmeraldGreen">Verde esmeralda</string>
+    <string name="contentDescriptionColorFreshCutLawn">Verde</string>
+    <string name="contentDescriptionColorChartreuse">Verde amarillento</string>
+    <string name="contentDescriptionColorSunFlower">Amarillo</string>
+    <string name="contentDescriptionColorTangerine">Naranja</string>
+    <string name="contentDescriptionColorBloodOrange">Naranja oscuro</string>
+    <string name="contentDescriptionColorSriracha">Rojo</string>
+
+    <string name="courseFavorited">Curso %s, favorito.</string>
+    <string name="courseNotFavorited">Curso %s, no favorito.</string>
+    <string name="groupFavorited">Grupo %s, favorito.</string>
+    <string name="groupNotFavorited">Grupo %s, no favorito.</string>
+    <string name="accountGroup">Grupo de cuenta</string>
+
+    <!-- Recents -->
+    <string name="recents_empty">Desde la pantalla de personalización del curso, añadir un curso o grupo que desee ver aquí.</string>
+
+    <string name="toolbar_close">Cerrar la barra de herramienta</string>
+    <string name="favoriteDescription">Mostrar en \"Mis cursos\"</string>
+    <string name="about">Acerca de</string>
+    <string name="courseShortcuts">Añadir un atajo a su curso</string>
+    <string name="courseNickname">Apodo del curso</string>
+
+    <string name="notAvailableOffline">La funcionalidad no está disponible cuando no está en línea</string>
+    <string name="editDashboard">Editar cuadro de mando</string>
+    <string name="editDashboardDescriptor">Seleccione los cursos que desee ver en el cuadro de mando</string>
+    <string name="a11y_editYourCourseList">Editar su lista de cursos</string>
+
+    <string name="dashboard">Cuadro de mando</string>
+    <string name="previous">Anterior</string>
+    <string name="pageNum" formatted="false">Página %d de %d</string>
+    <string name="language">Idioma</string>
+    <string name="systemDefault">Predeterminado del sistema</string>
+    <string name="restartingCanvas">Reiniciando Canvas</string>
+    <string name="languageDialogText">Para cambiar el idioma es necesario reiniciar la aplicación, ¿está seguro?</string>
+    <string name="defaultLanguageWarning">No se garantiza que el idioma predeterminado de su sistema sea compatible y necesitará reiniciar, ¿está seguro?</string>
+    <string name="locked_mastery_paths">Bloqueado hasta que \"%s\" sea evaluado</string>
+    <string name="locked_icon">Icono bloqueado</string>
+    <string name="choose_assignment_group">Seleccione el grupo de actividades</string>
+    <string name="chooseAssignmentPath">Seleccione la ruta de actividad</string>
+    <string name="select">Seleccionar</string>
+    <string name="choice_position">Opción %d</string>
+    <string name="updating_module_info">Actualización de la información del módulo&#8230;</string>
+    <string name="pending_review">Revisión pendiente</string>
+    <string name="totalPoints">%s puntos</string>
+    <string name="totalPointsText">Puntos totales</string>
+    <string name="contentDescriptionPoints">%s puntos</string>
+    <string name="score">Puntuación</string>
+    <string name="rangedRubricTotal" formatted="false">%s/%s puntos</string>
+    <string name="seeAll">Ver todos</string>
+    <string name="welcome">¡Bienvenido!</string>
+    <string name="dismiss">Descartar</string>
+    <string name="tapToViewAnnouncement">Toque para ver el anuncio</string>
+    <string name="acceptCourseInvitation">Aceptar</string>
+    <string name="declineCourseInvitation">Rechazar</string>
+    <string name="outOf">de</string>
+
+    <!-- File Strings -->
+    <string name="noFilesSubtextCourse">No hay archivos asociados con este curso.</string>
+    <string name="noFilesSubtextGroup">No hay archivos asociados con este grupo.</string>
+    <string name="fileTypeNotSupported">Tipo de archivo no compatible</string>
+    <string name="fileTypeNotSupportedBody">Esta actividad solo permite ciertos tipos de archivos: %s</string>
+
+    <array name="file_size_units">
+        <item>B</item>
+        <item>KB</item>
+        <item>MB</item>
+        <item>GB</item>
+        <item>TB</item>
+    </array>
+
+    <string name="launch_link_in_external_browser">Ejecutar el enlace en un navegador externo</string>
+    <string name="ltiLaunchFailure">En este momento, no se ha podido cargar esta herramienta LTI.</string>
+    <string name="urlSubmission">Entrega de la URL</string>
+
+    <string name="homePageIdForNotifications">Actividad reciente</string>
+    <string name="homePageIdForModules">Módulos</string>
+    <string name="homePageIdForAssignments">Actividades</string>
+    <string name="homePageIdForSyllabus">Programa del curso</string>
+
+    <string name="contentDescriptionWidgetRefresh">Actualizar componente</string>
+
+    <string name="copy">Copiar</string>
+    <string name="courseInviteTitle">Ha recibido una invitación.</string>
+    <string name="inviteAccepted">Invitación aceptada</string>
+    <string name="inviteDeclined">Invitación rechazada.</string>
+    <string name="latePenalty">Sanción por entrega con retraso (-%s)</string>
+    <string name="finalGrade">Nota final</string>
+
+    <string name="moreThan99">99+</string>
+    <string name="max_count">99+</string>
+
+    <string name="opensInWebView">Se abre en WebView</string>
+    <string name="unsupportedTabLabel">No compatible con este dispositivo</string>
+
+    <string name="downloadingFile">Descargando</string>
+    <string name="downloadFailed">No se ha podido realizar la descarga</string>
+    <string name="downloadSuccessful">La descarga se ha realizado correctamente</string>
+
+    <string name="full_due_date_details">Detalles completos de la fecha de entrega</string>
+    <string name="submissions">Entregas</string>
+    <string name="attachment">Archivo adjunto</string>
+    <string name="contentDescription_back">Volver</string>
+
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s punto</item>
+        <item quantity="other">%s puntos</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s punto</item>
+        <item quantity="other">%s puntos</item>
+    </plurals>
+    <string name="capitalTo">Para</string>
+
+    <string name="unableToViewInBrowser">No podemos encontrar una aplicación externa para ver esta herramienta LTI.</string>
+
+    <string name="commentUpload">Cargar comentario</string>
+
+    <string name="frontPage">Página de inicio</string>
+    <string name="editPage">Editar página</string>
+    <string name="description">Descripción</string>
+    <string name="pageSuccessfullyUpdated">Se ha actualizado la página.</string>
+    <string name="errorSavingPage">Ha habido un error al intentar guardar esta página. Inténtelo de nuevo.</string>
+    <string name="pageTitleMustBeSet">Se debe establecer el título de la página.</string>
+    <string name="pageDetails">Detalles de la página</string>
+    <string name="saving">Guardando</string>
+    <string name="confirmDeleteEvent">¿Está seguro de que desea eliminar este evento?</string>
+    <string name="conferencesNotSupported">Los teléfonos móviles aún no admiten conferencias.</string>
+    <string name="filePreviewContentDescription">Imagen de vista previa del archivo</string>
+    <string name="pdfError">Se ha producido un error al intentar cargar este PDF.</string>
+    <string name="featureNotAllowedInStudentView">¡Lo sentimos! Esta funcionalidad no se permite en la vista del alumno.</string>
+    <string name="nothingToSeeHere">No hay nada que ver aquí</string>
+    <string name="unsupportedFeature">Funcionalidad no compatible</string>
+
+    <!-- Parent Strings -->
+    <string name="addChildTitle">Añadir alumno</string>
+    <string name="addChildSubTitle">Introduzca el código de emparejamiento de alumno que se le ha proporcionado.</string>
+    <string name="addChildHint">Código de emparejamiento...</string>
+    <string name="addChildErrorMessage">Ha habido un error en el emparejamiento. Asegúrese de que su código de emparejamiento sea correcto y esté dentro del límite de tiempo de utilización.</string>
+    <string name="gradeComplete">Completo</string>
+    <string name="gradeIncomplete">Incompleto</string>
+
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Configuración de publicación</string>
+    <string name="postGradesTab">Publicar notas</string>
+    <string name="hideGradesTab">Ocultar notas</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d nota publicada actualmente</item>
+        <item quantity="other">%d notas publicadas actualmente</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d nota oculta actualmente</item>
+        <item quantity="other">%d notas ocultas actualmente</item>
+    </plurals>
+    <string name="postPolicyPostTo">Publicar en...</string>
+    <string name="postPolicySections">Secciones específicas</string>
+    <string name="postToEveryoneTitle">Todos</string>
+    <string name="postToEveryoneMessage">Todos los alumnos podrán ver las notas</string>
+    <string name="postToGradedTitle">Evaluado</string>
+    <string name="postToGradedMessage">Todos los alumnos que tengan entregas con nota podrán ver las notas.</string>
+    <string name="postPolicyAllHiddenTitle">Todas ocultas</string>
+    <string name="postPolicyAllHiddenMessage">Todas las notas están ocultas actualmente.</string>
+    <string name="postPolicyAllPostedTitle">Todas publicadas</string>
+    <string name="postPolicyAllPostedMessage">Todas las notas están publicadas actualmente.</string>
+    <string name="postPolicyPostedToast">Notas publicadas</string>
+    <string name="postPolicyHiddenToast">Notas ocultas</string>
+    <string name="postPolicyPostFailedToast">Ha fallado la publicación de las notas</string>
+    <string name="postPolicyHideFailedToast">Ha fallado la ocultación de las notas</string>
+    <string name="gradeBeforePosting">Nota antes de la publicación</string>
+    <string name="gradeAfterPosting">Nota después de la publicación</string>
+    <string name="gradeOverride">Anulación de nota</string>
+    <string name="currentGrade">Nota actual</string>
+    <string name="opensInCanvasStudent">Se abre en Canvas Student</string>
+    <string name="tab_student_view">Vista del alumno</string>
+
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Cabeza seleccionada: %s</string>
+    <string name="content_description_chosen_body">Cuerpo seleccionado: %s</string>
+    <string name="content_description_chosen_feet">Pies seleccionados: %s</string>
+    <string name="content_description_panda_body_1">Vestido con corazones violetas y borde rosa</string>
+    <string name="content_description_panda_body_2">Vestido con estrellas verdes y borde azul</string>
+    <string name="content_description_panda_body_3">Vestido con estrellas rojas y borde naranja</string>
+    <string name="content_description_panda_body_4">Chaqueta azul, moño rojo y pantalones grises</string>
+    <string name="content_description_panda_body_5">Camisa naranja y vaqueros</string>
+    <string name="content_description_panda_body_6">Camisa roja y pantalones marrones</string>
+    <string name="content_description_panda_body_7">Camiseta con estampado de sol amarillo y pantalones grises</string>
+    <string name="content_description_panda_body_8">Camiseta con estampado de pelotas de baloncesto verdes azuladas y pantalones violetas</string>
+    <string name="content_description_panda_body_9">Camiseta con estampado de androide azul y pantalones verdes</string>
+    <string name="content_description_panda_body_10">Camiseta con estampado de Instructure blanco y pantalones azules</string>
+    <string name="content_description_panda_body_11">Camiseta con tres estrellas gris oscuro y pantalones verdes azulados</string>
+    <string name="content_description_panda_body_12">Uniforme de mago bermellón con varita mágica y pantalones negros</string>
+    <string name="content_description_panda_body_13">Torso de panda desnudo</string>
+    <string name="content_description_panda_head_2">Gafas de sol de estilo de aviador y lápiz de labios</string>
+    <string name="content_description_panda_head_3">Maquillaje y lazo para el cabello de color violeta</string>
+    <string name="content_description_panda_head_4">Bigote elegante</string>
+    <string name="content_description_panda_head_5">Gafas verdes para fiesta</string>
+    <string name="content_description_panda_head_6">Gafas marrones</string>
+    <string name="content_description_panda_head_7">Máscara dorada y lápiz de labios</string>
+    <string name="content_description_panda_head_8">Gafas de sol de estilo de aviador</string>
+    <string name="content_description_panda_head_9">Mejillas con pecas</string>
+    <string name="content_description_panda_head_10">Mago con gafas y la frente con cicatriz</string>
+    <string name="content_description_panda_feet_1">Descalzo</string>
+    <string name="content_description_panda_feet_2">Zapatos rosas con lazos violetas</string>
+    <string name="content_description_panda_feet_3">Zapatos azules con lazos verdes</string>
+    <string name="content_description_panda_feet_4">Zapatos rojos con lazos naranjas</string>
+    <string name="content_description_panda_feet_5">Zapatos rojos</string>
+    <string name="content_description_choose_head">Seleccionar cabeza</string>
+    <string name="content_description_choose_body">Seleccionar cuerpo</string>
+    <string name="content_description_choose_feet">Seleccionar pies</string>
+
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d horas, %2$d minutos y %3$d segundos</string>
+    <string name="recordingTimerSpeechDivider">%1$s de %2$s</string>
+    <string name="replay">Repetir</string>
+    <string name="stop">Detener</string>
+    <string name="startRecordingAudio">Comenzar grabación de audio</string>
+    <string name="stopRecordingAudio">Detener grabación de audio</string>
+    <string name="startRecordingVideo">Comenzar grabación de video</string>
+    <string name="stopRecordingVideo">Detener grabación de video</string>
+    <string name="closeRecordingView">Cerrar vista de grabación</string>
+    <string name="deleteRecording">Eliminar grabación</string>
+    <string name="videoCommentReplay">Repetir comentario en video</string>
+    <string name="errorShowingVideoReplay">Ha habido un error al intentar ver la repetición.</string>
+    <string name="errorSubmittingMediaComment">Ha habido un error al intentar entregar su comentario multimedia.</string>
+
+    <string name="addVideoComment">Añadir un comentario de video</string>
+    <string name="addAudioComment">Añadir un comentario de audio</string>
+    <string name="audioRecordingError">Ha habido un problema inesperado mientras se intentaba grabar audio.</string>
+    <string name="videoRecordingError">Ha habido un problema inesperado mientras se intentaba grabar video.</string>
+
+    <string name="quizQuestionLabel">Preguntas:</string>
+    <string name="timeLimitLabel">Límite de tiempo:</string>
+    <string name="allowedAttemptsLabel">Intentos permitidos:</string>
+    <string name="instructions">Instrucciones</string>
+    <string name="quizNoTimeLimit">Ninguno</string>
+    <string name="viewQuiz">Ver examen</string>
+    <string name="viewDiscussion">Ver foro de discusión</string>
+    <string name="lockedModule">Esta actividad está bloqueada por el módulo \"%1$s\".</string>
+    <string name="chooseMediaFile">Elegir archivo multimedia</string>
+    <string name="discussions_unknown_author">Autor desconocido</string>
+    <string name="discussions_unknown_date">Fecha desconocida</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. menos</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
+    <plurals name="minutes">
+        <item quantity="one">%s minuto</item>
+        <item quantity="other">%s minutos</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">No hay conferencias</string>
+    <string name="noConferencesMessage">Todavía no hay conferencias para mostrar</string>
+    <string name="noConferenceDescription">No hay descripción para esta conferencia</string>
+    <string name="conferenceListError">Ha habido un error al cargar sus conferencias</string>
+    <string name="conferenceConcludedDateAtTime">Finalizado el %s a las %s</string>
+    <string name="conferenceStartedDateAtTime">Se ha iniciado el %s a las %s</string>
+    <string name="notStarted">No comenzado</string>
+    <string name="inProgress">En progreso</string>
+    <string name="join">Unirse</string>
+    <string name="newConferences">Nuevas conferencias</string>
+    <string name="concludedConferences">Conferencias finalizadas</string>
+    <string name="conferenceDetails">Detalles de la conferencia</string>
+    <string name="recordings">Grabaciones</string>
+    <string name="conferenceInProgress">Conferencia en curso</string>
+
+    <string name="a11y_criterion_content_description">Valoración del criterio %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">más información</string>
+    <string name="a11y_create_file_folder_visible">Botones Crear archivo y Carpeta visibles</string>
+    <string name="a11y_create_file_folder_gone">Botones Crear archivo y Carpeta invisibles</string>
+    <string name="unselect_all">Anular selección de todo</string>
+    <string name="select_all">Seleccionar todo</string>
+    <string name="all_courses">Todos los cursos</string>
+    <string name="all_groups">Todos los grupos</string>
+    <string name="edit_dashboard_course_description">Seleccione cursos para el cuadro de mando, o desplácese hasta la información del curso.</string>
+    <string name="edit_dashboard_group_description">Seleccione grupos para el cuadro de mando, o desplácese hasta la información del curso.</string>
+    <string name="current_enrollments">Inscripciones actuales</string>
+    <string name="past_enrollments">Inscripciones pasadas</string>
+    <string name="future_enrollments">Futuras inscripciones</string>
+    <string name="added_to_dashboard">Añadido al cuadro de mando</string>
+    <string name="removed_from_dashboard">Eliminado del cuadro de mando</string>
+    <string name="all_added_to_dashboard">Se ha añadido todo al cuadro de mando</string>
+    <string name="all_removed_from_dashboard">Todo eliminado del cuadro de mando</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Los cursos inactivos no se han podido añadir al cuadro de mando.</string>
+    <string name="edit_dashboard">Editar cuadro de mando</string>
+    <string name="edit_dashboard_empty_title">Aquí no hay cursos</string>
+    <string name="edit_dashboard_empty_message">Debe estar inscripto en un curso para añadirlo al cuadro de mando.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Eliminar del cuadro de mando</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Eliminar todo del cuadro de mando</string>
+    <string name="a11y_content_description_add_to_dashboard">Añadir al cuadro de mando</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Añadir todo al cuadro de mando</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Cuenta</string>
+    <string name="dashboardTabHomeroom">Aula principal</string>
+    <string name="dashboardTabSchedule">Planificar</string>
+    <string name="dashboardTabGrades">Notas</string>
+    <string name="dashboardTabResources">Recursos</string>
+    <string name="homeroomWelcomeMessage">¡Bienvenido, %1$s!</string>
+    <string name="homeroomMySubjects">Mis temas</string>
+    <string name="viewPreviousAnnouncements">Ver anuncios previos</string>
+    <string name="homeroomError">No se ha podido cargar el aula principal</string>
+    <string name="homeroomRefreshFail">No se ha podido actualizar el aula principal</string>
+    <string name="nothingDueToday">No hay nada con fecha de entrega el día de hoy</string>
+    <string name="dueToday">%1$s tiene fecha de entrega el día de hoy</string>
+    <string name="missing">%1$s faltante</string>
+    <string name="homeroomEmptyTitle">¡Bienvenido!</string>
+    <string name="homeroomEmptyMessage">Sus materias se muestran aquí.</string>
+    <string name="homeroomNoSubjects">No tiene materias actualmente.</string>
+    <string name="settingsElementaryViewSubtitle">Requiere reiniciar la aplicación</string>
+    <string name="gradesSelect">Seleccionar</string>
+    <string name="selectGradingPeriod">Seleccionar período de evaluación</string>
+    <string name="currentGradingPeriod">Período de evaluación actual</string>
+    <string name="failedToLoadGrades">No se han podido cargar las notas</string>
+    <string name="failedToLoadGradesForGradingPeriod">No se han podido cargar las notas del período de evaluación</string>
+    <string name="failedToRefreshGrades">No se han podido actualizar las notas</string>
+    <string name="noGradesToDisplay">No hay notas para mostrar</string>
+    <string name="notGraded">Sin evaluar</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Cambiar período de evaluación</string>
+    <string name="a11y_gradesNotAvailableContentDescription">No hay notas disponibles</string>
+    <string name="bottomBarHomeroom">Aula principal</string>
+    <string name="settingsHomeroomView">Vista del aula</string>
+    <string name="importantLinksTitle">Enlaces importantes</string>
+    <string name="studentApplications">Solicitudes del alumno</string>
+    <string name="staffContactInfo">Información de contacto del personal</string>
+    <string name="chooseACourse">Seleccione un curso</string>
+    <string name="webViewImportantLinksTitle">Enlaces importantes</string>
+    <string name="staffRoleTeacher">Profesor</string>
+    <string name="staffRoleTeacherAssistant">Profesor auxiliar</string>
+    <string name="resourcesEmptyMessage">Sus recursos se muestran aquí.</string>
+    <string name="failedToLoadResources">No se han podido cargar los recursos</string>
+    <string name="failedToRefreshResources">No se han podido actualizar los recursos</string>
+
+    <string name="open_alternate_view">Abrir una vista alternativa más accesible</string>
+
+    <string name="a11y_content_description_message_recipients">Destinatarios</string>
+    <string name="a11y_content_description_inbox_subject">Asunto</string>
+    <string name="a11y_content_description_inbox_course_spinner">Seleccione un curso, %s</string>
+
+    <string name="speedGraderAnonymousSubmissionMessage">Las respuestas de los alumnos están ocultas porque esta actividad es anónima.</string>
+
+    <string name="studentAnnotationUnsupported">Anotación del alumno (no admitida)</string>
+    <string name="studentAnnotationUnsupportedDescription">La anotación del alumno actualmente no se admite en el móvil.</string>
+    <string name="unsupportedSubmissionType">Tipo de entrega no compatible</string>
+    <string name="studentAnnotationUnsupportedMessage">La entrega no se puede mostrar porque la anotación del alumno actualmente no se admite en el móvil.</string>
+    <string name="schedule_marked_as_done">Lo ha marcado como terminado.</string>
+    <string name="error_saving_assignment_closed_grading_period">No se puede cambiar la fecha de entrega cuando está vencida en un período de evaluación cerrado.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Saltar a hoy</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">enviar mensaje</string>
+
+    <string name="somethingWentWrong">Ha habido un error.</string>
+    <string name="failedToLoadQuiz">No se ha podido cargar el examen</string>
+</resources>

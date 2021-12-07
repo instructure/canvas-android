@@ -16,6 +16,7 @@
 package com.instructure.canvasapi2.utils
 
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okio.*
 import org.greenrobot.eventbus.EventBus
@@ -28,7 +29,7 @@ class ProgressResponseBody(private val file: File, private val fileIndex: Int?, 
 
     override fun contentLength() = file.length()
 
-    override fun contentType() = MediaType.parse("application/octet-stream")
+    override fun contentType() = "application/octet-stream".toMediaTypeOrNull()
 
     override fun writeTo(sink: BufferedSink) {
         val buffer = ByteArray(DEFAULT_BUFFER_SIZE)

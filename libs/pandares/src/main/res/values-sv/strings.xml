@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Inlämningstyp som inte stöds</string>
     <string name="studentAnnotationUnsupportedMessage">Inlämningen kan inte visas eftersom studentnotering inte stöds på mobila enheter.</string>
     <string name="schedule_marked_as_done">Du har markerat den som färdig.</string>
+    <string name="error_saving_assignment_closed_grading_period">Det går inte att ändra inlämningsdatumet när det överskridits i en stängd omdömesperiod.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Hoppa fram till i dag</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">skicka meddelande</string>
+    <string name="somethingWentWrong">Något gick fel</string>
+    <string name="failedToLoadQuiz">Det gick inte att läsa in quizet</string>
 </resources>

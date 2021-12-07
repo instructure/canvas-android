@@ -164,16 +164,24 @@ class AnnouncementInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_abort() {
         val data = getToAnnouncementList()
+        val course = data.courses.values.first()
+        val announcement =
+            data.courseDiscussionTopicHeaders[course.id]!!.filter { th -> th.announcement }.first()
 
+        discussionListPage.assertHasAnnouncement(announcement)
+        discussionListPage.assertAnnouncementCount(2) // header + the one test announcement
         discussionListPage.launchCreateAnnouncementThenClose()
         discussionListPage.verifyExitWithoutSavingDialog()
+        discussionListPage.acceptExitWithoutSaveDialog()
+        discussionListPage.assertHasAnnouncement(announcement)
+        discussionListPage.assertAnnouncementCount(2) // header + the one test announcement
     }
 
     // Tests code around creating an announcement with no description
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_missingDescription() {
-        val data = getToAnnouncementList()
+        getToAnnouncementList()
 
         discussionListPage.createAnnouncement("title", "", verify = false)
         // easier than looking for the "A description is required" toast message
@@ -184,11 +192,32 @@ class AnnouncementInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_missingTitle() {
-        val data = getToAnnouncementList()
-
+        getToAnnouncementList()
         discussionListPage.createAnnouncement("", "description")
     }
 
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    fun testSearchAnnouncement() {
+        val data = getToAnnouncementList()
+        val course = data.courses.values.first()
+        val announcement = data.courseDiscussionTopicHeaders[course.id]!!.first()
+        val testAnnouncementName = "searchTestAnnouncement"
+        val existingAnnouncementName = announcement.title
+
+        discussionListPage.createAnnouncement(testAnnouncementName, "description")
+
+        discussionListPage.clickOnSearchButton()
+        discussionListPage.typeToSearchBar(testAnnouncementName)
+
+        discussionListPage.pullToUpdate()
+        discussionListPage.assertTopicDisplayed(testAnnouncementName)
+        discussionListPage.assertTopicNotDisplayed(existingAnnouncementName)
+
+        discussionListPage.clickOnClearSearchButton()
+        discussionListPage.waitForDiscussionTopicToDisplay(existingAnnouncementName!!)
+        discussionListPage.assertTopicDisplayed(testAnnouncementName)
+    }
 
     // Mock a specified number of students and courses, and navigate to the first course
     private fun getToCourse(

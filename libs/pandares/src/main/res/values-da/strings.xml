@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Ikke-understøttet afleveringsform</string>
     <string name="studentAnnotationUnsupportedMessage">Aflevering kan ikke vises, fordi studerendes anmærkninger i øjeblikket ikke understøttes på mobil.</string>
     <string name="schedule_marked_as_done">Du har markeret det som udført.</string>
+    <string name="error_saving_assignment_closed_grading_period">Kan ikke ændre afleveringsdatoen, når den forfalder i en lukket karakterperiode</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Spring til i dag</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">send besked</string>
+    <string name="somethingWentWrong">Noget gik galt</string>
+    <string name="failedToLoadQuiz">Indlæsning af test mislykkedes</string>
 </resources>

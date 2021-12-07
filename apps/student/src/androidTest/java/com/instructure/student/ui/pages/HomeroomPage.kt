@@ -92,7 +92,7 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
         swipeRefreshLayout.swipeDown()
     }
 
-    fun openHomeroomAnnouncements() {
+    fun clickOnViewPreviousAnnouncements() {
         onViewWithId(R.id.viewPreviousAnnouncements)
                 .click()
     }
@@ -100,6 +100,7 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
     fun openCourseAnnouncement(announcementText: String) {
         swipeRefreshLayout.swipeUp()
         onView(withId(R.id.announcementText) + withText(announcementText))
+                .scrollTo()
                 .click()
     }
 
@@ -118,6 +119,7 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
     fun openAssignments(todoText: String) {
         swipeRefreshLayout.swipeUp()
         onView(withId(R.id.todoText) + withText(todoText))
+            .scrollTo()
                 .click()
     }
 }

@@ -22,11 +22,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Course
-import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.waitForViewWithText
@@ -35,6 +31,8 @@ import java.util.*
 
 @Suppress("unused")
 class EditCoursesListPage : BasePage() {
+
+    private val backButton by OnViewWithContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description)
 
     private val favoritesRecyclerView by WaitForViewWithId(R.id.favoritesRecyclerView)
 
@@ -60,7 +58,11 @@ class EditCoursesListPage : BasePage() {
         onViewWithText(course.name).check(matches(withContentDescription(match)))
     }
 
-    fun toggleFavoritingCourse(course: Course) {
-        waitForViewWithText(course.name).click()
+    fun toggleFavoritingCourse(courseName: String) {
+        waitForViewWithText(courseName).click()
+    }
+
+    fun navigateBack() {
+        backButton.click()
     }
 }

@@ -48,10 +48,7 @@ import com.instructure.student.db.getInstance
 import com.instructure.student.db.sqlColAdapters.Date
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.common.ChannelSource
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.threeten.bp.OffsetDateTime
 import java.io.File
@@ -86,6 +83,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             Action.URL_ENTRY -> uploadUrl(db, submission, false)
             Action.STUDIO_ENTRY -> uploadUrl(db, submission, true)
             Action.COMMENT_ENTRY -> uploadComment(intent)
+            Action.STUDENT_ANNOTATION -> uploadStudentAnnotation(db, submission)
         }.exhaustive
     }
 
@@ -258,7 +256,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         return attachmentIds
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @ObsoleteCoroutinesApi
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun uploadComment(intent: Intent) {
         runBlocking {
             val db = Db.getInstance(this@SubmissionService)
@@ -411,7 +410,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 }
 
                 val newComment = submission.submissionComments.last()
-                ChannelSource.getChannel<SubmissionComment>().offer(newComment)
+                ChannelSource.getChannel<SubmissionComment>().trySend(newComment)
 
                 // Remove db entry
                 commentDb.deleteCommentById(comment.id)
@@ -427,6 +426,27 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         }
 
+    }
+
+    private fun uploadStudentAnnotation(db: StudentDb, submission: com.instructure.student.Submission) {
+        showProgressNotification(submission.assignmentName, submission.id)
+        val annotatableAttachmentIt = submission.annotatableAttachmentId
+
+        if (annotatableAttachmentIt == null) {
+            showErrorNotification(this, submission)
+            return
+        }
+
+        GlobalScope.launch {
+            val uploadResult = SubmissionManager.postStudentAnnotationSubmissionAsync(submission.canvasContext, submission.assignmentId, annotatableAttachmentIt).await()
+            uploadResult.onSuccess {
+                db.submissionQueries.deleteSubmissionById(submission.id)
+                if (!it.late) showConfetti()
+            }.onFailure {
+                db.submissionQueries.setSubmissionError(true, submission.id)
+                showErrorNotification(this@SubmissionService, submission)
+            }
+        }
     }
 
     // region Notifications
@@ -572,7 +592,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     // endregion
 
     enum class Action {
-        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, STUDIO_ENTRY, COMMENT_ENTRY
+        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, STUDIO_ENTRY, COMMENT_ENTRY, STUDENT_ANNOTATION
     }
 
     companion object {
@@ -582,6 +602,17 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         const val COMMENT_CHANNEL_ID = "commentUploadChannel"
 
         private fun getUserId() = ApiPrefs.user!!.id
+
+        private fun insertDraft(assignmentId: Long, context: Context, insertBlock: (StudentDb) -> Unit): Long {
+            val db = Db.getInstance(context)
+            deleteDraftsForAssignment(assignmentId, db)
+            insertBlock(db)
+            return db.submissionQueries.getLastInsert().executeAsOne()
+        }
+
+        private fun deleteDraftsForAssignment(id: Long, db: StudentDb) {
+            db.submissionQueries.deleteDraftById(id, getUserId())
+        }
 
         private fun insertNewSubmission(assignmentId: Long, context: Context, files: List<FileSubmitObject> = emptyList(), insertBlock: (StudentDb) -> Unit): Long {
             val db = Db.getInstance(context)
@@ -627,7 +658,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             text: String
         ) {
             val dbSubmissionId = insertNewSubmission(assignmentId, context) {
-                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
+                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now(), false)
             }
 
             val bundle = Bundle().apply {
@@ -635,6 +666,18 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             }
 
             startService(context, Action.TEXT_ENTRY, bundle)
+        }
+
+        fun saveDraft(
+            context: Context,
+            canvasContext: CanvasContext,
+            assignmentId: Long,
+            assignmentName: String?,
+            text: String
+        ) {
+            insertDraft(assignmentId, context) {
+                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now(), true)
+            }
         }
 
         fun startUrlSubmission(
@@ -804,6 +847,24 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val db = Db.getInstance(context)
             db.pendingSubmissionCommentQueries.deleteCommentById(commentId)
             db.submissionCommentFileQueries.deleteFilesForCommentId(commentId)
+        }
+
+        fun startStudentAnnotationSubmission(
+            context: Context,
+            canvasContext: CanvasContext,
+            assignmentId: Long,
+            assignmentName: String?,
+            annotatableAttachmentIt: Long
+        ) {
+            val dbSubmissionId = insertNewSubmission(assignmentId, context) {
+                it.submissionQueries.insertStudentAnnotationSubmission(annotatableAttachmentIt, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
+            }
+
+            val bundle = Bundle().apply {
+                putLong(Const.SUBMISSION_ID, dbSubmissionId)
+            }
+
+            startService(context, Action.STUDENT_ANNOTATION, bundle)
         }
         // endregion
     }

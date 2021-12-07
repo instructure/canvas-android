@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.panda_annotations.FeatureCategory
@@ -29,7 +30,8 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class DashboardE2ETest: TeacherTest() {
+class DashboardE2ETest : TeacherTest() {
+
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -39,7 +41,7 @@ class DashboardE2ETest: TeacherTest() {
     @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testDashboardE2E() {
 
-        val data = seedData(teachers = 1, courses = 2, favoriteCourses = 1)
+        val data = seedData(teachers = 1, courses = 2)
         val teacher = data.teachersList[0]
 
         tokenLogin(teacher)
@@ -49,19 +51,29 @@ class DashboardE2ETest: TeacherTest() {
         dashboardPage.assertDisplaysCourses()
         dashboardPage.assertDisplaysCourse(data.coursesList[0])
 
-        dashboardPage.clickSeeAll()
+        dashboardPage.clickSeeAll() //allCoursesListPage appearing as the result of this operation
         refresh()
-        for(course in data.coursesList) {
-            dashboardPage.assertDisplaysCourse(course)
-        }
-        dashboardPage.navigateBack()
-        
-        dashboardPage.editFavoriteCoursesWithCourse(data.coursesList[1])
-        refresh()
-        for(course in data.coursesList) {
-            dashboardPage.assertDisplaysCourse(course)
+        for (course in data.coursesList) {
+            allCoursesListPage.assertDisplaysCourse(course)
         }
 
-        dashboardPage.assertOpensCourse(data.coursesList[0])
+        allCoursesListPage.navigateBack() //navigate back to the dashboard
+
+        dashboardPage.openEditCoursesListPage()
+        editCoursesListPage.toggleFavoritingCourse(data.coursesList[1].name) //navigate to edit courses list page and select second course as favourite
+        editCoursesListPage.navigateBack() //navigate back to the dashboard
+        refresh()
+
+        dashboardPage.assertDisplaysCourse(data.coursesList[1])
+        dashboardPage.assertOpensCourse(data.coursesList[1])
+        Espresso.pressBack()
+
+        dashboardPage.openEditCoursesListPage()
+        editCoursesListPage.toggleFavoritingCourse(data.coursesList[1].name) //unfavourite course
+        editCoursesListPage.navigateBack()
+        refresh()
+
+        dashboardPage.assertDisplaysCourse(data.coursesList[0])
+        dashboardPage.assertDisplaysCourse(data.coursesList[1])
     }
 }

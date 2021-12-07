@@ -72,8 +72,9 @@ interface Stitcher {
  * WeaveCoroutine - A Coroutine class customized to meet the specific needs of our applications. This
  * includes a modular exception handler, Stitcher support, [onUI] and [inBackground] functions.
  */
-@UseExperimental(InternalCoroutinesApi::class)
-class WeaveCoroutine(parentContext: CoroutineContext) : AbstractCoroutine<Unit>(parentContext, true), CoroutineScope {
+@OptIn(InternalCoroutinesApi::class)
+class WeaveCoroutine(private val parentContext: CoroutineContext) :
+    AbstractCoroutine<Unit>(parentContext, true, true), CoroutineScope {
 
     /**
      * Runs the provided code on the UI thread. Note that this does *not* suspend the coroutine; as such, any code

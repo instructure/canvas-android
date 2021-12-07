@@ -24,7 +24,10 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -283,8 +286,12 @@ class DashboardFragment : ParentFragment() {
                 }
             }
 
-            var intent = CustomTabsIntent.Builder()
+            val colorSchemeParams = CustomTabColorSchemeParams.Builder()
                 .setToolbarColor(conference.canvasContext.color)
+                .build()
+
+            var intent = CustomTabsIntent.Builder()
+                .setDefaultColorSchemeParams(colorSchemeParams)
                 .setShowTitle(true)
                 .build()
                 .intent

@@ -830,9 +830,9 @@
 
     <string name="timeLimit">Limite de temps</string>
     <string name="newPushNotifications">%1$s Nouvelles notifications</string>
-    <string name="like">mention « J\'aime »</string>
+    <string name="like">mention « J’aime »</string>
     <string name="likeEntryLabel">Laisser une rétroaction de type « J’aime » à cette entrée</string>
-    <string name="likes">mentions « J\'aime »</string>
+    <string name="likes">mentions « J’aime »</string>
     <plurals name="likeCountLabel">
         <item quantity="one">%s « j’aime »</item>
         <item quantity="other">%s « j’aime »</item>
@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Type d’envoi non pris en charge</string>
     <string name="studentAnnotationUnsupportedMessage">L’envoi ne peut pas être affiché, car l’annotation d’étudiant n’est actuellement pas prise en charge sur mobile.</string>
     <string name="schedule_marked_as_done">Vous l’avez marqué comme terminé.</string>
+    <string name="error_saving_assignment_closed_grading_period">Ne peut pas changer la date d’échéance lors de l’échéance au cours d\'une période de notation fermée.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Aller à aujourd’hui</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">Envoi du message</string>
+    <string name="somethingWentWrong">Une erreur est survenue</string>
+    <string name="failedToLoadQuiz">Échec de chargement du questionnaire</string>
 </resources>

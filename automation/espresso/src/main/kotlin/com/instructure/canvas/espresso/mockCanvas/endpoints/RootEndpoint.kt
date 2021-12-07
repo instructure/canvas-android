@@ -51,7 +51,7 @@ object RootEndpoint : Endpoint(
                         // The response here won't contain all of the information that a normal
                         // /login/session_token response would have (e.g., actual tokens), but that
                         // information is unnecessary for mocked API calls.
-                        val sessionUrlString = request.url().queryParameter("return_to")
+                        val sessionUrlString = request.url.queryParameter("return_to")
                         val originalSessionUrl = URL(sessionUrlString)
                         val sessionUrl = "${data.webViewServer.url(originalSessionUrl.path)}"
                         Log.d("WebView", "original url=$sessionUrlString, new url=$sessionUrl")

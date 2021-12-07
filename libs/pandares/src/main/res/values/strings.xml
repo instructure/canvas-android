@@ -1215,13 +1215,23 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">This student\'s responses are hidden because this assignment is anonymous.</string>
 
-    <string name="studentAnnotationUnsupported">Student Annotation (Unsupported)</string>
-    <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently not supported on mobile.</string>
-    <string name="unsupportedSubmissionType">Unsupported Submission Type</string>
-    <string name="studentAnnotationUnsupportedMessage">Submission cannot be displayed, because Student Annotation is currently not supported on mobile.</string>
     <string name="schedule_marked_as_done">You\'ve marked it as done.</string>
     <string name="error_saving_assignment_closed_grading_period">Cannot change the due date when due in a closed grading period.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Jump to Today</string>
     <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
     <string name="a11y_contact_info_click_description">send message</string>
+
+    <string name="somethingWentWrong">Something went wrong</string>
+    <string name="failedToLoadQuiz">Failed to load quiz</string>
+    <string name="failedToLoadSubmission">Failed to load submission</string>
+    <string name="studentAnnotationToolbarTitle">Student Annotation</string>
+    <string name="submissionTypeStudentAnnotation">Student Annotation</string>
+    <string name="gradesNoDueDate">No due date</string>
+    <string name="missingAssignment">Missing</string>
+    <string name="dontSave">Don\'t save</string>
+    <string name="textSubmissionExitConfirmationTitle">Save draft?</string>
+    <string name="textSubmissionExitConfirmationMessage">Your changes will not be saved otherwise</string>
+    <string name="submissionDraftAvailableSubtitle">Tap here to continue</string>
+    <string name="submissionDraftAvailableTitle">Draft Available</string>
+    <string name="errorLoadingSubmission">An error occured while loading submission</string>
 </resources>

@@ -31,7 +31,7 @@ object SearchEndpoint : Endpoint(
     Segment("recipients") to endpoint(
         configure = {
             GET {
-                val contexts = request.url().queryParameter("context")
+                val contexts = request.url.queryParameter("context")
                 if(contexts != null) {
                     var courseId = contexts.substringAfter("course_")
 

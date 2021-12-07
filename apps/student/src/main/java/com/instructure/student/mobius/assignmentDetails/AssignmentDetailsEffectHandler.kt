@@ -115,6 +115,14 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     else -> Unit
                 }
             }
+            is AssignmentDetailsEffect.ShowDraftSubmission -> {
+                view?.showOnlineTextEntryView(
+                    effect.submission.assignmentId,
+                    effect.submission.assignmentName,
+                    effect.submission.submissionEntry,
+                    effect.submission.errorFlag
+                )
+            }
             is AssignmentDetailsEffect.LoadData -> loadData(effect)
             is AssignmentDetailsEffect.ShowCreateSubmissionView -> {
                 when (effect.submissionType) {
@@ -129,7 +137,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     Assignment.SubmissionType.ONLINE_UPLOAD -> view?.showFileUploadView(effect.assignment)
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> view?.showOnlineTextEntryView(effect.assignment.id, effect.assignment.name)
                     Assignment.SubmissionType.ONLINE_URL -> view?.showOnlineUrlEntryView(effect.assignment.id, effect.assignment.name, effect.course)
-                    Assignment.SubmissionType.STUDENT_ANNOTATION -> view?.showStudentAnnotationView(effect.assignment.htmlUrl ?: "")
+                    Assignment.SubmissionType.STUDENT_ANNOTATION -> view?.showStudentAnnotationView(effect.assignment)
                     Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> view?.showLTIView(effect.course, effect.assignment.name ?: "", effect.ltiTool)
                     else -> view?.showMediaRecordingView(effect.assignment) // Assignment.SubmissionType.MEDIA_RECORDING
                 }

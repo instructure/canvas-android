@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Velja miðil</string>
     <string name="takeVideo">Taka myndband</string>
     <string name="noCameraOnDevice">Engin myndavél</string>
@@ -328,7 +329,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Aflæsingardagur getur ekki verið eftir skiladag</string>
     <string name="utils_lockBeforeDueDateError">Læsingardagur getur ekki verið fyrir skiladag</string>
     <string name="utils_lockAfterUnlockError">Læsingardagur getur ekki verið fyrir opnunardag</string>
@@ -435,7 +435,10 @@
     <string name="appUpdateReadyDescription">Endurræstu smáforritið til að setja upp nýja útgáfu</string>
     <string name="nothing_planned_yet">Ekkert skipulagt ennþá</string>
     <string name="schedule_tag_graded">Metið</string>
-    <string name="schedule_tag_replies">Svör</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d Svar</item>
+        <item quantity="other">%d Svör></item>
+    </plurals>
     <string name="schedule_tag_feedback">Endurgjöf</string>
     <string name="schedule_tag_late">Seint</string>
     <string name="schedule_tag_redo">Endurtaka</string>
@@ -443,6 +446,7 @@
     <string name="tomorrow">Á morgun</string>
     <string name="yesterday">Í gær</string>
     <string name="schedule_calendar_event_due_text">Á %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s til %2$s</string>
     <string name="schedule_todo_due_text">Verkefni: %s</string>
     <string name="schedule_due_text">Skil: %s</string>
     <string name="show_missing_items_title">Sýna %d hluti sem vantar</string>
@@ -455,4 +459,28 @@
         <item quantity="other">%s punktar</item>
     </plurals>
 
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f punktar</item>
+        <item quantity="one">%.1f punktur</item>
+        <item quantity="other">%.1f punktar</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Allan daginn</string>
+    <string name="schedule_tag_missing">Vantar</string>
+    <string name="previous_week">Fyrri vika</string>
+    <string name="next_week">Næsta vika</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Námskeið %s</string>
+    <string name="a11y_announcement">Tilkynning</string>
+    <string name="a11y_discussion_topic">Umræða</string>
+    <string name="a11y_calendar_event">Dagatalsviðburður</string>
+    <string name="a11y_assignment">Verkefni</string>
+    <string name="a11y_planner_note">Athugasemd skipuleggjara</string>
+    <string name="a11y_quiz">Próf</string>
+    <string name="a11y_todo">Verkefnalisti</string>
+    <string name="a11y_page">Síða</string>
+    <string name="a11y_marked_as_done">Merkt sem lokið</string>
+    <string name="a11y_not_marked_as_done">Ekki merkt sem lokið</string>
+    <string name="a11y_mark_as_done">Merkja sem lokið</string>
+    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
+    <string name="error_loading_course_details">Æi! Villa átti sér stað við að hlaða inn námskeiðsupplýsingum.</string>
 </resources>

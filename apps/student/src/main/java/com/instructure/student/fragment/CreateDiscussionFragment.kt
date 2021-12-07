@@ -46,8 +46,10 @@ import com.instructure.student.view.AssignmentOverrideView
 import kotlinx.android.synthetic.main.fragment_create_discussion.*
 import kotlinx.coroutines.Job
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.util.*
 
@@ -318,7 +320,7 @@ class CreateDiscussionFragment : ParentFragment() {
             var filePart: MultipartBody.Part? = null
             attachment?.let {
                 val file = File(it.fullPath)
-                val requestBody = RequestBody.create(MediaType.parse(it.contentType), file)
+                val requestBody = file.asRequestBody(it.contentType.toMediaTypeOrNull())
                 filePart = MultipartBody.Part.createFormData("attachment", file.name, requestBody)
             }
             awaitApi<DiscussionTopicHeader> { DiscussionManager.createStudentDiscussion(canvasContext, discussionTopicHeader, filePart, it) }

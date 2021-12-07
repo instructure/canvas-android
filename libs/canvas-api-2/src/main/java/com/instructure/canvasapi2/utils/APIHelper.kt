@@ -26,7 +26,9 @@ import android.text.TextUtils
 import com.instructure.canvasapi2.builders.RestParams
 import okhttp3.Headers
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
@@ -140,7 +142,7 @@ object APIHelper {
      */
     fun removeDomainFromUrl(url: String?): String? = url?.substringAfter("/api/v1/")
 
-    fun isCachedResponse(response: okhttp3.Response): Boolean = response.cacheResponse() != null
+    fun isCachedResponse(response: okhttp3.Response): Boolean = response.cacheResponse != null
     fun isCachedResponse(response: Response<*>): Boolean = isCachedResponse(response.raw())
 
     fun paramIsNull(vararg args: Any?): Boolean {
@@ -195,9 +197,9 @@ object APIHelper {
     fun paramsWithDomain(domain: String, params: RestParams): RestParams = params.copy(domain = domain)
 
     fun makeRequestBody(part: String?): RequestBody = if (part == null) {
-        RequestBody.create(MediaType.parse("multipart/form-data"), ByteArray(0))
+        ByteArray(0).toRequestBody("multipart/form-data".toMediaTypeOrNull(), 0, 0)
     } else {
-        RequestBody.create(MediaType.parse("multipart/form-data"), part)
+        part.toRequestBody("multipart/form-data".toMediaTypeOrNull())
     }
 
     fun getQuizURL(courseid: Long, quizId: Long): String {

@@ -1219,4 +1219,10 @@
     <string name="unsupportedSubmissionType">Lähetystyyppiä ei tueta</string>
     <string name="studentAnnotationUnsupportedMessage">Lähetystä ei voida näyttää, koska opiskelijan huomautuksia ei tällä hetkellä tueta matkapuhelimessa.</string>
     <string name="schedule_marked_as_done">Olet merkinnyt sen tehdyksi.</string>
+    <string name="error_saving_assignment_closed_grading_period">Ei voida vaihtaa määräpäivää, kun määräpäivä on suljetulla arvosanojen antojaksolla</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Siirry tähän päivään</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">viestien lähettäminen</string>
+    <string name="somethingWentWrong">Jotakin meni pieleen</string>
+    <string name="failedToLoadQuiz">Testin lataus epäonnistui</string>
 </resources>
