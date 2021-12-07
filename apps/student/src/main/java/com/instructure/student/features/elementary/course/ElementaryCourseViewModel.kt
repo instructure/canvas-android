@@ -18,10 +18,12 @@ package com.instructure.student.features.elementary.course
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
@@ -38,7 +40,8 @@ import javax.inject.Inject
 class ElementaryCourseViewModel @Inject constructor(
     private val tabManager: TabManager,
     private val resources: Resources,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val oauthManager: OAuthManager
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -59,7 +62,12 @@ class ElementaryCourseViewModel @Inject constructor(
 
                 if (hasResources) {
                     filteredTabs = filteredTabs.toMutableList()
-                    filteredTabs.add(Tab(tabId = Tab.RESOURCES_ID, label = resources.getString(R.string.dashboardTabResources)))
+                    filteredTabs.add(
+                        Tab(
+                            tabId = Tab.RESOURCES_ID,
+                            label = resources.getString(R.string.dashboardTabResources)
+                        )
+                    )
                 }
 
                 val tabViewData = createTabs(canvasContext, filteredTabs)
@@ -72,8 +80,9 @@ class ElementaryCourseViewModel @Inject constructor(
         }
     }
 
-    private fun createTabs(canvasContext: CanvasContext, tabs: List<Tab>): List<ElementaryCourseTab> {
-        val prefix = if (canvasContext.isCourse) "${apiPrefs.fullDomain}/courses/${canvasContext.id}?embed=true" else "${apiPrefs.fullDomain}/groups/${canvasContext.id}?embed=true"
+    private suspend fun createTabs(canvasContext: CanvasContext, tabs: List<Tab>): List<ElementaryCourseTab> {
+        val prefix =
+            if (canvasContext.isCourse) "${apiPrefs.fullDomain}/courses/${canvasContext.id}?embed=true" else "${apiPrefs.fullDomain}/groups/${canvasContext.id}?embed=true"
         return tabs.map {
             val drawable: Drawable?
             val url: String
@@ -103,7 +112,17 @@ class ElementaryCourseViewModel @Inject constructor(
                     url = it.htmlUrl ?: ""
                 }
             }
-            ElementaryCourseTab(it.tabId, drawable, it.label, url)
+
+            val authenticatedUrl = if (apiPrefs.isStudentView) {
+                apiPrefs.user?.let {
+                    oauthManager.getAuthenticatedSessionMasqueradingAsync(url, apiPrefs.user!!.id)
+                        .await().dataOrNull?.sessionUrl
+                } ?: url
+            } else {
+                oauthManager.getAuthenticatedSessionAsync(url).await().dataOrNull?.sessionUrl
+            }
+            ElementaryCourseTab(it.tabId, drawable, it.label, authenticatedUrl ?: url)
+
         }
     }
 }
