@@ -114,7 +114,6 @@ class ElementaryCourseViewModel @Inject constructor(
             }
 
             val authenticatedUrl = if (apiPrefs.isStudentView) {
-                Log.d("STUDENT_VIEW", "createTabs: STUDENT_VIEW")
                 apiPrefs.user?.let {
                     oauthManager.getAuthenticatedSessionMasqueradingAsync(url, apiPrefs.user!!.id)
                         .await().dataOrNull?.sessionUrl
