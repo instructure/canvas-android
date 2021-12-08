@@ -56,6 +56,15 @@ object OAuthManager {
         OAuthAPI.getAuthenticatedSession(targetUrl, params, adapter, callback)
     }
 
+    fun getAuthenticatedSessionMasqueradingAsync(targetUrl: String, userId: Long) = apiAsync<AuthenticatedSession> { getAuthenticatedSessionMasquerading(targetUrl, userId, it) }
+
+    fun getAuthenticatedSessionMasquerading(targetUrl: String, userId: Long, callback: StatusCallback<AuthenticatedSession>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = true)
+        Logger.d("targetURL to be authed: $targetUrl")
+        OAuthAPI.getAuthenticatedSessionMasquerading(targetUrl, userId, params, adapter, callback)
+    }
+
     fun getAuthenticatedSessionSynchronous(targetUrl: String): String? {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = true)
