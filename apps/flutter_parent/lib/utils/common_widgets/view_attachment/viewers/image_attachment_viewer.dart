@@ -45,8 +45,8 @@ class ImageAttachmentViewer extends StatelessWidget {
       backgroundDecoration: backgroundDecoration,
       imageProvider: NetworkImage(attachment.url),
       minScale: minScale,
-      loadingChild: LoadingIndicator(),
-      loadFailedChild: EmptyPandaWidget(
+      loadingBuilder: (context, imageChunkEvent) => LoadingIndicator(),
+      errorBuilder: (context, error, stackTrace) => EmptyPandaWidget(
         svgPath: 'assets/svg/panda-not-supported.svg',
         title: L10n(context).errorLoadingImage,
       ),

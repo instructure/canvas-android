@@ -60,7 +60,7 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: Text(
                   L10n(context).pairingCodeEntryExplanation,
-                  style: Theme.of(context).textTheme.body1.copyWith(fontSize: 12.0),
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 12.0),
                 ),
               ),
               TextFormField(

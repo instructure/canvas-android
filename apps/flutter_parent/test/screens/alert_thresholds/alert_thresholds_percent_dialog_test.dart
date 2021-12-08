@@ -243,7 +243,7 @@ void main() {
                 child: RaisedButton(onPressed: () async {
                   result = await showDialog(
                       context: context,
-                      child: AlertThresholdsPercentageDialog([initial], AlertType.courseGradeLow, ''));
+                      builder:(_) => AlertThresholdsPercentageDialog([initial], AlertType.courseGradeLow, ''));
                 }),
               )));
 
@@ -271,7 +271,7 @@ void main() {
           builder: (context) => Container(
                 child: RaisedButton(onPressed: () async {
                   showDialog(
-                      context: context, child: AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''));
+                      context: context, builder:(_) => AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''));
                 }),
               )));
 
@@ -354,9 +354,9 @@ void main() {
 
 class MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}
 
-void _setupLocator({AlertThresholdsInteractor thresholdsInteractor}) {
+void _setupLocator({AlertThresholdsInteractor thresholdsInteractor}) async {
   var locator = GetIt.instance;
-  locator.reset();
+  await locator.reset();
 
   locator.registerFactory<AlertThresholdsInteractor>(() => thresholdsInteractor ?? MockAlertThresholdsInteractor());
 }

@@ -28,7 +28,7 @@ class PlannerApi {
     var queryParams = {
       'start_date': startDay.toUtc().toIso8601String(),
       'end_date': endDay.toUtc().toIso8601String(),
-      'context_codes': contexts.toList()..sort(), // Sort for cache consistency
+      'context_codes[]': contexts.toList()..sort(), // Sort for cache consistency
     };
     return fetchList(dio.get('users/$userId/planner/items', queryParameters: queryParams), depaginateWith: dio);
   }
