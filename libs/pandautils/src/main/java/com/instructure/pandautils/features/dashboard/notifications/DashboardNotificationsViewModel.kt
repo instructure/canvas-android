@@ -17,9 +17,6 @@
 package com.instructure.pandautils.features.dashboard.notifications
 
 import android.content.res.Resources
-import android.net.Uri
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,7 +26,6 @@ import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel
@@ -39,9 +35,7 @@ import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.asChooserExcludingInstructure
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.ColorKeeper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -58,7 +52,10 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val enrollmentManager: EnrollmentManager,
     private val conferenceManager: ConferenceManager,
     private val accountNotificationManager: AccountNotificationManager,
-    private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist
+    private val oauthManager: OAuthManager,
+    private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist,
+    private val colorKeeper: ColorKeeper,
+    private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -114,7 +111,7 @@ class DashboardNotificationsViewModel @Inject constructor(
             val color = when (it.icon) {
                 AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> resources.getColor(R.color.notificationTintError)
                 AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> resources.getColor(R.color.notificationTintWarning)
-                else -> ThemePrefs.brandColor
+                else -> colorKeeper.defaultColor
             }
 
             val icon = when (it.icon) {
@@ -246,31 +243,17 @@ class DashboardNotificationsViewModel @Inject constructor(
 
         viewModelScope.launch {
             var url: String = conference.joinUrl
-                ?: "${ApiPrefs.fullDomain}${conference.canvasContext.toAPIString()}/conferences/${conference.id}/join"
+                ?: "${apiPrefs.fullDomain}${conference.canvasContext.toAPIString()}/conferences/${conference.id}/join"
 
-            if (url.startsWith(ApiPrefs.fullDomain)) {
+            if (url.startsWith(apiPrefs.fullDomain)) {
                 try {
-                    val authSession = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }
+                    val authSession = oauthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow
                     url = authSession.sessionUrl
                 } catch (e: Throwable) {
                     // Try launching without authenticated URL
                 }
             }
-
-            val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-                .setToolbarColor(conference.canvasContext.color)
-                .build()
-
-            var intent = CustomTabsIntent.Builder()
-                .setDefaultColorSchemeParams(colorSchemeParams)
-                .setShowTitle(true)
-                .build()
-                .intent
-
-            intent.data = Uri.parse(url)
-
-            intent = intent.asChooserExcludingInstructure()
-            _events.postValue(Event(DashboardNotificationsActions.LaunchConference(intent)))
+            _events.postValue(Event(DashboardNotificationsActions.LaunchConference(conference.canvasContext, url)))
 
             delay(3000)
             itemViewModel.isJoining = false

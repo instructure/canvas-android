@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.dashboard.notifications
 
+import android.net.Uri
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -23,12 +24,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentDashboardNotificationsBinding
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomAction
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.bind
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,7 +80,22 @@ class DashboardNotificationsFragment : Fragment() {
 
     private fun handleAction(action: DashboardNotificationsActions) {
         when (action) {
-            is DashboardNotificationsActions.LaunchConference -> requireContext().startActivity(action.intent)
+            is DashboardNotificationsActions.LaunchConference -> {
+                val colorSchemeParams = CustomTabColorSchemeParams.Builder()
+                        .setToolbarColor(ColorKeeper.getOrGenerateColor(action.canvasContext))
+                        .build()
+
+                var intent = CustomTabsIntent.Builder()
+                        .setDefaultColorSchemeParams(colorSchemeParams)
+                        .setShowTitle(true)
+                        .build()
+                        .intent
+
+                intent.data = Uri.parse(action.url)
+
+                intent = intent.asChooserExcludingInstructure()
+                requireContext().startActivity(intent)
+            }
             is DashboardNotificationsActions.ShowToast -> Toast.makeText(
                 requireContext(),
                 action.toast,

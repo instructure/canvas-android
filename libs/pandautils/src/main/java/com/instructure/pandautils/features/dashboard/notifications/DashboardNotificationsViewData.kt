@@ -16,8 +16,8 @@
 
 package com.instructure.pandautils.features.dashboard.notifications
 
-import android.content.Intent
 import androidx.annotation.DrawableRes
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.pandautils.mvvm.ItemViewModel
 
@@ -47,6 +47,6 @@ data class AnnouncementViewData(
 
 sealed class DashboardNotificationsActions {
     data class ShowToast(val toast: String): DashboardNotificationsActions()
-    data class LaunchConference(val intent: Intent): DashboardNotificationsActions()
+    data class LaunchConference(val canvasContext: CanvasContext, val url: String): DashboardNotificationsActions()
     data class OpenAnnouncement(val subject: String, val message: String): DashboardNotificationsActions()
 }
