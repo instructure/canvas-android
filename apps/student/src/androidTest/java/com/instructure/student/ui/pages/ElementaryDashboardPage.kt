@@ -16,15 +16,12 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_elementary_dashboard.view.*
 import org.hamcrest.CoreMatchers
 
 class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
@@ -80,7 +77,7 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
                     .click()
             }
 
-            ElementaryTabType.RESOURES -> {
+            ElementaryTabType.RESOURCES -> {
                 onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabResources))
                     .scrollTo()
                     .click()
@@ -140,6 +137,6 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
         HOMEROOM(R.string.dashboardTabHomeroom),
         SCHEDULE(R.string.dashboardTabSchedule),
         GRADES(R.string.dashboardTabGrades),
-        RESOURES(R.string.dashboardTabResources)
+        RESOURCES(R.string.dashboardTabResources)
     }
 }
