@@ -61,7 +61,8 @@ void main() {
       // Create a list of alerts with dates in ascending order (reversed)
       return Alert((b) => b
         ..id = index.toString()
-        ..actionDate = date.add(Duration(days: index)));
+        ..actionDate = date.add(Duration(days: index))
+        ..lockedForUser = false);
     });
 
     when(api.getAlertsDepaginated(studentId, false)).thenAnswer((_) => Future.value(data.toList()));
