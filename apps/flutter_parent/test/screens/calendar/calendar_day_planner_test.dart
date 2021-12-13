@@ -147,7 +147,6 @@ void main() {
   });
 
   group('Interaction', () {
-    // TODO Fix test
     testWidgetsWithAccessibilityChecks('pull to refresh refreshes list', (tester) async {
       when(api.getUserCalendarItems(any, any, any, any,
               contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
@@ -176,7 +175,7 @@ void main() {
       // Should now show list
       expect(find.byType(EmptyPandaWidget), findsNothing);
       expect(find.byType(CalendarDayList), findsOneWidget);
-    }, skip: true);
+    });
   });
 }
 
