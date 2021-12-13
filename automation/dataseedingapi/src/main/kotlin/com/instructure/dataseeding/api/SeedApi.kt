@@ -278,17 +278,26 @@ object SeedApi {
 
     // Private course-creation method that does some special handling for grading periods
     private fun createCourse(gradingPeriods: Boolean = false, publishCourses: Boolean = true, isHomeroomCourse: Boolean = false, accountId: Long? = null, subAccountCourse: Boolean = false) : CourseApiModel {
-        return if(gradingPeriods) {
-            val enrollmentTerm = EnrollmentTermsApi.createEnrollmentTerm()
-            val gradingPeriodSetWrapper = GradingPeriodsApi.createGradingPeriodSet(enrollmentTerm.id)
-            val gradingPeriodSet = GradingPeriodsApi.createGradingPeriod(gradingPeriodSetWrapper.gradingPeriodSet.id)
-            val courseWithTerm = CoursesApi.createCourse(enrollmentTerm.id, publishCourses)
-            courseWithTerm
+        return if(subAccountCourse) {
+              if(gradingPeriods) {
+                  val enrollmentTerm = EnrollmentTermsApi.createEnrollmentTerm()
+                  val gradingPeriodSetWrapper = GradingPeriodsApi.createGradingPeriodSet(enrollmentTerm.id)
+                  val gradingPeriodSet = GradingPeriodsApi.createGradingPeriod(gradingPeriodSetWrapper.gradingPeriodSet.id)
+                  val courseWithTerm = CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse, enrollmentTermId = enrollmentTerm.id, publish = publishCourses)
+                  courseWithTerm
+            } else {
+                  val course = CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse)
+                  course
+            }
         }
         else {
-            if(subAccountCourse) {
-                val course = CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse)
-                course
+            if(gradingPeriods) {
+                val enrollmentTerm = EnrollmentTermsApi.createEnrollmentTerm()
+                val gradingPeriodSetWrapper = GradingPeriodsApi.createGradingPeriodSet(enrollmentTerm.id)
+                val gradingPeriodSet = GradingPeriodsApi.createGradingPeriod(gradingPeriodSetWrapper.gradingPeriodSet.id)
+                val courseWithTerm = CoursesApi.createCourse(enrollmentTerm.id, publishCourses)
+                courseWithTerm
+
             } else {
                 val course = CoursesApi.createCourse()
                 course
