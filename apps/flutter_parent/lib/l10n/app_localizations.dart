@@ -1657,4 +1657,7 @@ class AppLocalizations {
 
   String get lockedForUserTitle =>
       Intl.message('Locked', desc: 'title for locked alerts');
+
+  String get messageSent =>
+      Intl.message('Message sent', desc: 'confirmation message on the screen when the user succesfully sends a message');
 }
