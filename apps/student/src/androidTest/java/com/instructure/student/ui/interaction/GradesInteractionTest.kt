@@ -17,8 +17,6 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
-import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
@@ -74,7 +72,6 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @Stub
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCourseGrades() {
         val data = createMockData(courseCount = 3)
@@ -83,8 +80,7 @@ class GradesInteractionTest : StudentTest() {
         val course = data.courses.values.first()
 
         gradesPage.clickGradeRow(course.name)
-        courseGradesPage.assertPageObjects()
-        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("B+"))
+        elementaryCoursePage.assertPageObjects()
 
         Espresso.pressBack()
         gradesPage.assertPageObjects()
