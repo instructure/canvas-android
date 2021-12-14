@@ -53,12 +53,12 @@ class ResourcesE2ETest : StudentTest() {
         val homeroomCourse = data.coursesList[0]
         val homeroomAnnouncement = data.announcementsList[0]
         //val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
-        data.coursesList[0].syllabusBody = "test"
+       // data.coursesList[0].syllabusBody = "test"
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
         elementaryDashboardPage.waitForRender()
         elementaryDashboardPage.selectResourcesTab()
-       // elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
         resourcesPage.assertPageObjects()
 
     }

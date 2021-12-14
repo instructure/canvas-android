@@ -283,10 +283,10 @@ object SeedApi {
                   val enrollmentTerm = EnrollmentTermsApi.createEnrollmentTerm()
                   val gradingPeriodSetWrapper = GradingPeriodsApi.createGradingPeriodSet(enrollmentTerm.id)
                   val gradingPeriodSet = GradingPeriodsApi.createGradingPeriod(gradingPeriodSetWrapper.gradingPeriodSet.id)
-                  val courseWithTerm = CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse, enrollmentTermId = enrollmentTerm.id, publish = publishCourses)
+                  val courseWithTerm = CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse, enrollmentTermId = enrollmentTerm.id, publish = publishCourses, syllabusBody = "testSyllabus")
                   courseWithTerm
             } else {
-                  val course = CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse)
+                  val course = CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse, syllabusBody = "testSyllabus2")
                   course
             }
         }

@@ -44,6 +44,8 @@ data class CreateCourse(
         val homeroomCourse: Boolean = false,
         @SerializedName("account_id")
         val accountId: Long? = null,
+        @SerializedName("syllabus_body")
+        var syllabusBody: String? = null
 )
 
 

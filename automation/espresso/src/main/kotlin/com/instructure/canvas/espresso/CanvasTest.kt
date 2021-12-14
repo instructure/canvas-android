@@ -187,7 +187,7 @@ abstract class CanvasTest : InstructureTestingContract {
     }
 
     // Enable and configure accessibility checks
-    open protected fun enableAndConfigureAccessibilityChecks() {
+    protected open fun enableAndConfigureAccessibilityChecks() {
         AccessibilityChecker.runChecks() // Enable accessibility checks
 
         Log.v("overflowWidth", "enableAndConfigureAccessibilityChecks() called, validator=${AccessibilityChecker.accessibilityValidator != null}")
