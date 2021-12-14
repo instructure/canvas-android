@@ -248,7 +248,10 @@ dependencies {
     implementation project(path: ':interactions')
 
     /* Flutter embed */
-    implementation project(path: ':flutter-student-embed')
+    implementation (project(path: ':flutter-student-embed')) {
+        exclude group: 'com.google.firebase'
+        exclude group: 'com.google.android.gms'
+    }
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')

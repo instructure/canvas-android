@@ -20,23 +20,23 @@ FocusOnKeyCallback _onDirectionKeyCallback = (node, event) {
   if (event is RawKeyDownEvent) {
     if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
       node.focusInDirection(TraversalDirection.down);
-      return true; // event handled
+      return KeyEventResult.handled; // event handled
     }
     if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
       node.focusInDirection(TraversalDirection.up);
-      return true; // event handled
+      return KeyEventResult.handled; // event handled
     }
     if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
       node.focusInDirection(TraversalDirection.left);
-      return true; // event handled
+      return KeyEventResult.handled; // event handled
     }
     if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
       node.focusInDirection(TraversalDirection.right);
-      return true; // event handled
+      return KeyEventResult.handled; // event handled
     }
   }
 
-  return false; // event not handled
+  return KeyEventResult.ignored; // event not handled
 };
 
 // A FocusScope that properly handles directional-arrow presses (and dpad).

@@ -16,12 +16,15 @@
  */
 package com.instructure.student.ui.pages
 
+import android.view.View
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.student.R
+import org.hamcrest.Matcher
 
 class SchedulePage : BasePage(R.id.schedulePage) {
 
@@ -31,7 +34,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     private val recyclerView by OnViewWithId(R.id.scheduleRecyclerView)
     private val swipeRefreshLayout by OnViewWithId(R.id.scheduleSwipeRefreshLayout)
 
-    fun assertDayHeaderShown(dateText: String, dayText: String, position: Int, recyclerViewMatcherText: String? = null) {
+    fun assertDayHeaderShownByPosition(dateText: String, dayText: String, position: Int, recyclerViewMatcherText: String? = null) {
         val dateTextMatcher = withId(R.id.dateText) + withText(dateText)
         val dayTextMatcher = withId(R.id.dayText) + withText(dayText)
 
@@ -45,20 +48,49 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         waitForView(todayHeaderMatcher).assertDisplayed()
     }
 
+    fun assertDayHeaderShownByItemName(dateText: String, dayText: String, itemName: String) {
+        val dateTextMatcher = withId(R.id.dateText) + withText(dateText)
+        val dayTextMatcher = withId(R.id.dayText) + withText(dayText)
+
+        val dayHeaderMatcher = withId(R.id.scheduleHeaderLayout) + withDescendant(dateTextMatcher) + withDescendant(dayTextMatcher)
+
+        scrollToItem(R.id.scheduleHeaderLayout, itemName)
+        waitForView(dayHeaderMatcher).assertDisplayed()
+    }
+
     fun assertNoScheduleItemDisplayed() {
         onView(withId(R.id.scheduleCourseItemLayout)).check(ViewAssertions.doesNotExist())
+    }
+
+    fun assertNothingPlannedYetDisplayed() {
+        onViewWithText(R.string.nothing_planned_yet).assertDisplayed()
     }
 
     fun scrollToPosition(position: Int) {
         recyclerView.perform(RecyclerViewActions.scrollToPosition<BindableViewHolder>(position))
     }
 
+    fun scrollToItem(itemId: Int, itemName: String, target: Matcher<View>? = null) {
+        var i: Int = 0
+        while (true) {
+            scrollToPosition(i)
+            Thread.sleep(100)
+            try {
+                if(target == null) onView(withParent(itemId) + withText(itemName)).scrollTo()
+                else onView(target + withText(itemName)).scrollTo()
+                break
+            } catch(e: NoMatchingViewException) {
+                i++
+            }
+        }
+    }
+
     fun assertCourseHeaderDisplayed(courseName: String) {
-        onView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).assertDisplayed()
+        waitForView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).assertDisplayed()
     }
 
     fun assertScheduleItemDisplayed(scheduleItemName: String) {
-        onView(withAncestor(R.id.plannerItems) + withText(scheduleItemName)).assertDisplayed()
+        waitForView(withAncestor(R.id.plannerItems) + withText(scheduleItemName)).assertDisplayed()
     }
 
     fun assertMissingItemDisplayed(itemName: String, courseName: String, pointsPossible: String) {
@@ -66,12 +98,21 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         val courseNameMatcher = withId(R.id.courseName) + withText(courseName)
         val pointsPossibleMatcher = withId(R.id.points) + withText(pointsPossible)
 
-        onView(withId(R.id.missingItemLayout) + withDescendant(titleMatcher) + withDescendant(courseNameMatcher) + withDescendant(pointsPossibleMatcher))
+        onView(
+            withId(R.id.missingItemLayout) + withDescendant(titleMatcher) + withDescendant(
+                courseNameMatcher
+            ) + withDescendant(pointsPossibleMatcher)
+        )
+            .scrollTo()
             .assertDisplayed()
     }
 
     fun refresh() {
         swipeRefreshLayout.swipeDown()
+    }
+
+    fun swipeDown() {
+        swipeRefreshLayout.swipeUp()
     }
 
     fun previousWeekButtonClick() {
@@ -90,6 +131,18 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         pager.swipeLeft()
     }
 
+    fun swipeUp() {
+        swipeRefreshLayout.swipeUp()
+    }
+
+    fun assertTodayButtonDisplayed() {
+        onView(withId(R.id.todayButton)).assertDisplayed()
+    }
+
+    fun clickOnTodayButton() {
+        onView(withId(R.id.todayButton)).click()
+    }
+
     fun clickCourseHeader(courseName: String) {
         onView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).click()
     }
@@ -99,7 +152,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     }
 
     fun clickDoneCheckbox() {
-        onView(withId(R.id.checkbox)).click()
+        waitForView(withId(R.id.checkbox)).click()
     }
 
     fun assertMarkedAsDoneShown() {

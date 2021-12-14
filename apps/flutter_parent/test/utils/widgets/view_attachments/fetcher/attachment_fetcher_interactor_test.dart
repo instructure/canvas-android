@@ -39,7 +39,7 @@ void main() {
   });
 
   test('getAttachmentSavePath returns correct value for valid file name', () async {
-    _setupLocator();
+    await _setupLocator();
     var attachment = _makeAttachment();
 
     var expected = 'cache/attachment-123-fake-file.txt';
@@ -142,9 +142,9 @@ void main() {
   });
 }
 
-_setupLocator([config(GetIt locator) = null]) {
+_setupLocator([config(GetIt locator) = null]) async {
   var pathProvider = _MockPathProvider();
-  setupTestLocator((locator) {
+  await setupTestLocator((locator) {
     locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
     if (config != null) config(locator);
   });

@@ -78,7 +78,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                 Text(
                   student.shortName,
                   key: Key("${student.shortName}_text"),
-                  style: Theme.of(context).textTheme.subtitle.copyWith(color: ParentTheme.of(context).onSurfaceColor),
+                  style: Theme.of(context).textTheme.subtitle2.copyWith(color: ParentTheme.of(context).onSurfaceColor),
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
@@ -125,7 +125,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
             SizedBox(height: 8),
             Text(
               L10n(context).addStudent,
-              style: Theme.of(context).textTheme.subtitle.copyWith(color: ParentTheme.of(context).onSurfaceColor),
+              style: Theme.of(context).textTheme.subtitle2.copyWith(color: ParentTheme.of(context).onSurfaceColor),
             ),
           ],
         ),

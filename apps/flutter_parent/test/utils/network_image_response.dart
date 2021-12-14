@@ -43,6 +43,7 @@ class _ImageHttpOverrides extends HttpOverrides {
     when(request.close()).thenAnswer((_) => Future<HttpClientResponse>.value(response));
     when(response.contentLength).thenReturn(kTransparentImage.length);
     when(response.statusCode).thenReturn(HttpStatus.ok);
+    when(response.compressionState).thenReturn(HttpClientResponseCompressionState.compressed);
     when(response.listen(any)).thenAnswer((Invocation invocation) {
       final void Function(List<int>) onData = invocation.positionalArguments[0];
       final void Function() onDone = invocation.namedArguments[#onDone];

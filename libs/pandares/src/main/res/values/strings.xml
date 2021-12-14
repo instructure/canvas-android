@@ -1233,4 +1233,5 @@
     <string name="textSubmissionExitConfirmationMessage">Your changes will not be saved otherwise</string>
     <string name="submissionDraftAvailableSubtitle">Tap here to continue</string>
     <string name="submissionDraftAvailableTitle">Draft Available</string>
+    <string name="errorLoadingSubmission">An error occured while loading submission</string>
 </resources>
