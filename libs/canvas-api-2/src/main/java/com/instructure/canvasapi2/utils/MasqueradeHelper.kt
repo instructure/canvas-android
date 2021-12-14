@@ -56,6 +56,7 @@ object MasqueradeHelper {
         cleanupMasquerading(ContextKeeper.appContext)
         ApiPrefs.isMasquerading = false
         ApiPrefs.isStudentView = false
+        ApiPrefs.canvasForElementary = false
         if (startingClass != null) restartApplication(startingClass)
     }
 

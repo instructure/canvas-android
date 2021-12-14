@@ -92,6 +92,7 @@ class CanvasWebView @JvmOverloads constructor(
         fun onPageFinishedCallback(webView: WebView, url: String)
         fun routeInternallyCallback(url: String)
         fun canRouteInternallyDelegate(url: String): Boolean
+
     }
 
     interface CanvasEmbeddedWebViewCallback {
@@ -191,6 +192,10 @@ class CanvasWebView @JvmOverloads constructor(
     fun addVideoClient(activity: Activity) {
         webChromeClient = CanvasWebChromeClient(activity, this)
         setWebChromeClient(webChromeClient)
+    }
+
+    fun setZoomSettings(enabled: Boolean) {
+        this.settings.builtInZoomControls = enabled
     }
 
     private fun addJavascriptInterface() {
