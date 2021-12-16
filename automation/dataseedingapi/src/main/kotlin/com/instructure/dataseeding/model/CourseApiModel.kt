@@ -29,7 +29,7 @@ data class CourseApiModel(
         @SerializedName("account_id")
         val accountId: Long?,
         @SerializedName("syllabus_body")
-        var syllabusBody: String? = null
+        val syllabusBody: String? = null
 
 )
 
@@ -45,7 +45,7 @@ data class CreateCourse(
         @SerializedName("account_id")
         val accountId: Long? = null,
         @SerializedName("syllabus_body")
-        var syllabusBody: String? = null
+        val syllabusBody: String? = null
 )
 
 

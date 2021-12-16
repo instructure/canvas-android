@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.e2e.k5
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -45,22 +46,54 @@ class ResourcesE2ETest : StudentTest() {
             students = 1,
             courses = 4,
             homeroomCourses = 1,
-            announcements = 3
+            syllabusBody = "this is the syllabus body..."
         )
 
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
-        val homeroomCourse = data.coursesList[0]
-        val homeroomAnnouncement = data.announcementsList[0]
-        //val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
-       // data.coursesList[0].syllabusBody = "test"
+        val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
+
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
         elementaryDashboardPage.waitForRender()
-        elementaryDashboardPage.selectResourcesTab()
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
         resourcesPage.assertPageObjects()
 
+        //Verify if important links, LTI tools and contacts are displayed
+        //resourcesPage.assertCourseNameDisplayed(homeroomCourse.name)  // POSSIBLE API BUG: syllabus_body seems to be not returned from API.
+        resourcesPage.assertStudentApplicationsHeaderDisplayed()
+        resourcesPage.assertStaffInfoHeaderDisplayed()
+        resourcesPage.assertStaffDisplayed(teacher.shortName)
+
+        //Compose message to a contact, and verify if the new message page is displayed
+        resourcesPage.openComposeMessage(teacher.shortName)
+        assertNewMessagePageDisplayed()
+        Espresso.pressBack()
+        resourcesPage.assertPageObjects()
+
+        //Refresh the resources page and assert if important links, LTI tools and contact are displayed
+        resourcesPage.refresh()
+        resourcesPage.assertPageObjects()
+
+        //resourcesPage.assertCourseNameDisplayed(homeroomCourse.name)  // POSSIBLE API BUG: syllabus_body seems to be not returned from API.
+        resourcesPage.assertStudentApplicationsHeaderDisplayed()
+        resourcesPage.assertStaffInfoHeaderDisplayed()
+        resourcesPage.assertStaffDisplayed(teacher.shortName)
+
+        //Open an LTI tool, and verify if all the NON-homeroom courses are displayed within the 'Choose a Course' list.
+        resourcesPage.openLtiApp("Google Drive")
+        nonHomeroomCourses.forEach {
+            resourcesPage.assertCourseShown(it.name)
+        }
+    }
+
+    private fun assertNewMessagePageDisplayed() {
+        newMessagePage.assertToolbarTitleNewMessage()
+        newMessagePage.assertCourseSelectorNotShown()
+        newMessagePage.assertRecipientsNotShown()
+        newMessagePage.assertSendIndividualMessagesNotShown()
+        newMessagePage.assertSubjectViewShown()
+        newMessagePage.assertMessageViewShown()
     }
 }
 
