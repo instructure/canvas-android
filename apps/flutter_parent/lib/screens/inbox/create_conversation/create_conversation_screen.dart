@@ -150,6 +150,8 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
       }
       await _interactor.createConversation(widget.courseId, recipientIds, _subjectText, _bodyText, attachmentIds);
       Navigator.of(context).pop(true); // 'true' indicates upload was successful
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(L10n(context).messageSent)));
     } catch (e) {
       setState(() => _sending = false);
       _scaffoldKey.currentState.showSnackBar(

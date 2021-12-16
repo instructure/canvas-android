@@ -321,6 +321,7 @@ class InboxConversationFragment : ParentFragment() {
             adapter.remove(message)
             if (adapter.size() > 0) {
                 toast(R.string.deleted)
+                onConversationUpdated(false)
             } else {
                 onConversationUpdated(true)
             }
