@@ -140,6 +140,9 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
       'html_url',
       serializers.serialize(object.htmlUrl,
           specifiedType: const FullType(String)),
+      'locked_for_user',
+      serializers.serialize(object.lockedForUser,
+          specifiedType: const FullType(bool)),
     ];
 
     return result;
@@ -201,6 +204,10 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
         case 'html_url':
           result.htmlUrl = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
+          break;
+        case 'locked_for_user':
+          result.lockedForUser = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
           break;
       }
     }
@@ -286,6 +293,8 @@ class _$Alert extends Alert {
   final String observerId;
   @override
   final String htmlUrl;
+  @override
+  final bool lockedForUser;
 
   factory _$Alert([void Function(AlertBuilder) updates]) =>
       (new AlertBuilder()..update(updates)).build();
@@ -301,7 +310,8 @@ class _$Alert extends Alert {
       this.title,
       this.userId,
       this.observerId,
-      this.htmlUrl})
+      this.htmlUrl,
+      this.lockedForUser})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Alert', 'id');
@@ -336,6 +346,9 @@ class _$Alert extends Alert {
     if (htmlUrl == null) {
       throw new BuiltValueNullFieldError('Alert', 'htmlUrl');
     }
+    if (lockedForUser == null) {
+      throw new BuiltValueNullFieldError('Alert', 'lockedForUser');
+    }
   }
 
   @override
@@ -359,7 +372,8 @@ class _$Alert extends Alert {
         title == other.title &&
         userId == other.userId &&
         observerId == other.observerId &&
-        htmlUrl == other.htmlUrl;
+        htmlUrl == other.htmlUrl &&
+        lockedForUser == other.lockedForUser;
   }
 
   @override
@@ -373,17 +387,21 @@ class _$Alert extends Alert {
                             $jc(
                                 $jc(
                                     $jc(
-                                        $jc($jc(0, id.hashCode),
-                                            observerAlertThresholdId.hashCode),
-                                        contextType.hashCode),
-                                    contextId.hashCode),
-                                alertType.hashCode),
-                            workflowState.hashCode),
-                        actionDate.hashCode),
-                    title.hashCode),
-                userId.hashCode),
-            observerId.hashCode),
-        htmlUrl.hashCode));
+                                        $jc(
+                                            $jc(
+                                                $jc(0, id.hashCode),
+                                                observerAlertThresholdId
+                                                    .hashCode),
+                                            contextType.hashCode),
+                                        contextId.hashCode),
+                                    alertType.hashCode),
+                                workflowState.hashCode),
+                            actionDate.hashCode),
+                        title.hashCode),
+                    userId.hashCode),
+                observerId.hashCode),
+            htmlUrl.hashCode),
+        lockedForUser.hashCode));
   }
 
   @override
@@ -399,7 +417,8 @@ class _$Alert extends Alert {
           ..add('title', title)
           ..add('userId', userId)
           ..add('observerId', observerId)
-          ..add('htmlUrl', htmlUrl))
+          ..add('htmlUrl', htmlUrl)
+          ..add('lockedForUser', lockedForUser))
         .toString();
   }
 }
@@ -453,6 +472,11 @@ class AlertBuilder implements Builder<Alert, AlertBuilder> {
   String get htmlUrl => _$this._htmlUrl;
   set htmlUrl(String htmlUrl) => _$this._htmlUrl = htmlUrl;
 
+  bool _lockedForUser;
+  bool get lockedForUser => _$this._lockedForUser;
+  set lockedForUser(bool lockedForUser) =>
+      _$this._lockedForUser = lockedForUser;
+
   AlertBuilder() {
     Alert._initializeBuilder(this);
   }
@@ -470,6 +494,7 @@ class AlertBuilder implements Builder<Alert, AlertBuilder> {
       _userId = _$v.userId;
       _observerId = _$v.observerId;
       _htmlUrl = _$v.htmlUrl;
+      _lockedForUser = _$v.lockedForUser;
       _$v = null;
     }
     return this;
@@ -502,7 +527,8 @@ class AlertBuilder implements Builder<Alert, AlertBuilder> {
             title: title,
             userId: userId,
             observerId: observerId,
-            htmlUrl: htmlUrl);
+            htmlUrl: htmlUrl,
+            lockedForUser: lockedForUser);
     replace(_$result);
     return _$result;
   }

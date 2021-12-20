@@ -38,7 +38,7 @@ class PeopleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     ) = with(itemView) {
         title.text = headerText
         isExpanded = expanded
-        expand_collapse.rotation = if (isExpanded) 189f else 0f
+        expand_collapse.rotation = if (isExpanded) 180f else 0f
         divider.setVisible(!isExpanded)
         rootView.setOnClickListener { v ->
             viewHolderHeaderClicked.viewClicked(v, genericHeader)
