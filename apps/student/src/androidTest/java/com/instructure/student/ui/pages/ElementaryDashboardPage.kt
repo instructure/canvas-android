@@ -61,31 +61,9 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
     }
 
     fun selectTab(elementaryTabType: ElementaryTabType) {
-        when(elementaryTabType) {
-            ElementaryTabType.HOMEROOM -> {
-                onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabHomeroom))
-                    .scrollTo()
-                    .click()
-            }
-
-            ElementaryTabType.SCHEDULE -> {
-                onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabSchedule))
-                    .scrollTo()
-                    .click()
-            }
-
-            ElementaryTabType.GRADES -> {
-                onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabGrades))
-                    .scrollTo()
-                    .click()
-            }
-
-            ElementaryTabType.RESOURES -> {
-                onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabResources))
-                    .scrollTo()
-                    .click()
-            }
-        }
+        onView(withAncestor(R.id.dashboardTabLayout) + withText(elementaryTabType.tabType))
+            .scrollTo()
+            .click()
     }
 
     fun assertScheduleTabVisibleAndSelected() {
