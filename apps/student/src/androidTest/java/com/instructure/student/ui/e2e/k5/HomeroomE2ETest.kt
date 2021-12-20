@@ -14,11 +14,10 @@
  *     limitations under the License.
  *
  */
-package com.instructure.student.ui.e2e
+package com.instructure.student.ui.e2e.k5
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType

@@ -102,8 +102,8 @@ object SeedApi {
             var homeroomCoursesCountForAnnouncements = request.homeroomCourses
             for (c in 0 until maxOf(request.courses + request.pastCourses, request.favoriteCourses, request.homeroomCourses)) {
                 // Seed course
-                if(homeroomCourses > 0) addCourses(createCourse(request.gradingPeriods, request.publishCourses, true, request.accountId, subAccountCourse = true))
-                else addCourses(createCourse(request.gradingPeriods, request.publishCourses, false, request.accountId, subAccountCourse = true))
+                if(homeroomCourses > 0) addCourses(createCourse(request.gradingPeriods, request.publishCourses, true, request.accountId))
+                else addCourses(createCourse(request.gradingPeriods, request.publishCourses, false, request.accountId))
 
                 // Seed users
                 for (t in 0 until request.teachers) {
@@ -276,23 +276,24 @@ object SeedApi {
         return seededData
     }
 
-    // Private course-creation method that does some special handling for grading periods
-    private fun createCourse(gradingPeriods: Boolean = false, publishCourses: Boolean = true, isHomeroomCourse: Boolean = false, accountId: Long? = null, subAccountCourse: Boolean = false) : CourseApiModel {
+    private fun createCourse(gradingPeriods: Boolean = false, publishCourses: Boolean = true, isHomeroomCourse: Boolean = false, accountId: Long? = null) : CourseApiModel {
         return if(gradingPeriods) {
             val enrollmentTerm = EnrollmentTermsApi.createEnrollmentTerm()
             val gradingPeriodSetWrapper = GradingPeriodsApi.createGradingPeriodSet(enrollmentTerm.id)
             val gradingPeriodSet = GradingPeriodsApi.createGradingPeriod(gradingPeriodSetWrapper.gradingPeriodSet.id)
-            val courseWithTerm = CoursesApi.createCourse(enrollmentTerm.id, publishCourses)
+            val courseWithTerm = createCourseWithSubAccountCondition(publishCourses, isHomeroomCourse, accountId, enrollmentTerm.id)
             courseWithTerm
+        } else {
+            val course = createCourseWithSubAccountCondition(publishCourses, isHomeroomCourse, accountId)
+            course
         }
-        else {
-            if(subAccountCourse) {
-                val course = CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse)
-                course
-            } else {
-                val course = CoursesApi.createCourse()
-                course
-            }
+    }
+
+    private fun createCourseWithSubAccountCondition(publishCourses: Boolean = false, isHomeroomCourse: Boolean = false, accountId: Long? = null, enrollmentTermId: Long? = null): CourseApiModel {
+        return if (accountId != null) {
+            CoursesApi.createCourseInSubAccount(accountId = accountId, homeroomCourse = isHomeroomCourse, enrollmentTermId = enrollmentTermId, publish = publishCourses)
+        } else {
+            CoursesApi.createCourse(enrollmentTermId, publishCourses)
         }
     }
 }
