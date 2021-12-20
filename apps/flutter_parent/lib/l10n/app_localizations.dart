@@ -1651,4 +1651,13 @@ class AppLocalizations {
 
   String get qrCodeNoCameraError =>
       Intl.message('QR scanning requires camera access', desc: 'placeholder for camera error for QR code scan');
+
+  String get lockedForUserError =>
+      Intl.message('The linked item is no longer available', desc: 'error message when the alert could no be opened');
+
+  String get lockedForUserTitle =>
+      Intl.message('Locked', desc: 'title for locked alerts');
+
+  String get messageSent =>
+      Intl.message('Message sent', desc: 'confirmation message on the screen when the user succesfully sends a message');
 }

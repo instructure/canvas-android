@@ -71,6 +71,11 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
 
                         newHTML = newHTML.replace(iframe, newIframe)
                     }
+
+                    if (iframe.contains("overflow: scroll")) {
+                        val newIframe = iframeWithLink(srcUrl, iframe, context)
+                        newHTML = newHTML.replace(iframe, newIframe)
+                    }
                 }
             }
 
@@ -96,7 +101,7 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
     }
 }
 
-suspend fun externalToolIframe(srcUrl: String, iframe: String, context: Context): String {
+private suspend fun externalToolIframe(srcUrl: String, iframe: String, context: Context): String {
     // We need to authenticate the src url and replace it within the iframe
     val ltiUrl = URLEncoder.encode(srcUrl, "UTF-8")
 
@@ -111,6 +116,13 @@ suspend fun externalToolIframe(srcUrl: String, iframe: String, context: Context)
 
     // Now we add the launch button along with the new iframe with the updated URL
     return newIframe + htmlButton
+}
+
+private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): String {
+    val buttonText = context.getString(R.string.loadFullContent)
+    val htmlButton = "</br><p><div class=\"lti_button\" onClick=\"location.href=\'$srcUrl\'\">$buttonText</div></p>"
+
+    return iframe + htmlButton
 }
 
 fun handleLTIPlaceHolders(placeHolderList: ArrayList<Placeholder>, html: String): String {
