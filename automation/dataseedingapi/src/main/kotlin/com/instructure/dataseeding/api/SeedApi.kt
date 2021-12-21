@@ -39,7 +39,6 @@ object SeedApi {
             val announcements: Int = 0,
             val publishCourses: Boolean = true,
             val TAs: Int = 0,
-            val syllabusBody: String?
     )
 
     // Seed data object/model, made to look very much like the old proto-generated SeededData class
