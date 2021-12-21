@@ -276,6 +276,7 @@ object SeedApi {
         return seededData
     }
 
+    // Private course-creation method that does some special handling for grading periods
     private fun createCourse(gradingPeriods: Boolean = false, publishCourses: Boolean = true, isHomeroomCourse: Boolean = false, accountId: Long? = null) : CourseApiModel {
         return if(gradingPeriods) {
             val enrollmentTerm = EnrollmentTermsApi.createEnrollmentTerm()

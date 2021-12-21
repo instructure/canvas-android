@@ -49,7 +49,7 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.assertPageObjects()
         resourcesPage.assertImportantLinksDisplayed(courseWithSyllabus.syllabusBody!!)
@@ -61,30 +61,6 @@ class ResourcesInteractionTest : StudentTest() {
         val teacher = data.teachers[0]
         resourcesPage.assertStaffInfoHeaderDisplayed()
         resourcesPage.assertStaffDisplayed(teacher.shortName!!)
-    }
-
-    @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testImportantLinksForTwoCourses() {
-        val data = createMockDataWithHomeroomCourse(courseCount = 2)
-
-        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
-        val courseWithSyllabus = homeroomCourse.copy(syllabusBody = "Important links content")
-        data.courses[homeroomCourse.id] = courseWithSyllabus
-
-        val homeroomCourse2 = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, isHomeroom = true)
-        data.addEnrollment(data.teachers[0], homeroomCourse, Enrollment.EnrollmentType.Teacher)
-
-        val courseWithSyllabus2 = homeroomCourse2.copy(syllabusBody = "Important links 2")
-        data.courses[homeroomCourse2.id] = courseWithSyllabus2
-
-        goToResources(data)
-
-        resourcesPage.assertPageObjects()
-
-        // We only assert the course names, because can't differentiate between the two WebViews.
-        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus.name)
-        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus2.name)
     }
 
     @Test
@@ -102,7 +78,7 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.assertImportantLinksNotDisplayed()
 
@@ -126,7 +102,7 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.assertImportantLinksNotDisplayed()
 
@@ -138,24 +114,11 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testEmptyState() {
-        val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
-
-        goToResources(data)
-
-        resourcesPage.assertImportantLinksNotDisplayed()
-        resourcesPage.assertStudentApplicationsNotDisplayed()
-        resourcesPage.assertStaffInfoNotDisplayed()
-        resourcesPage.assertEmptyViewDisplayed()
-    }
-
-    @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testRefresh() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.assertEmptyViewDisplayed()
 
@@ -200,7 +163,7 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.openLtiApp("Google Drive")
         nonHomeroomCourses.forEach {
@@ -223,7 +186,7 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
         resourcesPage.openComposeMessage(data.teachers[0].shortName!!)
 
         newMessagePage.assertToolbarTitleNewMessage()
@@ -232,6 +195,43 @@ class ResourcesInteractionTest : StudentTest() {
         newMessagePage.assertSendIndividualMessagesNotShown()
         newMessagePage.assertSubjectViewShown()
         newMessagePage.assertMessageViewShown()
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testImportantLinksForTwoCourses() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 2)
+
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val courseWithSyllabus = homeroomCourse.copy(syllabusBody = "Important links content")
+        data.courses[homeroomCourse.id] = courseWithSyllabus
+
+        val homeroomCourse2 = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, isHomeroom = true)
+        data.addEnrollment(data.teachers[0], homeroomCourse, Enrollment.EnrollmentType.Teacher)
+
+        val courseWithSyllabus2 = homeroomCourse2.copy(syllabusBody = "Important links 2")
+        data.courses[homeroomCourse2.id] = courseWithSyllabus2
+
+        goToResourcesTab(data)
+
+        resourcesPage.assertPageObjects()
+
+        // We only assert the course names, because can't differentiate between the two WebViews.
+        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus.name)
+        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus2.name)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testEmptyState() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
+
+        goToResourcesTab(data)
+
+        resourcesPage.assertImportantLinksNotDisplayed()
+        resourcesPage.assertStudentApplicationsNotDisplayed()
+        resourcesPage.assertStaffInfoNotDisplayed()
+        resourcesPage.assertEmptyViewDisplayed()
     }
 
     private fun createMockDataWithHomeroomCourse(
@@ -255,7 +255,7 @@ class ResourcesInteractionTest : StudentTest() {
             homeroomCourseCount = homeroomCourseCount)
     }
 
-    private fun goToResources(data: MockCanvas) {
+    private fun goToResourcesTab(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLoginElementary(data.domain, token, student)

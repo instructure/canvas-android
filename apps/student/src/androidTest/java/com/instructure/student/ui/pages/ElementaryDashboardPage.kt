@@ -118,6 +118,6 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
         HOMEROOM(R.string.dashboardTabHomeroom),
         SCHEDULE(R.string.dashboardTabSchedule),
         GRADES(R.string.dashboardTabGrades),
-        RESOURES(R.string.dashboardTabResources)
+        RESOURCES(R.string.dashboardTabResources)
     }
 }
