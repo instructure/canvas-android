@@ -45,13 +45,14 @@ class ResourcesE2ETest : StudentTest() {
             teachers = 1,
             students = 1,
             courses = 4,
-            homeroomCourses = 1
+            homeroomCourses = 1,
+            syllabusBody = "this is the syllabus body..."
         )
 
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
-0
+
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
         elementaryDashboardPage.waitForRender()
