@@ -170,6 +170,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             // If the user is turning off what if grades we need to do a full refresh, should be
             // cached data, so fast.
             if (!showWhatIfCheckBox.isChecked) {
+                recyclerAdapter.whatIfGrade = null
                 recyclerAdapter.refresh()
             } else {
                 // Only log when what if grades is checked on
