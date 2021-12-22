@@ -16,15 +16,12 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_elementary_dashboard.view.*
 import org.hamcrest.CoreMatchers
 
 class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
