@@ -24,6 +24,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -40,33 +41,33 @@ class ElementaryDashboardInteractionTest : StudentTest() {
         // User should be able to tap and navigate to dashboard page
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.assertPageObjects()
-        elementaryDashboardPage.clickInboxTab()
+        elementaryDashboardPage.clickOnBottomNavigationBarInbox()
         inboxPage.goToDashboard()
         elementaryDashboardPage.assertToolbarTitle()
-        elementaryDashboardPage.assertHomeroomTabVisibleAndSelected()
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
     }
 
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testTabsNavigation() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
-        elementaryDashboardPage.assertHomeroomTabVisibleAndSelected()
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
         homeroomPage.assertPageObjects()
 
-        elementaryDashboardPage.selectScheduleTab()
-        elementaryDashboardPage.assertScheduleTabVisibleAndSelected()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
         schedulePage.assertPageObjects()
 
-        elementaryDashboardPage.selectGradesTab()
-        elementaryDashboardPage.assertGradesTabVisibleAndSelected()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.GRADES)
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.GRADES)
         gradesPage.assertPageObjects()
 
-        elementaryDashboardPage.selectResourcesTab()
-        elementaryDashboardPage.assertResourcesTabVisibleAndSelected()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
         resourcesPage.assertPageObjects()
 
-        elementaryDashboardPage.selectHomeroomTab()
-        elementaryDashboardPage.assertHomeroomTabVisibleAndSelected()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
         homeroomPage.assertPageObjects()
     }
 
