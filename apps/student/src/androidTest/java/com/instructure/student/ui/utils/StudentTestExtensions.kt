@@ -67,6 +67,7 @@ fun StudentTest.seedDataForK5(
     homeroomCourses: Int = 0,
     announcements: Int = 0,
     discussions: Int = 0,
+    syllabusBody: String? = null,
     gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
 
     val request = SeedApi.SeedDataRequest (
@@ -80,7 +81,8 @@ fun StudentTest.seedDataForK5(
         accountId = SUB_ACCOUNT_ID, //K5 Sub Account accountId on mobileqa.beta domain
         gradingPeriods = gradingPeriods,
         discussions = discussions,
-        announcements = announcements
+        announcements = announcements,
+        syllabusBody = syllabusBody
     )
     return SeedApi.seedDataForSubAccount(request)
 }
@@ -95,6 +97,7 @@ fun StudentTest.seedData(
     homeroomCourses: Int = 0,
     announcements: Int = 0,
     discussions: Int = 0,
+    syllabusBody: String? = null,
     gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
 
     val request = SeedApi.SeedDataRequest (
@@ -107,7 +110,8 @@ fun StudentTest.seedData(
             homeroomCourses = homeroomCourses,
             gradingPeriods = gradingPeriods,
             discussions = discussions,
-            announcements = announcements
+            announcements = announcements,
+            syllabusBody = syllabusBody
     )
     return SeedApi.seedData(request)
 }

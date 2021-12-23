@@ -24,6 +24,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -260,6 +261,6 @@ class ResourcesInteractionTest : StudentTest() {
         val token = data.tokenFor(student)!!
         tokenLoginElementary(data.domain, token, student)
         elementaryDashboardPage.waitForRender()
-        elementaryDashboardPage.selectResourcesTab()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
     }
 }
