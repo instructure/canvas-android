@@ -430,8 +430,6 @@ class EditAssignmentDetailsFragment : BaseFragment() {
             val type = "none"
             val submissionList = listOf(type)
             postData.submissionTypes = submissionList
-        } else {
-            postData.submissionTypes = mAssignment.submissionTypesRaw
         }
 
         // if we want to set the type as not graded, we don't want a submission type or points possible
