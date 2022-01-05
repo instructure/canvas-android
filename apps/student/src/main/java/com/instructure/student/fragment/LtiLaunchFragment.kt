@@ -27,9 +27,7 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.LTITool
-import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -97,7 +95,11 @@ class LtiLaunchFragment : ParentFragment() {
                     when {
                         sessionLessLaunch -> {
                             // This is specific for Studio and Gauge
-                            url = "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+                            url = when (canvasContext) {
+                                is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
+                                is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
+                                else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+                            }
                             loadSessionlessLtiUrl(url)
                         }
                         isAssignmentLTI -> loadSessionlessLtiUrl(url)
