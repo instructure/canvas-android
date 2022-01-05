@@ -49,7 +49,7 @@ class HomeroomViewModel @Inject constructor(
     private val htmlContentFormatter: HtmlContentFormatter,
     private val oAuthManager: OAuthManager,
     private val colorKeeper: ColorKeeper,
-    private val courseCardCreator: CourseCardCreator,
+    private val courseCardCreator: CourseCardCreator
 ) : ViewModel() {
 
     val state: LiveData<ViewState>

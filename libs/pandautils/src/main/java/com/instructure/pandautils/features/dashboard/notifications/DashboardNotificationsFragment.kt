@@ -45,10 +45,6 @@ class DashboardNotificationsFragment : Fragment() {
     @Inject
     lateinit var dashboardRouter: DashboardRouter
 
-    companion object {
-        fun newInstance() = DashboardNotificationsFragment()
-    }
-
     private val viewModel: DashboardNotificationsViewModel by viewModels()
 
     override fun onCreateView(
@@ -106,5 +102,9 @@ class DashboardNotificationsFragment : Fragment() {
                 action.message
             )
         }
+    }
+
+    companion object {
+        fun newInstance() = DashboardNotificationsFragment()
     }
 }

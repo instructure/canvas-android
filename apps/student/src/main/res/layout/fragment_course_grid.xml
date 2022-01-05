@@ -34,14 +34,24 @@
         app:theme="@style/ToolBarStyle"
         tools:targetApi="lollipop" />
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/notificationsFragment"
+            android:name="com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="notifications_fragment"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"/>
 
         <include layout="@layout/panda_recycler_refresh_layout" />
 
-    </FrameLayout>
+    </LinearLayout>
 
     <com.instructure.student.view.EmptyCoursesView
         android:id="@+id/emptyCoursesView"

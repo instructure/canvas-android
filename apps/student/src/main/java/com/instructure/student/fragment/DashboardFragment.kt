@@ -260,39 +260,6 @@ class DashboardFragment : ParentFragment() {
         applyTheme()
     }
 
-    private fun launchConference(conference: Conference) {
-        GlobalScope.launch(Dispatchers.Main) {
-            var url: String = conference.joinUrl
-                ?: "${ApiPrefs.fullDomain}${conference.canvasContext.toAPIString()}/conferences/${conference.id}/join"
-
-            if (url.startsWith(ApiPrefs.fullDomain)) {
-                try {
-                    val authSession = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }
-                    url = authSession.sessionUrl
-                } catch (e: Throwable) {
-                    // Try launching without authenticated URL
-                }
-            }
-
-            val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-                .setToolbarColor(conference.canvasContext.color)
-                .build()
-
-            var intent = CustomTabsIntent.Builder()
-                .setDefaultColorSchemeParams(colorSchemeParams)
-                .setShowTitle(true)
-                .build()
-                .intent
-
-            intent.data = Uri.parse(url)
-
-            // Exclude Instructure apps from chooser options
-            intent = intent.asChooserExcludingInstructure()
-
-            context?.startActivity(intent)
-        }
-    }
-
     override fun onDestroy() {
         recyclerAdapter?.cancel()
         super.onDestroy()

@@ -27,27 +27,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <com.instructure.pandarecycler.PandaRecyclerView
+                android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/notificationsFragment"
-                    android:name="com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:tag="notifications_fragment"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"/>
-
-                <com.instructure.pandarecycler.PandaRecyclerView
-                    android:id="@+id/listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:cacheColorHint="@android:color/transparent"
-                    android:nestedScrollingEnabled="false" />
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:cacheColorHint="@android:color/transparent"
+                android:nestedScrollingEnabled="false" />
 
         </androidx.core.widget.NestedScrollView>
 
