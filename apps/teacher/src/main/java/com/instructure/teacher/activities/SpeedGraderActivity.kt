@@ -322,9 +322,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
                 putInt(Const.SELECTED_ITEM, selectedIdx)
 
-                if (anonymousGrading != null) {
-                    putBoolean(Const.ANONYMOUS_GRADING, anonymousGrading)
-                }
+                putBoolean(Const.ANONYMOUS_GRADING, anonymousGradingOn)
             }
         }
 
