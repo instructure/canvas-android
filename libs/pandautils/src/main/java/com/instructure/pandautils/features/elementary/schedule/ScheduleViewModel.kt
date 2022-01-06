@@ -258,7 +258,7 @@ class ScheduleViewModel @Inject constructor(
             .map { entry ->
                 val scheduleViewData = ScheduleCourseViewData(
                     entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
-                    entry.key != null,
+                    entry.key != null && !entry.key!!.homeroomCourse,
                     getCourseColor(entry.key),
                     entry.key?.imageUrl ?: "",
                     entry.value.map {

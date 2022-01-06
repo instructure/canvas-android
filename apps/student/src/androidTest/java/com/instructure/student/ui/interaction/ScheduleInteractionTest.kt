@@ -31,6 +31,7 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import com.instructure.student.R
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.FakeDateTimeProvider
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -60,7 +61,7 @@ class ScheduleInteractionTest : StudentTest() {
     fun testShowCorrectHeaderItems() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
-        goToSchedule(data)
+        goToScheduleTab(data)
 
         schedulePage.assertPageObjects()
         schedulePage.assertDayHeaderShownByPosition("August 08", "Sunday", 0)
@@ -91,7 +92,7 @@ class ScheduleInteractionTest : StudentTest() {
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
         val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
 
-        goToSchedule(data)
+        goToScheduleTab(data)
         schedulePage.scrollToPosition(10)
         schedulePage.assertCourseHeaderDisplayed(courses[0].name)
         schedulePage.assertScheduleItemDisplayed(assignment1.name!!)
@@ -108,7 +109,7 @@ class ScheduleInteractionTest : StudentTest() {
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
         val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
 
-        goToSchedule(data)
+        goToScheduleTab(data)
         schedulePage.scrollToPosition(12)
         schedulePage.assertMissingItemDisplayed(assignment1.name!!, courses[0].name, "10 pts")
     }
@@ -122,7 +123,7 @@ class ScheduleInteractionTest : StudentTest() {
         val todo = data.addTodo("To Do event", data.students[0].id, date = dateTimeProvider.getCalendar().time)
         val todo2 = data.addTodo("Calendar event", data.students[0].id, date = dateTimeProvider.getCalendar().time)
 
-        goToSchedule(data)
+        goToScheduleTab(data)
         schedulePage.scrollToPosition(8)
         schedulePage.assertCourseHeaderDisplayed(schedulePage.getStringFromResource(R.string.schedule_todo_title))
         schedulePage.assertScheduleItemDisplayed(todo.plannable.title)
@@ -137,7 +138,7 @@ class ScheduleInteractionTest : StudentTest() {
 
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
-        goToSchedule(data)
+        goToScheduleTab(data)
 
         // Check that we don't have any elements initially
         schedulePage.assertNoScheduleItemDisplayed()
@@ -164,7 +165,7 @@ class ScheduleInteractionTest : StudentTest() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
 
-        goToSchedule(data)
+        goToScheduleTab(data)
 
         schedulePage.assertDayHeaderShownByPosition("August 08", "Sunday", 0)
         schedulePage.assertDayHeaderShownByPosition("August 09", "Monday", 2)
@@ -187,7 +188,7 @@ class ScheduleInteractionTest : StudentTest() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
 
-        goToSchedule(data)
+        goToScheduleTab(data)
 
         schedulePage.assertDayHeaderShownByPosition("August 08", "Sunday", 0)
         schedulePage.assertDayHeaderShownByPosition("August 09", "Monday", 2)
@@ -216,7 +217,7 @@ class ScheduleInteractionTest : StudentTest() {
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
         val assignment = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
 
-        goToSchedule(data)
+        goToScheduleTab(data)
         schedulePage.scrollToPosition(9)
         schedulePage.clickScheduleItem(assignment.name!!)
 
@@ -235,7 +236,7 @@ class ScheduleInteractionTest : StudentTest() {
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
         data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
 
-        goToSchedule(data)
+        goToScheduleTab(data)
         schedulePage.scrollToPosition(8)
         schedulePage.clickCourseHeader(courses[0].name)
 
@@ -251,7 +252,7 @@ class ScheduleInteractionTest : StudentTest() {
 
         data.addTodo("To Do event", data.students[0].id, date = dateTimeProvider.getCalendar().time)
 
-        goToSchedule(data)
+        goToScheduleTab(data)
         schedulePage.scrollToPosition(8)
 
         schedulePage.assertMarkedAsDoneNotShown()
@@ -272,7 +273,7 @@ class ScheduleInteractionTest : StudentTest() {
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
         val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
 
-        goToSchedule(data)
+        goToScheduleTab(data)
         schedulePage.swipeUp()
         schedulePage.assertTodayButtonDisplayed()
         schedulePage.clickOnTodayButton()
@@ -285,10 +286,6 @@ class ScheduleInteractionTest : StudentTest() {
         withGradingPeriods: Boolean = false,
         homeroomCourseCount: Int = 0): MockCanvas {
 
-        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
-        Thread.sleep(3000)
-        RemoteConfigPrefs.putString(RemoteConfigParam.K5_DESIGN.rc_name, "true")
-
         return MockCanvas.init(
             studentCount = 1,
             courseCount = courseCount,
@@ -296,12 +293,12 @@ class ScheduleInteractionTest : StudentTest() {
             homeroomCourseCount = homeroomCourseCount)
     }
 
-    private fun goToSchedule(data: MockCanvas) {
+    private fun goToScheduleTab(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLoginElementary(data.domain, token, student)
         elementaryDashboardPage.waitForRender()
-        elementaryDashboardPage.selectScheduleTab()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
     }
 
     private fun setDate(year: Int, month: Int, dayOfMonth: Int) {

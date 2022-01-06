@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.student.ui.e2e
+package com.instructure.student.ui.e2e.k5
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
@@ -29,6 +29,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -99,7 +100,7 @@ class ScheduleE2ETest : StudentTest() {
         // Sign in with elementary (K5) student and navigate to Schedule tab
         tokenLoginElementary(student)
         elementaryDashboardPage.waitForRender()
-        elementaryDashboardPage.selectScheduleTab()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
         schedulePage.assertPageObjects()
 
         //Depends on how we handle Sunday, need to clarify with calendar team

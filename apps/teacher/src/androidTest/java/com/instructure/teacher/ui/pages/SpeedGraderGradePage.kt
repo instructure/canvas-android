@@ -52,10 +52,6 @@ class SpeedGraderGradePage : BasePage() {
         confirmDialogButton.click()
     }
 
-    fun navigateBack() {
-        onView(Matchers.allOf((withParent(R.id.speedGraderToolbar) + withContentDescription("Navigate up")), ViewMatchers.isDisplayed())).click()
-    }
-
     fun assertGradeDialog() {
         customizeGradeTitle.assertDisplayed()
     }

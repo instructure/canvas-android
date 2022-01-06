@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
@@ -49,6 +50,7 @@ class SpeedGraderE2ETest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.GRADES, TestCategory.E2E)
     fun testSpeedGraderE2E() {
+
         val data = seedData(teachers = 1, courses = 1, students = 3, favoriteCourses = 1)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -63,7 +65,7 @@ class SpeedGraderE2ETest : TeacherTest() {
                 teacherToken = teacher.token,
                 pointsPossible = 15.0
         )
-        val sub = seedAssignmentSubmission(
+        seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
                         submissionType = SubmissionType.ONLINE_TEXT_ENTRY
@@ -73,7 +75,7 @@ class SpeedGraderE2ETest : TeacherTest() {
                 studentToken = student.token
         )
 
-        val gradedSubmission = seedAssignmentSubmission(
+        seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
                         submissionType = SubmissionType.ONLINE_TEXT_ENTRY
@@ -102,10 +104,12 @@ class SpeedGraderE2ETest : TeacherTest() {
         assignmentDetailsPage.assertNotSubmitted(actual = 1, outOf = 3)
         assignmentDetailsPage.openNotSubmittedSubmissions()
         assignmentSubmissionListPage.assertHasStudentSubmission(canvasUser = noSubStudent)
-        assignmentSubmissionListPage.navigateBack()
+        Espresso.pressBack()
+
         assignmentDetailsPage.openGradedSubmissions()
         assignmentSubmissionListPage.assertHasStudentSubmission(canvasUser = gradedStudent)
-        assignmentSubmissionListPage.navigateBack()
+        Espresso.pressBack()
+
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(studentName = student.name)
@@ -114,7 +118,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         val grade = "10"
         speedGraderGradePage.enterNewGrade(grade)
         speedGraderGradePage.assertHasGrade(grade)
-        speedGraderGradePage.navigateBack()
+        Espresso.pressBack()
         refresh()
 
         assignmentSubmissionListPage.clickFilterButton()

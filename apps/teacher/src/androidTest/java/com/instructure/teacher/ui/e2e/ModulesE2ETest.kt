@@ -93,7 +93,7 @@ class ModulesE2ETest : TeacherTest() {
                 teacherToken = teacher.token
         )
 
-        modulesPage.navigateBack()
+        Espresso.pressBack()
         courseBrowserPage.refresh()
         courseBrowserPage.openModulesTab()
         modulesPage.refresh()

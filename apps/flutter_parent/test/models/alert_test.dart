@@ -44,7 +44,8 @@ void main() {
       ..title = 'Hodor'
       ..workflowState = AlertWorkflowState.unread
       ..htmlUrl = 'https://instructure.com/api/v1/courses/$courseId/discussion_topics/1234'
-      ..alertType = AlertType.courseAnnouncement);
+      ..alertType = AlertType.courseAnnouncement
+      ..lockedForUser = false);
 
     expect(alert.getCourseIdForAnnouncement(), courseId);
   });
@@ -54,7 +55,8 @@ void main() {
       ..id = '123'
       ..title = 'Hodor'
       ..workflowState = AlertWorkflowState.unread
-      ..alertType = AlertType.institutionAnnouncement);
+      ..alertType = AlertType.institutionAnnouncement
+      ..lockedForUser = false);
 
     expect(() {
       alert.getCourseIdForAnnouncement();

@@ -56,6 +56,7 @@ object MasqueradeHelper {
         cleanupMasquerading(ContextKeeper.appContext)
         ApiPrefs.isMasquerading = false
         ApiPrefs.isStudentView = false
+        ApiPrefs.canvasForElementary = false
         if (startingClass != null) restartApplication(startingClass)
     }
 
@@ -150,13 +151,8 @@ object MasqueradeHelper {
     }
 
     private suspend fun getCanvasForElementaryFlag(): Boolean {
-        val k5enabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
-        return if (k5enabled) {
-            val userResult = UserManager.getSelfAsync(false).await()
-            userResult.dataOrThrow.k5User
-        } else {
-            false
-        }
+        val userResult = UserManager.getSelfAsync(false).await()
+        return userResult.dataOrThrow.k5User
     }
 
     /** Appends the masquerade ID to the provided URL (if currently masquerading) */

@@ -75,10 +75,6 @@ class DashboardPage : BasePage() {
         onView(withId(R.id.menu_edit_favorite_courses)).click()
     }
 
-    fun navigateBack(toolbarId: Int = R.id.toolbar) {
-        onView(withParent(toolbarId) + withContentDescription("Navigate up")).click()
-    }
-
     fun openCourse(courseName: String) {
         onView(withText(courseName)).click()
     }
