@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 /**
  * Manager for working with account notifications (aka global announcements)
@@ -46,12 +47,17 @@ object AccountNotificationManager {
         AccountNotificationAPI.getAccountNotifications(adapter, params, depaginatedCallback)
     }
 
+    fun getAllAccountNotificationsAsync(forceNetwork: Boolean) =
+        apiAsync<List<AccountNotification>> { getAllAccountNotifications(it, forceNetwork) }
+
     fun deleteAccountNotification(notificationId: Long, callback: StatusCallback<AccountNotification>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
 
         AccountNotificationAPI.deleteAccountNotification(notificationId, adapter, params, callback)
     }
+
+    fun deleteAccountNotificationsAsync(notificationId: Long) = apiAsync<AccountNotification> { deleteAccountNotification(notificationId, it) }
 
     fun getAccountNotification(
         accountNotificationId: Long,

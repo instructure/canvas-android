@@ -112,4 +112,14 @@ object ApiModule {
     fun provideTabManager(): TabManager {
         return TabManager
     }
+
+    @Provides
+    fun provideAccountNotificationManager(): AccountNotificationManager {
+        return AccountNotificationManager
+    }
+
+    @Provides
+    fun provideConferenceManager(): ConferenceManager {
+        return ConferenceManager
+    }
 }
