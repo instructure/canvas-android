@@ -55,6 +55,7 @@ class GradesPage : BasePage(R.id.gradesPage) {
 
     fun clickGradingPeriodSelector() {
         onView(withId(R.id.gradingPeriodSelector))
+            .scrollTo()
             .click()
     }
 

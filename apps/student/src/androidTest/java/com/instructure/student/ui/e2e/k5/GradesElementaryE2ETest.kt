@@ -125,7 +125,7 @@ class GradesElementaryE2ETest : StudentTest() {
             postedGrade="C-",
             excused = false)
 
-        Thread.sleep(3000) //This time is needed here to let the SubMissionApi does it's job.
+        Thread.sleep(5000) //This time is needed here to let the SubMissionApi does it's job.
         gradesPage.refresh()
         Thread.sleep(5000) //We need to wait here because sometimes if we refresh the page fastly, the old grade will be seen.
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "73%")
