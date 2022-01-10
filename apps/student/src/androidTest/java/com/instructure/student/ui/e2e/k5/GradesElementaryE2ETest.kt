@@ -45,6 +45,10 @@ class GradesElementaryE2ETest : StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We dont want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
@@ -127,14 +131,17 @@ class GradesElementaryE2ETest : StudentTest() {
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "73%")
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
 
+        //Changing grade period.
         gradesPage.assertSelectedGradingPeriod(gradesPage.getStringFromResource(R.string.currentGradingPeriod))
         gradesPage.clickGradingPeriodSelector()
         gradesPage.selectGradingPeriod(testGradingPeriodListApiModel.gradingPeriods[0].title)
+
+        //Checking if a course's grades page is displayed after clicking on a course row on elementary grades page.
         gradesPage.clickGradeRow(nonHomeroomCourses[0].name)
         courseGradesPage.assertPageObjects()
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("73%"))
 
-        Espresso.pressBack()  //A11Y bug: MBL-15788. After it will be fixed, then clicking on gradeRow could happen before changing period, because it would be more intuitive.
+        Espresso.pressBack()
         gradesPage.assertPageObjects()
 
     }
