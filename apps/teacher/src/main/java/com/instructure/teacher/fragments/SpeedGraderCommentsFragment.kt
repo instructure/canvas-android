@@ -17,8 +17,10 @@ package com.instructure.teacher.fragments
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
@@ -28,6 +30,7 @@ import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.SpeedGraderCommentsAdapter
 import com.instructure.teacher.decorations.SpacesItemDecoration
 import com.instructure.teacher.dialog.SGAddMediaCommentDialog
@@ -35,6 +38,7 @@ import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.UploadMediaCommentUpdateEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.SpeedGraderCommentsPresenterFactory
+import com.instructure.teacher.features.speedgrader.SpeedGraderViewModel
 import com.instructure.teacher.holders.SpeedGraderCommentHolder
 import com.instructure.teacher.models.SubmissionCommentWrapper
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
@@ -45,13 +49,18 @@ import com.instructure.teacher.view.CommentTextFocusedEvent
 import com.instructure.teacher.view.MediaCommentDialogClosedEvent
 import com.instructure.teacher.view.UploadMediaCommentEvent
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.adapter_submission_comment.*
+import kotlinx.android.synthetic.main.fragment_comment_library.*
 import kotlinx.android.synthetic.main.fragment_speedgrader_comments.*
+import kotlinx.android.synthetic.main.fragment_speedgrader_comments.addMediaAttachment
+import kotlinx.android.synthetic.main.fragment_speedgrader_comments.commentEditText
+import kotlinx.android.synthetic.main.fragment_speedgrader_comments.sendCommentButton
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
 
-
+@AndroidEntryPoint
 class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, SpeedGraderCommentsPresenter, SpeedGraderCommentsView, SpeedGraderCommentHolder, SpeedGraderCommentsAdapter>(), SpeedGraderCommentsView {
     var mRawComments by ParcelableArrayListArg<SubmissionComment>()
     var mSubmissionId by LongArg()
@@ -72,11 +81,19 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     override fun layoutResId() = R.layout.fragment_speedgrader_comments
     override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
     override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage)
-    override fun onCreateView(view: View) {}
+    override fun onCreateView(view: View) {
+        speedGraderViewModel.getCommentById(mSubmissionId).observe(viewLifecycleOwner) {
+            if (commentEditText.text.toString() != it) {
+                commentEditText.setText(it)
+            }
+        }
+    }
     override fun onRefreshStarted() {}
     override fun onRefreshFinished() {}
 
     private val onAttachmentClicked = { attachment: Attachment -> attachment.view(requireContext()) }
+
+    private val speedGraderViewModel: SpeedGraderViewModel by activityViewModels()
 
     override fun onPresenterPrepared(presenter: SpeedGraderCommentsPresenter) {
         RecyclerViewUtils.buildRecyclerView(requireContext(), adapter, presenter, swipeRefreshLayout, speedGraderCommentsRecyclerView, speedGraderCommentsEmptyView, getString(R.string.no_submission_comments))
@@ -117,19 +134,23 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         commentEditText.onTextChanged {
             sendCommentButton.isEnabled = it.isNotBlank()
             sendCommentButton.setVisible(it.isNotBlank())
+            speedGraderViewModel.setComment(mSubmissionId, it)
         }
         sendCommentButton.onClickWithRequireNetwork {
+            (requireActivity() as SpeedGraderActivity).closeCommentLibrary()
             presenter.sendComment(commentEditText.text.toString())
             errorLayout?.announceForAccessibility(getString(R.string.sendingSimple))
         }
 
         commentEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
+                (requireActivity() as SpeedGraderActivity).openCommentLibrary(mSubmissionId)
                 EventBus.getDefault().post(CommentTextFocusedEvent(mAssignee.id))
             }
         }
 
         addMediaAttachment.onClick {
+            (requireActivity() as SpeedGraderActivity).closeCommentLibrary()
             SGAddMediaCommentDialog.show(requireActivity().supportFragmentManager,
                     presenter.assignmentId, presenter.courseId,
                     when (presenter.assignee) {

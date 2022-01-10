@@ -47,6 +47,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.SubmissionContentAdapter
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
+import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryFragment
 import com.instructure.teacher.presenters.SpeedGraderPresenter
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.isTalkbackEnabled
@@ -56,6 +57,7 @@ import com.instructure.teacher.view.TabSelectedEvent
 import com.instructure.teacher.view.VideoPermissionGrantedEvent
 import com.instructure.teacher.viewinterface.SpeedGraderView
 import com.pspdfkit.preferences.PSPDFKitPreferences
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_speedgrader.*
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
@@ -63,6 +65,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
+@AndroidEntryPoint
 class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGraderView>(), SpeedGraderView {
 
     /* These should be passed to the presenter factory and should not be directly referenced otherwise */
@@ -265,6 +268,21 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY) {
             //File Dialog Fragment will not be notified of onActivityResult(), alert manually
             OnActivityResults(ActivityResult(requestCode, resultCode, data), null).postSticky()
+        }
+    }
+
+    fun openCommentLibrary(submissionId: Long) {
+        val commentLibraryFragment = CommentLibraryFragment.newInstance(submissionId)
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.commentLibraryFragmentContainer, commentLibraryFragment, commentLibraryFragment::class.java.name)
+        fragmentTransaction.addToBackStack(commentLibraryFragment::class.java.name)
+        fragmentTransaction.commitAllowingStateLoss()
+    }
+
+    fun closeCommentLibrary() {
+        val fragment = supportFragmentManager.findFragmentByTag(CommentLibraryFragment::class.java.name)
+        if (fragment != null) {
+            supportFragmentManager.popBackStackImmediate()
         }
     }
 

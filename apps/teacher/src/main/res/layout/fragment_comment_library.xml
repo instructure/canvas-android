@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C)  - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="6dp"
+            app:theme="@style/ToolBarStyle"
+            app:titleTextColor="@color/black"
+            app:title="@string/toolbarCommentLibrary"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <RelativeLayout
+            android:id="@+id/commentInputContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageButton
+                android:id="@+id/sendCommentButton"
+                android:layout_width="56dp"
+                android:layout_height="0dp"
+                android:layout_alignBottom="@+id/commentEditText"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/commentEditText"
+                android:layout_below="@id/sendingErrorTextView"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/send"
+                android:src="@drawable/ic_send"
+                app:tint="@color/canvasDefaultButton"/>
+
+
+            <ImageButton
+                android:id="@+id/addMediaAttachment"
+                android:layout_width="56dp"
+                android:layout_height="0dp"
+                android:layout_alignBottom="@+id/commentEditText"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/commentEditText"
+                android:layout_below="@id/sendingErrorTextView"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/addMediaComment"
+                android:src="@drawable/ic_add"
+                app:tint="@color/canvasDefaultButton"/>
+
+            <EditText
+                android:id="@+id/commentEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/sendCommentButton"
+                android:layout_toEndOf="@id/addMediaAttachment"
+                android:background="@color/transparent"
+                android:hint="@string/messageThisStudent"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLines="5"
+                android:minHeight="50dp"
+                android:paddingBottom="0dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="0dp"
+                android:textSize="16sp"/>
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/commentFieldDivider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider"
+            app:layout_constraintBottom_toTopOf="@id/commentInputContainer" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingBottom="16dp"
+            android:clipToPadding="false"
+            android:background="@color/white"
+            app:recyclerViewItemViewModels="@{viewModel.data}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toTopOf="@id/commentFieldDivider" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

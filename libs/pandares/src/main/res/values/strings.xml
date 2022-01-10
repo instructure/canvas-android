@@ -1235,4 +1235,6 @@
     <string name="submissionDraftAvailableTitle">Draft Available</string>
     <string name="errorLoadingSubmission">An error occured while loading submission</string>
     <string name="loadFullContent">Tap to see full content</string>
+
+    <string name="toolbarCommentLibrary">Comment Library</string>
 </resources>
