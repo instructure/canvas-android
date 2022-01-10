@@ -42,6 +42,10 @@ class ScheduleE2ETest : StudentTest() {
 
     override fun displaysPageObjects() = Unit
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We dont want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
