@@ -18,8 +18,6 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -53,7 +51,7 @@ class ResourcesInteractionTest : StudentTest() {
         goToResourcesTab(data)
 
         resourcesPage.assertPageObjects()
-        resourcesPage.assertImportantLinksDisplayed(courseWithSyllabus.syllabusBody!!)
+        resourcesPage.assertImportantLinksAndWebContentDisplayed(courseWithSyllabus.syllabusBody!!)
 
         resourcesPage.assertStudentApplicationsHeaderDisplayed()
         resourcesPage.assertLtiToolDisplayed("Google Drive")
@@ -138,7 +136,7 @@ class ResourcesInteractionTest : StudentTest() {
         resourcesPage.refresh()
 
         resourcesPage.assertPageObjects()
-        resourcesPage.assertImportantLinksDisplayed(courseWithSyllabus.syllabusBody!!)
+        resourcesPage.assertImportantLinksAndWebContentDisplayed(courseWithSyllabus.syllabusBody!!)
 
         resourcesPage.assertStudentApplicationsHeaderDisplayed()
         resourcesPage.assertLtiToolDisplayed("Google Drive")

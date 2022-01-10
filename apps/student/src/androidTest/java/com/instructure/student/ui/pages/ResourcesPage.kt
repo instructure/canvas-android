@@ -34,11 +34,15 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
     private val importantLinksContainer by OnViewWithId(R.id.importantLinksContainer)
     private val coursesRecyclerView by OnViewWithId(R.id.actionItemsRecyclerView)
 
-    fun assertImportantLinksDisplayed(content: String) {
+    fun assertImportantLinksAndWebContentDisplayed(content: String) {
         importantLinksTitle.assertDisplayed()
         Web.onWebView()
             .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "html"))
             .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(content)))
+    }
+
+    fun assertImportantLinksHeaderDisplayed() {
+        importantLinksTitle.assertDisplayed()
     }
 
     fun assertCourseNameDisplayed(courseName: String) {
