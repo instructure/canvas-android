@@ -42,13 +42,13 @@ class ResourcesE2ETest : StudentTest() {
     fun resourcesE2ETest() {
 
         // Seed data for K5 sub-account
-        val syllabugBodyString = "this is the syllabus body..."
+        val syllabusBodyString = "this is the syllabus body..."
         val data = seedDataForK5(
             teachers = 1,
             students = 1,
             courses = 4,
             homeroomCourses = 1,
-            syllabusBody = syllabugBodyString
+            syllabusBody = syllabusBodyString
         )
 
         val student = data.studentsList[0]
@@ -62,7 +62,7 @@ class ResourcesE2ETest : StudentTest() {
         resourcesPage.assertPageObjects()
 
         //Verify if important links, LTI tools and contacts are displayed
-        verifyResourcesPageAssertions(syllabugBodyString, teacher)
+        verifyResourcesPageAssertions(teacher)
 
         //Compose message to a contact, and verify if the new message page is displayed
         resourcesPage.openComposeMessage(teacher.shortName)
@@ -73,7 +73,7 @@ class ResourcesE2ETest : StudentTest() {
         //Refresh the resources page and assert if important links, LTI tools and contact are displayed
         resourcesPage.refresh()
         resourcesPage.assertPageObjects()
-        verifyResourcesPageAssertions(syllabugBodyString, teacher)
+        verifyResourcesPageAssertions(teacher)
 
         //Open an LTI tool, and verify if all the NON-homeroom courses are displayed within the 'Choose a Course' list.
         resourcesPage.openLtiApp("Google Drive")
@@ -83,10 +83,9 @@ class ResourcesE2ETest : StudentTest() {
     }
 
     private fun verifyResourcesPageAssertions(
-        syllabugBodyString: String,
         teacher: CanvasUserApiModel
     ) {
-        resourcesPage.assertImportantLinksDisplayed(syllabugBodyString)
+        resourcesPage.assertImportantLinksHeaderDisplayed()
         resourcesPage.assertStudentApplicationsHeaderDisplayed()
         resourcesPage.assertStaffInfoHeaderDisplayed()
         resourcesPage.assertStaffDisplayed(teacher.shortName)
