@@ -79,6 +79,7 @@ object CalendarEventManager {
     fun getImportantDates(
             startDate: String?,
             endDate: String?,
+            type: CalendarEventAPI.CalendarEventType,
             canvasContexts: List<String>,
             callback: StatusCallback<List<ScheduleItem>>,
             forceNetwork: Boolean) {
@@ -90,6 +91,7 @@ object CalendarEventManager {
                 CalendarEventAPI.getImportantDates(
                         startDate,
                         endDate,
+                        type,
                         canvasContexts,
                         adapter,
                         callback,
@@ -102,6 +104,7 @@ object CalendarEventManager {
         CalendarEventAPI.getImportantDates(
                 startDate,
                 endDate,
+                type,
                 canvasContexts,
                 adapter,
                 depaginatedCallback,
@@ -111,8 +114,9 @@ object CalendarEventManager {
 
     fun getImportantDatesAsync(startDate: String?,
                                endDate: String?,
+                               type: CalendarEventAPI.CalendarEventType,
                                canvasContexts: List<String>,
-                               forceNetwork: Boolean) = apiAsync<List<ScheduleItem>> { getImportantDates(startDate, endDate, canvasContexts, it, forceNetwork) }
+                               forceNetwork: Boolean) = apiAsync<List<ScheduleItem>> { getImportantDates(startDate, endDate, type, canvasContexts, it, forceNetwork) }
 
     @Throws(IOException::class)
     fun getUpcomingEventsSynchronous(forceNetwork: Boolean): List<ScheduleItem> {

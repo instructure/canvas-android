@@ -25,7 +25,7 @@ data class ImportantDatesViewData(
         val itemViewModels: List<ItemViewModel>
 )
 
-data class ImportantDatesHeaderViewData(val date: Date)
+data class ImportantDatesHeaderViewData(val title: String)
 
 sealed class ImportantDatesAction {
     data class OpenCourse(val course: Course) : ImportantDatesAction()

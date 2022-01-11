@@ -99,6 +99,12 @@
                 android:icon="@drawable/ic_resources"
                 android:text="@string/dashboardTabResources" />
 
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_important_dates"
+                android:text="@string/dashboardTabImportantDates" />
+
         </com.google.android.material.tabs.TabLayout>
 
         <View

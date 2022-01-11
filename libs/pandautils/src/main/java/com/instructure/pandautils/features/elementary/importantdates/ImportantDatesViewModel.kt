@@ -19,13 +19,29 @@ package com.instructure.pandautils.features.elementary.importantdates
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.managers.CalendarEventManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.features.elementary.importantdates.itemviewmodels.ImportantDatesHeaderItemViewModel
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class ImportantDatesViewModel @Inject constructor() : ViewModel() {
+class ImportantDatesViewModel @Inject constructor(
+        private val courseManager: CourseManager,
+        private val calendarEventManager: CalendarEventManager
+) : ViewModel() {
 
     val state: LiveData<ViewState>
         get() = _state
@@ -38,4 +54,52 @@ class ImportantDatesViewModel @Inject constructor() : ViewModel() {
     val events: LiveData<Event<ImportantDatesAction>>
         get() = _events
     private val _events = MutableLiveData<Event<ImportantDatesAction>>()
+
+    init {
+        loadData(false)
+    }
+
+    private fun loadData(forceNetwork: Boolean) {
+        viewModelScope.launch {
+            val courses = courseManager.getCoursesAsync(forceNetwork).await().dataOrThrow
+            val contextIds = courses.map { it.contextId }
+
+            val endDate = Calendar.getInstance().apply {
+                roll(Calendar.YEAR, 1)
+            }.time
+            val importantDateEvents = calendarEventManager.getImportantDatesAsync(startDate = Date().toApiString(),
+                    endDate = endDate.toApiString(),
+                    type = CalendarEventAPI.CalendarEventType.CALENDAR,
+                    canvasContexts = contextIds,
+                    forceNetwork = forceNetwork).await().dataOrThrow
+
+            val importantDateAssignments = calendarEventManager.getImportantDatesAsync(startDate = Date().toApiString(),
+                    endDate = endDate.toApiString(),
+                    type = CalendarEventAPI.CalendarEventType.ASSIGNMENT,
+                    canvasContexts = contextIds,
+                    forceNetwork = forceNetwork).await().dataOrThrow
+
+            val importantDates = (importantDateAssignments + importantDateEvents)
+                    .filter { it.startDate != null }
+                    .sortedBy { it.startDate }
+
+            _data.postValue(ImportantDatesViewData(createItems(importantDates)))
+        }
+    }
+
+    private fun createItems(importantDates: List<ScheduleItem>): List<ItemViewModel> {
+        val importantDatesMap = importantDates.groupBy { it.startDate }
+        return importantDatesMap.map {
+            createDayGroup(it.key, it.value)
+        }
+    }
+
+    private fun createDayGroup(date: Date?, items: List<ScheduleItem>): ItemViewModel {
+        return ImportantDatesHeaderItemViewModel(
+                ImportantDatesHeaderViewData(
+                        SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(date!!)
+                ),
+                emptyList()
+        )
+    }
 }

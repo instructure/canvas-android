@@ -27,6 +27,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
 import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
+import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesFragment
 import com.instructure.pandautils.features.elementary.resources.ResourcesFragment
 import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 import com.instructure.pandautils.utils.Const
@@ -49,7 +50,8 @@ class ElementaryDashboardFragment : ParentFragment() {
         HomeroomFragment.newInstance(),
         schedulePagerFragment,
         GradesFragment.newInstance(),
-        ResourcesFragment.newInstance()
+        ResourcesFragment.newInstance(),
+        ImportantDatesFragment.newInstance()
     )
 
     override fun title(): String = if (isAdded) getString(R.string.dashboard) else ""
