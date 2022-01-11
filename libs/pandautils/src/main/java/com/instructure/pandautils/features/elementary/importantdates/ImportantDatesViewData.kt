@@ -19,10 +19,13 @@ package com.instructure.pandautils.features.elementary.importantdates
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.mvvm.ItemViewModel
+import java.util.*
 
 data class ImportantDatesViewData(
         val itemViewModels: List<ItemViewModel>
 )
+
+data class ImportantDatesHeaderViewData(val date: Date)
 
 sealed class ImportantDatesAction {
     data class OpenCourse(val course: Course) : ImportantDatesAction()
