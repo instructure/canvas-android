@@ -77,9 +77,8 @@ class HomeroomE2ETest : StudentTest() {
         simpleDateFormat.setTimeZone(utcTimeZone)
 
         val missingCalendar = Calendar.getInstance()
-        missingCalendar.set(Calendar.HOUR_OF_DAY, 0)
-        missingCalendar.set(Calendar.MINUTE, 1)
-        missingCalendar.set(Calendar.SECOND, 10)
+        missingCalendar.set(Calendar.HOUR_OF_DAY, 11)
+        missingCalendar.set(Calendar.MINUTE, 30)
 
         val testAssignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(

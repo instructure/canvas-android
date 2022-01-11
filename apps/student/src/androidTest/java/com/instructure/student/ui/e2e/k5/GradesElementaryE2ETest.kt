@@ -112,7 +112,7 @@ class GradesElementaryE2ETest : StudentTest() {
         elementaryDashboardPage.waitForRender()
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.GRADES)
         gradesPage.assertPageObjects()
-
+        Thread.sleep(3000)
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "93%")
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
         gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
