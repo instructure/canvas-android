@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.elementary.importantdates
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,7 @@ import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.importantdates.itemviewmodels.ImportantDatesHeaderItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -32,15 +34,14 @@ import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.OffsetDateTime
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class ImportantDatesViewModel @Inject constructor(
         private val courseManager: CourseManager,
-        private val calendarEventManager: CalendarEventManager
+        private val calendarEventManager: CalendarEventManager,
+        private val resources: Resources
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -56,34 +57,51 @@ class ImportantDatesViewModel @Inject constructor(
     private val _events = MutableLiveData<Event<ImportantDatesAction>>()
 
     init {
+        _state.postValue(ViewState.Loading)
         loadData(false)
+    }
+
+    fun refresh() {
+        _state.postValue(ViewState.Refresh)
+        loadData(true)
     }
 
     private fun loadData(forceNetwork: Boolean) {
         viewModelScope.launch {
-            val courses = courseManager.getCoursesAsync(forceNetwork).await().dataOrThrow
-            val contextIds = courses.map { it.contextId }
+            try {
+                val courses = courseManager.getCoursesAsync(forceNetwork).await().dataOrThrow
+                val contextIds = courses.map { it.contextId }
 
-            val endDate = Calendar.getInstance().apply {
-                roll(Calendar.YEAR, 1)
-            }.time
-            val importantDateEvents = calendarEventManager.getImportantDatesAsync(startDate = Date().toApiString(),
-                    endDate = endDate.toApiString(),
-                    type = CalendarEventAPI.CalendarEventType.CALENDAR,
-                    canvasContexts = contextIds,
-                    forceNetwork = forceNetwork).await().dataOrThrow
+                val endDate = Calendar.getInstance().apply {
+                    roll(Calendar.YEAR, 1)
+                }.time
+                val importantDateEvents = calendarEventManager.getImportantDatesAsync(startDate = Date().toApiString(),
+                        endDate = endDate.toApiString(),
+                        type = CalendarEventAPI.CalendarEventType.CALENDAR,
+                        canvasContexts = contextIds,
+                        forceNetwork = forceNetwork).await().dataOrThrow
 
-            val importantDateAssignments = calendarEventManager.getImportantDatesAsync(startDate = Date().toApiString(),
-                    endDate = endDate.toApiString(),
-                    type = CalendarEventAPI.CalendarEventType.ASSIGNMENT,
-                    canvasContexts = contextIds,
-                    forceNetwork = forceNetwork).await().dataOrThrow
+                val importantDateAssignments = calendarEventManager.getImportantDatesAsync(startDate = Date().toApiString(),
+                        endDate = endDate.toApiString(),
+                        type = CalendarEventAPI.CalendarEventType.ASSIGNMENT,
+                        canvasContexts = contextIds,
+                        forceNetwork = forceNetwork).await().dataOrThrow
 
-            val importantDates = (importantDateAssignments + importantDateEvents)
-                    .filter { it.startDate != null }
-                    .sortedBy { it.startDate }
+                val importantDates = (importantDateAssignments + importantDateEvents)
+                        .filter { it.startDate != null }
+                        .sortedBy { it.startDate }
 
-            _data.postValue(ImportantDatesViewData(createItems(importantDates)))
+                val items = createItems(importantDates)
+                if (items.isNotEmpty()) {
+                    _data.postValue(ImportantDatesViewData(items))
+                    _state.postValue(ViewState.Success)
+                } else {
+                    _state.postValue(ViewState.Empty(emptyTitle = R.string.importantDatesEmptyTitle, emptyImage = R.drawable.ic_panda_noannouncements))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
+            }
         }
     }
 
