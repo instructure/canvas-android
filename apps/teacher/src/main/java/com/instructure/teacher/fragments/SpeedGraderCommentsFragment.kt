@@ -83,8 +83,11 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage)
     override fun onCreateView(view: View) {
         speedGraderViewModel.getCommentById(mSubmissionId).observe(viewLifecycleOwner) {
-            if (commentEditText.text.toString() != it) {
-                commentEditText.setText(it)
+            if (commentEditText.text.toString() != it.comment) {
+                commentEditText.setText(it.comment)
+                if (it.selectedFromSuggestion) {
+                    commentEditText.setSelection(it.comment.length)
+                }
             }
         }
     }
@@ -135,6 +138,9 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             sendCommentButton.isEnabled = it.isNotBlank()
             sendCommentButton.setVisible(it.isNotBlank())
             speedGraderViewModel.setComment(mSubmissionId, it)
+            if (it.isNotEmpty()) {
+                (requireActivity() as SpeedGraderActivity).reopenCommentLibrary(mSubmissionId)
+            }
         }
         sendCommentButton.onClickWithRequireNetwork {
             (requireActivity() as SpeedGraderActivity).closeCommentLibrary()

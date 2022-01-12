@@ -36,6 +36,8 @@
             android:padding="16dp"
             android:textColor="@color/defaultTextDark"
             android:text="@{itemViewModel.comment}"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{() -> itemViewModel.onClick()}"
             tools:text="You are off to a great start. Please add more detail to justify your reasoning."/>
 
         <View

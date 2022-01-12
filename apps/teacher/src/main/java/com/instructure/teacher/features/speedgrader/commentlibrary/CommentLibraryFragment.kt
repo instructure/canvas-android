@@ -41,8 +41,6 @@ import kotlinx.android.synthetic.main.fragment_edit_syllabus.*
 @AndroidEntryPoint
 class CommentLibraryFragment : Fragment() {
 
-    private val viewModel: CommentLibraryViewModel by viewModels()
-
     private val speedGraderViewModel: SpeedGraderViewModel by activityViewModels()
 
     private var submissionId by LongArg(key = Const.SUBMISSION_ID)
@@ -51,11 +49,12 @@ class CommentLibraryFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentCommentLibraryBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding.viewModel = speedGraderViewModel
 
+        speedGraderViewModel.currentSubmissionId = submissionId
         speedGraderViewModel.getCommentById(submissionId).observe(viewLifecycleOwner) {
-            if (commentEditText.text.toString() != it) {
-                commentEditText.setText(it)
+            if (commentEditText.text.toString() != it.comment) {
+                commentEditText.setText(it.comment)
             }
         }
 

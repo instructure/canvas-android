@@ -14,16 +14,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels
+package com.instructure.teacher.features.speedgrader
 
-import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.teacher.R
-
-class CommentItemViewModel(val comment: String, private val onItemClick: (String) -> Unit): ItemViewModel {
-
-    override val layoutId: Int = R.layout.item_comment_library_comment
-
-    fun onClick() {
-        onItemClick(comment)
-    }
+sealed class SpeedGraderAction {
+    object CommentLibraryClosed : SpeedGraderAction()
 }
