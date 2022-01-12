@@ -133,6 +133,7 @@ class GradesElementaryE2ETest : StudentTest() {
 
         //Changing grade period.
         gradesPage.assertSelectedGradingPeriod(gradesPage.getStringFromResource(R.string.currentGradingPeriod))
+        gradesPage.scrollToItem(R.id.gradingPeriodSelector, gradesPage.getStringFromResource(R.string.currentGradingPeriod))
         gradesPage.clickGradingPeriodSelector()
         gradesPage.selectGradingPeriod(testGradingPeriodListApiModel.gradingPeriods[0].title)
 
