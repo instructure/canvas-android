@@ -16,8 +16,18 @@
  */
 package com.instructure.student.ui.pages
 
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
 import com.instructure.student.R
 
 class GradesPage : BasePage(R.id.gradesPage) {
@@ -33,6 +43,11 @@ class GradesPage : BasePage(R.id.gradesPage) {
         onView(withId(R.id.gradeRow) + withDescendant(courseNameMatcher) + withDescendant(gradeMatcher))
             .scrollTo()
             .assertDisplayed()
+    }
+
+    fun assertCourseNotDisplayed(courseName: String) {
+        val courseNameMatcher = withId(R.id.gradesCourseNameText) + withText(courseName)
+        onView(courseNameMatcher).assertNotDisplayed()
     }
 
     fun refresh() {
