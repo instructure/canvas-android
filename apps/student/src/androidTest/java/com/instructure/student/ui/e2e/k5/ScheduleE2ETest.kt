@@ -208,6 +208,9 @@ class ScheduleE2ETest : StudentTest() {
     private fun getCustomDateCalendar(dayDiffFromToday: Int): Calendar {
         val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         cal.add(Calendar.DATE, dayDiffFromToday)
+        cal.set(Calendar.HOUR_OF_DAY, 10)
+        cal.set(Calendar.MINUTE, 1)
+        cal.set(Calendar.SECOND, 1)
         return cal
     }
 
