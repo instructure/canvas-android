@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "canvas": {
+      "schemaPath": "libs/canvas-api-2/src/main/graphql/com/instructure/canvasapi2/schema.json",
+      "extensions": {
+        "endpoints": {
+          "default": "https://mobileqa.instructure.com/api/graphql"
+        }
+      }
+    }
+  }
+}
