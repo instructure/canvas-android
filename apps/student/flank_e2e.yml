@@ -17,7 +17,7 @@ gcloud:
   device:
   - model: NexusLowRes
     version: 25
-    locale: en_US
+    locale: en_GB
     orientation: portrait
 
 flank:
