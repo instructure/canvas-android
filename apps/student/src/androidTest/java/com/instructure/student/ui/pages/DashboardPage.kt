@@ -246,8 +246,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectGroup(group: Group) {
         val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        scrollRecyclerView(R.id.listView, groupNameMatcher)
-        onView(withText(group.name)).click()
+        onView(groupNameMatcher).scrollTo().click()
     }
 
     fun launchSettingsPage() {

@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.PerformException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.assertion.WebViewAssertions
@@ -66,9 +67,20 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
         val todoTextMatcher = withId(R.id.todoText) + withText(todoText)
         val announcementMatcher = withId(R.id.announcementText) + withText(announcementText)
 
-        onView(withId(R.id.cardView) + withDescendant(titleMatcher) + withDescendant(todoTextMatcher) + withDescendant(announcementMatcher))
+        try {
+            onView(
+                withId(R.id.cardView) + withDescendant(titleMatcher) + withDescendant(
+                    todoTextMatcher
+                ) + withDescendant(announcementMatcher)
+            )
                 .scrollTo()
                 .assertDisplayed()
+        } catch(e: PerformException) {
+            scrollTo(courseName)
+            val titleMatcher = withId(R.id.courseNameText) + withText(courseName)
+            onView(withId(R.id.cardView) + withDescendant(titleMatcher))
+                .assertDisplayed()
+        }
     }
 
     fun assertNoSubjectsTextDisplayed() {

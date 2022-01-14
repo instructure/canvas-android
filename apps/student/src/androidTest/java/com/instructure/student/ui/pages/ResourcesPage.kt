@@ -98,6 +98,6 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
     }
 
     fun openComposeMessage(teacherName: String) {
-        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(teacherName))).click()
+        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(teacherName))).scrollTo().click()
     }
 }
