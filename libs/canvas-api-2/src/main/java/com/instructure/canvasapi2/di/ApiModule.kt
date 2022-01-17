@@ -112,4 +112,9 @@ object ApiModule {
     fun provideTabManager(): TabManager {
         return TabManager
     }
+
+    @Provides
+    fun provideCommentLibraryManager(): CommentLibraryManager {
+        return CommentLibraryManager()
+    }
 }

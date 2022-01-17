@@ -17,7 +17,6 @@ package com.instructure.teacher.fragments
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -51,7 +50,6 @@ import com.instructure.teacher.view.UploadMediaCommentEvent
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.adapter_submission_comment.*
-import kotlinx.android.synthetic.main.fragment_comment_library.*
 import kotlinx.android.synthetic.main.fragment_speedgrader_comments.*
 import kotlinx.android.synthetic.main.fragment_speedgrader_comments.addMediaAttachment
 import kotlinx.android.synthetic.main.fragment_speedgrader_comments.commentEditText
@@ -137,7 +135,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         commentEditText.onTextChanged {
             sendCommentButton.isEnabled = it.isNotBlank()
             sendCommentButton.setVisible(it.isNotBlank())
-            speedGraderViewModel.setComment(mSubmissionId, it)
+            speedGraderViewModel.setCommentById(mSubmissionId, it)
             if (it.isNotEmpty()) {
                 (requireActivity() as SpeedGraderActivity).reopenCommentLibrary(mSubmissionId)
             }

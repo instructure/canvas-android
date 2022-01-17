@@ -18,25 +18,18 @@ package com.instructure.teacher.features.speedgrader.commentlibrary
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentCommentLibraryBinding
 import com.instructure.teacher.features.speedgrader.SpeedGraderViewModel
 import com.instructure.teacher.utils.setupCloseButton
-import com.instructure.teacher.utils.setupMenu
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_comment_library.*
-import kotlinx.android.synthetic.main.fragment_discussions_reply.*
 import kotlinx.android.synthetic.main.fragment_discussions_reply.toolbar
-import kotlinx.android.synthetic.main.fragment_edit_syllabus.*
 
 @AndroidEntryPoint
 class CommentLibraryFragment : Fragment() {
