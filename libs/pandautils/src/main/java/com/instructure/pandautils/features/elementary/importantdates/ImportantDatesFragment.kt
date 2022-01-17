@@ -23,10 +23,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.databinding.FragmentImportantDatesBinding
+import com.instructure.pandautils.features.elementary.schedule.ScheduleAction
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ImportantDatesFragment : Fragment() {
+
+    @Inject
+    lateinit var router: ImportantDatesRouter
 
     private val viewModel: ImportantDatesViewModel by viewModels()
 
@@ -36,6 +41,29 @@ class ImportantDatesFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.events.observe(viewLifecycleOwner, { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
+    }
+
+    private fun handleAction(action: ImportantDatesAction) {
+        when (action) {
+            is ImportantDatesAction.OpenAssignment -> router.openAssignment(action.canvasContext, action.assignmentId)
+            is ImportantDatesAction.OpenCalendarEvent -> router.openCalendarEvent(
+                    action.canvasContext,
+                    action.scheduleItemId
+            )
+            is ImportantDatesAction.OpenQuiz -> {
+                router.openQuiz(action.canvasContext, action.htmlUrl)
+            }
+        }
     }
 
     companion object {

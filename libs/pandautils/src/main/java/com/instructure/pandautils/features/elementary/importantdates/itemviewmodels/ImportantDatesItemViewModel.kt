@@ -17,17 +17,20 @@
 package com.instructure.pandautils.features.elementary.importantdates.itemviewmodels
 
 import com.instructure.pandautils.R
-import com.instructure.pandautils.binding.GroupItemViewModel
-import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesHeaderViewData
+import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesItemViewData
 import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class ImportantDatesHeaderItemViewModel(
-        val data: ImportantDatesHeaderViewData,
-        val itemViewModels: List<ItemViewModel>
-) : GroupItemViewModel(false, false, itemViewModels) {
+class ImportantDatesItemViewModel(
+        val data: ImportantDatesItemViewData,
+        val open: (scheduleItemId: Long) -> Unit
+) : ItemViewModel {
+    override val layoutId: Int = R.layout.item_important_dates
 
-    override val layoutId: Int = R.layout.item_important_dates_header
+    override val viewType: Int = ImportantDatesViewType.ITEM.viewType
 
-    override val viewType: Int = ImportantDatesViewType.HEADER.viewType
+    fun open() {
+        open.invoke(data.scheduleItemId)
+    }
+
 }

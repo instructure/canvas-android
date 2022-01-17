@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.elementary.importantdates
 
 import android.content.res.Resources
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,18 +25,22 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.importantdates.itemviewmodels.ImportantDatesHeaderItemViewModel
+import com.instructure.pandautils.features.elementary.importantdates.itemviewmodels.ImportantDatesItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorApiHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+
+const val TODO_COLOR = "#0081BD"
 
 @HiltViewModel
 class ImportantDatesViewModel @Inject constructor(
@@ -56,6 +61,9 @@ class ImportantDatesViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<ImportantDatesAction>>()
 
+    private var courseMap: Map<Long, Course> = emptyMap()
+    private var importantDatesMap: Map<Long, ScheduleItem> = emptyMap()
+
     init {
         _state.postValue(ViewState.Loading)
         loadData(false)
@@ -70,6 +78,7 @@ class ImportantDatesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val courses = courseManager.getCoursesAsync(forceNetwork).await().dataOrThrow
+                courseMap = courses.associateBy { it.id }
                 val contextIds = courses.map { it.contextId }
 
                 val endDate = Calendar.getInstance().apply {
@@ -90,6 +99,8 @@ class ImportantDatesViewModel @Inject constructor(
                 val importantDates = (importantDateAssignments + importantDateEvents)
                         .filter { it.startDate != null }
                         .sortedBy { it.startDate }
+
+                importantDatesMap = importantDates.associateBy { it.id }
 
                 val items = createItems(importantDates)
                 if (items.isNotEmpty()) {
@@ -117,7 +128,62 @@ class ImportantDatesViewModel @Inject constructor(
                 ImportantDatesHeaderViewData(
                         SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(date!!)
                 ),
-                emptyList()
+                createImportantDateItems(items)
         )
+    }
+
+    private fun createImportantDateItems(items: List<ScheduleItem>): List<ItemViewModel> {
+        return items.map {
+            ImportantDatesItemViewModel(
+                    ImportantDatesItemViewData(
+                            scheduleItemId = it.id,
+                            title = it.title ?: "",
+                            courseName = courseMap[it.courseId]?.name ?: "",
+                            courseColor = getCourseColor(courseMap[it.courseId]),
+                            icon = getIcon(it)
+                    ),
+                    this@ImportantDatesViewModel::open
+            )
+        }
+    }
+
+    @DrawableRes
+    private fun getIcon(scheduleItem: ScheduleItem): Int {
+        return if (scheduleItem.assignment == null) {
+            R.drawable.ic_calendar
+        } else {
+            if (scheduleItem.assignment!!.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ)) {
+                R.drawable.ic_quiz
+            } else {
+                R.drawable.ic_assignment
+            }
+        }
+    }
+
+    private fun getCourseColor(course: Course?): String {
+        return when {
+            !course?.courseColor.isNullOrEmpty() -> course?.courseColor!!
+            !course?.name.isNullOrEmpty() -> ColorApiHelper.K5_DEFAULT_COLOR
+            else -> TODO_COLOR
+        }
+    }
+
+    private fun open(scheduleItemId: Long) {
+        val scheduleItem = importantDatesMap[scheduleItemId]
+        val course = courseMap[scheduleItem?.courseId]
+        val canvasContext = CanvasContext.fromContextCode(course?.contextId)
+        if (scheduleItem != null && canvasContext != null) {
+            if (scheduleItem.assignment == null) {
+                _events.postValue(Event(ImportantDatesAction.OpenCalendarEvent(canvasContext, scheduleItemId)))
+            } else {
+                if (scheduleItem.assignment!!.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ)) {
+                    scheduleItem.assignment?.htmlUrl?.let {
+                        _events.postValue(Event(ImportantDatesAction.OpenQuiz(canvasContext, scheduleItem.assignment!!.htmlUrl!!)))
+                    }
+                } else {
+                    _events.postValue(Event(ImportantDatesAction.OpenAssignment(canvasContext, scheduleItem.assignment!!.id)))
+                }
+            }
+        }
     }
 }

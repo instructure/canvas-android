@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.elementary.importantdates
 
+import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -27,10 +28,21 @@ data class ImportantDatesViewData(
 
 data class ImportantDatesHeaderViewData(val title: String)
 
+data class ImportantDatesItemViewData(
+        val scheduleItemId: Long,
+        val title: String,
+        val courseName: String,
+        @DrawableRes val icon: Int,
+        val courseColor: String,
+)
+
 sealed class ImportantDatesAction {
-    data class OpenCourse(val course: Course) : ImportantDatesAction()
     data class OpenAssignment(val canvasContext: CanvasContext, val assignmentId: Long) : ImportantDatesAction()
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val scheduleItemId: Long) : ImportantDatesAction()
     data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String) : ImportantDatesAction()
-    data class OpenDiscussion(val canvasContext: CanvasContext, val id: Long, val title: String) : ImportantDatesAction()
+}
+
+enum class ImportantDatesViewType(val viewType: Int) {
+    HEADER(0),
+    ITEM(1)
 }
