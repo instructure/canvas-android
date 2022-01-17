@@ -273,7 +273,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.tapToView)).assertDisplayed().click()
         WaitForViewWithId(R.id.canvasWebView)
         // Include isDisplayed() in the matcher to differentiate from other views with this text
-        onView(withText(announcement.subject) + isDisplayed()).assertDisplayed()
+        onView(withText(announcement.subject) + isDisplayed()).scrollTo().assertDisplayed()
     }
 
     fun dismissAnnouncement() {

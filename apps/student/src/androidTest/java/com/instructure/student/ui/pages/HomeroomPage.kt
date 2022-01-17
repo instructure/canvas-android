@@ -76,8 +76,8 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
                 .scrollTo()
                 .assertDisplayed()
         } catch(e: PerformException) {
-            scrollTo(courseName)
             val titleMatcher = withId(R.id.courseNameText) + withText(courseName)
+            scrollTo(titleMatcher)
             onView(withId(R.id.cardView) + withDescendant(titleMatcher))
                 .assertDisplayed()
         }
