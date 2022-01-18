@@ -86,7 +86,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     }
 
     fun assertCourseHeaderDisplayed(courseName: String) {
-        waitForView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).assertDisplayed()
+        waitForView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).scrollTo().assertDisplayed()
     }
 
     fun assertScheduleItemDisplayed(scheduleItemName: String) {

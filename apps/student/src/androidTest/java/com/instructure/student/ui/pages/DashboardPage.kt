@@ -118,12 +118,9 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
         val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
-        scrollRecyclerView(R.id.listView, groupNameMatcher)
-        onView(groupNameMatcher).assertDisplayed()
+        onView(groupNameMatcher).scrollTo().assertDisplayed()
         val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView))
-        scrollRecyclerView(R.id.listView, groupDescriptionMatcher)
-        onView(groupDescriptionMatcher).assertDisplayed()
-
+        onView(groupDescriptionMatcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysAddCourseMessage() {
