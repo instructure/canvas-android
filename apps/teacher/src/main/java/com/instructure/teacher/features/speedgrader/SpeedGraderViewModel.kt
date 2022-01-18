@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.awaitQL
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels.CommentItemViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -49,10 +50,22 @@ class SpeedGraderViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<SpeedGraderAction>>()
 
+    var allComments = listOf<String>()
+
     var currentSubmissionId: Long? = null
+        set(value) {
+            field = value
+            updateFilteredComments(value ?: -1)
+        }
 
     init {
         loadCommentLibrary()
+    }
+
+    private fun updateFilteredComments(currentSubmissionId: Long) {
+        val commentLiveData = comments.computeIfAbsent(currentSubmissionId) { MutableLiveData() }
+        val query = commentLiveData.value?.comment ?: ""
+        createFilteredSuggestions(query)
     }
 
     private fun loadCommentLibrary() {
@@ -75,11 +88,13 @@ class SpeedGraderViewModel @Inject constructor(
         val data = awaitQL<CommentLibraryQuery.Data> { CommentLibraryManager().getCommentLibraryItems(userId, it) }
 
         val user = data.user as CommentLibraryQuery.AsUser
-        val suggestions = user.commentBankItems?.nodes?.map {
-            CommentItemViewModel(it.comment) { comment: String -> setCommentFromSuggestion(comment) }
+        allComments = user.commentBankItems?.nodes?.map {
+            it.comment
         } ?: emptyList()
 
-        _suggestionsData.value = suggestions
+        _suggestionsData.value = allComments.map {
+            CommentItemViewModel(it, "") { comment: String -> setCommentFromSuggestion(comment) }
+        }
     }
 
     private fun setCommentFromSuggestion(comment: String) {
@@ -92,6 +107,14 @@ class SpeedGraderViewModel @Inject constructor(
     fun setCommentById(submissionId: Long, comment: String, selectedFromSuggestion: Boolean = false) {
         val commentLiveData = comments.computeIfAbsent(submissionId) { MutableLiveData() }
         commentLiveData.value = CommentViewData(comment, selectedFromSuggestion)
+
+        createFilteredSuggestions(comment)
+    }
+
+    private fun createFilteredSuggestions(query: String) {
+        _suggestionsData.value = allComments
+            .filter { it.contains(query, ignoreCase = true) }
+            .map { CommentItemViewModel(it, query) { comment: String -> setCommentFromSuggestion(comment) } }
     }
 
     fun getCommentById(submissionId: Long): LiveData<CommentViewData> {

@@ -22,6 +22,8 @@
         <variable
             name="viewModel"
             type="com.instructure.teacher.features.speedgrader.SpeedGraderViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -109,8 +111,21 @@
             android:paddingBottom="16dp"
             android:clipToPadding="false"
             android:background="@color/white"
+            android:visibility="@{viewModel.suggestionsData.empty ? View.GONE : View.VISIBLE}"
             app:recyclerViewItemViewModels="@{viewModel.suggestionsData}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toTopOf="@id/commentFieldDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:text="@string/commentLibraryNoSuggestions"
+            android:gravity="center"
+            android:textColor="@color/defaultTextDark"
+            android:textSize="15sp"
+            android:visibility="@{viewModel.suggestionsData.empty ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintBottom_toTopOf="@id/commentFieldDivider" />
 

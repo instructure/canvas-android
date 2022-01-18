@@ -16,12 +16,29 @@
  */
 package com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels
 
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.teacher.R
 
-class CommentItemViewModel(val comment: String, private val onItemClick: (String) -> Unit): ItemViewModel {
+class CommentItemViewModel(private val comment: String,
+                           private val searchQuery: String,
+                           private val onItemClick: (String) -> Unit): ItemViewModel {
 
     override val layoutId: Int = R.layout.item_comment_library_comment
+
+    val commentItemText = createCommentItemText(comment, searchQuery)
+
+    fun createCommentItemText(comment: String, searchQuery: String): Spannable {
+        val spanStart = comment.indexOf(searchQuery, ignoreCase = true)
+        val spanEnd = spanStart + searchQuery.length
+
+        return SpannableString(comment).apply {
+            setSpan(StyleSpan(Typeface.BOLD),spanStart, spanEnd, 0)
+        }
+    }
 
     fun onClick() {
         onItemClick(comment)

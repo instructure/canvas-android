@@ -96,6 +96,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     private lateinit var adapter: SubmissionContentAdapter
 
     var commentLibraryAlreadyOpenedOnce = false
+    var hasCommentLibrarySuggestions = false
 
     override fun unBundle(extras: Bundle) = Unit
 
@@ -130,6 +131,10 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
+        })
+
+        viewModel.suggestionsData.observe(this, {data ->
+            hasCommentLibrarySuggestions = data.isNotEmpty()
         })
     }
 
@@ -299,7 +304,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     }
 
     fun openCommentLibrary(submissionId: Long) {
-        if (!isCommentLibraryOpen()) {
+        if (!isCommentLibraryOpen() && hasCommentLibrarySuggestions) {
             val commentLibraryFragment = CommentLibraryFragment.newInstance(submissionId)
             val fragmentTransaction = supportFragmentManager.beginTransaction()
             fragmentTransaction.add(R.id.commentLibraryFragmentContainer, commentLibraryFragment, commentLibraryFragment::class.java.name)
