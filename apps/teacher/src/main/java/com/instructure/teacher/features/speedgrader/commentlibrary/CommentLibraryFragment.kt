@@ -30,6 +30,8 @@ import com.instructure.teacher.utils.setupCloseButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_comment_library.*
 import kotlinx.android.synthetic.main.fragment_discussions_reply.toolbar
+import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
+import kotlinx.android.synthetic.main.speed_grader_comment_input_view.view.*
 
 @AndroidEntryPoint
 class CommentLibraryFragment : Fragment() {

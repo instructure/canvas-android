@@ -71,7 +71,7 @@ class SpeedGraderViewModel @Inject constructor(
     private fun loadCommentLibrary() {
         viewModelScope.launch {
             try {
-                val userSettings = userManager.getSelfSettings(true).await()
+                val userSettings = userManager.getSelfSettings(false).await()
                 val commentLibraryEnabled = userSettings.dataOrNull?.commentLibrarySuggestions == true
 
                 if (commentLibraryEnabled) {

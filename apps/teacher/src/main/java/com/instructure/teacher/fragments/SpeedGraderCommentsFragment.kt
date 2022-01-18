@@ -51,9 +51,7 @@ import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.adapter_submission_comment.*
 import kotlinx.android.synthetic.main.fragment_speedgrader_comments.*
-import kotlinx.android.synthetic.main.fragment_speedgrader_comments.addMediaAttachment
-import kotlinx.android.synthetic.main.fragment_speedgrader_comments.commentEditText
-import kotlinx.android.synthetic.main.fragment_speedgrader_comments.sendCommentButton
+import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File

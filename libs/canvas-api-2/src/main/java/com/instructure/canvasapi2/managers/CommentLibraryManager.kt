@@ -32,7 +32,7 @@ class CommentLibraryManager {
             .build()
 
         callback.enqueueQuery(query) {
-            networkOnly = true
+            networkOnly = false
         }
     }
 }
