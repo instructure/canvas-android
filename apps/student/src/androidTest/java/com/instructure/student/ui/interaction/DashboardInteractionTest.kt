@@ -168,8 +168,8 @@ class DashboardInteractionTest : StudentTest() {
         // Tapping global announcement displays the content
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
         val announcement = data.accountNotifications.values.first()
-        dashboardPage.assertAnnouncementShowing(announcement) //TODO bug: https://instructure.atlassian.net/browse/MBL-15843
-        dashboardPage.tapAnnouncementAndAssertDisplayed(announcement)
+        dashboardPage.assertAnnouncementShowing(announcement)
+        dashboardPage.tapAnnouncementAndAssertDisplayed(announcement) //TODO bug: https://instructure.atlassian.net/browse/MBL-15843
     }
 
     @Test
