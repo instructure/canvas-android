@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.databinding.FragmentImportantDatesBinding
@@ -62,6 +63,9 @@ class ImportantDatesFragment : Fragment() {
             )
             is ImportantDatesAction.OpenQuiz -> {
                 router.openQuiz(action.canvasContext, action.htmlUrl)
+            }
+            is ImportantDatesAction.ShowToast -> {
+                Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
             }
         }
     }

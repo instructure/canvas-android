@@ -152,7 +152,8 @@ class ImportantDatesViewModel @Inject constructor(
         return if (scheduleItem.assignment == null) {
             R.drawable.ic_calendar
         } else {
-            if (scheduleItem.assignment!!.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ)) {
+            if (scheduleItem.assignment!!.getSubmissionTypes().contains(Assignment.SubmissionType.BASIC_LTI_LAUNCH) ||
+                    scheduleItem.assignment!!.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ)) {
                 R.drawable.ic_quiz
             } else {
                 R.drawable.ic_assignment
@@ -176,14 +177,10 @@ class ImportantDatesViewModel @Inject constructor(
             if (scheduleItem.assignment == null) {
                 _events.postValue(Event(ImportantDatesAction.OpenCalendarEvent(canvasContext, scheduleItemId)))
             } else {
-                if (scheduleItem.assignment!!.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ)) {
-                    scheduleItem.assignment?.htmlUrl?.let {
-                        _events.postValue(Event(ImportantDatesAction.OpenQuiz(canvasContext, scheduleItem.assignment!!.htmlUrl!!)))
-                    }
-                } else {
-                    _events.postValue(Event(ImportantDatesAction.OpenAssignment(canvasContext, scheduleItem.assignment!!.id)))
-                }
+                _events.postValue(Event(ImportantDatesAction.OpenAssignment(canvasContext, scheduleItem.assignment!!.id)))
             }
+        } else {
+            _events.postValue(Event(ImportantDatesAction.ShowToast(resources.getString(R.string.errorOccurred))))
         }
     }
 }
