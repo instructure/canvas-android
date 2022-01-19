@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2021 - present Instructure, Inc.
+  ~ Copyright (C) 2022 - present Instructure, Inc.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -33,8 +33,15 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
-        android:paddingEnd="2dp"
-        android:paddingStart="0dp">
+        android:importantForAccessibility="no">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/lightGray"
+            android:paddingStart="1.5dp"
+            android:paddingEnd="1.5dp"
+            android:importantForAccessibility="no"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -44,7 +51,9 @@
             android:clickable="@{itemViewModel.data.openable}"
             android:onClick="@{() -> itemViewModel.open.invoke()}"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingBottom="8dp"
+            android:importantForAccessibility="yes"
+            android:contentDescription="@{itemViewModel.data.contentDescription}">
 
             <CheckBox
                 android:id="@+id/checkbox"
@@ -54,9 +63,12 @@
                 android:buttonTint="@color/schedule_checkbox_color_selector"
                 android:checked="@{itemViewModel.completed}"
                 android:onCheckedChanged="@{(checkbox, checked) -> itemViewModel.markAsDone.invoke(itemViewModel, checked)}"
+                app:accessibleTouchTarget="@{true}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:importantForAccessibility="yes"
+                android:contentDescription="@{itemViewModel.completed ? @string/a11y_mark_as_done : @string/a11y_mark_as_not_done}"/>
 
             <ImageView
                 android:id="@+id/icon"
@@ -68,7 +80,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/checkbox"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/ic_announcement" />
+                tools:src="@drawable/ic_announcement"
+                android:importantForAccessibility="no"/>
 
             <LinearLayout
                 android:id="@+id/metaLayout"
@@ -80,7 +93,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/detailsLayout"
                 app:layout_constraintStart_toEndOf="@id/icon"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:importantForAccessibility="no">
 
                 <TextView
                     android:id="@+id/title"
@@ -89,7 +103,8 @@
                     android:text="@{itemViewModel.data.title}"
                     android:textColor="@color/canvasTextDark"
                     android:textSize="17sp"
-                    tools:text="Causes of the Revolutionary War I." />
+                    tools:text="Causes of the Revolutionary War I."
+                    android:importantForAccessibility="no"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,7 +112,8 @@
                     android:text="@string/schedule_marked_as_done"
                     android:textColorHighlight="@color/textLightGray"
                     android:textSize="12sp"
-                    android:visibility="@{itemViewModel.completed ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{itemViewModel.completed ? View.VISIBLE : View.GONE}"
+                    android:importantForAccessibility="no"/>
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:layout_width="match_parent"
@@ -151,10 +167,5 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lightGray" />
     </LinearLayout>
 </layout>

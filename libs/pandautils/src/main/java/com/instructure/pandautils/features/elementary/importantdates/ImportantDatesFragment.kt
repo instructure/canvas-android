@@ -47,6 +47,8 @@ class ImportantDatesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.loadData()
+
         viewModel.events.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
