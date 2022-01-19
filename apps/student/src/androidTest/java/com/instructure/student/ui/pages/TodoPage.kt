@@ -34,6 +34,7 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
@@ -85,12 +86,9 @@ class TodoPage: BasePage(R.id.todoPage) {
     // Assert that a string is displayed somewhere in the RecyclerView
     private fun assertTextDisplayedInRecyclerView(s: String) {
         // Common matcher
-        val matcher = ViewMatchers.withText(Matchers.containsString(s))
-
-        // Scroll RecyclerView item into view, if necessary
-        scrollRecyclerView(R.id.listView, matcher)
+        val matcher = withText(Matchers.containsString(s))
 
         // Now make sure that it is displayed
-        Espresso.onView(matcher).assertDisplayed()
+        onView(matcher).scrollTo().assertDisplayed()
     }
 }
