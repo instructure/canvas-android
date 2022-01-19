@@ -16,6 +16,7 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy
 import com.instructure.canvasapi2.CommentLibraryQuery
 import com.instructure.canvasapi2.QLCallback
 import com.instructure.canvasapi2.StudentContextCardQuery
@@ -32,7 +33,7 @@ class CommentLibraryManager {
             .build()
 
         callback.enqueueQuery(query) {
-            networkOnly = false
+            cachePolicy = HttpCachePolicy.NETWORK_FIRST
         }
     }
 }
