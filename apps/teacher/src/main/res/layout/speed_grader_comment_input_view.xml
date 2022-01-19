@@ -48,7 +48,7 @@
         android:layout_centerVertical="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/addMediaComment"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/ic_attachment"
         app:tint="@color/canvasDefaultButton"/>
 
     <EditText
@@ -58,7 +58,7 @@
         android:layout_toStartOf="@id/sendCommentButton"
         android:layout_toEndOf="@id/addMediaAttachment"
         android:background="@color/transparent"
-        android:hint="@string/messageThisStudent"
+        android:hint="@string/speedGraderCommentHint"
         android:inputType="textCapSentences|textMultiLine"
         android:maxLines="5"
         android:minHeight="50dp"

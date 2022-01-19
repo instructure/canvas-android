@@ -1238,4 +1238,5 @@
 
     <string name="toolbarCommentLibrary">Comment Library</string>
     <string name="commentLibraryNoSuggestions">No suggestions available</string>
+    <string name="speedGraderCommentHint">Comment</string>
 </resources>

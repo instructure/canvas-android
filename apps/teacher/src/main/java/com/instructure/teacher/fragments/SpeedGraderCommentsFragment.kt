@@ -122,12 +122,6 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
                 intArrayOf(-android.R.attr.state_enabled) to requireContext().getColorCompat(R.color.defaultTextGray),
                 intArrayOf() to ThemePrefs.buttonColor
         )
-        if (!mGradeAnonymously) commentEditText.hint = Pronouns.resource(
-            requireContext(),
-            R.string.sendMessageToHint,
-            mAssignee.pronouns,
-            Pronouns.span(mAssignee.name, mAssignee.pronouns)
-        )
         sendCommentButton.isEnabled = false
         sendCommentButton.setGone()
         commentEditText.onTextChanged {
