@@ -305,6 +305,8 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
     fun openCommentLibrary(submissionId: Long) {
         if (!isCommentLibraryOpen() && hasCommentLibrarySuggestions) {
+            submissionContentPager.isCommentLibraryOpen = true
+
             val commentLibraryFragment = CommentLibraryFragment.newInstance(submissionId)
             val fragmentTransaction = supportFragmentManager.beginTransaction()
             fragmentTransaction.add(R.id.commentLibraryFragmentContainer, commentLibraryFragment, commentLibraryFragment::class.java.name)
@@ -316,7 +318,16 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
     fun closeCommentLibrary() {
         if (isCommentLibraryOpen()) {
+            submissionContentPager.isCommentLibraryOpen = false
             supportFragmentManager.popBackStackImmediate()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (isCommentLibraryOpen()) {
+            closeCommentLibrary()
+        } else {
+            super.onBackPressed()
         }
     }
 
