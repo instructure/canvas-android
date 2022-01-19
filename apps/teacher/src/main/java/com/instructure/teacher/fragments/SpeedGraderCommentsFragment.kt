@@ -67,6 +67,8 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     var mIsGroupMessage by BooleanArg()
     var mGradeAnonymously by BooleanArg()
 
+    var sendCommentInProgress = false
+
     override fun createAdapter(): SpeedGraderCommentsAdapter {
         return SpeedGraderCommentsAdapter(requireContext(), presenter, mCourseId, presenter.assignee, mGradeAnonymously, onAttachmentClicked)
     }
@@ -128,12 +130,13 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             sendCommentButton.isEnabled = it.isNotBlank()
             sendCommentButton.setVisible(it.isNotBlank())
             speedGraderViewModel.setCommentById(mSubmissionId, it)
-            if (it.isNotEmpty()) {
+            if (!sendCommentInProgress) {
                 (requireActivity() as SpeedGraderActivity).reopenCommentLibrary(mSubmissionId)
             }
         }
         sendCommentButton.onClickWithRequireNetwork {
             (requireActivity() as SpeedGraderActivity).closeCommentLibrary()
+            sendCommentInProgress = true
             presenter.sendComment(commentEditText.text.toString())
             errorLayout?.announceForAccessibility(getString(R.string.sendingSimple))
         }
@@ -167,6 +170,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     override fun setDraftText(comment: String?) {
         commentEditText.setText(comment.orEmpty())
+        sendCommentInProgress = false
     }
 
     override fun onStop() {
