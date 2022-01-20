@@ -36,7 +36,7 @@ import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.UploadMediaCommentUpdateEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.SpeedGraderCommentsPresenterFactory
-import com.instructure.teacher.features.speedgrader.SpeedGraderViewModel
+import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel
 import com.instructure.teacher.holders.SpeedGraderCommentHolder
 import com.instructure.teacher.models.SubmissionCommentWrapper
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
@@ -79,7 +79,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
     override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage)
     override fun onCreateView(view: View) {
-        speedGraderViewModel.getCommentById(mSubmissionId).observe(viewLifecycleOwner) {
+        commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
             if (commentEditText.text.toString() != it.comment) {
                 commentEditText.setText(it.comment)
                 if (it.selectedFromSuggestion) {
@@ -93,7 +93,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     private val onAttachmentClicked = { attachment: Attachment -> attachment.view(requireContext()) }
 
-    private val speedGraderViewModel: SpeedGraderViewModel by activityViewModels()
+    private val commentLibraryViewModel: CommentLibraryViewModel by activityViewModels()
 
     override fun onPresenterPrepared(presenter: SpeedGraderCommentsPresenter) {
         RecyclerViewUtils.buildRecyclerView(requireContext(), adapter, presenter, swipeRefreshLayout, speedGraderCommentsRecyclerView, speedGraderCommentsEmptyView, getString(R.string.no_submission_comments))
@@ -128,7 +128,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         commentEditText.onTextChanged {
             sendCommentButton.isEnabled = it.isNotBlank()
             sendCommentButton.setVisible(it.isNotBlank())
-            speedGraderViewModel.setCommentById(mSubmissionId, it)
+            commentLibraryViewModel.setCommentBySubmission(mSubmissionId, it)
             if (!changeCommentFieldExternallyFlag) {
                 (requireActivity() as SpeedGraderActivity).openCommentLibrary(mSubmissionId)
             }

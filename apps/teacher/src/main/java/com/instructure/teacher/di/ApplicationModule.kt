@@ -14,6 +14,24 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.speedgrader
+package com.instructure.teacher.di
 
-data class CommentViewData(val comment: String, val selectedFromSuggestion: Boolean = false)
+import com.instructure.teacher.utils.TeacherPrefs
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+/**
+ * Module that provides all the application scope dependencies, that are not related to other module.
+ */
+@Module
+@InstallIn(SingletonComponent::class)
+class ApplicationModule {
+
+    @Provides
+    fun provideTeacherPrefs(): TeacherPrefs {
+        return TeacherPrefs
+    }
+}

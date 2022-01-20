@@ -28,9 +28,7 @@ import android.util.TypedValue
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
@@ -50,9 +48,9 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.SubmissionContentAdapter
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
-import com.instructure.teacher.features.speedgrader.SpeedGraderAction
-import com.instructure.teacher.features.speedgrader.SpeedGraderViewModel
+import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryAction
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryFragment
+import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel
 import com.instructure.teacher.presenters.SpeedGraderPresenter
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.isTalkbackEnabled
@@ -88,14 +86,13 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     // Used for keeping track of the page that is asking for media permissions from SubmissionContentView
     private var assigneeId: Long = -1L
 
-    private val viewModel: SpeedGraderViewModel by viewModels()
+    private val viewModel: CommentLibraryViewModel by viewModels()
 
     // Used in the SubmissionViewFragments in the ViewPager to handle issues with sliding panel
     var isCurrentlyAnnotating = false
 
     private lateinit var adapter: SubmissionContentAdapter
 
-    var commentLibraryAlreadyOpenedOnce = false
     var hasCommentLibrarySuggestions = false
 
     override fun unBundle(extras: Bundle) = Unit
@@ -133,13 +130,13 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             }
         })
 
-        viewModel.suggestionsData.observe(this, {data ->
-            hasCommentLibrarySuggestions = data.isNotEmpty()
+        viewModel.data.observe(this, { data ->
+            hasCommentLibrarySuggestions = !data.isEmpty()
         })
     }
 
-    private fun handleAction(action: SpeedGraderAction) {
-        if (action is SpeedGraderAction.CommentLibraryClosed) {
+    private fun handleAction(action: CommentLibraryAction) {
+        if (action is CommentLibraryAction.CommentLibraryClosed) {
             closeCommentLibrary()
         }
     }

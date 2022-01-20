@@ -23,20 +23,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.teacher.databinding.FragmentCommentLibraryBinding
-import com.instructure.teacher.features.speedgrader.SpeedGraderViewModel
 import com.instructure.teacher.utils.setupCloseButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_comment_library.*
-import kotlinx.android.synthetic.main.fragment_discussions_reply.toolbar
 import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
-import kotlinx.android.synthetic.main.speed_grader_comment_input_view.view.*
 
 @AndroidEntryPoint
 class CommentLibraryFragment : Fragment() {
 
-    private val speedGraderViewModel: SpeedGraderViewModel by activityViewModels()
+    private val commentLibraryViewModel: CommentLibraryViewModel by activityViewModels()
 
     private var submissionId by LongArg(key = Const.SUBMISSION_ID)
 
@@ -44,10 +43,10 @@ class CommentLibraryFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentCommentLibraryBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-        binding.viewModel = speedGraderViewModel
+        binding.viewModel = commentLibraryViewModel
 
-        speedGraderViewModel.currentSubmissionId = submissionId
-        speedGraderViewModel.getCommentById(submissionId).observe(viewLifecycleOwner) {
+        commentLibraryViewModel.currentSubmissionId = submissionId
+        commentLibraryViewModel.getCommentBySubmission(submissionId).observe(viewLifecycleOwner) {
             if (commentEditText.text.toString() != it.comment) {
                 commentEditText.setText(it.comment)
             }
@@ -62,8 +61,8 @@ class CommentLibraryFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        toolbar.setupCloseButton(this)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), resources.getBoolean(com.instructure.pandautils.R.bool.isDeviceTablet), toolbar, Color.BLACK, false)
+        commentLibraryToolbar.setupCloseButton(this)
+        ViewStyler.themeToolbarBottomSheet(requireActivity(), resources.getBoolean(com.instructure.pandautils.R.bool.isDeviceTablet), commentLibraryToolbar, Color.BLACK, false)
     }
 
     companion object {

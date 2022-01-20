@@ -18,7 +18,6 @@ query CommentLibraryQuery($userId: ID!) {
     user: legacyNode(_id: $userId, type: User) {
         ... on User {
             id: _id
-            email: email
             commentBankItems: commentBankItemsConnection(query: "") {
                 nodes {
                     comment: comment

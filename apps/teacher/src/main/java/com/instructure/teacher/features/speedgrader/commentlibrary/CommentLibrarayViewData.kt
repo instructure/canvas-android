@@ -14,8 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.speedgrader
+package com.instructure.teacher.features.speedgrader.commentlibrary
 
-sealed class SpeedGraderAction {
-    object CommentLibraryClosed : SpeedGraderAction()
+import com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels.SuggestionItemViewModel
+
+data class CommentLibraryViewData(val suggestions: List<SuggestionItemViewModel>) {
+    fun isEmpty() = suggestions.isEmpty()
+}
+
+data class CommentViewData(val comment: String, val selectedFromSuggestion: Boolean = false)
+
+sealed class CommentLibraryAction {
+    object CommentLibraryClosed : CommentLibraryAction()
 }

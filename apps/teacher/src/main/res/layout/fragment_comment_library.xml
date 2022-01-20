@@ -21,7 +21,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.teacher.features.speedgrader.SpeedGraderViewModel" />
+            type="com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -31,7 +31,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/commentLibraryToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -62,10 +62,10 @@
             android:paddingBottom="32dp"
             android:clipToPadding="false"
             android:background="@color/white"
-            android:visibility="@{viewModel.suggestionsData.empty ? View.GONE : View.VISIBLE}"
-            app:recyclerViewItemViewModels="@{viewModel.suggestionsData}"
+            android:visibility="@{viewModel.data.empty ? View.GONE : View.VISIBLE}"
+            app:recyclerViewItemViewModels="@{viewModel.data.suggestions}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintTop_toBottomOf="@id/commentLibraryToolbar"
             app:layout_constraintBottom_toTopOf="@id/commentFieldDivider" />
 
         <TextView
@@ -76,8 +76,8 @@
             android:gravity="center"
             android:textColor="@color/defaultTextDark"
             android:textSize="15sp"
-            android:visibility="@{viewModel.suggestionsData.empty ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            android:visibility="@{viewModel.data.empty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/commentLibraryToolbar"
             app:layout_constraintBottom_toTopOf="@id/commentFieldDivider" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
