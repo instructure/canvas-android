@@ -1227,6 +1227,7 @@
     <string name="studentAnnotationToolbarTitle">Student Annotation</string>
     <string name="submissionTypeStudentAnnotation">Student Annotation</string>
     <string name="gradesNoDueDate">No due date</string>
+    <string name="importantDatesNoDueDate">No due date</string>
     <string name="missingAssignment">Missing</string>
     <string name="dontSave">Don\'t save</string>
     <string name="textSubmissionExitConfirmationTitle">Save draft?</string>
