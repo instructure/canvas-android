@@ -297,13 +297,8 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         }
     }
 
-    fun reopenCommentLibrary(submissionId: Long) {
-        if (commentLibraryAlreadyOpenedOnce) {
-            openCommentLibrary(submissionId)
-        }
-    }
-
     fun openCommentLibrary(submissionId: Long) {
+        viewModel.currentSubmissionId = submissionId
         if (!isCommentLibraryOpen() && hasCommentLibrarySuggestions) {
             submissionContentPager.isCommentLibraryOpen = true
 
@@ -312,7 +307,6 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             fragmentTransaction.add(R.id.commentLibraryFragmentContainer, commentLibraryFragment, commentLibraryFragment::class.java.name)
             fragmentTransaction.addToBackStack(commentLibraryFragment::class.java.name)
             fragmentTransaction.commitAllowingStateLoss()
-            commentLibraryAlreadyOpenedOnce = true
         }
     }
 

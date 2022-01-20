@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
-import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
@@ -67,7 +66,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     var mIsGroupMessage by BooleanArg()
     var mGradeAnonymously by BooleanArg()
 
-    var sendCommentInProgress = false
+    var changeCommentFieldExternallyFlag = false
 
     override fun createAdapter(): SpeedGraderCommentsAdapter {
         return SpeedGraderCommentsAdapter(requireContext(), presenter, mCourseId, presenter.assignee, mGradeAnonymously, onAttachmentClicked)
@@ -130,13 +129,12 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             sendCommentButton.isEnabled = it.isNotBlank()
             sendCommentButton.setVisible(it.isNotBlank())
             speedGraderViewModel.setCommentById(mSubmissionId, it)
-            if (!sendCommentInProgress) {
-                (requireActivity() as SpeedGraderActivity).reopenCommentLibrary(mSubmissionId)
+            if (!changeCommentFieldExternallyFlag) {
+                (requireActivity() as SpeedGraderActivity).openCommentLibrary(mSubmissionId)
             }
         }
         sendCommentButton.onClickWithRequireNetwork {
             (requireActivity() as SpeedGraderActivity).closeCommentLibrary()
-            sendCommentInProgress = true
             presenter.sendComment(commentEditText.text.toString())
             errorLayout?.announceForAccessibility(getString(R.string.sendingSimple))
         }
@@ -169,8 +167,11 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     }
 
     override fun setDraftText(comment: String?) {
+        // We use this flag to avoid opening the comment library, when text is set externally.
+        // Cases like sending a comment and clearing the comment field or populating the comment field with cached data
+        changeCommentFieldExternallyFlag = true
         commentEditText.setText(comment.orEmpty())
-        sendCommentInProgress = false
+        changeCommentFieldExternallyFlag = false
     }
 
     override fun onStop() {
