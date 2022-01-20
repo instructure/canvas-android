@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.StubLandscape
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addTodo
@@ -81,6 +82,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
+    @StubLandscape
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowScheduledAssignments() {
         setDate(2021, Calendar.AUGUST, 11)
@@ -99,6 +101,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
+    @StubLandscape
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowMissingAssignments() {
         setDate(2021, Calendar.AUGUST, 11)

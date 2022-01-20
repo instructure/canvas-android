@@ -58,11 +58,11 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
     }
 
     fun assertStaffInfoHeaderDisplayed() {
-        onView(withText(R.string.staffContactInfo)).assertDisplayed()
+        onView(withText(R.string.staffContactInfo)).scrollTo().assertDisplayed()
     }
 
     fun assertStaffDisplayed(name: String) {
-        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(name))).assertDisplayed()
+        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(name))).scrollTo().assertDisplayed()
     }
 
     fun assertImportantLinksNotDisplayed() {
@@ -98,6 +98,6 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
     }
 
     fun openComposeMessage(teacherName: String) {
-        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(teacherName))).click()
+        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(teacherName))).scrollTo().click()
     }
 }
