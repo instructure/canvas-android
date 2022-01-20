@@ -30,7 +30,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
-        android:onClick="@{() -> itemViewModel.open()}">
+        android:onClick="@{() -> itemViewModel.open()}"
+        android:layout_marginTop="12dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

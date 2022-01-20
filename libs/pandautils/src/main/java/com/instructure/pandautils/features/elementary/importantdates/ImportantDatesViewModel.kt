@@ -117,16 +117,16 @@ class ImportantDatesViewModel @Inject constructor(
     }
 
     private fun createItems(importantDates: List<ScheduleItem>): List<ItemViewModel> {
-        val importantDatesMap = importantDates.groupBy { it.startDate }
+        val importantDatesMap = importantDates.groupBy { SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(it.startDate!!) }
         return importantDatesMap.map {
             createDayGroup(it.key, it.value)
         }
     }
 
-    private fun createDayGroup(date: Date?, items: List<ScheduleItem>): ItemViewModel {
+    private fun createDayGroup(date: String?, items: List<ScheduleItem>): ItemViewModel {
         return ImportantDatesHeaderItemViewModel(
                 ImportantDatesHeaderViewData(
-                        SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(date!!)
+                        date!!
                 ),
                 createImportantDateItems(items)
         )
@@ -152,7 +152,7 @@ class ImportantDatesViewModel @Inject constructor(
         return if (scheduleItem.assignment == null) {
             R.drawable.ic_calendar
         } else {
-            if (scheduleItem.assignment!!.getSubmissionTypes().contains(Assignment.SubmissionType.BASIC_LTI_LAUNCH) ||
+            if (scheduleItem.assignment!!.getSubmissionTypes().contains(Assignment.SubmissionType.EXTERNAL_TOOL) ||
                     scheduleItem.assignment!!.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ)) {
                 R.drawable.ic_quiz
             } else {
