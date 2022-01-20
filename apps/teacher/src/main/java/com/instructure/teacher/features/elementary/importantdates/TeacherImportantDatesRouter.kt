@@ -23,7 +23,5 @@ class TeacherImportantDatesRouter : ImportantDatesRouter {
 
     override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) = Unit
 
-    override fun openQuiz(canvasContext: CanvasContext, htmlUrl: String) = Unit
-
     override fun openCalendarEvent(canvasContext: CanvasContext, scheduleItemId: Long) = Unit
 }

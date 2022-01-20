@@ -63,9 +63,6 @@ class ImportantDatesFragment : Fragment() {
                     action.canvasContext,
                     action.scheduleItemId
             )
-            is ImportantDatesAction.OpenQuiz -> {
-                router.openQuiz(action.canvasContext, action.htmlUrl)
-            }
             is ImportantDatesAction.ShowToast -> {
                 Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
             }

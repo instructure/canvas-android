@@ -19,7 +19,6 @@ package com.instructure.student.mobius.elementary.importantdates
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesRouter
-import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
@@ -31,9 +30,5 @@ class StudentImportantDatesRouter(private val activity: FragmentActivity) : Impo
 
     override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) {
         RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId))
-    }
-
-    override fun openQuiz(canvasContext: CanvasContext, htmlUrl: String) {
-        RouteMatcher.route(activity, BasicQuizViewFragment.makeRoute(canvasContext, htmlUrl))
     }
 }

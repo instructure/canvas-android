@@ -24,7 +24,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 
 class ImportantDatesHeaderItemViewModel(
         val data: ImportantDatesHeaderViewData,
-        val itemViewModels: List<ItemViewModel>
+        val itemViewModels: List<ImportantDatesItemViewModel>
 ) : GroupItemViewModel(false, false, itemViewModels) {
 
     override val layoutId: Int = R.layout.item_important_dates_header

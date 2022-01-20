@@ -116,14 +116,14 @@ class ImportantDatesViewModel @Inject constructor(
         }
     }
 
-    private fun createItems(importantDates: List<ScheduleItem>): List<ItemViewModel> {
+    private fun createItems(importantDates: List<ScheduleItem>): List<ImportantDatesHeaderItemViewModel> {
         val importantDatesMap = importantDates.groupBy { SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(it.startDate!!) }
         return importantDatesMap.map {
             createDayGroup(it.key, it.value)
         }
     }
 
-    private fun createDayGroup(date: String?, items: List<ScheduleItem>): ItemViewModel {
+    private fun createDayGroup(date: String?, items: List<ScheduleItem>): ImportantDatesHeaderItemViewModel {
         return ImportantDatesHeaderItemViewModel(
                 ImportantDatesHeaderViewData(
                         date!!
@@ -132,7 +132,7 @@ class ImportantDatesViewModel @Inject constructor(
         )
     }
 
-    private fun createImportantDateItems(items: List<ScheduleItem>): List<ItemViewModel> {
+    private fun createImportantDateItems(items: List<ScheduleItem>): List<ImportantDatesItemViewModel> {
         return items.map {
             ImportantDatesItemViewModel(
                     ImportantDatesItemViewData(

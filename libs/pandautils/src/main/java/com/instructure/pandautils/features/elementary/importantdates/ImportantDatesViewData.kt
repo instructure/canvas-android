@@ -19,11 +19,12 @@ package com.instructure.pandautils.features.elementary.importantdates
 import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.features.elementary.importantdates.itemviewmodels.ImportantDatesHeaderItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
 import java.util.*
 
 data class ImportantDatesViewData(
-        val itemViewModels: List<ItemViewModel>
+        val itemViewModels: List<ImportantDatesHeaderItemViewModel>
 )
 
 data class ImportantDatesHeaderViewData(val title: String)
@@ -39,7 +40,6 @@ data class ImportantDatesItemViewData(
 sealed class ImportantDatesAction {
     data class OpenAssignment(val canvasContext: CanvasContext, val assignmentId: Long) : ImportantDatesAction()
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val scheduleItemId: Long) : ImportantDatesAction()
-    data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String) : ImportantDatesAction()
     data class ShowToast(val toast: String) : ImportantDatesAction()
 }
 

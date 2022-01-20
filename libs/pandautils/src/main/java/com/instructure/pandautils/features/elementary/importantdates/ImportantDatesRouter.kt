@@ -22,7 +22,5 @@ interface ImportantDatesRouter {
 
     fun openAssignment(canvasContext: CanvasContext, assignmentId: Long)
 
-    fun openQuiz(canvasContext: CanvasContext, htmlUrl: String)
-
     fun openCalendarEvent(canvasContext: CanvasContext, scheduleItemId: Long)
 }
