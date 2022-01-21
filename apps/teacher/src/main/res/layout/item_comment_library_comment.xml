@@ -23,6 +23,7 @@
             name="itemViewModel"
             type="com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels.SuggestionItemViewModel" />
 
+        <import type="com.instructure.teacher.features.speedgrader.commentlibrary.Highlighter" />
     </data>
 
     <LinearLayout
@@ -36,7 +37,7 @@
             android:padding="16dp"
             android:textColor="@color/defaultTextDark"
             android:textSize="15sp"
-            android:text="@{itemViewModel.commentItemText}"
+            android:text="@{Highlighter.createHighlightedText(itemViewModel.commentItemData)}"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{() -> itemViewModel.onClick()}"
             tools:text="You are off to a great start. Please add more detail to justify your reasoning."/>

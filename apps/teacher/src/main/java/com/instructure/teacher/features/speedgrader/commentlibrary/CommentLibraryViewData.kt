@@ -22,6 +22,8 @@ data class CommentLibraryViewData(val suggestions: List<SuggestionItemViewModel>
     fun isEmpty() = suggestions.isEmpty()
 }
 
+data class HighlightedSuggestionViewData(val suggestion: String, val highlightStart: Int, val highlightEnd: Int)
+
 data class CommentViewData(val comment: String, val selectedFromSuggestion: Boolean = false)
 
 sealed class CommentLibraryAction {

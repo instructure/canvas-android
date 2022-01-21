@@ -16,12 +16,9 @@
  */
 package com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels
 
-import android.graphics.Typeface
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.StyleSpan
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.teacher.R
+import com.instructure.teacher.features.speedgrader.commentlibrary.HighlightedSuggestionViewData
 
 class SuggestionItemViewModel(private val suggestion: String,
                               private val searchQuery: String,
@@ -29,15 +26,13 @@ class SuggestionItemViewModel(private val suggestion: String,
 
     override val layoutId: Int = R.layout.item_comment_library_comment
 
-    val commentItemText = createSuggestionItemText(suggestion, searchQuery)
+    val commentItemData = createHighlightedItemData(suggestion, searchQuery)
 
-    fun createSuggestionItemText(comment: String, searchQuery: String): Spannable {
-        val spanStart = comment.indexOf(searchQuery, ignoreCase = true)
-        val spanEnd = spanStart + searchQuery.length
+    fun createHighlightedItemData(suggestion: String, searchQuery: String): HighlightedSuggestionViewData {
+        val highlightStart = suggestion.indexOf(searchQuery, ignoreCase = true)
+        val highlightEnd = highlightStart + searchQuery.length
 
-        return SpannableString(comment).apply {
-            setSpan(StyleSpan(Typeface.BOLD),spanStart, spanEnd, 0)
-        }
+        return HighlightedSuggestionViewData(suggestion, highlightStart, highlightEnd)
     }
 
     fun onClick() {

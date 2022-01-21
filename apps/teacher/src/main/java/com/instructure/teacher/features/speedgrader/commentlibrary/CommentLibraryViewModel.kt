@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.CommentLibraryQuery
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.weave.awaitQL
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels.SuggestionItemViewModel
 import com.instructure.teacher.utils.TeacherPrefs
@@ -40,8 +39,6 @@ class CommentLibraryViewModel @Inject constructor(
     private val teacherPrefs: TeacherPrefs
 ) : ViewModel() {
 
-    private val commentsBySubmission = mutableMapOf<Long, MutableLiveData<CommentViewData>>()
-
     val data: LiveData<CommentLibraryViewData>
         get() = _data
     private val _data = MutableLiveData(CommentLibraryViewData(emptyList()))
@@ -50,22 +47,18 @@ class CommentLibraryViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<CommentLibraryAction>>()
 
-    var allComments = listOf<String>()
-
     var currentSubmissionId: Long? = null
         set(value) {
             field = value
             updateFilteredSuggestions(value ?: -1)
         }
 
+    private val commentsBySubmission = mutableMapOf<Long, MutableLiveData<CommentViewData>>()
+
+    private var allSuggestions = listOf<String>()
+
     init {
         loadCommentLibrary()
-    }
-
-    private fun updateFilteredSuggestions(currentSubmissionId: Long) {
-        val commentLiveData = commentsBySubmission.computeIfAbsent(currentSubmissionId) { MutableLiveData() }
-        val query = commentLiveData.value?.comment ?: ""
-        filterSuggestions(query)
     }
 
     private fun loadCommentLibrary() {
@@ -91,14 +84,14 @@ class CommentLibraryViewModel @Inject constructor(
 
     private suspend fun loadCommentLibraryContent() {
         val userId = apiPrefs.user?.id ?: -1
-        val data = awaitQL<CommentLibraryQuery.Data> { CommentLibraryManager().getCommentLibraryItems(userId, it) }
+        val data = commentLibraryManager.getCommentLibraryItems(userId)
 
         val user = data.user as CommentLibraryQuery.AsUser
-        allComments = user.commentBankItems?.nodes?.map {
+        allSuggestions = user.commentBankItems?.nodes?.map {
             it.comment
         } ?: emptyList()
 
-        val suggestions = allComments.map {
+        val suggestions = allSuggestions.map {
             SuggestionItemViewModel(it, "") { comment: String -> replaceCommentWithSuggestion(comment) }
         }
         _data.value = CommentLibraryViewData(suggestions)
@@ -118,14 +111,20 @@ class CommentLibraryViewModel @Inject constructor(
         filterSuggestions(comment)
     }
 
+    fun getCommentBySubmission(submissionId: Long): LiveData<CommentViewData> {
+        return commentsBySubmission.computeIfAbsent(submissionId) { MutableLiveData() }
+    }
+
+    private fun updateFilteredSuggestions(currentSubmissionId: Long) {
+        val commentLiveData = commentsBySubmission.computeIfAbsent(currentSubmissionId) { MutableLiveData() }
+        val query = commentLiveData.value?.comment ?: ""
+        filterSuggestions(query)
+    }
+
     private fun filterSuggestions(query: String) {
-        val filteredSuggestions = allComments
+        val filteredSuggestions = allSuggestions
             .filter { it.contains(query, ignoreCase = true) }
             .map { SuggestionItemViewModel(it, query) { comment: String -> replaceCommentWithSuggestion(comment) } }
         _data.value = CommentLibraryViewData(filteredSuggestions)
-    }
-
-    fun getCommentBySubmission(submissionId: Long): LiveData<CommentViewData> {
-        return commentsBySubmission.computeIfAbsent(submissionId) { MutableLiveData() }
     }
 }
