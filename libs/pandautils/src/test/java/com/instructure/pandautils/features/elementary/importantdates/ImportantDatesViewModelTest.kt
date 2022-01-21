@@ -61,8 +61,6 @@ class ImportantDatesViewModelTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
-    private lateinit var viewModel: ImportantDatesViewModel
-
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val calendarEventManager: CalendarEventManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -86,8 +84,6 @@ class ImportantDatesViewModelTest {
         }
 
         setupString()
-
-        createViewModel()
     }
 
     @Test
@@ -147,7 +143,7 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Success(importantAssignments)
         }
 
-        viewModel.loadData()
+        val viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
@@ -229,7 +225,7 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Success(importantAssignments)
         }
 
-        viewModel.loadData()
+        val viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner, {})
         viewModel.events.observe(lifecycleOwner, {})
 
@@ -260,7 +256,7 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
-        viewModel.loadData()
+        val viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner, {})
         viewModel.events.observe(lifecycleOwner, {})
 
@@ -282,7 +278,7 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
-        viewModel.loadData()
+        val viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner, {})
         viewModel.state.observe(lifecycleOwner, {})
 
@@ -302,7 +298,7 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
-        viewModel.loadData()
+        val viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner, {})
         viewModel.state.observe(lifecycleOwner, {})
 
@@ -385,7 +381,7 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
-        viewModel.loadData()
+        val viewModel = createViewModel()
         viewModel.state.observe(lifecycleOwner, {})
 
         val expectedState = ViewState.Error("An unexpected error occurred.")
@@ -402,7 +398,7 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
-        viewModel.loadData()
+        val viewModel = createViewModel()
         viewModel.state.observe(lifecycleOwner, {})
 
         val expectedState = ViewState.Error("An unexpected error occurred.")
@@ -419,15 +415,15 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Fail()
         }
 
-        viewModel.loadData()
+        val viewModel = createViewModel()
         viewModel.state.observe(lifecycleOwner, {})
 
         val expectedState = ViewState.Error("An unexpected error occurred.")
         assertEquals(expectedState, viewModel.state.value)
     }
 
-    private fun createViewModel() {
-        viewModel = ImportantDatesViewModel(
+    private fun createViewModel(): ImportantDatesViewModel {
+        return ImportantDatesViewModel(
                 courseManager,
                 calendarEventManager,
                 resources

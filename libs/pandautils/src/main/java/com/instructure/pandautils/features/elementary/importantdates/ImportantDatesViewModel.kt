@@ -64,7 +64,7 @@ class ImportantDatesViewModel @Inject constructor(
     private var courseMap: Map<Long, Course> = emptyMap()
     private var importantDatesMap: Map<Long, ScheduleItem> = emptyMap()
 
-    fun loadData() {
+    init {
         _state.postValue(ViewState.Loading)
         loadData(false)
     }

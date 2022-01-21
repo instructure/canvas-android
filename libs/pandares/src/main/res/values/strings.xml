@@ -1234,6 +1234,9 @@
     <string name="textSubmissionExitConfirmationMessage">Your changes will not be saved otherwise</string>
     <string name="submissionDraftAvailableSubtitle">Tap here to continue</string>
     <string name="submissionDraftAvailableTitle">Draft Available</string>
-    <string name="errorLoadingSubmission">An error occured while loading submission</string>
+    <string name="errorLoadingSubmission">An error occurred while loading submission</string>
     <string name="loadFullContent">Tap to see full content</string>
+    <string name="dashboardTabImportantDates">Important Dates</string>
+    <string name="importantDatesEmptyTitle">No important dates</string>
+    <string name="important_dates">Important Dates</string>
 </resources>

@@ -483,8 +483,5 @@
     <string name="a11y_mark_as_done">Mark as done</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Uh oh! An error occurred while loading the course details.</string>
-    <string name="dashboardTabImportantDates">Important Dates</string>
-    <string name="importantDatesEmptyTitle">No important dates</string>
-    <string name="important_dates">Important Dates</string>
 
 </resources>

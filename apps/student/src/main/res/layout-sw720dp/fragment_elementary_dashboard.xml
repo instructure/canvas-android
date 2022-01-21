@@ -109,37 +109,25 @@
             android:background="@color/dividerColor"
             app:layout_constraintTop_toBottomOf="@id/dashboardTabLayout" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/pagerContainer"
+        <com.instructure.pandautils.views.ViewPagerNonSwipeable
+            android:id="@+id/dashboardPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/importantDates"
             app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider">
-
-            <com.instructure.pandautils.views.ViewPagerNonSwipeable
-                android:id="@+id/dashboardPager"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/importantDates"
-            android:name="com.instructure.pandautils.features.elementary.importantdates.ImportantDatesFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/messageBackgroundGray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/pagerContainer"
+            app:layout_constraintStart_toEndOf="@id/dashboardPager"
             app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
