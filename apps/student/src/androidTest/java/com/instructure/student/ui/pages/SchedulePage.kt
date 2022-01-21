@@ -74,7 +74,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         var i: Int = 0
         while (true) {
             scrollToPosition(i)
-            Thread.sleep(100)
+            Thread.sleep(500)
             try {
                 if(target == null) onView(withParent(itemId) + withText(itemName)).scrollTo()
                 else onView(target + withText(itemName)).scrollTo()
@@ -86,7 +86,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     }
 
     fun assertCourseHeaderDisplayed(courseName: String) {
-        waitForView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).assertDisplayed()
+        waitForView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).scrollTo().assertDisplayed()
     }
 
     fun assertScheduleItemDisplayed(scheduleItemName: String) {
@@ -144,11 +144,11 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     }
 
     fun clickCourseHeader(courseName: String) {
-        onView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).click()
+        onView(withId(R.id.scheduleCourseHeaderText) + withText(courseName)).scrollTo().click()
     }
 
     fun clickScheduleItem(name: String) {
-        onView(withAncestor(R.id.plannerItems) + withText(name)).click()
+        onView(withAncestor(R.id.plannerItems) + withText(name)).scrollTo().click()
     }
 
     fun clickDoneCheckbox() {

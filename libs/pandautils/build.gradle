@@ -98,6 +98,7 @@ dependencies {
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
+    implementation Libs.ANDROIDX_BROWSER
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT

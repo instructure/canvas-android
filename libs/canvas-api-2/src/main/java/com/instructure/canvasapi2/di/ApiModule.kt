@@ -114,6 +114,16 @@ object ApiModule {
     }
 
     @Provides
+    fun provideAccountNotificationManager(): AccountNotificationManager {
+        return AccountNotificationManager
+    }
+
+    @Provides
+    fun provideConferenceManager(): ConferenceManager {
+        return ConferenceManager
+    }
+
+    @Provides
     fun provideCommentLibraryManager(): CommentLibraryManager {
         return CommentLibraryManager()
     }

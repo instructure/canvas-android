@@ -42,6 +42,10 @@ class HomeroomE2ETest : StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We dont want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
@@ -65,17 +69,17 @@ class HomeroomE2ETest : StudentTest() {
         val utcTimeZone = TimeZone.getTimeZone("UTC")
         val calendar = Calendar.getInstance(utcTimeZone)
 
-        calendar.set(Calendar.HOUR_OF_DAY, 21)
-        calendar.set(Calendar.MINUTE, 59)
-        calendar.set(Calendar.SECOND, 55)
+        calendar.set(Calendar.HOUR_OF_DAY, 10)
+        calendar.set(Calendar.MINUTE, 1)
+        calendar.set(Calendar.SECOND, 1)
 
         val simpleDateFormat = SimpleDateFormat("EE MMM dd HH:mm:ss zzz yyyy", Locale.US)
         simpleDateFormat.setTimeZone(utcTimeZone)
 
         val missingCalendar = Calendar.getInstance()
-        missingCalendar.set(Calendar.HOUR_OF_DAY, 0)
+        missingCalendar.set(Calendar.HOUR_OF_DAY, 10)
         missingCalendar.set(Calendar.MINUTE, 1)
-        missingCalendar.set(Calendar.SECOND, 10)
+        missingCalendar.set(Calendar.SECOND, 1)
 
         val testAssignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
@@ -100,6 +104,7 @@ class HomeroomE2ETest : StudentTest() {
 
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
+        homeroomPage.assertPageObjects()
         homeroomPage.assertWelcomeText(student.shortName)
         homeroomPage.assertAnnouncementDisplayed(
             homeroomCourse.name,

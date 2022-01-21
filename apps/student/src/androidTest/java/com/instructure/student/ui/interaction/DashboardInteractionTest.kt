@@ -156,7 +156,7 @@ class DashboardInteractionTest : StudentTest() {
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
         val announcement = data.accountNotifications.values.first()
         dashboardPage.assertAnnouncementShowing(announcement)
-        dashboardPage.dismissAnnouncement()
+        dashboardPage.dismissAnnouncement() //TODO BUG: https://instructure.atlassian.net/browse/MBL-15840
         dashboardPage.assertAnnouncementsGone()
         dashboardPage.refresh()
         dashboardPage.assertAnnouncementsGone()
@@ -169,7 +169,7 @@ class DashboardInteractionTest : StudentTest() {
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
         val announcement = data.accountNotifications.values.first()
         dashboardPage.assertAnnouncementShowing(announcement)
-        dashboardPage.tapAnnouncementAndAssertDisplayed(announcement)
+        dashboardPage.tapAnnouncementAndAssertDisplayed(announcement) //TODO bug: https://instructure.atlassian.net/browse/MBL-15843
     }
 
     @Test
