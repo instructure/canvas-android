@@ -209,13 +209,11 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         }
 
         override fun onReceivedHttpError(view: WebView, request: WebResourceRequest?, errorResponse: WebResourceResponse) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (errorResponse.statusCode == 400 && authenticationURL != null && request != null && request.url != null && authenticationURL == request.url.toString()) {
-                    //If the institution does not support skipping the authentication screen this will catch that error and force the
-                    //rebuilding of the authentication url with the authorization screen flow. Example: canvas.sfu.ca
-                    buildAuthenticationUrl(protocol, accountDomain, clientId, true)
-                    loadAuthenticationUrl(protocol, accountDomain.domain)
-                }
+            if (errorResponse.statusCode == 400 && authenticationURL != null && request != null && request.url != null && authenticationURL == request.url.toString()) {
+                //If the institution does not support skipping the authentication screen this will catch that error and force the
+                //rebuilding of the authentication url with the authorization screen flow. Example: canvas.sfu.ca
+                buildAuthenticationUrl(protocol, accountDomain, clientId, true)
+                loadAuthenticationUrl(protocol, accountDomain.domain)
             }
             super.onReceivedHttpError(view, request, errorResponse)
         }

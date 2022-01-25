@@ -112,15 +112,13 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
     }
 
     private fun registerNotificationChannel(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = context.getString(R.string.notificationChannelNameInAppUpdate)
-            val descriptionText = context.getString(R.string.notificationChannelDescriptionInAppUpdate)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            notificationManager.createNotificationChannel(channel)
+        val name = context.getString(R.string.notificationChannelNameInAppUpdate)
+        val descriptionText = context.getString(R.string.notificationChannelDescriptionInAppUpdate)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            description = descriptionText
         }
+        notificationManager.createNotificationChannel(channel)
     }
 
     private fun shouldShowUpdateNotification(appUpdateInfo: AppUpdateInfo): Boolean {

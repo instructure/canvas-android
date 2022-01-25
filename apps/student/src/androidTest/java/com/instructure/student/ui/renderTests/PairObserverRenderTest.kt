@@ -71,13 +71,6 @@ class PairObserverRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysLoading() {
-        // Let's not run this test on API-23, since FTL API-23 devices have a hard time
-        // testing ProgressBars.  The Espresso framework just spins waiting for the
-        // ProgressBar to go away.
-        if(Build.VERSION.SDK_INT < 24) {
-            return
-        }
-
         val model = baseModel.copy(isLoading = true)
         loadPageWithModel(model)
 

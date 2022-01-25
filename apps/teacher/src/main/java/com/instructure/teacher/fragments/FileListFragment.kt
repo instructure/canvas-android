@@ -80,9 +80,6 @@ class FileListFragment : BaseSyncFragment<
                 override fun onAnimationStart(animation: Animation?) = Unit
                 override fun onAnimationRepeat(animation: Animation?) = Unit
                 override fun onAnimationEnd(animation: Animation?) {
-                    /* A11y traversal order for the FABs is specified in the XML layout file, but is only supported
-                    in API 22+. If API level is less than that we need to manually request focus on the first FAB. */
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) addFolderFab.requestAccessibilityFocus(0)
                     addFab.contentDescription = getString(R.string.hideCreateFileFolderFabContentDesc)
                 }
             })

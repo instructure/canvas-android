@@ -340,8 +340,6 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         }
 
         fun createNotificationChannel(notificationManager: NotificationManager, channelId: String = CHANNEL_ID) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
             // Prevents recreation of notification channel if it exists.
             if (notificationManager.notificationChannels.any { it.id == channelId }) return
 

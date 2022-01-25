@@ -84,7 +84,7 @@ object UrlLauncher {
 
     private fun makeIntent(url: String, excludeInstructure: Boolean): Intent {
         var intent: Intent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        if (excludeInstructure && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (excludeInstructure) {
             intent = Intent.createChooser(intent, null).apply {
                 putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, excludeComponents)
             }
