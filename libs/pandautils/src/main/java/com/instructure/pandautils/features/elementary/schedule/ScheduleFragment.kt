@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.elementary.schedule
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -78,6 +79,11 @@ class ScheduleFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         recyclerView?.removeOnScrollListener(onScrollListener)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        viewModel.refresh(false)
     }
 
     private fun handleAction(action: ScheduleAction) {

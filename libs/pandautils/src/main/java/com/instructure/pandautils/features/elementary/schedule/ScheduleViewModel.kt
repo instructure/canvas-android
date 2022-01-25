@@ -89,9 +89,9 @@ class ScheduleViewModel @Inject constructor(
         getData(false)
     }
 
-    fun refresh() {
+    fun refresh(forceNetwork: Boolean = true) {
         _state.postValue(ViewState.Refresh)
-        getData(true)
+        getData(forceNetwork)
     }
 
     private fun jumpToToday() {
