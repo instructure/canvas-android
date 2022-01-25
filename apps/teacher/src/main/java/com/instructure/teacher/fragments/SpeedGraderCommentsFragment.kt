@@ -17,6 +17,7 @@ package com.instructure.teacher.fragments
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -88,6 +89,12 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             }
         }
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupCommentInput()
+    }
+
     override fun onRefreshStarted() {}
     override fun onRefreshFinished() {}
 
@@ -108,7 +115,6 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     }
 
     override fun onReadySetGo(presenter: SpeedGraderCommentsPresenter) {
-        setupCommentInput()
         presenter.loadData(false)
 
         // Check for any media comment updates

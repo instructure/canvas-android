@@ -108,7 +108,11 @@ class CommentLibraryViewModel @Inject constructor(
         val commentLiveData = commentsBySubmission.computeIfAbsent(submissionId) { MutableLiveData() }
         commentLiveData.value = CommentViewData(comment, selectedFromSuggestion)
 
-        filterSuggestions(comment)
+        // We need this check because when we put the app to background and go back, setCommentBySubmission will be triggered
+        // for all the submissions that has cached pending comment and we want the filtering to represent the submission we are currently on.
+        if (currentSubmissionId == submissionId) {
+            filterSuggestions(comment)
+        }
     }
 
     fun getCommentBySubmission(submissionId: Long): LiveData<CommentViewData> {
