@@ -24,7 +24,9 @@ import com.instructure.canvasapi2.CommentLibraryQuery
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.utils.unaccent
 import com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels.SuggestionItemViewModel
 import com.instructure.teacher.utils.TeacherPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -77,7 +79,8 @@ class CommentLibraryViewModel @Inject constructor(
                     loadCommentLibraryContent()
                 }
             } catch (e: Exception) {
-                // No-op Silently fail if we don't have info about the comment library, and just don't show anything.
+                // Silently fail if we don't have info about the comment library, and just don't show anything.
+                Logger.w(e.stackTraceToString())
             }
         }
     }
@@ -127,7 +130,7 @@ class CommentLibraryViewModel @Inject constructor(
 
     private fun filterSuggestions(query: String) {
         val filteredSuggestions = allSuggestions
-            .filter { it.contains(query, ignoreCase = true) }
+            .filter { it.unaccent().contains(query.unaccent(), ignoreCase = true) }
             .map { SuggestionItemViewModel(it, query) { comment: String -> replaceCommentWithSuggestion(comment) } }
         _data.value = CommentLibraryViewData(filteredSuggestions)
     }

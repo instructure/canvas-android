@@ -14,16 +14,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.speedgrader.commentlibrary
+package com.instructure.pandautils.utils
 
-import com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels.SuggestionItemViewModel
+import android.icu.text.Normalizer2
 
-data class CommentLibraryViewData(val suggestions: List<SuggestionItemViewModel>) {
-    fun isEmpty() = suggestions.isEmpty()
+private val REGEX_UNACCENT = "\\p{InCombiningDiacriticalMarks}+".toRegex()
+
+fun String.unaccent(): String {
+    val temp = Normalizer.normalize(this)
+    return REGEX_UNACCENT.replace(temp, "")
 }
 
-data class CommentViewData(val comment: String, val selectedFromSuggestion: Boolean = false)
+object Normalizer {
 
-sealed class CommentLibraryAction {
-    object CommentLibraryClosed : CommentLibraryAction()
+    fun normalize(text: String): String {
+        return Normalizer2.getNFDInstance().normalize(text)
+    }
 }

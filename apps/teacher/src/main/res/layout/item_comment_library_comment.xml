@@ -23,7 +23,7 @@
             name="itemViewModel"
             type="com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels.SuggestionItemViewModel" />
 
-        <import type="com.instructure.teacher.features.speedgrader.commentlibrary.Highlighter" />
+        <import type="com.instructure.pandautils.utils.Highlighter" />
     </data>
 
     <LinearLayout

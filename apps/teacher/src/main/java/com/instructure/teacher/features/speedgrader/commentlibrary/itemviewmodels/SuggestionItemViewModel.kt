@@ -17,8 +17,9 @@
 package com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels
 
 import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.utils.HighlightedTextData
+import com.instructure.pandautils.utils.unaccent
 import com.instructure.teacher.R
-import com.instructure.teacher.features.speedgrader.commentlibrary.HighlightedSuggestionViewData
 
 class SuggestionItemViewModel(private val suggestion: String,
                               private val searchQuery: String,
@@ -28,11 +29,11 @@ class SuggestionItemViewModel(private val suggestion: String,
 
     val commentItemData = createHighlightedItemData(suggestion, searchQuery)
 
-    fun createHighlightedItemData(suggestion: String, searchQuery: String): HighlightedSuggestionViewData {
-        val highlightStart = suggestion.indexOf(searchQuery, ignoreCase = true)
+    fun createHighlightedItemData(suggestion: String, searchQuery: String): HighlightedTextData {
+        val highlightStart = suggestion.unaccent().indexOf(searchQuery.unaccent(), ignoreCase = true)
         val highlightEnd = highlightStart + searchQuery.length
 
-        return HighlightedSuggestionViewData(suggestion, highlightStart, highlightEnd)
+        return HighlightedTextData(suggestion, highlightStart, highlightEnd)
     }
 
     fun onClick() {

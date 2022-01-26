@@ -26,11 +26,11 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.utils.HighlightedTextData
+import com.instructure.pandautils.utils.Normalizer
 import com.instructure.teacher.utils.TeacherPrefs
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -65,6 +65,17 @@ class CommentLibraryViewModelTest {
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+
+        mockkObject(Normalizer)
+
+        every { Normalizer.normalize(any()) } answers { firstArg() }
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        testDispatcher.cleanupTestCoroutines()
+        unmockkObject(Normalizer)
     }
 
     @Test
@@ -147,13 +158,13 @@ class CommentLibraryViewModelTest {
         val suggestions = viewModel.data.value!!.suggestions
         assertEquals(3, suggestions.size)
 
-        val expectedItem1 = HighlightedSuggestionViewData("Great", 0, 0)
+        val expectedItem1 = HighlightedTextData("Great", 0, 0)
         assertEquals(expectedItem1, suggestions[0].commentItemData)
 
-        val expectedItem2 = HighlightedSuggestionViewData("Fantastic", 0, 0)
+        val expectedItem2 = HighlightedTextData("Fantastic", 0, 0)
         assertEquals(expectedItem2, suggestions[1].commentItemData)
 
-        val expectedItem3 = HighlightedSuggestionViewData("Super", 0, 0)
+        val expectedItem3 = HighlightedTextData("Super", 0, 0)
         assertEquals(expectedItem3, suggestions[2].commentItemData)
     }
 
@@ -180,10 +191,10 @@ class CommentLibraryViewModelTest {
         val suggestions = viewModel.data.value!!.suggestions
         assertEquals(2, suggestions.size)
 
-        val expectedItem1 = HighlightedSuggestionViewData("Great", 0, 3)
+        val expectedItem1 = HighlightedTextData("Great", 0, 3)
         assertEquals(expectedItem1, suggestions[0].commentItemData)
 
-        val expectedItem2 = HighlightedSuggestionViewData("Great job", 0, 3)
+        val expectedItem2 = HighlightedTextData("Great job", 0, 3)
         assertEquals(expectedItem2, suggestions[1].commentItemData)
     }
 
@@ -210,16 +221,16 @@ class CommentLibraryViewModelTest {
         val suggestions = viewModel.data.value!!.suggestions
         assertEquals(4, suggestions.size)
 
-        val expectedItem1 = HighlightedSuggestionViewData("Great", 0, 5)
+        val expectedItem1 = HighlightedTextData("Great", 0, 5)
         assertEquals(expectedItem1, suggestions[0].commentItemData)
 
-        val expectedItem2 = HighlightedSuggestionViewData("This is great", 8, 13)
+        val expectedItem2 = HighlightedTextData("This is great", 8, 13)
         assertEquals(expectedItem2, suggestions[1].commentItemData)
 
-        val expectedItem3 = HighlightedSuggestionViewData("gReAt", 0, 5)
+        val expectedItem3 = HighlightedTextData("gReAt", 0, 5)
         assertEquals(expectedItem3, suggestions[2].commentItemData)
 
-        val expectedItem4 = HighlightedSuggestionViewData("GrEaT", 0, 5)
+        val expectedItem4 = HighlightedTextData("GrEaT", 0, 5)
         assertEquals(expectedItem4, suggestions[3].commentItemData)
     }
 
@@ -296,20 +307,14 @@ class CommentLibraryViewModelTest {
         viewModel.setCommentBySubmission(submissionId, "Gre")
         viewModel.data.observe(lifecycleOwner, Observer {})
 
-        val expectedItem = HighlightedSuggestionViewData("Great", 0, 3)
+        val expectedItem = HighlightedTextData("Great", 0, 3)
         assertEquals(expectedItem, viewModel.data.value!!.suggestions[0].commentItemData)
 
         viewModel.currentSubmissionId = newSubmissionId // Change to the other submission
 
         // Then
-        val newExpectedItem = HighlightedSuggestionViewData("Fantastic", 0, 4)
+        val newExpectedItem = HighlightedTextData("Fantastic", 0, 4)
         assertEquals(newExpectedItem, viewModel.data.value!!.suggestions[0].commentItemData)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 
     private fun createViewModel(): CommentLibraryViewModel = CommentLibraryViewModel(apiPrefs, commentLibraryManager, userManager, teacherPrefs)
