@@ -26,6 +26,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/commentLibraryFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <RelativeLayout
         android:id="@+id/swipeTutorialView"
         android:layout_width="match_parent"

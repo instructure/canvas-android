@@ -1239,4 +1239,8 @@
     <string name="dashboardTabImportantDates">Important Dates</string>
     <string name="importantDatesEmptyTitle">No important dates</string>
     <string name="important_dates">Important Dates</string>
+
+    <string name="toolbarCommentLibrary">Comment Library</string>
+    <string name="commentLibraryNoSuggestions">No suggestions available</string>
+    <string name="speedGraderCommentHint">Comment</string>
 </resources>

@@ -122,4 +122,9 @@ object ApiModule {
     fun provideConferenceManager(): ConferenceManager {
         return ConferenceManager
     }
+
+    @Provides
+    fun provideCommentLibraryManager(): CommentLibraryManager {
+        return CommentLibraryManager()
+    }
 }

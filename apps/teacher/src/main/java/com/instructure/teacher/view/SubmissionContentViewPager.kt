@@ -26,12 +26,13 @@ class SubmissionContentViewPager @JvmOverloads
     constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
 
     var isPagingEnabled = true
+    var isCommentLibraryOpen = false
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
-        return isPagingEnabled && tryOrNull { super.onTouchEvent(ev) } ?: false
+        return isPagingEnabled && !isCommentLibraryOpen && tryOrNull { super.onTouchEvent(ev) } ?: false
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return isPagingEnabled && tryOrNull { super.onInterceptTouchEvent(ev) } ?: false
+        return isPagingEnabled && !isCommentLibraryOpen && tryOrNull { super.onInterceptTouchEvent(ev) } ?: false
     }
 }
