@@ -116,7 +116,6 @@ dependencies {
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
 
     implementation Libs.JOURNEY_ZXING
-    implementation Libs.ZXING
 
     implementation Libs.FRAGMENT_KTX
     implementation Libs.HILT

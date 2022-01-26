@@ -313,7 +313,6 @@ dependencies {
 
     /* Qr Code */
     implementation Libs.JOURNEY_ZXING
-    implementation Libs.ZXING
 
     /* AAC */
     implementation Libs.VIEW_MODEL
