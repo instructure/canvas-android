@@ -64,12 +64,6 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     @Test
     @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysEmptyStateWithLoading() {
-
-        // API 23 doesn't do well with progress bars
-        if(Build.VERSION.SDK_INT < 24) {
-            return
-        }
-
         loadPageWithViewState(PickerSubmissionUploadViewState.Empty(baseVisibilities.copy(loading = true)))
         page.emptyView.assertVisible()
         page.sourcesContainer.assertVisible()
@@ -103,12 +97,6 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     @Test
     @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysListStateWithLoading() {
-
-        // API 23 doesn't do well with progress bars
-        if(Build.VERSION.SDK_INT < 24) {
-            return
-        }
-
         val fileItemStates = listOf(
             PickerListItemViewState(0, R.drawable.ic_media_recordings, "title", "12.3 KB")
         )

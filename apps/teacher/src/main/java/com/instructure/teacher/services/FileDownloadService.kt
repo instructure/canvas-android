@@ -241,8 +241,6 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
     //region Notifications
 
     private fun createNotificationChannel(channelId: String) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
         // Prevents recreation of notification channel if it exists.
         if (notificationManager.notificationChannels?.any { it.id == channelId } == true) return
 

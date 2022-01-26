@@ -196,11 +196,7 @@ class ToDoListFragment : ParentFragment() {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
             dialog.listView.children<AppCompatCheckedTextView>().forEach { checkbox ->
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    checkbox.compoundDrawableTintList = ColorStateList.valueOf(ThemePrefs.brandColor)
-                } else {
-                    checkbox.compoundDrawables.forEach { drawable -> drawable?.setColorFilter(ThemePrefs.brandColor, PorterDuff.Mode.SRC_IN) }
-                }
+                checkbox.compoundDrawableTintList = ColorStateList.valueOf(ThemePrefs.brandColor)
             }
         }
 

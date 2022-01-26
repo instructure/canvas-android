@@ -95,13 +95,6 @@ class PdfInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
     fun testAnnotations_openPdfFilesInPSPDFKit() {
-
-        // This test displays a progress bar spinner, which will spin forever in Espresso
-        // on API-23.
-        if(Build.VERSION.SDK_INT < 24) {
-            return
-        }
-        
         // Annotation toolbar icon needs to be present
         val data = getToCourse()
         val course = data.courses.values.first()
@@ -123,13 +116,6 @@ class PdfInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
     fun testAnnotations_openPdfsInPSPDFKitFromLinksInAssignment() {
-
-        // This test displays a progress bar spinner, which will spin forever in Espresso
-        // on API-23.
-        if(Build.VERSION.SDK_INT < 24) {
-            return
-        }
-
         // Annotation toolbar icon needs to be present, this link is specific to assignment details, as that was the advertised use case
         val data = MockCanvas.init(
                 studentCount = 1,

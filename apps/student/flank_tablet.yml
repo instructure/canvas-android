@@ -15,11 +15,11 @@ gcloud:
   - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
   device:
   - model: Nexus9
-    version: 25
+    version: 26
     locale: en_US
     orientation: landscape
   - model: Nexus9
-    version: 25
+    version: 26
     locale: en_US
     orientation: portrait
 

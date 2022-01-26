@@ -543,11 +543,7 @@ class CanvasWebView @JvmOverloads constructor(
         // Remove all html tags and set content description for accessibility
         // call toString on fromHTML because certain Spanned objects can cause this to crash
         val contentDescription = title?.let { "$it $formattedHtml" } ?: formattedHtml
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            this.contentDescription = simplifyHTML(Html.fromHtml(contentDescription, Html.FROM_HTML_MODE_LEGACY))
-        } else {
-            this.contentDescription = simplifyHTML(Html.fromHtml(contentDescription))
-        }
+        this.contentDescription = simplifyHTML(Html.fromHtml(contentDescription, Html.FROM_HTML_MODE_LEGACY))
     }
 
     fun setCanvasWebChromeClientShowFilePickerCallback(callback: VideoPickerCallback?) {

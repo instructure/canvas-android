@@ -158,13 +158,6 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     @Test
     @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testSinglePendingComment() {
-
-        // We shouldn't run this test on API 23 or lower, because we won't deal well
-        // with the ProgressBar that comes up.
-        if(Build.VERSION.SDK_INT < 24) {
-            return
-        }
-
         val state = SubmissionCommentsViewState(
             commentStates = listOf(pendingCommentItem)
         )
@@ -193,10 +186,6 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     @Test
     @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testSinglePendingCommentDisplaysAuthorPronoun() {
-        // We shouldn't run this test on API 23 or lower, because we won't deal well
-        // with the ProgressBar that comes up.
-        if(Build.VERSION.SDK_INT < 24) return
-
         val commentItem = pendingCommentItem.copy(authorPronouns = "Pro/Noun")
         val state = SubmissionCommentsViewState(commentStates = listOf(commentItem))
         loadPageWithViewState(state)

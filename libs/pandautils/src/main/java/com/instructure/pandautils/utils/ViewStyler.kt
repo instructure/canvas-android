@@ -90,18 +90,16 @@ object ViewStyler {
         // trackColor is the thumbColor with 30% transparency (77)
         val trackColor = Color.argb(77, Color.red(thumbColor), Color.green(thumbColor), Color.blue(thumbColor))
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // setting the thumb color
-            switch.thumbDrawable.setTintList(ColorStateList(
-                    arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                    intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.defaultThumbColor)))
-            )
+        // setting the thumb color
+        switch.thumbDrawable.setTintList(ColorStateList(
+                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.defaultThumbColor)))
+        )
 
-            // setting the track color
-            switch.trackDrawable.setTintList(ColorStateList(
-                    arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                    intArrayOf(trackColor, ContextCompat.getColor(context, R.color.defaultTrackColor))))
-        }
+        // setting the track color
+        switch.trackDrawable.setTintList(ColorStateList(
+                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                intArrayOf(trackColor, ContextCompat.getColor(context, R.color.defaultTrackColor))))
     }
 
     fun themeInputTextLayout(textInputLayout: TextInputLayout, @ColorInt color: Int) {
@@ -160,9 +158,7 @@ object ViewStyler {
     }
 
     fun themeProgressBar(progressBar: ProgressBar, @ColorInt brand: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            progressBar.indeterminateTintList = makeColorStateList(brand, brand)
-        }
+        progressBar.indeterminateTintList = makeColorStateList(brand, brand)
     }
 
     fun themeCheckBox(context: Context, checkBox: AppCompatCheckBox, @ColorInt brand: Int) {
@@ -191,23 +187,15 @@ object ViewStyler {
     }
 
     fun setStatusBarDark(activity: Activity, @ColorInt color: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.window.statusBarColor = ThemePrefs.darker(color)
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            var flags = activity.window.decorView.systemUiVisibility
-            flags = flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-            activity.window.decorView.systemUiVisibility = flags
-        }
+        activity.window.statusBarColor = ThemePrefs.darker(color)
+        var flags = activity.window.decorView.systemUiVisibility
+        flags = flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+        activity.window.decorView.systemUiVisibility = flags
     }
 
     fun setStatusBarLight(activity: Activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dimLighterGray)
-            activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.darkerGray)
-        }
+        activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dimLighterGray)
+        activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
     fun colorImageView(imageView: ImageView, color: Int) {

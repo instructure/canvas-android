@@ -3,7 +3,7 @@
 object Versions {
     /* SDK Versions */
     const val COMPILE_SDK = 30
-    const val MIN_SDK = 23
+    const val MIN_SDK = 26
     const val TARGET_SDK = 30
 
     /* Build/tooling */
@@ -106,8 +106,7 @@ object Libs {
     const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.3.0"
 
     /* Qr Code (zxing) */
-    const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.1.0"
-    const val ZXING = "com.google.zxing:core:3.3.0"
+    const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.3.0"
 
     /* Dependency Inejction */
     const val HILT = "com.google.dagger:hilt-android:${Versions.HILT}"
