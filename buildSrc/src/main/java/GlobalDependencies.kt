@@ -144,7 +144,7 @@ object Libs {
 
     /* Other */
     const val LOTTIE = "com.airbnb.android:lottie:4.1.0"
-    const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.4.0"
+    const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.3.1"
     const val SQLDELIGHT = "com.squareup.sqldelight:android-driver:1.4.3"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
     const val EVENTBUS = "org.greenrobot:eventbus:3.2.0"
