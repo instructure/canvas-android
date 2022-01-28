@@ -58,7 +58,7 @@ projects.each do |project|
     system("flutter pub get")
 
     puts "Generating flutter files for #{project_name}"
-    system("flutter pub run intl_translation:extract_to_arb --output-dir=#{l10n_output} #{l10n_input}")
+    system("flutter pub run intl_generator:extract_to_arb --output-dir=#{l10n_output} #{l10n_input}")
 
     # Verify the strings got extracted
     messages = File.join(l10n_output, 'intl_messages.arb')
