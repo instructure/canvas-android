@@ -33,8 +33,6 @@ class CommentLibraryPageTest : TeacherTest() {
 
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() = Unit
-
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllItemsWhenCommentFieldIsClicked() {
@@ -60,6 +58,7 @@ class CommentLibraryPageTest : TeacherTest() {
         commentLibraryPage.selectSuggestion(filteredSuggestion)
 
         speedGraderCommentsPage.assertCommentFieldHasText(filteredSuggestion)
+        speedGraderPage.assertCommentLibraryNotVisible()
     }
 
     @Test
@@ -76,6 +75,7 @@ class CommentLibraryPageTest : TeacherTest() {
         speedGraderCommentsPage.sendComment()
 
         speedGraderCommentsPage.assertDisplaysCommentText(filteredSuggestion)
+        speedGraderPage.assertCommentLibraryNotVisible()
     }
 
     @Test
@@ -94,6 +94,7 @@ class CommentLibraryPageTest : TeacherTest() {
         speedGraderCommentsPage.sendComment()
 
         speedGraderCommentsPage.assertDisplaysCommentText(comment)
+        speedGraderPage.assertCommentLibraryNotVisible()
     }
 
     @Test
@@ -105,6 +106,7 @@ class CommentLibraryPageTest : TeacherTest() {
         commentLibraryPage.assertSuggestionsCount(3)
 
         commentLibraryPage.closeCommentLibrary()
+        speedGraderPage.assertCommentLibraryNotVisible()
 
         speedGraderCommentsPage.typeComment("start")
         commentLibraryPage.assertPageObjects()

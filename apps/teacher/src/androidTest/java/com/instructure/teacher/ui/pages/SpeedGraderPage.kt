@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.canvasapi2.models.Submission
@@ -42,6 +43,7 @@ class SpeedGraderPage : BasePage() {
 
     private val submissionDropDown by WaitForViewWithId(R.id.submissionVersionsButton)
     private val submissionVersionDialogTitle by WaitForViewWithText(R.string.submission_versions)
+    private val commentLibraryContainer by OnViewWithId(R.id.commentLibraryFragmentContainer)
 
     fun assertHasSubmissionDropDown() {
         submissionDropDown.assertDisplayed()
@@ -133,4 +135,7 @@ class SpeedGraderPage : BasePage() {
         waitForViewWithId(R.id.canvasWebView).assertCompletelyDisplayed()
     }
 
+    fun assertCommentLibraryNotVisible() {
+        commentLibraryContainer.check(ViewAssertions.matches(ViewMatchers.hasChildCount(0)))
+    }
 }
