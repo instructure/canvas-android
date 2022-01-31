@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.utils.HighlightedTextData
 import com.instructure.pandautils.utils.Normalizer
 import com.instructure.teacher.utils.TeacherPrefs

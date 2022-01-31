@@ -226,6 +226,8 @@ class MockCanvas {
     /** Map of courseId to the courses latest announcement */
     val latestAnnouncements = mutableMapOf<Long, DiscussionTopicHeader>()
 
+    val commentLibraryItems = mutableMapOf<Long, List<String>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
