@@ -25,6 +25,7 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.View
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -304,6 +305,8 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             fragmentTransaction.add(R.id.commentLibraryFragmentContainer, commentLibraryFragment, commentLibraryFragment::class.java.name)
             fragmentTransaction.addToBackStack(commentLibraryFragment::class.java.name)
             fragmentTransaction.commitAllowingStateLoss()
+
+            submissionContentPager.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
         }
     }
 
@@ -311,6 +314,8 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         if (isCommentLibraryOpen()) {
             submissionContentPager.isCommentLibraryOpen = false
             supportFragmentManager.popBackStackImmediate()
+
+            submissionContentPager.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
         }
     }
 

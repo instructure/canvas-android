@@ -16,9 +16,28 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy
 import com.instructure.canvasapi2.CommentLibraryQuery
+import com.instructure.canvasapi2.QLCallback
+import com.instructure.canvasapi2.enqueueQuery
+import com.instructure.canvasapi2.utils.weave.awaitQL
 
-interface CommentLibraryManager {
+class CommentLibraryManagerImpl : CommentLibraryManager {
 
-    suspend fun getCommentLibraryItems(userId: Long): CommentLibraryQuery.Data
+    override suspend fun getCommentLibraryItems(userId: Long): CommentLibraryQuery.Data {
+        return awaitQL { getCommentLibraryItems(userId, it) }
+    }
+
+    private fun getCommentLibraryItems(
+        userId: Long,
+        callback: QLCallback<CommentLibraryQuery.Data>
+    ) {
+        val query = CommentLibraryQuery.builder()
+            .userId(userId.toString())
+            .build()
+
+        callback.enqueueQuery(query) {
+            cachePolicy = HttpCachePolicy.NETWORK_FIRST
+        }
+    }
 }
