@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.ui
 
-import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.panda_annotations.FeatureCategory
@@ -36,7 +35,9 @@ class CommentLibraryPageTest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllItemsWhenCommentFieldIsClicked() {
-        val commentLibraryItems = goToSpeedGraderCommentsPage()
+        val commentLibraryItems = createCommentLibraryMockData()
+        goToSpeedGraderCommentsPage()
+
         speedGraderCommentsPage.clickCommentField()
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(commentLibraryItems.size)
@@ -48,7 +49,9 @@ class CommentLibraryPageTest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAndSelectFilteredCommentCloseCommentLibrary() {
+        createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
+
         speedGraderCommentsPage.typeComment("great work")
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
@@ -64,7 +67,9 @@ class CommentLibraryPageTest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionAndSendComment() {
+        createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
+
         speedGraderCommentsPage.typeComment("great work")
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
@@ -72,8 +77,13 @@ class CommentLibraryPageTest : TeacherTest() {
         val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
         commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
         commentLibraryPage.selectSuggestion(filteredSuggestion)
-        speedGraderCommentsPage.sendComment()
 
+        // Check that the input field was populated with the selected comment
+        speedGraderCommentsPage.assertCommentFieldHasText(filteredSuggestion)
+        speedGraderPage.assertCommentLibraryNotVisible()
+
+        // Check sending selected comment
+        speedGraderCommentsPage.sendComment()
         speedGraderCommentsPage.assertDisplaysCommentText(filteredSuggestion)
         speedGraderPage.assertCommentLibraryNotVisible()
     }
@@ -81,6 +91,7 @@ class CommentLibraryPageTest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun sendCommentFromCommentLibraryWithoutSelectingSuggestion() {
+        createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
         val comment = "Great work"
 
@@ -100,7 +111,9 @@ class CommentLibraryPageTest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun reopenCommentLibraryWhenTextIsModified() {
+        createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
+
         speedGraderCommentsPage.typeComment("great ")
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(3)
@@ -119,14 +132,15 @@ class CommentLibraryPageTest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showEmptyViewWhenFilteringHasNoSuggestion() {
+        createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
-        speedGraderCommentsPage.typeComment("great work, bro")
+
+        speedGraderCommentsPage.typeComment("great work, bro") // Type something that is not present in the comment library
         commentLibraryPage.assertSuggestionListNotVisible()
         commentLibraryPage.assertEmptyViewVisible()
     }
 
-    private fun goToSpeedGraderCommentsPage(): List<String> {
-
+    private fun createCommentLibraryMockData(): List<String> {
         val data = MockCanvas.init(
             teacherCount = 1,
             studentCount = 1,
@@ -135,7 +149,6 @@ class CommentLibraryPageTest : TeacherTest() {
         )
         val teacher = data.teachers[0]
         val course = data.courses.values.first()
-        val student = data.students[0]
 
         data.addCoursePermissions(
             course.id,
@@ -145,12 +158,21 @@ class CommentLibraryPageTest : TeacherTest() {
         val settings = data.userSettings[teacher.id]!!.copy(commentLibrarySuggestions = true)
         data.userSettings[teacher.id] = settings
 
-        val commentLibrarayItems = listOf(
+        val commentLibraryItems = listOf(
             "You are off to a great start. Please add more detail to justify your reasoning.",
             "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit.",
             "Nicely done, group! Great collaboration!"
         )
-        data.commentLibraryItems[teacher.id] = commentLibrarayItems
+        data.commentLibraryItems[teacher.id] = commentLibraryItems
+
+        return commentLibraryItems
+    }
+
+    private fun goToSpeedGraderCommentsPage() {
+        val data = MockCanvas.data
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
+        val student = data.students[0]
 
         val assignment = data.addAssignment(
             courseId = course.id,
@@ -172,7 +194,5 @@ class CommentLibraryPageTest : TeacherTest() {
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectCommentsTab()
-
-        return commentLibrarayItems
     }
 }
