@@ -67,6 +67,10 @@ class SpeedGraderCommentsPage : BasePage() {
         commentEditText.typeText(comment)
     }
 
+    fun clearComment() {
+        commentEditText.clearText()
+    }
+
     fun sendComment() {
         onView(withId(R.id.sendCommentButton) + withEffectiveVisibility(Visibility.VISIBLE))
             .click()

@@ -140,7 +140,54 @@ class CommentLibraryPageTest : TeacherTest() {
         commentLibraryPage.assertEmptyViewVisible()
     }
 
-    private fun createCommentLibraryMockData(): List<String> {
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    fun selectCommentLibrarySuggestionFromMultipleItemResult() {
+        createCommentLibraryMockData()
+        goToSpeedGraderCommentsPage()
+        speedGraderCommentsPage.typeComment("great")
+        commentLibraryPage.assertPageObjects()
+        commentLibraryPage.assertSuggestionsCountGreaterThan(1) //Make sure that we have more than 1 filter result
+        val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
+        commentLibraryPage.selectSuggestion(filteredSuggestion)
+
+        // Check that the input field was populated with the selected comment
+        speedGraderCommentsPage.assertCommentFieldHasText(filteredSuggestion)
+        speedGraderPage.assertCommentLibraryNotVisible()
+
+        // Check sending selected comment
+        speedGraderCommentsPage.sendComment()
+        speedGraderCommentsPage.assertDisplaysCommentText(filteredSuggestion)
+        speedGraderPage.assertCommentLibraryNotVisible()
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    fun showAllCommentLibraryItemsAfterClearingCommentFieldFilter() {
+        val commentLibraryItems = createCommentLibraryMockData()
+        goToSpeedGraderCommentsPage()
+
+        speedGraderCommentsPage.typeComment("Great work!")
+        commentLibraryPage.assertPageObjects()
+        commentLibraryPage.assertSuggestionsCount(1)
+
+        //Select filtered suggestion and verify if it's displayed within the comment text field.
+        val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
+        commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
+        commentLibraryPage.selectSuggestion(filteredSuggestion)
+
+        speedGraderCommentsPage.assertCommentFieldHasText(filteredSuggestion)
+        speedGraderPage.assertCommentLibraryNotVisible()
+
+        //Clearing the comment text field.
+        speedGraderCommentsPage.clearComment()
+
+        //Verify that after clearing the comment text field, all of the comment library suggestions are visible.
+        commentLibraryPage.assertPageObjects()
+        commentLibraryPage.assertSuggestionsCount(commentLibraryItems.size)
+    }
+
+        private fun createCommentLibraryMockData(): List<String> {
         val data = MockCanvas.init(
             teacherCount = 1,
             studentCount = 1,
