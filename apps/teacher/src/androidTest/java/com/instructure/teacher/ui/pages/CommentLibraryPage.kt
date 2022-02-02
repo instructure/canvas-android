@@ -36,6 +36,10 @@ class CommentLibraryPage : BasePage(R.id.commentLibraryRoot) {
         recyclerView.check(RecyclerViewItemCountAssertion(expectedCount))
     }
 
+    fun assertSuggestionsCountGreaterThan(count: Int) {
+        recyclerView.check(RecyclerViewItemCountGreaterThanAssertion(count))
+    }
+
     fun assertSuggestionListNotVisible() {
         recyclerView.assertNotDisplayed()
     }
@@ -51,4 +55,5 @@ class CommentLibraryPage : BasePage(R.id.commentLibraryRoot) {
     fun closeCommentLibrary() {
         onViewWithContentDescription(R.string.close).click()
     }
+
 }
