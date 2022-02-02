@@ -14,15 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.teacher.features.elementary.importantdates
+package com.instructure.canvas.espresso
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesRouter
-
-class TeacherImportantDatesRouter : ImportantDatesRouter {
-
-    override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) = Unit
-
-    override fun openCalendarEvent(canvasContext: CanvasContext, scheduleItem: ScheduleItem) = Unit
-}
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class StubTablet

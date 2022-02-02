@@ -263,7 +263,7 @@ class ImportantDatesViewModelTest {
         viewModel.data.value?.itemViewModels!![0].itemViewModels[0].open()
 
         val canvasContext = CanvasContext.fromContextCode("course_1")
-        val expectedData = ImportantDatesAction.OpenCalendarEvent(canvasContext!!, 1)
+        val expectedData = ImportantDatesAction.OpenCalendarEvent(canvasContext!!, events[0])
 
         assertEquals(expectedData, viewModel.events.value?.getContentIfNotHandled())
     }
