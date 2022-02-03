@@ -28,7 +28,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class CommentLibraryInteractionTest : TeacherTest() {
+class CommentLibraryPageTest : TeacherTest() {
 
     override fun displaysPageObjects() = Unit
 
