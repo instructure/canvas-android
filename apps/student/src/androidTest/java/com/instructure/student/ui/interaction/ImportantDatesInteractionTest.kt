@@ -19,6 +19,7 @@ package com.instructure.student.ui.interaction
 import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -31,6 +32,7 @@ import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.text.SimpleDateFormat
 import java.util.*
 
 @HiltAndroidTest
@@ -45,12 +47,11 @@ class ImportantDatesInteractionTest : StudentTest() {
         val course = data.courses.values.toList()[0]
 
         val event = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
-        val twoDaysFromNowCalendar = getCustomDateCalendar(2)
 
         goToImportantDatesTab(data)
         importantDatesPage.assertItemDisplayed(event.title!!)
         importantDatesPage.assertRecyclerViewItemCount(2) // We count both day texts and calendar events here, since both types are part of the recyclerView.
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(twoDaysFromNowCalendar))
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(2.days.fromNow.iso8601.toDate()))
     }
 
     @Test
@@ -62,12 +63,11 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         data.addAssignmentCalendarEvent(course.id, 2.days.fromNow.iso8601, assignment.name!!, assignment.description!!, true, assignment)
-        val twoDaysFromNowCalendar = getCustomDateCalendar(2)
 
         goToImportantDatesTab(data)
         importantDatesPage.assertItemDisplayed(assignment.name!!)
         importantDatesPage.assertRecyclerViewItemCount(2) // We count both day texts and calendar events here, since both types are part of the recyclerView.
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(twoDaysFromNowCalendar))
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(2.days.fromNow.iso8601.toDate()))
     }
 
     @Test
@@ -88,20 +88,18 @@ class ImportantDatesInteractionTest : StudentTest() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
         data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
-        val twoDaysFromNowCalendar = getCustomDateCalendar(2)
 
         goToImportantDatesTab(data)
         val eventToCheck = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event 2", "Important event 2 description", true)
 
-        importantDatesPage.assertItemDisplayed(eventToCheck.title!!)
         importantDatesPage.assertRecyclerViewItemCount(2) // We count both day texts and calendar events here, since both types are part of the recyclerView.
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(twoDaysFromNowCalendar))
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(2.days.fromNow.iso8601.toDate()))
 
-        //Refresh the page and verify if the previously displayed event will be displayed after the refresh.
+        //Refresh the page and verify if the previously not displayed event will be displayed after the refresh.
         importantDatesPage.pullToRefresh()
         importantDatesPage.assertItemDisplayed(eventToCheck.title!!)
-        importantDatesPage.assertRecyclerViewItemCount(2) // We count both day texts and calendar events here, since both types are part of the recyclerView.
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(twoDaysFromNowCalendar))
+        importantDatesPage.assertRecyclerViewItemCount(3) // We count both day texts and calendar events here, since both types are part of the recyclerView.
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(2.days.fromNow.iso8601.toDate()))
     }
 
     @Test
@@ -111,7 +109,6 @@ class ImportantDatesInteractionTest : StudentTest() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
         val event = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
-        val twoDaysFromNowCalendar = getCustomDateCalendar(2)
 
         goToImportantDatesTab(data)
 
@@ -122,7 +119,7 @@ class ImportantDatesInteractionTest : StudentTest() {
         importantDatesPage.clickImportantDatesItem(event.title!!)
         calendarEventPage.verifyTitle(event.title!!)
         calendarEventPage.verifyDescription(event.description!!)
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(twoDaysFromNowCalendar))
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(2.days.fromNow.iso8601.toDate()))
     }
 
     @Test
@@ -134,7 +131,6 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         data.addAssignmentCalendarEvent(course.id, 2.days.fromNow.iso8601, assignment.name!!, assignment.description!!, true, assignment)
-        val twoDaysFromNowCalendar = getCustomDateCalendar(2)
 
         goToImportantDatesTab(data)
         importantDatesPage.assertItemDisplayed(assignment.name!!)
@@ -143,7 +139,7 @@ class ImportantDatesInteractionTest : StudentTest() {
         //Opening the calendar assignment event
         importantDatesPage.clickImportantDatesItem(assignment.name!!)
         assignmentDetailsPage.verifyAssignmentDetails(assignment)
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(twoDaysFromNowCalendar))
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(2.days.fromNow.iso8601.toDate()))
     }
 
     @Test
@@ -158,7 +154,6 @@ class ImportantDatesInteractionTest : StudentTest() {
         data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
 
         val items = data.courseCalendarEvents
-        val twoDaysFromNowCalendar = getCustomDateCalendar(2)
 
         goToImportantDatesTab(data)
 
@@ -168,7 +163,7 @@ class ImportantDatesInteractionTest : StudentTest() {
             }
         }
         importantDatesPage.assertRecyclerViewItemCount(3) // We count both day texts and calendar events here, since both types are part of the recyclerView.
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(twoDaysFromNowCalendar))
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(2.days.fromNow.iso8601.toDate()))
     }
 
     @Test
@@ -186,10 +181,6 @@ class ImportantDatesInteractionTest : StudentTest() {
         data.addCourseCalendarEvent(course.id,
             0.days.fromNow.iso8601, "Important event Today", "Important event today description", true)
 
-        val twoDaysFromNowCalendar = getCustomDateCalendar(2)
-        val threeDaysFromNowCalendar = getCustomDateCalendar(3)
-        val todayCalendar = getCustomDateCalendar(0)
-
         val items = data.courseCalendarEvents
 
         goToImportantDatesTab(data)
@@ -200,9 +191,9 @@ class ImportantDatesInteractionTest : StudentTest() {
             }
         }
 
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(todayCalendar))
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(twoDaysFromNowCalendar))
-        importantDatesPage.assertDayTextIsDisplayed(concatDayString(threeDaysFromNowCalendar))
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(0.days.fromNow.iso8601.toDate()))
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(2.days.fromNow.iso8601.toDate()))
+        importantDatesPage.assertDayTextIsDisplayed(generateDayString(3.days.fromNow.iso8601.toDate()))
         importantDatesPage.assertRecyclerViewItemCount(6) // We count both day texts and calendar events here, since both types are part of the recyclerView.
     }
 
@@ -216,33 +207,8 @@ class ImportantDatesInteractionTest : StudentTest() {
         Thread.sleep(100)
     }
 
-    private fun concatDayString(calendar: Calendar): String {
-        val dayOfMonthIntValue = calendar.get(Calendar.DAY_OF_MONTH)
-        val weekDayString = getWeekDayString(calendar.get(Calendar.DAY_OF_WEEK))
-        return if(dayOfMonthIntValue < 10) weekDayString + ", " + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US) + " 0" + calendar.get(Calendar.DAY_OF_MONTH).toString()
-        else weekDayString + ", " + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US) + " " + calendar.get(Calendar.DAY_OF_MONTH).toString()
-    }
-
-    private fun getCustomDateCalendar(dayDiffFromToday: Int): Calendar {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        cal.add(Calendar.DATE, dayDiffFromToday)
-        cal.set(Calendar.HOUR_OF_DAY, 10)
-        cal.set(Calendar.MINUTE, 1)
-        cal.set(Calendar.SECOND, 1)
-        return cal
-    }
-
-    private fun getWeekDayString(weekdayIntValue: Int): String {
-        return when (weekdayIntValue) {
-            1 -> "Sunday"
-            2 -> "Monday"
-            3 -> "Tuesday"
-            4 -> "Wednesday"
-            5 -> "Thursday"
-            6 -> "Friday"
-            7 -> "Saturday"
-            else -> ""
-        }
+    private fun generateDayString(date: Date?): String {
+        return SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(date)
     }
 
     private fun createMockData(
