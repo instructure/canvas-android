@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Les réponses de cet étudiant sont masquées du fait que cette tâche est anonyme.</string>
 
-    <string name="studentAnnotationUnsupported">Annotation d’étudiant (non pris en charge)</string>
-    <string name="studentAnnotationUnsupportedDescription">L’annotation d’étudiant n’est actuellement pas prise en charge sur les mobiles.</string>
-    <string name="unsupportedSubmissionType">Type d’envoi non pris en charge</string>
-    <string name="studentAnnotationUnsupportedMessage">L’envoi ne peut pas être affiché, car l’annotation d’étudiant n’est actuellement pas prise en charge sur mobile.</string>
     <string name="schedule_marked_as_done">Vous l’avez marqué comme terminé.</string>
     <string name="error_saving_assignment_closed_grading_period">Ne peut pas changer la date d’échéance lors de l’échéance au cours d\'une période de notation fermée.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Aller à aujourd’hui</string>
@@ -1225,4 +1221,16 @@
     <string name="a11y_contact_info_click_description">Envoi du message</string>
     <string name="somethingWentWrong">Une erreur est survenue</string>
     <string name="failedToLoadQuiz">Échec de chargement du questionnaire</string>
+    <string name="failedToLoadSubmission">Échec de chargement de l’envoi</string>
+    <string name="studentAnnotationToolbarTitle">Annotation de l’étudiant</string>
+    <string name="submissionTypeStudentAnnotation">Annotation de l’étudiant</string>
+    <string name="gradesNoDueDate">Aucune date d’échéance</string>
+    <string name="missingAssignment">Manquant</string>
+    <string name="dontSave">Ne pas enregistrer</string>
+    <string name="textSubmissionExitConfirmationTitle">Enregistrer ébauche?</string>
+    <string name="textSubmissionExitConfirmationMessage">Autrement, vos modifications ne seront pas enregistrées.</string>
+    <string name="submissionDraftAvailableSubtitle">Tapez ici pour continuer</string>
+    <string name="submissionDraftAvailableTitle">Ébauche disponible</string>
+    <string name="errorLoadingSubmission">Une erreur s\'est produite lors du chargement des envois</string>
+    <string name="loadFullContent">Appuyez pour voir le contenu complet</string>
 </resources>
