@@ -37,6 +37,7 @@ class ImportantDatesInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
+    //The UI is different on tablet, so we only check the phone version
     @StubTablet
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowCalendarEvents() {
@@ -76,7 +77,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testPullToRefresh() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -91,7 +92,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCalendarEvent() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -99,14 +100,14 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         goToImportantDatesTab(data)
         importantDatesPage.assertItemDisplayed(event.title!!)
-        importantDatesPage.clickItem(event.title!!)
+        importantDatesPage.clickImportantDatesItem(event.title!!)
         calendarEventPage.verifyTitle(event.title!!)
         calendarEventPage.verifyDescription(event.description!!)
     }
 
     @Test
     @StubTablet
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenAssignment() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -116,7 +117,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         goToImportantDatesTab(data)
         importantDatesPage.assertItemDisplayed(assignment.name!!)
-        importantDatesPage.clickItem(assignment.name!!)
+        importantDatesPage.clickImportantDatesItem(assignment.name!!)
         assignmentDetailsPage.verifyAssignmentDetails(assignment)
     }
 

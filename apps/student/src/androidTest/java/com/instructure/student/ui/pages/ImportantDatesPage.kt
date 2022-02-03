@@ -37,7 +37,7 @@ class ImportantDatesPage : BasePage(R.id.importantDatesPage) {
         onView(withId(R.id.importantDatesRecyclerView)).swipeDown()
     }
 
-    fun clickItem(title: String) {
+    fun clickImportantDatesItem(title: String) {
         waitForView(withAncestor(R.id.importantDatesRecyclerView) + withText(title)).click()
     }
 }
