@@ -1242,10 +1242,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Odpowiedzi tego uczestnika są ukryte, ponieważ to zadanie jest anonimowe.</string>
 
-    <string name="studentAnnotationUnsupported">Adnotacja uczestnika (nieobsługiwana)</string>
-    <string name="studentAnnotationUnsupportedDescription">Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
-    <string name="unsupportedSubmissionType">Nieobsługiwany typ zgłoszenia</string>
-    <string name="studentAnnotationUnsupportedMessage">Przesyłki nie można wyświetlić, ponieważ Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
     <string name="schedule_marked_as_done">Oznaczono je jako gotowe.</string>
     <string name="error_saving_assignment_closed_grading_period">Nie można zmienić terminu, gdy termin znajduje się w zamkniętym okresie oceniania.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Przejdź do dnia dzisiejszego</string>
@@ -1253,4 +1249,16 @@
     <string name="a11y_contact_info_click_description">wyślij wiadomość</string>
     <string name="somethingWentWrong">Coś poszło nie tak</string>
     <string name="failedToLoadQuiz">Nie udało się wczytać testu</string>
+    <string name="failedToLoadSubmission">Nie udało się załadować przesyłki</string>
+    <string name="studentAnnotationToolbarTitle">Adnotacja uczestnika</string>
+    <string name="submissionTypeStudentAnnotation">Adnotacja uczestnika</string>
+    <string name="gradesNoDueDate">Brak terminu</string>
+    <string name="missingAssignment">Brak</string>
+    <string name="dontSave">Nie zapisuj</string>
+    <string name="textSubmissionExitConfirmationTitle">Zapisać wersję roboczą?</string>
+    <string name="textSubmissionExitConfirmationMessage">W przeciwnym razie Twoje zmiany nie zostaną zapisane</string>
+    <string name="submissionDraftAvailableSubtitle">Stuknij tutaj, aby kontynuować</string>
+    <string name="submissionDraftAvailableTitle">Dostępna jest wersja robocza</string>
+    <string name="errorLoadingSubmission">Wystąpił błąd podczas wczytywania przesyłki</string>
+    <string name="loadFullContent">Stuknij, aby zobaczyć całą zawartość</string>
 </resources>

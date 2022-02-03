@@ -1200,10 +1200,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">この課題は匿名であるため、この学生の応答は表示されません。</string>
 
-    <string name="studentAnnotationUnsupported">学生の注釈（サポートされていません）</string>
-    <string name="studentAnnotationUnsupportedDescription">現在、学生の注釈はモバイルではサポートされていません。</string>
-    <string name="unsupportedSubmissionType">サポートされていない提出タイプ</string>
-    <string name="studentAnnotationUnsupportedMessage">現在、学生の注釈はモバイルでサポートされていないため、提出物を表示できません。</string>
     <string name="schedule_marked_as_done">「終了」としてマークしました。</string>
     <string name="error_saving_assignment_closed_grading_period">締め切り日を終了した採点期間の締め切り後に変更することはできません。</string>
     <string name="a11y_content_description_schedule_jump_to_today">本日に移動</string>
@@ -1211,4 +1207,16 @@
     <string name="a11y_contact_info_click_description">メッセージを送信</string>
     <string name="somethingWentWrong">なにかが失敗しました</string>
     <string name="failedToLoadQuiz">クイズ読み込みに失敗しました</string>
+    <string name="failedToLoadSubmission">提出読み込みに失敗しました</string>
+    <string name="studentAnnotationToolbarTitle">受講生の注釈</string>
+    <string name="submissionTypeStudentAnnotation">受講生の注釈</string>
+    <string name="gradesNoDueDate">締切日なし</string>
+    <string name="missingAssignment">提出なし</string>
+    <string name="dontSave">保存しないでください</string>
+    <string name="textSubmissionExitConfirmationTitle">下書きを保存しますか？</string>
+    <string name="textSubmissionExitConfirmationMessage">これをしない場合、変更内容が保存されません</string>
+    <string name="submissionDraftAvailableSubtitle">続けるにはここをタップします</string>
+    <string name="submissionDraftAvailableTitle">ドラフト版</string>
+    <string name="errorLoadingSubmission">提出読み込み中にエラーが起こりました</string>
+    <string name="loadFullContent">タップしてすべてのコンテンツを表示する</string>
 </resources>

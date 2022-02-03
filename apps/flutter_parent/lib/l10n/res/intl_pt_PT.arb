@@ -782,7 +782,7 @@
       "points": {}
     }
   },
-  "Due": "Vencimento",
+  "Due": "Limite",
   "@Due": {
     "description": "Label for an assignment due date",
     "type": "text",
@@ -814,13 +814,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Set a date and time to be notified of this specific assignment.": "Defina uma data e hora para ser notificado sobre esta atribuição específica.",
+  "Set a date and time to be notified of this specific assignment.": "Defina uma data e hora para ser notificado sobre esta tarefa específica.",
   "@Set a date and time to be notified of this specific assignment.": {
     "description": "Description for row to set reminders",
     "type": "text",
     "placeholders": {}
   },
-  "You will be notified about this assignment on…": "Você será notificado sobre esta atribuição em...",
+  "You will be notified about this assignment on…": "Você será notificado sobre esta tarefa em...",
   "@You will be notified about this assignment on…": {
     "description": "Description for when a reminder is set",
     "type": "text",
@@ -971,7 +971,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "assignmentGradeAboveThreshold": "Classificação de atribuição acima {threshold}",
+  "assignmentGradeAboveThreshold": "Classificação de tarefa acima {threshold}",
   "@assignmentGradeAboveThreshold": {
     "description": "Title for alerts when an assignment grade is above the threshold value",
     "type": "text",
@@ -979,7 +979,7 @@
       "threshold": {}
     }
   },
-  "assignmentGradeBelowThreshold": "Classificação de atribuição abaixo {threshold}",
+  "assignmentGradeBelowThreshold": "Classificação de tarefa abaixo {threshold}",
   "@assignmentGradeBelowThreshold": {
     "description": "Title for alerts when an assignment grade is below the threshold value",
     "type": "text",
@@ -1137,13 +1137,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Assignment grade below": "Classificação de atribuição abaixo",
+  "Assignment grade below": "Classificação de tarefa abaixo",
   "@Assignment grade below": {
     "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Assignment grade above": "Classificação de atribuição acima",
+  "Assignment grade above": "Classificação de tarefa acima",
   "@Assignment grade above": {
     "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
     "type": "text",
@@ -2049,7 +2049,7 @@
       "time": {}
     }
   },
-  "No Due Date": "Sem data de vencimento",
+  "No Due Date": "Sem data de limite",
   "@No Due Date": {
     "description": "Label for assignments that do not have a due date",
     "type": "text",

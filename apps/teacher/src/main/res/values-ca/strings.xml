@@ -22,18 +22,18 @@
     <string name="tab_details">Detalls</string>
     <string name="tab_questions">Preguntes</string>
     <string name="tab_submissions">Entregues</string>
-    <string name="tab_assignments">Tasques</string>
+    <string name="tab_assignments">Activitats</string>
     <string name="tab_profile">Perfil</string>
     <string name="tab_people">Persones</string>
-    <string name="tab_quizzes">Qüestionaris</string>
-    <string name="tab_discussions">Debats</string>
+    <string name="tab_quizzes">Proves</string>
+    <string name="tab_discussions">Fòrums</string>
     <string name="tab_announcements">Anuncis</string>
     <string name="tab_attendance">Assistència</string>
     <string name="tab_pages">Pàgines</string>
     <string name="tab_todo">Tasques pendents</string>
     <string name="content_description_school_logo">Logotip de l\'escola</string>
-    <string name="search_guides">Cerca a les Guies de Canvas</string>
-    <string name="canvas_guides">Guies de Canvas</string>
+    <string name="search_guides">Cerca les guies del Canvas</string>
+    <string name="canvas_guides">Guies del Canvas</string>
     <string name="search_guides_icon">Icona de les Guies de Canvas</string>
     <string name="search_guides_details">Respostes a preguntes freqüents</string>
     <string name="report_problem">Informeu d\'un problema</string>
@@ -55,7 +55,7 @@
     <string name="toolbar_event">Esdeveniment</string>
     <string name="location">Ubicació</string>
     <string name="event_date">Data de l\'esdeveniment</string>
-    <string name="course">Curs</string>
+    <string name="course">Assignatura</string>
     <string name="profile">Perfil</string>
     <string name="share">Comparteix</string>
     <string name="share_with">Comparteix amb&#8230;</string>
@@ -68,7 +68,7 @@
     <string name="no_subject">(sense assumpte)</string>
     <string name="compose_message">Redacta un missatge</string>
     <string name="newMessage">Missatge nou</string>
-    <string name="courses">Cursos</string>
+    <string name="courses">Assignatures</string>
     <string name="compose_message_no_ellipsis">Redacta un missatge</string>
     <string name="send">Envia</string>
     <string name="attachment">Fitxer adjunt</string>
@@ -76,11 +76,11 @@
     <string name="not_available_offline">Les funcions no estan disponibles fora de línia</string>
     <string name="empty_message">El missatge no pot quedar en blanc.</string>
     <string name="message_has_no_recipients">En aquest moment, aquest missatge no té cap destinatari.</string>
-    <string name="course_spinner_title">Curs:</string>
+    <string name="course_spinner_title">Assignatura:</string>
     <string name="reply_to_message">Respon</string>
     <string name="forward_message">Reenvia el missatge</string>
-    <string name="label_to">Per a</string>
-    <string name="label_course">Curs</string>
+    <string name="label_to">Fins al</string>
+    <string name="label_course">Assignatura</string>
     <string name="label_subject">Assumpte</string>
 
     <string name="common_send">Envia</string>
@@ -120,10 +120,10 @@
 
     <string name="no_title">Sense títol</string>
     <string name="announcement_create_success">Anunci creat.</string>
-    <string name="announcement_create_fail">No s\'ha pogut crear l\'anunci. Reviseu la connexió i torneu a provar-ho.</string>
+    <string name="announcement_create_fail">No s\'ha pogut crear l\'anunci. Reviseu la connexió i torneu-ho a provar.</string>
     <string name="create_announcement_delay_posting">Publicació retardada</string>
 
-    <string name="discussion">Debat</string>
+    <string name="discussion">Fòrum</string>
 
     <string name="sunday">Diumenge</string>
     <string name="monday">Dilluns</string>
@@ -138,29 +138,29 @@
     <string name="next">Següent</string>
     <string name="upload_to_cnavas">Penja a Canvas</string>
     <string name="upload_my_files">Els meus fitxers</string>
-    <string name="upload_course_files">Fitxers del curs</string>
+    <string name="upload_course_files">Fitxers de l\'assignatura</string>
     <string name="upload_to">Penja a</string>
     <string name="message_attachments">Fitxers adjunts al missatge</string>
     <string name="with">amb</string>
     <string name="discussion_attachment">Adjunta un fitxer</string>
     <string name="select_files_or_photos">Seleccioneu fitxers o fotografies</string>
-    <string name="uploading_files">S\'estan penjant els fitxers&#8230;</string>
+    <string name="uploading_files">S\'estan carregant els fitxers&#8230;</string>
     <string name="no_attachment">(Sense cap fitxer adjunt)</string>
     <string name="creating_announcement">S\'està creant un anunci&#8230;</string>
 
     <string name="copy_email">Copia l\'adreça electrònica</string>
     <string name="all_grading_periods">Tots els períodes de qualificació</string>
-    <string name="no_submissions">No hi ha cap entrega</string>
-    <string name="all_submissions_graded">Totes les entregues qualificades</string>
+    <string name="no_submissions">Cap entrega</string>
+    <string name="all_submissions_graded">Totes les entregues amb nota</string>
     <string name="icon">icona</string>
     <plurals name="grading_status_assignment">
-        <item quantity="one">%d entrega requereix qualificació</item>
-        <item quantity="other">%d entregues requereixen qualificació</item>
+        <item quantity="one">%d entrega requereix nota</item>
+        <item quantity="other">%d entregues requereixen nota</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
-        <item quantity="one">Hi ha %d beneficiari sense qualificació.</item>
-        <item quantity="other">Hi ha %d beneficiaris sense qualificació.</item>
+        <item quantity="one">Hi ha %d beneficiari sense nota.</item>
+        <item quantity="other">Hi ha %d beneficiaris sense nota.</item>
     </plurals>
 
     <string name="inbox_empty_title">Sense missatges</string>
@@ -171,16 +171,16 @@
     <string name="reply">Respon</string>
     <string name="replyAll">Respon a tots</string>
     <string name="forward">Reenvia</string>
-    <string name="star">Estrella</string>
+    <string name="star">Marca amb una estrella</string>
     <string name="archive">Arxiva</string>
     <string name="delete">Suprimeix</string>
     <string name="message">Missatge</string>
-    <string name="unarchive">Anul·la l\'arxivament</string>
+    <string name="unarchive">Desarxiva</string>
     <string name="message_options">Opcions del missatge</string>
     <string name="markAsUnread">Marca-ho com no llegit</string>
-    <string name="message_delete_warning">Segur que voleu suprimir la còpia d\'aquest missatge? Aquesta acció no es pot desfer.</string>
-    <string name="conversation_delete_warning">Segur que voleu suprimir la còpia d\'aquesta conversa? Aquesta acció no es pot desfer.</string>
-    <string name="error_conversation_generic">No es pot realitzar aquesta acció. Reviseu la connexió i torneu a provar-ho.</string>
+    <string name="message_delete_warning">Segur que voleu suprimir aquesta còpia del missatge? Aquesta acció no es pot desfer.</string>
+    <string name="conversation_delete_warning">Segur que voleu suprimir la vostra còpia d\'aquesta conversa? Aquesta acció no es pot desfer.</string>
+    <string name="error_conversation_generic">No es pot realitzar aquesta acció. Reviseu la connexió i torneu-ho a provar.</string>
     <string name="message_archived">Missatge arxivat</string>
     <string name="message_unarchived">Missatge no arxivat</string>
     <string name="message_deleted">Missatge suprimit</string>
@@ -193,18 +193,18 @@
     <string name="published_content_description">Casella de verificació de Publicat</string>
     <string name="points_with_value">punts</string>
     <string name="point_with_value">punt</string>
-    <string name="no_due_date">Sense data de venciment</string>
-    <string name="due_date">Data de venciment</string>
+    <string name="no_due_date">Sense data de lliurament</string>
+    <string name="due_date">Data de lliurament</string>
 
     <string name="view_replies">Mostra les respostes</string>
-    <string name="view_discussion">Mostra el debat</string>
+    <string name="view_discussion">Mostra el fòrum</string>
 
     <string name="edit">Edita</string>
     <string name="save">Desa</string>
-    <string name="successfully_updated_assignment">S\'ha actualitzat correctament la tasca.</string>
-    <string name="successfully_updated_quiz">S\'ha actualitzat correctament el qüestionari.</string>
-    <string name="failure_updating_assignment">Alguna cosa no ha anat bé en actualitzar la tasca. Torneu a provar-ho.</string>
-    <string name="failure_deleting_assignment">Alguna cosa no ha anat bé en suprimir la tasca. Torneu a provar-ho.</string>
+    <string name="successfully_updated_assignment">S\'ha actualitzat correctament l\'activitat.</string>
+    <string name="successfully_updated_quiz">S\'ha actualitzat correctament la prova.</string>
+    <string name="failure_updating_assignment">Alguna cosa no ha anat bé en actualitzar l\'activitat. Torneu-ho a provar.</string>
+    <string name="failure_deleting_assignment">Alguna cosa no ha anat bé en suprimir l\'activitat. Torneu-ho a provar.</string>
     <string name="cant_unpublish">No es pot anul·lar la publicació si hi ha entregues dels estudiants.</string>
     <string name="messages">Missatges</string>
     <plurals name="reply_message_plus_label">
@@ -212,25 +212,26 @@
         <item quantity="other">+ %d missatges</item>
     </plurals>
     <plurals name="submissionNeedsGrading">
-        <item quantity="one">%d entrega requereix qualificació</item>
-        <item quantity="other">%d entregues requereixen qualificació</item>
+        <item quantity="one">%d entrega requereix nota</item>
+        <item quantity="other">%d entregues requereixen nota</item>
     </plurals>
 
-    <string name="delete_assignment_message">Segur que voleu suprimir aquesta tasca?</string>
+    <string name="delete_assignment_message">Segur que voleu suprimir aquesta activitat?</string>
+
     <string name="max_count">99+</string>
     <string name="message_student">Envia un missatge a l\'estudiant</string>
 
     <string name="message_these_students">Envia un missatge a aquests estudiants</string>
-    <string name="submission_status_missing">Falta</string>
+    <string name="submission_status_missing">No presentat</string>
     <string name="submission_status_late">Tardà</string>
-    <string name="submission_status_submitted">Enviat</string>
+    <string name="submission_status_submitted">Entregat</string>
     <string name="submission_status_not_submitted">Encara no s\'ha entregat</string>
     <string name="submission_status_excused">Excusat</string>
-    <string name="last_login_format">Darrer inici de sessió: %s</string>
+    <string name="last_login_format">Últim inici de sessió: %s</string>
 
-    <string name="turnOnAnonymousGrading">Activeu l\'opció Qualificacions anònimes</string>
-    <string name="turnOffAnonymousGrading">Desactiveu l\'opció Qualificacions anònimes</string>
-    <string name="anonymousGradingLabel">Qualificacions anònimes</string>
+    <string name="turnOnAnonymousGrading">Activeu l\'opció Notes anònimes</string>
+    <string name="turnOffAnonymousGrading">Desactiveu l\'opció Notes anònimes</string>
+    <string name="anonymousGradingLabel">Nota anònima</string>
     <string name="anonymousStudentLabel">Estudiant</string>
 
     <!-- TODO -->
@@ -239,40 +240,40 @@
     <string-array name="submission_filters">
         <item>Totes les entregues</item>
         <item>Entregues tardanes</item>
-        <item>Falten entregues</item>
-        <item>Qualificació alta</item>
-        <item>Qualificació baixa</item>
+        <item>Entregues no presentades</item>
+        <item>Nota alta</item>
+        <item>Nota baixa</item>
     </string-array>
 
     <string-array name="people_filters">
         <item>Pel nom</item>
-        <item>Qualificació d\'alta a baixa</item>
-        <item>Qualificació de baixa a alta</item>
+        <item>Nota d\'alta a baixa</item>
+        <item>Nota de baixa a alta</item>
     </string-array>
 
-    <string name="content_description_course_tab">Pestanya Curs</string>
+    <string name="content_description_course_tab">Pestanya Assignatura</string>
     <string name="content_description_inbox_tab">Pestanya Safata d\'entrada</string>
     <string name="content_description_profile_tab">Pestanya Perfil</string>
     <string name="close">Tanca</string>
-    <string name="no_course_selected">Seleccioneu un curs</string>
-    <string name="discussion_reply_to_entry">Resposta al debat</string>
+    <string name="no_course_selected">Seleccioneu una assignatura</string>
+    <string name="discussion_reply_to_entry">Resposta al fòrum</string>
     <string name="announcement_reply_to_entry">Resposta a l\'anunci</string>
     <string name="error_text_missing">Afegiu text per enviar un missatge</string>
     <string name="error_sending_message">No s\'ha pogut enviar aquest missatge. Toqueu per tornar a provar-ho.</string>
     <string name="message_sent_successfully">S\'ha enviat correctament el missatge.</string>
     <string name="error_occurred">S\'ha produït un error inesperat.</string>
-    <string name="no_assignments_with_file_upload">Aquest curs no té cap tasca en què es permeti penjar fitxers.</string>
+    <string name="no_assignments_with_file_upload">Aquesta assignatura no té cap activitat en què es permeti penjar fitxers.</string>
     <string name="extension_not_allowed">El tipus de fitxer seleccionat no està permès.</string>
     <string name="allowed_extensions">Extensions permeses:&#160;</string>
     <string name="files_uploaded_successfully">S\'han penjat correctament els fitxers.</string>
-    <string name="error_uploading_file">S\'ha produït un error en penjar el fitxer. Torneu a provar-ho.</string>
+    <string name="error_uploading_file">S\'ha produït un error en penjar el fitxer. Torneu-ho a provar.</string>
     <string name="uploading_file">S\'està penjant el fitxer&#8230;</string>
     <string name="no_apps">El dispositiu no té cap aplicació instal·lada per obrir aquest fitxer.</string>
     <string name="turn_in">Entrega</string>
-    <string name="error_getting_photo">S\'ha produït un error en obtenir la foto. Torneu a provar-ho.</string>
+    <string name="error_getting_photo">S\'ha produït un error en obtenir la foto. Torneu-ho a provar.</string>
     <string name="loading_files_indeterminate">S\'estan carregant els fitxers&#8230;</string>
     <string name="no_files_uploaded">No heu seleccionat cap fitxer.</string>
-    <string name="file_upload_not_supported">No podeu penjar fitxers a la tasca seleccionada.</string>
+    <string name="file_upload_not_supported">No podeu penjar fitxers a l\'activitat seleccionada.</string>
     <string name="one_or_more_extension_not_allowed">Un o més fitxers tenen una extensió de fitxer que no està permesa</string>
 
     <string name="inbox_all">Safata d\'entrada</string>
@@ -284,7 +285,7 @@
     <string name="uploading_file_num" formatted="false">S\'estan penjant %d de %d</string>
     <string name="page_not_found">No s\'ha trobat la pàgina.</string>
     <string name="no_connection">Sense connexió</string>
-    <string name="unauthorized_access">No teniu autorització per accedir-hi. O bé no teniu permís o encara no podeu accedir-hi (per exemple, si el curs encara no ha començat)</string>
+    <string name="unauthorized_access">No teniu autorització per accedir-hi. O bé no teniu permís o encara no podeu accedir-hi (per exemple, si l\'assignatura encara no ha començat)</string>
     <string name="server_error">S\'ha produït un error de servidor.</string>
     <string name="error_loading_files">S\'ha produït un error en carregar el fitxer. Reviseu la connexió d\'Internet i torneu a provar-ho.</string>
     <string name="files_submitted_successfully">S\'han entregat correctament els fitxers.</string>
@@ -297,23 +298,24 @@
     <string name="teacher_okay">D\'acord</string>
     <string name="teacher_upload">Penja</string>
     <string name="settings">Configuració</string>
-    <string name="edit_courses">Edita els cursos</string>
+    <string name="edit_courses">Edita les assignatures</string>
     <string name="start_annotating">Comença a anotar</string>
     <string name="empty_speedgrader_content">Vista de SpeedGrader buida, cal disseny</string>
 
     <!--Course Settings-->
-    <string name="course_settings">Configuració del curs</string>
-    <string name="course_name">Nom del curs</string>
+    <string name="course_settings">Configuració de l\'assignatura</string>
+    <string name="course_name">Nom de l\'assignatura</string>
     <string name="set_home_to">Estableix "Inici" en&#8230;</string>
-    <string name="course_activity_stream">Seqüència d\'activitats del curs</string>
+    <string name="course_activity_stream">Seqüència d\'activitats de l\'assignatura</string>
     <string name="pages_front_page">Pàgines pàgina frontal</string>
     <string name="frontPage">Pàgina frontal</string>
-    <string name="course_modules">Mòduls del curs</string>
-    <string name="assignments_list">Llista de tasques</string>
+    <string name="course_modules">Continguts de l\'assignatura</string>
+    <string name="assignments_list">Llista d\'activitats</string>
     <string name="syllabus">Temari</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
-    <string name="multiple_due_dates">Dates de venciment múltiples</string>
+    <string name="multiple_due_dates">Dates de lliurament múltiples</string>
     <string name="everyone">Tothom</string>
     <string name="everyone_else">Tots els altres</string>
     <string name="unknown_student">Estudiant desconegut</string>
@@ -322,74 +324,74 @@
     <string name="due_date_at_time" formatted="false">Venç el %1s a les %2s</string>
     <string name="last_post" formatted="false">Darrera publicació %s</string>
     <string name="submission_types">Tipus d\'entrega</string>
-    <string name="full_due_date_details">Detalls complets sobre la data de venciment</string>
+    <string name="full_due_date_details">Detalls complets sobre la data de lliurament</string>
     <string name="availability_label">Disponibilitat:</string>
     <string name="available_to_label">Disponible per a:</string>
     <string name="available_from_label">Disponible de:</string>
     <string name="due_for_label">Per a:</string>
-    <string name="due_label">Venciment:</string>
+    <string name="due_label">Data de lliurament:</string>
     <string name="details_available_to_label">Disponible per a</string>
     <string name="details_available_from_label">Disponible de</string>
     <string name="details_due_for_label">Per a</string>
-    <string name="due_date_header_label">Venciment</string>
-    <string name="assignment_details">Detalls de la tasca</string>
-    <string name="no_content">Sense cap contingut</string>
+    <string name="due_date_header_label">Data de lliurament</string>
+    <string name="assignment_details">Detalls de l\'activitat</string>
+    <string name="no_content">Sense contingut</string>
     <string name="submissions">Entregues</string>
-    <string name="no_assignment_description_filler">Afegiu instruccions a aquesta tasca per ajudar els estudiants a realitzar-la.</string>
-    <string name="no_quiz_description_filler">Afegiu instruccions a aquest qüestionari per ajudar els estudiants a realitzar-lo.</string>
-    <string name="page_title_due_dates">Dates de venciment</string>
-    <string name="edit_assignment">Edita la tasca</string>
-    <string name="edit_quiz">Edita el qüestionari</string>
+    <string name="no_assignment_description_filler">Afegiu instruccions a aquesta activitat per ajudar els estudiants a realitzar-la.</string>
+    <string name="no_quiz_description_filler">Afegiu instruccions a aquesta prova per ajudar els estudiants a realitzar-la.</string>
+    <string name="page_title_due_dates">Dates de lliurament</string>
+    <string name="edit_assignment">Edita l\'activitat</string>
+    <string name="edit_quiz">Edita la prova</string>
     <string name="title">Títol</string>
     <string name="description">Descripció</string>
-    <string name="grade_total">Total de qualificacions</string>
-    <string name="grade">Qualificació</string>
-    <string name="enter_grade">Introdueix la qualificació</string>
+    <string name="grade_total">Total de notes</string>
+    <string name="grade">Nota</string>
+    <string name="enter_grade">Introdueix la nota</string>
     <string name="override">Substitueix</string>
     <string name="calculated_by_rubric">Calculat per rúbrica</string>
-    <string name="customize_grade">Personalitza la qualificació</string>
+    <string name="customize_grade">Personalitza la nota</string>
     <string name="out_of_points">De %1$s</string>
     <string name="gpa">GPA</string>
-    <string name="letter_grade">Qualificació amb lletra</string>
+    <string name="letter_grade">Nota amb lletra</string>
     <string name="excuse_student">Excusa l\'estudiant</string>
     <string name="excuseGroup">Excusa el grup</string>
     <string name="complete_grade">Complet</string>
     <string name="incomplete_grade">Incomplet</string>
-    <string name="not_graded">Sense qualificació</string>
+    <string name="not_graded">Sense nota</string>
     <string name="excused">Excusat</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
     <string name="grade_value_format_talk_back">%1$s de %2$s</string>
     <string name="publish">Publica</string>
-    <string name="error_saving_assignment">S\'ha produït un error en provar de desar la tasca. Torneu a provar-ho.</string>
-    <string name="error_saving_quiz">S\'ha produït un error en provar de desar el qüestionari. Torneu a provar-ho.</string>
-    <string name="assignment_name_must_be_set">S\'ha d\'establir el nom de la tasca.</string>
+    <string name="error_saving_assignment">S\'ha produït un error en provar de desar l\'activitat. Torneu-ho a provar.</string>
+    <string name="error_saving_quiz">S\'ha produït un error en provar de desar la prova. Torneu-ho a provar.</string>
+    <string name="assignment_name_must_be_set">S\'ha d\'establir el nom de l\'activitat.</string>
     <string name="announcement_name_must_be_set">S\'ha d\'establir el títol de l\'anunci.</string>
-    <string name="quiz_title_must_be_set">S\'ha d\'establir el títol del qüestionari.</string>
-    <string name="assignment_points_must_be_set">S\'han d\'establir els punts de la tasca.</string>
+    <string name="quiz_title_must_be_set">S\'ha d\'establir el títol de la prova.</string>
+    <string name="assignment_points_must_be_set">S\'han d\'establir els punts de l\'activitat.</string>
     <string name="assignment_points_must_be_a_number">La quantitat de punts possibles ha de ser un número</string>
-    <string name="quiz_points_must_be_set">S\'han d\'establir els punts del qüestionari.</string>
-    <string name="assignee_type_course_sections">Seccions del curs</string>
+    <string name="quiz_points_must_be_set">S\'han d\'establir els punts de la prova.</string>
+    <string name="assignee_type_course_sections">Seccions de l\'assignatura</string>
     <string name="assignee_type_groups">Grups</string>
     <string name="assignee_type_students">Estudiants</string>
     <string name="page_title_add_assignees">Afegeix beneficiaris</string>
     <string name="assign_to">Assigna a</string>
     <string name="available_from">Disponible de</string>
     <string name="available_to">Disponible per a</string>
-    <string name="unlock_after_due_date_error">La data de desbloqueig no pot ser posterior a la data de venciment</string>
-    <string name="lock_before_due_date_error">La data de bloqueig no pot ser anterior a la data de venciment</string>
+    <string name="unlock_after_due_date_error">La data de desbloqueig no pot ser posterior a la fi de la secció</string>
+    <string name="lock_before_due_date_error">La data de bloqueig no pot ser anterior a la data d\'inici</string>
     <string name="lock_after_unlock_error">La data de bloqueig no pot ser anterior a la data de desbloqueig</string>
     <string name="assignee_blank_error">El camp Beneficiari no pot quedar en blanc</string>
-    <string name="remove">Elimina</string>
-    <string name="add_due_date">Afegeix una data de venciment</string>
+    <string name="remove">Suprimeix</string>
+    <string name="add_due_date">Afegeix una data de lliurament</string>
     <string name="full_submission_details">Informació completa sobre l\'entrega</string>
-    <string name="graded">Qualificat</string>
+    <string name="graded">Amb nota</string>
     <string name="needsGrading">S\'ha de qualificar</string>
-    <string name="not_submitted">No s\'ha enviat</string>
+    <string name="not_submitted">No entregat</string>
     <string name="a11y_viewSubmissionAction">Visualitza els detalls de l\'entrega</string>
-    <string name="content_description_submission_donut_graded" formatted="false">Qualificat, %s de %s</string>
-    <string name="content_description_submission_donut_needs_grading" formatted="false">Requereix qualificació, %s de %s</string>
+    <string name="content_description_submission_donut_graded" formatted="false">Amb nota, %s de %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Requereix nota, %s de %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">No s\'ha entregat, %s de %s</string>
-    <string name="display_grade_as">Mostra la qualificació com a&#8230;</string>
+    <string name="display_grade_as">Mostra la nota com&#8230;</string>
     <string name="percentage">Percentatge</string>
     <string name="complete_incomplete">Complet/incomplet</string>
     <string name="points">Punts</string>
@@ -415,13 +417,13 @@
   <string name="not_a_teacher">No sou un professor?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">És possible que alguna de les altres aplicacions nostres us sigui més útil. Toqueu-ne una per anar a Play Store.</string>
 
-    <string name="sg_tab_grade">Qualificació</string>
+    <string name="sg_tab_grade">Nota</string>
     <string name="sg_tab_comments">Comentaris</string>
     <string name="sg_tab_files">Fitxers</string>
     <string name="sg_tab_files_w_counter">Fitxers (%d)</string>
     <string name="filter_submissions">Filtra les entregues</string>
     <string name="all_submissions">Totes les entregues</string>
-    <string name="submitted_late">Entregat tard</string>
+    <string name="submitted_late">S\'ha entregat tard</string>
     <string name="havent_submitted_yet">Encara no s\'ha entregat</string>
     <string name="havent_been_graded">Encara no s\'ha qualificat</string>
     <string name="scored_less_than">La puntuació és de menys de&#8230;</string>
@@ -437,11 +439,11 @@
     <string name="rubric">Rúbrica</string>
     <string name="enter_custom_value">Introdueix un valor personalitzat</string>
     <string name="success_saving_rubric_assessment">S\'ha desat l\'avaluació de la rúbrica</string>
-    <string name="error_saving_rubric_assessment">S\'ha produït un error en desar l\'avaluació de la rúbrica. Torneu a provar-ho.</string>
+    <string name="error_saving_rubric_assessment">S\'ha produït un error en desar l\'avaluació de la rúbrica. Torneu-ho a provar.</string>
     <string name="rubric_assessment_score_out_of_total">%1$s de %2$s</string>
     <string name="criterion_rating_customize_score">Personalitza la puntuació</string>
     <string name="edit_criterion_comment">Edita el comentari sobre el criteri</string>
-    <string name="sendMessageToHint">Missatge %s</string>
+    <string name="sendMessageToHint">Envia un missatge a %s</string>
     <string name="save_comment">Desa el comentari</string>
     <string name="cancel_editing_comment">Cancel·la l\'edició del comentari</string>
     <string name="skip">Omet</string>
@@ -457,18 +459,18 @@
         <item quantity="other">de %s punts</item>
     </plurals>
 
-    <string name="tab_courses">Cursos</string>
-    <string name="course_options">Opcions de curs</string>
-    <string name="edit_favorite_courses">Edita els cursos preferits</string>
+    <string name="tab_courses">Assignatures</string>
+    <string name="course_options">Opcions d\'assignatura</string>
+    <string name="edit_favorite_courses">Edita les assignatures preferides</string>
     <string name="feedback_form">Formulari de suggeriments</string>
-    <string name="see_all">Consulta-ho tot</string>
-    <string name="all_courses">Tots els cursos</string>
-    <string name="welcome">Benvingut!</string>
-    <string name="empty_course_list_message">Afegiu alguns dels cursos preferits per tal que aquest espai sigui més vostre.</string>
-    <string name="add_courses">Afegeix cursos</string>
-    <string name="unable_to_add_course_to_favorites">En aquest moment, no es pot afegir aquest curs al menú de cursos.</string>
+    <string name="see_all">Mostra-ho tot</string>
+    <string name="all_courses">Totes les assignatures</string>
+    <string name="welcome">Us donem la benvinguda!</string>
+    <string name="empty_course_list_message">Afegiu algunes de les assignatures preferides per tal que aquest espai sigui més vostre.</string>
+    <string name="add_courses">Afegeix assignatures</string>
+    <string name="unable_to_add_course_to_favorites">Aquesta assignatura no es pot afegir al menú d\'assignatures en aquests moments.</string>
     <string name="grading_periods_filter">Filtre de períodes de qualificació</string>
-    <string name="assignments">Tasques</string>
+    <string name="assignments">Activitats</string>
     <string name="clear_filter">Esborra el filtre</string>
     <string name="due">Venç el %1$s</string>
     <string name="updated">Actualitzat %1$s</string>
@@ -483,8 +485,8 @@
     </plurals>
     <string name="at">a</string>
     <plurals name="quantityPointsAbbreviated">
-        <item quantity="one">%s punt</item>
-        <item quantity="other">%s punts</item>
+        <item quantity="one">%s punt</item>
+        <item quantity="other">%s punts</item>
     </plurals>
     <plurals name="quantityPointsFull">
         <item quantity="one">%s punt</item>
@@ -503,12 +505,12 @@
     <string name="content_description_favorite">preferit</string>
     <string name="content_description_not_favorite">no preferit</string>
     <string name="edit_nickname">Edita l\'àlies</string>
-    <string name="edit_course_color">Edita el color del curs</string>
-    <string name="edit_course_nickname">Edita l\'àlies del curs</string>
+    <string name="edit_course_color">Edita el color de l\'assignatura</string>
+    <string name="edit_course_nickname">Edita l\'àlies de l\'assignatura</string>
 
-    <string name="colorPickerDialogTitle">Color del curs</string>
-    <string name="colorPickerDialogMessage">Aquesta és la configuració del vostre color personal. Cap altre usuari no veurà aquest color per al curs.</string>
-    <string name="colorPickerError">En aquest moment, no s\'ha pogut establir el color del curs.</string>
+    <string name="colorPickerDialogTitle">Color de l\'assignatura</string>
+    <string name="colorPickerDialogMessage">Aquesta és la configuració del vostre color personal. Cap altre usuari no veurà aquest color per a l\'assignatura.</string>
+    <string name="colorPickerError">En aquest moment, no s\'ha pogut establir el color de l\'assignatura.</string>
 
     <string name="contentDescriptionColorCottonCandy">Rosa</string>
     <string name="contentDescriptionColorBarbie">Rosa fort</string>
@@ -530,27 +532,27 @@
     <string name="contentDescriptionFileIcon">Icona de fitxer</string>
     <string name="contentDescriptionExpandPage">Desplega la pàgina</string>
     <string name="contentDescriptionCollapsePage">Contrau la pàgina</string>
-    <string name="noInternetConnectionTitle">No hi ha cap connexió a Internet.</string>
+    <string name="noInternetConnectionTitle">No hi ha cap connexió a Internet</string>
     <string name="noInternetConnectionMessage">Per dur a terme aquesta acció cal tenir una connexió a Internet.</string>
 
     <string name="emptyDetailsMessage">Toqueu un element de la llista per veure\'n els detalls</string>
 
-    <string name="assignmentQuizzes">Qüestionaris sobre les tasques</string>
-    <string name="practiceQuizzes">Practica els qüestionaris</string>
-    <string name="gradedSurveys">Estudis qualificats</string>
-    <string name="surveys">Estudis</string>
-    <string name="editQuiz">Edita la informació del qüestionari</string>
+    <string name="assignmentQuizzes">Proves de l\'activitat</string>
+    <string name="practiceQuizzes">Proves de pràctica</string>
+    <string name="gradedSurveys">Estudis amb nota</string>
+    <string name="surveys">Enquestes</string>
+    <string name="editQuiz">Edita la informació de la prova</string>
     <string name="requireAccessCode">Sol·liciteu un codi d\'accés</string>
     <string name="accessCode">Codi d\'accés</string>
     <string name="mustHaveAccessCode">Introduïu un codi d\'accés o no en sol·liciteu cap.</string>
-    <string name="errorSavingQuiz">S\'ha produït un error en provar de desar el qüestionari. Torneu a provar-ho.</string>
-    <string name="successfullyUpdatedQuiz">S\'ha actualitzat correctament el qüestionari.</string>
-    <string name="quizType">Tipus de qüestionari</string>
+    <string name="errorSavingQuiz">S\'ha produït un error en provar de desar la prova. Torneu-ho a provar.</string>
+    <string name="successfullyUpdatedQuiz">S\'ha actualitzat correctament la prova.</string>
+    <string name="quizType">Tipus de prova</string>
 
-    <string name="practiceQuiz">Qüestionari sobre pràctiques</string>
-    <string name="gradedQuiz">Qüestionari qualificat</string>
-    <string name="gradedSurvey">Estudi qualificat</string>
-    <string name="ungradedSurvey">Estudi sense qualificació</string>
+    <string name="practiceQuiz">Prova sobre pràctiques</string>
+    <string name="gradedQuiz">Prova amb nota</string>
+    <string name="gradedSurvey">Estudi amb nota</string>
+    <string name="ungradedSurvey">Estudi sense nota</string>
 
     <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
@@ -566,8 +568,8 @@
     <string name="quizStatusNotStarted">No s\'ha començat</string>
 
 
-    <string name="quiz_settings_label_quiz_type">Tipus de qüestionari:</string>
-    <string name="quiz_settings_label_assignment_group">Grup de tasques:</string>
+    <string name="quiz_settings_label_quiz_type">Tipus de prova:</string>
+    <string name="quiz_settings_label_assignment_group">Grup d\'activitats:</string>
     <string name="quiz_settings_label_shuffle_answers">Reorganitza les respostes:</string>
     <string name="quiz_settings_label_multiple_attempts">Múltiples intents:</string>
     <string name="quiz_settings_label_time_limit">Límit de temps:</string>
@@ -582,23 +584,23 @@
     <string name="quiz_settings_label_anonymous_submissions">Entregues anònimes:</string>
     <string name="quiz_settings_label_lock_questions_after_answering">Bloqueja les preguntes un cop respostes:</string>
 
-    <string name="quizPreview">Visualització prèvia del qüestionari</string>
-    <string name="preview_quiz">Fes una visualització prèvia del qüestionari</string>
-    <string name="quiz_details">Informació del qüestionari</string>
+    <string name="quizPreview">Visualització prèvia de la prova</string>
+    <string name="preview_quiz">Fes una visualització prèvia de la prova</string>
+    <string name="quiz_details">Informació de la prova</string>
     <string name="submission_versions">Versions de l\'entrega</string>
-    <string name="speedgrader_student_no_submissions">Aquest estudiant no té entregues per a aquesta tasca.</string>
-    <string name="speedgrader_group_no_submissions">Aquest grup no té entregues per a aquesta tasca.</string>
+    <string name="speedgrader_student_no_submissions">Aquest estudiant no té entregues per a aquesta activitat.</string>
+    <string name="speedgrader_group_no_submissions">Aquest grup no té entregues per a aquesta activitat.</string>
     <string name="speedgrader_unsupported_type">Tipus de entrega no admès</string>
     <string name="unlimited">Il·limitat</string>
-    <string name="practice_quiz">Qüestionari sobre pràctiques</string>
-    <string name="graded_quiz">Qüestionari qualificat</string>
+    <string name="practice_quiz">Prova sobre pràctiques</string>
+    <string name="graded_quiz">Prova amb nota</string>
     <string name="graded_survey">Estudi qualificat</string>
-    <string name="ungraded_survey">Estudi sense qualificació</string>
+    <string name="ungraded_survey">Estudi sense nota</string>
     <string name="no_time_limit">Sense límit de temps</string>
     <string name="immediately">Immediatament</string>
     <string name="quiz_details_no_points_assigned">No hi ha cap punt assignat</string>
 
-    <string name="quiz_details_from_to">De %1$s a %2$s</string>
+    <string name="quiz_details_from_to">Del %1$s al %2$s</string>
     <string name="quiz_details_after">Després de %1$s</string>
     <string name="quiz_details_until">Fins a %1$s</string>
     <string name="filterPointsMustBeSet">Introduïu un valor.</string>
@@ -608,11 +610,11 @@
         <item quantity="other">%d preguntes</item>
     </plurals>
 
-    <string name="discussion_details">Informació sobre el debat</string>
+    <string name="discussion_details">Informació sobre el fòrum</string>
     <string name="discussions_pinned">Ancorat</string>
-    <string name="discussions_unpinned">Debats</string>
+    <string name="discussions_unpinned">Fòrums</string>
     <string name="discussions_closed">Tancat per als comentaris</string>
-    <string name="discussions_open">Obert per als comentaris</string>
+    <string name="discussions_open">Obre per a comentaris</string>
     <string name="discussions_pin">Ancora</string>
     <string name="discussions_unpin">Desancora</string>
     <string name="contentDescriptionDiscussionsOverflow">Més opcions</string>
@@ -625,9 +627,9 @@
     <string name="discussions_reply">Respon</string>
     <string name="discussions_edit">Edita</string>
     <string name="discussions_forbidden">Només aquells que han publicat almenys una resposta poden veure les respostes.</string>
-    <string name="discussions_delete">Suprimeix el debat</string>
-    <string name="discussions_delete_title">Voleu suprimir el debat?</string>
-    <string name="discussions_delete_message">Amb aquesta acció, se suprimirà el debat sencer i les respostes enllaçades.</string>
+    <string name="discussions_delete">Suprimeix el fòrum</string>
+    <string name="discussions_delete_title">Voleu suprimir el fòrum?</string>
+    <string name="discussions_delete_message">Amb aquesta acció, se suprimirà el fòrum sencer i les respostes enllaçades.</string>
 
     <string name="dataUsageWarningTitle">Advertiment sobre l\'ús de dades</string>
     <string name="dataUsageWarningMessage">És possible que amb aquesta acció es consumeixi una gran quantitat de dades i se us apliquin càrrecs per superar el límit. Voleu continuar?</string>
@@ -638,7 +640,7 @@
     <string name="couldNotPlayFormat">No s\'admet el format d\'aquest element multimèdia</string>
     <string name="openWithAnotherApp">Obre amb&#8230;</string>
 
-    <string name="speedgraderCommentAddedSubmission">Tasca entregada. Toqueu per veure.</string>
+    <string name="speedgraderCommentAddedSubmission">S\'ha entregat l\'activitat. Toqueu per veure.</string>
     <string name="speedgraderCommentSubmittedFiles">Fitxers entregats:</string>
     <string name="no_submission_comments">No hi ha cap comentari sobre l\'entrega</string>
     <string name="mediaUploadAudio">Càrrega de contingut multimèdia: àudio</string>
@@ -646,73 +648,73 @@
     <string name="speedgraderCommentQuizAttempt">Intent %d</string>
     <string name="speedGraderTextSubmission">Entrega de text</string>
     <string name="speedGraderExternalToolSubmission">Entrega d\'eina externa</string>
-    <string name="speedGraderDiscussionSubmission">Entrega de debat</string>
-    <string name="speedGraderQuizSubmission">Entrega de qüestionari</string>
+    <string name="speedGraderDiscussionSubmission">Entrega de fòrum</string>
+    <string name="speedGraderQuizSubmission">Entrega de prova</string>
     <string name="speedGraderMediaFile">Fitxer multimèdia</string>
-    <string name="submissionTypeAudio">Àudio</string>
+    <string name="submissionTypeAudio">So</string>
     <string name="submissionTypeVideo">Vídeo</string>
     <string name="speedGraderUrlSubmission">Entrega d\'URL</string>
 
     <string name="unsupportedFileMessage">No s\'ha pogut mostrar aquest fitxer. Utilitzeu el botó de sota per obrir el fitxer amb una altra aplicació del dispositiu.</string>
-    <string name="speedGraderNoneMessage">Amb aquesta tasca no es permet fer entregues.</string>
-    <string name="speedGraderOnPaperMessage">Amb aquesta tasca només es permet fer entregues en paper.</string>
-    <string name="speedGraderUrlSubmissionDisclaimer">Aquesta entrega era un URL a una pàgina externa. Recordeu que és possible que aquesta pàgina hagi canviat des que es va entregar originalment.</string>
+    <string name="speedGraderNoneMessage">Amb aquesta activitat no es permet fer entregues.</string>
+    <string name="speedGraderOnPaperMessage">Amb aquesta activitat només es permet fer entregues en paper.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Aquesta entrega era un URL a una pàgina externa. Tingueu en compte que pot ser que la pàgina hagi canviat des que es va realitzar l\'entrega.</string>
     <string name="speedGraderOpenUrl">Obre l\'URL</string>
     <string name="annotationError">Error d\'anotació</string>
     <string name="annotationDialogMessage">S\'ha suprimit l\'anotació des d\'una altra font.</string>
 
-    <string name="selectCourse">Seleccioneu un curs</string>
+    <string name="selectCourse">Selecciona una assignatura</string>
 
     <string name="sendIndividualMessage">Envieu un missatge individual a cada destinatari</string>
 
     <string name="filterInbox">Filtra la safata d\'entrada</string>
-    <string name="selectCanvasContext">Selecciona un curs o un grup</string>
+    <string name="selectCanvasContext">Selecciona una assignatura o un grup</string>
 
-    <string name="contentDescription_back">Ves enrere</string>
+    <string name="contentDescription_back">Torna enrere</string>
 
-    <string name="discussion_update_success">S\'ha editat correctament el debat.</string>
-    <string name="discussion_update_empty">El camp del missatge sobre el debat no pot estar buit.</string>
-    <string name="discussion_update_failure">En aquest moment, no s\'ha pogut editar el debat.</string>
-    <string name="discussion_sent_success">S\'ha realitzat correctament la resposta al debat.</string>
-    <string name="discussion_sent_empty">El camp de la resposta al debat no pot estar buit.</string>
-    <string name="discussion_sent_failure">En aquest moment, no s\'ha pogut enviar la resposta al debat.</string>
+    <string name="discussion_update_success">S\'ha editat correctament el fòrum.</string>
+    <string name="discussion_update_empty">El camp del missatge sobre el fòrum no pot estar buit.</string>
+    <string name="discussion_update_failure">En aquest moment, no s\'ha pogut editar el fòrum.</string>
+    <string name="discussion_sent_success">S\'ha realitzat correctament la resposta al fòrum.</string>
+    <string name="discussion_sent_empty">El camp de la resposta al fòrum no pot estar buit.</string>
+    <string name="discussion_sent_failure">En aquest moment, no s\'ha pogut enviar la resposta al fòrum.</string>
     <string name="discussion_first_to_respond">Afegiu una resposta per ser el primer a respondre.</string>
     <string name="addMorePeopleToMessage">Afegiu un altre destinatari. No es poden enviar els missatges en què sou l\'únic destinatari.</string>
     <string name="tutorialSwipeMessage">Feu lliscar el dit cap a l\'esquerra o la dreta per veure altres estudiants.</string>
     <string name="tutorialRubricMessage">Manteniu tocat el número per veure la descripció.</string>
 
-    <string name="viewQuizSubmission">Mostra l\'entrega</string>
+    <string name="viewQuizSubmission">Visualitza l\'entrega</string>
     <string name="gradeQuizSubmission">Qualifica l\'entrega</string>
     <string name="comment">Comentari</string>
     <string name="messageStudentsWho">Envia un missatge als estudiants que&#8230;</string>
 
     <string name="on">en</string>
 
-    <string name="createDiscussion">Debat nou</string>
+    <string name="createDiscussion">Fòrum nou</string>
     <string name="options">Opcions</string>
     <string name="subscribe">Subscriu-t\'hi</string>
     <string name="allowThreadedReplies">Permet les respostes enllaçades</string>
-    <string name="usersMustPost">Els usuaris han de fer alguna publicació abans de poder veure les respostes</string>
+    <string name="usersMustPost">Els usuaris han de publicar per poder veure les respostes</string>
     <string name="allowUserComments">Permet que els usuaris facin comentaris</string>
-    <string name="discussionTitleMustBeSet">S\'ha d\'establir el títol del debat.</string>
-    <string name="discussionSuccessfullyCreated">S\'ha creat correctament el debat.</string>
-    <string name="errorCreatingDiscussion">S\'ha produït un error en provar de crear aquest debat. Torneu a provar-ho.</string>
-    <string name="editDiscussion">Edita el debat</string>
-    <string name="discussionSuccessfullyUpdated">S\'ha actualitzat correctament el debat.</string>
+    <string name="discussionTitleMustBeSet">S\'ha d\'establir el títol del fòrum.</string>
+    <string name="discussionSuccessfullyCreated">S\'ha creat correctament el fòrum.</string>
+    <string name="errorCreatingDiscussion">S\'ha produït un error en provar de crear aquest fòrum. Torneu-ho a provar.</string>
+    <string name="editDiscussion">Edita el fòrum</string>
+    <string name="discussionSuccessfullyUpdated">S\'ha actualitzat correctament el fòrum.</string>
     <string name="input_text">Text d\'entrada</string>
     <string name="announcementSuccessfullyCreated">S\'ha creat correctament l\'anunci.</string>
-    <string name="errorSavingAnnouncement">S\'ha produït un error en provar de desar aquest anunci. Torneu a provar-ho.</string>
+    <string name="errorSavingAnnouncement">S\'ha produït un error en provar de desar aquest anunci. Torneu-ho a provar.</string>
     <string name="editAnnouncementTitle">Edita l\'anunci</string>
     <string name="announcementSuccessfullyUpdated">S\'ha actualitzat correctament l\'anunci.</string>
     <string name="announcementDeleted">Anunci suprimit.</string>
-    <string name="postAt">Publicada a les</string>
-    <string name="errorDeletingAnnouncement">S\'ha produït un error en provar de suprimir aquest anunci. Torneu a provar-ho.</string>
+    <string name="postAt">Publica el</string>
+    <string name="errorDeletingAnnouncement">S\'ha produït un error en provar de suprimir aquest anunci. Torneu-ho a provar.</string>
     <string name="deleteAnnouncementDialogTitle">Voleu suprimir l\'anunci?</string>
     <string name="deleteAnnouncementDialogMessage">Segur que voleu suprimir aquest anunci?</string>
     <string name="deleteAnnouncement">Suprimeix l\'anunci</string>
     <string name="annotationErrorOccurred">S\'ha produït un error inesperat mentre es carregaven les anotacions.</string>
 
-    <string name="account">Compte</string>
+    <string name="account">Usuari</string>
     <string name="changeUser">Canvia l\'usuari</string>
     <string name="general">General</string>
     <string name="sendFeedback">Envia els comentaris</string>
@@ -720,15 +722,15 @@
     <string name="privacyPolicy">Política de privacitat</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Condicions d\'ús</string>
-    <string name="searchGuides">Cerca a les Guies de Canvas</string>
-    <string name="searchGuidesDetails">Trobeu respostes a preguntes habituals</string>
+    <string name="searchGuides">Cerca les guies del Canvas</string>
+    <string name="searchGuidesDetails">Cerca respostes a les preguntes més freqüents</string>
     <string name="reportProblem">Informeu d\'un problema</string>
     <string name="reportProblemDetails">Si l\'aplicació no funciona correctament, informeu-nos-en</string>
     <string name="requestFeature">Sol·liciteu una característica</string>
     <string name="requestFeatureDetails">Teniu alguna idea per millorar l\'aplicació?</string>
     <string name="shareYourLove">Compartiu l\'interès que us desperta l\'aplicació</string>
     <string name="shareYourLoveDetails">Expliqueu-nos quines són les parts preferides de l\'aplicació</string>
-    <string name="canvasGuides">Guies de Canvas</string>
+    <string name="canvasGuides">Guies del Canvas</string>
     <string name="featureSubject">Idea per a Canvas Teacher (Android)</string>
     <string name="understandRequest">La informació següent ens ajudarà a conèixer millor la vostra idea:</string>
     <string name="sendMail">Envia el correu electrònic&#8230;</string>
@@ -743,10 +745,10 @@
     <string name="version" formatted="false">Versió %s</string>
     <string name="fullVersion">Versió %s (%d)</string>
     <string name="tap_to_view_submissions_list">Toqueu per veure la llista d\'entregues.</string>
-    <string name="assignmentDescriptionContentDescription">Descripció de la tasca</string>
-    <string name="quizDescriptionContentDescription">Descripció del qüestionari</string>
-    <string name="removeDueDate">Elimina la data de venciment</string>
-    <string name="removeDueDateMessage">Amb aquesta acció s\'eliminaran la data de venciment i tots els beneficiaris associats.</string>
+    <string name="assignmentDescriptionContentDescription">Descripció de l\'activitat</string>
+    <string name="quizDescriptionContentDescription">Descripció de la prova</string>
+    <string name="removeDueDate">Elimina la data de lliurament</string>
+    <string name="removeDueDateMessage">Amb aquesta acció s\'eliminaran la data de lliurament i tots els beneficiaris associats.</string>
     <string name="email">Correu electrònic</string>
     <string name="fullscreen">pantalla completa</string>
     <string name="addNew">Afegeix nou</string>
@@ -754,8 +756,8 @@
     <string name="addMessage">Afegeix un missatge</string>
     <string name="messageThisStudent">Envia un missatge a aquest estudiant</string>
     <string name="scrollInstructions">Desplaceu-vos perquè es mostri tota la informació.</string>
-    <string name="dueTime">Hora de venciment</string>
-    <string name="available_from_date">Disponible des del dia</string>
+    <string name="dueTime">Hora de lliurament</string>
+    <string name="available_from_date">Disponible des de la data</string>
     <string name="available_from_time">Disponible des de les</string>
     <string name="available_to_date">Disponible per al dia</string>
     <string name="available_to_time">Disponible per a les</string>
@@ -766,7 +768,7 @@
     <string name="saving">S\'està desant</string>
     <string name="sendingSimple">S\'està enviant</string>
     <string name="uploading">S\'està penjant</string>
-    <string name="retry">Torna a provar-ho</string>
+    <string name="retry">Torna-ho a provar</string>
     <string name="error_loading_submission">S\'ha produït un problema en carregar aquesta entrega.</string>
     <string name="search">Cerca</string>
     <string name="filterPeople">Filtra les persones</string>
@@ -776,7 +778,7 @@
     <string name="enrollmentTypeStudent">Estudiant</string>
     <string name="enrollmentTypeTeacher">Professor</string>
     <string name="enrollmentTypeObserver">Observador</string>
-    <string name="enrollmentTypeTeachingAssistant">TA</string>
+    <string name="enrollmentTypeTeachingAssistant">Auxiliar de professor</string>
     <string name="enrollmentTypeDesigner">Dissenyador</string>
     <string name="enrollmentTypeUnknown">Desconegut</string>
     <string name="unableToLoadAttendance">En aquest moment, no s\'ha pogut carregar l\'assistència.</string>
@@ -838,10 +840,10 @@
     <string name="pageDeleteTitle">Voleu suprimir la pàgina?</string>
     <string name="pageDelete">Suprimeix la pàgina</string>
     <string name="pageDeleteMessage">Amb aquesta acció se suprimirà la pàgina. Aquesta acció no es pot desfer.</string>
-    <string name="errorSavingPage">S\'ha produït un error en provar de desar aquesta pàgina. Torneu a provar-ho.</string>
+    <string name="errorSavingPage">S\'ha produït un error en provar de desar aquesta pàgina. Torneu-ho a provar.</string>
     <string name="frontPageUnpublishedError">Una pàgina no pot ser la frontal i, alhora, no estar publicada.</string>
 
-    <string name="onlyTeachers">Només els professors</string>
+    <string name="onlyTeachers">Només professors</string>
     <string name="teachersAndStudents">Professors i estudiants</string>
     <string name="anyone">Qualsevol persona</string>
     <string name="groupMembers">Només els membres</string>
@@ -853,7 +855,7 @@
     <string name="errorUpdatingFolder">S\'ha produït un error en actualitzar aquesta carpeta</string>
 
     <string name="toDoEmpty">Ja no s\'ha de fer res més.\n Que tingueu bon dia.</string>
-    <string name="toDoNoSubmissions">No hi ha cap entrega que s\'hagi de qualificar per a aquesta tasca.</string>
+    <string name="toDoNoSubmissions">No hi ha cap entrega que s\'hagi de qualificar per a aquesta activitat.</string>
     <string name="errorToDoRouteFailed">S\'ha produït un error en provar de veure aquest element de tasques pendents.</string>
     <string name="errorIsDesigner">En la inscripció de dissenyadors no es pot veure això.</string>
 
@@ -863,8 +865,8 @@
     <string name="filterBySection">Filtra per secció</string>
     <string name="filterSubmissionsLowercase">Filtra les entregues</string>
     <string name="latePenalty">Sanció per endarreriment</string>
-    <string name="finalGrade">Qualificació final</string>
-    <string name="moderatedGradingUnsupported">En aquest moment, no s\'admet la qualificació moderada en la versió de SpeedGrader per a dispositius mòbils.</string>
+    <string name="finalGrade">Nota final</string>
+    <string name="moderatedGradingUnsupported">En aquest moment, no s\'admet la nota moderada en la versió de SpeedGrader per a dispositius mòbils.</string>
     <plurals name="latePolicyPenalty">
         <item quantity="one">-%s punt</item>
         <item quantity="other">-%s punts</item>
@@ -878,7 +880,7 @@
     <string name="downloadingFile">S\'està baixant el fitxer&#8230;</string>
     <string name="fileDownloadedSuccessfully">S\'ha baixat correctament el fitxer.</string>
     <string name="tapToView">Toqueu per veure</string>
-    <string name="errorDownloadingFile">S\'ha produït un error en baixar el fitxer. Torneu a provar-ho.</string>
+    <string name="errorDownloadingFile">S\'ha produït un error en baixar el fitxer. Torneu-ho a provar.</string>
 
     <string name="postTo">Publica a</string>
     <string name="allSections">Totes les seccions</string>
@@ -886,16 +888,17 @@
     <string name="gauge">Mesura</string>
     <string name="ltiLaunchFailure">En aquest moment, no s\'ha pogut carregar aquesta eina LTI (interoperabilitat d\'eines d\'aprenentatge).</string>
     <string name="downloading">S\'està baixant&#8230;</string>
+
     <!-- Edit Syllabus -->
     <string name="syllabusSuccessfullyUpdated">S\'ha actualitzat correctament el temari.</string>
     <string name="errorSavingSyllabus">S\'ha produït un error en provar de desar el temari. Torneu-ho a provar.</string>
     <string name="editSyllabusTitle">Edita el temari</string>
     <string name="editSyllabusContent">Contingut</string>
     <string name="editSyllabusDetails">Detalls</string>
-    <string name="editSyllabusShowCourseSummary">Mostra el resum del curs</string>
+    <string name="editSyllabusShowCourseSummary">Mostra el resum de l\'assignatura</string>
     <string name="editSyllabusContentAccessibilityLabel">Contingut del temari</string>
-
-    <string name="no_grade">Cap qualificació</string>
+    <string name="no_grade">Cap nota</string>
     <string name="excuse">Excusa</string>
     <string name="speed_grader_overgraded_by">Sobrequalificat per %s</string>
+
 </resources>

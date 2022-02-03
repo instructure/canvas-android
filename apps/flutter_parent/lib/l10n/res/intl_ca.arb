@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-09-18T11:03:20.748250",
+  "@@last_modified": "2020-09-18T11:3:20.748250",
   "alertsLabel": "Avisos",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -12,7 +12,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "coursesLabel": "Cursos",
+  "coursesLabel": "Assignatures",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
     "type": "text",
@@ -138,7 +138,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "pointsPossible": "{points} punts possibles",
+  "pointsPossible": "{points} punts possibles",
   "@pointsPossible": {
     "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
     "type": "text",
@@ -164,7 +164,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Toqueu per afegir als preferits els cursos que voleu veure al Calendari. Seleccioneu-ne fins a 10.",
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Toqueu per afegir als preferits les assignatures que voleu veure al Calendari. Seleccioneu-ne fins a 10.",
   "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
@@ -244,7 +244,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "domainSearchHelpBody": "Proveu de cercar pel nom de l'escola o districte al qual intenteu accedir, com ara “Escola Privada Smith” o “Escoles de la Regió d'Smith”. També podeu introduir un domini del Canvas directament, com ara “smith.instructure.com.”\n\nPer obtenir més informació sobre com cercar el compte del Canvas de la vostra institució, podeu consultar les {canvasGuides}, contactar amb l'{canvasSupport}, o posar-vos en contacte amb la vostra escola per obtenir assistència.",
+  "domainSearchHelpBody": "Proveu de cercar pel nom de l'escola o districte al qual intenteu accedir, com ara “Escola Privada Smith” o “Escoles de la Regió d'Smith”. També podeu introduir un domini del Canvas directament, com ara “smith.instructure.com.”\n\nPer obtenir més informació sobre com cercar l'usuari del Canvas de la vostra institució, podeu consultar les {canvasGuides}, contactar amb l'{canvasSupport}, o posar-vos en contacte amb la vostra escola per obtenir assistència.",
   "@domainSearchHelpBody": {
     "description": "The body text shown in the help dialog on the domain search screen",
     "type": "text",
@@ -324,13 +324,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Unable to fetch courses. Please check your connection and try again.": "No es poden obtenir els cursos. Reviseu la connexió i torneu-ho a provar.",
+  "Unable to fetch courses. Please check your connection and try again.": "No es poden obtenir les assignatures. Reviseu la connexió i torneu-ho a provar.",
   "@Unable to fetch courses. Please check your connection and try again.": {
     "description": "Message shown when an error occured while loading courses",
     "type": "text",
     "placeholders": {}
   },
-  "Choose a course to message": "Trieu un curs per enviar el missatge",
+  "Choose a course to message": "Trieu una assignatura per enviar el missatge",
   "@Choose a course to message": {
     "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
     "type": "text",
@@ -348,7 +348,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading recipients for this course": "S'ha produït un error en carregar els destinataris d'aquest curs",
+  "There was an error loading recipients for this course": "S'ha produït un error en carregar els destinataris d'aquesta assignatura",
   "@There was an error loading recipients for this course": {
     "description": "Message shown when attempting to create a new message but the recipients list failed to load",
     "type": "text",
@@ -556,25 +556,25 @@
     "type": "text",
     "placeholders": {}
   },
-  "No Courses": "No hi ha cap curs",
+  "No Courses": "No hi ha cap assignatura",
   "@No Courses": {
     "description": "Title for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "És possible que encara no s'hagin publicat els vostres cursos de l'estudiant.",
+  "Your student’s courses might not be published yet.": "És possible que encara no s'hagin publicat les vostres assignatures de l'estudiant.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your student’s courses.": "S'ha produït un error en carregar els vostres cursos de l'estudiant.",
+  "There was an error loading your student’s courses.": "S'ha produït un error en carregar les vostres assignatures de l'estudiant.",
   "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
     "placeholders": {}
   },
-  "No Grade": "Sense qualificació",
+  "No Grade": "Sense nota",
   "@No Grade": {
     "description": "Message shown when there is currently no grade available for a course",
     "type": "text",
@@ -586,7 +586,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Grades": "Qualificacions",
+  "Grades": "Notes",
   "@Grades": {
     "description": "Label for the \"Grades\" tab in course details",
     "type": "text",
@@ -610,13 +610,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Send a message about this course": "Envia un missatge sobre aquest curs",
+  "Send a message about this course": "Envia un missatge sobre aquesta assignatura",
   "@Send a message about this course": {
     "description": "Accessibility hint for the course messaage floating action button",
     "type": "text",
     "placeholders": {}
   },
-  "Total Grade": "Qualificació total",
+  "Total Grade": "Nota total",
   "@Total Grade": {
     "description": "Label for the total grade in the course",
     "type": "text",
@@ -646,7 +646,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Missing": "Falta",
+  "Missing": "No presentat",
   "@Missing": {
     "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
     "type": "text",
@@ -664,19 +664,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "No Assignments": "No hi ha cap tasca",
+  "No Assignments": "No hi ha cap activitat",
   "@No Assignments": {
     "description": "Title for the no assignments message",
     "type": "text",
     "placeholders": {}
   },
-  "It looks like assignments haven't been created in this space yet.": "Sembla que en aquest espai encara no s'ha creat cap tasca.",
+  "It looks like assignments haven't been created in this space yet.": "Sembla que en aquest espai encara no s'ha creat cap activitat.",
   "@It looks like assignments haven't been created in this space yet.": {
     "description": "Message for no assignments",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading the summary details for this course.": "S'ha produït un error en carregar els detalls de resumen d'aquest curs.",
+  "There was an error loading the summary details for this course.": "S'ha produït un error en carregar els detalls de resum d'aquesta assignatura.",
   "@There was an error loading the summary details for this course.": {
     "description": "Message shown when the course summary could not be loaded",
     "type": "text",
@@ -688,7 +688,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "This course does not have any assignments or calendar events yet.": "Aquest curs encara no té cap tasca o esdeveniment al calendari.",
+  "This course does not have any assignments or calendar events yet.": "Aquesta assignatura encara no té cap activitat o esdeveniment al calendari.",
   "@This course does not have any assignments or calendar events yet.": {
     "description": "Message displayed when there are no items in the course summary",
     "type": "text",
@@ -712,7 +712,7 @@
       "pointsPossible": {}
     }
   },
-  "gradesSubjectMessage": "Sobre: {studentName}, qualificacions",
+  "gradesSubjectMessage": "Sobre: {studentName}, notes",
   "@gradesSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a student's grades",
     "type": "text",
@@ -736,7 +736,7 @@
       "studentName": {}
     }
   },
-  "assignmentSubjectMessage": "Sobre: {studentName}, tasca - {assignmentName}",
+  "assignmentSubjectMessage": "Sobre: {studentName}, activitat - {assignmentName}",
   "@assignmentSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a student's assignment",
     "type": "text",
@@ -760,13 +760,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Assignment Details": "Detalls de la tasca",
+  "Assignment Details": "Detalls de l'activitat",
   "@Assignment Details": {
     "description": "Title for the page that shows details for an assignment",
     "type": "text",
     "placeholders": {}
   },
-  "assignmentTotalPoints": "{points} punts",
+  "assignmentTotalPoints": "{points} punts",
   "@assignmentTotalPoints": {
     "description": "Label used for the total points the assignment is worth",
     "type": "text",
@@ -782,13 +782,13 @@
       "points": {}
     }
   },
-  "Due": "Venciment",
+  "Due": "Data de lliurament",
   "@Due": {
     "description": "Label for an assignment due date",
     "type": "text",
     "placeholders": {}
   },
-  "Grade": "Qualificació",
+  "Grade": "Nota",
   "@Grade": {
     "description": "Label for the section that displays an assignment's grade",
     "type": "text",
@@ -800,7 +800,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "assignmentLockedModule": "El mòdul “{moduleName}” bloqueja aquesta tasca.",
+  "assignmentLockedModule": "El contingut “{moduleName}” bloqueja aquesta activitat.",
   "@assignmentLockedModule": {
     "description": "The locked description when an assignment is locked by a module",
     "type": "text",
@@ -814,13 +814,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Set a date and time to be notified of this specific assignment.": "Establiu una data i hora per rebre una notificació sobre aquesta tasca concreta.",
+  "Set a date and time to be notified of this specific assignment.": "Establiu una data i hora per rebre una notificació sobre aquesta activitat concreta.",
   "@Set a date and time to be notified of this specific assignment.": {
     "description": "Description for row to set reminders",
     "type": "text",
     "placeholders": {}
   },
-  "You will be notified about this assignment on…": "Rebreu una notificació sobre aquesta tasca el...",
+  "You will be notified about this assignment on…": "Rebreu una notificació sobre aquesta activitat el...",
   "@You will be notified about this assignment on…": {
     "description": "Description for when a reminder is set",
     "type": "text",
@@ -832,7 +832,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Send a message about this assignment": "Envia un missatge sobre aquesta tasca",
+  "Send a message about this assignment": "Envia un missatge sobre aquesta activitat",
   "@Send a message about this assignment": {
     "description": "Accessibility hint for the assignment messaage floating action button",
     "type": "text",
@@ -868,7 +868,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Notifications for reminders about assignments and calendar events": "Notificacions de recordatoris sobre tasques i esdeveniments del calendari",
+  "Notifications for reminders about assignments and calendar events": "Notificacions de recordatoris sobre activitats i esdeveniments del calendari",
   "@Notifications for reminders about assignments and calendar events": {
     "description": "Description of the system notification channel for assignment and event reminders",
     "type": "text",
@@ -880,7 +880,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "Per tal de proporcionar-vos una millor experiència, hem actualitzat la manera com funcionen els recordatoris. Podeu afegir recordatoris nous en visualitzar una tasca o esdeveniment del calendari i tocant el botó a sota de la secció \"Recorda-m'ho\".\n\nTingueu en compte que els recordatoris creats amb les versions anteriors de l'aplicació no seran compatibles amb els nous canvis i els haureu de tornar a crear.",
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "Per tal de proporcionar-vos una millor experiència, hem actualitzat la manera com funcionen els recordatoris. Podeu afegir recordatoris nous en visualitzar una activitat o esdeveniment del calendari i tocant el botó a sota de la secció \"Recorda-m'ho\".\n\nTingueu en compte que els recordatoris creats amb les versions anteriors de l'aplicació no seran compatibles amb els nous canvis i els haureu de tornar a crear.",
   "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
     "type": "text",
     "placeholders": {}
@@ -891,7 +891,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "We couldn't find any students associated with this account": "No hem trobat cap estudiant associat amb aquest compte",
+  "We couldn't find any students associated with this account": "No hem trobat cap estudiant associat amb aquest usuari",
   "@We couldn't find any students associated with this account": {
     "description": "Subtitle for the screen that shows when the user is not observing any students",
     "type": "text",
@@ -959,7 +959,7 @@
       "alertTitle": {}
     }
   },
-  "Course Announcement": "Anunci del curs",
+  "Course Announcement": "Anunci de l'assignatura",
   "@Course Announcement": {
     "description": "Title for alerts when there is a course announcement",
     "type": "text",
@@ -971,7 +971,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "assignmentGradeAboveThreshold": "Qualificació de la tasca per sobre de {threshold}",
+  "assignmentGradeAboveThreshold": "Nota de l'activitat per sobre de {threshold}",
   "@assignmentGradeAboveThreshold": {
     "description": "Title for alerts when an assignment grade is above the threshold value",
     "type": "text",
@@ -979,7 +979,7 @@
       "threshold": {}
     }
   },
-  "assignmentGradeBelowThreshold": "Qualificació de la tasca per sota de {threshold}",
+  "assignmentGradeBelowThreshold": "Nota de l'activitat per sota de {threshold}",
   "@assignmentGradeBelowThreshold": {
     "description": "Title for alerts when an assignment grade is below the threshold value",
     "type": "text",
@@ -987,7 +987,7 @@
       "threshold": {}
     }
   },
-  "courseGradeAboveThreshold": "Qualificació del curs per sobre de {threshold}",
+  "courseGradeAboveThreshold": "Nota de l'assignatura per sobre de {threshold}",
   "@courseGradeAboveThreshold": {
     "description": "Title for alerts when a course grade is above the threshold value",
     "type": "text",
@@ -995,7 +995,7 @@
       "threshold": {}
     }
   },
-  "courseGradeBelowThreshold": "Qualificació del curs per sota de {threshold}",
+  "courseGradeBelowThreshold": "Nota de l'assignatura per sota de {threshold}",
   "@courseGradeBelowThreshold": {
     "description": "Title for alerts when a course grade is below the threshold value",
     "type": "text",
@@ -1051,7 +1051,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "submissionStatusSuccessSubtitle": "Aquesta tasca es va entregar el {date} a les {time} i està a l'espera de qualificació",
+  "submissionStatusSuccessSubtitle": "Aquesta activitat es va entregar el {date} a les {time} i està a l'espera de nota",
   "@submissionStatusSuccessSubtitle": {
     "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
     "type": "text",
@@ -1101,7 +1101,7 @@
       "pointsLost": {}
     }
   },
-  "finalGrade": "Qualificació final: {grade}",
+  "finalGrade": "Nota final: {grade}",
   "@finalGrade": {
     "description": "Text that displays the final grade of an assignment",
     "type": "text",
@@ -1120,36 +1120,36 @@
     "type": "text",
     "placeholders": {}
   },
-  "Course grade below": "Qualificació del curs per sota de",
+  "Course grade below": "Nota de l'assignatura per sota de",
   "@Course grade below": {
     "description": "Label describing the threshold for when the course grade is below a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Course grade above": "Qualificació del curs per sobre de",
+  "Course grade above": "Nota de l'assignatura per sobre de",
   "@Course grade above": {
     "description": "Label describing the threshold for when the course grade is above a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Assignment missing": "Falta la tasca",
+  "Assignment missing": "Activitat no presentada",
   "@Assignment missing": {
     "type": "text",
     "placeholders": {}
   },
-  "Assignment grade below": "Qualificació de la tasca per sota de",
+  "Assignment grade below": "Nota de l'activitat per sota de",
   "@Assignment grade below": {
     "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Assignment grade above": "Qualificació de la tasca per sobre de",
+  "Assignment grade above": "Nota de l'activitat per sobre de",
   "@Assignment grade above": {
     "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Course Announcements": "Anuncis del curs",
+  "Course Announcements": "Anuncis de l'assignatura",
   "@Course Announcements": {
     "type": "text",
     "placeholders": {}
@@ -1165,7 +1165,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Grade percentage": "Percentatge de la qualificació",
+  "Grade percentage": "Percentatge de la nota",
   "@Grade percentage": {
     "type": "text",
     "placeholders": {}
@@ -1343,7 +1343,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Something went wrong trying to create your account, please reach out to your school for assistance.": "Alguna cosa no ha anat bé en intentar crear el vostre compte, poseu-vos en contacte amb la vostra escola per obtenir assistència.",
+  "Something went wrong trying to create your account, please reach out to your school for assistance.": "Alguna cosa no ha anat bé en intentar crear el vostre usuari, poseu-vos en contacte amb la vostra escola per obtenir assistència.",
   "@Something went wrong trying to create your account, please reach out to your school for assistance.": {
     "type": "text",
     "placeholders": {}
@@ -1370,19 +1370,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "I have a Canvas account": "Tinc un compte del Canvas",
+  "I have a Canvas account": "Tinc un usuari del Canvas",
   "@I have a Canvas account": {
     "description": "Option to select for users that have a canvas account",
     "type": "text",
     "placeholders": {}
   },
-  "I don't have a Canvas account": "No tinc un compte del Canvas",
+  "I don't have a Canvas account": "No tinc un usuari del Canvas",
   "@I don't have a Canvas account": {
     "description": "Option to select for users that don't have a canvas account",
     "type": "text",
     "placeholders": {}
   },
-  "Create Account": "Crea un compte",
+  "Create Account": "Crea un usuari",
   "@Create Account": {
     "description": "Button text for account creation confirmation",
     "type": "text",
@@ -1451,7 +1451,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "qrCreateAccountTos": "En tocar \"Crea un compte\", accepteu les {termsOfService} i reconeixeu la {privacyPolicy}.",
+  "qrCreateAccountTos": "En tocar \"Crea un usuari\", accepteu les {termsOfService} i reconeixeu la {privacyPolicy}.",
   "@qrCreateAccountTos": {
     "description": "The text show on the account creation screen",
     "type": "text",
@@ -1477,7 +1477,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Already have an account? ": "Ja teniu un compte? ",
+  "Already have an account? ": "Ja teniu un usuari? ",
   "@Already have an account? ": {
     "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
     "type": "text",
@@ -1600,7 +1600,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "User ID:": "ID d'usuari:",
+  "User ID:": "ID d’usuari:",
   "@User ID:": {
     "description": "The label for the Canvas user ID of the logged in user",
     "type": "text",
@@ -1726,7 +1726,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Not Graded": "Sense qualificació",
+  "Not Graded": "Sense nota",
   "@Not Graded": {
     "description": "Description for an assignment has not been graded.",
     "type": "text",
@@ -1793,7 +1793,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "User ID": "ID d'usuari",
+  "User ID": "ID d’usuari",
   "@User ID": {
     "description": "Text field hint for user ID input",
     "type": "text",
@@ -1810,7 +1810,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "endMasqueradeMessage": "Deixareu d'actuar com a {userName} i tornareu al vostre compte original.",
+  "endMasqueradeMessage": "Deixareu d'actuar com a {userName} i tornareu al vostre usuari original.",
   "@endMasqueradeMessage": {
     "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
     "type": "text",
@@ -1920,7 +1920,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "L'estudiant que esteu provant d'afegir pertany a una altra escola. Inicieu la sessió o creeu un compte amb aquesta escola per escanejar aquest codi.",
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "L'estudiant que esteu provant d'afegir pertany a una altra escola. Inicieu la sessió o creeu un usuari amb aquesta escola per escanejar aquest codi.",
   "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
     "type": "text",
     "placeholders": {}
@@ -1931,13 +1931,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "This will unpair and remove all enrollments for this student from your account.": "Amb aquesta acció es cancel·larà l’emparellament i se suprimiran del vostre compte totes les inscripcions per a aquest estudiant.",
+  "This will unpair and remove all enrollments for this student from your account.": "Amb aquesta acció es cancel·larà l’emparellament i se suprimiran del vostre usuari totes les inscripcions per a aquest estudiant.",
   "@This will unpair and remove all enrollments for this student from your account.": {
     "description": "Confirmation message shown when the user tries to delete a student from their account",
     "type": "text",
     "placeholders": {}
   },
-  "There was a problem removing this student from your account. Please check your connection and try again.": "S’ha produït un problema en suprimir aquest estudiant del vostre compte. Reviseu la connexió i torneu-ho a provar.",
+  "There was a problem removing this student from your account. Please check your connection and try again.": "S’ha produït un problema en suprimir aquest estudiant del vostre usuari. Reviseu la connexió i torneu-ho a provar.",
   "@There was a problem removing this student from your account. Please check your connection and try again.": {
     "type": "text",
     "placeholders": {}
@@ -2049,7 +2049,7 @@
       "time": {}
     }
   },
-  "No Due Date": "Sense data de venciment",
+  "No Due Date": "Sense data de lliurament",
   "@No Due Date": {
     "description": "Label for assignments that do not have a due date",
     "type": "text",
@@ -2146,7 +2146,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "Trobareu el codi QR a la web, al perfil del vostre compte. Feu clic a \"QR per a inici de sessió mòbil\" a la llista.",
+  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "Trobareu el codi QR a la web, al perfil del vostre usuari. Feu clic a \"QR per a inici de sessió mòbil\" a la llista.",
   "@You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": {
     "description": "Text for qr login tutorial screen",
     "type": "text",

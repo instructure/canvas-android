@@ -37,7 +37,7 @@
     <string name="userId">Bruker-ID</string>
     <string name="domain">Domene</string>
     <string name="actAsUser">Opptre som bruker</string>
-    <string name="stopActAsUser">Avslutt «Opptre som bruker»</string>
+    <string name="stopActAsUser">Avslutt opptre som bruker</string>
 
     <!--Multiple User Sign in -->
     <string name="removeUser">Fjerne denne brukeren?</string>
@@ -56,16 +56,17 @@
     <string name="invalidEmailPassword">Ugyldig e-post eller passord</string>
     <string name="login">Logg på</string>
     <string name="logout">Logg Ut</string>
-
     <string name="matchingSchools">Matchende skoler</string>
+
     <!--Logout Warning Dialog-->
-    <string name="logout_warning">Er du sikker på at du ønsker å logge av?</string>
+    <string name="logout_warning">Er du sikker på at du vil logge ut?</string>
     <string name="logout_yes">Ja</string>
     <string name="logout_no">Nei</string>
 
     <!--Smart Login-->
+
     <string name="loginNearYou">Nær deg</string>
-    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginCanvasNetwork">Canvas Nettverk</string>
     <string name="loginRightBehindYou">Rett bak deg</string>
     <string name="loginCanvasHelp">Ser du ikke skolen din? Skriv in skolens URL eller tappe her for hjelp.</string>
     <string name="loginCanvasHelpWithUser">Skriv in skolens URL eller tappe her for hjelp.</string>
@@ -73,14 +74,14 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Rapporter et problem</string>
-    <string name="errorReportSubject">Tittel</string>
+    <string name="errorReportSubject">Tema</string>
     <string name="errorReportDescription">Beskrivelse</string>
     <string name="errorReportSend">Send</string>
     <string name="errorReportThankyou">Takk for at du rapporterte problemet ditt til brukerstøtteteamet.  Du vil motta bekreftelse og oppdateringer via e-post.</string>
     <string name="errorReportSeverityText">Hvordan påvirker dette deg?</string>
-    <string name="errorSeverityCasualQuestion">Bare et tilfeldig spørsmål, kommentar, idé eller forslag...</string>
+    <string name="errorSeverityCasualQuestion">Bare et tilfeldig spørsmål, kommentar, idé eller forslag&#8230;</string>
     <string name="errorSeverityNeedHelp">Jeg trenger litt hjelp men det haster ikke.</string>
-    <string name="errorSeveritySomethingsBroken">Noe er ødelagt men jeg kan jobbe rundt det for å få det jeg trenger å gjøre unnagjort.</string>
+    <string name="errorSeveritySomethingsBroken">Noe er ødelagt men jeg kan jobbe rundt det for å få det jeg trenger å få unnagjort.</string>
     <string name="errorSeverityCantGetThingsDone">Jeg får ikke gjort det jeg skal gjøre før jeg hører fra dere.</string>
     <string name="errorSeverityExtremelyCritical">EKSTREMT KRITISK NØDSITUASJON!!</string>
 
@@ -92,7 +93,7 @@
     <string name="oneMile">1 mile (1.6 km)</string>
     <string name="miles">miles</string>
     <string name="kilometers">km</string>
-
+F
     <!-- String for submitting tickets -->
     <string name="device">Enhet</string>
     <string name="osVersion">OS-versjon</string>
@@ -103,7 +104,7 @@
     <string name="locateQRCode">Lokalisere QR-kode</string>
     <string name="qrCodeExplanation">Du finner QR-koden på nettet i kontoprofilen din. Klikk \'QR for mobil-innlogging\' i listen.</string>
     <string name="qrCodeScanningPrompt">Skann en QR-kode fra Canvas for å begynne.</string>
-    <string name="loginWithQRCodeError">Det oppstod en feil ved innlogging. Vennligst lag en ny QR-kode og prøv på nytt.</string>
+    <string name="loginWithQRCodeError">Det oppsto en feil ved innlogging. Vennligst lag en ny QR-kode og prøv på nytt.</string>
     <string name="invalidQRCodeError">Skann en QR-kode generert av Canvas</string>
     <string name="qrCodeScreenshotContentDescription">Skjermbilde som viser plassering av QR-kodegenerering i nettleser</string>
     <string name="whatsYourSchoolName">Hva er navnet på skolen din?</string>
@@ -122,9 +123,9 @@
     <string name="masqueradeErrorUserId">Du må skrive inn en bruker-ID.</string>
     <string name="masqueradeErrorDomain">Du må oppgi et gyldig domene.</string>
     <string name="masqueradeError">Det oppsto en feil da du prøvde å opptre som bruker.</string>
-    <string name="masqueradeInfo">\"Oppfør deg som\" er i realiteten å logge inn som denne brukeren uten passord. Du kan ta tiltak som om du er denne brukeren, og fra andres synspunkt ser det ut som denne brukeren har utført dem. Overvåkingloggen vil likevel notere at det var du som utførte handlingene på vegne av denne brukeren.</string>
+    <string name="masqueradeInfo">\"Opptre som\" er i praksis å logge inn som denne brukeren uten et passord. Du vil ha muligheten til å utføre enhver handling som om du var denne brukeren, og fra andre brukeres perspektiv vil det se ut som om denne brukeren har utført dem. Overvåkingloggen vil likevel notere at det var du som utførte handlingene på vegne av denne brukeren.</string>
     <string name="masqueradingAs">Du opptrer som %s</string>
-    <string name="stopActingAsTitle">Slutt å opptre som...</string>
+    <string name="stopActingAsTitle">Slutt å opptre som&#8230;</string>
     <string name="stopActingAsMessage">Du vil slutte å opptre som %s og gå tilbake til din egen konto.</string>
     <string name="weMadeChanges">Vi har gjort noen endringer.</string>
     <string name="whatsNewText">Se hva som er nytt</string>

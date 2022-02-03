@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Den här studentens svar är dolda eftersom uppgiften är anonym.</string>
 
-    <string name="studentAnnotationUnsupported">Studentnotering (stöds inte)</string>
-    <string name="studentAnnotationUnsupportedDescription">Studentnotering stöds för närvarande inte på mobila enheter.</string>
-    <string name="unsupportedSubmissionType">Inlämningstyp som inte stöds</string>
-    <string name="studentAnnotationUnsupportedMessage">Inlämningen kan inte visas eftersom studentnotering inte stöds på mobila enheter.</string>
     <string name="schedule_marked_as_done">Du har markerat den som färdig.</string>
     <string name="error_saving_assignment_closed_grading_period">Det går inte att ändra inlämningsdatumet när det överskridits i en stängd omdömesperiod.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Hoppa fram till i dag</string>
@@ -1225,4 +1221,16 @@
     <string name="a11y_contact_info_click_description">skicka meddelande</string>
     <string name="somethingWentWrong">Något gick fel</string>
     <string name="failedToLoadQuiz">Det gick inte att läsa in quizet</string>
+    <string name="failedToLoadSubmission">Det gick inte att läsa in inlämningen</string>
+    <string name="studentAnnotationToolbarTitle">Studentnotering</string>
+    <string name="submissionTypeStudentAnnotation">Studentnotering</string>
+    <string name="gradesNoDueDate">Inget inlämningsdatum</string>
+    <string name="missingAssignment">Saknad</string>
+    <string name="dontSave">Spara inte</string>
+    <string name="textSubmissionExitConfirmationTitle">Spara utkast?</string>
+    <string name="textSubmissionExitConfirmationMessage">Annars sparas inte dina ändringar</string>
+    <string name="submissionDraftAvailableSubtitle">Tryck här för att fortsätta</string>
+    <string name="submissionDraftAvailableTitle">Utkast tillgängligt</string>
+    <string name="errorLoadingSubmission">Ett fel inträffade vid inläsning av inlämningen</string>
+    <string name="loadFullContent">Tryck för att se hela innehållet</string>
 </resources>
