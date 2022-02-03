@@ -19,6 +19,7 @@
 package com.instructure.canvas.espresso.mockCanvas
 
 import android.util.Log
+import com.github.javafaker.Bool
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.*
@@ -541,7 +542,7 @@ fun MockCanvas.addUserPermissions(userId: Long, canUpdateName: Boolean, canUpdat
     user?.permissions = CanvasContextPermission(canUpdateAvatar = canUpdateAvatar, canUpdateName = canUpdateName)
 }
 
-fun MockCanvas.addCourseCalendarEvent(courseId: Long, date: String, title: String, description: String) : ScheduleItem {
+fun MockCanvas.addCourseCalendarEvent(courseId: Long, date: String, title: String, description: String, isImportantDate: Boolean = false) : ScheduleItem {
     val newScheduleItem = ScheduleItem(
             itemId = newItemId().toString(),
             title = title,
@@ -550,7 +551,32 @@ fun MockCanvas.addCourseCalendarEvent(courseId: Long, date: String, title: Strin
             isAllDay = true,
             allDayAt = date,
             startAt = date,
-            contextCode = "course_$courseId"
+            contextCode = "course_$courseId",
+            importantDates = isImportantDate
+    )
+
+    var calendarEventList = courseCalendarEvents[courseId]
+    if(calendarEventList == null) {
+        calendarEventList = mutableListOf<ScheduleItem>()
+        courseCalendarEvents[courseId] = calendarEventList
+    }
+    calendarEventList.add(newScheduleItem)
+
+    return newScheduleItem
+}
+
+fun MockCanvas.addAssignmentCalendarEvent(courseId: Long, date: String, title: String, description: String, isImportantDate: Boolean = false, assignment: Assignment): ScheduleItem {
+    val newScheduleItem = ScheduleItem(
+            itemId = newItemId().toString(),
+            title = title,
+            description = description,
+            itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+            isAllDay = true,
+            allDayAt = date,
+            startAt = date,
+            contextCode = "course_$courseId",
+            importantDates = isImportantDate,
+            assignment = assignment
     )
 
     var calendarEventList = courseCalendarEvents[courseId]

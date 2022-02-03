@@ -24,6 +24,7 @@
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/importantDatesPage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".features.elementary.importantdates.ImportantDatesFragment">
@@ -35,6 +36,7 @@
             app:refreshState="@{viewModel.state}">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/importantDatesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
@@ -47,7 +49,7 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.instructure.pandautils.views.EmptyView
-            android:id="@+id/scheduleEmptyView"
+            android:id="@+id/importantDatesEmptyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:emptyViewState="@{viewModel.state}" />

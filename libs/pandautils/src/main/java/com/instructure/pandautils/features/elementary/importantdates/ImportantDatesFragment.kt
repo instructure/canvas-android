@@ -59,7 +59,7 @@ class ImportantDatesFragment : Fragment() {
             is ImportantDatesAction.OpenAssignment -> router.openAssignment(action.canvasContext, action.assignmentId)
             is ImportantDatesAction.OpenCalendarEvent -> router.openCalendarEvent(
                     action.canvasContext,
-                    action.scheduleItemId
+                    action.scheduleItem
             )
             is ImportantDatesAction.ShowToast -> {
                 Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()

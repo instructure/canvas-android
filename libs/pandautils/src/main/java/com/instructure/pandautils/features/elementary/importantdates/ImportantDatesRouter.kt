@@ -17,10 +17,11 @@
 package com.instructure.pandautils.features.elementary.importantdates
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ScheduleItem
 
 interface ImportantDatesRouter {
 
     fun openAssignment(canvasContext: CanvasContext, assignmentId: Long)
 
-    fun openCalendarEvent(canvasContext: CanvasContext, scheduleItemId: Long)
+    fun openCalendarEvent(canvasContext: CanvasContext, scheduleItem: ScheduleItem)
 }

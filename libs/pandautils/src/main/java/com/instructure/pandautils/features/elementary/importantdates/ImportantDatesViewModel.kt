@@ -177,7 +177,7 @@ class ImportantDatesViewModel @Inject constructor(
         val canvasContext = CanvasContext.fromContextCode(course?.contextId)
         if (scheduleItem != null && canvasContext != null) {
             if (scheduleItem.assignment == null) {
-                _events.postValue(Event(ImportantDatesAction.OpenCalendarEvent(canvasContext, scheduleItemId)))
+                _events.postValue(Event(ImportantDatesAction.OpenCalendarEvent(canvasContext, scheduleItem)))
             } else {
                 _events.postValue(Event(ImportantDatesAction.OpenAssignment(canvasContext, scheduleItem.assignment!!.id)))
             }
