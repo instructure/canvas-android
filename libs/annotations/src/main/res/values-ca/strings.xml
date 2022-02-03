@@ -23,7 +23,7 @@
     <string name="skip">Omet</string>
     <string name="comments">Comentaris</string>
     <string name="error_loading_submission">S\'ha produït un problema en carregar aquesta entrega.</string>
-    <string name="retry">Torna a provar-ho</string>
+    <string name="retry">Torna-ho a provar</string>
     <string name="annotationErrorOccurred">S\'ha produït un error inesperat mentre es carregaven les anotacions.</string>
     <string name="annotationError">Error d\'anotació</string>
     <string name="annotationDialogMessage">S\'ha suprimit l\'anotació des d\'una altra font.</string>
@@ -33,9 +33,9 @@
     <string name="deleteComment">Suprimeix el comentari</string>
     <string name="deleteAnnotation">Suprimeix l\'anotació</string>
     <string name="deleteCommentConfirmation">Segur que voleu suprimir aquest comentari?</string>
-    <string name="deleteHeadCommentConfirmation">Si suprimiu aquest comentari, també se suprimiran tots els comentaris associats a aquesta anotació. Segur que voleu fer això?</string>
+    <string name="deleteHeadCommentConfirmation">Si suprimiu aquest comentari, també se suprimiran tots els comentaris associats a aquesta anotació. Segur que ho voleu fer?</string>
     <string name="sendingSimple">S\'està enviant</string>
     <string name="pspdf__annotation_type_stamp">Color de la nota</string>
-    <string name="removedComment">Eliminat %1$s per %2$s</string>
+    <string name="removedComment">Eliminat el %1$s per %2$s</string>
 
 </resources>

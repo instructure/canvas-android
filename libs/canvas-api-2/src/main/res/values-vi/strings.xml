@@ -1,0 +1,80 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Bạn phải hoàn thành trước:</string>
+    <string name="unlockedAt">Sẽ được mở khóa vào:</string>
+    <string name="goToModules">Đi Đến Học Phần:</string>
+
+    <!--Events-->
+    <string name="Starts">Bắt Đầu</string>
+    <string name="Ends">Kết Thúc</string>
+    <string name="allDayEvent">Sự Kiện Cả Ngày</string>
+    <string name="at">vào</string>
+    <string name="to">đến</string>
+
+    <!--StreamItems-->
+    <string name="Message">Tin Nhắn</string>
+    <string name="Loading">Đang tải&#8230;</string>
+    <string name="Deleted">Đã xóa</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Trực tuyến</string>
+    <string name="canvasAPI_onPaper">Trên Giấy</string>
+    <string name="canvasAPI_discussion">Thảo Luận</string>
+    <string name="canvasAPI_quiz">Kiểm Tra</string>
+    <string name="canvasAPI_externalTool">Công Cụ Ngoài</string>
+    <string name="canvasAPI_none">Không Có Mục Nộp</string>
+
+    <string name="canvasAPI_passFail">Đạt Không Đạt</string>
+    <string name="canvasAPI_percent">Phần Trăm</string>
+    <string name="canvasAPI_letterGrade">Điểm Bằng Chữ</string>
+    <string name="canvasAPI_points">Điểm</string>
+    <string name="canvasAPI_gpaScale">Thang GPA</string>
+    <string name="canvasAPI_notGraded">Chưa Được Chấm Điểm</string>
+
+    <string name="canvasAPI_onlineQuiz">Kiểm Tra</string>
+    <string name="canvasAPI_discussionTopic">Đề Tài Thảo Luận</string>
+    <string name="canvasAPI_onlineUpload">Tải Lên Tập Tin</string>
+    <string name="canvasAPI_onlineTextEntry">Mục Nhập Văn Bản</string>
+    <string name="canvasAPI_onlineURL">URL Trang Web</string>
+    <string name="canvasAPI_mediaRecording">Ghi Nội Dung Phương Tiện</string>
+    <string name="canvasAPI_attendance">Chuyên Cần</string>
+    <string name="canvasAPI_studentAnnotation">Chú Thích Sinh Viên</string>
+    <string name="quiz_scoring_policy_highest">Cao Nhất</string>
+    <string name="quiz_scoring_policy_average">Trung Bình</string>
+    <string name="quiz_scoring_policy_latest">Mới Nhất</string>
+    <string name="no">Không</string>
+    <string name="always">Luôn Luôn</string>
+    <string name="graded_quiz">Bài Kiểm Tra Có Chấm Điểm</string>
+    <string name="practice_quiz">Bài Kiểm Tra Luyện Tập</string>
+    <string name="graded_survey">Khảo Sát Đã Chấm Điểm</string>
+    <string name="ungraded_survey">Khảo Sát Chưa Chấm Điểm</string>
+    <string name="andMore">\u0020Và %d hơn nữa</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Sinh Viên</string>
+    <string name="enrollmentTypeTeacher">Giáo Viên</string>
+    <string name="enrollmentTypeObserver">Người Quan Sát</string>
+    <string name="enrollmentTypeTeachingAssistant">Trợ Giảng</string>
+    <string name="enrollmentTypeDesigner">Người Thiết Kế</string>
+    <string name="enrollmentTypeUnknown">Không xác định</string>
+
+</resources>

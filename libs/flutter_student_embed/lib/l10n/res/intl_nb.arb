@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-05-22T11:03:37.722827",
+  "@@last_modified": "2020-09-18T11:03:40.609706",
   "coursesLabel": "Emner",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
@@ -108,7 +108,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "To Do": "Å gjøre",
+  "To Do": "Gjøremål",
   "@To Do": {
     "description": "Label used for To-Do items in the planner",
     "type": "text",
@@ -226,7 +226,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "View error details": "Vis avviksdetaljer",
+  "View error details": "Vis feildetaljer",
   "@View error details": {
     "description": "Label for the button that allowed users to view crash details",
     "type": "text",
@@ -262,7 +262,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "Emnene til studentene dine er kanskje ikke publisert enda.",
+  "Your student’s courses might not be published yet.": "Emnene til studentene dine er kanskje upublisert enda.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
@@ -282,7 +282,7 @@
       "courseName": {}
     }
   },
-  "Graded": "Karaktersatt",
+  "Graded": "Vurdert",
   "@Graded": {
     "description": "Label for assignments that have been graded",
     "type": "text",
@@ -329,7 +329,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Retry": "Forsøk igjen",
+  "Retry": "Prøv igjen",
   "@Retry": {
     "type": "text",
     "placeholders": {}

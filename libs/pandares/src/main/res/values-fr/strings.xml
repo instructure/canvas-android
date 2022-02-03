@@ -56,7 +56,7 @@
     <string name="noAttemptsLeft">Aucune tentative restante</string>
     <string name="resubmitAssignment">Soumettre à nouveau le travail</string>
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">L’envoi d\'un ou plusieurs fichiers a échoué. Vérifiez l’état de votre connexion internet, puis réessayez.</string>
     <string name="submissionUploadByteProgress">%1$s de %2$s</string>
@@ -72,7 +72,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URLs utilisant « http:// »</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Entrez une URL ici pour votre soumission</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer de l’audio</string>
     <string name="recordVideo">Enregistrer la vidéo</string>
     <string name="a11y_textSubmissionEditor">Éditeur de soumission de texte</string>
@@ -930,7 +930,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Ce travail n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Ce travail n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>O</item>
@@ -1093,7 +1093,7 @@
     <string name="closeRecordingView">Fermer la vue enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur est survenue lors de la tentative d\'afficher le replay.</string>
+    <string name="errorShowingVideoReplay">Une erreur est survenue lors de la tentative d&apos;afficher le replay.</string>
     <string name="errorSubmittingMediaComment">Une erreur est survenue lors de la tentative de soumettre votre commentaire au format média.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>
@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Les réponses de cet élève sont masquées car ce travail est anonyme.</string>
 
-    <string name="studentAnnotationUnsupported">Annotation de l\'élève (non prise en charge)</string>
-    <string name="studentAnnotationUnsupportedDescription">L\'annotation des élèves n\'est actuellement pas prise en charge sur les téléphones mobiles.</string>
-    <string name="unsupportedSubmissionType">Type de soumission non pris en charge</string>
-    <string name="studentAnnotationUnsupportedMessage">La soumission ne peut pas être affichée, car l\'annotation de l\'élève n\'est actuellement pas prise en charge sur les téléphones mobiles.</string>
     <string name="schedule_marked_as_done">Vous avez tout indiqué comme terminé.</string>
     <string name="error_saving_assignment_closed_grading_period">Impossible de changer la date d\'échéance lorsque l’échéance se trouve dans une période fermée à la notation.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Aller à Aujourd’hui</string>
@@ -1225,4 +1221,16 @@
     <string name="a11y_contact_info_click_description">envoyer le message</string>
     <string name="somethingWentWrong">Un problème est survenu.</string>
     <string name="failedToLoadQuiz">Impossible de charger le questionnaire</string>
+    <string name="failedToLoadSubmission">Impossible de charger la soumission</string>
+    <string name="studentAnnotationToolbarTitle">Annotation d\'élève</string>
+    <string name="submissionTypeStudentAnnotation">Annotation d\'élève</string>
+    <string name="gradesNoDueDate">Pas de date d’échéance</string>
+    <string name="missingAssignment">Manquant</string>
+    <string name="dontSave">Ne pas enregistrer</string>
+    <string name="textSubmissionExitConfirmationTitle">Enregistrer le brouillon ?</string>
+    <string name="textSubmissionExitConfirmationMessage">Sinon, vos modifications ne seront pas enregistrées</string>
+    <string name="submissionDraftAvailableSubtitle">Appuyez ici pour continuer</string>
+    <string name="submissionDraftAvailableTitle">Brouillon disponible</string>
+    <string name="errorLoadingSubmission">Une erreur est survenue lors du chargement de la soumission.</string>
+    <string name="loadFullContent">Appuyez pour voir le contenu entier.</string>
 </resources>

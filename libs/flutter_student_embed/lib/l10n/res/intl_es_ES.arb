@@ -1,6 +1,6 @@
 ﻿{
-  "@@last_modified": "2020-09-18T11:03:40.609706",
-  "coursesLabel": "Cursos",
+  "@@last_modified": "2020-09-18T11:3:40.609706",
+  "coursesLabel": "Asignaturas",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
     "type": "text",
@@ -96,7 +96,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Pulse para marcar los cursos que desea ver en el Calendario como favoritos.",
+  "Tap to favorite the courses you want to see on the Calendar.": "Pulse para marcar las asignaturas que desea ver en el calendario como favoritos.",
   "@Tap to favorite the courses you want to see on the Calendar.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
@@ -108,7 +108,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "To Do": "Pendiente",
+  "To Do": "Tareas pendientes",
   "@To Do": {
     "description": "Label used for To-Do items in the planner",
     "type": "text",
@@ -132,13 +132,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "New To Do": "Nueva actividad pendiente",
+  "New To Do": "Nueva tarea pendiente",
   "@New To Do": {
     "description": "Title of the screen for creating new To Do items",
     "type": "text",
     "placeholders": {}
   },
-  "Edit To Do": "Editar actividad pendiente",
+  "Edit To Do": "Editar tarea pendiente",
   "@Edit To Do": {
     "description": "Title of the screen for editing a To Do item",
     "type": "text",
@@ -150,7 +150,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Course (optional)": "Curso (opcional)",
+  "Course (optional)": "Asignatura (opcional)",
   "@Course (optional)": {
     "description": "Label for optional course selection when creating To Do items",
     "type": "text",
@@ -180,7 +180,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Do you want to delete this To Do item?": "¿Desea eliminar esta actividad pendiente?",
+  "Do you want to delete this To Do item?": "¿Desea eliminar esta tarea pendiente?",
   "@Do you want to delete this To Do item?": {
     "description": "Message of the dialog shown when the user tries to delete a To Do item",
     "type": "text",
@@ -204,12 +204,12 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error saving this To Do. Please check your connection and try again.": "Ha habido un error al guardar esta actividad pendiente. Compruebe su conexión y vuelva a intentarlo.",
+  "There was an error saving this To Do. Please check your connection and try again.": "Ha habido un error al guardar esta tarea pendiente. Compruebe su conexión y vuelva a intentarlo.",
   "@There was an error saving this To Do. Please check your connection and try again.": {
     "type": "text",
     "placeholders": {}
   },
-  "There was an error deleting this To Do. Please check your connection and try again.": "Ha habido un error al eliminar esta actividad pendiente. Compruebe su conexión y vuelva a intentarlo.",
+  "There was an error deleting this To Do. Please check your connection and try again.": "Ha habido un error al eliminar esta tarea pendiente. Compruebe su conexión y vuelva a intentarlo.",
   "@There was an error deleting this To Do. Please check your connection and try again.": {
     "type": "text",
     "placeholders": {}
@@ -256,25 +256,25 @@
     "type": "text",
     "placeholders": {}
   },
-  "No Courses": "No hay cursos",
+  "No Courses": "No hay asignaturas",
   "@No Courses": {
     "description": "Title for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "Es posible que los cursos de sus alumnos aún no estén publicados.",
+  "Your student’s courses might not be published yet.": "Es posible que las asignaturas de sus alumnos aún no estén publicados.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your your student’s courses.": "Ha habido un error al cargar los cursos de sus alumnos.",
+  "There was an error loading your your student’s courses.": "Ha habido un error al cargar las asignaturas de sus alumnos.",
   "@There was an error loading your your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
     "placeholders": {}
   },
-  "courseToDo": "{courseName} Pendiente",
+  "courseToDo": "{courseName} Tareas pendientes",
   "@courseToDo": {
     "description": "Label used for course-specific To-Do items in the planner, where the course name is used as an adjective to describe the type of To Do",
     "type": "text",
@@ -308,7 +308,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Missing": "Faltante",
+  "Missing": "No presentado",
   "@Missing": {
     "description": "Description for when a student has not turned anything in for an assignment",
     "type": "text",
