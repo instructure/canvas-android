@@ -16,21 +16,35 @@
 
 package com.instructure.student.ui.pages
 
+import android.view.View
+import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.contrib.RecyclerViewActions
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasChild
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
+import com.instructure.espresso.swipeUp
+import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.student.R
+import org.hamcrest.Matcher
 
 
 class ImportantDatesPage : BasePage(R.id.importantDatesPage) {
+
+    private val importantDatesRecyclerView by OnViewWithId(R.id.importantDatesRecyclerView)
+    private val importantDatesEmptyView by OnViewWithId(R.id.importantDatesEmptyView, autoAssert = false)
 
     fun assertItemDisplayed(itemName: String) {
         waitForView(withAncestor(R.id.importantDatesRecyclerView) + withText(itemName)).assertDisplayed()
     }
 
     fun assertEmptyViewDisplayed() {
-        onView(withId(R.id.importantDatesEmptyView)).assertDisplayed()
+        importantDatesEmptyView.assertDisplayed().assertDisplayed()
     }
 
     fun pullToRefresh() {
@@ -40,4 +54,17 @@ class ImportantDatesPage : BasePage(R.id.importantDatesPage) {
     fun clickImportantDatesItem(title: String) {
         waitForView(withAncestor(R.id.importantDatesRecyclerView) + withText(title)).click()
     }
+
+    fun assertRecyclerViewItemCount(expectedCount: Int) {
+        importantDatesRecyclerView.check(RecyclerViewItemCountAssertion(expectedCount))
+    }
+
+    fun assertDayTextIsDisplayed(dayText: String) {
+        importantDatesRecyclerView.assertHasChild(withText(dayText))
+    }
+
+    fun assertCalendarEventCountGreaterThan(count: Int) {
+        importantDatesRecyclerView.check(RecyclerViewItemCountGreaterThanAssertion(count))
+    }
+
 }
