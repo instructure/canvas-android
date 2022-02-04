@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="rce_contentDescription_undo">Desfés</string>
     <string name="rce_contentDescription_redo">Refés</string>
     <string name="rce_contentDescription_bold">Format negreta</string>
@@ -62,11 +61,12 @@
     <string name="rce_done">Fet</string>
     <string name="rce_cancel">Cancel·la</string>
     <string name="rce_exit">Surt</string>
-    <string name="rce_dialog_exit_title">Voleu sortir de l\'edició de la tasca?</string>
+    <string name="rce_dialog_exit_title">Voleu sortir de l\'edició de l\'activitat?</string>
     <string name="rce_dialog_exit_message">Segur que voleu sortir? Es perdran les dades que no s\'hagin desat.</string>
     <string name="rce_empty_message">Missatge</string>
     <string name="rce_empty_description">Afegeix una descripció</string>
     <string name="rce_scrollInstructions">Desplaça\'t per trobar totes les eines d\'edició</string>
+
     <string name="rce_emptyUrlError">L\'URL no pot estar en blanc</string>
     <string name="rce_httpNotAllowed">Només s\'accepten URLs https</string>
 </resources>

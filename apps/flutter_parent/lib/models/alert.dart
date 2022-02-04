@@ -59,6 +59,9 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
   @BuiltValueField(wireName: 'html_url')
   String get htmlUrl;
 
+  @BuiltValueField(wireName: 'locked_for_user')
+  bool get lockedForUser;
+
   static void _initializeBuilder(AlertBuilder b) => b
     ..id = ''
     ..observerAlertThresholdId = ''

@@ -45,9 +45,9 @@ class SchedulePagerViewModel @Inject constructor(
 
     init {
         val calendar = dateTimeProvider.getCalendar()
-        calendar.roll(Calendar.WEEK_OF_YEAR, -28)
+        calendar.add(Calendar.WEEK_OF_YEAR, -28)
         val startDates = (0..SCHEDULE_PAGE_COUNT).map {
-            calendar.roll(Calendar.WEEK_OF_YEAR, true)
+            calendar.add(Calendar.WEEK_OF_YEAR, 1)
             calendar.time.toApiString()
         }
 

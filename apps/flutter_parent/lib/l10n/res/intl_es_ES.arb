@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-09-18T11:03:20.748250",
+  "@@last_modified": "2020-09-18T11:3:20.748250",
   "alertsLabel": "Alertas",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -12,7 +12,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "coursesLabel": "Cursos",
+  "coursesLabel": "Asignaturas",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
     "type": "text",
@@ -164,7 +164,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Pulse para marcar los cursos que desea ver en el calendario como favoritos. Seleccione hasta 10.",
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Pulse para marcar las asignaturas que desea ver en el calendario como favoritos. Seleccione hasta 10.",
   "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
@@ -324,13 +324,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Unable to fetch courses. Please check your connection and try again.": "No se han podido obtener los cursos. Compruebe su conexión y vuelva a intentarlo.",
+  "Unable to fetch courses. Please check your connection and try again.": "No se han podido obtener las asignaturas. Compruebe su conexión y vuelva a intentarlo.",
   "@Unable to fetch courses. Please check your connection and try again.": {
     "description": "Message shown when an error occured while loading courses",
     "type": "text",
     "placeholders": {}
   },
-  "Choose a course to message": "Elija un curso para enviar un mensaje",
+  "Choose a course to message": "Elija una asignatura para enviar un mensaje",
   "@Choose a course to message": {
     "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
     "type": "text",
@@ -348,7 +348,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading recipients for this course": "Ha habido un error al cargar los destinatarios de este curso",
+  "There was an error loading recipients for this course": "Ha habido un error al cargar los destinatarios de este asignatura",
   "@There was an error loading recipients for this course": {
     "description": "Message shown when attempting to create a new message but the recipients list failed to load",
     "type": "text",
@@ -459,7 +459,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Reply": "Responder",
+  "Reply": "Respuesta",
   "@Reply": {
     "description": "Button label for replying to a conversation",
     "type": "text",
@@ -556,19 +556,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "No Courses": "No hay cursos",
+  "No Courses": "No hay asignaturas",
   "@No Courses": {
     "description": "Title for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "Es posible que los cursos de sus alumnos aún no estén publicados.",
+  "Your student’s courses might not be published yet.": "Es posible que las asignaturas de sus alumnos aún no estén publicados.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your student’s courses.": "Ha habido un error al cargar los cursos de su alumno.",
+  "There was an error loading your student’s courses.": "Ha habido un error al cargar las asignaturas de su alumno.",
   "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
@@ -592,7 +592,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Syllabus": "Programa del curso",
+  "Syllabus": "Programa de la asignatura",
   "@Syllabus": {
     "description": "Label for the \"Syllabus\" tab in course details",
     "type": "text",
@@ -610,7 +610,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Send a message about this course": "Enviar un mensaje acerca de este curso",
+  "Send a message about this course": "Enviar un mensaje acerca de esta asignatura",
   "@Send a message about this course": {
     "description": "Accessibility hint for the course messaage floating action button",
     "type": "text",
@@ -646,7 +646,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Missing": "Faltante",
+  "Missing": "No presentado",
   "@Missing": {
     "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
     "type": "text",
@@ -676,7 +676,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading the summary details for this course.": "Ha habido un error al cargar los detalles del resumen de este curso.",
+  "There was an error loading the summary details for this course.": "Ha habido un error al cargar los detalles del resumen de esta asignatura.",
   "@There was an error loading the summary details for this course.": {
     "description": "Message shown when the course summary could not be loaded",
     "type": "text",
@@ -688,7 +688,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "This course does not have any assignments or calendar events yet.": "Este curso aún no tiene ninguna actividad ni eventos en el calendario.",
+  "This course does not have any assignments or calendar events yet.": "Esta asignatura aún no tiene ninguna actividad ni eventos en el calendario.",
   "@This course does not have any assignments or calendar events yet.": {
     "description": "Message displayed when there are no items in the course summary",
     "type": "text",
@@ -720,7 +720,7 @@
       "studentName": {}
     }
   },
-  "syllabusSubjectMessage": "Asunto: {studentName}, programa del curso",
+  "syllabusSubjectMessage": "Asunto: {studentName}, programa de la asignatura",
   "@syllabusSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a course syllabus",
     "type": "text",
@@ -800,7 +800,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "assignmentLockedModule": "Esta actividad está bloqueada por el módulo \"{moduleName}\".",
+  "assignmentLockedModule": "Esta actividad está bloqueada por el contenido \"{moduleName}\".",
   "@assignmentLockedModule": {
     "description": "The locked description when an assignment is locked by a module",
     "type": "text",
@@ -959,7 +959,7 @@
       "alertTitle": {}
     }
   },
-  "Course Announcement": "Anuncio del curso",
+  "Course Announcement": "Anuncio de la asignatura",
   "@Course Announcement": {
     "description": "Title for alerts when there is a course announcement",
     "type": "text",
@@ -987,7 +987,7 @@
       "threshold": {}
     }
   },
-  "courseGradeAboveThreshold": "Nota del curso superior a {threshold}",
+  "courseGradeAboveThreshold": "Nota de la asignatura superior a {threshold}",
   "@courseGradeAboveThreshold": {
     "description": "Title for alerts when a course grade is above the threshold value",
     "type": "text",
@@ -995,7 +995,7 @@
       "threshold": {}
     }
   },
-  "courseGradeBelowThreshold": "Nota del curso inferior a {threshold}",
+  "courseGradeBelowThreshold": "Nota de la asignatura inferior a {threshold}",
   "@courseGradeBelowThreshold": {
     "description": "Title for alerts when a course grade is below the threshold value",
     "type": "text",
@@ -1120,19 +1120,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "Course grade below": "Nota del curso inferior a",
+  "Course grade below": "Nota de la asignatura inferior a",
   "@Course grade below": {
     "description": "Label describing the threshold for when the course grade is below a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Course grade above": "Nota del curso superior a",
+  "Course grade above": "Nota de la asignatura superior a",
   "@Course grade above": {
     "description": "Label describing the threshold for when the course grade is above a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Assignment missing": "Actividad faltante",
+  "Assignment missing": "Actividad no presentado",
   "@Assignment missing": {
     "type": "text",
     "placeholders": {}
@@ -1149,7 +1149,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Course Announcements": "Anuncios del curso",
+  "Course Announcements": "Anuncios de la asignatura",
   "@Course Announcements": {
     "type": "text",
     "placeholders": {}
@@ -1165,7 +1165,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Grade percentage": "Porcentaje de calificación",
+  "Grade percentage": "Porcentaje de nota",
   "@Grade percentage": {
     "type": "text",
     "placeholders": {}
@@ -1382,7 +1382,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Create Account": "Crear cuenta",
+  "Create Account": "Crear usuario",
   "@Create Account": {
     "description": "Button text for account creation confirmation",
     "type": "text",
@@ -1451,7 +1451,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "qrCreateAccountTos": "Al tocar en “Crear cuenta”, acepta los {termsOfService} y la {privacyPolicy}",
+  "qrCreateAccountTos": "Al tocar en “Crear usuario”, acepta los {termsOfService} y la {privacyPolicy}",
   "@qrCreateAccountTos": {
     "description": "The text show on the account creation screen",
     "type": "text",
@@ -1701,7 +1701,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Just a casual question, comment, idea, suggestion…": "Solo una pregunta, comentario, idea o sugerencia informal",
+  "Just a casual question, comment, idea, suggestion…": "Solo una pregunta, comentario, idea o sugerencia informal...",
   "@Just a casual question, comment, idea, suggestion…": {
     "type": "text",
     "placeholders": {}

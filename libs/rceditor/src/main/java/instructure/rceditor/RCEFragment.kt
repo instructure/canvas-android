@@ -150,10 +150,8 @@ class RCEFragment : Fragment() {
             })
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.rce_dimStatusBarGray)
-            requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        }
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.rce_dimStatusBarGray)
+        requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         rce_colorPickerWhite.setOnClickListener(onColorChosen)
         rce_colorPickerBlack.setOnClickListener(onColorChosen)

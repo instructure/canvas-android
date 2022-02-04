@@ -27,6 +27,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
 import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
+import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesFragment
 import com.instructure.pandautils.features.elementary.resources.ResourcesFragment
 import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 import com.instructure.pandautils.utils.Const
@@ -44,12 +45,13 @@ class ElementaryDashboardFragment : ParentFragment() {
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private val schedulePagerFragment = SchedulePagerFragment.newInstance()
+    private val importantDatesFragment = ImportantDatesFragment.newInstance()
 
-    private val fragments = listOf(
+    private val fragments = mutableListOf(
         HomeroomFragment.newInstance(),
         schedulePagerFragment,
         GradesFragment.newInstance(),
-        ResourcesFragment.newInstance()
+        ResourcesFragment.newInstance(),
     )
 
     override fun title(): String = if (isAdded) getString(R.string.dashboard) else ""
@@ -94,6 +96,18 @@ class ElementaryDashboardFragment : ParentFragment() {
                 }
             }
         })
+
+        importantDates?.let {
+            childFragmentManager
+                    .beginTransaction()
+                    .add(R.id.importantDates, importantDatesFragment)
+                    .commit()
+        } ?: addImportantDatesFragment()
+    }
+
+    private fun addImportantDatesFragment() {
+        fragments.add(importantDatesFragment)
+        dashboardPager.adapter?.notifyDataSetChanged()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

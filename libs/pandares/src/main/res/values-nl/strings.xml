@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">De antwoorden van deze cursist zijn verborgen omdat deze opdracht anoniem is.</string>
 
-    <string name="studentAnnotationUnsupported">Cursistaantekening (niet ondersteund)</string>
-    <string name="studentAnnotationUnsupportedDescription">Cursistaantekening wordt momenteel niet ondersteund op mobiel apparaat.</string>
-    <string name="unsupportedSubmissionType">Niet-ondersteund inleveringstype</string>
-    <string name="studentAnnotationUnsupportedMessage">Inlevering kan niet worden weergegeven omdat cursistaantekening momenteel niet wordt ondersteund op mobiel apparaat.</string>
     <string name="schedule_marked_as_done">Je hebt het als klaar gemarkeerd.</string>
     <string name="error_saving_assignment_closed_grading_period">Kan de inleverdatum niet wijzigen wanneer deze binnen een afgesloten beoordelingsperiode valt.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Naar vandaag springen</string>
@@ -1225,4 +1221,16 @@
     <string name="a11y_contact_info_click_description">bericht verzenden</string>
     <string name="somethingWentWrong">Er is iets misgegaan</string>
     <string name="failedToLoadQuiz">Kan toets niet laden</string>
+    <string name="failedToLoadSubmission">Kan inlevering niet laden</string>
+    <string name="studentAnnotationToolbarTitle">Cursistaantekening</string>
+    <string name="submissionTypeStudentAnnotation">Cursistaantekening</string>
+    <string name="gradesNoDueDate">Geen inleverdatum</string>
+    <string name="missingAssignment">Ontbrekend</string>
+    <string name="dontSave">Niet opslaan</string>
+    <string name="textSubmissionExitConfirmationTitle">Concept opslaan?</string>
+    <string name="textSubmissionExitConfirmationMessage">Anders zullen je wijzigingen niet worden opgeslagen</string>
+    <string name="submissionDraftAvailableSubtitle">Hier tikken om door te gaan</string>
+    <string name="submissionDraftAvailableTitle">Concept beschikbaar</string>
+    <string name="errorLoadingSubmission">Er is een fout opgetreden bij het laden van de inlevering</string>
+    <string name="loadFullContent">Tikken om volledige inhoud te zien</string>
 </resources>

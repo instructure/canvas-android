@@ -767,7 +767,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                     putSerializable(MODULE_ITEMS, CourseModulesStore.moduleListItems)
                     putParcelableArrayList(MODULE_OBJECTS, CourseModulesStore.moduleObjects)
                 }
-                moduleItemId = route.queryParamsHash[RouterParams.MODULE_ITEM_ID] ?: ""
+                moduleItemId = route.queryParamsHash[RouterParams.MODULE_ITEM_ID] ?: route.paramsHash[RouterParams.MODULE_ITEM_ID] ?: ""
             } else null
 
             CourseModulesStore.moduleListItems = null
@@ -779,5 +779,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         private fun validRoute(route: Route): Boolean = route.canvasContext != null
             && (CourseModulesStore.moduleObjects != null && CourseModulesStore.moduleListItems != null)
             || route.queryParamsHash.keys.any { it == RouterParams.MODULE_ITEM_ID }
+            || route.paramsHash.keys.any { it == RouterParams.MODULE_ITEM_ID }
     }
 }

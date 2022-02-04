@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ApiModule {
+class ApiModule {
 
     @Provides
     fun provideRemoteConfigUtils(): RemoteConfigUtils {
@@ -111,5 +111,15 @@ object ApiModule {
     @Provides
     fun provideTabManager(): TabManager {
         return TabManager
+    }
+
+    @Provides
+    fun provideAccountNotificationManager(): AccountNotificationManager {
+        return AccountNotificationManager
+    }
+
+    @Provides
+    fun provideConferenceManager(): ConferenceManager {
+        return ConferenceManager
     }
 }

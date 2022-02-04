@@ -163,9 +163,4 @@ class AssignmentSubmissionListPage : BasePage() {
     fun clickFilterDialogOk() {
         waitForViewWithText(android.R.string.ok).click()
     }
-
-    fun navigateBack() {
-        onView(Matchers.allOf((withParent(R.id.assignmentSubmissionListToolbar) + ViewMatchers.withContentDescription("Navigate up")), ViewMatchers.isDisplayed())).click()
-
-    }
 }

@@ -79,11 +79,7 @@ class RCETextEditor @JvmOverloads constructor(
         // call toString on fromHTML because certain Spanned objects can cause this to crash
         var description = formattedHtml
         if (title != null) description = "$title $formattedHtml"
-        contentDescription = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            simplifyHTML(Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY))
-        } else {
-            simplifyHTML(Html.fromHtml(description))
-        }
+        contentDescription = simplifyHTML(Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY))
     }
 
     val accessibilityContentDescription: String

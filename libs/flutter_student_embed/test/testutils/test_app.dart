@@ -148,9 +148,9 @@ class _TestAppState extends State<TestApp> {
       };
 }
 
-void setupTestLocator(config(GetIt locator)) {
+Future<void> setupTestLocator(config(GetIt locator)) async {
   final locator = GetIt.instance;
-  locator.reset();
+  await locator.reset();
   locator.allowReassignment = true; // Allows reassignment by the config block
 
   config(locator);

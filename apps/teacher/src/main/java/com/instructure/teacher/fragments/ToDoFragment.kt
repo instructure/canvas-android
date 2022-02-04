@@ -137,7 +137,8 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
             showToast(R.string.toDoNoSubmissions)
             return
         }
-        val bundle = SpeedGraderActivity.makeBundle(course.id, assignment.id, submissions, 0)
+        val anonymousGrading = assignment.anonymousGrading || assignment.anonymousSubmissions
+        val bundle = SpeedGraderActivity.makeBundle(course.id, assignment.id, submissions, 0, anonymousGrading)
         RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
     }
 

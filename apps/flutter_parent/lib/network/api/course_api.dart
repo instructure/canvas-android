@@ -24,7 +24,7 @@ class CourseApi {
   Future<List<Course>> getObserveeCourses({bool forceRefresh: false}) async {
     final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
-      'include': [
+      'include[]': [
         'term',
         'syllabus_body',
         'total_scores',
@@ -45,7 +45,7 @@ class CourseApi {
 
   Future<Course> getCourse(String courseId, {bool forceRefresh: false}) async {
     final params = {
-      'include': [
+      'include[]': [
         'syllabus_body',
         'term',
         'permissions',

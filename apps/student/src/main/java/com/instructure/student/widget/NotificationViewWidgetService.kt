@@ -87,11 +87,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
 
             if (!BaseRemoteViewsService.shouldHideDetails(appWidgetId)) {
                 if (streamItem.getMessage(ContextKeeper.appContext) != null) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        row.setTextViewText(R.id.message, StringUtilities.simplifyHTML(Html.fromHtml(streamItem.getMessage(ContextKeeper.appContext), Html.FROM_HTML_MODE_LEGACY)))
-                    } else {
-                        row.setTextViewText(R.id.message, StringUtilities.simplifyHTML(Html.fromHtml(streamItem.getMessage(ContextKeeper.appContext))))
-                    }
+                    row.setTextViewText(R.id.message, StringUtilities.simplifyHTML(Html.fromHtml(streamItem.getMessage(ContextKeeper.appContext), Html.FROM_HTML_MODE_LEGACY)))
                 } else {
                     row.setTextViewText(R.id.message, "")
                     row.setViewVisibility(R.id.message, View.GONE)

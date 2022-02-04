@@ -162,6 +162,8 @@ fun BasePage.scrollTo(viewId: Int) = BaristaScrollInteractions.safelyScrollTo(vi
 
 fun BasePage.scrollTo(text: String) = BaristaScrollInteractions.safelyScrollTo(text)
 
+fun BasePage.scrollTo(matcher: Matcher<View>) = BaristaScrollInteractions.safelyScrollTo(matcher)
+
 fun BasePage.waitScrollClick(viewId: Int) {
     val view = waitForViewWithId(viewId)
     scrollTo(viewId)

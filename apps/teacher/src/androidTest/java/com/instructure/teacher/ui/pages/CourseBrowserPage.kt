@@ -73,8 +73,7 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openPeopleTab() {
-        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
-        waitForViewWithText("People").click()
+        scrollOpen("People", scrollPosition = 4)
     }
 
     fun clickSettingsButton() {

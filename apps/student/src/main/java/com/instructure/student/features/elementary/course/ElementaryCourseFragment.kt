@@ -17,6 +17,7 @@
 package com.instructure.student.features.elementary.course
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,7 @@ import kotlinx.android.synthetic.main.fragment_elementary_course.*
 class ElementaryCourseFragment : Fragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    private var tabId: String by StringArg(key = TAB_ID)
 
     private val viewModel: ElementaryCourseViewModel by viewModels()
 
@@ -73,22 +75,18 @@ class ElementaryCourseFragment : Fragment() {
 
         viewModel.data.observe(viewLifecycleOwner, { data ->
             data?.let {
-                val webViews = it.tabs.map {
-                    InternalWebviewFragment.newInstance(
-                        InternalWebviewFragment.makeRoute(
-                            canvasContext = canvasContext,
-                            url = it.url!!,
-                            authenticate = true,
-                            hideToolbar = true,
-                            allowEmbedRouting = false,
-                            allowRoutingTheSameUrlInternally = false,
-                            isUnsupportedFeature = false,
-                            shouldRouteToLogin = false
-                        )
-                    )
-                }
                 courseTabPager.offscreenPageLimit = it.tabs.size
-                courseTabPager.adapter = ElementaryCoursePagerAdapter(webViews, childFragmentManager)
+                courseTabPager.adapter = ElementaryCoursePagerAdapter(it.tabs)
+
+                val selectedTab = it.tabs.find { it.tabId == tabId }
+                val selectedTabPosition = it.tabs.indexOf(selectedTab)
+
+                if (selectedTabPosition != -1) {
+                    Handler().postDelayed({
+                        courseTabLayout.selectTab(courseTabLayout.getTabAt(selectedTabPosition))
+                    }, 100)
+                }
+
             }
         })
     }
@@ -100,13 +98,26 @@ class ElementaryCourseFragment : Fragment() {
     }
 
     companion object {
+        const val TAB_ID = "tabId"
         fun newInstance(route: Route) =
             if (validateRoute(route)) ElementaryCourseFragment().apply {
-                arguments = route.canvasContext!!.makeBundle(route.arguments)
+                val fullUrl = route.uri.toString()
+                val tabId = if (fullUrl.contains("#")) {
+                    fullUrl.split("#")[1]
+                } else {
+                    null
+                }
+                arguments = route.argsWithContext
+                arguments?.apply {
+                    putString(TAB_ID, route.tabId ?: tabId)
+                }
             } else null
 
         private fun validateRoute(route: Route) = route.canvasContext != null
 
         fun makeRoute(canvasContext: CanvasContext?) = Route(ElementaryCourseFragment::class.java, canvasContext)
+
+        fun makeRoute(canvasContext: CanvasContext?, tabId: String) =
+            Route(primaryClass = ElementaryCourseFragment::class.java, canvasContext = canvasContext, tabId = tabId)
     }
 }

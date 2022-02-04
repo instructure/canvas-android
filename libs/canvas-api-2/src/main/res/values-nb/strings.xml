@@ -32,28 +32,28 @@
 
     <!--StreamItems-->
     <string name="Message">Melding</string>
-    <string name="Loading">Laster&#8230;</string>
+    <string name="Loading">Loading&#8230;</string>
     <string name="Deleted">Slettet</string>
 
     <!-- Assignment Module -->
     <string name="canvasAPI_online">Online</string>
     <string name="canvasAPI_onPaper">På papir</string>
     <string name="canvasAPI_discussion">Diskusjon</string>
-    <string name="canvasAPI_quiz">Test</string>
+    <string name="canvasAPI_quiz">Quiz</string>
     <string name="canvasAPI_externalTool">Eksternt verktøy</string>
     <string name="canvasAPI_none">Ingen innlevering</string>
     <string name="canvasAPI_passFail">Sto ikke</string>
     <string name="canvasAPI_percent">Prosent</string>
-    <string name="canvasAPI_letterGrade">Bokstavkarakter</string>
+    <string name="canvasAPI_letterGrade">Bokstavvurdering</string>
     <string name="canvasAPI_points">Poeng</string>
-    <string name="canvasAPI_gpaScale">Tallkarakter (GPA)-skala</string>
-    <string name="canvasAPI_notGraded">Ikke karaktersatt</string>
+    <string name="canvasAPI_gpaScale">Tallvurdering (GPA)-skala</string>
+    <string name="canvasAPI_notGraded">Ikke vurdert</string>
 
-    <string name="canvasAPI_onlineQuiz">Test</string>
+    <string name="canvasAPI_onlineQuiz">Quiz</string>
     <string name="canvasAPI_discussionTopic">Diskusjonstema</string>
     <string name="canvasAPI_onlineUpload">Filopplasting</string>
     <string name="canvasAPI_onlineTextEntry">Innlegging av tekst</string>
-    <string name="canvasAPI_onlineURL">Websidens URL</string>
+    <string name="canvasAPI_onlineURL">Nettstedets URL</string>
     <string name="canvasAPI_mediaRecording">Medieinnspilling</string>
     <string name="canvasAPI_attendance">Oppmøte</string>
     <string name="canvasAPI_studentAnnotation">Studentmerknad</string>
@@ -62,9 +62,9 @@
     <string name="quiz_scoring_policy_latest">Siste</string>
     <string name="no">Nei</string>
     <string name="always">Alltid</string>
-    <string name="graded_quiz">Karaktersatt test</string>
-    <string name="practice_quiz">Øvelsestest</string>
-    <string name="graded_survey">Karaktersatt undersøkelse</string>
+    <string name="graded_quiz">Vurdert quiz</string>
+    <string name="practice_quiz">Øvelsesquiz</string>
+    <string name="graded_survey">Vurdert undersøkelse</string>
     <string name="ungraded_survey">Ikke vurdert undersøkelse</string>
     <string name="andMore">\u0020og %d flere</string>
 

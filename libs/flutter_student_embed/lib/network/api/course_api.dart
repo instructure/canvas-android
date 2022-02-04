@@ -39,22 +39,4 @@ class CourseApi {
     courses.retainWhere((it) => it.accessRestrictedByDate == false);
     return courses;
   }
-
-  Future<Course> getCourse(String courseId) async {
-    final params = {
-      'include': [
-        'syllabus_body',
-        'term',
-        'permissions',
-        'license',
-        'is_public',
-        'needs_grading_count',
-        'total_scores',
-        'current_grading_period_scores',
-        'course_image',
-        'observed_users',
-      ]
-    };
-    return fetch(canvasDio().get('courses/${courseId}', queryParameters: params));
-  }
 }

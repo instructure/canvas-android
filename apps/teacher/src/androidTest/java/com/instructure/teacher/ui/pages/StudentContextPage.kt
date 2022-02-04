@@ -56,8 +56,4 @@ class StudentContextPage : BasePage(R.id.studentContextPage) {
     fun assertStudentSubmission(submittedCount: String) {
         onView(withId(R.id.submittedCount)).assertHasText(submittedCount)
     }
-
-    fun navigateBack() {
-        onView(withParent(R.id.toolbar) + withContentDescription("Navigate up")).click()
-    }
 }

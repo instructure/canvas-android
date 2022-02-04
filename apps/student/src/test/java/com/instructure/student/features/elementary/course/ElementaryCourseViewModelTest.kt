@@ -21,6 +21,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
@@ -58,6 +59,7 @@ class ElementaryCourseViewModelTest {
     private val tabManager: TabManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val oauthManager: OAuthManager = mockk(relaxed = true)
 
     private lateinit var viewModel: ElementaryCourseViewModel
 
@@ -69,9 +71,13 @@ class ElementaryCourseViewModelTest {
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
         every { apiPrefs.fullDomain } returns "https://mockk.instructure.com"
+
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail()
+        }
         setupStrings()
 
-        viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs)
+        viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager)
     }
 
     @Test
@@ -86,11 +92,11 @@ class ElementaryCourseViewModelTest {
 
         val expectedData = ElementaryCourseViewData(
             listOf(
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
+                ElementaryCourseTab(Tab.HOME_ID, resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
+                ElementaryCourseTab(Tab.SCHEDULE_ID, resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
+                ElementaryCourseTab(Tab.MODULES_ID, resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
+                ElementaryCourseTab(Tab.GRADES_ID, resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
+                ElementaryCourseTab(Tab.RESOURCES_ID, resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
             )
         )
 
@@ -115,11 +121,11 @@ class ElementaryCourseViewModelTest {
 
         val expectedData = ElementaryCourseViewData(
             listOf(
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
+                ElementaryCourseTab(Tab.HOME_ID, resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
+                ElementaryCourseTab(Tab.SCHEDULE_ID, resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
+                ElementaryCourseTab(Tab.MODULES_ID, resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
+                ElementaryCourseTab(Tab.GRADES_ID, resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
+                ElementaryCourseTab(Tab.RESOURCES_ID, resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
             )
         )
 
@@ -144,9 +150,9 @@ class ElementaryCourseViewModelTest {
 
         val expectedData = ElementaryCourseViewData(
             listOf(
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
+                ElementaryCourseTab(Tab.HOME_ID, resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
+                ElementaryCourseTab(Tab.SCHEDULE_ID, resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
+                ElementaryCourseTab(Tab.RESOURCES_ID, resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
             )
         )
 
@@ -183,11 +189,11 @@ class ElementaryCourseViewModelTest {
 
         val expectedData = ElementaryCourseViewData(
             listOf(
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
-                ElementaryCourseTab(resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
+                ElementaryCourseTab(Tab.HOME_ID, resources.getDrawable(R.drawable.ic_home), "Home", "https://mockk.instructure.com/courses/0?embed=true#home"),
+                ElementaryCourseTab(Tab.SCHEDULE_ID, resources.getDrawable(R.drawable.ic_schedule), "Schedule", "https://mockk.instructure.com/courses/0?embed=true#schedule"),
+                ElementaryCourseTab(Tab.MODULES_ID, resources.getDrawable(R.drawable.ic_modules), "Modules", "https://mockk.instructure.com/courses/0?embed=true#modules"),
+                ElementaryCourseTab(Tab.GRADES_ID, resources.getDrawable(R.drawable.ic_grades), "Grades", "https://mockk.instructure.com/courses/0?embed=true#grades"),
+                ElementaryCourseTab(Tab.RESOURCES_ID, resources.getDrawable(R.drawable.ic_resources), "Resources", "https://mockk.instructure.com/courses/0?embed=true#resources")
             )
         )
 

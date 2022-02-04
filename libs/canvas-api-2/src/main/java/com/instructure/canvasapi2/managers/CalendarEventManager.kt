@@ -28,13 +28,13 @@ import java.io.IOException
 object CalendarEventManager {
 
     fun getCalendarEventsExhaustive(
-        allEvents: Boolean,
-        type: CalendarEventAPI.CalendarEventType,
-        startDate: String?,
-        endDate: String?,
-        canvasContexts: List<String>,
-        callback: StatusCallback<List<ScheduleItem>>,
-        forceNetwork: Boolean
+            allEvents: Boolean,
+            type: CalendarEventAPI.CalendarEventType,
+            startDate: String?,
+            endDate: String?,
+            canvasContexts: List<String>,
+            callback: StatusCallback<List<ScheduleItem>>,
+            forceNetwork: Boolean
     ) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -42,39 +42,81 @@ object CalendarEventManager {
         val depaginatedCallback = object : ExhaustiveListCallback<ScheduleItem>(callback) {
             override fun getNextPage(callback: StatusCallback<List<ScheduleItem>>, nextUrl: String, isCached: Boolean) {
                 CalendarEventAPI.getCalendarEvents(
-                    allEvents,
-                    type,
-                    startDate,
-                    endDate,
-                    canvasContexts,
-                    adapter,
-                    callback,
-                    params
+                        allEvents,
+                        type,
+                        startDate,
+                        endDate,
+                        canvasContexts,
+                        adapter,
+                        callback,
+                        params
                 )
             }
         }
 
         adapter.statusCallback = depaginatedCallback
         CalendarEventAPI.getCalendarEvents(
-            allEvents,
-            type,
-            startDate,
-            endDate,
-            canvasContexts,
-            adapter,
-            depaginatedCallback,
-            params
+                allEvents,
+                type,
+                startDate,
+                endDate,
+                canvasContexts,
+                adapter,
+                depaginatedCallback,
+                params
         )
     }
 
     fun getCalendarEventsExhaustiveAsync(
-        allEvents: Boolean,
-        type: CalendarEventAPI.CalendarEventType,
-        startDate: String?,
-        endDate: String?,
-        canvasContexts: List<String>,
-        forceNetwork: Boolean
+            allEvents: Boolean,
+            type: CalendarEventAPI.CalendarEventType,
+            startDate: String?,
+            endDate: String?,
+            canvasContexts: List<String>,
+            forceNetwork: Boolean
     ) = apiAsync<List<ScheduleItem>> { CalendarEventManager.getCalendarEventsExhaustive(allEvents, type, startDate, endDate, canvasContexts, it, forceNetwork) }
+
+    fun getImportantDates(
+            startDate: String?,
+            endDate: String?,
+            type: CalendarEventAPI.CalendarEventType,
+            canvasContexts: List<String>,
+            callback: StatusCallback<List<ScheduleItem>>,
+            forceNetwork: Boolean) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<ScheduleItem>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<ScheduleItem>>, nextUrl: String, isCached: Boolean) {
+                CalendarEventAPI.getImportantDates(
+                        startDate,
+                        endDate,
+                        type,
+                        canvasContexts,
+                        adapter,
+                        callback,
+                        params
+                )
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CalendarEventAPI.getImportantDates(
+                startDate,
+                endDate,
+                type,
+                canvasContexts,
+                adapter,
+                depaginatedCallback,
+                params
+        )
+    }
+
+    fun getImportantDatesAsync(startDate: String?,
+                               endDate: String?,
+                               type: CalendarEventAPI.CalendarEventType,
+                               canvasContexts: List<String>,
+                               forceNetwork: Boolean) = apiAsync<List<ScheduleItem>> { getImportantDates(startDate, endDate, type, canvasContexts, it, forceNetwork) }
 
     @Throws(IOException::class)
     fun getUpcomingEventsSynchronous(forceNetwork: Boolean): List<ScheduleItem> {
@@ -101,27 +143,27 @@ object CalendarEventManager {
     }
 
     fun createCalendarEvent(
-        contextCode: String,
-        title: String,
-        description: String,
-        startDate: String,
-        endDate: String,
-        location: String,
-        callback: StatusCallback<ScheduleItem>
+            contextCode: String,
+            title: String,
+            description: String,
+            startDate: String,
+            endDate: String,
+            location: String,
+            callback: StatusCallback<ScheduleItem>
     ) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
 
         CalendarEventAPI.createCalendarEvent(
-            contextCode,
-            title,
-            description,
-            startDate,
-            endDate,
-            location,
-            adapter,
-            params,
-            callback
+                contextCode,
+                title,
+                description,
+                startDate,
+                endDate,
+                location,
+                adapter,
+                params,
+                callback
         )
     }
 

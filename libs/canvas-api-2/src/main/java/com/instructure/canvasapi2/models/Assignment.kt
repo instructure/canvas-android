@@ -107,7 +107,10 @@ data class Assignment(
         @SerializedName("in_closed_grading_period")
         val inClosedGradingPeriod: Boolean = false,
         @SerializedName("annotatable_attachment_id")
-        val annotatableAttachmentId: Long = 0
+        val annotatableAttachmentId: Long = 0,
+        // For quizzes we need to use this field instead of anonymous_grading to determine if it's anonymous
+        @SerializedName("anonymous_submissions")
+        val anonymousSubmissions: Boolean = false,
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt

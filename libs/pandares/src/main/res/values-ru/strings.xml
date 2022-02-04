@@ -1242,10 +1242,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Ответы студентов скрыты, поскольку это задание анонимно.</string>
 
-    <string name="studentAnnotationUnsupported">Аннотация учащегося (не поддерживается)</string>
-    <string name="studentAnnotationUnsupportedDescription">В настоящее время функция Аннотация учащегося не поддерживается на мобильных устройствах.</string>
-    <string name="unsupportedSubmissionType">Неподдерживаемый тип отправки</string>
-    <string name="studentAnnotationUnsupportedMessage">Невозможно отобразить отправку, так как Аннотация учащегося в настоящее время не поддерживается на мобильном устройстве.</string>
     <string name="schedule_marked_as_done">Вы отметили это как выполненное.</string>
     <string name="error_saving_assignment_closed_grading_period">Невозможно изменить дату истечения срока выполнения, наступающую в закрытом периоде оценки успеваемости.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Перейти к сегодняшнему дню</string>
@@ -1253,4 +1249,16 @@
     <string name="a11y_contact_info_click_description">отправить сообщение</string>
     <string name="somethingWentWrong">Что-то пошло не так</string>
     <string name="failedToLoadQuiz">Не удалось загрузить тест</string>
+    <string name="failedToLoadSubmission">Не удалось загрузить данные</string>
+    <string name="studentAnnotationToolbarTitle">Аннотация учащегося</string>
+    <string name="submissionTypeStudentAnnotation">Аннотация учащегося</string>
+    <string name="gradesNoDueDate">Срок выполнения не задан</string>
+    <string name="missingAssignment">Отсутствует</string>
+    <string name="dontSave">Не сохранять</string>
+    <string name="textSubmissionExitConfirmationTitle">Сохранить черновик?</string>
+    <string name="textSubmissionExitConfirmationMessage">В противном случае ваши изменения не будут сохранены</string>
+    <string name="submissionDraftAvailableSubtitle">Нажмите здесь, чтобы продолжить</string>
+    <string name="submissionDraftAvailableTitle">Черновик доступен</string>
+    <string name="errorLoadingSubmission">Произошла ошибка при загрузке отправки</string>
+    <string name="loadFullContent">Нажмите, чтобы увидеть полное содержание</string>
 </resources>

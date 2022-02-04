@@ -170,11 +170,8 @@ class BookmarksFragment : ParentFragment() {
     //region Functionality Methods
     @TargetApi(Build.VERSION_CODES.O)
     private fun isShortcutAddingSupported(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val shortcutManager = requireContext().getSystemService(ShortcutManager::class.java)
-            return shortcutManager?.isRequestPinShortcutSupported == true
-        }
-        return false
+        val shortcutManager = requireContext().getSystemService(ShortcutManager::class.java)
+        return shortcutManager?.isRequestPinShortcutSupported == true
     }
 
     private fun editBookmark(bookmark: Bookmark) {

@@ -40,6 +40,7 @@ import com.instructure.espresso.UiControllerSingleton
 import com.instructure.espresso.page.InstructureTestingContract
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
@@ -65,6 +66,8 @@ abstract class CanvasTest : InstructureTestingContract {
     abstract val activityRule: InstructureActivityTestRule<out Activity>
 
     abstract val isTesting: Boolean
+
+    var extraAccessibilitySupressions: Matcher<in AccessibilityViewCheckResult>? = Matchers.anyOf()
 
     @Rule(order = 1)
     override fun chain(): TestRule {
@@ -187,7 +190,7 @@ abstract class CanvasTest : InstructureTestingContract {
     }
 
     // Enable and configure accessibility checks
-    open protected fun enableAndConfigureAccessibilityChecks() {
+    protected open fun enableAndConfigureAccessibilityChecks() {
         AccessibilityChecker.runChecks() // Enable accessibility checks
 
         Log.v("overflowWidth", "enableAndConfigureAccessibilityChecks() called, validator=${AccessibilityChecker.accessibilityValidator != null}")
@@ -199,6 +202,8 @@ abstract class CanvasTest : InstructureTestingContract {
                 // Suppression (exclusion) rules
                 ?.setSuppressingResultMatcher(
                         Matchers.anyOf(
+                            // Extra supressions that can be adde to individual tests
+                            extraAccessibilitySupressions,
                             // Suppress issues in PsPDFKit, date/time picker, calendar grid
                             isExcludedNamedView( listOf("pspdf", "_picker_", "timePicker", "calendar1")),
 

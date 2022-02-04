@@ -62,7 +62,7 @@
     <string name="rce_done">Feito</string>
     <string name="rce_cancel">Cancelar</string>
     <string name="rce_exit">Sair</string>
-    <string name="rce_dialog_exit_title">Sair da edição da atribuição?</string>
+    <string name="rce_dialog_exit_title">Sair da edição da tarefa?</string>
     <string name="rce_dialog_exit_message">Você tem a certeza de que deseja sair? Todos os dados não guardados serão perdidos.</string>
     <string name="rce_empty_message">Mensagem</string>
     <string name="rce_empty_description">Adicionar descrição</string>

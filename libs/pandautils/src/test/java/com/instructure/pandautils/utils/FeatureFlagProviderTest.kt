@@ -48,21 +48,8 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `Return false if remote config flag is not enabled`() = runBlockingTest {
-        // Given
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN) } returns false
-
-        // When
-        val canvasForElementaryFlag = featureFlagProvider.getCanvasForElementaryFlag()
-
-        // Then
-        assertFalse(canvasForElementaryFlag)
-    }
-
-    @Test
     fun `Return false if feature flag is not enabled`() = runBlockingTest {
         // Given
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN) } returns true
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(User(k5User = false))
         }
@@ -77,7 +64,6 @@ class FeatureFlagProviderTest {
     @Test
     fun `Return true if remote config flag and feature flag is enabled`() = runBlockingTest {
         // Given
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN) } returns true
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(User(k5User = true))
         }
@@ -92,7 +78,6 @@ class FeatureFlagProviderTest {
     @Test
     fun `Return false if feature flag request fails`() = runBlockingTest {
         // Given
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN) } returns true
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
@@ -107,7 +92,6 @@ class FeatureFlagProviderTest {
     @Test
     fun `Return true if feature flag request fails, but it is already cached as true`() = runBlockingTest {
         // Given
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN) } returns true
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
@@ -123,7 +107,6 @@ class FeatureFlagProviderTest {
     @Test
     fun `Successful request saves feature flag to cache`() = runBlockingTest {
         // Given
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN) } returns true
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(User(k5User = true))
         }
@@ -139,7 +122,6 @@ class FeatureFlagProviderTest {
     fun `Return false if remote config flag and feature flag is enabled but dashboard override is false`() = runBlockingTest {
         // Given
         every { apiPrefs.elementaryDashboardEnabledOverride } returns false
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN) } returns true
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(User(k5User = true))
         }

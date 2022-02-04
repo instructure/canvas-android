@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.SubmissionType
@@ -83,14 +84,14 @@ class PeopleE2ETest: TeacherTest() {
         courseBrowserPage.openPeopleTab()
         peopleListPage.clickPerson(teacher)
         studentContextPage.assertDisplaysCourseInfo(course)
-        studentContextPage.navigateBack()
+        Espresso.pressBack()
 
         peopleListPage.clickPerson(notGradedStudent)
         studentContextPage.assertDisplaysStudentInfo(notGradedStudent)
         studentContextPage.assertDisplaysCourseInfo(course)
         studentContextPage.assertStudentGrade("--")
         studentContextPage.assertStudentSubmission("--")
-        studentContextPage.navigateBack()
+        Espresso.pressBack()
 
         peopleListPage.clickPerson(gradedStudent)
         studentContextPage.assertDisplaysStudentInfo(gradedStudent)

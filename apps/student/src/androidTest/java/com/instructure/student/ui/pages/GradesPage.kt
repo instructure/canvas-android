@@ -16,9 +16,28 @@
  */
 package com.instructure.student.ui.pages
 
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import android.view.View
+import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.PerformException
+import androidx.test.espresso.contrib.RecyclerViewActions
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.scrollTo
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.swipeUp
+import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.student.R
+import org.hamcrest.Matcher
 
 class GradesPage : BasePage(R.id.gradesPage) {
 
@@ -30,9 +49,24 @@ class GradesPage : BasePage(R.id.gradesPage) {
         val courseNameMatcher = withId(R.id.gradesCourseNameText) + withText(courseName)
         val gradeMatcher = withId(R.id.scoreText) + withText(grade)
 
-        onView(withId(R.id.gradeRow) + withDescendant(courseNameMatcher) + withDescendant(gradeMatcher))
+        try {
+            scrollTo(courseNameMatcher)
+            onView(withId(R.id.gradeRow) + withDescendant(courseNameMatcher) + withDescendant(gradeMatcher))
             .scrollTo()
             .assertDisplayed()
+        } catch(e: NoMatchingViewException) {
+            swipeRefreshLayout.swipeUp()
+            scrollTo(courseNameMatcher)
+            onView(withId(R.id.gradeRow) + withDescendant(courseNameMatcher) + withDescendant(gradeMatcher))
+                .scrollTo()
+                .assertDisplayed()
+        }
+
+    }
+
+    fun assertCourseNotDisplayed(courseName: String) {
+        val courseNameMatcher = withId(R.id.gradesCourseNameText) + withText(courseName)
+        onView(courseNameMatcher).assertNotDisplayed()
     }
 
     fun refresh() {
@@ -55,6 +89,7 @@ class GradesPage : BasePage(R.id.gradesPage) {
 
     fun clickGradingPeriodSelector() {
         onView(withId(R.id.gradingPeriodSelector))
+            .scrollTo()
             .click()
     }
 
@@ -66,5 +101,23 @@ class GradesPage : BasePage(R.id.gradesPage) {
     fun assertSelectedGradingPeriod(gradingPeriodName: String) {
         onView(withId(R.id.gradingPeriodSelector) + withText(gradingPeriodName))
             .assertDisplayed()
+    }
+
+    fun scrollToPosition(position: Int) {
+        gradesRecyclerView.perform(RecyclerViewActions.scrollToPosition<BindableViewHolder>(position))
+    }
+
+    fun scrollToItem(itemId: Int, itemName: String) {
+        var i: Int = 0
+        while (true) {
+            scrollToPosition(i)
+            Thread.sleep(500)
+            try {
+                onView(withId(itemId) + withText(itemName)).scrollTo()
+                break
+            } catch(e: NoMatchingViewException) {
+                i++
+            }
+        }
     }
 }

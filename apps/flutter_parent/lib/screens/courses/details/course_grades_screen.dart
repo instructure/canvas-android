@@ -205,7 +205,7 @@ class _CourseGradeHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.ideographic,
         children: <Widget>[
-          Text(gradingPeriod.title, style: Theme.of(context).textTheme.display1),
+          Text(gradingPeriod.title, style: Theme.of(context).textTheme.headline4),
           InkWell(
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: 48, minWidth: 48), // For a11y
@@ -252,8 +252,8 @@ class _CourseGradeHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(L10n(context).courseTotalGradeLabel, style: textTheme.body1),
-          Text(_courseGrade(context, grade), style: textTheme.body1, key: Key("total_grade")),
+          Text(L10n(context).courseTotalGradeLabel, style: textTheme.bodyText2),
+          Text(_courseGrade(context, grade), style: textTheme.bodyText2, key: Key("total_grade")),
         ],
       ),
     );
@@ -310,7 +310,7 @@ class _AssignmentRow extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(assignment.name, style: textTheme.subhead, key: Key("assignment_${assignment.id}_name")),
+                        Text(assignment.name, style: textTheme.subtitle1, key: Key("assignment_${assignment.id}_name")),
                         SizedBox(height: 2),
                         Text(_formatDate(context, assignment.dueAt),
                             style: textTheme.caption, key: Key("assignment_${assignment.id}_dueAt")),
@@ -381,7 +381,7 @@ class _AssignmentRow extends StatelessWidget {
 
     return Text(text,
         semanticsLabel: semantics,
-        style: Theme.of(context).textTheme.subhead,
+        style: Theme.of(context).textTheme.subtitle1,
         key: Key("assignment_${assignment.id}_grade"));
   }
 
