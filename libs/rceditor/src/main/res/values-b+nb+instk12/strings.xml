@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="rce_contentDescription_undo">Angre</string>
     <string name="rce_contentDescription_redo">Gjør om</string>
     <string name="rce_contentDescription_bold">Formater fet</string>
@@ -34,7 +33,7 @@
     <string name="rce_contentDescription_insert_bullets">Sett inn punktliste</string>
     <string name="rce_contentDescription_insert_numbers">Sett inn nummerert liste</string>
     <string name="rce_contentDescription_insert_photo">Sett inn bilde</string>
-    <string name="rce_contentDescription_upload_photo">Last opp foto fra enhet</string>
+    <string name="rce_contentDescription_upload_photo">Last opp bilde fra enhet</string>
     <string name="rce_contentDescription_insert_link">Sett inn lenke</string>
     <string name="rce_contentDescription_block_quote">Sitatblokk</string>
 
@@ -67,6 +66,7 @@
     <string name="rce_empty_message">Melding</string>
     <string name="rce_empty_description">Legg til beskrivelse</string>
     <string name="rce_scrollInstructions">Bla for alle redigeringsverktøy</string>
+
     <string name="rce_emptyUrlError">URL kan ikke være tom</string>
     <string name="rce_httpNotAllowed">Kun URL-er som begynner med https vil godtas</string>
 </resources>

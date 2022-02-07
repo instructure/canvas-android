@@ -77,8 +77,8 @@ void main() {
   mockNetworkImageResponse();
   final analyticsMock = _MockAnalytics();
 
-  _setupLocator({MockInteractor interactor, AlertsApi alertsApi, InboxApi inboxApi}) {
-    setupTestLocator((locator) {
+  _setupLocator({MockInteractor interactor, AlertsApi alertsApi, InboxApi inboxApi}) async {
+    await setupTestLocator((locator) {
       locator.registerFactory<AlertsInteractor>(() => MockAlertsInteractor());
       locator.registerFactory<CoursesInteractor>(() => MockCoursesInteractor());
       locator.registerFactory<DashboardInteractor>(() => interactor ?? MockInteractor());
@@ -127,7 +127,7 @@ void main() {
 
   group('Render', () {
     testWidgetsWithAccessibilityChecks('Displays name with pronouns when pronouns are not null', (tester) async {
-      _setupLocator(interactor: MockInteractor(includePronouns: true));
+      await _setupLocator(interactor: MockInteractor(includePronouns: true));
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -143,7 +143,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Displays name without pronouns when pronouns are null', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -163,7 +163,7 @@ void main() {
       'Displays empty state when there are no students',
       (tester) async {
         var interactor = MockInteractor(generateStudents: false);
-        _setupLocator(interactor: interactor);
+        await _setupLocator(interactor: interactor);
 
         await tester.pumpWidget(_testableMaterialWidget());
         await tester.pumpAndSettle();
@@ -178,7 +178,7 @@ void main() {
     );
 
     testWidgetsWithAccessibilityChecks('Does not display Act As User button if user cannot masquerade', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -198,7 +198,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Displays Act As User button if user can masquerade', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -218,7 +218,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Displays Stop Acting As User button if user is masquerading', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -239,15 +239,9 @@ void main() {
       expect(find.text(l10n.stopActAsUser), findsOneWidget);
     });
 
-    // TODO: Finish when we have specs
-//  testWidgetsWithAccessibilityChecks('Displays error when retrieving students results in a failure',
-//      (tester) async {
-//
-//  });
-
     testWidgetsWithAccessibilityChecks('Nav drawer displays observer name (w/pronouns), and email address',
         (tester) async {
-      _setupLocator(interactor: MockInteractor(includePronouns: true));
+      await _setupLocator(interactor: MockInteractor(includePronouns: true));
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -269,7 +263,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Nav drawer displays observer name without pronouns, and email address',
         (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -295,7 +289,7 @@ void main() {
 //  });
 
     testWidgetsWithAccessibilityChecks('Courses is the default content screen', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -307,7 +301,7 @@ void main() {
       final inboxApi = MockInboxApi();
       var interactor = MockInteractor();
       when(inboxApi.getUnreadCount()).thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject('0'))));
-      _setupLocator(interactor: interactor, inboxApi: inboxApi);
+      await _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -325,7 +319,7 @@ void main() {
       var interactor = MockInteractor();
       when(inboxApi.getUnreadCount())
           .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject('12321'))));
-      _setupLocator(interactor: interactor, inboxApi: inboxApi);
+      await _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -344,7 +338,7 @@ void main() {
       var interactor = MockInteractor();
       when(inboxApi.getUnreadCount())
           .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(inboxCount))));
-      _setupLocator(interactor: interactor, inboxApi: inboxApi);
+      await _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -359,7 +353,7 @@ void main() {
       var interactor = MockInteractor();
       when(inboxApi.getUnreadCount())
           .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(inboxCount))));
-      _setupLocator(interactor: interactor, inboxApi: inboxApi);
+      await _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -368,7 +362,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('displays course when passed in as starting page', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       await tester.pumpWidget(_testableMaterialWidget(startingPage: DashboardContentScreens.Courses));
       await tester.pumpAndSettle();
@@ -377,7 +371,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('displays calendar when passed in as starting page', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -396,7 +390,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('displays alerts when passed in as starting page', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       await tester.pumpWidget(_testableMaterialWidget(startingPage: DashboardContentScreens.Alerts));
       await tester.pumpAndSettle();
@@ -408,7 +402,7 @@ void main() {
 
   group('Interactions', () {
     testWidgetsWithAccessibilityChecks('tapping courses in the bottom nav shows courses screen', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -428,7 +422,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('tapping calendar sets correct current page index', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -448,7 +442,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('tapping alerts sets correct current page index', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -461,7 +455,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('tapping Inbox from nav drawer opens inbox page', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -476,7 +470,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('tapping Manage Students from nav drawer opens manage students page',
         (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -494,7 +488,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('tapping Settings in nav drawer opens settings screen', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -521,7 +515,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('tapping Help from nav drawer shows help', (tester) async {
-      _setupLocator(interactor: MockInteractor());
+      await _setupLocator(interactor: MockInteractor());
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -547,7 +541,7 @@ void main() {
         final reminderDb = MockReminderDb();
         final notificationUtil = _MockNotificationUtil();
 
-        _setupLocator();
+        await _setupLocator();
         final _locator = GetIt.instance;
         _locator.registerLazySingleton<ReminderDb>(() => reminderDb);
         _locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
@@ -600,7 +594,7 @@ void main() {
       final notificationUtil = _MockNotificationUtil();
       final authApi = _MockAuthApi();
 
-      _setupLocator();
+      await _setupLocator();
       final _locator = GetIt.instance;
       _locator.registerLazySingleton<ReminderDb>(() => reminderDb);
       _locator.registerLazySingleton<CalendarFilterDb>(() => calendarFilterDb);
@@ -649,7 +643,7 @@ void main() {
       final calendarFilterDb = _MockCalendarFilterDb();
       final notificationUtil = _MockNotificationUtil();
 
-      _setupLocator();
+      await _setupLocator();
       final _locator = GetIt.instance;
       _locator.registerLazySingleton<ReminderDb>(() => reminderDb);
       _locator.registerLazySingleton<CalendarFilterDb>(() => calendarFilterDb);
@@ -689,7 +683,7 @@ void main() {
       int retracted = 0;
       int expanded = 1;
 
-      _setupLocator(interactor: MockInteractor(includePronouns: false));
+      await _setupLocator(interactor: MockInteractor(includePronouns: false));
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -729,7 +723,7 @@ void main() {
       int retracted = 0;
       int expanded = 1;
 
-      _setupLocator(interactor: MockInteractor(includePronouns: false));
+      await _setupLocator(interactor: MockInteractor(includePronouns: false));
 
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -766,7 +760,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('deep link params is cleared after first screen is shown', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       Map<String, Object> params = {'test': 'Instructure Pandas'};
 
@@ -784,7 +778,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Tapping Act As User button opens MasqueradeScreen', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -808,7 +802,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Tapping Stop Acting As User button shows confirmation dialog', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -837,7 +831,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Displays and dismisses Old Reminders dialog', (tester) async {
       var interactor = MockInteractor();
       interactor.showOldReminderMessage = true;
-      _setupLocator(interactor: interactor);
+      await _setupLocator(interactor: interactor);
 
       // Load the screen
       await tester.pumpWidget(_testableMaterialWidget());
@@ -870,7 +864,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Does not display Old Reminders dialog if no reminders', (tester) async {
       var interactor = MockInteractor();
       interactor.showOldReminderMessage = false;
-      _setupLocator(interactor: interactor);
+      await _setupLocator(interactor: interactor);
 
       // Load the screen
       await tester.pumpWidget(_testableMaterialWidget());
@@ -887,7 +881,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Initiates call to update inbox count', (tester) async {
       final inboxApi = MockInboxApi();
       var interactor = MockInteractor();
-      _setupLocator(interactor: interactor, inboxApi: inboxApi);
+      await _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -904,7 +898,7 @@ void main() {
       var interactor = MockInteractor();
       when(inboxApi.getUnreadCount())
           .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject('12321'))));
-      _setupLocator(interactor: interactor, inboxApi: inboxApi);
+      await _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -927,7 +921,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Initiates call to update alerts count', (tester) async {
       final alertsApi = MockAlertsApi();
       var interactor = MockInteractor();
-      _setupLocator(interactor: interactor, alertsApi: alertsApi);
+      await _setupLocator(interactor: interactor, alertsApi: alertsApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -943,7 +937,7 @@ void main() {
       final alertsApi = MockAlertsApi();
       var interactor = MockInteractor();
       when(alertsApi.getUnreadCount(any)).thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(0))));
-      _setupLocator(interactor: interactor, alertsApi: alertsApi);
+      await _setupLocator(interactor: interactor, alertsApi: alertsApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -961,7 +955,7 @@ void main() {
       var interactor = MockInteractor();
       when(alertsApi.getUnreadCount(any))
           .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(88))));
-      _setupLocator(interactor: interactor, alertsApi: alertsApi);
+      await _setupLocator(interactor: interactor, alertsApi: alertsApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -978,7 +972,7 @@ void main() {
       var interactor = MockInteractor();
       when(alertsApi.getUnreadCount(any))
           .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(88))));
-      _setupLocator(interactor: interactor, alertsApi: alertsApi);
+      await _setupLocator(interactor: interactor, alertsApi: alertsApi);
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -1002,7 +996,7 @@ void main() {
   // tests were put here instead of the Calendar screen
   group('calendar today button', () {
     testWidgetsWithAccessibilityChecks('today button not shown by default', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -1026,7 +1020,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('today button shown when date other than today selected', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -1056,7 +1050,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('today button tap goes to now', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -1097,7 +1091,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('tapping today button hides button', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -1144,7 +1138,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('today button hides when not on calendar screen', (tester) async {
-      _setupLocator();
+      await _setupLocator();
 
       var login = Login((b) => b
         ..domain = 'domain'

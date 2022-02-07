@@ -61,7 +61,7 @@ object EnrollmentAPI {
                 @Query("state[]") states: List<String>?): Call<List<Enrollment>>
 
         @POST("courses/{courseId}/enrollments/{enrollmentId}/{action}")
-        fun handleInvite(@Path("courseId") courseId: Long, @Path("enrollmentId") enrollmentId: Long, @Path("action") action: String): Call<Void>
+        fun handleInvite(@Path("courseId") courseId: Long, @Path("enrollmentId") enrollmentId: Long, @Path("action") action: String): Call<Unit>
 
         @GET("users/self/enrollments?state[]=active&type[]=StudentEnrollment")
         fun getFirstPageEnrollmentsForGradingPeriod(@Query("grading_period_id") gradingPeriodId: Long): Call<List<Enrollment>>
@@ -117,7 +117,7 @@ object EnrollmentAPI {
         }
     }
 
-    fun handleInvite(courseId: Long, enrollmentId: Long, acceptInvite: Boolean, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Void>) {
+    fun handleInvite(courseId: Long, enrollmentId: Long, acceptInvite: Boolean, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Unit>) {
         callback.addCall(adapter.build(EnrollmentInterface::class.java, params).handleInvite(courseId, enrollmentId, if (acceptInvite) "accept" else "reject")).enqueue(callback)
     }
 

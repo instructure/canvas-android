@@ -1269,10 +1269,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">استجابات هذا الطالب مخفية لأن هذه المهمة مجهولة الاسم.</string>
 
-    <string name="studentAnnotationUnsupported">التعليق التوضيحي للطالب (غير مدعوم)</string>
-    <string name="studentAnnotationUnsupportedDescription">التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
-    <string name="unsupportedSubmissionType">نوع إرسال غير مدعوم</string>
-    <string name="studentAnnotationUnsupportedMessage">لا يمكن عرض الإرسال، لأن التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
     <string name="schedule_marked_as_done">قمت بتمييزه بأنه تم.</string>
     <string name="error_saving_assignment_closed_grading_period">يتعذر تغيير تاريخ استحقاق عند استحقاقه في فترة منح مغلقة لمنح العلامات.</string>
     <string name="a11y_content_description_schedule_jump_to_today">ابدأ اليوم</string>
@@ -1280,4 +1276,16 @@
     <string name="a11y_contact_info_click_description">إرسال رسالة</string>
     <string name="somethingWentWrong">حدث خطأ ما</string>
     <string name="failedToLoadQuiz">فشل تحميل الاختبار</string>
+    <string name="failedToLoadSubmission">فشل تحميل الإرسال</string>
+    <string name="studentAnnotationToolbarTitle">تعليق توضيحي لطالب</string>
+    <string name="submissionTypeStudentAnnotation">تعليق توضيحي لطالب</string>
+    <string name="gradesNoDueDate">بلا تاريخ استحقاق</string>
+    <string name="missingAssignment">مفقود</string>
+    <string name="dontSave">عدم الحفظ</string>
+    <string name="textSubmissionExitConfirmationTitle">حفظ المسودة؟</string>
+    <string name="textSubmissionExitConfirmationMessage">وإلا لن يتم حفظ التغييرات</string>
+    <string name="submissionDraftAvailableSubtitle">اضغط هنا للمتابعة</string>
+    <string name="submissionDraftAvailableTitle">المسودة متوفرة</string>
+    <string name="errorLoadingSubmission">حدث خطأ أثناء تحميل الإرسال</string>
+    <string name="loadFullContent">اضغط للاطلاع على المحتوى الكامل</string>
 </resources>

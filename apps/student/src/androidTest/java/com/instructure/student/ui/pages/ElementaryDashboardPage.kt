@@ -16,15 +16,24 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.assertSelected
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_elementary_dashboard.view.*
 import org.hamcrest.CoreMatchers
 
 class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
@@ -35,56 +44,15 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
 
     private val hamburgerButtonMatcher = CoreMatchers.allOf(withContentDescription(R.string.navigation_drawer_open), isDisplayed())
 
-    fun assertToolbarTitle() {
-        onView(withParent(R.id.toolbar) + withText(R.string.dashboard) + isDisplayed()).assertDisplayed()
-    }
-
-    fun clickInboxTab() {
-        onView(withId(R.id.bottomNavigationInbox)).click()
-    }
-
-    fun selectHomeroomTab() {
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabHomeroom))
+    fun selectTab(elementaryTabType: ElementaryTabType) {
+        onView(withAncestor(R.id.dashboardTabLayout) + withText(elementaryTabType.tabType))
             .scrollTo()
             .click()
     }
 
-    fun assertHomeroomTabVisibleAndSelected() {
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabHomeroom) + isDisplayed()).assertDisplayed()
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabHomeroom) + isDisplayed()).assertSelected()
-    }
-
-    fun selectScheduleTab() {
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabSchedule))
-            .scrollTo()
-            .click()
-    }
-
-    fun assertScheduleTabVisibleAndSelected() {
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabSchedule) + isDisplayed()).assertDisplayed()
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabSchedule) + isDisplayed()).assertSelected()
-    }
-
-    fun selectGradesTab() {
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabGrades))
-            .scrollTo()
-            .click()
-    }
-
-    fun assertGradesTabVisibleAndSelected() {
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabGrades) + isDisplayed()).assertDisplayed()
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabGrades) + isDisplayed()).assertSelected()
-    }
-
-    fun selectResourcesTab() {
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabResources))
-            .scrollTo()
-            .click()
-    }
-
-    fun assertResourcesTabVisibleAndSelected() {
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabResources) + isDisplayed()).assertDisplayed()
-        onView(withAncestor(R.id.dashboardTabLayout) + withText(R.string.dashboardTabResources) + isDisplayed()).assertSelected()
+    fun assertElementaryTabVisibleAndSelected(elementaryTabType: ElementaryTabType) {
+        onView(withAncestor(R.id.dashboardTabLayout) + withText(elementaryTabType.tabType) + isDisplayed()).assertDisplayed()
+        onView(withAncestor(R.id.dashboardTabLayout) + withText(elementaryTabType.tabType) + isDisplayed()).assertSelected()
     }
 
     fun waitForRender() {
@@ -95,16 +63,32 @@ class ElementaryDashboardPage : BasePage(R.id.elementaryDashboardPage) {
         onView(hamburgerButtonMatcher).click()
     }
 
+    fun assertToolbarTitle() {
+        onView(withParent(R.id.toolbar) + withText(R.string.dashboard) + isDisplayed()).assertDisplayed()
+    }
+
+    fun clickOnBottomNavigationBarInbox() {
+        onView(withId(R.id.bottomNavigationInbox)).click()
+    }
+
     fun assertElementaryMenuItemsShownInDrawer() {
-        onView(withText(R.string.files)).assertDisplayed()
-        onView(withText(R.string.settings)).assertDisplayed()
-        onView(withText(R.string.help)).assertDisplayed()
-        onView(withText(R.string.changeUser)).assertDisplayed()
-        onView(withText(R.string.logout)).assertDisplayed()
+        onView(withText(R.string.files)).scrollTo().assertDisplayed()
+        onView(withText(R.string.settings)).scrollTo().assertDisplayed()
+        onView(withText(R.string.help)).scrollTo().assertDisplayed()
+        onView(withText(R.string.changeUser)).scrollTo().assertDisplayed()
+        onView(withText(R.string.logout)).scrollTo().assertDisplayed()
     }
 
     fun assertNotElementaryMenuItemsDontShowInDrawer() {
         onView(withText(R.string.showGrades)).assertNotDisplayed()
         onView(withText(R.string.colorOverlay)).assertNotDisplayed()
+    }
+
+    enum class ElementaryTabType(val tabType: Int) {
+        HOMEROOM(R.string.dashboardTabHomeroom),
+        SCHEDULE(R.string.dashboardTabSchedule),
+        GRADES(R.string.dashboardTabGrades),
+        RESOURCES(R.string.dashboardTabResources),
+        IMPORTANT_DATES(R.string.dashboardTabImportantDates)
     }
 }

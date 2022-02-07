@@ -322,7 +322,7 @@ class ModuleInteractionTest : StudentTest() {
 
         // Refresh to get module list update, select module2, and assert that unavailableAssignment is locked
         modulesPage.refresh()
-        modulesPage.clickModule(module2)
+        modulesPage.clickModule(module)
         modulesPage.clickModuleItem(module2,unavailableAssignment.name!!)
         assignmentDetailsPage.verifyAssignmentLocked()
     }
@@ -356,6 +356,7 @@ class ModuleInteractionTest : StudentTest() {
 
         // Refresh to get module list update, then assert that module2 is locked
         modulesPage.refresh()
+        modulesPage.clickModule(module)
         // No need to click on the module since they are expanded by default now
         modulesPage.assertAssignmentLocked(lockedAssignment, course1)
     }

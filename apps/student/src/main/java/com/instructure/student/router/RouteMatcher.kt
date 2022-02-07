@@ -100,7 +100,7 @@ object RouteMatcher : BaseRouteMatcher() {
         } else {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ModuleListFragment::class.java))
         }
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"), ModuleListFragment::class.java)) // Just route to modules list. API does not have a way to fetch a module item without knowing the module id (even though web canvas can do it)
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/:${RouterParams.MODULE_ID}"), ModuleListFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))

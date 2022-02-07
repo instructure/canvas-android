@@ -126,15 +126,11 @@ class DiscussionsMoveToDialog : DialogFragment() {
 
         if(group == DiscussionListPresenter.DELETE) {
             val destructiveColor =  requireContext().getColorCompat(R.color.destructive)
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(destructiveColor, destructiveColor))
-                radioButton.setTextColor(destructiveColor)
-            }
+            CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(destructiveColor, destructiveColor))
+            radioButton.setTextColor(destructiveColor)
         } else {
             val unselectedColor = requireContext().getColorCompat(R.color.unselectedRadioColor)
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(unselectedColor, ThemePrefs.brandColor))
-            }
+            CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(unselectedColor, ThemePrefs.brandColor))
         }
     }
 

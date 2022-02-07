@@ -16,8 +16,7 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
@@ -30,6 +29,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -44,7 +44,7 @@ class GradesInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowGrades() {
         val data = createMockData(courseCount = 3)
-        goToGrades(data)
+        goToGradesTab(data)
 
         gradesPage.assertPageObjects()
 
@@ -57,7 +57,7 @@ class GradesInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testRefresh() {
         val data = createMockData(courseCount = 3)
-        goToGrades(data)
+        goToGradesTab(data)
 
         gradesPage.assertPageObjects()
 
@@ -73,34 +73,28 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testEmptyView() {
-        val data = createMockData(homeroomCourseCount = 1)
-        goToGrades(data)
-
-        gradesPage.assertEmptyViewVisible()
-        gradesPage.assertRecyclerViewNotVisible()
-    }
-
-    @Test
-    @Stub
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCourseGrades() {
         val data = createMockData(courseCount = 3)
-        goToGrades(data)
+        goToGradesTab(data)
 
         val course = data.courses.values.first()
 
         gradesPage.clickGradeRow(course.name)
-        courseGradesPage.assertPageObjects()
-        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("B+"))
+        elementaryCoursePage.assertPageObjects()
+
+        Espresso.pressBack()
+        gradesPage.assertPageObjects()
+        data.courses.forEach {
+            gradesPage.assertCourseShownWithGrades(it.value.name, "B+")
+        }
     }
 
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testChangeGradingPeriod() {
         val data = createMockData(courseCount = 3, withGradingPeriods = true)
-        goToGrades(data)
+        goToGradesTab(data)
 
         gradesPage.assertSelectedGradingPeriod(gradesPage.getStringFromResource(R.string.currentGradingPeriod))
         gradesPage.clickGradingPeriodSelector()
@@ -110,14 +104,41 @@ class GradesInteractionTest : StudentTest() {
         gradesPage.assertSelectedGradingPeriod(gradingPeriod.title!!)
     }
 
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testEmptyView() {
+        val data = createMockData(homeroomCourseCount = 1)
+        goToGradesTab(data)
+
+        gradesPage.assertEmptyViewVisible()
+        gradesPage.assertRecyclerViewNotVisible()
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testShowPercentageOnlyIfNoAlphabeticalGrade() {
+        val data = createMockData(courseCount = 1)
+        goToGradesTab(data)
+
+        gradesPage.assertPageObjects()
+
+        val alphabeticallyGradedCourse = data.courses.values.first()
+        var scoreGradedCourse = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, 50.0)
+        var bothGradedCourse = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, 50.0, "C+")
+        var notGradedCourse = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student)
+
+        gradesPage.refresh()
+
+        gradesPage.assertCourseShownWithGrades(alphabeticallyGradedCourse.name, "B+")
+        gradesPage.assertCourseShownWithGrades(scoreGradedCourse.name, "50%")
+        gradesPage.assertCourseShownWithGrades(bothGradedCourse.name, "C+")
+        gradesPage.assertCourseShownWithGrades(notGradedCourse.name, "0%")
+    }
+
     private fun createMockData(
         courseCount: Int = 0,
         withGradingPeriods: Boolean = false,
         homeroomCourseCount: Int = 0): MockCanvas {
-
-        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
-        Thread.sleep(3000)
-        RemoteConfigPrefs.putString(RemoteConfigParam.K5_DESIGN.rc_name, "true")
 
         return MockCanvas.init(
             studentCount = 1,
@@ -126,11 +147,11 @@ class GradesInteractionTest : StudentTest() {
             homeroomCourseCount = homeroomCourseCount)
     }
 
-    private fun goToGrades(data: MockCanvas) {
+    private fun goToGradesTab(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLoginElementary(data.domain, token, student)
         elementaryDashboardPage.waitForRender()
-        elementaryDashboardPage.selectGradesTab()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.GRADES)
     }
 }

@@ -59,11 +59,7 @@ object LocaleUtils {
         }
         Locale.setDefault(locale)
         val config = Configuration()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            config.setLocales(LocaleList(locale))
-        } else {
-            config.locale = locale
-        }
+        config.setLocales(LocaleList(locale))
         ContextKeeper.updateLocale(config)
         return base.createConfigurationContext(config)
     }

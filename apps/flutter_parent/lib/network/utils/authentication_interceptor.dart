@@ -29,24 +29,24 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
   AuthenticationInterceptor(this._dio);
 
   @override
-  Future onError(DioError error) async {
+  Future<void> onError(DioError error, ErrorInterceptorHandler handler) async {
     // Only proceed if it was an authentication error
-    if (error.response?.statusCode != 401) return error;
+    if (error.response?.statusCode != 401) return handler.next(error);
 
     final currentLogin = ApiPrefs.getCurrentLogin();
 
     // Check for any errors
-    if (error.request?.path?.contains('accounts/self') == true) {
+    if (error.requestOptions?.path?.contains('accounts/self') == true) {
       // We are likely just checking if the user can masquerade or not, which happens on login - don't try to re-auth here
-      return error;
-    } else if (error.request.headers[_RETRY_HEADER] != null) {
+      return handler.next(error);
+    } else if (error.requestOptions.headers[_RETRY_HEADER] != null) {
       _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE);
-      return error;
+      return handler.next(error);
     } else if (currentLogin == null ||
         (currentLogin.clientId?.isEmpty ?? true) ||
         (currentLogin.clientSecret?.isEmpty ?? true)) {
       _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET);
-      return error;
+      return handler.next(error);
     }
 
     // Lock new requests from being processed while refreshing the token
@@ -54,30 +54,38 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
     _dio.interceptors?.responseLock?.lock();
 
     // Refresh the token and update the login
-    dynamic result = error;
     CanvasToken tokens;
 
     tokens = await locator<AuthApi>().refreshToken().catchError((e) => null);
 
     if (tokens == null) {
       _logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID);
+
+      _dio.interceptors?.requestLock?.unlock();
+      _dio.interceptors?.responseLock?.unlock();
+
+      return handler.next(error);
     } else {
       Login login = currentLogin.rebuild((b) => b..accessToken = tokens.accessToken);
       ApiPrefs.addLogin(login);
       ApiPrefs.switchLogins(login);
 
       // Update the header and make the request again
-      RequestOptions options = error.request;
-      options.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
-      options.headers[_RETRY_HEADER] = _RETRY_HEADER; // Mark retry to prevent infinite recursion
+      RequestOptions requestOptions = error.requestOptions;
 
-      result = _dio.request(options.path, options: options);
+      requestOptions.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
+      requestOptions.headers[_RETRY_HEADER] = _RETRY_HEADER; // Mark retry to prevent infinite recursion
+
+      _dio.interceptors?.requestLock?.unlock();
+      _dio.interceptors?.responseLock?.unlock();
+
+      final response = await _dio.fetch(requestOptions);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return handler.resolve(response);
+      } else {
+        return handler.next(error);
+      }
     }
-
-    _dio.interceptors?.requestLock?.unlock();
-    _dio.interceptors?.responseLock?.unlock();
-
-    return result;
   }
 
   _logAuthAnalytics(String eventString) {

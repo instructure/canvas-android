@@ -193,7 +193,7 @@
     <string name="published_content_description">Marca de seleção publicada</string>
     <string name="points_with_value">pontos</string>
     <string name="point_with_value">ponto</string>
-    <string name="no_due_date">Sem data de vencimento</string>
+    <string name="no_due_date">Sem data limite</string>
     <string name="due_date">Data de entrega</string>
 
     <string name="view_replies">Ver respostas</string>
@@ -203,8 +203,8 @@
     <string name="save">Guardar</string>
     <string name="successfully_updated_assignment">Palavra-passe atualizada com êxito</string>
     <string name="successfully_updated_quiz">Teste atualizado com êxito.</string>
-    <string name="failure_updating_assignment">Alguma coisa correu mal durante a atribuição. Tente novamente.</string>
-    <string name="failure_deleting_assignment">Alguma coisa correu mal durante a atribuição. Tente novamente.</string>
+    <string name="failure_updating_assignment">Alguma coisa correu mal durante a tarefa. Tente novamente.</string>
+    <string name="failure_deleting_assignment">Alguma coisa correu mal durante a tarefa. Tente novamente.</string>
     <string name="cant_unpublish">Não é possível publicar se existirem submissões de alunos</string>
     <string name="messages">Mensagens</string>
     <plurals name="reply_message_plus_label">
@@ -216,7 +216,7 @@
         <item quantity="other">%d a submissão precisa ser classificada</item>
     </plurals>
 
-    <string name="delete_assignment_message">Tem a certeza de que deseja eliminar esta atribuição?</string>
+    <string name="delete_assignment_message">Tem a certeza de que deseja eliminar esta tarefa?</string>
     <string name="max_count">99+</string>
     <string name="message_student">Mensagem Aluno</string>
 
@@ -272,7 +272,7 @@
     <string name="error_getting_photo">Ocorreu um erro ao obter a foto. É favor tentar novamente.</string>
     <string name="loading_files_indeterminate">Carregando Ficheiros&#8230;</string>
     <string name="no_files_uploaded">Ainda não selecionou nenhum ficheiro.</string>
-    <string name="file_upload_not_supported">Não pode carregar ficheiros para a atribuição escolhida.</string>
+    <string name="file_upload_not_supported">Não pode carregar ficheiros para a tarefa escolhida.</string>
     <string name="one_or_more_extension_not_allowed">Um ou mais ficheiros tem uma extensão que não é permitida</string>
 
     <string name="inbox_all">Caixa de entrada</string>
@@ -309,7 +309,7 @@
     <string name="pages_front_page">Páginas na primeira página</string>
     <string name="frontPage">Primeira página</string>
     <string name="course_modules">Módulos da disciplina</string>
-    <string name="assignments_list">Lista de atribuições</string>
+    <string name="assignments_list">Lista de tarefa</string>
     <string name="syllabus">Programa</string>
     <!--End Course Settings-->
     <!-- Assignment Details -->
@@ -322,7 +322,7 @@
     <string name="due_date_at_time" formatted="false">Termina %1s a %2s</string>
     <string name="last_post" formatted="false">Última publicação %s</string>
     <string name="submission_types">Tipos de submissão</string>
-    <string name="full_due_date_details">Detalhes completos da data de vencimento</string>
+    <string name="full_due_date_details">Detalhes completos da data limite</string>
     <string name="availability_label">Disponibilidade:</string>
     <string name="available_to_label">Disponível para:</string>
     <string name="available_from_label">Disponível a partir de:</string>
@@ -331,14 +331,14 @@
     <string name="details_available_to_label">Disponível para</string>
     <string name="details_available_from_label">Disponível de</string>
     <string name="details_due_for_label">Para</string>
-    <string name="due_date_header_label">Vencimento</string>
+    <string name="due_date_header_label">Data limite</string>
     <string name="assignment_details">Detalhes da tarefa</string>
     <string name="no_content">Sem conteúdo</string>
     <string name="submissions">Submissões</string>
     <string name="no_assignment_description_filler">Ajude seus alunos com essa tarefa, ao adicionar instruções.</string>
     <string name="no_quiz_description_filler">Ajude seus alunos com este teste, ao adicionar instruções.</string>
-    <string name="page_title_due_dates">Datas de vencimento</string>
-    <string name="edit_assignment">Editar atribuição</string>
+    <string name="page_title_due_dates">Datas limite</string>
+    <string name="edit_assignment">Editar tarefa</string>
     <string name="edit_quiz">Editar teste</string>
     <string name="title">Título</string>
     <string name="description">Descrição</string>
@@ -360,12 +360,12 @@
     <string formatted="false" name="grade_value_format">%s %s</string>
     <string name="grade_value_format_talk_back">%1$s fora de %2$s</string>
     <string name="publish">Publicar</string>
-    <string name="error_saving_assignment">Ocorreu um erro ao tentar salvar a atribuição. Tente novamente.</string>
+    <string name="error_saving_assignment">Ocorreu um erro ao tentar salvar a tarefa. Tente novamente.</string>
     <string name="error_saving_quiz">Ocorreu um erro ao tentar guardar o teste. Tente novamente.</string>
-    <string name="assignment_name_must_be_set">O nome da atribuição deve ser definido.</string>
+    <string name="assignment_name_must_be_set">O nome da tarefa deve ser definido.</string>
     <string name="announcement_name_must_be_set">O título do anúncio deve ser definido.</string>
     <string name="quiz_title_must_be_set">O título do teste deve ser definido.</string>
-    <string name="assignment_points_must_be_set">Os pontos de atribuição devem ser definidos.</string>
+    <string name="assignment_points_must_be_set">Os pontos de tarefa devem ser definidos.</string>
     <string name="assignment_points_must_be_a_number">O valor de pontos possíveis tem de ser um número</string>
     <string name="quiz_points_must_be_set">Os pontos do teste devem ser definidos.</string>
     <string name="assignee_type_course_sections">Secções da disciplina</string>
@@ -380,7 +380,7 @@
     <string name="lock_after_unlock_error">A data de bloqueio não pode ser anterior à data de desbloqueio</string>
     <string name="assignee_blank_error">Cessionário não pode estar em branco</string>
     <string name="remove">Remover</string>
-    <string name="add_due_date">Adicionar data de vencimento</string>
+    <string name="add_due_date">Adicionar data limite</string>
     <string name="full_submission_details">Detalhes de envio completo</string>
     <string name="graded">Classificado</string>
     <string name="needsGrading">Precisa de classificação</string>
@@ -469,7 +469,7 @@
     <string name="grading_periods_filter">Filtro dos períodos de classificação</string>
     <string name="assignments">Tarefas</string>
     <string name="clear_filter">Filtro limpo</string>
-    <string name="due">Vencimento %1$s</string>
+    <string name="due">Data limite %1$s</string>
     <string name="updated">Atualizado %1$s</string>
 
     <plurals name="needsGradingCount">
@@ -742,10 +742,10 @@
     <string name="version" formatted="false">Versão %s</string>
     <string name="fullVersion">Versão %s (%d)</string>
     <string name="tap_to_view_submissions_list">Toque para visualizar a lista de envios.</string>
-    <string name="assignmentDescriptionContentDescription">Descrição da atribuição</string>
+    <string name="assignmentDescriptionContentDescription">Descrição da tarefa</string>
     <string name="quizDescriptionContentDescription">Descrição  do teste</string>
-    <string name="removeDueDate">Remover data de vencimento</string>
-    <string name="removeDueDateMessage">Isso eliminará a data de vencimento e todos os cessionários associados.</string>
+    <string name="removeDueDate">Remover data limite</string>
+    <string name="removeDueDateMessage">Isso eliminará a data limite e todos os cessionários associados.</string>
     <string name="email">Email</string>
     <string name="fullscreen">ecrã inteiro</string>
     <string name="addNew">Adicionar Nova</string>

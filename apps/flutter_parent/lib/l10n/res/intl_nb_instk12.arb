@@ -24,7 +24,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to show student selector": "Trykk for å vise elev velger",
+  "Tap to show student selector": "Trykk for å vise elevvelger",
   "@Tap to show student selector": {
     "description": "Semantics label for the area that will show the student selector when tapped",
     "type": "text",
@@ -158,13 +158,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your student's calendar": "Det oppstod en feil under lasting av din elevkalender.",
+  "There was an error loading your student's calendar": "Det oppsto en feil under lasting av din elevkalender.",
   "@There was an error loading your student's calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Trykk for å velge fagene du ønsker på se på kalenderen. Velg opptil 10.",
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Trykk for å velge fagne du ønsker på se på kalenderen. Velg opptil 10.",
   "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
@@ -182,7 +182,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Planner Note": "Planlegger-notat",
+  "Planner Note": "Planleggingsmerknad",
   "@Planner Note": {
     "description": "Label used for notes in the planner",
     "type": "text",
@@ -212,7 +212,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "domainSearchInputHint": "Skriv inn skolenavn eller område...",
+  "domainSearchInputHint": "Skriv inn skolenavn eller område…",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",
     "type": "text",
@@ -271,7 +271,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "View error details": "Vis avviksdetaljer",
+  "View error details": "Vis feildetaljer",
   "@View error details": {
     "description": "Label for the button that allowed users to view crash details",
     "type": "text",
@@ -313,12 +313,12 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your inbox messages.": "Det oppstod en feil under lasting av innboksmeldingene dine.",
+  "There was an error loading your inbox messages.": "Det oppsto en feil under lasting av innboksmeldingene dine.",
   "@There was an error loading your inbox messages.": {
     "type": "text",
     "placeholders": {}
   },
-  "No Subject": "Intet tittel",
+  "No Subject": "Ingen tittel",
   "@No Subject": {
     "description": "Title used for inbox messages that have no subject",
     "type": "text",
@@ -348,7 +348,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading recipients for this course": "Det oppstod en feil under lasting av mottakere for dette faget.",
+  "There was an error loading recipients for this course": "Det oppsto en feil under lasting av mottakere for dette faget.",
   "@There was an error loading recipients for this course": {
     "description": "Message shown when attempting to create a new message but the recipients list failed to load",
     "type": "text",
@@ -453,7 +453,7 @@
       "linkUrl": {}
     }
   },
-  "There was an error loading this conversation": "Det oppstod en feil under lasting av denne samtalen",
+  "There was an error loading this conversation": "Det oppsto en feil under lasting av denne samtalen",
   "@There was an error loading this conversation": {
     "description": "Message shown when a conversation fails to load",
     "type": "text",
@@ -550,7 +550,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading this file": "Det oppstod en feil under lasting av denne filen",
+  "There was an error loading this file": "Det oppsto en feil under lasting av denne filen",
   "@There was an error loading this file": {
     "description": "Message shown when a file could not be loaded or displayed",
     "type": "text",
@@ -562,13 +562,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "Fagene til elevene dine er kanskje ikke publisert enda.",
+  "Your student’s courses might not be published yet.": "Fagne til elevene dine er kanskje upublisert enda.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your student’s courses.": "Det oppstod en feil under lasting av fagene til elevene dine.",
+  "There was an error loading your student’s courses.": "Det oppsto en feil under lasting av elevfagne dine.",
   "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
@@ -676,7 +676,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading the summary details for this course.": "Det oppstod en feil under lasting av sammendragsdetaljer for dette faget.",
+  "There was an error loading the summary details for this course.": "Det oppsto en feil under lasting av sammendragsdetaljer for dette faget.",
   "@There was an error loading the summary details for this course.": {
     "description": "Message shown when the course summary could not be loaded",
     "type": "text",
@@ -694,7 +694,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "gradeFormatScoreOutOfPointsPossible": "{score}/{pointsPossible}",
+  "gradeFormatScoreOutOfPointsPossible": "{score} / {pointsPossible}",
   "@gradeFormatScoreOutOfPointsPossible": {
     "description": "Formatted string for a student score out of the points possible",
     "type": "text",
@@ -820,7 +820,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "You will be notified about this assignment on…": "Du vil få en påminnelse om denne oppgaven den...",
+  "You will be notified about this assignment on…": "Du vil få en påminnelse om denne oppgaven den…",
   "@You will be notified about this assignment on…": {
     "description": "Description for when a reminder is set",
     "type": "text",
@@ -959,13 +959,13 @@
       "alertTitle": {}
     }
   },
-  "Course Announcement": "Fagbeskjed",
+  "Course Announcement": "Fag-beskjed",
   "@Course Announcement": {
     "description": "Title for alerts when there is a course announcement",
     "type": "text",
     "placeholders": {}
   },
-  "Institution Announcement": "Institusjonsbeskjed",
+  "Institution Announcement": "Institusjons-beskjed",
   "@Institution Announcement": {
     "description": "Title for alerts when there is an institution announcement",
     "type": "text",
@@ -1114,7 +1114,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Alert me when…": "Varsle meg når...",
+  "Alert me when…": "Varsle meg når…",
   "@Alert me when…": {
     "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
     "type": "text",
@@ -1149,12 +1149,12 @@
     "type": "text",
     "placeholders": {}
   },
-  "Course Announcements": "Fagbeskjed",
+  "Course Announcements": "Fagbeskjeder",
   "@Course Announcements": {
     "type": "text",
     "placeholders": {}
   },
-  "Institution Announcements": "Institusjonsbeskjed",
+  "Institution Announcements": "Institusjonsbeskjeder",
   "@Institution Announcements": {
     "type": "text",
     "placeholders": {}
@@ -1165,12 +1165,12 @@
     "type": "text",
     "placeholders": {}
   },
-  "Grade percentage": "Vurderingsprosent",
+  "Grade percentage": "Vurderingsskala i prosent",
   "@Grade percentage": {
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your student's alerts.": "Det oppstod en feil under lasting av elev-varslene dine.",
+  "There was an error loading your student's alerts.": "Det oppsto en feil under lasting av elevvarslene dine.",
   "@There was an error loading your student's alerts.": {
     "type": "text",
     "placeholders": {}
@@ -1242,7 +1242,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "An error occurred while saving your selection. Please try again.": "Det oppsto en feil ved lagring av valget ditt. Vennligst prøv igjen.",
+  "An error occurred while saving your selection. Please try again.": "Det oppsto en feil ved lagring av valget ditt. Prøv på nytt.",
   "@An error occurred while saving your selection. Please try again.": {
     "type": "text",
     "placeholders": {}
@@ -1297,13 +1297,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Preparing…": "Forbereder...",
+  "Preparing…": "Forbereder…",
   "@Preparing…": {
     "description": "Message shown while a file is being prepared to attach to a message",
     "type": "text",
     "placeholders": {}
   },
-  "Add student with…": "Legg til en elev til...",
+  "Add student with…": "Legg til en elev til…",
   "@Add student with…": {
     "type": "text",
     "placeholders": {}
@@ -1318,7 +1318,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your students.": "Det oppstod en feil under lasting av elevene dine.",
+  "There was an error loading your students.": "Det oppsto en feil under lasting av elevene dine.",
   "@There was an error loading your students.": {
     "type": "text",
     "placeholders": {}
@@ -1333,7 +1333,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Angi paringskoden til elev som ble gitt til deg. Hvis paringskoden ikke fungerer kan det hende at den er utgått",
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Angi elevparingskoden som ble gitt til deg. Hvis paringskoden ikke fungerer kan det hende at den er utgått",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
     "placeholders": {}
@@ -1460,13 +1460,13 @@
       "privacyPolicy": {}
     }
   },
-  "Terms of Service": "Brukervilkår",
+  "Terms of Service": "Tjenestevilkår",
   "@Terms of Service": {
     "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
     "type": "text",
     "placeholders": {}
   },
-  "Privacy Policy": "retningslinjer for personvern",
+  "Privacy Policy": "Retningslinjer for personvern",
   "@Privacy Policy": {
     "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
     "type": "text",
@@ -1552,7 +1552,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "You will be notified about this event on…": "Du vil få en påminnelse om denne hendelsen den...",
+  "You will be notified about this event on…": "Du vil få en påminnelse om denne hendelsen den…",
   "@You will be notified about this event on…": {
     "description": "Description for when an event reminder is set",
     "type": "text",
@@ -1570,13 +1570,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Legal": "Rettslig",
+  "Legal": "Juss",
   "@Legal": {
     "description": "Label for legal information option",
     "type": "text",
     "placeholders": {}
   },
-  "Privacy policy, terms of use, open source": "Personvernregler, bruksvilkår, åpen kilde",
+  "Privacy policy, terms of use, open source": "Personvernregler, brukervilkår, åpen kilde",
   "@Privacy policy, terms of use, open source": {
     "description": "Description for legal information option",
     "type": "text",
@@ -1600,7 +1600,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "User ID:": "Bruker-ID",
+  "User ID:": "Bruker-ID:",
   "@User ID:": {
     "description": "The label for the Canvas user ID of the logged in user",
     "type": "text",
@@ -1618,7 +1618,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Terms of Use": "bruksvilkår",
+  "Terms of Use": "brukervilkår",
   "@Terms of Use": {
     "description": "Label for the terms of use",
     "type": "text",
@@ -1630,7 +1630,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was a problem loading the Terms of Use": "Det oppsto et problem under opplastingen av bruksvilkårene",
+  "There was a problem loading the Terms of Use": "Det oppsto et problem under opplastingen av brukervilkårene",
   "@There was a problem loading the Terms of Use": {
     "type": "text",
     "placeholders": {}
@@ -1659,7 +1659,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Subject": "Tittel",
+  "Subject": "Tema",
   "@Subject": {
     "description": "Label used for Subject text field",
     "type": "text",
@@ -1701,7 +1701,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Just a casual question, comment, idea, suggestion…": "Bare et tilfeldig spørsmål, kommentar, idé eller forslag...",
+  "Just a casual question, comment, idea, suggestion…": "Bare et tilfeldig spørsmål, kommentar, idé eller forslag…",
   "@Just a casual question, comment, idea, suggestion…": {
     "type": "text",
     "placeholders": {}
@@ -1744,7 +1744,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Login flow: Site Admin": "Innloggingsflyt: Site-admin",
+  "Login flow: Site Admin": "Innloggingsflyt: Nettstedadministrator",
   "@Login flow: Site Admin": {
     "description": "Description for the Site Admin login flow",
     "type": "text",
@@ -1805,7 +1805,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Det var en feil med å opptre som denne brukeren. Sjekk domenet og bruker-ID-en og prøv igjen.",
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Det oppsto en feil med å opptre som denne brukeren. Sjekk domenet og bruker-ID-en og prøv igjen.",
   "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
     "type": "text",
     "placeholders": {}
@@ -1874,7 +1874,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Open Canvas Student": "Åpne Canvas Elev",
+  "Open Canvas Student": "Åpne Canvas elev",
   "@Open Canvas Student": {
     "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
     "type": "text",
@@ -1967,7 +1967,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Retry": "Forsøk igjen",
+  "Retry": "Prøv igjen",
   "@Retry": {
     "type": "text",
     "placeholders": {}
@@ -2083,7 +2083,7 @@
       "count": {}
     }
   },
-  "There was an error loading this announcement": "Det oppstod en feil under lasting av denne beskjeden",
+  "There was an error loading this announcement": "Det oppsto en feil under lasting av denne beskjeden",
   "@There was an error loading this announcement": {
     "description": "Message shown when an announcement detail screen fails to load",
     "type": "text",
@@ -2134,7 +2134,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Link Error": "Avvik på lenke",
+  "Link Error": "Feil på lenke",
   "@Link Error": {
     "description": "Title for error page shown when clicking a link",
     "type": "text",
@@ -2164,7 +2164,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error logging in. Please generate another QR Code and try again.": "Det oppstod en feil ved innlogging. Vennligst lag en ny QR-kode og prøv på nytt.",
+  "There was an error logging in. Please generate another QR Code and try again.": "Det oppsto en feil ved innlogging. Vennligst lag en ny QR-kode og prøv på nytt.",
   "@There was an error logging in. Please generate another QR Code and try again.": {
     "description": "Text for qr login error",
     "type": "text",

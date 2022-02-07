@@ -16,6 +16,7 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.espresso.*
@@ -52,10 +53,31 @@ class SpeedGraderCommentsPage : BasePage() {
         match.assertHasText(attachment.displayName!!)
     }
 
+    fun assertCommentFieldHasText(text: String) {
+        commentEditText.assertHasText(text)
+    }
+
     fun addComment(comment: String) {
         commentEditText.typeText(comment)
         Espresso.closeSoftKeyboard()
         callOnClick(withId(R.id.sendCommentButton))
+    }
+
+    fun typeComment(comment: String) {
+        commentEditText.typeText(comment)
+    }
+
+    fun clearComment() {
+        commentEditText.clearText()
+    }
+
+    fun sendComment() {
+        onView(withId(R.id.sendCommentButton) + withEffectiveVisibility(Visibility.VISIBLE))
+            .click()
+    }
+
+    fun clickCommentField() {
+        commentEditText.click()
     }
 
     fun assertDisplaysEmptyState() {

@@ -24,10 +24,7 @@ import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.models.Favorite
-import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.mvvm.ViewState
@@ -50,6 +47,7 @@ import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
 import java.util.*
+import kotlin.time.days
 
 @ExperimentalCoroutinesApi
 class EditDashboardViewModelTest {
@@ -635,7 +633,229 @@ class EditDashboardViewModelTest {
         assertEquals("Group", groupItemViewModel.name)
     }
 
-    private fun createCourse(id: Long, name: String, isFavorite: Boolean = false, startOffsetDate: OffsetDateTime? = null, endOffsetDate: OffsetDateTime? = null): Course {
+    @Test
+    fun `Sections override course date if allowed`() {
+        val courses = listOf(
+                createCourse(
+                        id = 1L,
+                        name = "Past section course",
+                        isFavorite = false,
+                        sections = listOf(createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString())),
+                        restrictEnrolmentsToCourseDate = false
+                ),
+                createCourse(
+                        id = 2L,
+                        name = "Current course with past section",
+                        isFavorite = false,
+                        sections = listOf(createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString())),
+                        restrictEnrolmentsToCourseDate = true
+                ),
+                createCourse(
+                        id = 3L,
+                        name = "Future section course",
+                        isFavorite = false,
+                        sections = listOf(createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString())),
+                        restrictEnrolmentsToCourseDate = false
+                )
+        )
+
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
+        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.current_enrollments, currentHeader.title)
+
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
+        assertEquals("Current course with past section", currentCourseItemViewModel.name)
+
+        assertTrue(data[4] is EditDashboardEnrollmentItemViewModel)
+        val pastHeader = data[4] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.past_enrollments, pastHeader.title)
+
+        assertTrue(data[5] is EditDashboardCourseItemViewModel)
+        val pastCourseItemViewModel = data[5] as EditDashboardCourseItemViewModel
+        assertEquals("Past section course", pastCourseItemViewModel.name)
+
+        assertTrue(data[6] is EditDashboardEnrollmentItemViewModel)
+        val futureHeader = data[6] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.future_enrollments, futureHeader.title)
+
+        assertTrue(data[7] is EditDashboardCourseItemViewModel)
+        val futureCourseItemViewModel = data[7] as EditDashboardCourseItemViewModel
+        assertEquals("Future section course", futureCourseItemViewModel.name)
+    }
+
+    @Test
+    fun `Terms override course date if allowed`() {
+        val courses = listOf(
+                createCourse(
+                        id = 1L,
+                        name = "Past term course",
+                        isFavorite = false,
+                        term = createTerm(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 2).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
+                        restrictEnrolmentsToCourseDate = false
+                ),
+                createCourse(
+                        id = 2L,
+                        name = "Current course with past term",
+                        isFavorite = false,
+                        term = createTerm(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 2).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
+                        restrictEnrolmentsToCourseDate = true
+                ),
+                createCourse(
+                        id = 3L,
+                        name = "Future term course",
+                        isFavorite = false,
+                        term = createTerm(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 2).toApiString()),
+                        restrictEnrolmentsToCourseDate = false
+                )
+        )
+
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
+        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.current_enrollments, currentHeader.title)
+
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
+        assertEquals("Current course with past term", currentCourseItemViewModel.name)
+
+        assertTrue(data[4] is EditDashboardEnrollmentItemViewModel)
+        val pastHeader = data[4] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.past_enrollments, pastHeader.title)
+
+        assertTrue(data[5] is EditDashboardCourseItemViewModel)
+        val pastCourseItemViewModel = data[5] as EditDashboardCourseItemViewModel
+        assertEquals("Past term course", pastCourseItemViewModel.name)
+
+        assertTrue(data[6] is EditDashboardEnrollmentItemViewModel)
+        val futureHeader = data[6] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.future_enrollments, futureHeader.title)
+
+        assertTrue(data[7] is EditDashboardCourseItemViewModel)
+        val futureCourseItemViewModel = data[7] as EditDashboardCourseItemViewModel
+        assertEquals("Future term course", futureCourseItemViewModel.name)
+    }
+
+    @Test
+    fun `Sections override terms`() {
+        val courses = listOf(
+                createCourse(
+                        id = 1L,
+                        name = "Past section current term course",
+                        isFavorite = false,
+                        term = createTerm(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
+                        sections = listOf(createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString())),
+                        restrictEnrolmentsToCourseDate = false
+                ),
+                createCourse(
+                        id = 2L,
+                        name = "Current section current term course",
+                        isFavorite = false,
+                        term = createTerm(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
+                        sections = listOf(createSection(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString())),
+                        restrictEnrolmentsToCourseDate = false
+                ),
+                createCourse(
+                        id = 3L,
+                        name = "Future section past term course",
+                        isFavorite = false,
+                        term = createTerm(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 2).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
+                        sections = listOf(createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString())),
+                        restrictEnrolmentsToCourseDate = false
+                )
+        )
+
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
+        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.current_enrollments, currentHeader.title)
+
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
+        assertEquals("Current section current term course", currentCourseItemViewModel.name)
+
+        assertTrue(data[4] is EditDashboardEnrollmentItemViewModel)
+        val pastHeader = data[4] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.past_enrollments, pastHeader.title)
+
+        assertTrue(data[5] is EditDashboardCourseItemViewModel)
+        val pastCourseItemViewModel = data[5] as EditDashboardCourseItemViewModel
+        assertEquals("Past section current term course", pastCourseItemViewModel.name)
+
+        assertTrue(data[6] is EditDashboardEnrollmentItemViewModel)
+        val futureHeader = data[6] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.future_enrollments, futureHeader.title)
+
+        assertTrue(data[7] is EditDashboardCourseItemViewModel)
+        val futureCourseItemViewModel = data[7] as EditDashboardCourseItemViewModel
+        assertEquals("Future section past term course", futureCourseItemViewModel.name)
+    }
+
+    private fun createCourse(
+            id: Long,
+            name: String,
+            isFavorite: Boolean = false,
+            startOffsetDate: OffsetDateTime? = null,
+            endOffsetDate: OffsetDateTime? = null,
+            sections: List<Section>? = null,
+            term: Term? = null,
+            restrictEnrolmentsToCourseDate: Boolean = true
+    ): Course {
+
         val startDate = startOffsetDate ?: OffsetDateTime.now()
         val endDate = endOffsetDate ?: startDate.plusDays(1)
 
@@ -651,7 +871,22 @@ class EditDashboardViewModelTest {
                 startAt = DateTimeUtils.toDate(startDate.atZoneSimilarLocal(ZoneId.systemDefault()).toInstant()).toApiString(),
                 isFavorite = isFavorite,
                 enrollments = enrollments,
-                restrictEnrollmentsToCourseDate = true)
+                restrictEnrollmentsToCourseDate = restrictEnrolmentsToCourseDate,
+                term = term,
+                sections = sections ?: emptyList())
+    }
+
+    private fun createSection(startAt: String? = null, endAt: String? = null): Section {
+        return Section(
+                startAt = startAt,
+                endAt = endAt)
+    }
+
+    private fun createTerm(startAt: String? = null, endAt: String? = null): Term {
+        return Term(
+                startAt = startAt,
+                endAt = endAt
+        )
     }
 
     private fun createGroup(id: Long, name: String, isFavorite: Boolean = false, courseId: Long = 0): Group {

@@ -34,11 +34,15 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
     private val importantLinksContainer by OnViewWithId(R.id.importantLinksContainer)
     private val coursesRecyclerView by OnViewWithId(R.id.actionItemsRecyclerView)
 
-    fun assertImportantLinksDisplayed(content: String) {
+    fun assertImportantLinksAndWebContentDisplayed(content: String) {
         importantLinksTitle.assertDisplayed()
         Web.onWebView()
             .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "html"))
             .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(content)))
+    }
+
+    fun assertImportantLinksHeaderDisplayed() {
+        importantLinksTitle.assertDisplayed()
     }
 
     fun assertCourseNameDisplayed(courseName: String) {
@@ -54,11 +58,11 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
     }
 
     fun assertStaffInfoHeaderDisplayed() {
-        onView(withText(R.string.staffContactInfo)).assertDisplayed()
+        onView(withText(R.string.staffContactInfo)).scrollTo().assertDisplayed()
     }
 
     fun assertStaffDisplayed(name: String) {
-        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(name))).assertDisplayed()
+        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(name))).scrollTo().assertDisplayed()
     }
 
     fun assertImportantLinksNotDisplayed() {
@@ -94,6 +98,6 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
     }
 
     fun openComposeMessage(teacherName: String) {
-        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(teacherName))).click()
+        onView(withId(R.id.contactInfoLayout) + withDescendant(withText(teacherName))).scrollTo().click()
     }
 }

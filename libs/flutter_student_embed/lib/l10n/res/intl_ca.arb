@@ -1,6 +1,6 @@
 ﻿{
-  "@@last_modified": "2020-05-22T11:03:37.722827",
-  "coursesLabel": "Cursos",
+  "@@last_modified": "2020-09-18T11:3:40.609706",
+  "coursesLabel": "Assignatures",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
     "type": "text",
@@ -70,7 +70,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "pointsPossible": "{points} punts possibles",
+  "pointsPossible": "{points} punts possibles",
   "@pointsPossible": {
     "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
     "type": "text",
@@ -96,7 +96,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Toqueu per afegir als preferits els cursos que voleu veure al Calendari.",
+  "Tap to favorite the courses you want to see on the Calendar.": "Toqueu per afegir als preferits les assignatures que voleu veure al Calendari.",
   "@Tap to favorite the courses you want to see on the Calendar.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
@@ -150,7 +150,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Course (optional)": "Curs (opcional)",
+  "Course (optional)": "Assignatura (opcional)",
   "@Course (optional)": {
     "description": "Label for optional course selection when creating To Do items",
     "type": "text",
@@ -256,19 +256,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "No Courses": "No hi ha cap curs",
+  "No Courses": "No hi ha cap assignatura",
   "@No Courses": {
     "description": "Title for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "És possible que encara no s'hagin publicat els vostres cursos de l'estudiant.",
+  "Your student’s courses might not be published yet.": "És possible que encara no s'hagin publicat les vostres assignatures de l'estudiant.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your your student’s courses.": "S'ha produït un error en carregar els vostres cursos de l'estudiant.",
+  "There was an error loading your your student’s courses.": "S'ha produït un error en carregar els vostres assignatures de l'estudiant.",
   "@There was an error loading your your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
@@ -294,7 +294,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "assignmentTotalPoints": "{points} punts",
+  "assignmentTotalPoints": "{points} punts",
   "@assignmentTotalPoints": {
     "description": "Label used for the total points the assignment is worth",
     "type": "text",
@@ -308,7 +308,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Missing": "Falta",
+  "Missing": "No presentat",
   "@Missing": {
     "description": "Description for when a student has not turned anything in for an assignment",
     "type": "text",

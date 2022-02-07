@@ -515,15 +515,10 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     }
 
     private fun detachForegroundNotification() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            stopForeground(Service.STOP_FOREGROUND_DETACH)
-        else
-            stopForeground(false)
+        stopForeground(Service.STOP_FOREGROUND_DETACH)
     }
 
     private fun createNotificationChannel(notificationManager: NotificationManager, channelId: String = CHANNEL_ID) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
         // Prevents recreation of notification channel if it exists.
         if (notificationManager.notificationChannels.any { it.id == channelId }) return
 

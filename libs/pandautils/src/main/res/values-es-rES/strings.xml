@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Elegir multimedia</string>
     <string name="takeVideo">Realizar video</string>
     <string name="noCameraOnDevice">No hay cámara</string>
@@ -60,7 +59,7 @@
     <string name="assignment">Actividad</string>
     <string name="attachedFiles">Archivos adjuntos</string>
     <string name="turnIn">Entregar</string>
-    <string name="course">Curso</string>
+    <string name="course">Asignatura</string>
     <string name="sending">Enviando&#8230;</string>
 
     <!--rating dialog-->
@@ -78,10 +77,10 @@
     <string name="filesSubmittedSuccessfully">Se han enviado los archivos.</string>
     <string name="messageSentSuccessfully">Se ha enviado el mensaje.</string>
     <string name="shareWithCanvas">Otras aplicaciones pueden compartir archivos con Canvas. Busque el ícono a continuación en las aplicaciones y toque sobre Canvas.</string>
-    <string name="shareWithCanvas2">De esta forma, abrirá esta aplicación. Luego seleccione en qué curso y actividad desea entregar el archivo.</string>
+    <string name="shareWithCanvas2">De esta forma, abrirá esta aplicación. Luego seleccione en qué asignatura y actividad desea entregar el archivo.</string>
     <string name="contentDescriptionSocialShare">Compartir ícono</string>
     <string name="submitAssignment">Entregar actividad</string>
-    <string name="assignmentHeader">Actividad:</string>
+    <string name="assignmentHeader">Actividad :</string>
     <string name="submittingAssignment">Entregando actividad&#8230;</string>
     <string name="conversations">Conversaciones </string>
     <string name="inbox">Bandeja de entrada </string>
@@ -103,7 +102,7 @@
     <!--Errors-->
     <string name="errorOccurred">Ha habido un error inesperado.</string>
     <string name="serverError">Ha habido un error del servidor.</string>
-    <string name="unauthorized">No tiene autorización para acceder. O no tiene permisos o no tiene acceso todavía (es posible que su curso no haya comenzado todavía)</string>
+    <string name="unauthorized">No tiene autorización para acceder. O no tiene permisos o no tiene acceso todavía (es posible que su asignatura no haya comenzado todavía)</string>
     <string name="fileNoLongerExists">Ese archivo ya no existe.</string>
     <string name="invalidAccessToken">Su sesión ha caducado. Inicie una nueva sesión.</string>
     <string name="uploadingFromSourceFailed">No pudo completarse la carga de un archivo desde esta fuente.</string>
@@ -111,13 +110,13 @@
     <string name="errorTextMissing">Añada texto para enviar un mensaje</string>
 
     <string name="fileUploadNotSupported">No puede cargar archivos a la actividad seleccionada.</string>
-    <string name="noCourseSelected">Seleccione un curso</string>
-    <string name="selectCourse">Seleccione un curso</string>
+    <string name="noCourseSelected">Seleccione una asignatura</string>
+    <string name="selectCourse">Seleccione una asignatura</string>
     <string name="selectAssignment">Seleccione una actividad</string>
     <string name="loadingAssignments">Cargando actividades...</string>
     <string name="noAssignmentSelected">Seleccione una actividad</string>
-    <string name="noAssignmentsWithFileUpload">Este curso no tiene actividades que permitan la carga de archivos.</string>
-    <string name="teacherNotAllowedFileSubmission">Como profesor en este curso, no puede enviar archivos</string>
+    <string name="noAssignmentsWithFileUpload">Esta asignatura no tiene actividades que permitan la carga de archivos.</string>
+    <string name="teacherNotAllowedFileSubmission">Como profesor en esta asignatura, no puede enviar archivos</string>
     <string name="noFilesUploaded">No ha seleccionado ningún archivo.</string>
     <string name="oneOrMoreExtensionNotAllowed">Uno o más archivos tienen una extensión de archivo no permitida</string>
     <string name="extensionNotAllowed">No se permite el tipo de archivo seleccionado.</string>
@@ -137,9 +136,9 @@
     <string name="noConnection">Sin conexión</string>
 
     <!--Empty Screens-->
-    <string name="emptyCourseListMessage">Sus cursos y grupos favoritos se muestran aquí.</string>
-    <string name="addCoursesGroups">Añadir cursos/grupos</string>
-    <string name="noDiscussions">No hay foros de discusión</string>
+    <string name="emptyCourseListMessage">Sus asignaturas y grupos favoritos se muestran aquí.</string>
+    <string name="addCoursesGroups">Añadir asignaturas/grupos</string>
+    <string name="noDiscussions">No hay foros</string>
     <string name="noDiscussionsSubtext">Inicie una conversación con otras personas.</string>
     <string name="noDiscussionsTeacher">Comience una conversación con sus estudiantes.</string>
     <string name="nothingUnread">Bandeja de entrada vacía</string>
@@ -150,13 +149,13 @@
     <string name="nothingSentSubtext">No ha enviado ningún mensaje.</string>
     <string name="nothingArchived">No hay mensajes archivados</string>
     <string name="nothingArchivedSubtext">No ha archivado ningún mensaje.</string>
-    <string name="noQuizzes">No hay evaluaciones</string>
-    <string name="noQuizzesSubtext">Lo sentimos, no existen evaluaciones aún.</string>
-    <string name="noQuizzesTeacher">No hay evaluaciones publicadas para mostrar.</string>
+    <string name="noQuizzes">No hay pruebas</string>
+    <string name="noQuizzesSubtext">Lo sentimos, no existen pruebas aún.</string>
+    <string name="noQuizzesTeacher">No hay pruebas publicadas para mostrar.</string>
     <string name="noAnnouncements">No hay anuncios</string>
     <string name="noAnnouncementsSubtext">No se ha realizado ningún anuncio todavía.</string>
-    <string name="noCourses">No hay cursos</string>
-    <string name="noCoursesSubtext">No parece haber cursos asociados con esta cuenta. Visite la web para crear un curso hoy mismo.</string>
+    <string name="noCourses">No hay asignaturas</string>
+    <string name="noCoursesSubtext">No parece haber asignaturas asociados con esta cuenta. Visite la web para crear una asignatura hoy mismo.</string>
     <string name="noAssignments">No hay actividades</string>
     <string name="noAssignmentsSubtext">Al parecer no se han creado actividades en este espacio. Hora de salir y explorar</string>
     <string name="noAssignmentsTeacher">Al parecer no se han publicado actividades aún.</string>
@@ -178,15 +177,15 @@
     <string name="noNotificationsSubtext">Aún no hay ninguna notificación.</string>
     <string name="noTodos">¡Bien hecho!</string>
     <string name="noTodosSubtext">Su lista de actividades pendientes está vacía. Es momento de recargar energías.</string>
-    <string name="noSyllabus">No hay ningún programa del curso</string>
-    <string name="noSyllabusSubtext">No se ha creado ningún programa del curso todavía.</string>
+    <string name="noSyllabus">No hay ningún programa de la asignatura</string>
+    <string name="noSyllabusSubtext">No se ha creado ningún programa de la asignatura todavía.</string>
     <string name="noBookmarks">No hay marcadores</string>
     <string name="noBookmarksSubtext">Los marcadores son atajos para cualquier pantalla de la aplicación. Añádalos en la pantalla que desee marcar.</string>
-    <string name="noModules">No hay módulos</string>
-    <string name="noModulesSubtext">Al parecer no se han creado módulos todavía.</string>
+    <string name="noModules">No hay contenidos</string>
+    <string name="noModulesSubtext">Al parecer no se han creado contenidos todavía.</string>
     <string name="noPages">No hay páginas</string>
     <string name="noPagesSubtext">Al parecer no se han creado páginas todavía.</string>
-    <string name="modulesLockedSubtext">Se han deshabilitado los módulos para este curso.</string>
+    <string name="modulesLockedSubtext">Se han deshabilitado los contenidos para esta asignatura.</string>
     <string name="modulesLocked">Ha habido un error</string>
 
     <!--General-->
@@ -207,7 +206,7 @@
     <string name="deletedEntryNoChildren">Esta entrada de foro de discusión borrada no tiene ninguna respuesta.</string>
     <string name="deleted">Eliminado</string>
     <string name="deleted_by">[Eliminado por %1$s]</string>
-    <string name="lockedDiscussionDesc">Este foro de discusión es parte del módulo %s y no ha sido desbloqueado todavía.</string>
+    <string name="lockedDiscussionDesc">Este foro de discusión es parte del contenido %s y no ha sido desbloqueado todavía.</string>
     <string name="gradedDiscussion">Foro de discusión evaluado</string>
     <string name="pointsPossible">Puntos posibles</string>
     <string name="sideCommentEntry">En este tipo de foros de discusión, no se puede comentar en ninguna entrada en este nivel.</string>
@@ -274,7 +273,7 @@
     <string name="utils_unpinDiscussion">Soltar foro de discusión</string>
     <string name="utils_discussionPinned">Foro de discusión fijado</string>
     <string name="utils_pinnedDiscussions">Fijado</string>
-    <string name="utils_discussionUnpinned">Foros de discusión</string>
+    <string name="utils_discussionUnpinned">Foros</string>
     <string name="utils_emptyDiscussions">No hay foros de discusión que mostrar en esta sección.</string>
     <string name="utils_description">Descripción</string>
     <string name="utils_allowThreadedReplies">Permitir respuestas agrupadas</string>
@@ -318,8 +317,8 @@
     <string name="utils_announcementSuccessfullyCreated">Se ha creado el anuncio.</string>
 
     <plurals name="utils_discussionsUnread">
-        <item quantity="one">%s no leído</item>
-        <item quantity="other">%s no leído</item>
+        <item quantity="one">%s no leídos</item>
+        <item quantity="other">%s no leídos</item>
     </plurals>
 
     <plurals name="utils_addAttachment">
@@ -329,6 +328,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">La fecha de desbloqueo no puede ser posterior a la fecha de entrega</string>
     <string name="utils_lockBeforeDueDateError">La fecha de bloqueo no puede ser anterior a la fecha de entrega</string>
     <string name="utils_lockAfterUnlockError">La fecha de bloqueo no puede ser anterior a la fecha de desbloqueo</string>
@@ -377,7 +377,7 @@
     <string name="utils_uploadTo">Cargar a </string>
     <string name="utils_uploadToCanvas">Cargar a Canvas</string>
     <string name="utils_uploadMyFiles">Mis archivos</string>
-    <string name="utils_uploadCourseFiles">Archivos del curso</string>
+    <string name="utils_uploadCourseFiles">Archivos de la asignatura</string>
     <string name="utils_uploadGroupFiles">Archivos del grupo</string>
     <string name="utils_uploadToSubmissionComment">Cargar a los comentarios de la entrega</string>
     <string name="utils_attachFile">Adjuntar un archivo</string>
@@ -423,9 +423,9 @@
     <string name="search">Buscar</string>
     <string name="searchAssignmentsHint">Buscar actividades</string>
     <string name="searchAnnouncementsHint">Buscar anuncios</string>
-    <string name="searchDiscussionsHint">Buscar foros de discusión</string>
+    <string name="searchDiscussionsHint">Buscar foros</string>
     <string name="searchPagesHint">Buscar páginas</string>
-    <string name="searchQuizzesHint">Buscar evaluaciones</string>
+    <string name="searchQuizzesHint">Buscar pruebas</string>
     <string name="noItemsMatchingQuery">No hay ítems que coincidan con \"%s\"</string>
 
     <string name="selected">Seleccionado</string>
@@ -448,40 +448,40 @@
     <string name="yesterday">Ayer</string>
     <string name="schedule_calendar_event_due_text">A las %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s a %2$s</string>
-    <string name="schedule_todo_due_text">Pendiente: %s</string>
+    <string name="schedule_todo_due_text">Tareas pendientes: %s</string>
     <string name="schedule_due_text">Fecha de entrega: %s</string>
-    <string name="show_missing_items_title">Mostrar %d ítems faltantes</string>
-    <string name="hide_missing_items_title">Ocultar %d ítems faltantes</string>
+    <string name="show_missing_items_title">Mostrar %d ítems no presentados</string>
+    <string name="hide_missing_items_title">Ocultar %d ítems no presentados</string>
     <string name="schedule_error_message">No se ha podido obtener el planificador</string>
-    <string name="schedule_todo_title">Pendiente</string>
+    <string name="schedule_todo_title">Tareas pendientes</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s punto</item>
         <item quantity="one">%s punto</item>
         <item quantity="other">%s puntos</item>
     </plurals>
-
     <plurals name="a11y_schedule_points">
         <item quantity="zero">%.1f puntos</item>
         <item quantity="one">%.1f punto</item>
         <item quantity="other">%.1f puntos</item>
     </plurals>
     <string name="schedule_all_day_event_text">Todo el día</string>
-    <string name="schedule_tag_missing">Faltante</string>
+    <string name="schedule_tag_missing">No presentado</string>
     <string name="previous_week">Semana anterior</string>
     <string name="next_week">Siguiente semana</string>
     <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
-    <string name="a11y_schedule_course_header_content_description">Curso %s</string>
+    <string name="a11y_schedule_course_header_content_description">Asignatura %s</string>
     <string name="a11y_announcement">Anuncio</string>
     <string name="a11y_discussion_topic">Foro de discusión</string>
     <string name="a11y_calendar_event">Evento del calendario</string>
     <string name="a11y_assignment">Actividad</string>
     <string name="a11y_planner_note">Nota del planificador</string>
-    <string name="a11y_quiz">Examen</string>
-    <string name="a11y_todo">Pendiente</string>
+    <string name="a11y_quiz">Prueba</string>
+    <string name="a11y_todo">Tareas pendientes</string>
     <string name="a11y_page">Página</string>
     <string name="a11y_marked_as_done">Marcado como hecho</string>
     <string name="a11y_not_marked_as_done">Marcado como no hecho</string>
     <string name="a11y_mark_as_done">Marcar como hecho</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
-    <string name="error_loading_course_details">¡Ay, no! Ha habido un error al cargar los detalles del curso.</string>
+    <string name="error_loading_course_details">¡Ay, no! Ha habido un error al cargar los detalles de la asignatura.</string>
+
 </resources>

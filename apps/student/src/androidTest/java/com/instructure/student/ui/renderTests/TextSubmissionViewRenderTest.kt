@@ -29,11 +29,6 @@ class TextSubmissionViewRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysProgressBarPriorToLoading() {
-        // Testing progress bars doesn't work very well in API-23 and below.
-        if(Build.VERSION.SDK_INT < 24) {
-            return;
-        }
-
         loadPageWithHtml("Sample Text")
         page.assertDisplaysProgressBar()
     }

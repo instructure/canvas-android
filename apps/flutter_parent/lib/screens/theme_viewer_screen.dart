@@ -37,19 +37,19 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
   }
 
   Map<String, TextStyle> getStyles(TextTheme theme) => {
-        'subtitle / caption': theme.subtitle,
+        'subtitle2 / caption': theme.subtitle2,
         'overline / subhead': theme.overline,
-        'body1 / body': theme.body1,
+        'bodyText2 / body': theme.bodyText2,
         'caption / subtitle': theme.caption,
-        'subhead / title': theme.subhead,
-        'headline / heading': theme.headline,
-        'display1 / display': theme.display1,
+        'subtitle1 / title': theme.subtitle1,
+        'headline5 / heading': theme.headline5,
+        'headline4 / display': theme.headline4,
         'button / -': theme.button,
-        'body2 / -': theme.body2,
-        'title / -': theme.title,
-        'display2 / -': theme.display2,
-        'display3 / -': theme.display3,
-        'display4 / -': theme.display4,
+        'bodyText1 / -': theme.bodyText1,
+        'headline6 / -': theme.headline6,
+        'headline3 / -': theme.headline3,
+        'headline2 / -': theme.headline2,
+        'headline1 / -': theme.headline1,
       };
 
   @override
@@ -75,7 +75,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                           height: 48,
                           color: Theme.of(context).accentColor,
                         ),
-                        Text('Theme configuration', style: Theme.of(context).textTheme.title),
+                        Text('Theme configuration', style: Theme.of(context).textTheme.headline6),
                         Text('Play around with some values', style: Theme.of(context).textTheme.caption),
                       ],
                     ),
@@ -263,7 +263,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
-                child: Text('Essay: The Rocky Planet', style: Theme.of(context).textTheme.display1),
+                child: Text('Essay: The Rocky Planet', style: Theme.of(context).textTheme.headline4),
               ),
               Row(
                 children: [
@@ -291,7 +291,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text('April 1 at 11:59pm', style: Theme.of(context).textTheme.subhead),
+          child: Text('April 1 at 11:59pm', style: Theme.of(context).textTheme.subtitle1),
         ),
         Divider(),
         SwitchListTile(

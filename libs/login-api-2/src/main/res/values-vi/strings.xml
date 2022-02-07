@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Cài Đặt</string>
+    <string name="mobileVerifyGeneral">Ứng dụng này chưa được cấp phép sử dụng</string>
+    <string name="mobileVerifyDomainUnauthorized">Máy chủ bạn đã nhập chưa được cấp phép sử dụng cho ứng dụng này</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Tác tử người dùng cho ứng dụng này chưa được cấp phép</string>
+    <string name="mobileVerifyUnknownError">Chúng tôi không thể xác minh máy chủ để sử dụng với ứng dụng này.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Đã xảy ra lỗi không lường trước.</string>
+    <string name="pageNotFound">Không tìm thấy trang.</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="cancel">Hủy</string>
+    <string name="help">Trợ Giúp</string>
+    <string name="enterURL">Nhập URL Canvas của bạn:</string>
+    <string name="signIntoCanvasNetwork">Bạn đang cố đăng nhập Mạng Lưới Canvas?</string>
+    <string name="remove">Gỡ</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ID Người Dùng</string>
+    <string name="domain">Tên Miền</string>
+    <string name="actAsUser">Đóng Vai Trò Người Dùng</string>
+    <string name="stopActAsUser">Dừng Đóng Vai Trò Người Dùng</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Loại bỏ người dùng này?</string>
+    <string name="removedForever">Bạn phải đăng nhập vào người dùng này lại thì mới có thể truy cập nội dung của họ.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Biểu Trưng Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: BẬT</string>
+    <string name="canvasLoginOff">Canvas_Login: TẮT</string>
+    <string name="siteAdminLogin">Đăng Nhập Quản Trị Viên Trang: BẬT</string>
+
+    <string name="username">Tên người dùng</string>
+    <string name="password">Mật khẩu</string>
+    <string name="authenticationRequired">Bắt Buộc Xác Thực</string>
+    <string name="invalidEmailPassword">Email hoặc mật khẩu không hợp lệ</string>
+    <string name="login">Đăng Nhập</string>
+    <string name="logout">Đăng Xuất</string>
+    <string name="matchingSchools">Trường Khớp</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Bạn có chắc chắn muốn đăng xuất không?</string>
+    <string name="logout_yes">Có</string>
+    <string name="logout_no">Không</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">Gần Bạn</string>
+    <string name="loginCanvasNetwork">Mạng Lưới Canvas</string>
+    <string name="loginRightBehindYou">Ngay sau bạn</string>
+    <string name="loginCanvasHelp">Không thấy trường của bạn? Hãy nhập URL trường hoặc nhấn vào đây để được trợ giúp.</string>
+    <string name="loginCanvasHelpWithUser">Hãy nhập URL trường hoặc nhấn vào đây để được trợ giúp.</string>
+    <string name="loginHint">Tìm trường hoặc học khu của bạn</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Báo Cáo Vấn Đề</string>
+    <string name="errorReportSubject">Tiêu Đề</string>
+    <string name="errorReportDescription">Mô Tả</string>
+    <string name="errorReportSend">Gửi</string>
+    <string name="errorReportThankyou">Cảm ơn bạn đã báo cáo vấn đề với Bộ Phận Hỗ Trợ của chúng tôi.  Bạn sẽ nhận được thông tin xác minh và cập nhật qua email.</string>
+    <string name="errorReportSeverityText">Điều này ảnh hưởng đến bạn như thế nào?</string>
+    <string name="errorSeverityCasualQuestion">Chỉ là câu hỏi, bình luận, ý tưởng, đề xuất bình thường...</string>
+    <string name="errorSeverityNeedHelp">Tôi cần trợ giúp một chút nhưng không gấp.</string>
+    <string name="errorSeveritySomethingsBroken">Đã có vấn đề xảy ra nhưng tôi không tìm được cách khắc phục tạm thời để lấy thứ tôi cần.</string>
+    <string name="errorSeverityCantGetThingsDone">Tôi không làm được gì cho đến khi được nghe phản hồi từ bạn.</string>
+    <string name="errorSeverityExtremelyCritical">TRƯỜNG HỢP KHẨN CẤP, CỰC KỲ QUAN TRỌNG!!</string>
+
+    <string name="errorReportEmailAddress">Địa Chỉ Email</string>
+    <string name="errorReportUnknown">Không xác định</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 dặm (1,6 km)</string>
+    <string name="oneMile">1 dặm (1,6 km)</string>
+    <string name="miles">dặm</string>
+    <string name="kilometers">km</string>
+F
+    <!-- String for submitting tickets -->
+    <string name="device">Thiết Bị</string>
+    <string name="osVersion">Phiên Bản HĐH</string>
+
+    <string name="previousLoginTitle">Lần Đăng Nhập Trước</string>
+    <string name="findMySchool">Tìm trường của tôi</string>
+    <string name="loginWithQRCode">Mã QR</string>
+    <string name="locateQRCode">Tìm Mã QR</string>
+    <string name="qrCodeExplanation">Bạn sẽ thấy mã QR trên trang web trong hồ sơ tài khoản của bạn. Hãy nhấp vào "Mã QR Để Đăng Nhập Trên Di Động" trong danh sách.</string>
+    <string name="qrCodeScanningPrompt">Quét mã QR từ Canvas để đăng nhập</string>
+    <string name="loginWithQRCodeError">Đã xảy ra lỗi khi đăng nhập. Vui lòng tạo Mã QR khác rồi thử lại.</string>
+    <string name="invalidQRCodeError">Vui lòng quét mã QR do Canvas tạo</string>
+    <string name="qrCodeScreenshotContentDescription">Ảnh chụp màn hình cho thấy vị trí tạo mã QR trong trình duyệt</string>
+    <string name="whatsYourSchoolName">Trường của bạn tên là gì?</string>
+    <string name="next">Tiếp</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Loại Bỏ Người Dùng Trước</string>
+    <string name="accountDomainFooter">Không tìm được trường của bạn? Hãy thử nhập URL đầy đủ của trường</string>
+    <string name="accountDomainFooterLink">Nhấn vào đây để được trợ giúp.</string>
+
+    <string name="login_noInternetConnectionTitle">Không Có Kết Nối Internet</string>
+    <string name="login_noInternetConnectionMessage">Thao tác này bắt buộc phải có kết nối internet.</string>
+    <string name="empty_feedback">Bắt buộc phải có tiêu đề và mô tả thì mới có thể nộp ý kiến phản hồi.</string>
+    <string name="versionNum">Số Phiên Bản</string>
+    <string name="scrollInstructions">Cuộn để xem toàn bộ thông tin chi tiết</string>
+
+    <string name="masqueradeErrorUserId">Bạn phải nhập id người dùng.</string>
+    <string name="masqueradeErrorDomain">Bạn phải nhập tên miền hợp lệ.</string>
+    <string name="masqueradeError">Lỗi thử đóng vai trò người dùng.</string>
+    <string name="masqueradeInfo">\\"Đóng vai trò\\" về cơ bản là đăng nhập dưới danh nghĩa người dùng này mà không sử dụng mật khẩu. Bạn sẽ có thể thực hiện mọi thao tác như thể bạn chính là người dùng này và từ góc nhìn của người dùng khác, mọi thứ sẽ như thể chính là người dùng này thực hiện các thao tác đó. Tuy nhiên, nhật ký đánh giá sẽ ghi nhận lại rằng bạn chính là người đã thực hiện thao tác thay mặt cho người dùng này.</string>
+    <string name="masqueradingAs">Bạn đang đóng vai trò %s</string>
+    <string name="stopActingAsTitle">Dừng đóng vai trò&#8230;</string>
+    <string name="stopActingAsMessage">Bạn sẽ dừng đóng vai trò %s và trở về tài khoản của bạn.</string>
+    <string name="weMadeChanges">Chúng tôi đã thực hiện một số thay đổi.</string>
+    <string name="whatsNewText">Xem nội dung mới</string>
+</resources>

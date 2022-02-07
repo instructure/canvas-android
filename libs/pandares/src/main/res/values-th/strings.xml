@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">การตอบกลับของผู้เรียนรายนี้ถูกซ่อนไว้เนื่องจากภารกิจไม่เปิดเผยตัว</string>
 
-    <string name="studentAnnotationUnsupported">หมายเหตุกำกับของผู้เรียน (ไม่รองรับ)</string>
-    <string name="studentAnnotationUnsupportedDescription">หมายเหตุกำกับของผู้เรียนปัจจุบันไม่รองรับสำหรับอุปกรณ์พกพา</string>
-    <string name="unsupportedSubmissionType">ประเภทการจัดส่งที่ไม่รองรับ</string>
-    <string name="studentAnnotationUnsupportedMessage">ไม่สามารถแสดงผลงานจัดส่งได้เนื่องจากหมายเหตุกำกับของผู้เรียนปัจจุบันไม่รองรับกับอุปกรณ์พกพา</string>
     <string name="schedule_marked_as_done">คุณกำกับว่าเสร็จสิ้นแล้ว</string>
     <string name="error_saving_assignment_closed_grading_period">ไม่สามารถแก้ไขวันครบกำหนดหากวันครบกำหนดอยู่ในระยะเวลาการให้เกรดที่สรุปไปแล้ว</string>
     <string name="a11y_content_description_schedule_jump_to_today">ข้ามไปที่วันนี้</string>
@@ -1225,4 +1221,16 @@
     <string name="a11y_contact_info_click_description">ส่งข้อความ</string>
     <string name="somethingWentWrong">มีบางอย่างผิดปกติ</string>
     <string name="failedToLoadQuiz">ไม่สามารถโหลดแบบทดสอบได้</string>
+    <string name="failedToLoadSubmission">ไม่สามารถโหลดผลงานจัดส่งได้</string>
+    <string name="studentAnnotationToolbarTitle">หมายเหตุกำกับสำหรับผู้เรียน</string>
+    <string name="submissionTypeStudentAnnotation">หมายเหตุกำกับสำหรับผู้เรียน</string>
+    <string name="gradesNoDueDate">ไม่มีวันครบกำหนด</string>
+    <string name="missingAssignment">ขาดหาย</string>
+    <string name="dontSave">ไม่บันทึก</string>
+    <string name="textSubmissionExitConfirmationTitle">บันทึกร่างหรือไม่</string>
+    <string name="textSubmissionExitConfirmationMessage">การแก้ไขของคุณจะไม่ถูกบันทึกด้วยวิธีอื่น</string>
+    <string name="submissionDraftAvailableSubtitle">กดเลือกที่นี่เพื่อดำเนินการต่อ</string>
+    <string name="submissionDraftAvailableTitle">มีฉบับร่าง</string>
+    <string name="errorLoadingSubmission">เกิดข้อผิดพลาดขณะโหลดผลงานจัดส่ง</string>
+    <string name="loadFullContent">กดเลือกเพื่อดูเนื้อหาทั้งหมด</string>
 </resources>

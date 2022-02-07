@@ -212,7 +212,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "domainSearchInputHint": "Skriv inn skolenavn eller område...",
+  "domainSearchInputHint": "Skriv inn skolenavn eller område…",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",
     "type": "text",
@@ -271,7 +271,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "View error details": "Vis avviksdetaljer",
+  "View error details": "Vis feildetaljer",
   "@View error details": {
     "description": "Label for the button that allowed users to view crash details",
     "type": "text",
@@ -318,7 +318,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "No Subject": "Intet tittel",
+  "No Subject": "Ingen tittel",
   "@No Subject": {
     "description": "Title used for inbox messages that have no subject",
     "type": "text",
@@ -562,7 +562,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "Emnene til studentene dine er kanskje ikke publisert enda.",
+  "Your student’s courses might not be published yet.": "Emnene til studentene dine er kanskje upublisert enda.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
@@ -574,7 +574,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "No Grade": "Ingen karakter",
+  "No Grade": "Ingen vurdering",
   "@No Grade": {
     "description": "Message shown when there is currently no grade available for a course",
     "type": "text",
@@ -586,7 +586,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Grades": "Karakterer",
+  "Grades": "Vurderinger",
   "@Grades": {
     "description": "Label for the \"Grades\" tab in course details",
     "type": "text",
@@ -616,13 +616,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Total Grade": "Samlet karakter",
+  "Total Grade": "Samlet vurdering",
   "@Total Grade": {
     "description": "Label for the total grade in the course",
     "type": "text",
     "placeholders": {}
   },
-  "Graded": "Karaktersatt",
+  "Graded": "Vurdert",
   "@Graded": {
     "description": "Label for assignments that have been graded",
     "type": "text",
@@ -712,7 +712,7 @@
       "pointsPossible": {}
     }
   },
-  "gradesSubjectMessage": "Vedrørende: {studentName}, Karakterer",
+  "gradesSubjectMessage": "Vedrørende: {studentName}, Vurderinger",
   "@gradesSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a student's grades",
     "type": "text",
@@ -788,7 +788,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Grade": "Karakter",
+  "Grade": "Vurdering",
   "@Grade": {
     "description": "Label for the section that displays an assignment's grade",
     "type": "text",
@@ -820,7 +820,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "You will be notified about this assignment on…": "Du vil få en påminnelse om denne oppgaven den...",
+  "You will be notified about this assignment on…": "Du vil få en påminnelse om denne oppgaven den…",
   "@You will be notified about this assignment on…": {
     "description": "Description for when a reminder is set",
     "type": "text",
@@ -880,7 +880,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "For å gi deg en bedre opplevelse, har vi oppdatert hvordan påminnelser fungerer. Du kan legg etil påminnelser ved å vise en oppgave eller kalenderoppføring og trykke på bryteren under avsnittet ”Påminn meg”.\n\nVær oppmerksom på at påminnelser som ble opprettet med den gamle versjonen av denne appen ikke er kompatible med de nye endringene, og at du må opprette disse på nytt.",
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "For å gi deg en bedre opplevelse, har vi oppdatert hvordan påminnelser fungerer. Du kan legge til påminnelser ved å vise en oppgave eller kalenderoppføring og trykke på bryteren under avsnittet ”Påminn meg”.\n\nVær oppmerksom på at påminnelser som ble opprettet med den gamle versjonen av denne appen ikke er kompatible med de nye endringene, og at du må opprette disse på nytt.",
   "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
     "type": "text",
     "placeholders": {}
@@ -1075,7 +1075,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Complete": "Godkjent",
+  "Complete": "Fullført",
   "@Complete": {
     "description": "Grading status for an assignment marked as complete",
     "type": "text",
@@ -1101,7 +1101,7 @@
       "pointsLost": {}
     }
   },
-  "finalGrade": "Avsluttende karakter: {grade}",
+  "finalGrade": "Avsluttende vurdering: {grade}",
   "@finalGrade": {
     "description": "Text that displays the final grade of an assignment",
     "type": "text",
@@ -1114,7 +1114,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Alert me when…": "Varsle meg når...",
+  "Alert me when…": "Varsle meg når…",
   "@Alert me when…": {
     "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
     "type": "text",
@@ -1165,7 +1165,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Grade percentage": "Karakterskala i prosent",
+  "Grade percentage": "Vurderingsskala i prosent",
   "@Grade percentage": {
     "type": "text",
     "placeholders": {}
@@ -1297,13 +1297,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Preparing…": "Forbereder...",
+  "Preparing…": "Forbereder…",
   "@Preparing…": {
     "description": "Message shown while a file is being prepared to attach to a message",
     "type": "text",
     "placeholders": {}
   },
-  "Add student with…": "Legg til en student til...",
+  "Add student with…": "Legg til en student til…",
   "@Add student with…": {
     "type": "text",
     "placeholders": {}
@@ -1460,13 +1460,13 @@
       "privacyPolicy": {}
     }
   },
-  "Terms of Service": "tjenestevilkår",
+  "Terms of Service": "Tjenestevilkår",
   "@Terms of Service": {
     "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
     "type": "text",
     "placeholders": {}
   },
-  "Privacy Policy": "retningslinjer for personvern",
+  "Privacy Policy": "Retningslinjer for personvern",
   "@Privacy Policy": {
     "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
     "type": "text",
@@ -1552,7 +1552,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "You will be notified about this event on…": "Du vil få en påminnelse om denne hendelsen den...",
+  "You will be notified about this event on…": "Du vil få en påminnelse om denne hendelsen den…",
   "@You will be notified about this event on…": {
     "description": "Description for when an event reminder is set",
     "type": "text",
@@ -1570,13 +1570,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "Legal": "Rettslig",
+  "Legal": "Juss",
   "@Legal": {
     "description": "Label for legal information option",
     "type": "text",
     "placeholders": {}
   },
-  "Privacy policy, terms of use, open source": "Personvernregler, bruksvilkår, åpen kilde",
+  "Privacy policy, terms of use, open source": "Personvernregler, brukervilkår, åpen kilde",
   "@Privacy policy, terms of use, open source": {
     "description": "Description for legal information option",
     "type": "text",
@@ -1600,7 +1600,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "User ID:": "Bruker-ID",
+  "User ID:": "Bruker-ID:",
   "@User ID:": {
     "description": "The label for the Canvas user ID of the logged in user",
     "type": "text",
@@ -1618,7 +1618,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Terms of Use": "bruksvilkår",
+  "Terms of Use": "brukervilkår",
   "@Terms of Use": {
     "description": "Label for the terms of use",
     "type": "text",
@@ -1630,7 +1630,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was a problem loading the Terms of Use": "Det oppsto et problem under opplastingen av bruksvilkårene",
+  "There was a problem loading the Terms of Use": "Det oppsto et problem under opplastingen av brukervilkårene",
   "@There was a problem loading the Terms of Use": {
     "type": "text",
     "placeholders": {}
@@ -1659,7 +1659,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Subject": "Tittel",
+  "Subject": "Tema",
   "@Subject": {
     "description": "Label used for Subject text field",
     "type": "text",
@@ -1701,7 +1701,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Just a casual question, comment, idea, suggestion…": "Bare et tilfeldig spørsmål, kommentar, idé eller forslag...",
+  "Just a casual question, comment, idea, suggestion…": "Bare et tilfeldig spørsmål, kommentar, idé eller forslag…",
   "@Just a casual question, comment, idea, suggestion…": {
     "type": "text",
     "placeholders": {}
@@ -1726,7 +1726,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Not Graded": "Ikke karaktersatt",
+  "Not Graded": "Ikke vurdert",
   "@Not Graded": {
     "description": "Description for an assignment has not been graded.",
     "type": "text",
@@ -1744,7 +1744,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Login flow: Site Admin": "Innloggingsflyt: Site-admin",
+  "Login flow: Site Admin": "Innloggingsflyt: Nettstedadministrator",
   "@Login flow: Site Admin": {
     "description": "Description for the Site Admin login flow",
     "type": "text",
@@ -1805,7 +1805,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Det var en feil med å opptre som denne brukeren. Sjekk domenet og bruker-ID-en og prøv igjen.",
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Det oppsto en feil med å opptre som denne brukeren. Sjekk domenet og bruker-ID-en og prøv igjen.",
   "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
     "type": "text",
     "placeholders": {}
@@ -1967,7 +1967,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Retry": "Forsøk igjen",
+  "Retry": "Prøv igjen",
   "@Retry": {
     "type": "text",
     "placeholders": {}
@@ -2134,7 +2134,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Link Error": "Avvik på lenke",
+  "Link Error": "Feil på lenke",
   "@Link Error": {
     "description": "Title for error page shown when clicking a link",
     "type": "text",

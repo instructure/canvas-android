@@ -65,14 +65,9 @@ class VideoViewActivity : AppCompatActivity() {
         player?.prepare(buildMediaSource(Uri.parse(intent?.extras?.getString(Const.URL))))
     }
 
-    public override fun onPause() {
-        super.onPause()
-        if (Util.SDK_INT <= 23) player?.release()
-    }
-
     public override fun onStop() {
         super.onStop()
-        if (Util.SDK_INT > 23) player?.release()
+        player?.release()
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {

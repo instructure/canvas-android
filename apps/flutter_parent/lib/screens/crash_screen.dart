@@ -103,7 +103,7 @@ class CrashScreen extends StatelessWidget {
           onPressed: () => _showDetailsDialog(context, packageInfo, deviceInfo),
           child: Text(
             L10n(context).crashScreenViewDetails,
-            style: Theme.of(context).textTheme.subtitle,
+            style: Theme.of(context).textTheme.subtitle2,
           ),
         );
       },
@@ -115,7 +115,7 @@ class CrashScreen extends StatelessWidget {
       onPressed: () => Respawn.of(context).restart(),
       child: Text(
         L10n(context).crashScreenRestart,
-        style: Theme.of(context).textTheme.subtitle,
+        style: Theme.of(context).textTheme.subtitle2,
       ),
     );
   }

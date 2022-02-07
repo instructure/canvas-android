@@ -982,7 +982,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
             val annotation = if (pdfFragment?.selectedAnnotations?.size ?: 0 > 0) pdfFragment?.selectedAnnotations?.get(0)
                     ?: return else return
-            if (cancelled && annotation.contents.isNullOrEmpty()) {
+            if ((cancelled && annotation.contents.isNullOrEmpty()) || text.isEmpty()) {
                 // Remove the annotation
                 pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
                 pdfFragment?.notifyAnnotationHasChanged(annotation)

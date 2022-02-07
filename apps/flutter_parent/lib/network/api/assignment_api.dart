@@ -22,7 +22,7 @@ class AssignmentApi {
   Future<List<Assignment>> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {
     var dio = canvasDio();
     var params = {
-      'include': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
+      'include[]': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
       'order_by': 'due_at',
       'override_assignment_dates': 'true',
       'needs_grading_count_by_section': 'true',
@@ -35,7 +35,7 @@ class AssignmentApi {
       {bool forceRefresh = false}) async {
     var dio = canvasDio(forceRefresh: forceRefresh);
     var params = {
-      'include': [
+      'include[]': [
         'assignments',
         'discussion_topic',
         'submission',
@@ -51,7 +51,7 @@ class AssignmentApi {
 
   Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPaged(String courseId, String studentId) async {
     var params = {
-      'include': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
+      'include[]': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
       'order_by': 'due_at',
       'override_assignment_dates': 'true',
       'needs_grading_count_by_section': 'true',
@@ -61,7 +61,7 @@ class AssignmentApi {
 
   Future<Assignment> getAssignment(String courseId, String assignmentId, {bool forceRefresh = false}) async {
     var params = {
-      'include': ['overrides', 'rubric_assessment', 'submission', 'observed_users'],
+      'include[]': ['overrides', 'rubric_assessment', 'submission', 'observed_users'],
       'all_dates': 'true',
       'override_assignment_dates': 'true',
       'needs_grading_count_by_section': 'true',

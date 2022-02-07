@@ -48,13 +48,9 @@ object PermissionUtils {
      */
     fun hasPermissions(activity: Activity, vararg permissions: String): Boolean {
         val validPermissions = filterStoragePermission(permissions)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return validPermissions
-                    .map { activity.checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
-                    .all { it }
-        }
-
-        return true
+        return validPermissions
+                .map { activity.checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
+                .all { it }
     }
 
     fun filterStoragePermission(permissions: Array<out String>): List<String> {
@@ -96,11 +92,9 @@ object PermissionUtils {
  */
 fun Context.hasPermissions(vararg permissions: String): Boolean {
     val validPermissions = PermissionUtils.filterStoragePermission(permissions)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        return validPermissions
-                .map { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
-                .all { it }
-    }
+    return validPermissions
+            .map { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
+            .all { it }
     return true
 }
 

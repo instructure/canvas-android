@@ -55,7 +55,9 @@ data class CreateGradingPeriod(
 )
 
 data class GradingPeriodApiModel(
-        val id: Long
+        val id: Long,
+        @SerializedName("title")
+        val title: String
 )
 
 data class GradingPeriods(

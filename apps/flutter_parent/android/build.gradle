@@ -1,5 +1,4 @@
 buildscript {
-    ext.kotlin_version = '1.2.71'
     repositories {
         google()
         mavenCentral()
@@ -26,15 +25,6 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
-    //TODO revisit this when the firebase_remote_config is finally updated (https://github.com/FirebaseExtended/flutterfire/issues/3847)
-    project.configurations.all {
-        resolutionStrategy.eachDependency { details ->
-            if (details.requested.group == 'com.google.protobuf'
-                    && details.requested.name.contains('protobuf-javalite') ) {
-                details.useTarget group: details.requested.group, name: 'protobuf-lite', version:'3.0.1'
-            }
-        }
-    }
 }
 
 task clean(type: Delete) {

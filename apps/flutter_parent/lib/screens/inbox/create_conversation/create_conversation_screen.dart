@@ -150,6 +150,8 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
       }
       await _interactor.createConversation(widget.courseId, recipientIds, _subjectText, _bodyText, attachmentIds);
       Navigator.of(context).pop(true); // 'true' indicates upload was successful
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(L10n(context).messageSent)));
     } catch (e) {
       setState(() => _sending = false);
       _scaffoldKey.currentState.showSnackBar(
@@ -458,7 +460,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
         key: CreateConversationScreen.subjectKey,
         controller: _subjectController,
         enabled: !_sending,
-        style: Theme.of(context).textTheme.body2,
+        style: Theme.of(context).textTheme.bodyText1,
         textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           hintText: L10n(context).messageSubjectInputHint,
@@ -480,7 +482,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
         textCapitalization: TextCapitalization.sentences,
         minLines: 4,
         maxLines: null,
-        style: Theme.of(context).textTheme.body1,
+        style: Theme.of(context).textTheme.bodyText2,
         decoration: InputDecoration(
           hintText: L10n(context).messageBodyInputHint,
           contentPadding: EdgeInsets.all(16),
@@ -502,7 +504,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
                 child: Text(
                   L10n(context).recipients,
-                  style: Theme.of(context).textTheme.title,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
               Expanded(

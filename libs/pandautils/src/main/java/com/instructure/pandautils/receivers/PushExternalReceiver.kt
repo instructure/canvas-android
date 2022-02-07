@@ -81,15 +81,12 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
                 )
             }
 
-            // Only show group notification on higher than M, otherwise lower APIs will dismiss individual notifications
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                // If the passed notifications is greater than 1, we're showing from boot so we don't need to retrieve
-                // all stored notifications
-                val allPushes =
+            // If the passed notifications is greater than 1, we're showing from boot so we don't need to retrieve
+            // all stored notifications
+            val allPushes =
                     if (notifications.size > 1) notifications.toList() else PushNotification.getAllStoredPushes()
-                if (allPushes.size > 1) {
-                    nm.notify(PushNotification.GROUP_ID, createGroup(context, appColor, CHANNEL_PUSH_GENERAL))
-                }
+            if (allPushes.size > 1) {
+                nm.notify(PushNotification.GROUP_ID, createGroup(context, appColor, CHANNEL_PUSH_GENERAL))
             }
         }
 
@@ -137,8 +134,7 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
         ): Notification {
             // Use the app name if we're marshmallow or lower, as it won't display the app name for us. On later versions,
             // we'll still want a title, but it will already have our app name so instead we'll use this notification title
-            val title =
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) appName else context.getString(R.string.notificationPrimaryInboxTitle)
+            val title = context.getString(R.string.notificationPrimaryInboxTitle)
             return NotificationCompat.Builder(context, channelId)
                 .setContentTitle(title)
                 .setContentText(notification.alert)
@@ -158,8 +154,6 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
             loginId: String,
             nm: NotificationManager
         ) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
             val name = context.getString(R.string.notificationChannelNamePrimary)
             val description = context.getString(R.string.notificationChannelDescriptionPrimary)
 

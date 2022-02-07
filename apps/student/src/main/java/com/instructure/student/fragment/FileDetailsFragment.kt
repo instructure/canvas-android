@@ -185,8 +185,7 @@ class FileDetailsFragment : ParentFragment() {
                         lockedMessage += DateHelper.createPrefixedDateTimeString(activity, getString(R.string.unlockedAt) + "<br>&#8226; ", it.lockInfo!!.unlockDate)
                     }
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) fileName.text = StringUtilities.simplifyHTML(Html.fromHtml(lockedMessage, Html.FROM_HTML_MODE_LEGACY))
-                    else fileName.text = StringUtilities.simplifyHTML(Html.fromHtml(lockedMessage))
+                    fileName.text = StringUtilities.simplifyHTML(Html.fromHtml(lockedMessage, Html.FROM_HTML_MODE_LEGACY))
                 } else {
                     setupTextViews()
                     setupClickListeners()

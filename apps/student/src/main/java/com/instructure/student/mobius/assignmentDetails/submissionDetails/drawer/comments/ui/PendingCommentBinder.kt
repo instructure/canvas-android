@@ -74,11 +74,7 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
                     progressBar.setVisible()
                     progressBar.max = 1000
                     val progress = 1000 * (comment.progress ?: 0.0)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        progressBar.setProgress(progress.toInt(), true)
-                    } else {
-                        progressBar.progress = progress.toInt()
-                    }
+                    progressBar.setProgress(progress.toInt(), true)
                 }
             }
         }

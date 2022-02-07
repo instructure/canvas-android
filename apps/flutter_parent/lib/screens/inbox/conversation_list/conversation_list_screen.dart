@@ -156,7 +156,7 @@ class ConversationListState extends State<ConversationListScreen> {
               SizedBox(height: 4),
               Text(
                 item.lastMessage ?? item.lastAuthoredMessage,
-                style: Theme.of(context).textTheme.body1,
+                style: Theme.of(context).textTheme.bodyText2,
                 maxLines: 2,
                 key: ValueKey('conversation_message_$index'),
               ),
