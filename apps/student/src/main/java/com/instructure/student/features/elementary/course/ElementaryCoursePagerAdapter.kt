@@ -16,6 +16,7 @@
 
 package com.instructure.student.features.elementary.course
 
+import android.content.ContextWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +61,8 @@ class ElementaryCoursePagerAdapter(
     }
 
     private fun setupViews(webView: CanvasWebView, progressBar: ProgressBar) {
-        val activity = (webView.context as? FragmentActivity)
+        val baseContext = (webView.context as ContextWrapper).baseContext
+        val activity = (baseContext as? FragmentActivity)
         activity?.let { webView.addVideoClient(it) }
         webView.setZoomSettings(false)
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
@@ -76,11 +78,11 @@ class ElementaryCoursePagerAdapter(
             }
 
             override fun canRouteInternallyDelegate(url: String): Boolean {
-                return !isUrlSame(webView, url) && RouteMatcher.canRouteInternally(webView.context, url, ApiPrefs.domain, false)
+                return !isUrlSame(webView, url) && RouteMatcher.canRouteInternally(baseContext, url, ApiPrefs.domain, false)
             }
 
             override fun routeInternallyCallback(url: String) {
-                RouteMatcher.canRouteInternally(webView.context, url, ApiPrefs.domain, true)
+                RouteMatcher.canRouteInternally(baseContext, url, ApiPrefs.domain, true)
             }
         }
         webView.canvasEmbeddedWebViewCallback =
@@ -90,7 +92,7 @@ class ElementaryCoursePagerAdapter(
                 }
 
                 override fun launchInternalWebViewFragment(url: String) {
-                    activity?.startActivity(InternalWebViewActivity.createIntent(webView.context, url, "", true))
+                    activity?.startActivity(InternalWebViewActivity.createIntent(baseContext, url, "", true))
                 }
             }
     }
