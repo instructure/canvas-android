@@ -41,7 +41,7 @@ class PlannerApi {
     DateTime date,
     @nullable String courseId,
   ) async {
-    var params = {'title': title, 'details': description, 'todo_date': date.toIso8601String(), 'course_id': courseId};
+    var params = {'title': title, 'details': description, 'todo_date': date.toUtc().toIso8601String(), 'course_id': courseId};
     return fetch(canvasDio().post('planner_notes', queryParameters: params));
   }
 
@@ -52,7 +52,7 @@ class PlannerApi {
     DateTime date,
     @nullable String courseId,
   ) async {
-    var params = {'title': title, 'details': description, 'todo_date': date.toIso8601String(), 'course_id': courseId};
+    var params = {'title': title, 'details': description, 'todo_date': date.toUtc().toIso8601String(), 'course_id': courseId};
     return fetch(canvasDio().put('planner_notes/$id', queryParameters: params));
   }
 
