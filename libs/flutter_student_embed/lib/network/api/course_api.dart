@@ -20,7 +20,7 @@ class CourseApi {
   Future<List<Course>> getCourses({bool forceRefresh: false}) async {
     final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
-      'include': [
+      'include[]': [
         'term',
         'syllabus_body',
         'total_scores',
