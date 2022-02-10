@@ -17,6 +17,7 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
@@ -69,7 +70,14 @@ class GradesInteractionTest : StudentTest() {
 
         gradesPage.refresh()
 
-        gradesPage.assertCourseShownWithGrades(newCourse.name, "50%")
+        try {
+            gradesPage.assertCourseShownWithGrades(newCourse.name, "50%")
+        } catch(e: NoMatchingViewException) { //Landscape mode
+            Thread.sleep(5000) //Need to give enough time for the API to process the new course.
+            gradesPage.refresh()
+            gradesPage.refresh() //Somehow we need to refresh twice on landscape mode to get the new course.
+            gradesPage.assertCourseShownWithGrades(newCourse.name, "50%")
+        }
     }
 
     @Test
