@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import instructure.androidblueprint.analytics.SCREEN_VIEW_BASIC_QUIZ
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
@@ -43,6 +45,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView("student", SCREEN_VIEW_BASIC_QUIZ)
 class BasicQuizViewFragment : InternalWebviewFragment() {
 
     private var quizDetailsJob: WeaveJob? = null

@@ -34,12 +34,15 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_MODULE_QUIZ_DECIDER
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_module_quiz_decider.*
 
+@ScreenView("student", SCREEN_VIEW_MODULE_QUIZ_DECIDER)
 class ModuleQuizDecider : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

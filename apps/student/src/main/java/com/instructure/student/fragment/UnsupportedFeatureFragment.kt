@@ -23,11 +23,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_UNSUPPORTED_FEATURE
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.util.Analytics
 import kotlinx.android.synthetic.main.fragment_unsupported_feature.*
 
+@ScreenView("student", SCREEN_VIEW_UNSUPPORTED_FEATURE)
 open class UnsupportedFeatureFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

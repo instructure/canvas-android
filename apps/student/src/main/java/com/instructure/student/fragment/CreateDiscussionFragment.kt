@@ -34,6 +34,8 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.NetworkUtils
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_CREATE_DISCUSSION
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.models.DueDateGroup
@@ -45,14 +47,13 @@ import com.instructure.student.events.post
 import com.instructure.student.view.AssignmentOverrideView
 import kotlinx.android.synthetic.main.fragment_create_discussion.*
 import kotlinx.coroutines.Job
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.util.*
 
+@ScreenView("student", SCREEN_VIEW_CREATE_DISCUSSION)
 class CreateDiscussionFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

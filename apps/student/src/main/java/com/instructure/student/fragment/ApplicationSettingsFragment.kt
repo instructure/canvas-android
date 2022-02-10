@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
+import instructure.androidblueprint.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
@@ -42,6 +44,7 @@ import com.instructure.student.util.Analytics
 import kotlinx.android.synthetic.main.dialog_about.*
 import kotlinx.android.synthetic.main.fragment_application_settings.*
 
+@ScreenView("student", SCREEN_VIEW_APPLICATION_SETTINGS)
 @PageView(url = "profile/settings")
 class ApplicationSettingsFragment : ParentFragment() {
 

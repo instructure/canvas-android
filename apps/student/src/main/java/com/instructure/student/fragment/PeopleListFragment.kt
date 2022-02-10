@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_PEOPLE_LIST
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.PeopleListRecyclerAdapter
@@ -34,6 +36,7 @@ import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_people_list.*
 
+@ScreenView("student", SCREEN_VIEW_PEOPLE_LIST)
 @PageView(url = "{canvasContext}/users")
 class PeopleListFragment : ParentFragment(), Bookmarkable {
 

@@ -32,6 +32,8 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_NOTIFICATION_LIST
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.ParentActivity
@@ -43,6 +45,7 @@ import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_list_notification.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 
+@ScreenView("student", SCREEN_VIEW_NOTIFICATION_LIST)
 @PageView
 class NotificationListFragment : ParentFragment(), Bookmarkable {
 

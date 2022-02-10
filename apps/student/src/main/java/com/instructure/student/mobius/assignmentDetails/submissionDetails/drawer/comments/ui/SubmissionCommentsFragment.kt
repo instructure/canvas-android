@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import instructure.androidblueprint.analytics.SCREEN_VIEW_SUBMISSION_COMMENTS
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.PendingSubmissionComment
@@ -34,6 +36,7 @@ import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
+@ScreenView("student", SCREEN_VIEW_SUBMISSION_COMMENTS)
 class SubmissionCommentsFragment :
         MobiusFragment<SubmissionCommentsModel, SubmissionCommentsEvent, SubmissionCommentsEffect, SubmissionCommentsView, SubmissionCommentsViewState>() {
 

@@ -39,6 +39,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
+import instructure.androidblueprint.analytics.SCREEN_VIEW_PAGE_DETAILS
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
@@ -53,6 +55,7 @@ import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
 
+@ScreenView("student", SCREEN_VIEW_PAGE_DETAILS)
 @PageView
 class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 

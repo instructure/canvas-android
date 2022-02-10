@@ -23,16 +23,18 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import instructure.androidblueprint.analytics.SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY_CONTENT
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEmptyContentEventBusSource
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.*
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
+@ScreenView("student", SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY_CONTENT)
 class SubmissionDetailsEmptyContentFragment :
         MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState>() {
 

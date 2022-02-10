@@ -23,10 +23,13 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
+@ScreenView("student", SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER)
 class PickerSubmissionUploadFragment :
     MobiusFragment<PickerSubmissionUploadModel, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect, PickerSubmissionUploadView, PickerSubmissionUploadViewState>() {
 

@@ -32,6 +32,8 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import instructure.androidblueprint.analytics.SCREEN_VIEW_MODULE_LIST
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.ModuleListRecyclerAdapter
@@ -48,6 +50,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
+@ScreenView("student", SCREEN_VIEW_MODULE_LIST)
 @PageView(url = "modules")
 class ModuleListFragment : ParentFragment(), Bookmarkable {
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

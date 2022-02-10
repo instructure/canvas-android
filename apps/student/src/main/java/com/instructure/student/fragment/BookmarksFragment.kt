@@ -37,6 +37,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_BOOKMARKS
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.BookmarkShortcutActivity
@@ -50,6 +52,7 @@ import kotlinx.android.synthetic.main.fragment_bookmarks_fragment.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlin.properties.Delegates
 
+@ScreenView("student", SCREEN_VIEW_BOOKMARKS)
 class BookmarksFragment : ParentFragment() {
 
     private var bookmarkSelectedCallback: (Bookmark) -> Unit by Delegates.notNull()

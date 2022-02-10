@@ -17,7 +17,6 @@
 
 package com.instructure.student.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
@@ -39,6 +38,8 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_FILE_DETAILS
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.events.ModuleUpdatedEvent
@@ -49,6 +50,7 @@ import kotlinx.android.synthetic.main.fragment_file_details.*
 import okhttp3.ResponseBody
 import java.util.*
 
+@ScreenView("student", SCREEN_VIEW_FILE_DETAILS)
 @PageView(url = "{canvasContext}/files/{fileId}")
 class FileDetailsFragment : ParentFragment() {
 

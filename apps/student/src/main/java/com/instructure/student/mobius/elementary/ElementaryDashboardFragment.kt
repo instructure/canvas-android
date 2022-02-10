@@ -20,10 +20,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_ELEMENTARY_DASHBOARD
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
 import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
@@ -40,6 +41,7 @@ import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_course_grid.toolbar
 import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
+@ScreenView("student", SCREEN_VIEW_ELEMENTARY_DASHBOARD)
 class ElementaryDashboardFragment : ParentFragment() {
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)

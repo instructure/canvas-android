@@ -36,6 +36,8 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import instructure.androidblueprint.analytics.SCREEN_VIEW_GRADES_LIST
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.GradesListRecyclerAdapter
@@ -50,6 +52,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 
+@ScreenView("student", SCREEN_VIEW_GRADES_LIST)
 @PageView(url = "{canvasContext}/grades")
 class GradesListFragment : ParentFragment(), Bookmarkable {
 

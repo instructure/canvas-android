@@ -24,12 +24,15 @@ import com.instructure.student.R
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_VIEW_HTML
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.fragment_webview.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
+@ScreenView("student", SCREEN_VIEW_VIEW_HTML)
 //TODO: make this generic enough teacher and student can use most/all of the code
 class ViewHtmlFragment : InternalWebviewFragment() {
 

@@ -24,6 +24,8 @@ import android.widget.TextView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_INBOX_RECIPIENTS
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxRecipientAdapter
@@ -33,6 +35,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
+@ScreenView("student", SCREEN_VIEW_INBOX_RECIPIENTS)
 class InboxRecipientsFragment : ParentFragment() {
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)

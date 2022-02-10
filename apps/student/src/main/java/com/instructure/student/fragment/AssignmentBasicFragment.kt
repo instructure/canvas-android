@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_ASSIGNMENT_BASIC
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
@@ -39,6 +41,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
 import java.util.*
 
+@ScreenView("student", SCREEN_VIEW_ASSIGNMENT_BASIC)
 class AssignmentBasicFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

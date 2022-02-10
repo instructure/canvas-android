@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.cleanDisplayName
 import com.instructure.canvasapi2.utils.pageview.PageView
+import instructure.androidblueprint.analytics.SCREEN_VIEW_ACCOUNT_PREFERENCES
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -37,6 +39,7 @@ import kotlinx.android.synthetic.main.fragment_account_preferences.*
 import kotlinx.android.synthetic.main.settings_spinner.view.*
 import java.util.*
 
+@ScreenView("student", SCREEN_VIEW_ACCOUNT_PREFERENCES)
 @PageView(url = "profile/settings")
 class AccountPreferencesFragment : ParentFragment() {
 

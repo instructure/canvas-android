@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_CALENDAR
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
@@ -40,6 +42,7 @@ import io.flutter.plugin.common.MethodChannel
 import kotlinx.android.extensions.CacheImplementation
 import kotlinx.android.extensions.ContainerOptions
 
+@ScreenView("student", SCREEN_VIEW_CALENDAR)
 @PageView(url = "calendar")
 @ContainerOptions(cache = CacheImplementation.NO_CACHE)
 class CalendarFragment : ParentFragment() {

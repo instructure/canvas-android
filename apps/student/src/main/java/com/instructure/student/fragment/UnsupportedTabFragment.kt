@@ -23,9 +23,12 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_UNSUPPORTED_TAB
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.setupAsBackButton
 import kotlinx.android.synthetic.main.fragment_webview.*
 
+@ScreenView("student", SCREEN_VIEW_UNSUPPORTED_TAB)
 class UnsupportedTabFragment : InternalWebviewFragment() {
 
     override fun applyTheme() {

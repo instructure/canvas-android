@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import instructure.androidblueprint.analytics.SCREEN_VIEW_MASTERY_PATH_OPTIONS
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.MasteryPathOptionsRecyclerAdapter
@@ -34,6 +36,7 @@ import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_mastery_paths_options.*
 
+@ScreenView("student", SCREEN_VIEW_MASTERY_PATH_OPTIONS)
 class MasteryPathOptionsFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

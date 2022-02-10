@@ -43,6 +43,8 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.*
+import instructure.androidblueprint.analytics.SCREEN_VIEW_PROFILE_SETTINGS
+import instructure.androidblueprint.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.PandaAvatarActivity
@@ -54,6 +56,7 @@ import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
+@ScreenView("student", SCREEN_VIEW_PROFILE_SETTINGS)
 @PageView(url = "profile")
 class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<AvatarWrapper> {
 
