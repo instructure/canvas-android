@@ -40,7 +40,9 @@ class ImportantDatesPage : BasePage(R.id.importantDatesPage) {
     private val importantDatesEmptyView by OnViewWithId(R.id.importantDatesEmptyView, autoAssert = false)
 
     fun assertItemDisplayed(itemName: String) {
-        waitForView(withAncestor(R.id.importantDatesRecyclerView) + withText(itemName)).assertDisplayed()
+        val itemMatcher = withAncestor(R.id.importantDatesRecyclerView) + withText(itemName)
+        scrollToItem(R.id.importantDatesRecyclerView, itemName, itemMatcher)
+        waitForView(itemMatcher).assertDisplayed()
     }
 
     fun assertEmptyViewDisplayed() {
@@ -63,8 +65,27 @@ class ImportantDatesPage : BasePage(R.id.importantDatesPage) {
         importantDatesRecyclerView.assertHasChild(withText(dayText))
     }
 
-    fun assertCalendarEventCountGreaterThan(count: Int) {
-        importantDatesRecyclerView.check(RecyclerViewItemCountGreaterThanAssertion(count))
+    fun swipeUp() {
+        importantDatesRecyclerView.swipeUp()
+    }
+
+    fun scrollToPosition(position: Int) {
+        importantDatesRecyclerView.perform(RecyclerViewActions.scrollToPosition<BindableViewHolder>(position))
+    }
+
+    fun scrollToItem(parentItemId: Int, itemName: String, target: Matcher<View>? = null) {
+        var i: Int = 0
+        while (true) {
+            scrollToPosition(i)
+            Thread.sleep(500)
+            try {
+                if(target == null) onView(withAncestor(parentItemId) + withText(itemName)).scrollTo()
+                else onView(target + withText(itemName)).scrollTo()
+                break
+            } catch(e: NoMatchingViewException) {
+                i++
+            }
+        }
     }
 
 }

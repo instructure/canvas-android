@@ -193,6 +193,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(todayEvent.startDate))
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(twoDaysFromNowEvent.startDate))
+        importantDatesPage.swipeUp() // Need to do this because on landscape mode the last item cannot be seen on the view by default.
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(threeDaysFromNowEvent.startDate))
         importantDatesPage.assertRecyclerViewItemCount(6) // We count both day texts and calendar events here, since both types are part of the recyclerView.
     }
