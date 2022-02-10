@@ -23,8 +23,8 @@ import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
-import instructure.androidblueprint.analytics.SCREEN_VIEW_ELEMENTARY_DASHBOARD
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_DASHBOARD
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
 import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment

@@ -27,8 +27,8 @@ import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.interactions.router.Route
-import instructure.androidblueprint.analytics.SCREEN_VIEW_ASSIGNMENT_BASIC
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_BASIC
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R

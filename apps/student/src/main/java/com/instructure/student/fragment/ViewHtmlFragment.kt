@@ -24,8 +24,8 @@ import com.instructure.student.R
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
-import instructure.androidblueprint.analytics.SCREEN_VIEW_VIEW_HTML
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_HTML
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.fragment_webview.*

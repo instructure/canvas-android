@@ -27,8 +27,8 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
-import instructure.androidblueprint.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.common.ui.MobiusFragment

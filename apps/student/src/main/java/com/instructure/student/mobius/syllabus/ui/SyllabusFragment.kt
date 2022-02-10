@@ -21,8 +21,8 @@ import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
-import instructure.androidblueprint.analytics.SCREEN_VIEW_SYLLABUS
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SYLLABUS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.makeBundle

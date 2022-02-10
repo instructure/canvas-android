@@ -19,8 +19,8 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.conte
 import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import instructure.androidblueprint.analytics.SCREEN_VIEW_QUIZ_SUBMISSION_VIEW
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_SUBMISSION_VIEW
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setInvisible

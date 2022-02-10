@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package instructure.androidblueprint.analytics
+package com.instructure.pandautils.analytics
 
 const val SCREEN_VIEW_ACCOUNT_PREFERENCES = "account_preferences"
 const val SCREEN_VIEW_ANNOUNCEMENT_LIST = "announcement_list"

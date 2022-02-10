@@ -30,8 +30,8 @@ import com.instructure.canvasapi2.apis.InboxApi.Scope
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
-import instructure.androidblueprint.analytics.SCREEN_VIEW_INBOX
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxAdapter

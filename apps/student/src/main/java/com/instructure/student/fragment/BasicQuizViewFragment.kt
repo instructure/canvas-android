@@ -33,8 +33,8 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
-import instructure.androidblueprint.analytics.SCREEN_VIEW_BASIC_QUIZ
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_BASIC_QUIZ
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R

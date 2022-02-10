@@ -23,8 +23,8 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
-import instructure.androidblueprint.analytics.SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY_CONTENT
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY_CONTENT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.Submission
 import com.instructure.student.db.Db

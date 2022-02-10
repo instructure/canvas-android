@@ -20,8 +20,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
-import instructure.androidblueprint.analytics.SCREEN_VIEW_SUBMISSION_RUBRIC
-import instructure.androidblueprint.analytics.ScreenView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_RUBRIC
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.*
