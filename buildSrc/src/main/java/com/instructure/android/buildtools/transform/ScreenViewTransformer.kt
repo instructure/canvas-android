@@ -40,11 +40,19 @@ class ScreenViewTransformer(private val appName: String) : ClassTransformer() {
         }
         """
 
+    private val emptyOnAttach =
+            """
+        public void onAttach(Context context) {
+            super.onAttach(context);
+        }
+            """
+
     override fun onClassPoolReady(classPool: ClassPool) {
         activityClass = classPool["android.app.Activity"]
         fragmentClass = classPool["androidx.fragment.app.Fragment"]
         classPool.importPackage("com.instructure.canvasapi2.utils.Analytics")
         classPool.importPackage("android.view.View")
+        classPool.importPackage("android.content.Context")
         classPool.importPackage("android.util.Log")
     }
 
@@ -76,13 +84,18 @@ class ScreenViewTransformer(private val appName: String) : ClassTransformer() {
         val screenName = annotation?.getString("screenName") ?: simpleName
         val fullEvent = "${appName}_screen_view_${screenName}"
 
-        val onViewCreatedContent =
-                """
+        if (appName == "student") {
+            val onViewCreatedContent =
+                    """
             if (isAdded() && isVisible() && getUserVisibleHint()) {
                 ${logEventLogic(fullEvent)}
             }
             """
-        addOrUpdateDeclaredMethod("onViewCreated", onViewCreatedContent, emptyOnViewCreated)
+            addOrUpdateDeclaredMethod("onViewCreated", onViewCreatedContent, emptyOnViewCreated)
+        } else {
+            val onAttach = logEventLogic(fullEvent)
+            addOrUpdateDeclaredMethod("onAttach", onAttach, emptyOnAttach)
+        }
     }
 
     private fun logEventLogic(fullEvent: String) =
