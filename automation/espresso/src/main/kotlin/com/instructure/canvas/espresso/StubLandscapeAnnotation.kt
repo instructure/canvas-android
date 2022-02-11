@@ -19,4 +19,4 @@ package com.instructure.canvas.espresso
 // When applied to a test method, denotes that the test is stubbed out and not yet implemented only for landscape tests.
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class StubLandscape
+annotation class StubLandscape(val description: String = "")

@@ -247,7 +247,6 @@ class HomeroomInteractionTest : StudentTest() {
         homeroomPage.assertToDoText("2 due today | 2 missing")
     }
 
-    @StubLandscape
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenAssignments() {

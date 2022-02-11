@@ -82,7 +82,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @StubLandscape
+    @StubLandscape(description = "This is intentionally stubbed on landscape mode because the item view is too narrow, but that's not a bug, it's intentional.")
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowScheduledAssignments() {
         setDate(2021, Calendar.AUGUST, 11)
@@ -101,7 +101,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @StubLandscape
+    @StubLandscape(description = "This is intentionally stubbed on landscape mode because the item view is too narrow, but that's not a bug, it's intentional.")
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowMissingAssignments() {
         setDate(2021, Calendar.AUGUST, 11)

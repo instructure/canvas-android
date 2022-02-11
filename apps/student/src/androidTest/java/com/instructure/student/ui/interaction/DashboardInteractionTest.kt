@@ -17,9 +17,9 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAccountNotification
-import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -155,11 +155,12 @@ class DashboardInteractionTest : StudentTest() {
         // Tapping dismiss should remove the announcement. Refresh should not display it again.
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
         val announcement = data.accountNotifications.values.first()
+
         dashboardPage.assertAnnouncementShowing(announcement)
-        dashboardPage.dismissAnnouncement() //TODO BUG: https://instructure.atlassian.net/browse/MBL-15840
-        dashboardPage.assertAnnouncementsGone()
-        dashboardPage.refresh()
-        dashboardPage.assertAnnouncementsGone()
+        dashboardPage.refresh() //need this refresh because if there are such amount of elements and the screen is scrollable, first "interaction" will scroll down somehow a bit. It works on physical device, it's just an emulator-specific issue.
+        dashboardPage.assertAnnouncementShowing(announcement)
+        dashboardPage.dismissAnnouncement()
+        dashboardPage.assertAnnouncementGoneAndCheckAfterRefresh()
     }
 
     @Test
@@ -168,8 +169,12 @@ class DashboardInteractionTest : StudentTest() {
         // Tapping global announcement displays the content
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
         val announcement = data.accountNotifications.values.first()
+
         dashboardPage.assertAnnouncementShowing(announcement)
-        dashboardPage.tapAnnouncementAndAssertDisplayed(announcement) //TODO bug: https://instructure.atlassian.net/browse/MBL-15843
+        dashboardPage.refresh() //need this refresh because if there are such amount of elements and the screen is scrollable, first "interaction" will scroll down somehow a bit. It works on physical device, it's just an emulator-specific issue.
+        dashboardPage.assertAnnouncementShowing(announcement)
+        dashboardPage.tapAnnouncement()
+        dashboardPage.assertAnnouncementDetailsDisplayed(announcement)
     }
 
     @Test
@@ -208,14 +213,15 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     private fun getToDashboard(
-            courseCount: Int = 1,
-            pastCourseCount: Int = 0,
-            favoriteCourseCount: Int = 0,
-            announcementCount: Int = 0): MockCanvas {
+        courseCount: Int = 1,
+        pastCourseCount: Int = 0,
+        favoriteCourseCount: Int = 0,
+        announcementCount: Int = 0
+    ): MockCanvas {
         val data = MockCanvas.init(
-                studentCount = 1,
-                courseCount = courseCount,
-                pastCourseCount = pastCourseCount,
+            studentCount = 1,
+            courseCount = courseCount,
+            pastCourseCount = pastCourseCount,
                 favoriteCourseCount = favoriteCourseCount,
                 accountNotificationCount = announcementCount)
         val student = data.students[0]

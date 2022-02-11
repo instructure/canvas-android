@@ -266,11 +266,14 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     // Assumes that a single announcement is showing
-    fun tapAnnouncementAndAssertDisplayed(announcement: AccountNotification) {
-        onView(withId(R.id.tapToView)).assertDisplayed().click()
+    fun assertAnnouncementDetailsDisplayed(announcement: AccountNotification) {
         WaitForViewWithId(R.id.canvasWebView)
         // Include isDisplayed() in the matcher to differentiate from other views with this text
         onView(withText(announcement.subject) + isDisplayed()).assertDisplayed()
+    }
+
+    fun tapAnnouncement() {
+        onView(withId(R.id.tapToView)).assertDisplayed().click()
     }
 
     fun dismissAnnouncement() {
@@ -279,6 +282,12 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun refresh() {
         onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.dashboardPage)).swipeDown()
+    }
+
+    fun assertAnnouncementGoneAndCheckAfterRefresh() {
+        assertAnnouncementsGone()
+        refresh()
+        assertAnnouncementsGone()
     }
 }
 
