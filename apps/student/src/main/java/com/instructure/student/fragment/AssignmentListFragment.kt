@@ -51,7 +51,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.assignment_list_layout.*
 
-@ScreenView("student", SCREEN_VIEW_ASSIGNMENT_LIST)
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 @PageView(url = "{canvasContext}/assignments")
 class AssignmentListFragment : ParentFragment(), Bookmarkable {
 

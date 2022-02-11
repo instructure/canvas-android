@@ -34,7 +34,7 @@ import com.instructure.student.mobius.conferences.conference_list.ConferenceList
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListPresenter
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListUpdate
 
-@ScreenView("student", SCREEN_VIEW_CONFERENCE_LIST)
+@ScreenView(SCREEN_VIEW_CONFERENCE_LIST)
 class ConferenceListFragment :
     MobiusFragment<ConferenceListModel, ConferenceListEvent, ConferenceListEffect, ConferenceListView, ConferenceListViewState>() {
 

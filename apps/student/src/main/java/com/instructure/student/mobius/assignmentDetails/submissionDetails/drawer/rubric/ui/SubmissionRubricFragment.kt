@@ -28,7 +28,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
-@ScreenView("student", SCREEN_VIEW_SUBMISSION_RUBRIC)
+@ScreenView(SCREEN_VIEW_SUBMISSION_RUBRIC)
 class SubmissionRubricFragment :
     MobiusFragment<SubmissionRubricModel, SubmissionRubricEvent, SubmissionRubricEffect, SubmissionRubricView, SubmissionRubricViewState>() {
     private var submission by ParcelableArg<Submission>(key = Const.SUBMISSION)

@@ -52,7 +52,7 @@ import kotlinx.android.synthetic.main.fragment_bookmarks_fragment.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlin.properties.Delegates
 
-@ScreenView("student", SCREEN_VIEW_BOOKMARKS)
+@ScreenView(SCREEN_VIEW_BOOKMARKS)
 class BookmarksFragment : ParentFragment() {
 
     private var bookmarkSelectedCallback: (Bookmark) -> Unit by Delegates.notNull()

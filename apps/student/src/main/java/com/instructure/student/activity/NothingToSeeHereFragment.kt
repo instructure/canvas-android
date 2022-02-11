@@ -29,7 +29,7 @@ import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_nothing_to_see_here.*
 
-@ScreenView("student", SCREEN_VIEW_NOTHING_TO_SEE_HERE)
+@ScreenView(SCREEN_VIEW_NOTHING_TO_SEE_HERE)
 class NothingToSeeHereFragment : ParentFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

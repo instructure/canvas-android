@@ -30,7 +30,7 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.conferences.conference_details.*
 
-@ScreenView("student", SCREEN_VIEW_CONFERENCE_DETAILS)
+@ScreenView(SCREEN_VIEW_CONFERENCE_DETAILS)
 class ConferenceDetailsFragment :
     MobiusFragment<ConferenceDetailsModel, ConferenceDetailsEvent, ConferenceDetailsEffect, ConferenceDetailsView, ConferenceDetailsViewState>() {
 

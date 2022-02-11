@@ -42,7 +42,7 @@ import com.instructure.student.R
 import kotlinx.android.synthetic.main.fragment_lti_launch.*
 import kotlinx.coroutines.Job
 
-@ScreenView("student", SCREEN_VIEW_LTI_LAUNCH)
+@ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 @PageView
 class LtiLaunchFragment : ParentFragment() {
 

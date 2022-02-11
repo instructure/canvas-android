@@ -39,7 +39,7 @@ import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.quiz_list_layout.*
 
-@ScreenView("student", SCREEN_VIEW_QUIZ_LIST)
+@ScreenView(SCREEN_VIEW_QUIZ_LIST)
 @PageView(url = "{canvasContext}/quizzes")
 class QuizListFragment : ParentFragment(), Bookmarkable {
 

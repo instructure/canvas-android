@@ -33,7 +33,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
-@ScreenView("student", SCREEN_VIEW_ASSIGNMENT_DETAILS)
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 class AssignmentDetailsFragment :
     MobiusFragment<AssignmentDetailsModel, AssignmentDetailsEvent, AssignmentDetailsEffect, AssignmentDetailsView, AssignmentDetailsViewState>(),

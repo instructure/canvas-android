@@ -43,7 +43,7 @@ import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
-@ScreenView("student", SCREEN_VIEW_PAGE_LIST)
+@ScreenView(SCREEN_VIEW_PAGE_LIST)
 @PageView(url = "{canvasContext}/pages")
 class PageListFragment : ParentFragment(), Bookmarkable {
 

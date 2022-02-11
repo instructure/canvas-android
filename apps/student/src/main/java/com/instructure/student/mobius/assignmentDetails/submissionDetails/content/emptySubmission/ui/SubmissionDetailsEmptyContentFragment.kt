@@ -34,7 +34,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.conten
 import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
-@ScreenView("student", SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY_CONTENT)
+@ScreenView(SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY_CONTENT)
 class SubmissionDetailsEmptyContentFragment :
         MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState>() {
 

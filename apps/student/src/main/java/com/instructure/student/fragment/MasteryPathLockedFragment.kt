@@ -29,7 +29,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.StringArg
 import kotlinx.android.synthetic.main.fragment_master_paths_locked.*
 
-@ScreenView("student", SCREEN_VIEW_MASTERY_PATH_LOCKED)
+@ScreenView(SCREEN_VIEW_MASTERY_PATH_LOCKED)
 class MasteryPathLockedFragment : ParentFragment() {
 
     private var moduleItemName: String by StringArg(key = MODULE_ITEM)

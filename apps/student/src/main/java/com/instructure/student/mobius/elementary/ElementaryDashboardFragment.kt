@@ -41,7 +41,7 @@ import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_course_grid.toolbar
 import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
-@ScreenView("student", SCREEN_VIEW_ELEMENTARY_DASHBOARD)
+@ScreenView(SCREEN_VIEW_ELEMENTARY_DASHBOARD)
 class ElementaryDashboardFragment : ParentFragment() {
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)

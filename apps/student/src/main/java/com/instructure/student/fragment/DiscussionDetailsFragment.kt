@@ -72,7 +72,7 @@ import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
 
-@ScreenView("student", SCREEN_VIEW_DISCUSSION_DETAILS)
+@ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
 class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     // Weave jobs

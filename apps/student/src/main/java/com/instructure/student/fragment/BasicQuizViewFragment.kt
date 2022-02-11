@@ -45,7 +45,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-@ScreenView("student", SCREEN_VIEW_BASIC_QUIZ)
+@ScreenView(SCREEN_VIEW_BASIC_QUIZ)
 class BasicQuizViewFragment : InternalWebviewFragment() {
 
     private var quizDetailsJob: WeaveJob? = null

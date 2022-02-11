@@ -17,5 +17,5 @@
 package com.instructure.pandautils.analytics
 
 @Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.RUNTIME)
-annotation class ScreenView(val appName: String, val screenName: String)
+@Retention(AnnotationRetention.BINARY)
+annotation class ScreenView(val screenName: String)

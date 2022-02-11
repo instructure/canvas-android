@@ -40,7 +40,7 @@ import com.instructure.student.util.Const
 import kotlinx.android.synthetic.main.fragment_discussions_update.*
 import kotlinx.coroutines.Job
 
-@ScreenView("student", SCREEN_VIEW_DISCUSSIONS_UPDATE)
+@ScreenView(SCREEN_VIEW_DISCUSSIONS_UPDATE)
 class DiscussionsUpdateFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

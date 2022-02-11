@@ -25,7 +25,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ANNOUNCEMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.makeBundle
 
-@ScreenView("student", SCREEN_VIEW_ANNOUNCEMENT_LIST)
+@ScreenView(SCREEN_VIEW_ANNOUNCEMENT_LIST)
 @PageView(url = "{canvasContext}/announcements")
 class AnnouncementListFragment : DiscussionListFragment() {
 

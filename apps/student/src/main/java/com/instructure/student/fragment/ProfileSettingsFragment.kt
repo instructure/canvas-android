@@ -56,7 +56,7 @@ import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
-@ScreenView("student", SCREEN_VIEW_PROFILE_SETTINGS)
+@ScreenView(SCREEN_VIEW_PROFILE_SETTINGS)
 @PageView(url = "profile")
 class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<AvatarWrapper> {
 

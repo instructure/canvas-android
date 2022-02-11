@@ -50,7 +50,7 @@ import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
 
-@ScreenView("student", SCREEN_VIEW_ANNOTATION_COMMENT_LIST)
+@ScreenView(SCREEN_VIEW_ANNOTATION_COMMENT_LIST)
 class AnnotationCommentListFragment : ParentFragment() {
 
     private var annotations by ParcelableArrayListArg<CanvaDocAnnotation>()

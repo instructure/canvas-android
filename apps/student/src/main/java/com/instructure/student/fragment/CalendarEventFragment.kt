@@ -51,7 +51,7 @@ import retrofit2.Response
 import java.net.URLDecoder
 import java.util.*
 
-@ScreenView("student", SCREEN_VIEW_CALENDAR_EVENT)
+@ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
 class CalendarEventFragment : ParentFragment() {
 
     // Bundle args

@@ -40,7 +40,7 @@ import kotlinx.android.synthetic.main.fragment_assignment.*
 import java.lang.ref.WeakReference
 import java.util.*
 
-@ScreenView("student", SCREEN_VIEW_MASTERY_PATH_SELECTION)
+@ScreenView(SCREEN_VIEW_MASTERY_PATH_SELECTION)
 class MasteryPathSelectionFragment : ParentFragment() {
 
     // Bundle Args

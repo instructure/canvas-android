@@ -36,7 +36,7 @@ import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_people_list.*
 
-@ScreenView("student", SCREEN_VIEW_PEOPLE_LIST)
+@ScreenView(SCREEN_VIEW_PEOPLE_LIST)
 @PageView(url = "{canvasContext}/users")
 class PeopleListFragment : ParentFragment(), Bookmarkable {
 

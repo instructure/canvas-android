@@ -38,7 +38,7 @@ import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.router.RouteMatcher
 import org.apache.commons.text.StringEscapeUtils
 
-@ScreenView("student", SCREEN_VIEW_STUDIO_WEB_VIEW)
+@ScreenView(SCREEN_VIEW_STUDIO_WEB_VIEW)
 class StudioWebViewFragment : InternalWebviewFragment() {
     val assignmentId: Long by LongArg(key = Const.ASSIGNMENT_ID)
     val assignmentName: String by StringArg(key = Const.ASSIGNMENT_NAME)

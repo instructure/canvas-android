@@ -41,7 +41,7 @@ import kotlinx.android.synthetic.main.fragment_list_todo.*
 import kotlinx.android.synthetic.main.fragment_list_todo.view.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 
-@ScreenView("student", SCREEN_VIEW_TO_DO_LIST)
+@ScreenView(SCREEN_VIEW_TO_DO_LIST)
 @PageView
 class ToDoListFragment : ParentFragment() {
 

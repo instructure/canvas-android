@@ -39,7 +39,7 @@ import kotlinx.android.synthetic.main.fragment_account_preferences.*
 import kotlinx.android.synthetic.main.settings_spinner.view.*
 import java.util.*
 
-@ScreenView("student", SCREEN_VIEW_ACCOUNT_PREFERENCES)
+@ScreenView(SCREEN_VIEW_ACCOUNT_PREFERENCES)
 @PageView(url = "profile/settings")
 class AccountPreferencesFragment : ParentFragment() {
 

@@ -62,7 +62,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.listView as recyclerView
 
-@ScreenView("student", SCREEN_VIEW_DASHBOARD)
+@ScreenView(SCREEN_VIEW_DASHBOARD)
 @PageView
 class DashboardFragment : ParentFragment() {
 

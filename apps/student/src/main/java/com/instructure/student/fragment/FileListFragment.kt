@@ -60,7 +60,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-@ScreenView("student", SCREEN_VIEW_FILE_LIST)
+@ScreenView(SCREEN_VIEW_FILE_LIST)
 @PageView
 class FileListFragment : ParentFragment(), Bookmarkable {
 

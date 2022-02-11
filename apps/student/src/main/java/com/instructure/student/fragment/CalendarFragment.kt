@@ -42,7 +42,7 @@ import io.flutter.plugin.common.MethodChannel
 import kotlinx.android.extensions.CacheImplementation
 import kotlinx.android.extensions.ContainerOptions
 
-@ScreenView("student", SCREEN_VIEW_CALENDAR)
+@ScreenView(SCREEN_VIEW_CALENDAR)
 @PageView(url = "calendar")
 @ContainerOptions(cache = CacheImplementation.NO_CACHE)
 class CalendarFragment : ParentFragment() {

@@ -30,7 +30,7 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.syllabus.*
 
-@ScreenView("student", SCREEN_VIEW_SYLLABUS)
+@ScreenView(SCREEN_VIEW_SYLLABUS)
 @PageView(url = "{canvasContext}/assignments/syllabus")
 class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState>() {
 

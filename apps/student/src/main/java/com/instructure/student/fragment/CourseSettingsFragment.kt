@@ -31,7 +31,7 @@ import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.fragment_course_settings.*
 import kotlinx.android.synthetic.main.fragment_course_settings.view.*
 
-@ScreenView("student", SCREEN_VIEW_COURSE_SETTINGS)
+@ScreenView(SCREEN_VIEW_COURSE_SETTINGS)
 class CourseSettingsFragment : ParentFragment() {
 
     var course: Course by ParcelableArg(key = Const.CANVAS_CONTEXT)

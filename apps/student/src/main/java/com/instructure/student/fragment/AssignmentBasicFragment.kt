@@ -41,7 +41,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
 import java.util.*
 
-@ScreenView("student", SCREEN_VIEW_ASSIGNMENT_BASIC)
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_BASIC)
 class AssignmentBasicFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

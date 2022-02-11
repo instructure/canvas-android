@@ -57,7 +57,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-@ScreenView("student", SCREEN_VIEW_DISCUSSION_LIST)
+@ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
 @PageView(url = "{canvasContext}/discussion_topics")
 open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     protected var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

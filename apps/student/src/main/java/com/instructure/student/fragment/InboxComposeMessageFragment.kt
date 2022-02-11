@@ -54,7 +54,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.ArrayList
 
-@ScreenView("student", SCREEN_VIEW_INBOX_COMPOSE)
+@ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 class InboxComposeMessageFragment : ParentFragment() {
 
     private val conversation by NullableParcelableArg<Conversation>(key = Const.CONVERSATION)

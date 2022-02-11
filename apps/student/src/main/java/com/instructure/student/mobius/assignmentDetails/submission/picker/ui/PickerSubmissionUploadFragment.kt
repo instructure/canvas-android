@@ -29,7 +29,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
-@ScreenView("student", SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER)
+@ScreenView(SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER)
 class PickerSubmissionUploadFragment :
     MobiusFragment<PickerSubmissionUploadModel, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect, PickerSubmissionUploadView, PickerSubmissionUploadViewState>() {
 

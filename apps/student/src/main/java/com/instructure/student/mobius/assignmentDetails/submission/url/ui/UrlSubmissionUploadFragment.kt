@@ -29,7 +29,7 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.common.ui.Presenter
 import com.instructure.student.mobius.common.ui.UpdateInit
 
-@ScreenView("student", SCREEN_VIEW_URL_SUBMISSION_UPLOAD)
+@ScreenView(SCREEN_VIEW_URL_SUBMISSION_UPLOAD)
 class UrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUploadModel, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect, UrlSubmissionUploadView, UrlSubmissionUploadViewState>() {
 
     private val course by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)

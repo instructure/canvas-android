@@ -34,7 +34,7 @@ import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_file_search.*
 
-@ScreenView("student", SCREEN_VIEW_FILE_SEARCH)
+@ScreenView(SCREEN_VIEW_FILE_SEARCH)
 class FileSearchFragment : ParentFragment(), FileSearchView {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)

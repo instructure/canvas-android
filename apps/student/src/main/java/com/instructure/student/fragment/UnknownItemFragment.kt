@@ -33,7 +33,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import kotlinx.android.synthetic.main.unknown_item.*
 
-@ScreenView("student", SCREEN_VIEW_UNKNOWN_ITEM)
+@ScreenView(SCREEN_VIEW_UNKNOWN_ITEM)
 class UnknownItemFragment : ParentFragment() {
 
     private var streamItem: StreamItem by ParcelableArg(key = Const.STREAM_ITEM)

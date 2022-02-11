@@ -46,7 +46,7 @@ import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_people_details.*
 
-@ScreenView("student", SCREEN_VIEW_PEOPLE_DETAILS)
+@ScreenView(SCREEN_VIEW_PEOPLE_DETAILS)
 @PageView(url = "{canvasContext}/users/{userId}")
 class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 

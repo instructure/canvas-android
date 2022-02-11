@@ -47,7 +47,7 @@ import kotlinx.coroutines.Job
 import retrofit2.Response
 import java.io.File
 
-@ScreenView("student", SCREEN_VIEW_DISCUSSIONS_REPLY)
+@ScreenView(SCREEN_VIEW_DISCUSSIONS_REPLY)
 class DiscussionsReplyFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

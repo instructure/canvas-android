@@ -45,7 +45,7 @@ import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_list_notification.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 
-@ScreenView("student", SCREEN_VIEW_NOTIFICATION_LIST)
+@ScreenView(SCREEN_VIEW_NOTIFICATION_LIST)
 @PageView
 class NotificationListFragment : ParentFragment(), Bookmarkable {
 

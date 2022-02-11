@@ -29,7 +29,7 @@ import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
 import kotlinx.android.synthetic.main.fragment_webview.*
 
-@ScreenView("student", SCREEN_VIEW_QUIZ_SUBMISSION_VIEW)
+@ScreenView(SCREEN_VIEW_QUIZ_SUBMISSION_VIEW)
 class QuizSubmissionViewFragment : InternalWebviewFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         getCanvasLoading()?.setVisible() // Set visible so we can test it

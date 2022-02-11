@@ -29,7 +29,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
-@ScreenView("student", SCREEN_VIEW_SUBMISSION_FILES)
+@ScreenView(SCREEN_VIEW_SUBMISSION_FILES)
 class SubmissionFilesFragment :
     MobiusFragment<SubmissionFilesModel, SubmissionFilesEvent, SubmissionFilesEffect, SubmissionFilesView, SubmissionFilesViewState>() {
 

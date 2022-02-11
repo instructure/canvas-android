@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.fragment_webview.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
-@ScreenView("student", SCREEN_VIEW_VIEW_HTML)
+@ScreenView(SCREEN_VIEW_VIEW_HTML)
 //TODO: make this generic enough teacher and student can use most/all of the code
 class ViewHtmlFragment : InternalWebviewFragment() {
 

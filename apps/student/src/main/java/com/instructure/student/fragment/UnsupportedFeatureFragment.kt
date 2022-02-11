@@ -30,7 +30,7 @@ import com.instructure.student.R
 import com.instructure.student.util.Analytics
 import kotlinx.android.synthetic.main.fragment_unsupported_feature.*
 
-@ScreenView("student", SCREEN_VIEW_UNSUPPORTED_FEATURE)
+@ScreenView(SCREEN_VIEW_UNSUPPORTED_FEATURE)
 open class UnsupportedFeatureFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

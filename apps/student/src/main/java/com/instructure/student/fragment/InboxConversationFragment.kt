@@ -53,7 +53,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-@ScreenView("student", SCREEN_VIEW_INBOX_CONVERSATION)
+@ScreenView(SCREEN_VIEW_INBOX_CONVERSATION)
 @PageView(url = "conversations")
 class InboxConversationFragment : ParentFragment() {
 

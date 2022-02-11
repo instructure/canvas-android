@@ -42,7 +42,7 @@ import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_module_quiz_decider.*
 
-@ScreenView("student", SCREEN_VIEW_MODULE_QUIZ_DECIDER)
+@ScreenView(SCREEN_VIEW_MODULE_QUIZ_DECIDER)
 class ModuleQuizDecider : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

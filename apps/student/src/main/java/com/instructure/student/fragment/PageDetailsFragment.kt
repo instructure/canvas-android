@@ -55,7 +55,7 @@ import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
 
-@ScreenView("student", SCREEN_VIEW_PAGE_DETAILS)
+@ScreenView(SCREEN_VIEW_PAGE_DETAILS)
 @PageView
 class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 

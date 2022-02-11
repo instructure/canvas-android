@@ -52,7 +52,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 
-@ScreenView("student", SCREEN_VIEW_GRADES_LIST)
+@ScreenView(SCREEN_VIEW_GRADES_LIST)
 @PageView(url = "{canvasContext}/grades")
 class GradesListFragment : ParentFragment(), Bookmarkable {
 

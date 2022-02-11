@@ -50,7 +50,7 @@ import kotlinx.android.synthetic.main.fragment_file_details.*
 import okhttp3.ResponseBody
 import java.util.*
 
-@ScreenView("student", SCREEN_VIEW_FILE_DETAILS)
+@ScreenView(SCREEN_VIEW_FILE_DETAILS)
 @PageView(url = "{canvasContext}/files/{fileId}")
 class FileDetailsFragment : ParentFragment() {
 

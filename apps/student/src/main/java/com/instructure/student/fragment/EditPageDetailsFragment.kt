@@ -44,7 +44,7 @@ import com.instructure.student.events.PageUpdatedEvent
 import kotlinx.android.synthetic.main.fragment_edit_page.*
 import org.greenrobot.eventbus.EventBus
 
-@ScreenView("student", SCREEN_VIEW_EDIT_PAGE_DETAILS)
+@ScreenView(SCREEN_VIEW_EDIT_PAGE_DETAILS)
 class EditPageDetailsFragment : ParentFragment() {
 
     private var apiJob: WeaveJob? = null

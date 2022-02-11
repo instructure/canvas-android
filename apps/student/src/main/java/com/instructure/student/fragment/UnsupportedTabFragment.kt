@@ -28,7 +28,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.setupAsBackButton
 import kotlinx.android.synthetic.main.fragment_webview.*
 
-@ScreenView("student", SCREEN_VIEW_UNSUPPORTED_TAB)
+@ScreenView(SCREEN_VIEW_UNSUPPORTED_TAB)
 class UnsupportedTabFragment : InternalWebviewFragment() {
 
     override fun applyTheme() {

@@ -36,7 +36,7 @@ import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
-@ScreenView("student", SCREEN_VIEW_SUBMISSION_COMMENTS)
+@ScreenView(SCREEN_VIEW_SUBMISSION_COMMENTS)
 class SubmissionCommentsFragment :
         MobiusFragment<SubmissionCommentsModel, SubmissionCommentsEvent, SubmissionCommentsEffect, SubmissionCommentsView, SubmissionCommentsViewState>() {
 

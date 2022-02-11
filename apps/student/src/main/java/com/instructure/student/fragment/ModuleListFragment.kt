@@ -50,7 +50,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
-@ScreenView("student", SCREEN_VIEW_MODULE_LIST)
+@ScreenView(SCREEN_VIEW_MODULE_LIST)
 @PageView(url = "modules")
 class ModuleListFragment : ParentFragment(), Bookmarkable {
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

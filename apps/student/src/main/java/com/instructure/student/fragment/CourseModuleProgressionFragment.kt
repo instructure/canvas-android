@@ -57,7 +57,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import java.util.*
 
-@ScreenView("student", SCREEN_VIEW_COURSE_MODULE_PROGRESSION)
+@ScreenView(SCREEN_VIEW_COURSE_MODULE_PROGRESSION)
 class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private var routeModuleProgressionJob: Job? = null

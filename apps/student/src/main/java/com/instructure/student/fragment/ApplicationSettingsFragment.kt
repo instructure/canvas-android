@@ -44,7 +44,7 @@ import com.instructure.student.util.Analytics
 import kotlinx.android.synthetic.main.dialog_about.*
 import kotlinx.android.synthetic.main.fragment_application_settings.*
 
-@ScreenView("student", SCREEN_VIEW_APPLICATION_SETTINGS)
+@ScreenView(SCREEN_VIEW_APPLICATION_SETTINGS)
 @PageView(url = "profile/settings")
 class ApplicationSettingsFragment : ParentFragment() {
 

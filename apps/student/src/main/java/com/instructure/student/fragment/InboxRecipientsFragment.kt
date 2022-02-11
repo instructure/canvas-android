@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
-@ScreenView("student", SCREEN_VIEW_INBOX_RECIPIENTS)
+@ScreenView(SCREEN_VIEW_INBOX_RECIPIENTS)
 class InboxRecipientsFragment : ParentFragment() {
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)

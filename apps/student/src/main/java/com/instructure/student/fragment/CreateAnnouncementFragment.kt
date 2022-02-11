@@ -45,7 +45,7 @@ import com.instructure.student.events.post
 import kotlinx.android.synthetic.main.fragment_create_announcement.*
 import kotlinx.coroutines.Job
 
-@ScreenView("student", SCREEN_VIEW_CREATE_ANNOUNCEMENT)
+@ScreenView(SCREEN_VIEW_CREATE_ANNOUNCEMENT)
 class CreateAnnouncementFragment : ParentFragment() {
 
     /* The announcement to be edited. This will be null if we're creating a new announcement */

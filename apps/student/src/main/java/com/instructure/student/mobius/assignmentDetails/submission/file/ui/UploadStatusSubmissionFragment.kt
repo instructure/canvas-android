@@ -34,7 +34,7 @@ import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.spotify.mobius.EventSource
 
-@ScreenView("student", SCREEN_VIEW_UPLOAD_STATUS_SUBMISSION)
+@ScreenView(SCREEN_VIEW_UPLOAD_STATUS_SUBMISSION)
 class UploadStatusSubmissionFragment :
     MobiusFragment<UploadStatusSubmissionModel, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect, UploadStatusSubmissionView, UploadStatusSubmissionViewState>() {
 

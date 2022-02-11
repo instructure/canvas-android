@@ -44,7 +44,7 @@ import kotlinx.android.synthetic.main.fragment_inbox.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
-@ScreenView("student", SCREEN_VIEW_INBOX)
+@ScreenView(SCREEN_VIEW_INBOX)
 @PageView(url = "conversations")
 class InboxFragment : ParentFragment() {
 

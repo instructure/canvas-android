@@ -36,7 +36,7 @@ import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_mastery_paths_options.*
 
-@ScreenView("student", SCREEN_VIEW_MASTERY_PATH_OPTIONS)
+@ScreenView(SCREEN_VIEW_MASTERY_PATH_OPTIONS)
 class MasteryPathOptionsFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
