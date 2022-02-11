@@ -155,21 +155,12 @@ class DashboardInteractionTest : StudentTest() {
         // Tapping dismiss should remove the announcement. Refresh should not display it again.
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
         val announcement = data.accountNotifications.values.first()
-        val course = data.courses.values.first()
+
+        dashboardPage.assertAnnouncementShowing(announcement)
+        dashboardPage.refresh() //need this refresh because if there are such amount of elements and the screen is scrollable, first "interaction" will scroll down somehow a bit. It works on physical device, it's just an emulator-specific issue.
         dashboardPage.assertAnnouncementShowing(announcement)
         dashboardPage.dismissAnnouncement()
-        try {
-            dashboardPage.assertAnnouncementShowing(announcement)
-        } catch (e: AssertionError) { //Workaround for Landscape mode. It automatically clicks on "Edit Dashboard" when we first want to dismiss the announcement (probably the X is "pushing into the Edit Dashboard button" somehow).
-            editDashboardPage.assertCourseDisplayed(course)
-            Espresso.pressBack()
-            dashboardPage.refresh()
-            dashboardPage.assertAnnouncementShowing(announcement)
-            dashboardPage.dismissAnnouncement()
-            dashboardPage.assertAnnouncementGoneAndCheckAfterRefresh()
-        } catch (e: NoMatchingViewException) { //Portrait mode, we can dismiss the announcement with the first click on portrait mode so the assertion will throw this exception.
-            dashboardPage.assertAnnouncementGoneAndCheckAfterRefresh()
-        }
+        dashboardPage.assertAnnouncementGoneAndCheckAfterRefresh()
     }
 
     @Test
@@ -178,15 +169,12 @@ class DashboardInteractionTest : StudentTest() {
         // Tapping global announcement displays the content
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
         val announcement = data.accountNotifications.values.first()
+
+        dashboardPage.assertAnnouncementShowing(announcement)
+        dashboardPage.refresh() //need this refresh because if there are such amount of elements and the screen is scrollable, first "interaction" will scroll down somehow a bit. It works on physical device, it's just an emulator-specific issue.
         dashboardPage.assertAnnouncementShowing(announcement)
         dashboardPage.tapAnnouncement()
-        try { //We need this to handle landscape mode, because after first tap on the announcement on landscape mode just "push down" the page a bit, and have to go up, refresh, and tap again.
-            dashboardPage.assertAnnouncementDetailsDisplayed(announcement)
-        } catch (e: NoMatchingViewException) { //Landscape mode
-            dashboardPage.refresh()
-            dashboardPage.tapAnnouncement()
-            dashboardPage.assertAnnouncementDetailsDisplayed(announcement)
-        }
+        dashboardPage.assertAnnouncementDetailsDisplayed(announcement)
     }
 
     @Test

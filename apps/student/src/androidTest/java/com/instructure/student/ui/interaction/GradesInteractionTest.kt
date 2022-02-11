@@ -17,13 +17,10 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -57,7 +54,7 @@ class GradesInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testRefresh() {
-        val data = createMockData(courseCount = 3)
+        val data = createMockData(courseCount = 1)
         goToGradesTab(data)
 
         gradesPage.assertPageObjects()
@@ -66,18 +63,12 @@ class GradesInteractionTest : StudentTest() {
             gradesPage.assertCourseShownWithGrades(it.value.name, "B+")
         }
 
-        val newCourse = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, 50.0)
+        val newCourse =
+            data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, 50.0)
 
         gradesPage.refresh()
+        gradesPage.assertCourseShownWithGrades(newCourse.name, "50%")
 
-        try {
-            gradesPage.assertCourseShownWithGrades(newCourse.name, "50%")
-        } catch(e: NoMatchingViewException) { //Landscape mode
-            Thread.sleep(5000) //Need to give enough time for the API to process the new course.
-            gradesPage.refresh()
-            gradesPage.refresh() //Somehow we need to refresh twice on landscape mode to get the new course.
-            gradesPage.assertCourseShownWithGrades(newCourse.name, "50%")
-        }
     }
 
     @Test
