@@ -101,6 +101,5 @@ class ScreenViewTransformer(private val appName: String) : ClassTransformer() {
     private fun logEventLogic(fullEvent: String) =
             """
         Analytics.INSTANCE.logEvent("$fullEvent");
-        Log.d("Analytics", "$fullEvent");
         """
 }
