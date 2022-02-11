@@ -29,6 +29,9 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD_NOTIFICATIONS
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_DASHBOARD
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentDashboardNotificationsBinding
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomAction
@@ -39,6 +42,7 @@ import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_DASHBOARD_NOTIFICATIONS)
 @AndroidEntryPoint
 class DashboardNotificationsFragment : Fragment() {
 
