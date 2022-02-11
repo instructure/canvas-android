@@ -24,6 +24,8 @@ import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_TEXT_SUBMISSION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -34,6 +36,7 @@ import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
 import com.instructure.teacher.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_speed_grader_text_submission.*
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER_TEXT_SUBMISSION)
 class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
 
     private var mSubmissionText by StringArg()

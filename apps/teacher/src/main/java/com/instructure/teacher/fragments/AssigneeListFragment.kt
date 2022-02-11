@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNEE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.EmptyView
@@ -44,6 +46,7 @@ import com.instructure.teacher.viewinterface.AssigneeListView
 import kotlinx.android.synthetic.main.fragment_assignee_list.*
 import java.util.ArrayList
 
+@ScreenView(SCREEN_VIEW_ASSIGNEE_LIST)
 class AssigneeListFragment : BaseExpandableSyncFragment<
         AssigneeCategory,
         CanvasComparable<*>,

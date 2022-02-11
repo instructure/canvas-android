@@ -30,6 +30,8 @@ import com.instructure.teacher.R
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_MEDIA
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.teacher.router.RouteMatcher
@@ -37,6 +39,7 @@ import com.instructure.teacher.view.MediaContent
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_speed_grader_media.*
 
+@ScreenView(SCREEN_VIEW_VIEW_MEDIA)
 class ViewMediaFragment : Fragment(), ShareableFile {
 
     private var mUri by ParcelableArg(Uri.EMPTY)

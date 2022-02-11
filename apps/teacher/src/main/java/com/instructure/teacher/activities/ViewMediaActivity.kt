@@ -20,10 +20,13 @@ import android.content.Context
 import android.content.Intent
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_MEDIA
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.teacher.fragments.EditFileFolderFragment
 import com.instructure.teacher.router.RouteMatcher
 
+@ScreenView(SCREEN_VIEW_VIEW_MEDIA)
 class ViewMediaActivity : BaseViewMediaActivity() {
 
     override fun allowEditing() = true

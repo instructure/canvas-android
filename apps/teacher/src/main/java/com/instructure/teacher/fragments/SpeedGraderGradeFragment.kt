@@ -18,6 +18,8 @@ package com.instructure.teacher.fragments
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_GRADE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -35,6 +37,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.DecimalFormat
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER_GRADE)
 class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter, SpeedGraderGradeView>(), SpeedGraderGradeView {
 
     private var mSubmission: Submission? by NullableParcelableArg(default = Submission())

@@ -44,6 +44,9 @@ import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_EDIT
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_SETTINGS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.MediaUploadUtils.chooseFromGalleryBecausePermissionsAlreadyGranted
@@ -59,6 +62,7 @@ import kotlinx.android.synthetic.main.fragment_profile_edit.*
 import retrofit2.Response
 import java.io.File
 
+@ScreenView(SCREEN_VIEW_PROFILE_EDIT)
 class ProfileEditFragment : BasePresenterFragment<
         ProfileEditFragmentPresenter,
         ProfileEditFragmentView>(), ProfileEditFragmentView, LoaderManager.LoaderCallbacks<AvatarWrapper> {
