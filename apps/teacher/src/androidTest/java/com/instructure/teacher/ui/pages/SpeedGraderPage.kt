@@ -60,9 +60,9 @@ class SpeedGraderPage : BasePage() {
         )
     }
 
-    fun selectGradesTab() {
-        val gradesTabText = getStringFromResource(R.string.sg_tab_grade).toUpperCase()
-        onView(allOf((withText(gradesTabText)), isDisplayed())).click()
+    fun selectGradeTab() {
+        val gradeTabText = getStringFromResource(R.string.sg_tab_grade).toUpperCase()
+        onView(allOf((withText(gradeTabText)), isDisplayed())).click()
     }
 
     fun selectCommentsTab() {
