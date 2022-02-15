@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
-import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_ANNOUNCEMENT
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment

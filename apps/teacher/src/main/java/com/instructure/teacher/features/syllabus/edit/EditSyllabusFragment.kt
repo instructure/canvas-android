@@ -23,7 +23,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_SYLLABUS
-import com.instructure.pandautils.analytics.SCREEN_VIEW_SYLLABUS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.*

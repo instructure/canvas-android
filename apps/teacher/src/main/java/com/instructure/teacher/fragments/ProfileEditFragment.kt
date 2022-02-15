@@ -45,7 +45,6 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_EDIT
-import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
