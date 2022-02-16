@@ -763,7 +763,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
                 selectBottomNavFragment(fragment::class.java)
             } else {
-                addFullScreenFragment(fragment)
+                addFullScreenFragment(fragment, route.removePreviousScreen)
             }
         }
     }
@@ -785,14 +785,19 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         bottomNavScreensStack.push(fragmentClass.name)
     }
 
-    private fun addFullScreenFragment(fragment: Fragment?) {
+    private fun addFullScreenFragment(fragment: Fragment?, removePreviousFragment: Boolean = false) {
         if (fragment == null) {
             Logger.e("NavigationActivity:addFullScreenFragment() - Could not route null Fragment.")
             return
         }
 
         val ft = supportFragmentManager.beginTransaction()
-        ft.setCustomAnimations(R.anim.fade_in_quick, R.anim.fade_out_quick)
+        if (removePreviousFragment) {
+            supportFragmentManager.popBackStackImmediate()
+        } else {
+            ft.setCustomAnimations(R.anim.fade_in_quick, R.anim.fade_out_quick)
+        }
+
         currentFragment?.let { ft.hide(it) }
         ft.add(R.id.fullscreen, fragment, fragment::class.java.name)
         ft.addToBackStack(fragment::class.java.name)

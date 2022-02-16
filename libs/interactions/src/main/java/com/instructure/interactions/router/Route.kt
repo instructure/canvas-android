@@ -62,7 +62,9 @@ data class Route(
         /* The URL of the path before the params have been replaced. */
         var routePath: String? = null,
         /* A tab id see the Tabs api for a definition. Not required for most routes. */
-        var tabId: String? = null
+        var tabId: String? = null,
+        /* If true removes the previous screen from the backstack when routing to this route. */
+        var removePreviousScreen: Boolean = false
 ) : Parcelable {
 
     //All constructors should eventually set the [Route.routePath]
