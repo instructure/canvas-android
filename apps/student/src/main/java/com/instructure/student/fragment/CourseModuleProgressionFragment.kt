@@ -212,7 +212,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun setViewInfo(bundle: Bundle?) {
-
         // Figure out the total size so the adapter knows how many items it will have
         var size = 0
         for (i in items.indices) { size += items[i].size }
@@ -391,6 +390,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
             //prev_item/next_item buttons may now need to be visible (if we were on a module item that was the last in its group but
             //now we have info about the next_item module, we want the user to be able to navigate there)
+            bottomBarModule.setVisible()
             updateBottomNavBarButtons()
         } catch { }
     }
@@ -718,6 +718,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             return
         }
 
+        progressBar.setVisible()
         routeModuleProgressionJob = tryWeave {
             val moduleItemSequence = awaitApi<ModuleItemSequence> { ModuleManager.getModuleItemSequence(canvasContext, assetType, assetId, it, true) }
             // Make sure that there is a sequence
@@ -736,6 +737,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 childPos = moduleHelper.newChildPosition
                 items = moduleHelper.strippedModuleItems
             } else {
+                progressBar.setGone()
                 val moduleItemAsset = ModuleItemAsset.fromAssetType(assetType)
                 if (moduleItemAsset != ModuleItemAsset.MODULE_ITEM) {
                     val newRoute = route.copy(secondaryClass = moduleItemAsset.routeClass, removePreviousScreen = true)
@@ -744,9 +746,12 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 }
             }
 
+            progressBar.setGone()
+            bottomBarModule.setVisible()
             setViewInfo(bundle)
             setButtonListeners()
         } catch {
+            progressBar.setGone()
             Logger.e("Error routing modules: " + it.message)
         }
     }
