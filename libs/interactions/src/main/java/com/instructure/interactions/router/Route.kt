@@ -97,6 +97,11 @@ data class Route(
         this.routeContext = routeContext
     }
 
+    constructor(routePath: String?, routeContext: RouteContext, secondaryClass: Class<out Fragment>?) : this(routePath) {
+        this.routeContext = routeContext
+        this.secondaryClass = secondaryClass
+    }
+
     constructor(routePath: String?, primaryClass: Class<out Fragment>?) : this(routePath) {
         this.primaryClass = primaryClass
     }

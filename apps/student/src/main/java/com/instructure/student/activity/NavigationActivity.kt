@@ -688,7 +688,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 val contextId = Route.extractCourseId(route)
                 if (contextId != 0L) {
                     when {
-                        RouteContext.FILE == route.routeContext -> {
+                        RouteContext.FILE == route.routeContext && route.secondaryClass != CourseModuleProgressionFragment::class.java -> {
                             if (route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD)) {
                                 if(route.uri != null) openMedia(CanvasContext.getGenericContext(CanvasContext.Type.COURSE, contextId, ""), route.uri.toString())
                             }

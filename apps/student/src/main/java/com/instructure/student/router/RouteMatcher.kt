@@ -130,7 +130,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/folder/:${RouterParams.FOLDER_NAME}"), RouteContext.FILE))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}/download"), RouteContext.FILE)) // trigger webview's download listener
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}/preview"), RouteContext.FILE))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"), RouteContext.FILE))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"), RouteContext.FILE, CourseModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/folder(\\/.*)*/:${RouterParams.FILE_ID}"), RouteContext.FILE))
         routes.add(Route("/files/folder(\\/.*)*/:${RouterParams.FILE_ID}", RouteContext.FILE))
 
@@ -264,28 +264,41 @@ object RouteMatcher : BaseRouteMatcher() {
                 handleWebViewUrl(context, route.uri.toString())
             }
         } else if (route.routeContext == RouteContext.FILE || route.primaryClass?.isAssignableFrom(FileListFragment::class.java) == true && route.queryParamsHash.containsKey(RouterParams.PREVIEW)) {
-            if (route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD)) {
-                if (route.uri != null) {
-                    openMedia(context as FragmentActivity, route.uri.toString())
-                } else if (route.uri != null) {
-                    openMedia(context as FragmentActivity, route.uri!!.toString())
+            when {
+                route.secondaryClass == CourseModuleProgressionFragment::class.java -> handleFullscreenRoute(context, route)
+                route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD) -> {
+                    if (route.removePreviousScreen) {
+                        val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
+                        fragmentManager?.popBackStackImmediate()
+                    }
+                    if (route.uri != null) {
+                        openMedia(context as FragmentActivity, route.uri.toString())
+                    } else if (route.uri != null) {
+                        openMedia(context as FragmentActivity, route.uri!!.toString())
+                    }
                 }
-            }  else if (route.paramsHash.containsKey(RouterParams.FOLDER_NAME) && !route.queryParamsHash.containsKey(RouterParams.PREVIEW)) {
-                // Preview query params are caught under the same route matcher with the :folder_name param, make sure we're not catching preview urls here as well
-                // Route to the FileListFragment but to the folder - To route we need to modify the route a bit.
-                if (!route.paramsHash.containsKey(RouterParams.COURSE_ID)) {
-                    route.canvasContext = ApiPrefs.user
+                route.paramsHash.containsKey(RouterParams.FOLDER_NAME) && !route.queryParamsHash.containsKey(RouterParams.PREVIEW) -> {
+                    // Preview query params are caught under the same route matcher with the :folder_name param, make sure we're not catching preview urls here as well
+                    // Route to the FileListFragment but to the folder - To route we need to modify the route a bit.
+                    if (!route.paramsHash.containsKey(RouterParams.COURSE_ID)) {
+                        route.canvasContext = ApiPrefs.user
+                    }
+                    route.routeContext = RouteContext.UNKNOWN
+                    route.primaryClass = FileListFragment::class.java
+                    handleFullscreenRoute(context, route)
                 }
-                route.routeContext = RouteContext.UNKNOWN
-                route.primaryClass = FileListFragment::class.java
-                handleFullscreenRoute(context, route)
-            } else {
-                val isGroupRoute = "groups" == route.uri?.pathSegments?.get(0)
-                handleSpecificFile(
+                else -> {
+                    if (route.removePreviousScreen) {
+                        val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
+                        fragmentManager?.popBackStackImmediate()
+                    }
+                    val isGroupRoute = "groups" == route.uri?.pathSegments?.get(0)
+                    handleSpecificFile(
                         context as FragmentActivity,
                         (if (route.queryParamsHash.containsKey(RouterParams.PREVIEW)) route.queryParamsHash[RouterParams.PREVIEW] else route.paramsHash[RouterParams.FILE_ID]) ?: "",
                         route,
                         isGroupRoute)
+                }
             }
         } else if (route.routeContext == RouteContext.MEDIA) {
             handleMediaRoute(context, route)
