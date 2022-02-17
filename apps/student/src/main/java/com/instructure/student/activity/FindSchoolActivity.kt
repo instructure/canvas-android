@@ -22,7 +22,10 @@ import androidx.core.content.ContextCompat
 import com.instructure.student.R
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.loginapi.login.activities.BaseLoginFindSchoolActivity
+import com.instructure.pandautils.analytics.SCREEN_VIEW_FIND_SCHOOL
+import com.instructure.pandautils.analytics.ScreenView
 
+@ScreenView(SCREEN_VIEW_FIND_SCHOOL)
 class FindSchoolActivity : BaseLoginFindSchoolActivity() {
 
     override fun themeColor(): Int = ContextCompat.getColor(this, R.color.login_studentAppTheme)

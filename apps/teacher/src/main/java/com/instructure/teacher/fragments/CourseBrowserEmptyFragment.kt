@@ -17,6 +17,9 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Color
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER_EMPTY
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -27,6 +30,7 @@ import com.instructure.teacher.presenters.CourseBrowserEmptyPresenter
 import com.instructure.teacher.viewinterface.CourseBrowserEmptyView
 import kotlinx.android.synthetic.main.fragment_course_browser_empty.*
 
+@ScreenView(SCREEN_VIEW_COURSE_BROWSER_EMPTY)
 class CourseBrowserEmptyFragment: BasePresenterFragment<
         CourseBrowserEmptyPresenter,
         CourseBrowserEmptyView>(), CourseBrowserEmptyView {

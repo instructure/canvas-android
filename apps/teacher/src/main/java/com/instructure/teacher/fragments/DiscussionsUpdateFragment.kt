@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_UPDATE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -47,6 +49,7 @@ import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DiscussionsUpdateView
 import kotlinx.android.synthetic.main.fragment_discussions_edit.*
 
+@ScreenView(SCREEN_VIEW_DISCUSSIONS_UPDATE)
 class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresenter, DiscussionsUpdateView>(), DiscussionsUpdateView {
 
     private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))

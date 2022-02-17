@@ -21,11 +21,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.analytics.SCREEN_VIEW_NOT_A_TEACHER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.teacher.R
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import kotlinx.android.synthetic.main.fragment_not_a_teacher.*
 
+@ScreenView(SCREEN_VIEW_NOT_A_TEACHER)
 class NotATeacherFragment : BaseFragment() {
     private val MARKET_URI_PREFIX = "market://details?id="
     private val CANVAS_ID = "com.instructure.candroid"

@@ -25,6 +25,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_SCHEDULE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentScheduleBinding
 import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 import com.instructure.pandautils.utils.StringArg
@@ -32,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_K5_SCHEDULE)
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
 
