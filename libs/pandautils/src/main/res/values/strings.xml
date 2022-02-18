@@ -483,5 +483,6 @@
     <string name="a11y_mark_as_done">Mark as done</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Uh oh! An error occurred while loading the course details.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s marked as not done</string>
 
 </resources>
