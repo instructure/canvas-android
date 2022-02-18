@@ -715,6 +715,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private fun loadModuleProgression(bundle: Bundle?) {
         if(assetId.isBlank()) {
+            bottomBarModule.setVisible()
             setViewInfo(bundle)
             setButtonListeners()
             updateBottomNavBarButtons()
