@@ -27,20 +27,19 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.features.elementary.course.ElementaryCourseTab
 import com.instructure.student.features.elementary.course.ElementaryCourseViewData
 import com.instructure.student.features.elementary.course.ElementaryCourseViewModel
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
+import io.mockk.*
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -69,6 +68,7 @@ class ElementaryCourseViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
+        mockkObject(Logger)
 
         every { apiPrefs.fullDomain } returns "https://mockk.instructure.com"
 
@@ -78,6 +78,11 @@ class ElementaryCourseViewModelTest {
         setupStrings()
 
         viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager)
+    }
+
+    @After
+    fun tearDown() {
+        unmockkObject(Logger)
     }
 
     @Test

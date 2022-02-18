@@ -26,13 +26,12 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.itemviewmodels.*
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -46,8 +45,6 @@ import org.junit.Test
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
-import java.util.*
-import kotlin.time.days
 
 @ExperimentalCoroutinesApi
 class EditDashboardViewModelTest {
@@ -67,6 +64,7 @@ class EditDashboardViewModelTest {
 
     @Before
     fun setUp() {
+        mockkObject(Logger)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
     }
@@ -75,6 +73,7 @@ class EditDashboardViewModelTest {
     fun tearDown() {
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
+        unmockkObject(Logger)
     }
 
     @Test
