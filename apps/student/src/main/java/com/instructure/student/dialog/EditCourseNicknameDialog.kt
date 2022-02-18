@@ -27,10 +27,13 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_COURSE_NICKNAME
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_EDIT_COURSE_NICKNAME)
 class EditCourseNicknameDialog : AppCompatDialogFragment() {
 
     private var mEditNicknameCallback: (String) -> Unit by Delegates.notNull()

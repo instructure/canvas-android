@@ -34,6 +34,8 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_ANNOUNCEMENT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -43,6 +45,7 @@ import com.instructure.student.events.post
 import kotlinx.android.synthetic.main.fragment_create_announcement.*
 import kotlinx.coroutines.Job
 
+@ScreenView(SCREEN_VIEW_CREATE_ANNOUNCEMENT)
 class CreateAnnouncementFragment : ParentFragment() {
 
     /* The announcement to be edited. This will be null if we're creating a new announcement */

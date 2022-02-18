@@ -66,20 +66,12 @@ class HomeroomE2ETest : StudentTest() {
         val homeroomAnnouncement = data.announcementsList[0]
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
-        val utcTimeZone = TimeZone.getTimeZone("UTC")
-        val calendar = Calendar.getInstance(utcTimeZone)
-
-        calendar.set(Calendar.HOUR_OF_DAY, 10)
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
         calendar.set(Calendar.MINUTE, 1)
         calendar.set(Calendar.SECOND, 1)
 
-        val simpleDateFormat = SimpleDateFormat("EE MMM dd HH:mm:ss zzz yyyy", Locale.US)
-        simpleDateFormat.setTimeZone(utcTimeZone)
-
         val missingCalendar = Calendar.getInstance()
-        missingCalendar.set(Calendar.HOUR_OF_DAY, 10)
-        missingCalendar.set(Calendar.MINUTE, 1)
-        missingCalendar.set(Calendar.SECOND, 1)
 
         val testAssignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(

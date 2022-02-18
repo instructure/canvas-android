@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_PREFERENCES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -37,6 +39,7 @@ import com.instructure.student.adapter.NotificationPreferencesRecyclerAdapter
 import kotlinx.android.synthetic.main.notification_preferences_activity.*
 import kotlinx.android.synthetic.main.notification_preferences_activity.listView as recyclerView
 
+@ScreenView(SCREEN_VIEW_NOTIFICATION_PREFERENCES)
 @PageView(url = "profile/communication")
 class NotificationPreferencesActivity : AppCompatActivity() {
 

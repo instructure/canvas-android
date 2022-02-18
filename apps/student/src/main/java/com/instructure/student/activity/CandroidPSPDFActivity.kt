@@ -27,6 +27,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.text.TextUtilsCompat
 import com.instructure.annotations.CanvasPdfMenuGrouping
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PSPDFKIT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -43,6 +45,7 @@ import com.pspdfkit.ui.toolbar.ContextualToolbarMenuItem
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_PSPDFKIT)
 class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextualToolbarLifecycleListener {
     override fun onDisplayContextualToolbar(p0: ContextualToolbar<*>) {}
     override fun onRemoveContextualToolbar(p0: ContextualToolbar<*>) {}

@@ -41,6 +41,8 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BasePresenterActivity
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesContinueDialog
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
@@ -69,6 +71,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER)
 @AndroidEntryPoint
 class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGraderView>(), SpeedGraderView {
 

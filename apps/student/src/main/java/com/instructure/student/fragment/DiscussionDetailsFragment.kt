@@ -17,13 +17,11 @@
 package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityManager
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -48,6 +46,8 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
@@ -72,6 +72,7 @@ import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
 
+@ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
 class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     // Weave jobs

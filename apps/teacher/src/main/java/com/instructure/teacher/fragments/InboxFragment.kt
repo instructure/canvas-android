@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -50,6 +52,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_INBOX)
 class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, InboxViewHolder, InboxAdapter>(), InboxView {
 
     private val CANVAS_CONTEXT = "canvas_context"

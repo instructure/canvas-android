@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_FAVORITES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -37,6 +39,7 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.CanvasContextView
 import kotlinx.android.synthetic.main.fragment_edit_favorites.*
 
+@ScreenView(SCREEN_VIEW_EDIT_FAVORITES)
 class EditFavoritesFragment : BaseSyncFragment<
         CanvasContext,
         EditFavoritesPresenter,

@@ -32,6 +32,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_HOMEROOM
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
@@ -46,6 +48,7 @@ import kotlinx.android.synthetic.main.fragment_homeroom.view.*
 import kotlinx.android.synthetic.main.item_announcement.view.*
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_K5_HOMEROOM)
 @AndroidEntryPoint
 class HomeroomFragment : Fragment() {
 
