@@ -178,6 +178,7 @@ class DashboardInteractionTest : StudentTest() {
         dashboardPage.assertInviteAccepted()
         dashboardPage.refresh()
         dashboardPage.assertInviteGone(invitedCourse.name)
+        dashboardPage.assertDisplaysCourse(invitedCourse)
     }
 
     @Test
@@ -193,6 +194,7 @@ class DashboardInteractionTest : StudentTest() {
         dashboardPage.assertInviteDeclined()
         dashboardPage.refresh()
         dashboardPage.assertInviteGone(invitedCourse.name)
+        dashboardPage.assertCourseNotShown(invitedCourse)
     }
 
     @Test
