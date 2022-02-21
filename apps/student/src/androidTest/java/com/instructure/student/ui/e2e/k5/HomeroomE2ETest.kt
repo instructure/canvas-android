@@ -100,7 +100,7 @@ class HomeroomE2ETest : StudentTest() {
         tokenLoginElementary(student)
         elementaryDashboardPage.assertPageObjects()
         elementaryDashboardPage.waitForRender()
-        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
 
         homeroomPage.assertWelcomeText(student.shortName)
         homeroomPage.assertAnnouncementDisplayed(
