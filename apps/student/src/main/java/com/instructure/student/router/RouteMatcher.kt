@@ -137,10 +137,12 @@ object RouteMatcher : BaseRouteMatcher() {
         // Discussions
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics"), DiscussionListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, CourseModuleProgressionFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, DiscussionDetailsFragment::class.java))
 
         // Pages
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages"), PageListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), PageListFragment::class.java, CourseModuleProgressionFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), PageListFragment::class.java, PageDetailsFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/wiki"), PageListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/wiki/:${RouterParams.PAGE_ID}"), PageListFragment::class.java, PageDetailsFragment::class.java))
 
@@ -154,6 +156,7 @@ object RouteMatcher : BaseRouteMatcher() {
         // Quiz
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes"), QuizListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"), QuizListFragment::class.java, CourseModuleProgressionFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"), QuizListFragment::class.java, BasicQuizViewFragment::class.java))
 
 
         // Calendar
@@ -168,6 +171,9 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, CourseModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, CourseModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarFragment::class.java, CourseModuleProgressionFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, AssignmentDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, AssignmentDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarFragment::class.java, AssignmentDetailsFragment::class.java))
 
         // Studio
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}/resource_selection"), StudioWebViewFragment::class.java))
