@@ -29,9 +29,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ATTACHMENT_PICKER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.dismissExisting
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_ATTACHMENT_PICKER)
 class AttachmentPickerDialog : AppCompatDialogFragment() {
 
     init {

@@ -17,7 +17,6 @@
 
 package com.instructure.student.features.dashboard.edit
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,6 +28,8 @@ import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_DASHBOARD
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentEditDashboardBinding
@@ -37,6 +38,7 @@ import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_edit_dashboard.*
 
+@ScreenView(SCREEN_VIEW_EDIT_DASHBOARD)
 @AndroidEntryPoint
 class EditDashboardFragment : Fragment() {
 

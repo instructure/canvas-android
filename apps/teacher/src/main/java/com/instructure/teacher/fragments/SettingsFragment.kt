@@ -19,6 +19,8 @@ package com.instructure.teacher.fragments
 import android.graphics.Color
 import android.os.Bundle
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
@@ -36,6 +38,7 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.ProfileSettingsFragmentView
 import kotlinx.android.synthetic.main.fragment_settings.*
 
+@ScreenView(SCREEN_VIEW_SETTINGS)
 class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter, ProfileSettingsFragmentView>(),
     ProfileSettingsFragmentView {
 

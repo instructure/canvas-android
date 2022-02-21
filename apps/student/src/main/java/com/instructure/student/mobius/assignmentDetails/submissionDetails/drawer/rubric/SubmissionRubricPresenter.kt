@@ -81,8 +81,8 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
                     )
                 )
             } else if (criterion.criterionUseRange) {
-                val assessedRating = ratings.first { it.id == assessment!!.ratingId }
-                if (assessment.points != assessedRating.points) {
+                val assessedRating = ratings.firstOrNull { it.id == assessment!!.ratingId }
+                if (assessedRating != null && assessment.points != assessedRating.points) {
                     assessment = assessment.copy(ratingId = customRatingId)
                     ratings = ratings.plus(
                         RubricCriterionRating(

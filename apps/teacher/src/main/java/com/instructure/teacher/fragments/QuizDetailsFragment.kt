@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -57,6 +59,7 @@ import java.net.URL
 import java.net.URLDecoder
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
 class QuizDetailsFragment : BasePresenterFragment<
         QuizDetailsPresenter,
         QuizDetailsView>(),

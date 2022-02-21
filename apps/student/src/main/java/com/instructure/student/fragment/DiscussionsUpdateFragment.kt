@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_UPDATE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.utils.*
@@ -38,6 +40,7 @@ import com.instructure.student.util.Const
 import kotlinx.android.synthetic.main.fragment_discussions_update.*
 import kotlinx.coroutines.Job
 
+@ScreenView(SCREEN_VIEW_DISCUSSIONS_UPDATE)
 class DiscussionsUpdateFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)

@@ -39,10 +39,13 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelection
 import com.google.android.exoplayer2.upstream.*
 import com.google.android.exoplayer2.util.Util
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIDEO_VIEW
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.student.R
 import com.instructure.student.util.Const
 import kotlinx.android.synthetic.main.activity_video_view.player_view as simpleExoPlayerView
 
+@ScreenView(SCREEN_VIEW_VIDEO_VIEW)
 @Suppress("DEPRECATION")
 class VideoViewActivity : AppCompatActivity() {
 

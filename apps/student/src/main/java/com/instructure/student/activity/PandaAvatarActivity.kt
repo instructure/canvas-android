@@ -38,6 +38,8 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.PrefManager
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PANDA_AVATAR
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.util.PandaDrawables
@@ -51,6 +53,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.toolbar as mToolbar
 
 private object PandaAvatarPrefs : PrefManager(Const.NAME)
 
+@ScreenView(SCREEN_VIEW_PANDA_AVATAR)
 class PandaAvatarActivity : ParentActivity() {
 
     private enum class BodyPart { HEAD, BODY, LEGS }
