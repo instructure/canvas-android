@@ -28,6 +28,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -98,6 +99,9 @@ class HomeroomE2ETest : StudentTest() {
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
         elementaryDashboardPage.assertPageObjects()
+        elementaryDashboardPage.waitForRender()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
+
         homeroomPage.assertWelcomeText(student.shortName)
         homeroomPage.assertAnnouncementDisplayed(
             homeroomCourse.name,
