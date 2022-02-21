@@ -35,6 +35,8 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_PAGE_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.UnsavedChangesExitDialog
@@ -42,6 +44,7 @@ import com.instructure.student.events.PageUpdatedEvent
 import kotlinx.android.synthetic.main.fragment_edit_page.*
 import org.greenrobot.eventbus.EventBus
 
+@ScreenView(SCREEN_VIEW_EDIT_PAGE_DETAILS)
 class EditPageDetailsFragment : ParentFragment() {
 
     private var apiJob: WeaveJob? = null

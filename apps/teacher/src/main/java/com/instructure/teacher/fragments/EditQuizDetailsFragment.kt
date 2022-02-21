@@ -39,6 +39,8 @@ import com.instructure.canvasapi2.models.postmodels.QuizPostBody
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.discussions.DiscussionUtils
@@ -62,6 +64,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
 class EditQuizDetailsFragment : BasePresenterFragment<
         EditQuizDetailsPresenter,
         EditQuizDetailsView>(), EditQuizDetailsView, Identity {

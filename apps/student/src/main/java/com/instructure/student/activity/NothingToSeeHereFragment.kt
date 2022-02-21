@@ -21,12 +21,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTHING_TO_SEE_HERE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_nothing_to_see_here.*
 
+@ScreenView(SCREEN_VIEW_NOTHING_TO_SEE_HERE)
 class NothingToSeeHereFragment : ParentFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

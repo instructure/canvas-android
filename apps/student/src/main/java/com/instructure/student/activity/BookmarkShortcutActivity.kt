@@ -22,6 +22,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARK_SHORTCUT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.Const
@@ -31,6 +33,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.ShortcutUtils
 
+@ScreenView(SCREEN_VIEW_BOOKMARK_SHORTCUT)
 class BookmarkShortcutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

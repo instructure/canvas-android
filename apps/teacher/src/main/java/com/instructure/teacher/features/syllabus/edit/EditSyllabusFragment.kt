@@ -22,6 +22,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_SYLLABUS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.mobius.common.ui.EffectHandler
@@ -31,6 +33,7 @@ import com.instructure.teacher.mobius.common.ui.UpdateInit
 
 private const val SUMMARY_ALLOWED = "summaryAllowed"
 
+@ScreenView(SCREEN_VIEW_EDIT_SYLLABUS)
 class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent, EditSyllabusEffect, EditSyllabusView, EditSyllabusViewState>(), NavigationCallbacks {
 
     private val course by ParcelableArg<Course>()

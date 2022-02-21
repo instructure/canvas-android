@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -48,6 +50,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView {
 
     private var currentMessage: Message? by NullableParcelableArg(null, Const.MESSAGE_TO_USER)

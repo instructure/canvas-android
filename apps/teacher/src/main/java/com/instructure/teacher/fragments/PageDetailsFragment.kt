@@ -31,6 +31,8 @@ import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -54,6 +56,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
 
+@ScreenView(SCREEN_VIEW_PAGE_DETAILS)
 class PageDetailsFragment : BasePresenterFragment<
         PageDetailsPresenter,
         PageDetailsView>(),

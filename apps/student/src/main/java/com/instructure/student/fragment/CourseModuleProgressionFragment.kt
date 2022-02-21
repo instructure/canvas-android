@@ -41,6 +41,8 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_MODULE_PROGRESSION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.events.ModuleUpdatedEvent
@@ -55,6 +57,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_COURSE_MODULE_PROGRESSION)
 class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private var routeModuleProgressionJob: Job? = null

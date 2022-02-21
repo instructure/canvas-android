@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -53,6 +55,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LIST)
 class AssignmentSubmissionListFragment : BaseSyncFragment<
         GradeableStudentSubmission,
         AssignmentSubmissionListPresenter,

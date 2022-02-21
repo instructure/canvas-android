@@ -29,6 +29,8 @@ import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_RESOURCES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentResourcesBinding
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
@@ -41,6 +43,7 @@ import kotlinx.android.synthetic.main.fragment_resources.*
 import kotlinx.android.synthetic.main.item_important_links.view.*
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_K5_RESOURCES)
 @AndroidEntryPoint
 class ResourcesFragment : Fragment() {
 

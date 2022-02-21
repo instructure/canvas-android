@@ -26,6 +26,8 @@ import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.fragment.app.FragmentManager
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PASS_FAIL_GRADE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.dismissExisting
@@ -34,6 +36,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.utils.Const
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_PASS_FAIL_GRADE)
 class PassFailGradeDailog : AppCompatDialogFragment() {
 
     init {

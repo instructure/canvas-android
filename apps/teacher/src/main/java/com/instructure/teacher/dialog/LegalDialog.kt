@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.pandautils.analytics.SCREEN_VIEW_LEGAL
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.descendants
 import com.instructure.pandautils.utils.setVisible
@@ -38,6 +40,7 @@ import com.instructure.teacher.activities.InternalWebViewActivity
 import kotlinx.android.synthetic.main.dialog_legal.view.*
 import kotlinx.coroutines.Job
 
+@ScreenView(SCREEN_VIEW_LEGAL)
 class LegalDialog : AppCompatDialogFragment() {
 
     private var termsJob: Job? = null

@@ -53,6 +53,8 @@ import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
 import com.instructure.teacher.presenters.AttendanceListPresenter
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ATTENDANCE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
@@ -64,6 +66,7 @@ import org.json.JSONObject
 import java.util.*
 import java.util.regex.Pattern
 
+@ScreenView(SCREEN_VIEW_ATTENDANCE_LIST)
 class AttendanceListFragment : BaseSyncFragment<
         Attendance, AttendanceListPresenter, AttendanceListView, AttendanceViewHolder, AttendanceListRecyclerAdapter>(), AttendanceListView {
 

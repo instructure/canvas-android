@@ -20,13 +20,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.Submission
 import com.instructure.student.db.Db
@@ -36,6 +37,7 @@ import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
+@ScreenView(SCREEN_VIEW_SUBMISSION_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
 class SubmissionDetailsFragment :
     MobiusFragment<SubmissionDetailsModel, SubmissionDetailsEvent, SubmissionDetailsEffect, SubmissionDetailsView, SubmissionDetailsViewState>() {

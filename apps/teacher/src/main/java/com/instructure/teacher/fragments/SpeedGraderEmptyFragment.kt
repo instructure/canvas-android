@@ -22,6 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_EMPTY
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.StringArg
@@ -29,6 +31,7 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import kotlinx.android.synthetic.main.fragment_speedgrader_empty.*
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER_EMPTY)
 class SpeedGraderEmptyFragment : Fragment() {
 
     private var mTitle by StringArg()

@@ -32,12 +32,15 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_RATING
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.withArgs
 import kotlinx.android.synthetic.main.dialog_rating.view.*
 
+@ScreenView(SCREEN_VIEW_RATING)
 class RatingDialog : DialogFragment() {
 
     object Prefs : PrefManager("rating_dialog") {

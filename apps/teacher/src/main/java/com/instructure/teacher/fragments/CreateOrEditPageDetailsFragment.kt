@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_PAGE_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -47,6 +49,7 @@ import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.CreateOrEditPageView
 import kotlinx.android.synthetic.main.fragment_create_or_edit_page.*
 
+@ScreenView(SCREEN_VIEW_CREATE_OR_EDIT_PAGE_DETAILS)
 class CreateOrEditPageDetailsFragment :
         BasePresenterFragment<CreateOrEditPagePresenter, CreateOrEditPageView>(),
         CreateOrEditPageView,

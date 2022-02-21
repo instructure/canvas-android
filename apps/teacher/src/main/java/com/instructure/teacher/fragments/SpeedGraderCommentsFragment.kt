@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
@@ -56,6 +58,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER_COMMENTS)
 @AndroidEntryPoint
 class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, SpeedGraderCommentsPresenter, SpeedGraderCommentsView, SpeedGraderCommentHolder, SpeedGraderCommentsAdapter>(), SpeedGraderCommentsView {
     var mRawComments by ParcelableArrayListArg<SubmissionComment>()
