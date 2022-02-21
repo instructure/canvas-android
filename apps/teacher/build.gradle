@@ -16,6 +16,7 @@
 import com.instructure.android.buildtools.transform.ProjectTransformer
 import com.instructure.android.buildtools.transform.MasqueradeUITransformer
 import com.instructure.android.buildtools.transform.LocaleTransformer
+import com.instructure.android.buildtools.transform.ScreenViewTransformer
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -172,7 +173,8 @@ android {
             new ProjectTransformer(
                     android,
                     new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
-                    new LocaleTransformer(project)
+                    new LocaleTransformer(project),
+                    new ScreenViewTransformer("teacher")
             )
     )
 

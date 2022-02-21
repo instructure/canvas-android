@@ -38,6 +38,8 @@ import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.AttachmentPickerDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
@@ -74,6 +76,7 @@ import kotlin.collections.joinToString
 import kotlin.collections.map
 import kotlin.collections.singleOrNull
 
+@ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 class DiscussionsDetailsFragment : BasePresenterFragment<
         DiscussionsDetailsPresenter,
         DiscussionsDetailsView>(), DiscussionsDetailsView, Identity {

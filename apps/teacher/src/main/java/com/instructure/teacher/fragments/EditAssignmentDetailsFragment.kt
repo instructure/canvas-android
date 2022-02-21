@@ -48,6 +48,8 @@ import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_ASSIGNMENT_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.discussions.DiscussionUtils
@@ -73,6 +75,7 @@ import java.text.DecimalFormat
 import java.text.ParseException
 import java.util.Date
 
+@ScreenView(SCREEN_VIEW_EDIT_ASSIGNMENT_DETAILS)
 class EditAssignmentDetailsFragment : BaseFragment() {
 
     private var mCourse: Course by ParcelableArg(Course())

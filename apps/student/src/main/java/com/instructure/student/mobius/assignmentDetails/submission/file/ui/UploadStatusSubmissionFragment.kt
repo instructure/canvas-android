@@ -17,11 +17,12 @@
 package com.instructure.student.mobius.assignmentDetails.submission.file.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_UPLOAD_STATUS_SUBMISSION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.withArgs
@@ -33,6 +34,7 @@ import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.spotify.mobius.EventSource
 
+@ScreenView(SCREEN_VIEW_UPLOAD_STATUS_SUBMISSION)
 class UploadStatusSubmissionFragment :
     MobiusFragment<UploadStatusSubmissionModel, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect, UploadStatusSubmissionView, UploadStatusSubmissionViewState>() {
 

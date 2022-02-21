@@ -26,12 +26,15 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD_NOTIFICATIONS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentDashboardNotificationsBinding
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_DASHBOARD_NOTIFICATIONS)
 @AndroidEntryPoint
 class DashboardNotificationsFragment : Fragment() {
 

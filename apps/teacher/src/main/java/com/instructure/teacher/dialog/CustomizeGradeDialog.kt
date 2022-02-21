@@ -27,11 +27,14 @@ import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CUSTOMIZE_GRADE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import kotlinx.android.synthetic.main.dialog_customize_grade.view.*
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_CUSTOMIZE_GRADE)
 class CustomizeGradeDialog : AppCompatDialogFragment() {
 
     init {

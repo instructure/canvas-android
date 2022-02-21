@@ -27,6 +27,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CRITERION_LONG_DESCRIPTION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
@@ -34,7 +36,7 @@ import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.router.RouteMatcher
 import kotlinx.android.synthetic.main.dialog_criterion_long_description.view.*
 
-
+@ScreenView(SCREEN_VIEW_CRITERION_LONG_DESCRIPTION)
 class CriterionLongDescriptionDialog : DialogFragment() {
 
     var mDescription by StringArg()

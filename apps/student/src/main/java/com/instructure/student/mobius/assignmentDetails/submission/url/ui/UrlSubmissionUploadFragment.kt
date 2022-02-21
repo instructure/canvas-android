@@ -19,8 +19,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_URL_SUBMISSION_UPLOAD
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.submission.url.*
 import com.instructure.student.mobius.common.ui.EffectHandler
@@ -28,6 +29,7 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.common.ui.Presenter
 import com.instructure.student.mobius.common.ui.UpdateInit
 
+@ScreenView(SCREEN_VIEW_URL_SUBMISSION_UPLOAD)
 class UrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUploadModel, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect, UrlSubmissionUploadView, UrlSubmissionUploadViewState>() {
 
     private val course by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
