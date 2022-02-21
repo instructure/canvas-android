@@ -233,7 +233,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routeUrl(context, url, ApiPrefs.domain, extras)
     }
 
-    fun routeUrl(context: Context, url: String, domain: String, extras: Bundle? = null) {
+    fun routeUrl(context: Context, url: String, domain: String, extras: Bundle? = null, secondaryClass: Class<out Fragment>? = null) {
         /* Possible activity types we can navigate too: Unknown Link, InitActivity, Master/Detail, Fullscreen, WebView, ViewMedia */
 
         //Find the best route
@@ -256,6 +256,10 @@ object RouteMatcher : BaseRouteMatcher() {
         if (route?.getContextType() == CanvasContext.Type.GROUP && route.primaryClass == PeopleListFragment::class.java && route.secondaryClass == PeopleDetailsFragment::class.java ) {
             route.primaryClass = null
             route.secondaryClass = PeopleListFragment::class.java
+        }
+
+        if (secondaryClass != null) {
+            route?.secondaryClass = secondaryClass
         }
 
         route(context, route)
