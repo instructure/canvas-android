@@ -65,6 +65,7 @@ object CourseEndpoint : Endpoint(
         Segment("files") to CourseFilesEndpoint,
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         Segment("modules") to CourseModuleListEndpoint,
+        Segment("module_item_sequence") to CourseModuleItemSequenceEndpoint,
         Segment("quizzes") to CourseQuizListEndpoint,
         Segment("all_quizzes") to CourseQuizListEndpoint,
         Segment("users") to CourseUsersEndpoint,
@@ -892,5 +893,13 @@ object CourseSingleUserEndpoint : Endpoint(
             }
         }
 
+    }
+)
+
+object CourseModuleItemSequenceEndpoint : Endpoint(
+    response = {
+        GET {
+            request.successResponse(ModuleItemSequence())
+        }
     }
 )

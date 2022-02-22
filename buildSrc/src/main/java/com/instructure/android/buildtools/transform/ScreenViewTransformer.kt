@@ -53,7 +53,6 @@ class ScreenViewTransformer(private val appName: String) : ClassTransformer() {
         classPool.importPackage("com.instructure.canvasapi2.utils.Analytics")
         classPool.importPackage("android.view.View")
         classPool.importPackage("android.content.Context")
-        classPool.importPackage("android.util.Log")
     }
 
     override fun createFilter(): ClassFilter = NameContains("instructure") +
