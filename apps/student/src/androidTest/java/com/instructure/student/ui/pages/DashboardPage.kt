@@ -289,6 +289,30 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         refresh()
         assertAnnouncementsGone()
     }
+
+    fun assertInviteShowing(courseName: String) {
+        onView(withText(courseName) + withAncestor(R.id.dashboardNotifications)).assertDisplayed()
+    }
+
+    fun acceptInvite() {
+        onView(withId(R.id.acceptButtonWrapper)).click()
+    }
+
+    fun declineInvite() {
+        onView(withId(R.id.declineButtonWrapper)).click()
+    }
+
+    fun assertInviteAccepted() {
+        onView(withText("Invite accepted!") + withAncestor(R.id.dashboardNotifications)).assertDisplayed()
+    }
+
+    fun assertInviteDeclined() {
+        onView(withText("Invite declined.") + withAncestor(R.id.dashboardNotifications)).assertDisplayed()
+    }
+
+    fun assertInviteGone(courseName: String) {
+        onView(withText(courseName) + withAncestor(R.id.dashboardNotifications)).check(doesNotExist())
+    }
 }
 
 /**

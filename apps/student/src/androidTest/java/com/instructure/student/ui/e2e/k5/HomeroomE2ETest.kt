@@ -28,6 +28,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -68,8 +69,9 @@ class HomeroomE2ETest : StudentTest() {
 
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, 23)
-        calendar.set(Calendar.MINUTE, 1)
-        calendar.set(Calendar.SECOND, 1)
+        calendar.set(Calendar.MINUTE, 55)
+        calendar.set(Calendar.SECOND, 59)
+
 
         val missingCalendar = Calendar.getInstance()
 
@@ -96,7 +98,10 @@ class HomeroomE2ETest : StudentTest() {
 
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
-        homeroomPage.assertPageObjects()
+        elementaryDashboardPage.assertPageObjects()
+        elementaryDashboardPage.waitForRender()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
+
         homeroomPage.assertWelcomeText(student.shortName)
         homeroomPage.assertAnnouncementDisplayed(
             homeroomCourse.name,
