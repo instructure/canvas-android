@@ -20,14 +20,16 @@ package com.instructure.dataseeding.api
 import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.CanvasRestAdapter
 import com.instructure.dataseeding.util.Randomizer
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.FormElement
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -48,13 +50,28 @@ object UserApi {
                 @Query(value = "redirect_uri", encoded = true) redirectURI: String
         ): Call<OAuthToken>
 
+        @GET("users/{userId}/settings")
+        fun getSelfSettings(@Path("userId") userId: Long): Call<UserSettingsApiModel>
+
+        @PUT("users/{userId}/settings")
+        fun putSelfSettings(@Path("userId") userId: Long, @Body body: UserSettingsApiModel): Call<UserSettingsApiModel>
+
     }
 
     private val userAdminService: UserService by lazy {
         CanvasRestAdapter.adminRetrofit.create(UserService::class.java)
     }
 
-    fun createCanvasUser(
+    fun getSelfSettings(userId: Long): UserSettingsApiModel {
+        return userAdminService.getSelfSettings(userId).execute().body()!!
+    }
+
+    fun putSelfSettings(userId: Long,
+                        requestApiModel: UserSettingsApiModel) {
+         userAdminService.putSelfSettings(userId, requestApiModel).execute()
+    }
+
+        fun createCanvasUser(
             userService: UserService = userAdminService,
             userDomain: String = CanvasRestAdapter.canvasDomain
     ): CanvasUserApiModel {

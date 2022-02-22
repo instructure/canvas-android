@@ -67,6 +67,10 @@ class SpeedGraderCommentsPage : BasePage() {
         commentEditText.typeText(comment)
     }
 
+    fun focusOnCommentEditTextField() {
+        commentEditText.click()
+    }
+
     fun clearComment() {
         commentEditText.clearText()
     }
