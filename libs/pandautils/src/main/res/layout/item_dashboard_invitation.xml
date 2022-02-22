@@ -112,30 +112,57 @@
                     android:paddingBottom="4dp"
                     android:visibility="@{itemViewModel.inProgress ? View.INVISIBLE : itemViewModel.accepted != null ? View.GONE : View.VISIBLE, default = visible}">
 
-                    <Button
-                        android:id="@+id/declineButton"
-                        style="@style/TextFont.Medium"
-                        android:layout_width="128dp"
-                        android:layout_height="36dp"
-                        android:background="@drawable/course_invite_decline_button_background"
-                        android:onClick="@{() -> itemViewModel.handleInvitation(false)}"
-                        android:text="@string/declineCourseInvitation"
-                        android:textAllCaps="false"
-                        android:textColor="@color/defaultTextGray"
-                        android:textSize="16sp" />
 
-                    <Button
-                        android:id="@+id/acceptButton"
-                        style="@style/TextFont.Medium"
-                        android:layout_width="128dp"
-                        android:layout_height="36dp"
+                    <LinearLayout
+                        android:id="@+id/declineButtonWrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:contentDescription="@string/a11y_content_description_decline_invite"
+                        android:gravity="center"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:onClick="@{() -> itemViewModel.handleInvitation(false)}">
+
+                        <Button
+                            android:id="@+id/declineButton"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="128dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/course_invite_decline_button_background"
+                            android:clickable="false"
+                            android:importantForAccessibility="no"
+                            android:text="@string/declineCourseInvitation"
+                            android:textAllCaps="false"
+                            android:textColor="@color/defaultTextGray"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/acceptButtonWrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:background="@drawable/course_invite_accept_button_background"
-                        android:onClick="@{() -> itemViewModel.handleInvitation(true)}"
-                        android:text="@string/acceptCourseInvitation"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:background="?android:selectableItemBackground"
+                        android:contentDescription="@string/a11y_content_description_accept_invite"
+                        android:gravity="center"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:onClick="@{() -> itemViewModel.handleInvitation(true)}">
+
+                        <Button
+                            android:id="@+id/acceptButton"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="128dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/course_invite_accept_button_background"
+                            android:clickable="false"
+                            android:importantForAccessibility="no"
+                            android:text="@string/acceptCourseInvitation"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
