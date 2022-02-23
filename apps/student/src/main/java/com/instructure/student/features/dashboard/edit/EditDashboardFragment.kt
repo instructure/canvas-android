@@ -95,6 +95,7 @@ class EditDashboardFragment : Fragment() {
             }
             is EditDashboardItemAction.ShowSnackBar -> {
                 Snackbar.make(requireView(), action.res, Snackbar.LENGTH_LONG).show()
+                view?.announceForAccessibility(requireContext().getString(action.res))
             }
         }
     }
