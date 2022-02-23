@@ -29,6 +29,16 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/markDoneWrapper" />
 
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/viewPager"
+        android:layout_alignBottom="@id/viewPager"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/moduleNotFound"
         style="@style/TextStyle.Primary"
@@ -36,10 +46,10 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/markDoneWrapper"
         android:gravity="center"
-        android:visibility="gone"
-        android:textColor="@color/secondaryText"
         android:text="@string/moduleItemNotFound"
-        tools:visibility="visible"/>
+        android:textColor="@color/secondaryText"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <View
         android:layout_width="match_parent"
@@ -54,7 +64,8 @@
         android:layout_above="@+id/bottomBarModule"
         android:background="@color/white"
         android:clickable="true"
-        android:visibility="visible">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <LinearLayout
             android:id="@+id/markDoneButton"
@@ -98,14 +109,15 @@
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:clickable="true"
+        android:visibility="gone"
         tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/prev_item"
             android:layout_toStartOf="@+id/next_item"
+            android:layout_toEndOf="@+id/prev_item"
             android:gravity="center"
             tools:ignore="UseCompoundDrawables">
 
@@ -142,7 +154,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_chevron_left"
-            android:contentDescription="@string/previous"/>
+            android:contentDescription="@string/previous" />
 
         <Button
             android:id="@+id/next_item"
@@ -151,7 +163,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_chevron_right"
-            android:contentDescription="@string/next"/>
+            android:contentDescription="@string/next" />
 
     </RelativeLayout>
 

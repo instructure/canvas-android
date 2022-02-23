@@ -44,7 +44,7 @@ open class BaseRouteMatcher {
 
         return routes.find { it.apply(urlValidator.url) }?.takeUnless {
             RouteContext.INTERNAL == it.routeContext || RouteContext.DO_NOT_ROUTE == it.routeContext
-        }
+        }?.copy()
     }
 
     /**

@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePag
 import com.instructure.pandautils.utils.StringArg
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule.*
+import kotlinx.android.synthetic.main.item_schedule_planner_item.*
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_K5_SCHEDULE)
@@ -105,6 +106,9 @@ class ScheduleFragment : Fragment() {
             }
             is ScheduleAction.JumpToToday -> {
                 jumpToToday()
+            }
+            is ScheduleAction.AnnounceForAccessibility -> {
+                checkbox.announceForAccessibility(action.announcement)
             }
         }
     }

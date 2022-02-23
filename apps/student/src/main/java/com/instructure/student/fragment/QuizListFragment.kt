@@ -134,7 +134,9 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
         if (navigation != null) {
             /* The quiz list endpoint is currently missing the quiz question types, so we'll route using the quiz url
             which should pull the full quiz details including the question types. */
-            if (!RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain, true)) {
+            if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain, false)) {
+                RouteMatcher.routeUrl(requireContext(), quiz.htmlUrl!!, ApiPrefs.domain, secondaryClass = BasicQuizViewFragment::class.java)
+            } else {
                 RouteMatcher.route(requireContext(), BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
             }
         }
