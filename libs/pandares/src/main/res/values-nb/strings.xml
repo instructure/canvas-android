@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Fant ingen filer</string>
     <string name="searchFilesHint">Søk i filer</string>
     <string name="fileSearchInstructions">Skriv inn en søkeord med tre eller flere tegn</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Valgt: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Oppgavedetaljer</string>
     <string name="submission_types">Innleveringstyper</string>
@@ -733,7 +733,7 @@
     <string name="createNewCalendarEvent">Opprett ny hendelse</string>
     <string name="enableFunMode">Skru av pandaene</string>
 
-    <string name="accountNotifications">Kunngjøringer</string>`
+    <string name="accountNotifications">Kunngjøringer</string>
     <string name="addAccount">Legg til konto</string>
 
     <string name="changeUser">Endre bruker</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Valgt hode: %s</string>
     <string name="content_description_chosen_body">Valgt kropp: %s</string>
     <string name="content_description_chosen_feet">Valgte føtter: %s</string>
@@ -1227,6 +1226,7 @@
     <string name="studentAnnotationToolbarTitle">Studentmerknad</string>
     <string name="submissionTypeStudentAnnotation">Studentmerknad</string>
     <string name="gradesNoDueDate">Ingen forfallsdato</string>
+    <string name="importantDatesNoDueDate">Ingen forfallsdato</string>
     <string name="missingAssignment">Mangler</string>
     <string name="dontSave">Ikke lagre</string>
     <string name="textSubmissionExitConfirmationTitle">Lagre utkast?</string>
@@ -1235,4 +1235,11 @@
     <string name="submissionDraftAvailableTitle">Utkast tilgjengelig</string>
     <string name="errorLoadingSubmission">Det oppsto en feil under lasting av innleveringer</string>
     <string name="loadFullContent">Klikk for å se hele innholdet</string>
+    <string name="dashboardTabImportantDates">Viktige datoer</string>
+    <string name="importantDatesEmptyTitle">Ingen viktige datoer</string>
+    <string name="important_dates">Viktige datoer</string>
+
+    <string name="toolbarCommentLibrary">Kommentarbibliotek</string>
+    <string name="commentLibraryNoSuggestions">Ingen forslag tilgjengelige</string>
+    <string name="speedGraderCommentHint">Kommentar</string>
 </resources>

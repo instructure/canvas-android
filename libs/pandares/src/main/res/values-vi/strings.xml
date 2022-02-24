@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Không Tìm Thấy Tập Tin</string>
     <string name="searchFilesHint">Tìm kiếm tập tin</string>
     <string name="fileSearchInstructions">Nhập từ khóa tìm kiếm có từ ba ký tự trở lên</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Đã chọn: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Chi Tiết Bài Tập</string>
     <string name="submission_types">Loại Nộp</string>
@@ -91,7 +91,7 @@
     <string name="submissionDetailsNoSubmissionYet">Chưa Có Bài Nộp</string>
     <string name="submissionDetailsAssignmentWasLockedOn">Bài tập của bạn đã được khóa trên %1$s lúc %2$s</string>
     <string name="submissionDetailsAssignmentWillUnlockOn">Bài tập của bạn sẽ được mở khóa trên %1$s lúc %2$s</string>
-    <string name="submissionDetailsAssignmentLockedByModuleName">Bài tập của bạn đã bị khóa bởi học phần \\"%1$s\\"</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Bài tập của bạn đã bị khóa bởi học phần \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Bài tập của bạn đã bị khóa do yêu cầu học phần</string>
     <string name="submissionDetailsAssignmentLocked">Bài Tập Bị Khóa</string>
     <string name="submissionDetailsNoSubmissionAllowed">Không Cho Phép Nộp</string>
@@ -212,7 +212,7 @@
     <string name="a11y_assignmentsSortedByType">Bài tập đã sắp xếp theo loại</string>
 
     <!-- Assignment editing -->
-    <string name="points">Điểm Thành Phần\\u0020</string>
+    <string name="points">Điểm Thành Phần\u0020</string>
     <string name="save">Lưu</string>
     <string name="cancel">Hủy</string>
 
@@ -347,9 +347,9 @@
     <string name="with">với</string>
     <string name="starConversation">Gắn Dấu Sao Cuộc Trò Chuyện</string>
     <string name="deleteConversation">Xóa Cuộc Trò Chuyện</string>
-    <string name="sharedWith">Đã chia sẻ với \\u0020</string>
+    <string name="sharedWith">Đã chia sẻ với \u0020</string>
     <string name="sharedWithYou">Đã chia sẻ với bạn</string>
-    <string name="inboxEmptyMessage">Nhấn vào dấu \\"+\\" để tạo cuộc trò chuyện mới.</string>
+    <string name="inboxEmptyMessage">Nhấn vào dấu \"+\" để tạo cuộc trò chuyện mới.</string>
     <string name="inboxAllMessages">Tất Cả</string>
     <string name="filterInbox">Lọc Hộp Thư Đến</string>
     <string name="selectCanvasContext">Chọn một khóa học hoặc nhóm</string>
@@ -559,11 +559,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Khả dụng riêng tư</string>
     <string name="publiclyAvailable">Khả dụng công khai</string>
-    <string name="starts">Bắt Đầu: \\u0020</string>
-    <string name="courseCode">Mã Khóa Học: \\u0020</string>
-    <string name="ends">Kết Thúc: \\u0020</string>
-    <string name="visibility">Hiển Thị: \\u0020</string>
-    <string name="license">Giấy Phép: \\u0020</string>
+    <string name="starts">Bắt Đầu: \u0020</string>
+    <string name="courseCode">Mã Khóa Học: \u0020</string>
+    <string name="ends">Kết Thúc: \u0020</string>
+    <string name="visibility">Hiển Thị: \u0020</string>
+    <string name="license">Giấy Phép: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -654,7 +654,7 @@
     <string name="pinAndFingerprint">Mã PIN Và Vân Tay</string>
     <string name="pairWithObserver">Ghép Cặp Với Người Quan Sát</string>
     <string name="pairWithObserverDetails">Hãy nhờ phụ huynh của bạn quét mã QR này từ ứng dụng Canvas Parent để ghép cặp với bạn. Mã này sẽ hết hạn sau bảy ngày hoặc sau một lần sử dụng.</string>
-    <string name="pairingCodeLabel">Mã Ghép Cặp:\\u0020</string>
+    <string name="pairingCodeLabel">Mã Ghép Cặp:\u0020</string>
     <string name="pairingCodeErrorTitle">Lỗi Mã Ghép Cặp</string>
     <string name="pairingCodeErrorDescription">Không thể truy xuất mã ghép cặp. Tính năng này chỉ được hỗ trợ đối với sinh viên.</string>
 
@@ -733,7 +733,7 @@
     <string name="createNewCalendarEvent">Tạo Sự Kiện Mới</string>
     <string name="enableFunMode">Tắt gấu trúc</string>
 
-    <string name="accountNotifications">Thông Báo Chung</string>`
+    <string name="accountNotifications">Thông Báo Chung</string>
     <string name="addAccount">Thêm Tài Khoản</string>
 
     <string name="changeUser">Thay Đổi Người Dùng</string>
@@ -887,7 +887,7 @@
     <string name="recents_empty">Từ màn hình tùy chỉnh khóa học, hãy thêm khóa học hoặc nhóm để xem ở đây.</string>
 
     <string name="toolbar_close">Đóng thanh công cụ</string>
-    <string name="favoriteDescription">Hiển thị trong \\"Khóa Học Của Tôi\\"</string>
+    <string name="favoriteDescription">Hiển thị trong \"Khóa Học Của Tôi\"</string>
     <string name="about">Giới Thiệu</string>
     <string name="courseShortcuts">Thêm lối tắt cho khóa học của bạn</string>
     <string name="courseNickname">Biệt Danh Khóa Học</string>
@@ -905,7 +905,7 @@
     <string name="restartingCanvas">Khởi Động Lại Canvas</string>
     <string name="languageDialogText">Thay đổi ngôn ngữ sẽ yêu cầu ứng dụng khởi động lại, bạn có chắc chắn không?</string>
     <string name="defaultLanguageWarning">Ngôn ngữ mặc định của hệ thống của bạn không bảo đảm sẽ được hỗ trợ và sẽ yêu cầu khởi động lại, bạn có chắc chắn không?</string>
-    <string name="locked_mastery_paths">Bị khóa đến khi \\"%s\\" được chấm điểm</string>
+    <string name="locked_mastery_paths">Bị khóa đến khi \"%s\" được chấm điểm</string>
     <string name="locked_icon">Biểu Tượng Bị Khóa</string>
     <string name="choose_assignment_group">Chọn Nhóm Bài Tập</string>
     <string name="chooseAssignmentPath">Chọn Đường Dẫn Bài tập</string>
@@ -1046,7 +1046,6 @@
 
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Đầu được chọn: %s</string>
     <string name="content_description_chosen_body">Thân được chọn: %s</string>
     <string name="content_description_chosen_feet">Chân được chọn: %s</string>
@@ -1109,7 +1108,7 @@
     <string name="quizNoTimeLimit">Không Có</string>
     <string name="viewQuiz">Xem Bài Kiểm Tra</string>
     <string name="viewDiscussion">Xem Thảo Luận</string>
-    <string name="lockedModule">Bài tập này bị khóa bởi học phần \\"%1$s\\".</string>
+    <string name="lockedModule">Bài tập này bị khóa bởi học phần \"%1$s\".</string>
     <string name="chooseMediaFile">Chọn Tập Tin Nội Dung Phương Tiện</string>
     <string name="discussions_unknown_author">Tác Giả Không Xác Định</string>
     <string name="discussions_unknown_date">Ngày Không Xác Định</string>
@@ -1215,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Đáp án của sinh viên này bị ẩn vì bài tập này ẩn danh.</string>
 
-    <string name="studentAnnotationUnsupported">Chú Thích Sinh Viên (Không được hỗ trợ)</string>
-    <string name="studentAnnotationUnsupportedDescription">Chú Thích Sinh Viên hiện không được hỗ trợ trên di động.</string>
-    <string name="unsupportedSubmissionType">Loại Nộp Không Được Hỗ Trợ</string>
-    <string name="studentAnnotationUnsupportedMessage">Không thể hiển thị bài nộp do Chú Thích Sinh Viên hiện không được hỗ trợ trên di động.</string>
     <string name="schedule_marked_as_done">Bạn đã đánh dấu là đã xong.</string>
     <string name="error_saving_assignment_closed_grading_period">Không thể thay đổi do ngày đến hạn khi ngày đến hạn nằm trong thời gian phân loại điểm.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Chuyển Đến Hôm Nay</string>
@@ -1227,4 +1222,24 @@
 
     <string name="somethingWentWrong">Đã xảy ra vấn đề</string>
     <string name="failedToLoadQuiz">Tải bài kiểm tra thất bại</string>
+    <string name="failedToLoadSubmission">Tải bài nộp không thành công</string>
+    <string name="studentAnnotationToolbarTitle">Chú Thích Sinh Viên</string>
+    <string name="submissionTypeStudentAnnotation">Chú Thích Sinh Viên</string>
+    <string name="gradesNoDueDate">Không có ngày đến hạn</string>
+    <string name="importantDatesNoDueDate">Không có ngày đến hạn</string>
+    <string name="missingAssignment">Bị Thiếu</string>
+    <string name="dontSave">Không lưu</string>
+    <string name="textSubmissionExitConfirmationTitle">Lưu bản nháp?</string>
+    <string name="textSubmissionExitConfirmationMessage">Nếu không các thay đổi của bạn sẽ không được lưu lại</string>
+    <string name="submissionDraftAvailableSubtitle">Nhấn vào đây để tiếp tục</string>
+    <string name="submissionDraftAvailableTitle">Có Bản Nháp</string>
+    <string name="errorLoadingSubmission">Đã xảy ra lỗi khi tải bài nộp</string>
+    <string name="loadFullContent">Nhấn để xem nội dung đầy đủ</string>
+    <string name="dashboardTabImportantDates">Những Ngày Quan Trọng</string>
+    <string name="importantDatesEmptyTitle">Không có ngày quan trọng</string>
+    <string name="important_dates">Những Ngày Quan Trọng</string>
+
+    <string name="toolbarCommentLibrary">Thư Viện Bình Luận</string>
+    <string name="commentLibraryNoSuggestions">Không có đề xuất nào</string>
+    <string name="speedGraderCommentHint">Bình Luận</string>
 </resources>

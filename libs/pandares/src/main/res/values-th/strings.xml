@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">หมายเหตุกำกับสำหรับผู้เรียน</string>
     <string name="submissionTypeStudentAnnotation">หมายเหตุกำกับสำหรับผู้เรียน</string>
     <string name="gradesNoDueDate">ไม่มีวันครบกำหนด</string>
+    <string name="importantDatesNoDueDate">ไม่มีวันครบกำหนด</string>
     <string name="missingAssignment">ขาดหาย</string>
     <string name="dontSave">ไม่บันทึก</string>
     <string name="textSubmissionExitConfirmationTitle">บันทึกร่างหรือไม่</string>
@@ -1233,4 +1234,11 @@
     <string name="submissionDraftAvailableTitle">มีฉบับร่าง</string>
     <string name="errorLoadingSubmission">เกิดข้อผิดพลาดขณะโหลดผลงานจัดส่ง</string>
     <string name="loadFullContent">กดเลือกเพื่อดูเนื้อหาทั้งหมด</string>
+    <string name="dashboardTabImportantDates">วันที่ที่สำคัญ</string>
+    <string name="importantDatesEmptyTitle">ไม่มีวันที่ที่สำคัญ</string>
+    <string name="important_dates">วันที่ที่สำคัญ</string>
+
+    <string name="toolbarCommentLibrary">ไลบรารี่ความเห็น</string>
+    <string name="commentLibraryNoSuggestions">ไม่มีข้อเสนอแนะ</string>
+    <string name="speedGraderCommentHint">ความเห็น</string>
 </resources>
