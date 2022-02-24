@@ -1225,12 +1225,20 @@
     <string name="studentAnnotationToolbarTitle">Student Annotation</string>
     <string name="submissionTypeStudentAnnotation">Student Annotation</string>
     <string name="gradesNoDueDate">No due date</string>
+    <string name="importantDatesNoDueDate">No due date</string>
     <string name="missingAssignment">Missing</string>
     <string name="dontSave">Don\'t save</string>
     <string name="textSubmissionExitConfirmationTitle">Save draft?</string>
     <string name="textSubmissionExitConfirmationMessage">Your changes will not be saved otherwise</string>
     <string name="submissionDraftAvailableSubtitle">Tap here to continue</string>
     <string name="submissionDraftAvailableTitle">Draft Available</string>
-    <string name="errorLoadingSubmission">An error occured while loading submission</string>
+    <string name="errorLoadingSubmission">An error occurred while loading submission</string>
     <string name="loadFullContent">Tap to see full content</string>
+    <string name="dashboardTabImportantDates">Important Dates</string>
+    <string name="importantDatesEmptyTitle">No important dates</string>
+    <string name="important_dates">Important Dates</string>
+
+    <string name="toolbarCommentLibrary">Comment Library</string>
+    <string name="commentLibraryNoSuggestions">No suggestions available</string>
+    <string name="speedGraderCommentHint">Comment</string>
 </resources>

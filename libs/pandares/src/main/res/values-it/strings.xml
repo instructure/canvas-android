@@ -1225,12 +1225,20 @@
     <string name="studentAnnotationToolbarTitle">Annotazione studente</string>
     <string name="submissionTypeStudentAnnotation">Annotazione studente</string>
     <string name="gradesNoDueDate">Nessuna data di scadenza</string>
+    <string name="importantDatesNoDueDate">Nessuna data di scadenza</string>
     <string name="missingAssignment">Mancante</string>
     <string name="dontSave">Non salvare</string>
     <string name="textSubmissionExitConfirmationTitle">Salvare bozza?</string>
     <string name="textSubmissionExitConfirmationMessage">Le modifiche non saranno altrimenti salvate</string>
     <string name="submissionDraftAvailableSubtitle">Tocca qui per continuare</string>
     <string name="submissionDraftAvailableTitle">Bozza disponibile</string>
-    <string name="errorLoadingSubmission">Si è verificato un errore durante la consegna</string>
+    <string name="errorLoadingSubmission">Si è verificato un errore durante il caricamento della consegna</string>
     <string name="loadFullContent">Tocca per vedere tutto il contenuto</string>
+    <string name="dashboardTabImportantDates">Date importanti</string>
+    <string name="importantDatesEmptyTitle">Nessuna data importante</string>
+    <string name="important_dates">Date importanti</string>
+
+    <string name="toolbarCommentLibrary">Commenta libreria</string>
+    <string name="commentLibraryNoSuggestions">Nessun suggerimento disponibile</string>
+    <string name="speedGraderCommentHint">Commento</string>
 </resources>

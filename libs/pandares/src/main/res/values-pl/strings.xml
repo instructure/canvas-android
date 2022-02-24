@@ -1253,6 +1253,7 @@
     <string name="studentAnnotationToolbarTitle">Adnotacja uczestnika</string>
     <string name="submissionTypeStudentAnnotation">Adnotacja uczestnika</string>
     <string name="gradesNoDueDate">Brak terminu</string>
+    <string name="importantDatesNoDueDate">Brak terminu</string>
     <string name="missingAssignment">Brak</string>
     <string name="dontSave">Nie zapisuj</string>
     <string name="textSubmissionExitConfirmationTitle">Zapisać wersję roboczą?</string>
@@ -1261,4 +1262,11 @@
     <string name="submissionDraftAvailableTitle">Dostępna jest wersja robocza</string>
     <string name="errorLoadingSubmission">Wystąpił błąd podczas wczytywania przesyłki</string>
     <string name="loadFullContent">Stuknij, aby zobaczyć całą zawartość</string>
+    <string name="dashboardTabImportantDates">Ważne daty</string>
+    <string name="importantDatesEmptyTitle">Brak ważnych dat</string>
+    <string name="important_dates">Ważne daty</string>
+
+    <string name="toolbarCommentLibrary">Biblioteka komentarzy</string>
+    <string name="commentLibraryNoSuggestions">Brak dostępnych propozycji</string>
+    <string name="speedGraderCommentHint">Komentarz</string>
 </resources>
