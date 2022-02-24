@@ -562,7 +562,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         if (docSession.annotationMetadata?.canWrite() != true) return
 
         // This is a new annotation; Post it
-        commentsButton.isEnabled = false
+        post {
+            commentsButton.isEnabled = false
+        }
 
         createAnnotationJob = tryWeave {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(apiValues.documentId)
