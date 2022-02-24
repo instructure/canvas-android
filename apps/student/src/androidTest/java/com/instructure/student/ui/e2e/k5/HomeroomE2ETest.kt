@@ -18,6 +18,7 @@ package com.instructure.student.ui.e2e.k5
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FlakyE2E
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
@@ -48,6 +49,7 @@ class HomeroomE2ETest : StudentTest() {
     }
 
     @E2E
+    @FlakyE2E("Need to investigate why is it breaking when asserting todo text. Timezone shouldn't be a problem anymore since we run these tests at 8 PM.")
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun homeroomE2ETest() {
