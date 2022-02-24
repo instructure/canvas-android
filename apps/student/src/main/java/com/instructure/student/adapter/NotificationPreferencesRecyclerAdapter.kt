@@ -34,9 +34,9 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.holders.NotificationPreferencesHeaderViewHolder
 import com.instructure.student.holders.NotificationPreferencesViewHolder
-import com.instructure.student.model.NotificationCategory
-import com.instructure.student.model.NotificationCategoryHeader
-import com.instructure.student.util.NotificationPreferenceUtils
+import com.instructure.pandautils.features.notification.preferences.NotificationCategory
+import com.instructure.pandautils.features.notification.preferences.NotificationCategoryHeader
+import com.instructure.pandautils.features.notification.preferences.NotificationPreferenceUtils
 import java.util.*
 
 class NotificationPreferencesRecyclerAdapter(context: Context) : ExpandableRecyclerAdapter<NotificationCategoryHeader, NotificationCategory, RecyclerView.ViewHolder>(context, NotificationCategoryHeader::class.java, NotificationCategory::class.java ) {

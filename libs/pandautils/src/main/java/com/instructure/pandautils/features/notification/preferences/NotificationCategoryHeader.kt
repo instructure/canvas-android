@@ -14,6 +14,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.model
+package com.instructure.pandautils.features.notification.preferences
 
 data class NotificationCategoryHeader(var title: String, var position: Int)

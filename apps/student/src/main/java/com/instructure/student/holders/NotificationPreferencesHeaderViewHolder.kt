@@ -19,7 +19,7 @@ package com.instructure.student.holders
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.instructure.student.R
-import com.instructure.student.model.NotificationCategoryHeader
+import com.instructure.pandautils.features.notification.preferences.NotificationCategoryHeader
 import kotlinx.android.synthetic.main.viewholder_notification_prefs_header.view.*
 
 class NotificationPreferencesHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.model
+package com.instructure.pandautils.features.notification.preferences
 
 data class NotificationCategory(
         var name: String,

@@ -24,7 +24,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import com.instructure.student.model.NotificationCategory
+import com.instructure.pandautils.features.notification.preferences.NotificationCategory
 import kotlinx.android.synthetic.main.viewholder_notification_preference.view.*
 
 class NotificationPreferencesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
