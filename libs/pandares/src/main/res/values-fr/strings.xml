@@ -1225,12 +1225,20 @@
     <string name="studentAnnotationToolbarTitle">Annotation d\'élève</string>
     <string name="submissionTypeStudentAnnotation">Annotation d\'élève</string>
     <string name="gradesNoDueDate">Pas de date d’échéance</string>
+    <string name="importantDatesNoDueDate">Pas de date d’échéance</string>
     <string name="missingAssignment">Manquant</string>
     <string name="dontSave">Ne pas enregistrer</string>
     <string name="textSubmissionExitConfirmationTitle">Enregistrer le brouillon ?</string>
     <string name="textSubmissionExitConfirmationMessage">Sinon, vos modifications ne seront pas enregistrées</string>
     <string name="submissionDraftAvailableSubtitle">Appuyez ici pour continuer</string>
     <string name="submissionDraftAvailableTitle">Brouillon disponible</string>
-    <string name="errorLoadingSubmission">Une erreur est survenue lors du chargement de la soumission.</string>
+    <string name="errorLoadingSubmission">Une erreur est survenue pendant le chargement des cours</string>
     <string name="loadFullContent">Appuyez pour voir le contenu entier.</string>
+    <string name="dashboardTabImportantDates">Dates importantes</string>
+    <string name="importantDatesEmptyTitle">Aucune date importante</string>
+    <string name="important_dates">Dates importantes</string>
+
+    <string name="toolbarCommentLibrary">Bibliothèque de Commentaires</string>
+    <string name="commentLibraryNoSuggestions">Aucune suggestion disponible</string>
+    <string name="speedGraderCommentHint">Commenter</string>
 </resources>

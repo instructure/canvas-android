@@ -1211,6 +1211,7 @@
     <string name="studentAnnotationToolbarTitle">學生註釋</string>
     <string name="submissionTypeStudentAnnotation">學生註釋</string>
     <string name="gradesNoDueDate">無截止日期</string>
+    <string name="importantDatesNoDueDate">無截止日期</string>
     <string name="missingAssignment">缺少</string>
     <string name="dontSave">請勿儲存</string>
     <string name="textSubmissionExitConfirmationTitle">儲存草稿？</string>
@@ -1219,4 +1220,11 @@
     <string name="submissionDraftAvailableTitle">可用草稿</string>
     <string name="errorLoadingSubmission">載入提交項目時發生錯誤</string>
     <string name="loadFullContent">點選以查看完整內容</string>
+    <string name="dashboardTabImportantDates">重要日期</string>
+    <string name="importantDatesEmptyTitle">沒有重要日期</string>
+    <string name="important_dates">重要日期</string>
+
+    <string name="toolbarCommentLibrary">評論檔案庫</string>
+    <string name="commentLibraryNoSuggestions">沒有提供建議</string>
+    <string name="speedGraderCommentHint">評論</string>
 </resources>

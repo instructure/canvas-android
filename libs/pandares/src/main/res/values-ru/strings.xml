@@ -1253,12 +1253,20 @@
     <string name="studentAnnotationToolbarTitle">Аннотация учащегося</string>
     <string name="submissionTypeStudentAnnotation">Аннотация учащегося</string>
     <string name="gradesNoDueDate">Срок выполнения не задан</string>
+    <string name="importantDatesNoDueDate">Срок выполнения не задан</string>
     <string name="missingAssignment">Отсутствует</string>
     <string name="dontSave">Не сохранять</string>
     <string name="textSubmissionExitConfirmationTitle">Сохранить черновик?</string>
     <string name="textSubmissionExitConfirmationMessage">В противном случае ваши изменения не будут сохранены</string>
     <string name="submissionDraftAvailableSubtitle">Нажмите здесь, чтобы продолжить</string>
     <string name="submissionDraftAvailableTitle">Черновик доступен</string>
-    <string name="errorLoadingSubmission">Произошла ошибка при загрузке отправки</string>
+    <string name="errorLoadingSubmission">Возникла ошибка при загрузке отправки</string>
     <string name="loadFullContent">Нажмите, чтобы увидеть полное содержание</string>
+    <string name="dashboardTabImportantDates">Важные даты</string>
+    <string name="importantDatesEmptyTitle">Нет важных дат</string>
+    <string name="important_dates">Важные даты</string>
+
+    <string name="toolbarCommentLibrary">Библиотека комментариев</string>
+    <string name="commentLibraryNoSuggestions">нет доступных предложений</string>
+    <string name="speedGraderCommentHint">Комментарий</string>
 </resources>

@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">Opomba študenta</string>
     <string name="submissionTypeStudentAnnotation">Opomba študenta</string>
     <string name="gradesNoDueDate">Ni roka.</string>
+    <string name="importantDatesNoDueDate">Ni roka</string>
     <string name="missingAssignment">Manjkajoče</string>
     <string name="dontSave">Ne shrani</string>
     <string name="textSubmissionExitConfirmationTitle">Želite shraniti osnutek?</string>
@@ -1233,4 +1234,11 @@
     <string name="submissionDraftAvailableTitle">Na voljo je osnutek</string>
     <string name="errorLoadingSubmission">Med nalaganjem oddaje je prišlo do napake</string>
     <string name="loadFullContent">Tapnite za ogled celotne vsebine</string>
+    <string name="dashboardTabImportantDates">Pomembni datumi</string>
+    <string name="importantDatesEmptyTitle">Ni pomembnih datumov</string>
+    <string name="important_dates">Pomembni datumi</string>
+
+    <string name="toolbarCommentLibrary">Knjižnica komentarjev</string>
+    <string name="commentLibraryNoSuggestions">Na voljo ni nobenih predlogov</string>
+    <string name="speedGraderCommentHint">Komentar</string>
 </resources>

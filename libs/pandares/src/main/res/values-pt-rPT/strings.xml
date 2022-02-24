@@ -1225,12 +1225,20 @@
     <string name="studentAnnotationToolbarTitle">Anotação de aluno</string>
     <string name="submissionTypeStudentAnnotation">Anotação de aluno</string>
     <string name="gradesNoDueDate">Sem data de limite</string>
+    <string name="importantDatesNoDueDate">Sem data de limite</string>
     <string name="missingAssignment">Em falta</string>
     <string name="dontSave">Não guardar</string>
     <string name="textSubmissionExitConfirmationTitle">Guardar rascunho?</string>
     <string name="textSubmissionExitConfirmationMessage">As suas alterações não serão guardadas de outra forma</string>
     <string name="submissionDraftAvailableSubtitle">Toque aqui para continuar</string>
     <string name="submissionDraftAvailableTitle">Projeto disponível</string>
-    <string name="errorLoadingSubmission">Ocorreu um erro ao carregar a submissão</string>
+    <string name="errorLoadingSubmission">Ocorreu um erro durante a submissão do carregamento</string>
     <string name="loadFullContent">Toque para ver o conteúdo completo</string>
+    <string name="dashboardTabImportantDates">Datas importantes</string>
+    <string name="importantDatesEmptyTitle">Não há datas importantes</string>
+    <string name="important_dates">Datas importantes</string>
+
+    <string name="toolbarCommentLibrary">Biblioteca de Comentários</string>
+    <string name="commentLibraryNoSuggestions">Não há sugestões disponíveis</string>
+    <string name="speedGraderCommentHint">Comentário</string>
 </resources>
