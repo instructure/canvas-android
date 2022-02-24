@@ -21,7 +21,8 @@ repositories {
 }
 
 apollo {
-    packageNamesFromFilePaths()
+    packageName.set("com.instructure.dataseeding.api.graphql")
+    schemaFile.set(file("src/main/kotlin/com/instructure/dataseeding/api/graphql/schema.json"))
 }
 
 dependencies {

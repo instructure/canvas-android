@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import com.apollographql.apollo.ApolloClient
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -79,6 +80,10 @@ class CommentLibraryE2ETest : TeacherTest() {
             commentLibrarySuggestions = true
         )
         UserApi.putSelfSettings(teacher.id, request) // Set comment library "Show suggestions when typing" user settings to be able to see the library comments.
+            val domain = teacher.domain
+        val apolloClient = ApolloClient.builder()
+            .serverUrl("https://mobileqa.beta.instructure.com/graphql")
+            .build()
 
         tokenLogin(teacher)
 
