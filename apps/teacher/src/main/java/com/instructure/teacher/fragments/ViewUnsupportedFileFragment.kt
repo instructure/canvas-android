@@ -30,6 +30,8 @@ import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_UNSUPPORTED_FILE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
@@ -44,6 +46,7 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
+@ScreenView(SCREEN_VIEW_VIEW_UNSUPPORTED_FILE)
 class ViewUnsupportedFileFragment : Fragment() {
 
     private var downloadFileJob: Job? = null

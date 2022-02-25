@@ -22,6 +22,7 @@ import android.util.Log
 import com.github.javafaker.Bool
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
+import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocCoordinate
@@ -333,6 +334,7 @@ class MockCanvas {
  */
 fun MockCanvas.Companion.init(
     courseCount: Int = 0,
+    invitedCourseCount: Int = 0,
     pastCourseCount: Int = 0,
     favoriteCourseCount: Int = 0,
     studentCount: Int = 0,
@@ -383,7 +385,7 @@ fun MockCanvas.Companion.init(
     }
 
     // Add enrollments
-    data.courses.values.forEach { course ->
+    data.courses.values.forEachIndexed { index, course ->
         // Enroll teachers
         teacherUsers.forEach { data.addEnrollment(it, course, Enrollment.EnrollmentType.Teacher) }
 
@@ -392,6 +394,7 @@ fun MockCanvas.Companion.init(
             data.addEnrollment(
                     user = it,
                     course = course,
+                    enrollmentState = if (index < invitedCourseCount) EnrollmentAPI.STATE_INVITED else EnrollmentAPI.STATE_ACTIVE,
                     type = Enrollment.EnrollmentType.Student,
                     courseSectionId = if(course.sections.count() > 0) course.sections.get(0).id else 0
             )
@@ -1039,14 +1042,15 @@ fun MockCanvas.addEnrollment(
     observedUser: User? = null,
     courseSectionId: Long = 0,
     currentScore: Double = 88.1,
-    currentGrade: String = "B+"
+    currentGrade: String = "B+",
+    enrollmentState: String = EnrollmentAPI.STATE_ACTIVE
 ): Enrollment {
     val enrollment = Enrollment(
         id = enrollments.size + 1L,
         role = type,
         type = type,
         courseId = course.id,
-        enrollmentState = "active",
+        enrollmentState = enrollmentState,
         userId = user.id,
         observedUser = observedUser,
         grades = Grades(currentScore = currentScore, currentGrade = currentGrade),

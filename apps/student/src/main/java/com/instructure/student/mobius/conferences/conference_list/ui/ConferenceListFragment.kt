@@ -19,8 +19,9 @@ package com.instructure.student.mobius.conferences.conference_list.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFERENCE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.makeBundle
@@ -33,6 +34,7 @@ import com.instructure.student.mobius.conferences.conference_list.ConferenceList
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListPresenter
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListUpdate
 
+@ScreenView(SCREEN_VIEW_CONFERENCE_LIST)
 class ConferenceListFragment :
     MobiusFragment<ConferenceListModel, ConferenceListEvent, ConferenceListEffect, ConferenceListView, ConferenceListViewState>() {
 

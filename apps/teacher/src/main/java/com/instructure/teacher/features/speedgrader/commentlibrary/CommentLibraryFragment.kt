@@ -23,6 +23,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COMMENT_LIBRARY
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -32,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_comment_library.*
 import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
 
+@ScreenView(SCREEN_VIEW_COMMENT_LIBRARY)
 @AndroidEntryPoint
 class CommentLibraryFragment : Fragment() {
 

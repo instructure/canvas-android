@@ -31,6 +31,8 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_IMAGE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
@@ -44,6 +46,7 @@ import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_view_image.*
 import org.greenrobot.eventbus.EventBus
 
+@ScreenView(SCREEN_VIEW_VIEW_IMAGE)
 class ViewImageFragment : Fragment(), ShareableFile {
 
     private var mUri by ParcelableArg(Uri.EMPTY)

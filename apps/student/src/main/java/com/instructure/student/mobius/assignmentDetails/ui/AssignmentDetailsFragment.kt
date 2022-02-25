@@ -16,10 +16,8 @@
  */
 package com.instructure.student.mobius.assignmentDetails.ui
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityManager
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -29,10 +27,13 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 class AssignmentDetailsFragment :
     MobiusFragment<AssignmentDetailsModel, AssignmentDetailsEvent, AssignmentDetailsEffect, AssignmentDetailsView, AssignmentDetailsViewState>(),

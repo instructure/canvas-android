@@ -26,9 +26,12 @@ import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
 import com.instructure.loginapi.login.snicker.SnickerDoodle
+import com.instructure.pandautils.analytics.SCREEN_VIEW_LOGIN_LANDING
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import dagger.hilt.android.AndroidEntryPoint
 
+@ScreenView(SCREEN_VIEW_LOGIN_LANDING)
 @AndroidEntryPoint
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 

@@ -1226,12 +1226,20 @@
     <string name="studentAnnotationToolbarTitle">Anotación del alumno</string>
     <string name="submissionTypeStudentAnnotation">Anotación del alumno</string>
     <string name="gradesNoDueDate">No hay fecha de entrega</string>
+    <string name="importantDatesNoDueDate">No hay fecha de entrega</string>
     <string name="missingAssignment">No presentado</string>
     <string name="dontSave">No guardar</string>
     <string name="textSubmissionExitConfirmationTitle">¿Guardar borrador?</string>
     <string name="textSubmissionExitConfirmationMessage">No se guardarán los cambios</string>
     <string name="submissionDraftAvailableSubtitle">Pulsar aquí para continuar</string>
     <string name="submissionDraftAvailableTitle">Borrador disponible</string>
-    <string name="errorLoadingSubmission">Ha habido un error al cargar la entrega</string>
+    <string name="errorLoadingSubmission">Ha ocurrido un error al cargar la entrega</string>
     <string name="loadFullContent">Pulsar para ver todo el contenido</string>
+    <string name="dashboardTabImportantDates">Fechas importantes</string>
+    <string name="importantDatesEmptyTitle">Fechas no importantes</string>
+    <string name="important_dates">Fechas importantes</string>
+
+    <string name="toolbarCommentLibrary">Biblioteca de comentarios</string>
+    <string name="commentLibraryNoSuggestions">No hay sugerencias disponibles</string>
+    <string name="speedGraderCommentHint">Comentario</string>
 </resources>

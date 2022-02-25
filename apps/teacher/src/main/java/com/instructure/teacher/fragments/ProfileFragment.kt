@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -38,6 +40,7 @@ import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_profile.*
 
+@ScreenView(SCREEN_VIEW_PROFILE)
 class ProfileFragment : BaseFragment() {
 
     override fun layoutResId() = R.layout.fragment_profile

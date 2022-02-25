@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.QuizListRecyclerAdapter
@@ -37,6 +39,7 @@ import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.quiz_list_layout.*
 
+@ScreenView(SCREEN_VIEW_QUIZ_LIST)
 @PageView(url = "{canvasContext}/quizzes")
 class QuizListFragment : ParentFragment(), Bookmarkable {
 
@@ -131,7 +134,9 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
         if (navigation != null) {
             /* The quiz list endpoint is currently missing the quiz question types, so we'll route using the quiz url
             which should pull the full quiz details including the question types. */
-            if (!RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain, true)) {
+            if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain, false)) {
+                RouteMatcher.routeUrl(requireContext(), quiz.htmlUrl!!, ApiPrefs.domain, secondaryClass = BasicQuizViewFragment::class.java)
+            } else {
                 RouteMatcher.route(requireContext(), BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
             }
         }

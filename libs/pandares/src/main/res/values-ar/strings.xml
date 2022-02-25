@@ -1280,6 +1280,7 @@
     <string name="studentAnnotationToolbarTitle">تعليق توضيحي لطالب</string>
     <string name="submissionTypeStudentAnnotation">تعليق توضيحي لطالب</string>
     <string name="gradesNoDueDate">بلا تاريخ استحقاق</string>
+    <string name="importantDatesNoDueDate">بلا تاريخ استحقاق</string>
     <string name="missingAssignment">مفقود</string>
     <string name="dontSave">عدم الحفظ</string>
     <string name="textSubmissionExitConfirmationTitle">حفظ المسودة؟</string>
@@ -1288,4 +1289,11 @@
     <string name="submissionDraftAvailableTitle">المسودة متوفرة</string>
     <string name="errorLoadingSubmission">حدث خطأ أثناء تحميل الإرسال</string>
     <string name="loadFullContent">اضغط للاطلاع على المحتوى الكامل</string>
+    <string name="dashboardTabImportantDates">التواريخ الهامة</string>
+    <string name="importantDatesEmptyTitle">لا توجد تواريخ هامة</string>
+    <string name="important_dates">التواريخ الهامة</string>
+
+    <string name="toolbarCommentLibrary">مكتبة التعليقات</string>
+    <string name="commentLibraryNoSuggestions">لا توجد مقترحات متاحة</string>
+    <string name="speedGraderCommentHint">التعليق</string>
 </resources>

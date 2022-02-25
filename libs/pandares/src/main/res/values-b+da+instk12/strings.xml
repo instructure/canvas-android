@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">Elevs anmærkning</string>
     <string name="submissionTypeStudentAnnotation">Elevs anmærkning</string>
     <string name="gradesNoDueDate">Ingen afleveringsdato</string>
+    <string name="importantDatesNoDueDate">Ingen afleveringsdato</string>
     <string name="missingAssignment">Mangler</string>
     <string name="dontSave">Gem ikke</string>
     <string name="textSubmissionExitConfirmationTitle">Gem udkast?</string>
@@ -1233,4 +1234,11 @@
     <string name="submissionDraftAvailableTitle">Udkast tilgængeligt</string>
     <string name="errorLoadingSubmission">Der opstod en fejl under indlæsning af aflevering</string>
     <string name="loadFullContent">Tryk for at se alt indholdet</string>
+    <string name="dashboardTabImportantDates">Vigtige datoer</string>
+    <string name="importantDatesEmptyTitle">Ingen vigtige datoer</string>
+    <string name="important_dates">Vigtige datoer</string>
+
+    <string name="toolbarCommentLibrary">Kommentarbibliotek</string>
+    <string name="commentLibraryNoSuggestions">Ingen forslag til rådighed</string>
+    <string name="speedGraderCommentHint">Kommentar</string>
 </resources>

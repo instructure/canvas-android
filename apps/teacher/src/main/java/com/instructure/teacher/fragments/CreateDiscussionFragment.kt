@@ -39,6 +39,8 @@ import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_DISCUSSION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
@@ -79,6 +81,7 @@ import kotlin.collections.last
 import kotlin.collections.plusAssign
 import kotlin.collections.toList
 
+@ScreenView(SCREEN_VIEW_CREATE_DISCUSSION)
 class CreateDiscussionFragment : BasePresenterFragment<
         CreateDiscussionPresenter,
         CreateDiscussionView>(), CreateDiscussionView, Identity {

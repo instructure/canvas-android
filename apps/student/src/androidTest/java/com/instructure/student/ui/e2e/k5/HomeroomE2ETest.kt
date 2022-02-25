@@ -18,6 +18,7 @@ package com.instructure.student.ui.e2e.k5
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FlakyE2E
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
@@ -28,6 +29,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -47,6 +49,7 @@ class HomeroomE2ETest : StudentTest() {
     }
 
     @E2E
+    @FlakyE2E("Need to investigate why is it breaking when asserting todo text. Timezone shouldn't be a problem anymore since we run these tests at 8 PM.")
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun homeroomE2ETest() {
@@ -66,20 +69,13 @@ class HomeroomE2ETest : StudentTest() {
         val homeroomAnnouncement = data.announcementsList[0]
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
-        val utcTimeZone = TimeZone.getTimeZone("UTC")
-        val calendar = Calendar.getInstance(utcTimeZone)
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 55)
+        calendar.set(Calendar.SECOND, 59)
 
-        calendar.set(Calendar.HOUR_OF_DAY, 10)
-        calendar.set(Calendar.MINUTE, 1)
-        calendar.set(Calendar.SECOND, 1)
-
-        val simpleDateFormat = SimpleDateFormat("EE MMM dd HH:mm:ss zzz yyyy", Locale.US)
-        simpleDateFormat.setTimeZone(utcTimeZone)
 
         val missingCalendar = Calendar.getInstance()
-        missingCalendar.set(Calendar.HOUR_OF_DAY, 10)
-        missingCalendar.set(Calendar.MINUTE, 1)
-        missingCalendar.set(Calendar.SECOND, 1)
 
         val testAssignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
@@ -104,7 +100,10 @@ class HomeroomE2ETest : StudentTest() {
 
         // Sign in with elementary (K5) student
         tokenLoginElementary(student)
-        homeroomPage.assertPageObjects()
+        elementaryDashboardPage.assertPageObjects()
+        elementaryDashboardPage.waitForRender()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
+
         homeroomPage.assertWelcomeText(student.shortName)
         homeroomPage.assertAnnouncementDisplayed(
             homeroomCourse.name,

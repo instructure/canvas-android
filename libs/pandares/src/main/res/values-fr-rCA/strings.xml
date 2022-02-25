@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">Annotation de l’étudiant</string>
     <string name="submissionTypeStudentAnnotation">Annotation de l’étudiant</string>
     <string name="gradesNoDueDate">Aucune date d’échéance</string>
+    <string name="importantDatesNoDueDate">Aucune date d’échéance</string>
     <string name="missingAssignment">Manquant</string>
     <string name="dontSave">Ne pas enregistrer</string>
     <string name="textSubmissionExitConfirmationTitle">Enregistrer ébauche?</string>
@@ -1233,4 +1234,11 @@
     <string name="submissionDraftAvailableTitle">Ébauche disponible</string>
     <string name="errorLoadingSubmission">Une erreur s\'est produite lors du chargement des envois</string>
     <string name="loadFullContent">Appuyez pour voir le contenu complet</string>
+    <string name="dashboardTabImportantDates">Dates importantes</string>
+    <string name="importantDatesEmptyTitle">Aucune date importante</string>
+    <string name="important_dates">Dates importantes</string>
+
+    <string name="toolbarCommentLibrary">Bibliothèque de commentaires</string>
+    <string name="commentLibraryNoSuggestions">Aucune suggestion disponible</string>
+    <string name="speedGraderCommentHint">Commentaire</string>
 </resources>

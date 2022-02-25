@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_HTML
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
@@ -39,6 +41,7 @@ import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
+@ScreenView(SCREEN_VIEW_VIEW_HTML)
 class ViewHtmlFragment : InternalWebViewFragment() {
 
     private val downloadUrl by NullableStringArg(key = DOWNLOAD_URL)

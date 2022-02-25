@@ -30,10 +30,13 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.globalName
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_COURSE_NAME
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_EDIT_COURSE_NAME)
 class EditCourseNameDialog : AppCompatDialogFragment() {
 
     init {

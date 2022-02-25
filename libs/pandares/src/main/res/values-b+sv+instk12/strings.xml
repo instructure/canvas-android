@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">Elevnotering</string>
     <string name="submissionTypeStudentAnnotation">Elevnotering</string>
     <string name="gradesNoDueDate">Inget inlämningsdatum</string>
+    <string name="importantDatesNoDueDate">Inget inlämningsdatum</string>
     <string name="missingAssignment">Saknad</string>
     <string name="dontSave">Spara inte</string>
     <string name="textSubmissionExitConfirmationTitle">Spara utkast?</string>
@@ -1233,4 +1234,11 @@
     <string name="submissionDraftAvailableTitle">Utkast tillgängligt</string>
     <string name="errorLoadingSubmission">Ett fel inträffade vid inläsning av inlämningen</string>
     <string name="loadFullContent">Tryck för att se hela innehållet</string>
+    <string name="dashboardTabImportantDates">Viktiga datum</string>
+    <string name="importantDatesEmptyTitle">Inga viktiga datum</string>
+    <string name="important_dates">Viktiga datum</string>
+
+    <string name="toolbarCommentLibrary">Kommentarbibliotek</string>
+    <string name="commentLibraryNoSuggestions">Inga förslag finns tillgängliga</string>
+    <string name="speedGraderCommentHint">Kommentar</string>
 </resources>

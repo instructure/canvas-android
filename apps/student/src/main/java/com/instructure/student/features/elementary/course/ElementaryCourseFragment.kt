@@ -27,12 +27,15 @@ import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_COURSE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.databinding.FragmentElementaryCourseBinding
 import com.instructure.student.fragment.InternalWebviewFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_elementary_course.*
 
+@ScreenView(SCREEN_VIEW_ELEMENTARY_COURSE)
 @AndroidEntryPoint
 class ElementaryCourseFragment : Fragment() {
 

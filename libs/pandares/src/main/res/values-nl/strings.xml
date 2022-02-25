@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">Cursistaantekening</string>
     <string name="submissionTypeStudentAnnotation">Cursistaantekening</string>
     <string name="gradesNoDueDate">Geen inleverdatum</string>
+    <string name="importantDatesNoDueDate">Geen inleverdatum</string>
     <string name="missingAssignment">Ontbrekend</string>
     <string name="dontSave">Niet opslaan</string>
     <string name="textSubmissionExitConfirmationTitle">Concept opslaan?</string>
@@ -1233,4 +1234,11 @@
     <string name="submissionDraftAvailableTitle">Concept beschikbaar</string>
     <string name="errorLoadingSubmission">Er is een fout opgetreden bij het laden van de inlevering</string>
     <string name="loadFullContent">Tikken om volledige inhoud te zien</string>
+    <string name="dashboardTabImportantDates">Belangrijke datums</string>
+    <string name="importantDatesEmptyTitle">Geen belangrijke datums</string>
+    <string name="important_dates">Belangrijke datums</string>
+
+    <string name="toolbarCommentLibrary">Bibliotheek met opmerkingen</string>
+    <string name="commentLibraryNoSuggestions">Geen suggesties beschikbaar</string>
+    <string name="speedGraderCommentHint">Opmerking</string>
 </resources>

@@ -351,7 +351,7 @@ class GradesViewModelTest {
         gradingPeriods: List<GradingPeriod>? = null,
         hideFinalGrades: Boolean = false
     ): Course {
-        val enrollment = Enrollment(id = 123, computedCurrentScore = score, computedCurrentGrade = grade)
+        val enrollment = Enrollment(id = 123, computedCurrentScore = score, computedCurrentGrade = grade, type = Enrollment.EnrollmentType.Student)
         return Course(
             id = id,
             name = name,

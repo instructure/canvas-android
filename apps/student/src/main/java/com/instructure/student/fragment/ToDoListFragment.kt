@@ -19,8 +19,6 @@ package com.instructure.student.fragment
 
 import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.PorterDuff
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +29,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
@@ -41,6 +41,7 @@ import kotlinx.android.synthetic.main.fragment_list_todo.*
 import kotlinx.android.synthetic.main.fragment_list_todo.view.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 
+@ScreenView(SCREEN_VIEW_TO_DO_LIST)
 @PageView
 class ToDoListFragment : ParentFragment() {
 

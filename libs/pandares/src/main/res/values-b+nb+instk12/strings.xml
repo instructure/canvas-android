@@ -1226,6 +1226,7 @@
     <string name="studentAnnotationToolbarTitle">Elevmerknad</string>
     <string name="submissionTypeStudentAnnotation">Elevmerknad</string>
     <string name="gradesNoDueDate">Ingen forfallsdato</string>
+    <string name="importantDatesNoDueDate">Ingen forfallsdato</string>
     <string name="missingAssignment">Mangler</string>
     <string name="dontSave">Ikke lagre</string>
     <string name="textSubmissionExitConfirmationTitle">Lagre utkast?</string>
@@ -1234,4 +1235,11 @@
     <string name="submissionDraftAvailableTitle">Utkast tilgjengelig</string>
     <string name="errorLoadingSubmission">Det oppsto en feil under lasting av innleveringer</string>
     <string name="loadFullContent">Klikk for å se hele innholdet</string>
+    <string name="dashboardTabImportantDates">Viktige datoer</string>
+    <string name="importantDatesEmptyTitle">Ingen viktige datoer</string>
+    <string name="important_dates">Viktige datoer</string>
+
+    <string name="toolbarCommentLibrary">Kommentarbibliotek</string>
+    <string name="commentLibraryNoSuggestions">Ingen forslag tilgjengelige</string>
+    <string name="speedGraderCommentHint">Kommentar</string>
 </resources>

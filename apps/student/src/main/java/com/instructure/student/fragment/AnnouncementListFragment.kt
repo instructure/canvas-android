@@ -21,8 +21,11 @@ import com.instructure.student.R
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ANNOUNCEMENT_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.makeBundle
 
+@ScreenView(SCREEN_VIEW_ANNOUNCEMENT_LIST)
 @PageView(url = "{canvasContext}/announcements")
 class AnnouncementListFragment : DiscussionListFragment() {
 

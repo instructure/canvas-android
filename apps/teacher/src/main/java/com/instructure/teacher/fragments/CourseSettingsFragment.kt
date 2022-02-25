@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.globalName
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_SETTINGS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -37,6 +39,7 @@ import kotlinx.android.synthetic.main.fragment_course_settings.*
 import kotlinx.android.synthetic.main.view_edit_course_homepage.*
 import kotlinx.android.synthetic.main.view_rename_course.*
 
+@ScreenView(SCREEN_VIEW_COURSE_SETTINGS)
 class CourseSettingsFragment : BasePresenterFragment<
         CourseSettingsFragmentPresenter,
         CourseSettingsFragmentView>(), CourseSettingsFragmentView {
