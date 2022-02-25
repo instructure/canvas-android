@@ -28,6 +28,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_HELP
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.HelpDialogBinding
 import com.instructure.pandautils.features.help.HelpDialogAction
 import com.instructure.pandautils.features.help.HelpDialogViewModel
@@ -37,6 +39,7 @@ import com.instructure.pandautils.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_HELP)
 @AndroidEntryPoint
 class HelpDialogFragment : DialogFragment() {
 

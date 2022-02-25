@@ -22,6 +22,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.webkit.WebView
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_PREVIEW
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setGone
@@ -33,6 +35,7 @@ import com.instructure.teacher.utils.setupBackButton
 import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import kotlinx.coroutines.Job
 
+@ScreenView(SCREEN_VIEW_QUIZ_PREVIEW)
 class QuizPreviewWebviewFragment : InternalWebViewFragment() {
 
     var mClickedPreview = false

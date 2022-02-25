@@ -36,6 +36,8 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.bookmarks.Bookmarkable
+import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARK_CREATION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color
@@ -46,6 +48,7 @@ import com.instructure.student.util.Analytics
 import com.instructure.student.util.CacheControlFlags
 import kotlinx.coroutines.Job
 
+@ScreenView(SCREEN_VIEW_BOOKMARK_CREATION)
 class BookmarkCreationDialog : AppCompatDialogFragment() {
     private var bookmarkJob: Job? = null
     private var bookmarkEditText: AppCompatEditText? = null

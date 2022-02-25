@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.RouteContext.FILE
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_QUIZ_WEB_VIEW
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
@@ -42,6 +44,7 @@ import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER_QUIZ_WEB_VIEW)
 class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
 
     private var mCourseId by LongArg()

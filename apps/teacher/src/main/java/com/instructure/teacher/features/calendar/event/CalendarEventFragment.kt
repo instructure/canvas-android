@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -37,6 +39,7 @@ import kotlinx.android.synthetic.main.fragment_syllabus.toolbar
 import kotlinx.coroutines.Job
 import java.net.URLDecoder
 
+@ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
 class CalendarEventFragment : BaseFragment() {
 
     private val transformer = CalendarEventStateTransformer()

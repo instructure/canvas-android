@@ -9,12 +9,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.webkit.WebChromeClient
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.SCREEN_VIEW_FEEDBACK
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.setupBackButton
 import kotlinx.android.synthetic.main.activity_feedback.*
 
+@ScreenView(SCREEN_VIEW_FEEDBACK)
 class FeedbackActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

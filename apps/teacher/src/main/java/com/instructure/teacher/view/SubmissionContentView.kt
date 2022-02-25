@@ -268,7 +268,9 @@ class SubmissionContentView(
                 else -> SlidingUpPanelLayout.PanelState.ANCHORED
             }
 
-            slidingUpPanelLayout?.panelState = newState
+            if (newState != SlidingUpPanelLayout.PanelState.DRAGGING) {
+                slidingUpPanelLayout?.panelState = newState
+            }
 
             // Have to post here as we wait for contentRoot height to settle
             contentRoot.post {

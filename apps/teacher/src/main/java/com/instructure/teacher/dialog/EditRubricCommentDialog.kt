@@ -27,6 +27,8 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_RUBRIC_COMMENT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.getColorCompat
@@ -34,7 +36,7 @@ import com.instructure.teacher.view.edit_rubric.RubricCommentEditedEvent
 import kotlinx.android.synthetic.main.view_edit_grade_comment.*
 import org.greenrobot.eventbus.EventBus
 
-
+@ScreenView(SCREEN_VIEW_EDIT_RUBRIC_COMMENT)
 class EditRubricCommentDialog : AppCompatDialogFragment() {
 
     var mCriterionId by StringArg()

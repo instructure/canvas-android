@@ -16,6 +16,7 @@
 import com.instructure.android.buildtools.transform.ProjectTransformer
 import com.instructure.android.buildtools.transform.MasqueradeUITransformer
 import com.instructure.android.buildtools.transform.LocaleTransformer
+import com.instructure.android.buildtools.transform.ScreenViewTransformer
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -43,8 +44,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 44
-        versionName = '1.15.0'
+        versionCode = 45
+        versionName = '1.16.0'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -172,7 +173,8 @@ android {
             new ProjectTransformer(
                     android,
                     new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
-                    new LocaleTransformer(project)
+                    new LocaleTransformer(project),
+                    new ScreenViewTransformer("teacher")
             )
     )
 

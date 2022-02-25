@@ -34,6 +34,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
@@ -50,9 +52,9 @@ import kotlinx.android.synthetic.main.fragment_inbox_compose_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLEncoder
 import java.util.ArrayList
 
+@ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 class InboxComposeMessageFragment : ParentFragment() {
 
     private val conversation by NullableParcelableArg<Conversation>(key = Const.CONVERSATION)

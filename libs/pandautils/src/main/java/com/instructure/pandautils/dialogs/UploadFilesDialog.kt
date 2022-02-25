@@ -41,6 +41,8 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_UPLOAD_FILES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -53,6 +55,7 @@ import org.greenrobot.eventbus.Subscribe
 import java.io.File
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_UPLOAD_FILES)
 class UploadFilesDialog : AppCompatDialogFragment() {
 
     init {
