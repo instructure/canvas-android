@@ -23,6 +23,7 @@
         android:id="@+id/mainMenu"
         android:icon="@drawable/ic_overflow_white_18dp"
         android:title="@string/uploadToCanvas"
+        app:iconTint="#b3e5fc"
         app:showAsAction="always">
         <menu>
 
