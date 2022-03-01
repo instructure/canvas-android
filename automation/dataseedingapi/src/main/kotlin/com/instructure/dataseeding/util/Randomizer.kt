@@ -64,7 +64,7 @@ object Randomizer {
     fun randomGradingPeriodSetTitle(): String = "${faker.pokemon().location()} Set"
     fun randomGradingPeriodName(): String = "${faker.pokemon().name()} Grading Period"
 
-    fun randomAssignment(withDescription: Boolean = false, lockAt: String, unlockAt: String, dueAt: String, submissionTypes: List<SubmissionType>, gradingType: GradingType?, groupCategoryId: Long?, pointsPossible: Double?, allowedExtensions: List<String>?): CreateAssignment =
+    fun randomAssignment(withDescription: Boolean = false, lockAt: String, unlockAt: String, dueAt: String, submissionTypes: List<SubmissionType>, gradingType: GradingType?, groupCategoryId: Long?, pointsPossible: Double?, allowedExtensions: List<String>?, importantDate: Boolean?): CreateAssignment =
             CreateAssignment(
                     name = faker.lorem().sentence(),
                     description = if (withDescription) faker.lorem().paragraph() else null,
@@ -77,7 +77,8 @@ object Randomizer {
                     gradingType = if (gradingType != null) gradingType.toString().toLowerCase() else "points",
                     groupCategoryId = groupCategoryId,
                     pointsPossible = pointsPossible,
-                    allowedExtensions = allowedExtensions
+                    allowedExtensions = allowedExtensions,
+                    importantDate = importantDate
             )
 
     fun randomAssignmentOverrideTitle(): String = faker.food().ingredient()
