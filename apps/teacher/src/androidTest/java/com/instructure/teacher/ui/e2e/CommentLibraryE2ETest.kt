@@ -82,7 +82,7 @@ class CommentLibraryE2ETest : TeacherTest() {
         UserApi.putSelfSettings(teacher.id, request) // Set comment library "Show suggestions when typing" user settings to be able to see the library comments.
             val domain = teacher.domain
         val apolloClient = ApolloClient.builder()
-            .serverUrl("https://mobileqa.beta.instructure.com/graphql")
+            .serverUrl("https://mobileqa.beta.instructure.com/api/graphql/")
             .build()
 
         tokenLogin(teacher)
