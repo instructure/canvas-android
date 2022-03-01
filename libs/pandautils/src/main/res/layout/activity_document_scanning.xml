@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2022 - present Instructure, Inc.
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -15,6 +14,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,9 +22,38 @@
     android:layout_height="match_parent"
     tools:context="com.instructure.pandautils.features.documentscanning.DocumentScanningActivity">
 
-    <ImageView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/imageView" />
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="6dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/defaultTextDark">
+
+        <TextView
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:background="?android:selectableItemBackground"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:text="@string/save"
+            android:textAllCaps="true"
+            android:textColor="@color/defaultTextDark"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.documentscanning
 
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.R
 import com.zynksoftware.documentscanner.ScanActivity
@@ -30,6 +31,8 @@ class DocumentScanningActivity : ScanActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_document_scanning)
         addFragmentContentLayout()
+
+        setupToolbar()
     }
 
     override fun onClose() {
@@ -46,6 +49,16 @@ class DocumentScanningActivity : ScanActivity() {
             Glide.with(this)
                     .load(it)
                     .into(imageView)
+        }
+    }
+
+    private fun setupToolbar() {
+        toolbar.apply {
+            setTitle(R.string.documentScanningTitle)
+            navigationIcon = ContextCompat.getDrawable(this@DocumentScanningActivity, R.drawable.ic_back_arrow)
+            navigationIcon?.isAutoMirrored = true
+            setNavigationContentDescription(R.string.close)
+            setNavigationOnClickListener { onClose() }
         }
     }
 

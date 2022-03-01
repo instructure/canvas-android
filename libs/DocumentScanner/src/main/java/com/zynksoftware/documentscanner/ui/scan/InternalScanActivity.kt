@@ -84,8 +84,7 @@ abstract class InternalScanActivity : AppCompatActivity() {
     }
 
     internal fun reInitOriginalImageFile() {
-        originalImageFile = File(filesDir, "${ORIGINAL_IMAGE_NAME}.${imageType.extension()}")
-        originalImageFile.delete()
+        originalImageFile = File(filesDir, "${ORIGINAL_IMAGE_NAME}_${System.currentTimeMillis()}.${imageType.extension()}")
     }
 
     private fun showCameraScreen() {
@@ -127,13 +126,13 @@ abstract class InternalScanActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.IO) {
             var croppedImageFile: File? = null
             croppedImage?.let {
-                croppedImageFile = File(filesDir, "${CROPPED_IMAGE_NAME}.${imageType.extension()}")
+                croppedImageFile = File(filesDir, "${CROPPED_IMAGE_NAME}_${System.currentTimeMillis()}.${imageType.extension()}")
                 saveBitmap(it, croppedImageFile!!, imageType, imageQuality)
             }
 
             var transformedImageFile: File? = null
             transformedImage?.let {
-                transformedImageFile = File(filesDir, "${TRANSFORMED_IMAGE_NAME}.${imageType.extension()}")
+                transformedImageFile = File(filesDir, "${TRANSFORMED_IMAGE_NAME}_${System.currentTimeMillis()}.${imageType.extension()}")
                 saveBitmap(it, transformedImageFile!!, imageType, imageQuality)
             }
 

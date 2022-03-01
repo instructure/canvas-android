@@ -1,2 +1,0 @@
-com/zynksoftware/documentscanner/BuildConfig.java
- com.zynksoftware.documentscanner.BuildConfig
