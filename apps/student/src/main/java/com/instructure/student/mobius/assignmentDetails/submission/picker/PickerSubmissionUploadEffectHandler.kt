@@ -32,6 +32,7 @@ import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.remove
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.R
+import com.instructure.student.features.documentscanning.DocumentScanningActivity
 import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.CommentAttachment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.FileSubmission
@@ -91,6 +92,8 @@ class PickerSubmissionUploadEffectHandler constructor(
                     } else {
                         view?.showErrorMessage(R.string.unexpectedErrorOpeningFile)
                     }
+                } else if (it.requestCode == REQUEST_DOCUMENT_SCANNING) {
+                    event.remove()
                 }
             }
         }
@@ -106,6 +109,9 @@ class PickerSubmissionUploadEffectHandler constructor(
             }
             PickerSubmissionUploadEffect.LaunchSelectFile -> {
                 launchSelectFile()
+            }
+            PickerSubmissionUploadEffect.LaunchDocumentScanning -> {
+                launchDocumentScanning()
             }
             is PickerSubmissionUploadEffect.LoadFileContents -> {
                 loadFile(effect.allowedExtensions, effect.uri, context)
@@ -196,6 +202,17 @@ class PickerSubmissionUploadEffectHandler constructor(
         }
     }
 
+    private fun launchDocumentScanning() {
+        // Get camera permission if we need it
+        if (needsPermissions(
+                        PickerSubmissionUploadEvent.DocumentScanningClicked,
+                        PermissionUtils.CAMERA
+                )
+        ) return
+        val intent = Intent(context, DocumentScanningActivity::class.java)
+        (context as Activity).startActivityForResult(intent, REQUEST_DOCUMENT_SCANNING)
+    }
+
     private fun launchCamera() {
         // Get camera permission if we need it
         if (needsPermissions(
@@ -271,6 +288,7 @@ class PickerSubmissionUploadEffectHandler constructor(
         const val REQUEST_CAMERA_PIC = 5100
         const val REQUEST_PICK_IMAGE_GALLERY = 5101
         const val REQUEST_PICK_FILE_FROM_DEVICE = 5102
+        const val REQUEST_DOCUMENT_SCANNING = 5103
 
         fun isPickerRequest(code: Int): Boolean {
             return code in listOf(

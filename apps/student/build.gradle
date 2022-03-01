@@ -331,6 +331,8 @@ dependencies {
     androidTestImplementation Libs.UI_AUTOMATOR
 
     implementation Libs.FIREBASE_CRASHLYTICS_NDK
+
+    implementation 'com.github.zynkware:Document-Scanning-Android-SDK:1.0.1'
 }
 
 // Comment out this line if the reporting logic starts going wonky.

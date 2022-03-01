@@ -43,6 +43,7 @@ import com.instructure.student.tasks.StudentLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
+import com.zynksoftware.documentscanner.ui.DocumentScanner
 import dagger.hilt.android.HiltAndroidApp
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
@@ -58,9 +59,16 @@ class AppManager : BaseAppManager() {
     override fun onCreate() {
         super.onCreate()
         MasqueradeHelper.masqueradeLogoutTask = Runnable { StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute() }
+
+        configureDocumentScanning()
     }
 
     override fun performLogoutOnAuthError() {
         StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
+    }
+
+
+    private fun configureDocumentScanning() {
+        DocumentScanner.init(this)
     }
 }
