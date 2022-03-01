@@ -14,13 +14,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.documentscanning
+package com.instructure.pandautils.features.documentscanning
 
 import android.os.Bundle
-import com.instructure.student.R
+import com.bumptech.glide.Glide
+import com.instructure.pandautils.R
 import com.zynksoftware.documentscanner.ScanActivity
 import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel
 import com.zynksoftware.documentscanner.model.ScannerResults
+import kotlinx.android.synthetic.main.activity_document_scanning.*
 
 class DocumentScanningActivity : ScanActivity() {
 
@@ -40,7 +42,11 @@ class DocumentScanningActivity : ScanActivity() {
     }
 
     override fun onSuccess(scannerResults: ScannerResults) {
-
+        scannerResults.croppedImageFile?.let {
+            Glide.with(this)
+                    .load(it)
+                    .into(imageView)
+        }
     }
 
 

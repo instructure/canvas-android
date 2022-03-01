@@ -34,6 +34,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.zynksoftware.documentscanner.R
+import com.zynksoftware.documentscanner.ScanActivity
 import com.zynksoftware.documentscanner.common.extensions.scaledBitmap
 import com.zynksoftware.documentscanner.common.utils.OpenCvNativeBridge
 import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel
@@ -117,7 +118,7 @@ internal class ImageCropFragment : BaseFragment() {
 
     private fun onConfirmButtonClicked() {
         getCroppedImage()
-        startImageProcessingFragment()
+        (activity as ScanActivity).finalScannerResult()
     }
 
     private fun getEdgePoints(tempBitmap: Bitmap): Map<Int, PointF> {

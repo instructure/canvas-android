@@ -71,7 +71,7 @@
         tools:overrideLibrary="com.instructure.canvasapi"
         tools:replace="android:supportsRtl">
         <activity
-            android:name=".features.documentscanning.DocumentScanningActivity"
+            android:name="com.instructure.pandautils.features.documentscanning.DocumentScanningActivity"
             android:exported="true" />
         <!-- Fun fact. LoginActivity is called that because activity-alias are not supported by pspdfkit, should be InitLoginActivity -->
         <activity

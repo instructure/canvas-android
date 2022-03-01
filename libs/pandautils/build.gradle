@@ -93,6 +93,7 @@ dependencies {
     /* Modules */
     api project(path: ':blueprint')
     api project(path: ':interactions')
+    implementation project(path: ':DocumentScanner')
 
     implementation Libs.WONDERKILN_CAMERA_KIT
 
