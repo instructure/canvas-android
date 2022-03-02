@@ -43,9 +43,7 @@ import java.util.*
 
 @HiltAndroidTest
 class ImportantDatesE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() {
         //We dont want to see accessibility errors on E2E tests
@@ -129,6 +127,7 @@ class ImportantDatesE2ETest : StudentTest() {
         importantDatesPage.assertItemDisplayed(testAssignment1.name)
         importantDatesPage.assertItemDisplayed(testAssignment2.name)
         importantDatesPage.assertItemDisplayed(testAssignment3.name)
+        importantDatesPage.assertItemNotDisplayed(testNotImportantAssignment.name)
 
         //Assert that the count of the items and the day strings are correct on the Important Dates page.
         importantDatesPage.assertRecyclerViewItemCount(5) // We count both day texts and calendar events here, since both types are part of the recyclerView.
@@ -149,6 +148,7 @@ class ImportantDatesE2ETest : StudentTest() {
         importantDatesPage.assertItemDisplayed(testAssignment1.name)
         importantDatesPage.assertItemDisplayed(testAssignment2.name)
         importantDatesPage.assertItemDisplayed(testAssignment3.name)
+        importantDatesPage.assertItemNotDisplayed(testNotImportantAssignment.name)
 
         //Assert that the count of the items and the day strings are correct on the Important Dates page after the refresh.
         importantDatesPage.assertRecyclerViewItemCount(5) // We count both day texts and calendar events here, since both types are part of the recyclerView.
