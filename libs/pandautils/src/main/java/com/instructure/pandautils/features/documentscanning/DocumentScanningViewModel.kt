@@ -58,10 +58,10 @@ class DocumentScanningViewModel @Inject constructor(
             val monochromeBitmap = croppedBitmap.toMonochrome()
 
             val filters = listOf(
-                    createFilterViewModel(croppedBitmap, true, resources.getString(R.string.filter_name_cropped)),
+                    createFilterViewModel(croppedBitmap, true, resources.getString(R.string.filter_name_color)),
                     createFilterViewModel(grayscaleBitmap, false, resources.getString(R.string.filter_name_grayscale)),
-                    createFilterViewModel(monochromeBitmap, true, resources.getString(R.string.filter_name_monochrome)),
-                    createFilterViewModel(originalBitmap, true, resources.getString(R.string.filter_name_original))
+                    createFilterViewModel(monochromeBitmap, false, resources.getString(R.string.filter_name_monochrome)),
+                    createFilterViewModel(originalBitmap, false, resources.getString(R.string.filter_name_original))
             )
             selectedItem = filters[0]
 
@@ -93,6 +93,7 @@ class DocumentScanningViewModel @Inject constructor(
             selectedBitmap = itemViewModel.data.bitmap
             notifyPropertyChanged(BR.selectedBitmap)
         }
+        selectedItem = itemViewModel
     }
 
     fun onSaveClicked() {

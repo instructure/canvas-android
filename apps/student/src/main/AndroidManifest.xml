@@ -72,7 +72,8 @@
         tools:replace="android:supportsRtl">
         <activity
             android:name="com.instructure.pandautils.features.documentscanning.DocumentScanningActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"/>
         <!-- Fun fact. LoginActivity is called that because activity-alias are not supported by pspdfkit, should be InitLoginActivity -->
         <activity
             android:name=".activity.LoginActivity"

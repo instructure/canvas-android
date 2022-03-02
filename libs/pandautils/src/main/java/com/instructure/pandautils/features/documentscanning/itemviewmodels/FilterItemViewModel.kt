@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.documentscanning.itemviewmodels
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.documentscanning.FilterItemViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
@@ -27,8 +28,7 @@ class FilterItemViewModel(
         @get:Bindable var selected: Boolean,
         val onSelect: (FilterItemViewModel) -> Unit
 ) : ItemViewModel, BaseObservable() {
-    override val layoutId: Int
-        get() = TODO("Not yet implemented")
+    override val layoutId: Int = R.layout.item_document_scanning_filter
 
     fun select() {
         if (!selected) {

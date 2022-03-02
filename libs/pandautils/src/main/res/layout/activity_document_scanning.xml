@@ -19,6 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.documentscanning.DocumentScanningViewModel" />
@@ -48,6 +49,7 @@
                 android:gravity="center"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
+                android:onClick="@{() -> viewModel.onSaveClicked()}"
                 android:text="@string/save"
                 android:textAllCaps="true"
                 android:textColor="@color/defaultTextDark"
@@ -58,44 +60,21 @@
             android:id="@+id/imageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:bitmap="@{viewModel.data.selectedBitmap}"
             app:layout_constraintBottom_toTopOf="@+id/filters"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:bitmap="@{viewModel.data.selectedBitmap}"/>
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <LinearLayout
             android:id="@+id/filters"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="136dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:orientation="horizontal"
-            android:weightSum="4"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <ImageView
-                android:id="@+id/colorFilter"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/grayscaleFilter"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/monochromeFilter"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/original"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-        </LinearLayout>
+            app:itemViewModels="@{viewModel.data.filterItemViewModels}"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

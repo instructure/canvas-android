@@ -1249,7 +1249,7 @@
     <string name="a11y_content_description_decline_invite">Decline invite</string>
 
     <string name="documentScanningTitle">Document Scanning</string>
-    <string name="filter_name_cropped">Cropped</string>
+    <string name="filter_name_color">Color</string>
     <string name="filter_name_grayscale">Grayscale</string>
     <string name="filter_name_monochrome">Monochrome</string>
     <string name="filter_name_original">Original</string>
