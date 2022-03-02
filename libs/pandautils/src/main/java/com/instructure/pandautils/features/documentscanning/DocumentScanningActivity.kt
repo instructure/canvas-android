@@ -17,19 +17,28 @@
 package com.instructure.pandautils.features.documentscanning
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
+import androidx.databinding.DataBindingUtil
 import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.ActivityDocumentScanningBinding
 import com.zynksoftware.documentscanner.ScanActivity
 import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel
 import com.zynksoftware.documentscanner.model.ScannerResults
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_document_scanning.*
 
+@AndroidEntryPoint
 class DocumentScanningActivity : ScanActivity() {
+
+    private val viewModel: DocumentScanningViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_document_scanning)
+        val binding = DataBindingUtil.setContentView<ActivityDocumentScanningBinding>(this, R.layout.activity_document_scanning)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
         addFragmentContentLayout()
 
         setupToolbar()
@@ -45,11 +54,7 @@ class DocumentScanningActivity : ScanActivity() {
     }
 
     override fun onSuccess(scannerResults: ScannerResults) {
-        scannerResults.croppedImageFile?.let {
-            Glide.with(this)
-                    .load(it)
-                    .into(imageView)
-        }
+        viewModel.setScannerResults(scannerResults)
     }
 
     private fun setupToolbar() {
@@ -61,6 +66,4 @@ class DocumentScanningActivity : ScanActivity() {
             setNavigationOnClickListener { onClose() }
         }
     }
-
-
 }
