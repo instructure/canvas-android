@@ -20,6 +20,10 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.instructure.pandautils.mvvm.ViewState" />
+
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.documentscanning.DocumentScanningViewModel" />
@@ -60,6 +64,7 @@
             android:id="@+id/imageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@color/canvasBackgroundMedium"
             app:bitmap="@{viewModel.data.selectedBitmap}"
             app:layout_constraintBottom_toTopOf="@+id/filters"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,9 +74,8 @@
         <LinearLayout
             android:id="@+id/filters"
             android:layout_width="match_parent"
-            android:layout_height="136dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="horizontal"
             app:itemViewModels="@{viewModel.data.filterItemViewModels}"
             app:layout_constraintBottom_toBottomOf="parent" />

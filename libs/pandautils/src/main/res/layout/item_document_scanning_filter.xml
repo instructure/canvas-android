@@ -28,9 +28,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="120dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:onClick="@{() -> itemViewModel.select()}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="8dp"
-            app:backgroundColor="@{itemViewModel.selected ? @color/yellowAnnotation : @color/bottomNavBarBg}"
+            app:backgroundColor="@{itemViewModel.selected ? @color/yellowAnnotation : @color/canvasBackgroundMedium}"
             app:borderCornerRadius="@{4}"
             app:layout_constraintBottom_toTopOf="@+id/filterName"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +63,6 @@
             android:id="@+id/filterName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:text="@{itemViewModel.data.name}"
             android:textColor="@color/defaultTextDark"
             android:textSize="12sp"
