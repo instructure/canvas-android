@@ -20,6 +20,7 @@ import android.graphics.Bitmap
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.instructure.pandautils.features.documentscanning.itemviewmodels.FilterItemViewModel
+import java.io.File
 
 data class DocumentScanningViewData(
         @get:Bindable var selectedBitmap: Bitmap,
@@ -30,3 +31,7 @@ data class FilterItemViewData(
         val bitmap: Bitmap,
         val name: String
 )
+
+sealed class DocumentScanningAction {
+    data class SaveBitmapAction(val bitmap: Bitmap, val quality: Int): DocumentScanningAction()
+}

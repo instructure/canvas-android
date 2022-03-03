@@ -16,9 +16,12 @@
 
 package com.instructure.pandautils.features.documentscanning
 
+import android.app.Activity
+import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.ActivityDocumentScanningBinding
@@ -27,6 +30,10 @@ import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel
 import com.zynksoftware.documentscanner.model.ScannerResults
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_document_scanning.*
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class DocumentScanningActivity : ScanActivity() {
@@ -42,6 +49,33 @@ class DocumentScanningActivity : ScanActivity() {
         addFragmentContentLayout()
 
         setupToolbar()
+
+        viewModel.events.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
+    }
+
+    private fun handleAction(action: DocumentScanningAction) {
+        when (action) {
+            is DocumentScanningAction.SaveBitmapAction -> {
+                val file = File(filesDir, "scanned_${SimpleDateFormat("yyyyMMddkkmmss", Locale.getDefault()).format(Date())}.jpg")
+                var fileOutputStream: FileOutputStream? = null
+                try {
+                    fileOutputStream = FileOutputStream(file.absolutePath)
+                    action.bitmap.compress(Bitmap.CompressFormat.JPEG, action.quality, fileOutputStream)
+                    intent.data = file.toUri()
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                } finally {
+                    fileOutputStream?.run {
+                        flush()
+                        close()
+                    }
+                }
+            }
+        }
     }
 
     override fun onClose() {

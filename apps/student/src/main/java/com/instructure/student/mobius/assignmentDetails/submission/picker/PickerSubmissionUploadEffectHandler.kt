@@ -93,6 +93,12 @@ class PickerSubmissionUploadEffectHandler constructor(
                     }
                 } else if (it.requestCode == REQUEST_DOCUMENT_SCANNING) {
                     event.remove()
+
+                    if (it.data != null && it.data?.data != null) {
+                        consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(it.data!!.data!!))
+                    } else {
+                        view?.showErrorMessage(R.string.unexpectedErrorOpeningFile)
+                    }
                 }
             }
         }
@@ -293,7 +299,8 @@ class PickerSubmissionUploadEffectHandler constructor(
             return code in listOf(
                 REQUEST_CAMERA_PIC,
                 REQUEST_PICK_IMAGE_GALLERY,
-                REQUEST_PICK_FILE_FROM_DEVICE
+                REQUEST_PICK_FILE_FROM_DEVICE,
+                REQUEST_DOCUMENT_SCANNING
             )
 
         }

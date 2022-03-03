@@ -24,7 +24,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.instructure.pandautils.R
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsActions
 import com.instructure.pandautils.features.documentscanning.itemviewmodels.FilterItemViewModel
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.zynksoftware.documentscanner.model.ScannerResults
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,6 +45,10 @@ class DocumentScanningViewModel @Inject constructor(
         get() = _data
     private val _data = MutableLiveData<DocumentScanningViewData>()
 
+    val events: LiveData<Event<DocumentScanningAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<DocumentScanningAction>>()
+
     private lateinit var selectedItem: FilterItemViewModel
 
     fun setScannerResults(results: ScannerResults) {
@@ -56,6 +62,11 @@ class DocumentScanningViewModel @Inject constructor(
             val originalBitmap = BitmapFactory.decodeFile(results.originalImageFile!!.path)
             val grayscaleBitmap = croppedBitmap.toGrayscale()
             val monochromeBitmap = croppedBitmap.toMonochrome()
+
+            //We no longer need these files
+            results.croppedImageFile?.delete()
+            results.croppedImageFile?.delete()
+            results.transformedImageFile?.delete()
 
             val filters = listOf(
                     createFilterViewModel(croppedBitmap, true, resources.getString(R.string.filter_name_color)),
@@ -97,6 +108,6 @@ class DocumentScanningViewModel @Inject constructor(
     }
 
     fun onSaveClicked() {
-
+        _events.postValue(Event(DocumentScanningAction.SaveBitmapAction(selectedItem.data.bitmap, 100)))
     }
 }
