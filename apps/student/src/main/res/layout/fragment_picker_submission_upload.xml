@@ -70,36 +70,6 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
-            android:id="@+id/sourceDocumentScanning"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <ImageView
-                android:id="@+id/sourceDocumentScanningIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:importantForAccessibility="no"
-                android:tint="@color/defaultActionColor"
-                app:srcCompat="@drawable/ic_add_from_camera"/>
-
-            <TextView
-                android:id="@+id/sourceDocumentScanningLabel"
-                style="@style/TextFont.Regular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fromDocumentScanning"
-                android:textColor="@color/defaultActionColor"
-                android:textSize="12sp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/sourceCamera"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -184,6 +154,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fromDevice"
+                android:textColor="@color/defaultActionColor"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sourceDocumentScanning"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <ImageView
+                android:id="@+id/sourceDocumentScanningIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:importantForAccessibility="no"
+                android:tint="@color/defaultActionColor"
+                app:srcCompat="@drawable/ic_scan"/>
+
+            <TextView
+                android:id="@+id/sourceDocumentScanningLabel"
+                style="@style/TextFont.Regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fromDocumentScanning"
                 android:textColor="@color/defaultActionColor"
                 android:textSize="12sp"/>
 
