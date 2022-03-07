@@ -54,12 +54,13 @@ object FileUtils {
         )
 
         val annotationEditList = listOf(
-                AnnotationType.INK,
-                AnnotationType.HIGHLIGHT,
-                AnnotationType.STRIKEOUT,
-                AnnotationType.SQUARE,
-                AnnotationType.NOTE,
-                AnnotationType.FREETEXT
+            AnnotationType.INK,
+            AnnotationType.HIGHLIGHT,
+            AnnotationType.STRIKEOUT,
+            AnnotationType.SQUARE,
+            AnnotationType.NOTE,
+            AnnotationType.FREETEXT,
+            AnnotationType.NONE // Wee need this to enable the eraser
         )
         if (!PSPDFKitPreferences.get(context).isAnnotationCreatorSet) {
             PSPDFKitPreferences.get(context).setAnnotationCreator(ApiPrefs.user?.shortName.orEmpty())
