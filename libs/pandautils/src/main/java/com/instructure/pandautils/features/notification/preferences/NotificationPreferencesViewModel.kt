@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.managers.NotificationPreferencesManager
 import com.instructure.canvasapi2.models.NotificationPreference
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryHeaderItemViewModel
+import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -64,35 +66,51 @@ class NotificationPreferencesViewModel @Inject constructor(
                 val communicationChannels = communicationChannelsManager.getCommunicationChannelsAsync(it.id, forceNetwork).await().dataOrThrow
                 val pushChannel = communicationChannels.first { "push".equals(it.type, true) }
                 val notificationPreferences = notificationPreferencesManager.getNotificationPreferencesAsync(pushChannel.userId, pushChannel.id, forceNetwork).await().dataOrThrow
-                val categories = groupNotifications(notificationPreferences.notificationPreferences)
-                val size = categories.size
-
+                val items = groupNotifications(notificationPreferences.notificationPreferences)
+                _data.postValue(NotificationPreferencesViewData(items))
             }
         }
     }
 
-    private fun groupNotifications(items: List<NotificationPreference>): List<NotificationCategory> {
+    private fun groupNotifications(items: List<NotificationPreference>): List<NotificationCategoryHeaderItemViewModel> {
         val categoryHelperMap = NotificationPreferenceUtils.categoryHelperMap
         val titleMap = NotificationPreferenceUtils.categoryTitleMap
         val descriptionMap = NotificationPreferenceUtils.categoryDescriptionMap
         val groupHeaderMap = NotificationPreferenceUtils.categoryGroupHeaderMap
 
-        val categories = mutableListOf<NotificationCategory>()
+        val categories = hashMapOf<NotificationCategoryHeaderViewData, ArrayList<NotificationCategoryItemViewModel>>()
 
         for ((categoryName, prefs) in items.groupBy { it.category }) {
             val categoryHelper = categoryHelperMap[categoryName] ?: continue
             val header = groupHeaderMap[categoryHelper.categoryGroup] ?: continue
 
-            val category = NotificationCategory(
-                    categoryName,
-                    titleMap[categoryName],
-                    descriptionMap[categoryName],
-                    prefs[0].frequency,
-                    categoryHelper.position,
-                    prefs[0].notification
+            val categoryHeaderViewData = NotificationCategoryHeaderViewData(
+                    header.title,
+                    header.position
             )
-            categories.add(category)
+
+            val categoryItemViewModel = NotificationCategoryItemViewModel(
+                    data = NotificationCategoryViewData(
+                            categoryName,
+                            titleMap[categoryName],
+                            descriptionMap[categoryName],
+                            prefs[0].frequency,
+                            categoryHelper.position,
+                            prefs[0].notification
+                    )
+            )
+            if (categories[categoryHeaderViewData] == null) {
+                categories[categoryHeaderViewData] = arrayListOf(categoryItemViewModel)
+            } else {
+                categories[categoryHeaderViewData]?.add(categoryItemViewModel)
+            }
         }
-        return categories
+
+        return categories.map {
+            NotificationCategoryHeaderItemViewModel(
+                    data = it.key,
+                    itemViewModels = it.value.sortedBy { it.data.position }
+            )
+        }.sortedBy { it.data.position }
     }
 }

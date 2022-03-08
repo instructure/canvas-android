@@ -42,6 +42,7 @@ class NotificationPreferencesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         val binding = FragmentPushPreferencesBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
         return binding.root
     }

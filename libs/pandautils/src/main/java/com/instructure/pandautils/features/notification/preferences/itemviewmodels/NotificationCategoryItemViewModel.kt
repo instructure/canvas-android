@@ -14,28 +14,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.notification.preferences
+package com.instructure.pandautils.features.notification.preferences.itemviewmodels
 
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.notification.preferences.NotificationCategoryViewData
+import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class NotificationPreferencesViewData(val items: List<ItemViewModel>)
+class NotificationCategoryItemViewModel(
+        val data: NotificationCategoryViewData
+) : ItemViewModel {
+    override val layoutId: Int = R.layout.item_notification_preference
 
-data class NotificationCategoryHeaderViewData(val title: String, val position: Int)
+    override val viewType: Int = NotificationPreferencesViewType.CATEGORY.viewType
 
-data class NotificationCategoryViewData(
-        var name: String,
-        var title: String?,
-        var description: String?,
-        var frequency: String,
-        var position: Int,
-        var notification: String?
-)
+    fun onCheckedChanged(checked: Boolean) {
 
-enum class NotificationPreferencesViewType(val viewType: Int) {
-    HEADER(0),
-    CATEGORY(1)
-}
-
-sealed class NotificationPreferencesAction {
-
+    }
 }
