@@ -14,24 +14,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.documentscanning
+package com.instructure.student.features.documentscanning.itemviewmodels
 
-import android.graphics.Bitmap
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import com.instructure.pandautils.features.documentscanning.itemviewmodels.FilterItemViewModel
-import java.io.File
+import com.instructure.pandautils.BR
+import com.instructure.student.features.documentscanning.FilterItemViewData
+import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.student.R
 
-data class DocumentScanningViewData(
-        @get:Bindable var selectedBitmap: Bitmap,
-        val filterItemViewModels: List<FilterItemViewModel>
-) : BaseObservable()
+class FilterItemViewModel(
+        val data: FilterItemViewData,
+        @get:Bindable var selected: Boolean,
+        val onSelect: (FilterItemViewModel) -> Unit
+) : ItemViewModel, BaseObservable() {
+    override val layoutId: Int = R.layout.item_document_scanning_filter
 
-data class FilterItemViewData(
-        val bitmap: Bitmap,
-        val name: String
-)
-
-sealed class DocumentScanningAction {
-    data class SaveBitmapAction(val bitmap: Bitmap, val quality: Int): DocumentScanningAction()
+    fun select() {
+        if (!selected) {
+            selected = true
+            notifyPropertyChanged(BR.selected)
+            onSelect(this)
+        }
+    }
 }

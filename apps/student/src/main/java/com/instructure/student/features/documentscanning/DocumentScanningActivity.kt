@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.documentscanning
+package com.instructure.student.features.documentscanning
 
 import android.app.Activity
 import android.graphics.Bitmap
@@ -23,8 +23,8 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
-import com.instructure.pandautils.R
-import com.instructure.pandautils.databinding.ActivityDocumentScanningBinding
+import com.instructure.student.R
+import com.instructure.student.databinding.ActivityDocumentScanningBinding
 import com.zynksoftware.documentscanner.ScanActivity
 import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel
 import com.zynksoftware.documentscanner.model.ScannerResults

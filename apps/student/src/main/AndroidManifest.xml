@@ -269,7 +269,7 @@
         </activity>
 
         <activity
-            android:name="com.instructure.pandautils.features.documentscanning.DocumentScanningActivity"
+            android:name=".features.documentscanning.DocumentScanningActivity"
             android:exported="true"
             android:screenOrientation="portrait"/>
 

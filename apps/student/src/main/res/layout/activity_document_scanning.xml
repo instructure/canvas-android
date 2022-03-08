@@ -26,13 +26,13 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.pandautils.features.documentscanning.DocumentScanningViewModel" />
+            type="com.instructure.student.features.documentscanning.DocumentScanningViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.instructure.pandautils.features.documentscanning.DocumentScanningActivity">
+        tools:context="com.instructure.pandautils.com.instructure.student.features.documentscanning.DocumentScanningActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

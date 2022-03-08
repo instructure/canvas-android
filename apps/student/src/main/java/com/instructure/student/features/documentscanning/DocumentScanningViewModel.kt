@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.documentscanning
+package com.instructure.student.features.documentscanning
 
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -24,8 +24,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.instructure.pandautils.R
 import com.instructure.pandautils.BR
-import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsActions
-import com.instructure.pandautils.features.documentscanning.itemviewmodels.FilterItemViewModel
+import com.instructure.student.features.documentscanning.itemviewmodels.FilterItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.zynksoftware.documentscanner.model.ScannerResults

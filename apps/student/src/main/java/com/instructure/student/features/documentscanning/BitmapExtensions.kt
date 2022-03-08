@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.documentscanning
+package com.instructure.student.features.documentscanning
 
 import android.graphics.*
 
