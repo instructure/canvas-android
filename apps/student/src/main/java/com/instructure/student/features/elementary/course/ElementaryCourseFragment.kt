@@ -23,15 +23,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_COURSE
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.databinding.FragmentElementaryCourseBinding
-import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.CourseBrowserFragment
+import com.instructure.student.fragment.GradesListFragment
+import com.instructure.student.fragment.ModuleListFragment
+import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_elementary_course.*
 
@@ -62,7 +67,7 @@ class ElementaryCourseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
-        viewModel.getData(canvasContext)
+        viewModel.getData(canvasContext, tabId)
 
         courseTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) = Unit
@@ -92,12 +97,30 @@ class ElementaryCourseFragment : Fragment() {
 
             }
         })
+
+        viewModel.events.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
     }
 
     private fun applyTheme() {
         toolbar.title = canvasContext.name
         toolbar.setupAsBackButton(this)
         ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+    }
+
+    private fun handleAction(action: ElementaryCourseAction) {
+        when (action) {
+            is ElementaryCourseAction.RedirectToCourseBrowserPage -> redirect(CourseBrowserFragment.makeRoute(canvasContext))
+            is ElementaryCourseAction.RedirectToGrades -> redirect(GradesListFragment.makeRoute(canvasContext))
+            is ElementaryCourseAction.RedirectToModules -> redirect(ModuleListFragment.makeRoute(canvasContext))
+        }
+    }
+
+    private fun redirect(route: Route) {
+        RouteMatcher.route(requireContext(), route.copy(removePreviousScreen = true))
     }
 
     companion object {
