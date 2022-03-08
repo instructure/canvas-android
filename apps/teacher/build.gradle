@@ -202,7 +202,7 @@ dependencies {
     implementation project(path: ':rceditor')
     implementation project(path: ':annotations')
     implementation project(path: ':interactions')
-    api project(path: ':DocumentScanner')
+    implementation project(path: ':DocumentScanner')
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB

@@ -247,7 +247,7 @@ dependencies {
     implementation project(path: ':annotations')
     implementation project(path: ':rceditor')
     implementation project(path: ':interactions')
-    api project(path: ':DocumentScanner')
+    implementation project(path: ':DocumentScanner')
 
     /* Flutter embed */
     implementation (project(path: ':flutter-student-embed')) {

@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.tasks.StudentLogoutTask
-import com.zynksoftware.documentscanner.ui.DocumentScanner
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
