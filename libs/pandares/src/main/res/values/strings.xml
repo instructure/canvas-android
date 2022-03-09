@@ -1247,4 +1247,10 @@
     <string name="a11y_error_occured">Error occured, please try again.</string>
     <string name="a11y_content_description_accept_invite">Accept invite</string>
     <string name="a11y_content_description_decline_invite">Decline invite</string>
+
+    <string name="documentScanningTitle">Document Scanning</string>
+    <string name="filter_name_color">Color</string>
+    <string name="filter_name_grayscale">Grayscale</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Original</string>
 </resources>

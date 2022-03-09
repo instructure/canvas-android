@@ -24,6 +24,7 @@ include ':recyclerview'
 include ':pandares'
 include ':panda_annotations'
 include ':panda_processor'
+include ':DocumentScanner'
 
 project(':annotations').projectDir = new File(rootProject.projectDir, '/../libs/annotations')
 project(':blueprint').projectDir = new File(rootProject.projectDir, '/../libs/blueprint')
@@ -39,3 +40,4 @@ project(':recyclerview').projectDir = new File(rootProject.projectDir, '/../libs
 project(':pandares').projectDir = new File(rootProject.projectDir, '/../libs/pandares')
 project(':panda_annotations').projectDir = new File(rootProject.projectDir, '/../libs/panda_annotations')
 project(':panda_processor').projectDir = new File(rootProject.projectDir, '/../libs/panda_processor')
+project(':DocumentScanner').projectDir = new File(rootProject.projectDir, '/../libs/DocumentScanner')

@@ -269,6 +269,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".features.documentscanning.DocumentScanningActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
         <service
             android:name="com.instructure.pandautils.services.NotoriousUploadService"
             android:exported="false" />
