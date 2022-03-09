@@ -297,6 +297,8 @@ class HomeroomInteractionTest : StudentTest() {
             accountNotificationCount = announcementCount,
             homeroomCourseCount = homeroomCourseCount)
 
+        data.elementarySubjectPages = true
+
         return data
     }
 
