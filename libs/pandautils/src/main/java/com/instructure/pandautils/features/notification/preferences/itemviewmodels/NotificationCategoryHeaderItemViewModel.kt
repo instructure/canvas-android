@@ -24,7 +24,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 
 class NotificationCategoryHeaderItemViewModel(
         val data: NotificationCategoryHeaderViewData,
-        val itemViewModels: List<ItemViewModel>) : GroupItemViewModel(collapsable = false, items = itemViewModels) {
+        val itemViewModels: List<NotificationCategoryItemViewModel>) : GroupItemViewModel(collapsable = false, items = itemViewModels) {
     override val layoutId: Int = R.layout.item_notification_header
 
     override val viewType: Int = NotificationPreferencesViewType.HEADER.viewType

@@ -16,20 +16,23 @@
 
 package com.instructure.pandautils.features.notification.preferences
 
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryHeaderItemViewModel
 
-data class NotificationPreferencesViewData(val items: List<ItemViewModel>)
+data class NotificationPreferencesViewData(val items: List<NotificationCategoryHeaderItemViewModel>)
 
 data class NotificationCategoryHeaderViewData(val title: String, val position: Int)
 
 data class NotificationCategoryViewData(
-        var name: String,
-        var title: String?,
-        var description: String?,
+        val name: String,
+        val title: String?,
+        val description: String?,
         var frequency: String,
-        var position: Int,
-        var notification: String?
-)
+        val position: Int,
+        val notification: String?
+) {
+    val categoryName: String
+        get() = notification ?: name
+}
 
 enum class NotificationPreferencesViewType(val viewType: Int) {
     HEADER(0),
@@ -37,5 +40,5 @@ enum class NotificationPreferencesViewType(val viewType: Int) {
 }
 
 sealed class NotificationPreferencesAction {
-
+    data class ShowSnackbar(val snackbar: String): NotificationPreferencesAction()
 }

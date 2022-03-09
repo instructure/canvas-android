@@ -23,8 +23,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.managers.NotificationPreferencesManager
+import com.instructure.canvasapi2.models.CommunicationChannel
 import com.instructure.canvasapi2.models.NotificationPreference
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.BR
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryHeaderItemViewModel
 import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryItemViewModel
 import com.instructure.pandautils.mvvm.Event
@@ -52,22 +55,34 @@ class NotificationPreferencesViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<NotificationPreferencesAction>>()
 
+    private var pushChannel: CommunicationChannel? = null
+
     init {
+        _state.postValue(ViewState.Loading)
         fetchData(false)
     }
 
     fun refresh() {
+        _state.postValue(ViewState.Refresh)
         fetchData(true)
     }
 
     private fun fetchData(forceNetwork: Boolean) {
         viewModelScope.launch {
-            apiPrefs.user?.let {
-                val communicationChannels = communicationChannelsManager.getCommunicationChannelsAsync(it.id, forceNetwork).await().dataOrThrow
-                val pushChannel = communicationChannels.first { "push".equals(it.type, true) }
-                val notificationPreferences = notificationPreferencesManager.getNotificationPreferencesAsync(pushChannel.userId, pushChannel.id, forceNetwork).await().dataOrThrow
-                val items = groupNotifications(notificationPreferences.notificationPreferences)
-                _data.postValue(NotificationPreferencesViewData(items))
+            try {
+                apiPrefs.user?.let {
+                    val communicationChannels = communicationChannelsManager.getCommunicationChannelsAsync(it.id, forceNetwork).await().dataOrThrow
+                    pushChannel = communicationChannels.first { "push".equals(it.type, true) }
+                    pushChannel?.let {
+                        val notificationPreferences = notificationPreferencesManager.getNotificationPreferencesAsync(it.userId, it.id, forceNetwork).await().dataOrThrow
+                        val items = groupNotifications(notificationPreferences.notificationPreferences)
+                        _data.postValue(NotificationPreferencesViewData(items))
+                        _state.postValue(ViewState.Success)
+                    } ?: throw IllegalStateException()
+                } ?: throw  IllegalStateException()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
             }
         }
     }
@@ -97,7 +112,8 @@ class NotificationPreferencesViewModel @Inject constructor(
                             prefs[0].frequency,
                             categoryHelper.position,
                             prefs[0].notification
-                    )
+                    ),
+                    toggle = this::toggleNotification
             )
             if (categories[categoryHeaderViewData] == null) {
                 categories[categoryHeaderViewData] = arrayListOf(categoryItemViewModel)
@@ -113,4 +129,34 @@ class NotificationPreferencesViewModel @Inject constructor(
             )
         }.sortedBy { it.data.position }
     }
+
+    private fun toggleNotification(enabled: Boolean, categoryName: String) {
+        viewModelScope.launch {
+            try {
+                pushChannel?.let {
+                    notificationPreferencesManager.updatePreferenceCategoryAsync(
+                            categoryName,
+                            it.id,
+                            enabled.frequency,
+                    ).await().dataOrThrow
+                } ?: throw IllegalStateException()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _data.value?.items?.forEach {
+                    val itemViewModel = it.itemViewModels.firstOrNull { it.data.categoryName == categoryName }
+                    itemViewModel?.let {
+                        it.apply {
+                            data.frequency = enabled.not().frequency
+                            notifyPropertyChanged(BR.checked)
+                        }
+                        return@forEach
+                    }
+                }
+                _events.postValue(Event(NotificationPreferencesAction.ShowSnackbar(resources.getString(R.string.errorOccurred))))
+            }
+        }
+    }
+
+    private val Boolean.frequency: String
+        get() = if (this) NotificationPreferencesManager.IMMEDIATELY else NotificationPreferencesManager.NEVER
 }

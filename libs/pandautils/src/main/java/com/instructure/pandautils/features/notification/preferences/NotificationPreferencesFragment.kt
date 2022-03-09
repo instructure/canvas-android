@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView
@@ -50,6 +51,18 @@ class NotificationPreferencesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
+
+        viewModel.events.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
+    }
+
+    private fun handleAction(action: NotificationPreferencesAction) {
+        when (action) {
+            is NotificationPreferencesAction.ShowSnackbar -> Snackbar.make(requireView(), action.snackbar, Snackbar.LENGTH_LONG).show()
+        }
     }
 
     private fun setupToolbar() {

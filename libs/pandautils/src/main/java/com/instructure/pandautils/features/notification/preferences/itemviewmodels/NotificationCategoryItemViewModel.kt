@@ -16,19 +16,27 @@
 
 package com.instructure.pandautils.features.notification.preferences.itemviewmodels
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import com.instructure.canvasapi2.managers.NotificationPreferencesManager
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.notification.preferences.NotificationCategoryViewData
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class NotificationCategoryItemViewModel(
-        val data: NotificationCategoryViewData
-) : ItemViewModel {
+        val data: NotificationCategoryViewData,
+        val toggle: (Boolean, String) -> Unit
+) : ItemViewModel, BaseObservable() {
     override val layoutId: Int = R.layout.item_notification_preference
 
     override val viewType: Int = NotificationPreferencesViewType.CATEGORY.viewType
 
-    fun onCheckedChanged(checked: Boolean) {
+    @get:Bindable val isChecked: Boolean
+        get() = !data.frequency.equals(NotificationPreferencesManager.NEVER, ignoreCase = true)
 
+    fun onCheckedChanged(checked: Boolean) {
+        data.frequency = if (checked) NotificationPreferencesManager.IMMEDIATELY else NotificationPreferencesManager.NEVER
+        toggle(checked, data.categoryName)
     }
 }

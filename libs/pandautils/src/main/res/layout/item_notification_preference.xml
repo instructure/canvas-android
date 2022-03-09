@@ -45,8 +45,8 @@
             android:layout_centerVertical="true"
             android:layout_gravity="end|center_vertical"
             android:layout_marginStart="16dp"
-            android:checked="@{!itemViewModel.data.frequency.equalsIgnoreCase(NotificationPreferencesManager.NEVER)}"
-            android:onCheckedChanged="@{(v, checked) -> itemViewModel.onCheckedChanged(checked)}"
+            android:checked="@{itemViewModel.checked}"
+            android:onClick="@{() -> itemViewModel.onCheckedChanged(toggle.isChecked())}"
             android:theme="@style/SwitchTheme" />
 
         <LinearLayout
