@@ -23,6 +23,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -30,6 +31,7 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.isCourse
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +43,8 @@ class ElementaryCourseViewModel @Inject constructor(
     private val tabManager: TabManager,
     private val resources: Resources,
     private val apiPrefs: ApiPrefs,
-    private val oauthManager: OAuthManager
+    private val oauthManager: OAuthManager,
+    private val courseManager: CourseManager
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -52,31 +55,54 @@ class ElementaryCourseViewModel @Inject constructor(
         get() = _data
     private val _data = MutableLiveData<ElementaryCourseViewData>()
 
-    fun getData(canvasContext: CanvasContext, forceNetwork: Boolean = false) {
+    val events: LiveData<Event<ElementaryCourseAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<ElementaryCourseAction>>()
+
+    fun getData(canvasContext: CanvasContext, tabId: String) {
         _state.postValue(ViewState.Loading)
         viewModelScope.launch {
             try {
-                val tabs = tabManager.getTabsForElementaryAsync(canvasContext, forceNetwork).await().dataOrThrow
-                val hasResources = tabs.firstOrNull { it.isExternal } != null
-                var filteredTabs = tabs.filter { !it.isHidden && !it.isExternal }.sortedBy { it.position }
+                val dashboardCards = courseManager.getDashboardCoursesAsync(false).await().dataOrNull ?: emptyList()
+                val isElementaryCourse = dashboardCards.any { it.id == canvasContext.id && it.isK5Subject }
 
-                if (hasResources) {
-                    filteredTabs = filteredTabs.toMutableList()
-                    filteredTabs.add(
-                        Tab(
-                            tabId = Tab.RESOURCES_ID,
-                            label = resources.getString(R.string.dashboardTabResources)
-                        )
-                    )
+                if (isElementaryCourse) {
+                    loadDataForElementary(canvasContext)
+                } else {
+                    handleNonElementaryCourse(tabId)
                 }
-
-                val tabViewData = createTabs(canvasContext, filteredTabs)
-                _data.postValue(ElementaryCourseViewData(tabViewData))
-                _state.postValue(ViewState.Success)
             } catch (e: Exception) {
                 _state.postValue(ViewState.Error(resources.getString(R.string.error_loading_course_details)))
                 Logger.e("Failed to load tabs")
             }
+        }
+    }
+
+    private suspend fun loadDataForElementary(canvasContext: CanvasContext) {
+        val tabs = tabManager.getTabsForElementaryAsync(canvasContext, false).await().dataOrThrow
+        val hasResources = tabs.firstOrNull { it.isExternal } != null
+        var filteredTabs = tabs.filter { !it.isHidden && !it.isExternal }.sortedBy { it.position }
+
+        if (hasResources) {
+            filteredTabs = filteredTabs.toMutableList()
+            filteredTabs.add(
+                Tab(
+                    tabId = Tab.RESOURCES_ID,
+                    label = resources.getString(R.string.dashboardTabResources)
+                )
+            )
+        }
+
+        val tabViewData = createTabs(canvasContext, filteredTabs)
+        _data.postValue(ElementaryCourseViewData(tabViewData))
+        _state.postValue(ViewState.Success)
+    }
+
+    private fun handleNonElementaryCourse(tabId: String) {
+        when (tabId) {
+            Tab.GRADES_ID -> _events.postValue(Event(ElementaryCourseAction.RedirectToGrades))
+            Tab.MODULES_ID -> _events.postValue(Event(ElementaryCourseAction.RedirectToModules))
+            else -> _events.postValue(Event(ElementaryCourseAction.RedirectToCourseBrowserPage))
         }
     }
 
