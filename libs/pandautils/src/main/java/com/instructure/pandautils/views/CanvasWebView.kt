@@ -59,11 +59,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils.getAssetsFile
 import com.instructure.canvasapi2.utils.Logger.e
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.FileUploadUtils.getExternalCacheDir
-import com.instructure.pandautils.utils.Utils
-import com.instructure.pandautils.utils.requestWebPermissions
 import com.instructure.pandautils.video.VideoWebChromeClient
 import java.io.File
 import java.io.UnsupportedEncodingException
@@ -368,17 +365,6 @@ class CanvasWebView @JvmOverloads constructor(
             // Check if the URL has a scheme that we aren't handling
             val uri = Uri.parse(url)
             if (uri != null && uri.scheme != null && uri.scheme != "http" && uri.scheme != "https") {
-                // Special scheme, send URL to app that can handle it
-                val intent = Intent(Intent.ACTION_VIEW, uri)
-                // Verify that the intent will resolve to an activity
-                if (intent.resolveActivity(context.packageManager) != null) {
-                    if (uri.scheme == "yellowdig") {
-                        // Pop off the LTI page so it doesn't try to reload the yellowdig app when going back to our app
-                        popBackStack()
-                    }
-                    context.startActivity(intent)
-                    return true
-                }
                 if (url.startsWith("intent:")) {
                     try {
                         val appIntent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
@@ -396,6 +382,21 @@ class CanvasWebView @JvmOverloads constructor(
                     } catch (e: URISyntaxException) {
                         //not an intent uri
                     }
+                }
+
+                // Special scheme, send URL to app that can handle it
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                // Verify that the intent will resolve to an activity
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    if (uri.scheme == "yellowdig") {
+                        // Pop off the LTI page so it doesn't try to reload the yellowdig app when going back to our app
+                        popBackStack()
+                    }
+                    context.startActivity(intent)
+                    return true
+                } else {
+                    toast(R.string.noCompatibleAppInstalled, Toast.LENGTH_LONG)
+                    return true
                 }
             }
             // Is the URL something we can link to inside our application?
