@@ -90,7 +90,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 if (model.groupTopicChildren.isNotEmpty()) {
                     groupsJob = tryWeave {
                         DiscussionDetailsFragment.getDiscussionGroup(model)?.let {
-                            RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(it.first, it.second))
+                            RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(it.first, it.second, groupDiscussion = true))
                         } ?: RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(canvasContext, model))
                     }.catch {  }
                 } else {
