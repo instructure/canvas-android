@@ -13,7 +13,7 @@ gcloud:
   timeout: 60m
   test-targets:
   - annotation com.instructure.canvas.espresso.E2E
-  - notAnnotation com.instructure.canvas.espresso.Stub
+  - notAnnotation com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
   device:
   - model: NexusLowRes
     version: 26

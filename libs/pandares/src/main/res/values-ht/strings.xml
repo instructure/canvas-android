@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">Nòt Elèv</string>
     <string name="submissionTypeStudentAnnotation">Nòt Elèv</string>
     <string name="gradesNoDueDate">San delè</string>
+    <string name="importantDatesNoDueDate">San delè</string>
     <string name="missingAssignment">Manke</string>
     <string name="dontSave">Pa anrejistre</string>
     <string name="textSubmissionExitConfirmationTitle">Anrejistre bouyon?</string>
@@ -1233,4 +1234,11 @@
     <string name="submissionDraftAvailableTitle">Bouyon Disponib</string>
     <string name="errorLoadingSubmission">Yon erè fèt pandan chajman soumisyon an</string>
     <string name="loadFullContent">Tape pou wè tout kontni an</string>
+    <string name="dashboardTabImportantDates">Dat Enpòtan</string>
+    <string name="importantDatesEmptyTitle">Pa gen Dat Enpòtan</string>
+    <string name="important_dates">Dat Enpòtan</string>
+
+    <string name="toolbarCommentLibrary">Bibliyotèk Kòmantè</string>
+    <string name="commentLibraryNoSuggestions">pa gen sijesyon disponib</string>
+    <string name="speedGraderCommentHint">Kòmantè</string>
 </resources>

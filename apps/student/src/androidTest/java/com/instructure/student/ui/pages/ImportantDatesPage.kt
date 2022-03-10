@@ -17,13 +17,17 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasChild
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.espresso.scrollTo
@@ -32,6 +36,7 @@ import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.student.R
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers
 
 
 class ImportantDatesPage : BasePage(R.id.importantDatesPage) {
@@ -43,6 +48,10 @@ class ImportantDatesPage : BasePage(R.id.importantDatesPage) {
         val itemMatcher = withAncestor(R.id.importantDatesRecyclerView) + withText(itemName)
         scrollToItem(R.id.importantDatesRecyclerView, itemName, itemMatcher)
         waitForView(itemMatcher).assertDisplayed()
+    }
+
+    fun assertItemNotDisplayed(itemName: String) {
+        onView(ViewMatchers.withText(itemName)).check(ViewAssertions.doesNotExist())
     }
 
     fun assertEmptyViewDisplayed() {

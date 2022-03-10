@@ -1211,12 +1211,20 @@
     <string name="studentAnnotationToolbarTitle">学生注释</string>
     <string name="submissionTypeStudentAnnotation">学生注释</string>
     <string name="gradesNoDueDate">没有截止日期</string>
+    <string name="importantDatesNoDueDate">没有截止日期</string>
     <string name="missingAssignment">未交</string>
     <string name="dontSave">不保存</string>
     <string name="textSubmissionExitConfirmationTitle">是否保存草稿？</string>
     <string name="textSubmissionExitConfirmationMessage">您的更改不会以其他方式保存</string>
     <string name="submissionDraftAvailableSubtitle">点击此处继续</string>
     <string name="submissionDraftAvailableTitle">可用草稿</string>
-    <string name="errorLoadingSubmission">加载提交项时遇到错误</string>
+    <string name="errorLoadingSubmission">加载提交项时发生错误</string>
     <string name="loadFullContent">点击以查看完整内容</string>
+    <string name="dashboardTabImportantDates">重要日期</string>
+    <string name="importantDatesEmptyTitle">没有重要日期</string>
+    <string name="important_dates">重要日期</string>
+
+    <string name="toolbarCommentLibrary">评论库</string>
+    <string name="commentLibraryNoSuggestions">未提供建议</string>
+    <string name="speedGraderCommentHint">评论</string>
 </resources>

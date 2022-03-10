@@ -1226,6 +1226,7 @@
     <string name="studentAnnotationToolbarTitle">Anotació de l\'estudiant</string>
     <string name="submissionTypeStudentAnnotation">Anotació de l\'estudiant</string>
     <string name="gradesNoDueDate">Sense data de lliurament</string>
+    <string name="importantDatesNoDueDate">Sense data de lliurament</string>
     <string name="missingAssignment">No presentat</string>
     <string name="dontSave">No ho desis</string>
     <string name="textSubmissionExitConfirmationTitle">Voleu desar l’esborrany?</string>
@@ -1234,4 +1235,11 @@
     <string name="submissionDraftAvailableTitle">L’esborrany està disponible</string>
     <string name="errorLoadingSubmission">S\'ha produït un error en carregar les entregues</string>
     <string name="loadFullContent">Toqueu per veure tot el contingut</string>
+    <string name="dashboardTabImportantDates">Dates importants</string>
+    <string name="importantDatesEmptyTitle">Sense dates importants</string>
+    <string name="important_dates">Dates importants</string>
+
+    <string name="toolbarCommentLibrary">Biblioteca de comentaris</string>
+    <string name="commentLibraryNoSuggestions">Sense suggeriments disponibles</string>
+    <string name="speedGraderCommentHint">Comentari</string>
 </resources>

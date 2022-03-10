@@ -21,14 +21,17 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.student.features.elementary.course.ElementaryCourseAction
 import com.instructure.student.features.elementary.course.ElementaryCourseTab
 import com.instructure.student.features.elementary.course.ElementaryCourseViewData
 import com.instructure.student.features.elementary.course.ElementaryCourseViewModel
@@ -60,6 +63,7 @@ class ElementaryCourseViewModelTest {
     private val resources: Resources = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
+    private val courseManager: CourseManager = mockk(relaxed = true)
 
     private lateinit var viewModel: ElementaryCourseViewModel
 
@@ -75,9 +79,13 @@ class ElementaryCourseViewModelTest {
         every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
+
+        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(DashboardCard(id = 0, isK5Subject = true)))
+        }
         setupStrings()
 
-        viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager)
+        viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager, courseManager)
     }
 
     @Test
@@ -104,7 +112,7 @@ class ElementaryCourseViewModelTest {
             coEvery { await() } returns DataResult.Success(tabs)
         }
 
-        viewModel.getData(CanvasContext.emptyCourseContext())
+        viewModel.getData(CanvasContext.emptyCourseContext(), "")
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(expectedData, viewModel.data.value)
     }
@@ -133,7 +141,7 @@ class ElementaryCourseViewModelTest {
             coEvery { await() } returns DataResult.Success(tabs)
         }
 
-        viewModel.getData(CanvasContext.emptyCourseContext())
+        viewModel.getData(CanvasContext.emptyCourseContext(), "")
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(expectedData, viewModel.data.value)
     }
@@ -160,7 +168,7 @@ class ElementaryCourseViewModelTest {
             coEvery { await() } returns DataResult.Success(tabs)
         }
 
-        viewModel.getData(CanvasContext.emptyCourseContext())
+        viewModel.getData(CanvasContext.emptyCourseContext(), "")
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(expectedData, viewModel.data.value)
     }
@@ -171,9 +179,41 @@ class ElementaryCourseViewModelTest {
             coEvery { await() } returns DataResult.Fail()
         }
 
-
-        viewModel.getData(CanvasContext.emptyCourseContext())
+        viewModel.getData(CanvasContext.emptyCourseContext(), "")
         assertEquals(ViewState.Error("Uh oh! An error occurred while loading the course details."), viewModel.state.value)
+    }
+
+    @Test
+    fun `Redirect to grades if non-K5 course grades tab is opened`() {
+        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel.getData(CanvasContext.emptyCourseContext(), "grades")
+
+        assertEquals(ElementaryCourseAction.RedirectToGrades, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `Redirect to modules if non-K5 course modules tab is opened`() {
+        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel.getData(CanvasContext.emptyCourseContext(), "modules")
+
+        assertEquals(ElementaryCourseAction.RedirectToModules, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `Redirect to course browser page if non-K5 course is opened`() {
+        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel.getData(CanvasContext.emptyCourseContext(), "")
+
+        assertEquals(ElementaryCourseAction.RedirectToCourseBrowserPage, viewModel.events.value?.peekContent())
     }
 
     @Test
@@ -201,7 +241,7 @@ class ElementaryCourseViewModelTest {
             coEvery { await() } returns DataResult.Success(tabs)
         }
 
-        viewModel.getData(CanvasContext.emptyCourseContext())
+        viewModel.getData(CanvasContext.emptyCourseContext(), "")
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(expectedData, viewModel.data.value)
     }

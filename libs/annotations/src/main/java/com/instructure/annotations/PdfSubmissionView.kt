@@ -95,7 +95,15 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     protected val supportFragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
 
     private val annotationCreationList = mutableListOf(AnnotationTool.INK, AnnotationTool.HIGHLIGHT, AnnotationTool.STRIKEOUT, AnnotationTool.SQUARE, AnnotationTool.STAMP, AnnotationTool.FREETEXT, AnnotationTool.ERASER, AnnotationTool.NOTE)
-    private val annototationEditList = mutableListOf(AnnotationType.INK, AnnotationType.HIGHLIGHT, AnnotationType.STRIKEOUT, AnnotationType.SQUARE, AnnotationType.STAMP, AnnotationType.FREETEXT)
+    private val annototationEditList = mutableListOf(
+        AnnotationType.INK,
+        AnnotationType.HIGHLIGHT,
+        AnnotationType.STRIKEOUT,
+        AnnotationType.SQUARE,
+        AnnotationType.STAMP,
+        AnnotationType.FREETEXT,
+        AnnotationType.NONE // Wee need this to enable the eraser
+    )
 
     private val pdfConfiguration: PdfConfiguration = PdfConfiguration.Builder()
             .scrollDirection(PageScrollDirection.VERTICAL)
@@ -562,7 +570,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         if (docSession.annotationMetadata?.canWrite() != true) return
 
         // This is a new annotation; Post it
-        commentsButton.isEnabled = false
+        post {
+            commentsButton.isEnabled = false
+        }
 
         createAnnotationJob = tryWeave {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(apiValues.documentId)

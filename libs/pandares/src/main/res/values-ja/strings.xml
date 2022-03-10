@@ -1211,12 +1211,20 @@
     <string name="studentAnnotationToolbarTitle">受講生の注釈</string>
     <string name="submissionTypeStudentAnnotation">受講生の注釈</string>
     <string name="gradesNoDueDate">締切日なし</string>
+    <string name="importantDatesNoDueDate">締切日なし</string>
     <string name="missingAssignment">提出なし</string>
     <string name="dontSave">保存しないでください</string>
     <string name="textSubmissionExitConfirmationTitle">下書きを保存しますか？</string>
     <string name="textSubmissionExitConfirmationMessage">これをしない場合、変更内容が保存されません</string>
     <string name="submissionDraftAvailableSubtitle">続けるにはここをタップします</string>
     <string name="submissionDraftAvailableTitle">ドラフト版</string>
-    <string name="errorLoadingSubmission">提出読み込み中にエラーが起こりました</string>
+    <string name="errorLoadingSubmission">提出物読み込み中にエラーが発生しました</string>
     <string name="loadFullContent">タップしてすべてのコンテンツを表示する</string>
+    <string name="dashboardTabImportantDates">重要な日付</string>
+    <string name="importantDatesEmptyTitle">重要な日付なし</string>
+    <string name="important_dates">重要な日付</string>
+
+    <string name="toolbarCommentLibrary">コメントライブラリ</string>
+    <string name="commentLibraryNoSuggestions">示唆されている利用可能なものなし</string>
+    <string name="speedGraderCommentHint">コメント</string>
 </resources>

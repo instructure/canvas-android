@@ -59,8 +59,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 235
-        versionName = '6.16.1'
+        versionCode = 236
+        versionName = '6.16.2'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -247,6 +247,7 @@ dependencies {
     implementation project(path: ':annotations')
     implementation project(path: ':rceditor')
     implementation project(path: ':interactions')
+    implementation project(path: ':DocumentScanner')
 
     /* Flutter embed */
     implementation (project(path: ':flutter-student-embed')) {

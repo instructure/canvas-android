@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.binding
 
+import android.graphics.Bitmap
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -155,6 +156,15 @@ fun bindConstraintWidthPercentage(view: View, percentage: Float) {
 @BindingAdapter("imageRes")
 fun bindImageResource(imageView: ImageView, @DrawableRes imageRes: Int) {
     imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
+}
+
+@BindingAdapter("bitmap")
+fun bindBitmap(imageView: ImageView, bitmap: Bitmap?) {
+    bitmap?.let {
+        Glide.with(imageView)
+                .load(it)
+                .into(imageView)
+    }
 }
 
 
