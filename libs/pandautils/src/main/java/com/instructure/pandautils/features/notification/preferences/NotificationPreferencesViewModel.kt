@@ -41,6 +41,7 @@ class NotificationPreferencesViewModel @Inject constructor(
         private val communicationChannelsManager: CommunicationChannelsManager,
         private val notificationPreferencesManager: NotificationPreferencesManager,
         private val apiPrefs: ApiPrefs,
+        private val notificationPreferenceUtils: NotificationPreferenceUtils,
         private val resources: Resources
 ) : ViewModel() {
     val state: LiveData<ViewState>
@@ -73,11 +74,17 @@ class NotificationPreferencesViewModel @Inject constructor(
                 apiPrefs.user?.let {
                     val communicationChannels = communicationChannelsManager.getCommunicationChannelsAsync(it.id, forceNetwork).await().dataOrThrow
                     pushChannel = communicationChannels.first { "push".equals(it.type, true) }
-                    pushChannel?.let {
-                        val notificationPreferences = notificationPreferencesManager.getNotificationPreferencesAsync(it.userId, it.id, forceNetwork).await().dataOrThrow
+                    pushChannel?.let { channel ->
+
+                        val notificationPreferences = notificationPreferencesManager.getNotificationPreferencesAsync(channel.userId, channel.id, forceNetwork).await().dataOrThrow
                         val items = groupNotifications(notificationPreferences.notificationPreferences)
-                        _data.postValue(NotificationPreferencesViewData(items))
-                        _state.postValue(ViewState.Success)
+
+                        if (items.isEmpty()) {
+                            _state.postValue(ViewState.Empty(emptyTitle = R.string.no_notifications_to_show, emptyImage = R.drawable.ic_panda_noalerts))
+                        } else {
+                            _data.postValue(NotificationPreferencesViewData(items))
+                            _state.postValue(ViewState.Success)
+                        }
                     } ?: throw IllegalStateException()
                 } ?: throw  IllegalStateException()
             } catch (e: Exception) {
@@ -88,21 +95,16 @@ class NotificationPreferencesViewModel @Inject constructor(
     }
 
     private fun groupNotifications(items: List<NotificationPreference>): List<NotificationCategoryHeaderItemViewModel> {
-        val categoryHelperMap = NotificationPreferenceUtils.categoryHelperMap
-        val titleMap = NotificationPreferenceUtils.categoryTitleMap
-        val descriptionMap = NotificationPreferenceUtils.categoryDescriptionMap
-        val groupHeaderMap = NotificationPreferenceUtils.categoryGroupHeaderMap
+        val categoryHelperMap = notificationPreferenceUtils.categoryHelperMap
+        val titleMap = notificationPreferenceUtils.categoryTitleMap
+        val descriptionMap = notificationPreferenceUtils.categoryDescriptionMap
+        val groupHeaderMap = notificationPreferenceUtils.categoryGroupHeaderMap
 
         val categories = hashMapOf<NotificationCategoryHeaderViewData, ArrayList<NotificationCategoryItemViewModel>>()
 
         for ((categoryName, prefs) in items.groupBy { it.category }) {
             val categoryHelper = categoryHelperMap[categoryName] ?: continue
             val header = groupHeaderMap[categoryHelper.categoryGroup] ?: continue
-
-            val categoryHeaderViewData = NotificationCategoryHeaderViewData(
-                    header.title,
-                    header.position
-            )
 
             val categoryItemViewModel = NotificationCategoryItemViewModel(
                     data = NotificationCategoryViewData(
@@ -115,10 +117,10 @@ class NotificationPreferencesViewModel @Inject constructor(
                     ),
                     toggle = this::toggleNotification
             )
-            if (categories[categoryHeaderViewData] == null) {
-                categories[categoryHeaderViewData] = arrayListOf(categoryItemViewModel)
+            if (categories[header] == null) {
+                categories[header] = arrayListOf(categoryItemViewModel)
             } else {
-                categories[categoryHeaderViewData]?.add(categoryItemViewModel)
+                categories[header]?.add(categoryItemViewModel)
             }
         }
 
