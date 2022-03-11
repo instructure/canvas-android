@@ -51,7 +51,8 @@ class AssignmentListByDateRecyclerAdapter(
         override fun getUniqueItemId(item: Assignment) = item.id
         override fun compare(group: AssignmentGroup, o1: Assignment, o2: Assignment): Int {
             return when (group.position) {
-                HEADER_POSITION_UNDATED -> o1.name?.toLowerCase()?.compareTo(o2.name?.toLowerCase() ?: "") ?: 0
+                HEADER_POSITION_UNDATED -> o1.name?.lowercase(Locale.getDefault())
+                    ?.compareTo(o2.name?.lowercase(Locale.getDefault()) ?: "") ?: 0
                 HEADER_POSITION_PAST -> o2.dueAt?.compareTo(o1.dueAt ?: "") ?: 0 // Sort newest date first (o1 and o2 switched places)
                 else -> o1.dueAt?.compareTo(o2.dueAt ?: "") ?: 0 // Sort oldest date first
             }

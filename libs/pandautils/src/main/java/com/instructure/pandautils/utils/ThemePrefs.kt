@@ -116,7 +116,7 @@ object ThemePrefs : PrefManager("CanvasTheme") {
         accentColor = parseColor(theme.accent, accentColor)
         buttonColor = parseColor(theme.button, buttonColor)
         buttonTextColor = parseColor(theme.buttonText, buttonTextColor)
-        logoUrl = theme.logoUrl ?: ""
+        logoUrl = theme.logoUrl
         isThemeApplied = true
     }
 

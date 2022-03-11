@@ -37,7 +37,7 @@ internal object UnreadCountAPI {
 
     fun getUnreadConversationsCountSynchronous(adapter: RestBuilder, params: RestParams): String? {
         return try {
-            adapter.build(UnreadCountsInterface::class.java, params).getUnreadConversationCount().execute()?.body()?.unreadCount
+            adapter.build(UnreadCountsInterface::class.java, params).getUnreadConversationCount().execute().body()?.unreadCount
         } catch (E: Exception) {
             null
         }

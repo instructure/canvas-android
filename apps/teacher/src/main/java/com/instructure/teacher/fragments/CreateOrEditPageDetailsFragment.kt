@@ -185,7 +185,7 @@ class CreateOrEditPageDetailsFragment :
         frontPageSwitch.applyTheme()
         frontPageSwitch.isChecked = presenter.page.frontPage
         frontPageSwitch.setOnCheckedChangeListener { _, isChecked ->
-            presenter?.page?.frontPage = isChecked
+            presenter.page.frontPage = isChecked
         }
     }
 
@@ -237,7 +237,7 @@ class CreateOrEditPageDetailsFragment :
         publishSwitch.applyTheme()
         publishSwitch.isChecked = presenter.page.published
 
-        publishSwitch.setOnCheckedChangeListener { _, isChecked -> presenter?.page?.published = isChecked }
+        publishSwitch.setOnCheckedChangeListener { _, isChecked -> presenter.page.published = isChecked }
     }
 
     private fun setupDelete() {
@@ -248,7 +248,7 @@ class CreateOrEditPageDetailsFragment :
                     .setMessage(R.string.pageDeleteMessage)
                     .setPositiveButton(R.string.delete) { _, _ ->
                         if(mPage != null) {
-                            presenter?.deletePage(mPage!!.url!!)
+                            presenter.deletePage(mPage!!.url!!)
                         }
                     }
                     .setNegativeButton(R.string.cancel) { _, _ -> }
@@ -258,7 +258,7 @@ class CreateOrEditPageDetailsFragment :
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter?.page?.body = pageRCEView.html
+        presenter.page.body = pageRCEView.html
     }
 
     private fun savePage() {

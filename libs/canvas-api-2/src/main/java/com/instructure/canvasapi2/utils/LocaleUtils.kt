@@ -80,7 +80,7 @@ object LocaleUtils {
 
 val Locale.cleanDisplayName: String
     get() {
-        val displayLanguage = getDisplayLanguage(this).capitalize()
+        val displayLanguage = getDisplayLanguage(this).capitalized()
         val displayTags = listOf<String>(
             getDisplayScript(this),
             getDisplayCountry(this),

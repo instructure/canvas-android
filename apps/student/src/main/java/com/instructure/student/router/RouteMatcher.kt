@@ -425,7 +425,7 @@ object RouteMatcher : BaseRouteMatcher() {
         // If we're trying to open an HTML file, don't download it. It could be referencing other files
         // through a relative URL which we won't be able to access. Instead, just showing the file in
         // a webview will load the file the user is trying to view and will resolve all relative paths
-        if (filename.toLowerCase().endsWith(".htm") || filename.toLowerCase().endsWith(".html")) {
+        if (filename.lowercase(Locale.getDefault()).endsWith(".htm") || filename.lowercase(Locale.getDefault()).endsWith(".html")) {
             RouteUtils.retrieveFileUrl(route, fileId) { fileUrl, context, needsAuth ->
                 InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(context, fileUrl, needsAuth, true))
             }

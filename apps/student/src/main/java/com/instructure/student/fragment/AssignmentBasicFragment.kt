@@ -97,7 +97,7 @@ class AssignmentBasicFragment : ParentFragment() {
             override fun launchInternalWebViewFragment(url: String) {
                 // Create and add the InternalWebviewFragment to deal with the link they clicked
                 val route = InternalWebviewFragment.makeRoute(url, "", false, "")
-                InternalWebviewFragment.newInstance(route)?.let {
+                InternalWebviewFragment.newInstance(route).let {
                     val ft = requireActivity().supportFragmentManager.beginTransaction()
                     ft.setCustomAnimations(R.anim.slide_in_from_bottom, android.R.anim.fade_out, R.anim.none, R.anim.slide_out_to_bottom)
                     ft.add(R.id.fullscreen, it, it.javaClass.name)

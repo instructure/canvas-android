@@ -156,7 +156,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
             } else {
                 emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
-            presenter?.searchQuery = query
+            presenter.searchQuery = query
         }
         ViewStyler.themeToolbar(requireActivity(), pageListToolbar, mCourseColor, Color.WHITE)
     }

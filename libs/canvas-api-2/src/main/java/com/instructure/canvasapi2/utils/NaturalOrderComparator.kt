@@ -37,7 +37,7 @@ object NaturalOrderComparator {
             if (!Character.isDigit(ca) && !Character.isDigit(cb)) return bias
             if (!Character.isDigit(ca)) return -1
             if (!Character.isDigit(cb)) return +1
-            if (ca.toInt() == 0 && cb.toInt() == 0) return bias
+            if (ca.code == 0 && cb.code == 0) return bias
             if (bias == 0) {
                 if (ca < cb) {
                     bias = -1
@@ -91,7 +91,7 @@ object NaturalOrderComparator {
                 val bias = compareRight(a.substring(ia), b.substring(ib))
                 if (bias != 0) return bias
             }
-            if (ca.toInt() == 0 && cb.toInt() == 0) {
+            if (ca.code == 0 && cb.code == 0) {
                 // The strings compare the same. Perhaps the caller
                 // will want to call strcmp to break the tie.
                 return nza - nzb

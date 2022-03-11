@@ -189,7 +189,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(sticky = true)
     fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
-        adapter?.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
     @Suppress("unused")

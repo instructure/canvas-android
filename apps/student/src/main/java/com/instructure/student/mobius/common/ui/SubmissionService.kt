@@ -361,7 +361,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 notification.setProgress(0, 0, true)
                 notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
-                NotoriousUploader.performUpload(comment.mediaPath!!, object : ProgressRequestUpdateListener {
+                NotoriousUploader.performUpload(comment.mediaPath, object : ProgressRequestUpdateListener {
                     override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
                         updateCommentProgress(notification, comment, progressPercent, db)
                         return true

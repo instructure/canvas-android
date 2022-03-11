@@ -31,6 +31,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_COURSE_NICKNAME
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import java.util.Locale
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_EDIT_COURSE_NICKNAME)
@@ -67,10 +68,10 @@ class EditCourseNicknameDialog : AppCompatDialogFragment() {
                 .setCancelable(true)
                 .setTitle(getString(R.string.edit_course_nickname))
                 .setView(view)
-                .setPositiveButton(getString(android.R.string.ok).toUpperCase()) { _, _ ->
+                .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault())) { _, _ ->
                     mEditNicknameCallback(editCourseNicknameEditText.text.toString())
                 }
-            .setNegativeButton(getString(android.R.string.cancel).toUpperCase(), null)
+            .setNegativeButton(getString(android.R.string.cancel).uppercase(Locale.getDefault()), null)
                 .create()
         nameDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 

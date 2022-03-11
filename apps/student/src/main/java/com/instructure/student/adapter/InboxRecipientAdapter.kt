@@ -191,7 +191,7 @@ open class InboxRecipientAdapter(
 
             val comparator = compareBy<Recipient>(
                 { it.recipientType.ordinal }, // Compare types, should sort by group > metagroup > person
-                { it.name!!.toLowerCase() }, // Compare by name
+                { it.name!!.lowercase(Locale.getDefault()) }, // Compare by name
                 { it.stringId } // Compare by id
             )
 

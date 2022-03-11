@@ -200,7 +200,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     private fun updateFilterTitle() {
         clearFilterTextView.setVisible()
-        when (presenter?.getFilter()) {
+        when (presenter.getFilter()) {
             SubmissionListFilter.ALL -> {
                 filterTitle.setText(R.string.all_submissions)
                 clearFilterTextView.setGone()
@@ -223,7 +223,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             }
         }
 
-        filterTitle.text = filterTitle.text.toString().plus(presenter?.getSectionFilterText())
+        filterTitle.text = filterTitle.text.toString().plus(presenter.getSectionFilterText())
     }
 
     private fun setFilter(filterIndex: Int = -1, canvasContexts: ArrayList<CanvasContext>? = null) {
@@ -259,13 +259,13 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             }
             SubmissionListFilter.BELOW_VALUE.ordinal -> {
                 FilterSubmissionByPointsDialog.getInstance(requireFragmentManager(), getString(R.string.scored_less_than), mAssignment.pointsPossible) { points ->
-                    presenter?.setFilter(SubmissionListFilter.BELOW_VALUE, points)
+                    presenter.setFilter(SubmissionListFilter.BELOW_VALUE, points)
                     updateFilterTitle()
                 }.show(requireActivity().supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
             }
             SubmissionListFilter.ABOVE_VALUE.ordinal -> {
                 FilterSubmissionByPointsDialog.getInstance(requireFragmentManager(), getString(R.string.scored_more_than), mAssignment.pointsPossible) { points ->
-                    presenter?.setFilter(SubmissionListFilter.ABOVE_VALUE, points)
+                    presenter.setFilter(SubmissionListFilter.ABOVE_VALUE, points)
                     updateFilterTitle()
                 }.show(requireActivity().supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
             }

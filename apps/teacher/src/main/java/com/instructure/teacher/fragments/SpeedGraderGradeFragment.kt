@@ -77,10 +77,10 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
-        val submissionId = presenter?.submission?.id ?: return
+        val submissionId = presenter.submission?.id ?: return
         event.once(javaClass.simpleName + submissionId) {
             if (mAssignment.id == it) {
-                presenter?.refreshSubmission()
+                presenter.refreshSubmission()
             }
         }
     }

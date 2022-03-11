@@ -30,6 +30,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.student.R
 import kotlinx.android.synthetic.main.dialog_edit_text.view.*
+import java.util.Locale
 import kotlin.properties.Delegates
 
 class EditTextDialog : AppCompatDialogFragment() {
@@ -68,10 +69,10 @@ class EditTextDialog : AppCompatDialogFragment() {
                 .setCancelable(true)
                 .setTitle(mTitle)
                 .setView(view)
-                .setPositiveButton(getString(android.R.string.ok).toUpperCase()) { _, _ ->
+                .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault())) { _, _ ->
                     mEditTextCallback(view.textInput.text.toString())
                 }
-            .setNegativeButton(getString(android.R.string.cancel).toUpperCase(), null)
+            .setNegativeButton(getString(android.R.string.cancel).uppercase(Locale.getDefault()), null)
                 .create()
 
         dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)

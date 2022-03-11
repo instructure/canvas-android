@@ -35,6 +35,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.router.RouteMatcher
 import kotlinx.android.synthetic.main.dialog_criterion_long_description.view.*
+import java.util.Locale
 
 @ScreenView(SCREEN_VIEW_CRITERION_LONG_DESCRIPTION)
 class CriterionLongDescriptionDialog : DialogFragment() {
@@ -98,7 +99,7 @@ class CriterionLongDescriptionDialog : DialogFragment() {
                 .setCancelable(true)
                 .setTitle(mDescription)
                 .setView(content)
-                .setPositiveButton(getString(android.R.string.ok).toUpperCase(), null)
+                .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault()), null)
                 .create()
                 .apply {
                     setOnShowListener {

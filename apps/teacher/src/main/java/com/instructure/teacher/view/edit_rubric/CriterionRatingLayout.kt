@@ -117,7 +117,7 @@ class CriterionRatingLayout @JvmOverloads constructor(
 
         for (child in children) {
             child.measure(childWidthSpec, childHeightSpec)
-            val rowWidth = currentRow.sumBy { it.measuredWidth + mMinSpacing } + child.measuredWidth
+            val rowWidth = currentRow.sumOf { it.measuredWidth + mMinSpacing } + child.measuredWidth
             if (rowWidth > maxWidth) {
                 currentRow = arrayListOf()
                 rows += currentRow
@@ -130,7 +130,7 @@ class CriterionRatingLayout @JvmOverloads constructor(
             val spacing = if (index == rows.lastIndex || row.size < 2) {
                 mMinSpacing
             } else {
-                (maxWidth - row.sumBy { it.measuredWidth }) / (row.size - 1)
+                (maxWidth - row.sumOf { it.measuredWidth }) / (row.size - 1)
             }
             var x = 0
             for (view in row) {

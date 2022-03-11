@@ -54,7 +54,7 @@ object NotoriousUploader {
             val uploadToken = resultWrapper.result?.id.orEmpty()
 
             // Perform upload
-            val contentType = FileUtils.getMimeType(mediaPath) ?: "application/octet-stream"
+            val contentType = FileUtils.getMimeType(mediaPath)
             val file = File(mediaPath)
             val response = NotoriousManager.uploadFileSynchronous(uploadToken, file, contentType, onProgress)
 

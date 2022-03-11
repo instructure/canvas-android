@@ -91,7 +91,7 @@ object ApiEndpoint : Endpoint(
                                         .assignments
                                         .values
                                         .filter {a -> a.courseId == courseId}
-                                        .map {a -> ScheduleItem(title = a.name, description = a.description, startAt = a.dueAt, assignment = a)} ?: mutableListOf<ScheduleItem>()
+                                        .map {a -> ScheduleItem(title = a.name, description = a.description, startAt = a.dueAt, assignment = a)}
 
                                 // default handler assumes "event" event type
                                 else -> data.courseCalendarEvents[courseId] ?: mutableListOf<ScheduleItem>()

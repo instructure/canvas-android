@@ -150,7 +150,7 @@ abstract class VideoWebChromeClient : WebChromeClient, MediaPlayer.OnPreparedLis
             if(window != null) {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
                 window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                window.decorView?.let {
+                window.decorView.let {
                     if (it.findViewById<View>(R.id.videoFullScreenView) != null) {
                         val container = it.findViewById<View>(R.id.videoFullScreenView).parent as? ViewGroup
                         container?.removeView(videoViewContainer)

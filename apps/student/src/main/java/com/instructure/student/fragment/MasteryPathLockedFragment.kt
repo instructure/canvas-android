@@ -37,7 +37,7 @@ class MasteryPathLockedFragment : ParentFragment() {
     //region Fragment Lifecycle Overrides
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater!!.inflate(R.layout.fragment_master_paths_locked, container, false)
+        return inflater.inflate(R.layout.fragment_master_paths_locked, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

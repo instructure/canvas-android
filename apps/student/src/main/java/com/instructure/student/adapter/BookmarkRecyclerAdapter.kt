@@ -38,6 +38,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.CacheControlFlags
 import retrofit2.Call
 import retrofit2.Response
+import java.util.Locale
 
 class BookmarkRecyclerAdapter(context: Context, isShortcutActivity: Boolean, private val mAdapterToFragmentCallback: BookmarkAdapterToFragmentCallback<Bookmark>)
     : BaseListRecyclerAdapter<Bookmark, BookmarkViewHolder>(context, Bookmark::class.java) {
@@ -48,8 +49,11 @@ class BookmarkRecyclerAdapter(context: Context, isShortcutActivity: Boolean, pri
     init {
         mIsShortcutActivity = isShortcutActivity
         itemCallback = object : BaseListRecyclerAdapter.ItemComparableCallback<Bookmark>() {
-            override fun compare(o1: Bookmark, o2: Bookmark): Int = o1.name!!.toLowerCase().compareTo(o2.name!!.toLowerCase())
-            override fun areContentsTheSame(item1: Bookmark, item2: Bookmark): Boolean = item1.name!!.toLowerCase() == item2.name!!.toLowerCase()
+            override fun compare(o1: Bookmark, o2: Bookmark): Int = o1.name!!.lowercase(Locale.getDefault())
+                .compareTo(o2.name!!.lowercase(Locale.getDefault()))
+            override fun areContentsTheSame(item1: Bookmark, item2: Bookmark): Boolean = item1.name!!.lowercase(
+                Locale.getDefault()
+            ) == item2.name!!.lowercase(Locale.getDefault())
             override fun getUniqueItemId(bookmark: Bookmark): Long = bookmark.id
         }
 

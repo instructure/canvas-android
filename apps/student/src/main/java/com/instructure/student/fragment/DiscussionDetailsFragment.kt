@@ -685,7 +685,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
         attachmentIcon.onClick { _ ->
-            discussionTopicHeader.attachments?.let { viewAttachments(it) }
+            discussionTopicHeader.attachments.let { viewAttachments(it) }
         }
     }
 

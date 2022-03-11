@@ -103,7 +103,7 @@ class RemoteConfigUtilsTest : Assert() {
         RemoteConfigUtils.initialize(config, localPrefs)
 
         assertEquals("true",RemoteConfigUtils.getString(RemoteConfigParam.TEST_BOOL))
-        assertEquals(true, RemoteConfigUtils.getBoolean(RemoteConfigParam.TEST_BOOL)!!)
+        assertEquals(true, RemoteConfigUtils.getBoolean(RemoteConfigParam.TEST_BOOL))
         assertEquals("hello",RemoteConfigUtils.getString(RemoteConfigParam.TEST_STRING))
         assertEquals("3.14", RemoteConfigUtils.getString(RemoteConfigParam.TEST_FLOAT))
         assertEquals(3.14f, RemoteConfigUtils.getFloat(RemoteConfigParam.TEST_FLOAT)!!, 0.01f)

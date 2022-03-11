@@ -54,7 +54,7 @@ data class Page(
         return when {
             page1.frontPage -> -1
             page2.frontPage -> 1
-            else -> NaturalOrderComparator.compare(page1.title?.toLowerCase().orEmpty(), page2.title?.toLowerCase().orEmpty())
+            else -> NaturalOrderComparator.compare(page1.title?.lowercase(Locale.getDefault()).orEmpty(), page2.title?.lowercase(Locale.getDefault()).orEmpty())
         }
     }
 

@@ -38,7 +38,7 @@ class SpeedGraderUrlSubmissionFragment : Fragment() {
     private var mPreviewUrl by NullableStringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_speedgrader_url_submission, container, false)
+        return inflater.inflate(R.layout.fragment_speedgrader_url_submission, container, false)
     }
 
     override fun onStart() {

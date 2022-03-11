@@ -99,7 +99,7 @@ class InboxFragment : ParentFragment() {
         try {
             onUnreadCountInvalidated = context as OnUnreadCountInvalidated?
         } catch (e: ClassCastException) {
-            throw ClassCastException(context!!.toString() + " must implement OnUnreadCountInvalidated")
+            throw ClassCastException(context.toString() + " must implement OnUnreadCountInvalidated")
         }
 
     }

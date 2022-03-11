@@ -30,7 +30,7 @@ fun OffsetDateTime.getShortMonthAndDay(): String {
 
 fun OffsetDateTime.getTime(): String {
     val pattern = DateTimeFormatterBuilder().appendPattern("h:mm a").toFormatter()
-    return format(pattern).toLowerCase()
+    return format(pattern).lowercase(Locale.getDefault())
 }
 
 fun Date.isSameDay(date: Date?): Boolean {

@@ -165,7 +165,7 @@ class ImportantDatesViewModelTest {
                         icon = R.drawable.ic_calendar
                 )
         )
-        val header1 = items!![0] as ImportantDatesHeaderItemViewModel
+        val header1 = items!![0]
         assertEquals(SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(now.plusDays(1).toApiString().toDate()), header1.data.title)
 
         header1.itemViewModels.forEachIndexed { index, itemViewModel ->
@@ -189,7 +189,7 @@ class ImportantDatesViewModelTest {
                         icon = R.drawable.ic_calendar
                 )
         )
-        val header2 = items[1] as ImportantDatesHeaderItemViewModel
+        val header2 = items[1]
         assertEquals(SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(now.plusDays(2).toApiString().toDate()), header2.data.title)
 
         header2.itemViewModels.forEachIndexed { index, itemViewModel ->

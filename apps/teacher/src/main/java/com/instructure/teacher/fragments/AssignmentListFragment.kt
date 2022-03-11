@@ -203,7 +203,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
             } else {
                 emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
-            presenter?.searchQuery = query
+            presenter.searchQuery = query
         }
     }
 

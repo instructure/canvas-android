@@ -68,6 +68,7 @@ import com.instructure.pandautils.R
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.abc_search_view.view.*
 import kotlinx.coroutines.delay
+import java.util.Locale
 
 /** Convenience extension for setting a click listener */
 @Suppress("NOTHING_TO_INLINE")
@@ -699,7 +700,7 @@ val Attachment.iconRes: Int
         contentType!!.startsWith("image") -> R.drawable.ic_image
         contentType!!.startsWith("video") -> R.drawable.ic_media
         contentType!!.startsWith("audio") -> R.drawable.ic_audio
-        else -> when (filename!!.substringAfterLast('.', "").toLowerCase()) {
+        else -> when (filename!!.substringAfterLast('.', "").lowercase(Locale.getDefault())) {
             "doc", "docx" -> R.drawable.ic_document
             "txt" -> R.drawable.ic_document
             "rtf" -> R.drawable.ic_document

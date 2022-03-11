@@ -133,7 +133,7 @@ class UserFilesInteractionTest : StudentTest() {
                 override fun apply(intent: Intent?): Instrumentation.ActivityResult {
                     val uri = intent?.extras?.get(MediaStore.EXTRA_OUTPUT)
                     fileName = (uri as Uri).pathSegments.takeLast(1).first()
-                    val newFilePath = (uri as Uri).pathSegments.takeLast(2).joinToString(separator="/")
+                    val newFilePath = uri.pathSegments.takeLast(2).joinToString(separator="/")
                     copySampleTo(newFilePath)
 
                     var resultData = Intent()

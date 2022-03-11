@@ -21,6 +21,7 @@ import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import kotlinx.android.parcel.Parcelize
 import java.util.Date
+import java.util.Locale
 
 @Parcelize
 data class FileFolder(
@@ -103,8 +104,8 @@ data class FileFolder(
         return when {
             (file1.fullName == null && file2.fullName != null) -> 1
             (file1.fullName != null && file2.fullName == null) -> -1
-            (file1.fullName != null && file2.fullName != null) -> NaturalOrderComparator.compare(file1.fullName.toLowerCase(), file2.fullName.toLowerCase())
-            else -> NaturalOrderComparator.compare(file1.displayName?.toLowerCase(), file2.displayName?.toLowerCase())
+            (file1.fullName != null && file2.fullName != null) -> NaturalOrderComparator.compare(file1.fullName.lowercase(Locale.getDefault()), file2.fullName.lowercase(Locale.getDefault()))
+            else -> NaturalOrderComparator.compare(file1.displayName?.lowercase(Locale.getDefault()), file2.displayName?.lowercase(Locale.getDefault()))
         }
     }
 
