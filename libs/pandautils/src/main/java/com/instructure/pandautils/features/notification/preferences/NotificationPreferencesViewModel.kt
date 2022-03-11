@@ -60,23 +60,23 @@ class NotificationPreferencesViewModel @Inject constructor(
 
     init {
         _state.postValue(ViewState.Loading)
-        fetchData(false)
+        fetchData()
     }
 
     fun refresh() {
         _state.postValue(ViewState.Refresh)
-        fetchData(true)
+        fetchData()
     }
 
-    private fun fetchData(forceNetwork: Boolean) {
+    private fun fetchData() {
         viewModelScope.launch {
             try {
                 apiPrefs.user?.let {
-                    val communicationChannels = communicationChannelsManager.getCommunicationChannelsAsync(it.id, forceNetwork).await().dataOrThrow
+                    val communicationChannels = communicationChannelsManager.getCommunicationChannelsAsync(it.id, true).await().dataOrThrow
                     pushChannel = communicationChannels.first { "push".equals(it.type, true) }
                     pushChannel?.let { channel ->
 
-                        val notificationPreferences = notificationPreferencesManager.getNotificationPreferencesAsync(channel.userId, channel.id, forceNetwork).await().dataOrThrow
+                        val notificationPreferences = notificationPreferencesManager.getNotificationPreferencesAsync(channel.userId, channel.id, true).await().dataOrThrow
                         val items = groupNotifications(notificationPreferences.notificationPreferences)
 
                         if (items.isEmpty()) {

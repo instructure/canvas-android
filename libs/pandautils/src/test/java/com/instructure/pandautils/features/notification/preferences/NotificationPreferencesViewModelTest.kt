@@ -66,8 +66,6 @@ class NotificationPreferencesViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
 
-        mockkStatic("kotlinx.coroutines.AwaitKt")
-
         every { apiPrefs.user } returns User(id = 1)
 
         every { communicationChannelsManager.getCommunicationChannelsAsync(any(), any()) } returns mockk {
