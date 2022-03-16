@@ -181,7 +181,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 }
             }
         })
-        configureRecyclerView(view!!, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        configureRecyclerView(requireView(), requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
     }
 
     fun notifyOfItemChanged(`object`: ModuleObject?, item: ModuleItem?) {

@@ -207,7 +207,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun initAdapter() {
-        configureRecyclerView(view!!, requireContext(), adapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        configureRecyclerView(requireView(), requireContext(), adapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
         val dividerItemDecoration = DividerItemDecoration(
             listView.context,
             LinearLayoutManager.VERTICAL

@@ -144,7 +144,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(
-            view!!,
+            requireView(),
             requireContext(),
             recyclerAdapter,
             R.id.swipeRefreshLayout,

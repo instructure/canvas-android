@@ -102,7 +102,7 @@ class NLongArg(val default: Long? = null, val key: String? = null) : ReadWritePr
     override fun getValue(thisRef: Fragment, property: KProperty<*>): Long? {
         val keyName = key ?: property.name
         return if (thisRef.arguments?.containsKey(keyName) == true) {
-            thisRef.arguments!!.getLong(keyName, 0L)
+            thisRef.requireArguments().getLong(keyName, 0L)
         } else {
             default
         }
