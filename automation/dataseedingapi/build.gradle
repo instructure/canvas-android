@@ -27,7 +27,6 @@ apollo {
             "DateTime": "java.util.Date",
             "ID"  : "java.lang.String"
     ]
-    generateKotlinModels.set(true)
 }
 
 dependencies {
