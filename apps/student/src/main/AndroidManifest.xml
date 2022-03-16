@@ -118,11 +118,6 @@
             android:windowSoftInputMode="adjustNothing" />
 
         <activity
-            android:name=".activity.NotificationPreferencesActivity"
-            android:theme="@style/CanvasMaterialTheme_Default"
-            android:label="@string/notifications"/>
-
-        <activity
             android:name=".activity.SettingsActivity"
             android:theme="@style/CanvasMaterialTheme_Default"/>
 

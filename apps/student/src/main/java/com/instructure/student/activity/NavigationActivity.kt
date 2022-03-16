@@ -68,6 +68,7 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -717,8 +718,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }
                         }
                         RouteContext.NOTIFICATION_PREFERENCES == route.routeContext -> {
-                            Analytics.trackAppFlow(this@NavigationActivity, NotificationPreferencesActivity::class.java)
-                            startActivity(Intent(this@NavigationActivity, NotificationPreferencesActivity::class.java))
+                            Analytics.trackAppFlow(this@NavigationActivity, NotificationPreferencesFragment::class.java)
+                            RouteMatcher.route(this@NavigationActivity, Route(NotificationPreferencesFragment::class.java, null))
                         }
                         else -> {
                             //fetch the CanvasContext

@@ -3,6 +3,7 @@ package com.instructure.student.router
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
@@ -119,6 +120,7 @@ object RouteResolver {
             cls.isA<AnnotationCommentListFragment>() -> AnnotationCommentListFragment.newInstance(route)
             cls.isA<NothingToSeeHereFragment>() -> NothingToSeeHereFragment.newInstance()
             cls.isA<AnnotationSubmissionUploadFragment>() -> AnnotationSubmissionUploadFragment.newInstance(route)
+            cls.isA<NotificationPreferencesFragment>() -> NotificationPreferencesFragment.newInstance()
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

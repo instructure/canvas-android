@@ -36,6 +36,11 @@ object CommunicationChannelsManager {
         CommunicationChannelsAPI.getCommunicationChannels(userId, adapter, params, callback)
     }
 
+    fun getCommunicationChannelsAsync(
+            userId: Long,
+            forceNetwork: Boolean
+    ) = apiAsync<List<CommunicationChannel>> { getCommunicationChannels(userId, it, forceNetwork) }
+
     fun addNewPushCommunicationChannelSynchronous(
         registrationId: String,
         callback: StatusCallback<ResponseBody>
