@@ -285,9 +285,11 @@ class CreateDiscussionFragment : ParentFragment() {
                 postData.title = editDiscussionName.text?.toString() ?: getString(R.string.utils_noTitle)
             }
             postData.message = descriptionRCEView.html
-            postData.discussionType = if (allowThreaded) DiscussionTopicHeader.DiscussionType.THREADED.toString()
-                .lowercase(Locale.getDefault()) else DiscussionTopicHeader.DiscussionType.SIDE_COMMENT.toString()
-                .lowercase(Locale.getDefault())
+            postData.discussionType = if (allowThreaded) {
+                DiscussionTopicHeader.DiscussionType.THREADED.toString().lowercase(Locale.getDefault())
+            } else {
+                DiscussionTopicHeader.DiscussionType.SIDE_COMMENT.toString().lowercase(Locale.getDefault())
+            }
             postData.requireInitialPost = usersMustPost
 
             editDiscussion((discussionTopicHeader as DiscussionTopicHeader).id, postData)

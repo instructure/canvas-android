@@ -601,9 +601,11 @@ class CreateDiscussionFragment : BasePresenterFragment<
             }
             postData.message = handleLTIPlaceHolders(placeHolderList, descriptionRCEView.html)
             postData.published = mIsPublished
-            postData.discussionType = if (mAllowThreaded) DiscussionTopicHeader.DiscussionType.THREADED.toString()
-                .lowercase(Locale.getDefault()) else DiscussionTopicHeader.DiscussionType.SIDE_COMMENT.toString()
-                .lowercase(Locale.getDefault())
+            postData.discussionType = if (mAllowThreaded) {
+                DiscussionTopicHeader.DiscussionType.THREADED.toString().lowercase(Locale.getDefault())
+            } else {
+                DiscussionTopicHeader.DiscussionType.SIDE_COMMENT.toString().lowercase(Locale.getDefault())
+            }
             postData.requireInitialPost = mUsersMustPost
 
             if (presenter.getAssignment() == null) {
