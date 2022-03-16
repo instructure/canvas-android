@@ -49,7 +49,8 @@ object AssignmentsApi {
             val allowedExtensions: List<String>? = null,
             val teacherToken: String,
             val groupCategoryId: Long? = null,
-            val pointsPossible: Double? = null)
+            val pointsPossible: Double? = null,
+            val importantDate: Boolean? = null)
 
     fun createAssignment(request: CreateAssignmentRequest): AssignmentApiModel {
         return createAssignment(
@@ -63,7 +64,8 @@ object AssignmentsApi {
                 request.allowedExtensions,
                 request.teacherToken,
                 request.groupCategoryId,
-                request.pointsPossible
+                request.pointsPossible,
+                request.importantDate
         )
     }
 
@@ -78,7 +80,8 @@ object AssignmentsApi {
             allowedExtensions: List<String>?,
             teacherToken: String,
             groupCategoryId: Long?,
-            pointsPossible: Double?): AssignmentApiModel {
+            pointsPossible: Double?,
+            importantDate: Boolean?): AssignmentApiModel {
         val assignment = CreateAssignmentWrapper(Randomizer.randomAssignment(
                 withDescription,
                 lockAt,
@@ -88,7 +91,8 @@ object AssignmentsApi {
                 gradingType,
                 groupCategoryId,
                 pointsPossible,
-                allowedExtensions))
+                allowedExtensions,
+                importantDate))
 
         return assignmentsService(teacherToken).createAssignment(courseId, assignment).execute().body()!!
     }

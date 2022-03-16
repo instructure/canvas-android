@@ -289,11 +289,15 @@ class ScheduleInteractionTest : StudentTest() {
         withGradingPeriods: Boolean = false,
         homeroomCourseCount: Int = 0): MockCanvas {
 
-        return MockCanvas.init(
+        val data = MockCanvas.init(
             studentCount = 1,
             courseCount = courseCount,
             withGradingPeriods = withGradingPeriods,
             homeroomCourseCount = homeroomCourseCount)
+
+        data.elementarySubjectPages = true
+
+        return data
     }
 
     private fun goToScheduleTab(data: MockCanvas) {

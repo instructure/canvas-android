@@ -49,6 +49,7 @@
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Gallery</string>
     <string name="fromDevice">Device</string>
+    <string name="fromDocumentScanning">Scanner</string>
     <string name="fromOtherApplication">Other</string>
     <string name="Domain">Domain</string>
     <string name="files">Files</string>

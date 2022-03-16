@@ -49,3 +49,5 @@ apps/true/
 fastlane/.idea
 
 apps/captures
+
+libs/DocumentScanner/build/
