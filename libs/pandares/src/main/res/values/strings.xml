@@ -1255,4 +1255,7 @@
     <string name="filter_name_monochrome">Monochrome</string>
     <string name="filter_name_original">Original</string>
     <string name="noCompatibleAppInstalled">Your device does not have any applications installed that can open this link.</string>
+
+    <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
+    <string name="discussionOpenInBrowser">Open in browser</string>
 </resources>

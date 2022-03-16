@@ -112,7 +112,10 @@ data class DiscussionTopicHeader(
         var userCanSeePosts: Boolean = true,
         @SerializedName("specific_sections")
         var specificSections: String? = null, // For when we're submitting the sections
-        var sections: List<Section>? = null // Comes back from the server
+        var sections: List<Section>? = null, // Comes back from the server
+
+        @SerializedName("anonymous_state")
+        var anonymousState: String? = null
 ) : CanvasModel<DiscussionTopicHeader>() {
     override val comparisonDate: Date?
         get() = if (lastReplyDate != null)
