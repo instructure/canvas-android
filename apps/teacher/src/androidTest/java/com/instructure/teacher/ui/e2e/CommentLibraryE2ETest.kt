@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.e2e
 
 import com.apollographql.apollo.ApolloClient
 import com.instructure.canvas.espresso.E2E
+import com.instructure.dataseeding.CreateCommentMutation
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.api.UserApi
@@ -84,6 +85,9 @@ class CommentLibraryE2ETest : TeacherTest() {
         val apolloClient = ApolloClient.builder()
             .serverUrl("https://mobileqa.beta.instructure.com/api/graphql/")
             .build()
+
+        val mutationCall =  CreateCommentMutation(course.id.toString(), "Comment")
+        apolloClient.mutate(mutationCall)
 
         tokenLogin(teacher)
 
