@@ -29,10 +29,6 @@ apply plugin: 'dagger.hilt.android.plugin'
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
 
-if (coverageEnabled) {
-    apply from: '../../gradle/jacoco.gradle'
-}
-
 sqldelight {
     StudentDb {
         packageName = "com.instructure.student.db"

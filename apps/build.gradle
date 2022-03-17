@@ -58,3 +58,6 @@ task assembleAllApps() {
     dependsOn ':student:assembleDevDebug'
     dependsOn ':teacher:assembleDevDebug'
 }
+
+apply from: '../gradle/jacoco.gradle'
+
