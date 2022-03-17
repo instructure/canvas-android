@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.loginapi.login.R
 import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.dialog_masquerading.*
+import java.util.Locale
 
 
 class MasqueradingDialog : DialogFragment() {
@@ -133,7 +134,7 @@ class MasqueradingDialog : DialogFragment() {
     }
 
     private fun sanitizeDomain(domain: String): String {
-        var url = domain.toLowerCase().replace(" ", "").substringAfter("www.")
+        var url = domain.lowercase(Locale.getDefault()).replace(" ", "").substringAfter("www.")
 
         // If there are no periods, append .instructure.com
         if (!url.contains(".") || url.endsWith(".beta")) {

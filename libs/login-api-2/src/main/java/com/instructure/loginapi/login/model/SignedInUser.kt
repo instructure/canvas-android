@@ -28,7 +28,7 @@ data class SignedInUser(
         var domain: String,
         var protocol: String,
         var token: String,
-        var accessToken: String,
+        var accessToken: String?,
         var refreshToken: String,
         var clientId: String?,
         var clientSecret: String?,

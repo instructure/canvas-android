@@ -30,6 +30,7 @@ import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
+import java.util.Locale
 
 object TabHelper {
 
@@ -83,7 +84,7 @@ object TabHelper {
             return NotificationListFragment.makeRoute(canvasContext)
         }
 
-        return when (tabId.toLowerCase()) {
+        return when (tabId.lowercase(Locale.getDefault())) {
             Tab.ASSIGNMENTS_ID -> AssignmentListFragment.makeRoute(canvasContext)
             Tab.MODULES_ID -> ModuleListFragment.makeRoute(canvasContext)
             Tab.PAGES_ID -> PageListFragment.makeRoute(canvasContext, false)

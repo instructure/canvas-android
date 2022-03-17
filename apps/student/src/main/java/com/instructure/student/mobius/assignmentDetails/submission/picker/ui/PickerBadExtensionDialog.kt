@@ -26,6 +26,7 @@ import com.instructure.pandautils.utils.StringArrayArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.student.R
+import java.util.Locale
 
 class PickerBadExtensionDialog : DialogFragment() {
 
@@ -40,7 +41,7 @@ class PickerBadExtensionDialog : DialogFragment() {
             .setCancelable(true)
             .setTitle(R.string.fileTypeNotSupported)
             .setMessage(getString(R.string.fileTypeNotSupportedBody, extensions.joinToString(", ")))
-            .setPositiveButton(getString(android.R.string.ok).toUpperCase(), null)
+            .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault()), null)
             .create()
             .apply {
                 setOnShowListener {

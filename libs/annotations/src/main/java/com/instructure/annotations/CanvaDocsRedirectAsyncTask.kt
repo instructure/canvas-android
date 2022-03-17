@@ -48,7 +48,7 @@ class CanvaDocsRedirectAsyncTask(
 
             val redirectUrl: String
             return if (response.isRedirect) {
-                redirectUrl = response?.header("Location") ?: ""
+                redirectUrl = response.header("Location") ?: ""
 
                 // Let's parse out what we don't want
                 redirectUrl.substringBefore("/view")

@@ -786,9 +786,9 @@ class SubmissionContentView(
         override fun getCount() = fragments.size
 
         override fun getPageTitle(position: Int) = when (position) {
-            0 -> ContextKeeper.appContext.getString(R.string.sg_tab_grade).toUpperCase(Locale.getDefault())
-            1 -> ContextKeeper.appContext.getString(R.string.sg_tab_comments).toUpperCase(Locale.getDefault())
-            2 -> ContextKeeper.appContext.getString(R.string.sg_tab_files_w_counter, fileCount).toUpperCase(Locale.getDefault())
+            0 -> ContextKeeper.appContext.getString(R.string.sg_tab_grade).uppercase(Locale.getDefault())
+            1 -> ContextKeeper.appContext.getString(R.string.sg_tab_comments).uppercase(Locale.getDefault())
+            2 -> ContextKeeper.appContext.getString(R.string.sg_tab_files_w_counter, fileCount).uppercase(Locale.getDefault())
             else -> ""
         }
 

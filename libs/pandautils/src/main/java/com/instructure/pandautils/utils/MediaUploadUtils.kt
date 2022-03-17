@@ -195,8 +195,8 @@ object MediaUploadUtils {
                 file.lockDate = null
                 file.unlockDate = null
 
-                val updateFileFolder = UpdateFileFolder(file.name, file.lockDate.toApiString() ?: "",
-                        file.unlockDate.toApiString() ?: "", file.isLocked, file.isHidden)
+                val updateFileFolder = UpdateFileFolder(file.name, file.lockDate.toApiString(),
+                    file.unlockDate.toApiString(), file.isLocked, file.isHidden)
 
                 // Determine if this course has the usage rights feature enabled
                 val features = awaitApi<List<String>> { FeaturesManager.getEnabledFeaturesForCourse(canvasContext.id, true, it) }

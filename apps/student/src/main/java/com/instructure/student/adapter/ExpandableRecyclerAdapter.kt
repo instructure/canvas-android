@@ -35,18 +35,14 @@ abstract class ExpandableRecyclerAdapter<GROUP, ITEM, VIEW_HOLDER : RecyclerView
         // listener is never triggered it will never show up.
         if (shouldShowFooter && existsCollapsedGroup()) loadData()
 
-        adapterToRecyclerViewCallback?.let { callback ->
-            callback.setDisplayNoConnection(false)
-            callback.setIsEmpty(isAllPagesLoaded && size() == 0)
-        }
+        adapterToRecyclerViewCallback.setDisplayNoConnection(false)
+        adapterToRecyclerViewCallback.setIsEmpty(isAllPagesLoaded && size() == 0)
     }
 
     open fun onNoNetwork() {
-        adapterToRecyclerViewCallback?.let { callback ->
-            val size = size()
-            callback.setDisplayNoConnection(size == 0)
-            callback.setIsEmpty(size == 0)
-        }
+        val size = size()
+        adapterToRecyclerViewCallback.setDisplayNoConnection(size == 0)
+        adapterToRecyclerViewCallback.setIsEmpty(size == 0)
     }
 
     private fun existsCollapsedGroup(): Boolean = groups.all { isGroupExpanded(it) }

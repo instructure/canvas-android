@@ -91,9 +91,9 @@ object Logger {
      */
     fun canLogUserDetails(): Boolean {
         val telephonyManager = ContextKeeper.appContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        val networkCountryCode = telephonyManager.networkCountryIso.toUpperCase(Locale.US)
-        val simCountryCode = telephonyManager.simCountryIso.toUpperCase(Locale.US)
-        val localeCountryCode = Locale.getDefault().country.toUpperCase(Locale.US)
+        val networkCountryCode = telephonyManager.networkCountryIso.uppercase(Locale.US)
+        val simCountryCode = telephonyManager.simCountryIso.uppercase(Locale.US)
+        val localeCountryCode = Locale.getDefault().country.uppercase(Locale.US)
 
         return LOGGING_DISALLOWED_COUNTRY_CODES.none {
             (it == networkCountryCode || it == simCountryCode || it == localeCountryCode)

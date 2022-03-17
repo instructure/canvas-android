@@ -21,6 +21,7 @@ import com.github.javafaker.Faker
 import com.instructure.dataseeding.model.*
 import java.util.Date
 import java.util.UUID
+import java.util.Locale
 
 object Randomizer {
     private val faker = Faker()
@@ -72,9 +73,9 @@ object Randomizer {
                     unlockAt = if (unlockAt.isNotBlank()) unlockAt else null,
                     dueAt = if (dueAt.isNotBlank()) dueAt else null,
                     submissionTypes = if (submissionTypes.isEmpty()) null else submissionTypes.map {
-                        if (it.name == "NO_TYPE") "none" else it.name.toLowerCase()
+                        if (it.name == "NO_TYPE") "none" else it.name.lowercase(Locale.getDefault())
                     },
-                    gradingType = if (gradingType != null) gradingType.toString().toLowerCase() else "points",
+                    gradingType = if (gradingType != null) gradingType.toString().lowercase(Locale.getDefault()) else "points",
                     groupCategoryId = groupCategoryId,
                     pointsPossible = pointsPossible,
                     allowedExtensions = allowedExtensions,
@@ -95,7 +96,7 @@ object Randomizer {
                 }
                 this.submissionType =
                         if (submissionType.name == "NO_TYPE") "none"
-                        else submissionType.name.toLowerCase()
+                        else submissionType.name.lowercase(Locale.getDefault())
             }
 
     fun randomQuiz(withDescription: Boolean, lockAt: String, unlockAt: String, dueAt: String, published: Boolean) =

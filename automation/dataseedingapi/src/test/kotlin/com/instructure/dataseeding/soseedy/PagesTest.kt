@@ -27,6 +27,7 @@ import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import java.util.Locale
 
 class PagesTest {
     private val course = CoursesApi.createCourse()
@@ -47,7 +48,7 @@ class PagesTest {
         )
         assertThat(page, instanceOf(PageApiModel::class.java))
         assertTrue(page.title.isNotEmpty())
-        assertEquals(page.title.replace(" ", "-").replace("'","").toLowerCase(), page.url);
+        assertEquals(page.title.replace(" ", "-").replace("'","").lowercase(Locale.getDefault()), page.url);
         assertTrue(page.body.isNotEmpty())
         assertFalse(page.published)
         assertFalse(page.frontPage)

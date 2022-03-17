@@ -257,5 +257,5 @@ abstract class TooltipView @JvmOverloads constructor(
             ?: 0
 
     /** Returns the length of the visible text */
-    private val Layout.visibleTextLength get() = (0 until lineCount).sumBy { getLineVisibleEnd(it) }
+    private val Layout.visibleTextLength get() = (0 until lineCount).sumOf { getLineVisibleEnd(it) }
 }

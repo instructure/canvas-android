@@ -221,7 +221,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         repliesBack.onClick { requireActivity().onBackPressed() }
         attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
         attachmentIcon.onClick {
-            val remoteFiles = presenter?.discussionTopicHeader?.attachments
+            val remoteFiles = presenter.discussionTopicHeader.attachments
             if(remoteFiles != null) {
                 viewAttachments(remoteFiles)
             }
@@ -272,7 +272,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                 if (topLevelReplyPosted) {
                     discussionsScrollView.fullScroll(ScrollView.FOCUS_DOWN)
                 } else {
-                    discussionsScrollView.scrollTo(0, presenter?.scrollPosition)
+                    discussionsScrollView.scrollTo(0, presenter.scrollPosition)
                 }
                 discussionRepliesWebView.setVisible()
             }
@@ -437,7 +437,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     override fun onPause() {
         super.onPause()
-        presenter?.scrollPosition = discussionsScrollView.scrollY
+        presenter.scrollPosition = discussionsScrollView.scrollY
         discussionTopicHeaderWebView.onPause()
         discussionRepliesWebView.onPause()
     }
@@ -520,7 +520,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             override fun routeInternallyCallback(url: String) {
                 if (!RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)) {
                     val bundle = InternalWebViewFragment.makeBundle(url, url, false, "")
-                    RouteMatcher.route(requireContext(), Route(FullscreenInternalWebViewFragment::class.java, presenter?.canvasContext, bundle))
+                    RouteMatcher.route(requireContext(), Route(FullscreenInternalWebViewFragment::class.java,
+                        presenter.canvasContext, bundle))
                 }
             }
             override fun canRouteInternallyDelegate(url: String): Boolean {
@@ -574,7 +575,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
         @JavascriptInterface
         fun onLikePressed(id: String) {
-            presenter?.likeDiscussionPressed(id.toLong())
+            presenter.likeDiscussionPressed(id.toLong())
         }
 
         @JavascriptInterface
@@ -585,13 +586,13 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
         @JavascriptInterface
         fun getInViewPort(): String {
-            return presenter?.discussionTopic?.unreadEntries?.joinToString() ?: ""
+            return presenter.discussionTopic.unreadEntries.joinToString()
         }
 
         @JavascriptInterface
         fun inViewPortAndUnread(idList: String) {
             if(idList.isNotEmpty()) {
-                presenter?.markAsRead(idList.split(",").map(String::toLong))
+                presenter.markAsRead(idList.split(",").map(String::toLong))
             }
         }
 
@@ -683,7 +684,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.discussions_delete_warning)
             builder.setPositiveButton(android.R.string.yes) { _, _ ->
-                presenter?.deleteDiscussionEntry(id)
+                presenter.deleteDiscussionEntry(id)
             }
             builder.setNegativeButton(android.R.string.no) { _, _ -> }
             val dialog = builder.create()

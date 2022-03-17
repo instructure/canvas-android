@@ -133,7 +133,8 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                     submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.defaultTextDark))
                 }
                 else -> {
-                    submissionGrade.text = ViewStyler.applyKerning(context.getString(R.string.needsGrading).toUpperCase(Locale.getDefault()), .5f)
+                    submissionGrade.text = ViewStyler.applyKerning(context.getString(R.string.needsGrading)
+                        .uppercase(Locale.getDefault()), .5f)
                     submissionGrade.contentDescription = context.getString(R.string.needsGrading)
                     submissionGrade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.0f)
                     val submissionGradeDrawable = ContextCompat.getDrawable(context, R.drawable.bg_generic_pill)

@@ -48,7 +48,7 @@ abstract class BaseRemoteViewsService : RemoteViewsService() {
         //unless the data is passed as part of a filter. When a filter is applied the intent does not get reused so data can be passed, like the widget id.
         // http://stackoverflow.com/questions/11350287/ongetviewfactory-only-called-once-for-multiple-widgets
         fun getAppWidgetId(intent: Intent): Int {
-            return Integer.valueOf(intent.data!!.schemeSpecificPart)!!
+            return Integer.valueOf(intent.data!!.schemeSpecificPart)
         }
 
         private fun getWidgetBackgroundPref(widgetId: Int): String {

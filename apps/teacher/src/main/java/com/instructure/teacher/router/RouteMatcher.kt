@@ -51,6 +51,7 @@ import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.fragments.FileListFragment
 import instructure.rceditor.RCEFragment
+import java.util.Locale
 
 object RouteMatcher : BaseRouteMatcher() {
 
@@ -472,7 +473,7 @@ object RouteMatcher : BaseRouteMatcher() {
                         } else if (loadedMedia.intent != null) {
                             if (loadedMedia.intent?.type?.contains("pdf") == true && !loadedMedia.isUseOutsideApps) {
                                 // Show pdf with PSPDFkit
-                                val args = ViewPdfFragment.newInstance((loader as OpenMediaAsyncTaskLoader).url!!, 0).nonNullArgs
+                                val args = ViewPdfFragment.newInstance((loader as OpenMediaAsyncTaskLoader).url, 0).nonNullArgs
                                 RouteMatcher.route(activity, Route(ViewPdfFragment::class.java, null, args))
                             } else if (loadedMedia.intent?.type == "video/mp4") {
                                 val bundle = BaseViewMediaActivity.makeBundle(loadedMedia.intent!!.data!!.toString(), null, "video/mp4", loadedMedia.intent!!.dataString, true)
@@ -514,7 +515,7 @@ object RouteMatcher : BaseRouteMatcher() {
         // If we're trying to open an HTML file, don't download it. It could be referencing other files
         // through a relative URL which we won't be able to access. Instead, just showing the file in
         // a webview will load the file the user is trying to view and will resolve all relative paths
-        if (filename.toLowerCase().endsWith(".htm") || filename.toLowerCase().endsWith(".html")) {
+        if (filename.lowercase(Locale.getDefault()).endsWith(".htm") || filename.lowercase(Locale.getDefault()).endsWith(".html")) {
             RouteUtils.retrieveFileUrl(route, fileId) { fileUrl, context, needsAuth ->
                 val bundle = InternalWebViewFragment.makeBundle(url = fileUrl, title = filename, shouldAuthenticate = needsAuth)
                 RouteMatcher.route(activity, Route(FullscreenInternalWebViewFragment::class.java, context, bundle))

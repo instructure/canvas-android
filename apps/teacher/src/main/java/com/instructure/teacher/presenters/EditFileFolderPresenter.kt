@@ -97,8 +97,9 @@ class EditFileFolderPresenter(val currentFileOrFolder: FileFolder, val usageRigh
 
         updateFileFolderJob = tryWeave {
             val updatedFileFolder: FileFolder
-            val updateFileFolder = UpdateFileFolder(fileFolder.name, fileFolder.lockDate.toApiString() ?: "",
-                    fileFolder.unlockDate.toApiString() ?: "", fileFolder.isLocked, fileFolder.isHidden)
+            val updateFileFolder = UpdateFileFolder(fileFolder.name,
+                fileFolder.lockDate.toApiString(),
+                fileFolder.unlockDate.toApiString(), fileFolder.isLocked, fileFolder.isHidden)
 
             // Update file/folder
             if (isFile) {

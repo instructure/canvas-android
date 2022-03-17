@@ -149,7 +149,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
             } else {
                 emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
-            presenter?.searchQuery = query
+            presenter.searchQuery = query
         }
         ViewStyler.themeToolbar(requireActivity(), quizListToolbar, mCourseColor, Color.WHITE)
     }

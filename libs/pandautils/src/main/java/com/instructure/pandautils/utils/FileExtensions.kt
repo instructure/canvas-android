@@ -27,6 +27,6 @@ fun Uri.viewExternally(context: Context, contentType: String, onNoApps: () -> Un
     val intent = Intent(Intent.ACTION_VIEW, uri)
     intent.setDataAndType(uri, contentType)
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    val appCount = context.packageManager.queryIntentActivities(intent, 0).size ?: 0
+    val appCount = context.packageManager.queryIntentActivities(intent, 0).size
     if (appCount > 0) context.startActivity(intent) else onNoApps()
 }

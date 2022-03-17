@@ -86,10 +86,10 @@ class WeaveQLPager<DATA>(
                 if (response.hasErrors()) {
                     val message = response.errors!!.first().message
                     pageCallback.errorCallback(ApolloException(message))
-                } else if (response.data() == null) {
+                } else if (response.data == null) {
                     pageCallback.errorCallback(ApolloException("Response data is null!"))
                 } else {
-                    pageCallback.nextCursor = config.responseBlock(response.data()!!)
+                    pageCallback.nextCursor = config.responseBlock(response.data!!)
                     if (pageCallback.nextCursor.isNullOrBlank()) {
                         config.completeBlock()
                         onRelease()

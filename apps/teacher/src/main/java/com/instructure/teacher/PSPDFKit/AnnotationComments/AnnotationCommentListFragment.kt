@@ -34,6 +34,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.setupBackButton
 import kotlinx.android.synthetic.main.fragment_annotation_comment_list.*
+import java.util.Locale
 
 class AnnotationCommentListFragment : BaseListFragment<
         CanvaDocAnnotation,
@@ -61,10 +62,10 @@ class AnnotationCommentListFragment : BaseListFragment<
             //we want to show a different title for the head annotation
             builder.setTitle(if(position == 0) R.string.deleteAnnotation else R.string.deleteComment)
             builder.setMessage(if(position == 0) R.string.deleteHeadCommentConfirmation else R.string.deleteCommentConfirmation)
-            builder.setPositiveButton(getString(R.string.delete).toUpperCase()) { _, _ ->
+            builder.setPositiveButton(getString(R.string.delete).uppercase(Locale.getDefault())) { _, _ ->
                 presenter.deleteComment(annotation, position)
             }
-            builder.setNegativeButton(getString(R.string.cancel).toUpperCase(), null)
+            builder.setNegativeButton(getString(R.string.cancel).uppercase(Locale.getDefault()), null)
             val dialog = builder.create()
             dialog.setOnShowListener {
                 dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)

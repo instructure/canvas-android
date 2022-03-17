@@ -32,6 +32,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import kotlinx.android.synthetic.main.dialog_customize_grade.view.*
+import java.util.Locale
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_CUSTOMIZE_GRADE)
@@ -106,10 +107,10 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
                 .setCancelable(true)
                 .setTitle(getString(R.string.customize_grade))
                 .setView(view)
-                .setPositiveButton(getString(android.R.string.ok).toUpperCase()) { _, _ ->
+                .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault())) { _, _ ->
                     updateGrade(gradeEditText.text.toString(), gradingType, excusedCheckBox.isChecked)
                 }
-                .setNegativeButton(getString(android.R.string.cancel).toUpperCase(), null)
+                .setNegativeButton(getString(android.R.string.cancel).uppercase(Locale.getDefault()), null)
                 .create()
 
         gradeDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)

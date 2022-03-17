@@ -71,7 +71,7 @@ class ToDoPresenter : SyncPresenter<ToDo, ToDoView>(ToDo::class.java) {
                     data.addOrUpdate(toDos)
 
                     // We want the count of the assignments that need grading. If there are more than 100 we will just show 99+
-                    val todoCount = toDos.sumBy { it.needsGradingCount }
+                    val todoCount = toDos.sumOf { it.needsGradingCount }
 
                     EventBus.getDefault().post(ToDoListUpdatedEvent(todoCount))
                     viewCallback?.onRefreshFinished()

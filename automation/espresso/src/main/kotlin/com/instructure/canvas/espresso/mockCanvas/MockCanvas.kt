@@ -1965,7 +1965,7 @@ fun MockCanvas.addSubmissionStreamItem(
     val item = StreamItem(
             id = newItemId(),
             course_id = course.id,
-            assignment_id = assignment.id ?: -1,
+            assignment_id = assignment.id,
             title = assignment.name,
             message = message,
             assignment = assignment,

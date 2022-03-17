@@ -56,7 +56,7 @@ class InitActivityPresenter : Presenter<InitActivityView> {
             // Get To dos
             val todos = awaitApi<List<ToDo>> { ToDoManager.getUserTodos(it, forceNetwork) }
             // Now count now students need grading
-            val count = todos.sumBy { it.needsGradingCount }
+            val count = todos.sumOf { it.needsGradingCount }
             view?.updateTodoCount(count)
 
             val launchDefinitions = awaitApi<List<LaunchDefinition>?> { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }

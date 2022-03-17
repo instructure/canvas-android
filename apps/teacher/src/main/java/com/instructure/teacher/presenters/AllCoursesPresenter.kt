@@ -30,6 +30,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.util.Locale
 
 class AllCoursesPresenter : SyncPresenter<Course, AllCoursesView>(Course::class.java) {
 
@@ -67,7 +68,8 @@ class AllCoursesPresenter : SyncPresenter<Course, AllCoursesView>(Course::class.
     override fun refresh(forceNetwork: Boolean) = loadData(forceNetwork)
 
     override fun compare(item1: Course, item2: Course): Int =
-            item1.name.toLowerCase().compareTo(item2.name.toLowerCase())
+            item1.name.lowercase(Locale.getDefault())
+                .compareTo(item2.name.lowercase(Locale.getDefault()))
 
     override fun onDestroyed() {
         loadJob?.cancel()

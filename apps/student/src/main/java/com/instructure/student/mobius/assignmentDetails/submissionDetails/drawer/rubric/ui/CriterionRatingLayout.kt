@@ -89,7 +89,7 @@ class CriterionRatingLayout @JvmOverloads constructor(
 
         for (child in children) {
             child.measure(childWidthSpec, childHeightSpec)
-            val rowWidth = currentRow.sumBy { it.measuredWidth + minSpacing } + child.measuredWidth
+            val rowWidth = currentRow.sumOf { it.measuredWidth + minSpacing } + child.measuredWidth
             if (rowWidth > maxWidth) {
                 currentRow = arrayListOf()
                 rows += currentRow

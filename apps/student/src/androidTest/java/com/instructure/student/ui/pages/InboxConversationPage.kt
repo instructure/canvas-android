@@ -183,7 +183,7 @@ class ImageViewDrawableMatcher(val resourceId: Int, val color: Int? = null) : Ty
         if (target !is ImageView) {
             return false
         }
-        val imageView = target as ImageView
+        val imageView = target
         if (resourceId < 0) {
             return imageView.drawable == null
         }

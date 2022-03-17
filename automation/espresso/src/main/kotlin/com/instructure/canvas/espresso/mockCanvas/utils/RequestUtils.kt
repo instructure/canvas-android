@@ -169,7 +169,7 @@ private fun grabJsonFieldFromBuffer(buffer: Buffer, jsonObject: JsonObject): Boo
     var line = buffer.readUtf8Line()
     while(line != null && line.length > 0) {
         val nameRegex = """name=\"(\w+)\"""".toRegex()
-        val match = nameRegex.find(line!!)
+        val match = nameRegex.find(line)
         if(match != null) {
             fieldName = match.groupValues[1]
             Log.d("<--","Found fieldName=$fieldName in line=$line")
@@ -204,12 +204,12 @@ private fun grabJsonFieldFromBuffer(buffer: Buffer, jsonObject: JsonObject): Boo
     else {
         fieldValue = fieldStringValue.toIntOrNull()
         if(fieldValue != null) {
-            jsonObject.addProperty(fieldName, fieldValue as Int)
+            jsonObject.addProperty(fieldName, fieldValue)
         }
         else{
             fieldValue = fieldStringValue.toDoubleOrNull()
             if (fieldValue != null) {
-                jsonObject.addProperty(fieldName, fieldValue as Double)
+                jsonObject.addProperty(fieldName, fieldValue)
             } else {
                 jsonObject.addProperty(fieldName, fieldStringValue)
             }

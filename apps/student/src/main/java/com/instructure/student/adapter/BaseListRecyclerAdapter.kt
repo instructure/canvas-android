@@ -102,10 +102,8 @@ abstract class BaseListRecyclerAdapter<MODEL : CanvasComparable<*>, T : Recycler
     fun onCallbackFinished() {
         isLoadedFirstPage = true
         shouldShowLoadingFooter()
-        adapterToRecyclerViewCallback?.let {
-            it.setDisplayNoConnection(false)
-            it.setIsEmpty(isAllPagesLoaded && size() == 0)
-        }
+        adapterToRecyclerViewCallback.setDisplayNoConnection(false)
+        adapterToRecyclerViewCallback.setIsEmpty(isAllPagesLoaded && size() == 0)
     }
 
     /**

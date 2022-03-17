@@ -22,6 +22,7 @@ package com.zynksoftware.documentscanner.manager
 import android.content.Context
 import android.graphics.Bitmap
 import id.zelory.compressor.extension
+import java.util.Locale
 
 internal class SessionManager(context: Context) {
 
@@ -59,7 +60,7 @@ internal class SessionManager(context: Context) {
         preferences.edit().putString(IMAGE_TYPE_KEY, type.extension()).apply()
     }
 
-    private fun compressFormat(format: String) = when (format.toLowerCase()) {
+    private fun compressFormat(format: String) = when (format.lowercase(Locale.getDefault())) {
         "png" -> Bitmap.CompressFormat.PNG
         "webp" -> Bitmap.CompressFormat.WEBP
         else -> Bitmap.CompressFormat.JPEG

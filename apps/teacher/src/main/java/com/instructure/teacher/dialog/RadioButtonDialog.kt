@@ -35,6 +35,7 @@ import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.getColorCompat
+import java.util.Locale
 
 typealias OnRadioButtonSelected = ((selectedIdx: Int) -> Unit)?
 
@@ -105,7 +106,7 @@ class RadioButtonDialog : AppCompatDialogFragment() {
                 .setCancelable(true)
                 .setTitle(mTitle)
                 .setView(view)
-                .setPositiveButton(getString(android.R.string.ok).toUpperCase()) { _, _ ->
+                .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault())) { _, _ ->
                     if (currentSelectionIdx != mSelectedIdx) mCallback?.invoke(currentSelectionIdx)
                 }
             .setNegativeButton(getString(R.string.cancel), null)

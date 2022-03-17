@@ -25,6 +25,7 @@ import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 
@@ -41,7 +42,7 @@ fun <T> createError(message: String = "Error", code: Int = 400) =
         null,
         null,
         retrofit2.Response.error<T>(
-            ResponseBody.create(null, ""),
+            "".toResponseBody(null),
             Response.Builder()
                 .protocol(Protocol.HTTP_1_1)
                 .message(message)

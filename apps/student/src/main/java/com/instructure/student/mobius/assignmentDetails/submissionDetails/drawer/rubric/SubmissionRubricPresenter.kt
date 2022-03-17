@@ -98,7 +98,7 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
         ratings = ratings.sortedBy { it.points }
 
         // Find the criterion rating that matches the assessment rating (if there are valid points)
-        val assessedRating = if (assessment?.points == null) null else ratings.find { it.id == assessment?.ratingId }
+        val assessedRating = if (assessment?.points == null) null else ratings.find { it.id == assessment.ratingId }
 
         val selectedRatingId = model.selectedRatingMap[criterion.id] ?: assessedRating?.id
 

@@ -115,7 +115,7 @@ data class Quiz(
         if(quiz1.dueAt != null && quiz2.dueAt != null) {
             val result = quiz1.dueAt.toDate()!!.compareTo(quiz2.dueAt.toDate())
             return if (result == 0) {
-                NaturalOrderComparator.compare(quiz1.title?.toLowerCase().orEmpty(), quiz2.title?.toLowerCase().orEmpty())
+                NaturalOrderComparator.compare(quiz1.title?.lowercase(Locale.getDefault()).orEmpty(), quiz2.title?.lowercase(Locale.getDefault()).orEmpty())
             } else {
                 result
             }
@@ -125,7 +125,7 @@ data class Quiz(
             return -1
         }
 
-        return NaturalOrderComparator.compare(quiz1.title?.toLowerCase().orEmpty(), quiz2.title?.toLowerCase().orEmpty())
+        return NaturalOrderComparator.compare(quiz1.title?.lowercase(Locale.getDefault()).orEmpty(), quiz2.title?.lowercase(Locale.getDefault()).orEmpty())
     }
 
     val url: String?

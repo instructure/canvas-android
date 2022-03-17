@@ -104,7 +104,7 @@ abstract class CanvasContext : CanvasModel<CanvasContext>() {
 
     companion object {
 
-        fun makeContextId(type: Type, id: Long): String = type.name.toLowerCase() + "_" + id
+        fun makeContextId(type: Type, id: Long): String = type.name.lowercase(Locale.getDefault()) + "_" + id
 
         /**
          * Returns a generic CanvasContext based on the provided context code.
@@ -114,7 +114,7 @@ abstract class CanvasContext : CanvasModel<CanvasContext>() {
         fun fromContextCode(contextCode: String?): CanvasContext? {
             if (contextCode.isNullOrBlank()) return null
 
-            val codeParts = contextCode!!.split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val codeParts = contextCode.split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             if (codeParts.size != 2) return null
 
             val type = when (codeParts[0]) {

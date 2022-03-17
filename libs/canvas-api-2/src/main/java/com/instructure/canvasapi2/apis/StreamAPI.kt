@@ -65,7 +65,7 @@ internal object StreamAPI {
 
     fun getUserStreamSynchronous(numberToReturn: Int, adapter: RestBuilder, params: RestParams): List<StreamItem>? {
         return try {
-            adapter.build(StreamInterface::class.java, params).getUserStreamCustomCount(numberToReturn).execute()?.body()
+            adapter.build(StreamInterface::class.java, params).getUserStreamCustomCount(numberToReturn).execute().body()
         } catch (E: Exception) {
             null
         }

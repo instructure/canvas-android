@@ -70,8 +70,8 @@ class FilterSubmissionByPointsDialog : AppCompatDialogFragment() {
                 .setCancelable(true)
                 .setTitle(title)
                 .setView(view)
-                .setPositiveButton(getString(android.R.string.ok).toUpperCase(Locale.getDefault()), null)
-                .setNegativeButton(getString(android.R.string.cancel).toUpperCase(Locale.getDefault()), null)
+                .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault()), null)
+                .setNegativeButton(getString(android.R.string.cancel).uppercase(Locale.getDefault()), null)
                 .create()
         nameDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 

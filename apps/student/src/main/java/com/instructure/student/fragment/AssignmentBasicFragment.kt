@@ -97,13 +97,12 @@ class AssignmentBasicFragment : ParentFragment() {
             override fun launchInternalWebViewFragment(url: String) {
                 // Create and add the InternalWebviewFragment to deal with the link they clicked
                 val route = InternalWebviewFragment.makeRoute(url, "", false, "")
-                InternalWebviewFragment.newInstance(route)?.let {
-                    val ft = requireActivity().supportFragmentManager.beginTransaction()
-                    ft.setCustomAnimations(R.anim.slide_in_from_bottom, android.R.anim.fade_out, R.anim.none, R.anim.slide_out_to_bottom)
-                    ft.add(R.id.fullscreen, it, it.javaClass.name)
-                    ft.addToBackStack(it.javaClass.name)
-                    ft.commitAllowingStateLoss()
-                }
+                val fragment = InternalWebviewFragment.newInstance(route)
+                val ft = requireActivity().supportFragmentManager.beginTransaction()
+                ft.setCustomAnimations(R.anim.slide_in_from_bottom, android.R.anim.fade_out, R.anim.none, R.anim.slide_out_to_bottom)
+                ft.add(R.id.fullscreen, fragment, fragment.javaClass.name)
+                ft.addToBackStack(fragment.javaClass.name)
+                ft.commitAllowingStateLoss()
 
             }
 
