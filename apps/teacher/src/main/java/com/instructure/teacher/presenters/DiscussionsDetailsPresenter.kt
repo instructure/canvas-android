@@ -48,7 +48,12 @@ class DiscussionsDetailsPresenter(
 
     override fun loadData(forceNetwork: Boolean) {
         viewCallback?.onRefreshStarted()
-        DiscussionManager.getFullDiscussionTopic(canvasContext, discussionTopicHeader.id, forceNetwork, mDiscussionTopicCallback)
+        if (discussionTopicHeader.anonymousState == null) {
+            DiscussionManager.getFullDiscussionTopic(canvasContext, discussionTopicHeader.id, forceNetwork, mDiscussionTopicCallback)
+        } else {
+            viewCallback?.onRefreshFinished()
+            viewCallback?.showAnonymousDiscussionView()
+        }
     }
 
     override fun refresh(forceNetwork: Boolean) {

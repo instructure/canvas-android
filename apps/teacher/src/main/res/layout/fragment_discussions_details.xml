@@ -440,6 +440,30 @@
                     android:layout_height="0.5dp"
                     android:background="@color/divider"/>
 
+                <TextView
+                    android:id="@+id/anonymousDiscussionsNotSupported"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginTop="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/anonymousDiscussionNotSupported" />
+
+                <TextView
+                    android:id="@+id/openInBrowser"
+                    style="@style/TextFont.Regular"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp"
+                    android:textColor="@color/defaultActionColor"
+                    android:visibility="gone"
+                    android:text="@string/openInBrowser" />
+
                 <LinearLayout
                     android:id="@+id/discussionRepliesHeaderWrapper"
                     android:layout_width="match_parent"
