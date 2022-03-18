@@ -57,7 +57,7 @@ object CanvasRestAdapter {
                 .build()
     }
 
-    private fun okHttpClientWithToken(token: String): OkHttpClient {
+    fun okHttpClientWithToken(token: String): OkHttpClient {
         val authInterceptor = AuthRequestInterceptor(token)
 
         return OkHttpClient.Builder()

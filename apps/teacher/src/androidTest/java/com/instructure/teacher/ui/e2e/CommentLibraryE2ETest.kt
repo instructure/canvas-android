@@ -16,15 +16,25 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Response
+import com.apollographql.apollo.exception.ApolloException
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.apis.AccountNotificationAPI
+import com.instructure.canvasapi2.builders.RestBuilder
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.dataseeding.CreateCommentMutation
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.AuthorizationInterceptor
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.api.UserApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.model.UserSettingsApiModel
+import com.instructure.dataseeding.util.CanvasRestAdapter
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -36,6 +46,8 @@ import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import okhttp3.Callback
+import okhttp3.OkHttpClient
 import org.junit.Test
 
 @HiltAndroidTest
@@ -81,15 +93,30 @@ class CommentLibraryE2ETest : TeacherTest() {
             commentLibrarySuggestions = true
         )
         UserApi.putSelfSettings(teacher.id, request) // Set comment library "Show suggestions when typing" user settings to be able to see the library comments.
-            val domain = teacher.domain
+
+   /*     val okHttpClient = OkHttpClient.Builder()
+            .build()
+*/
+     //   CanvasRestAdapter.retrofitWithToken(teacher.token).create(CommentLibraryE2ETest::class.java)
         val apolloClient = ApolloClient.builder()
-            .serverUrl("https://mobileqa.beta.instructure.com/api/graphql/")
+            .serverUrl("https://mobileqa.beta.instructure.com/graphql")
+            .okHttpClient(CanvasRestAdapter.okHttpClientWithToken(teacher.token))
             .build()
 
-        val mutationCall =  CreateCommentMutation(course.id.toString(), "Comment")
-        apolloClient.mutate(mutationCall)
-
         tokenLogin(teacher)
+
+      /*  val mutationCall =  CreateCommentMutation(course.id.toString(), "Comment Test Mutation")
+        val response = apolloClient.mutate(mutationCall)
+*/
+        val mutationCall =  CreateCommentMutation(course.id.toString(), "Comment")
+        apolloClient.mutate(mutationCall).enqueue(object : ApolloCall.Callback<CreateCommentMutation.Data>() {
+            override fun onResponse(response: Response<CreateCommentMutation.Data>) = Unit
+            override fun onFailure(e: ApolloException) = Unit
+        })
+
+
+      //  CallBack.addCall(adapter.build(AccountNotificationAPI.AccountNotificationInterface::class.java, params).deleteAccountNotification(notificationId)).enqueue(callback)
+
 
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
