@@ -294,7 +294,12 @@ if (coverageEnabled) {
                            '**/*$ViewInjector*.*',
                            '**/*$ViewBinder*.*',
                            '**/BuildConfig.*',
-                           '**/Manifest*.*']
+                           '**/Manifest*.*',
+                           '**/generated/**',
+                           '**/*Reveiver*.*',
+                           '**/model*/**',
+                           '**/di/**',
+                           '**/service*/**']
         )
 
         // project.buildDir is /canvas-android/apps/teacher/build
@@ -323,7 +328,12 @@ if (coverageEnabled) {
                            '**/*$ViewInjector*.*',
                            '**/*$ViewBinder*.*',
                            '**/BuildConfig.*',
-                           '**/Manifest*.*'],
+                           '**/Manifest*.*',
+                           '**/generated/**',
+                           '**/*Reveiver*.*',
+                           '**/model*/**',
+                           '**/di/**',
+                           '**/service*/**'],
                 //includes: ['**/com/instructure/*']
         )
 
