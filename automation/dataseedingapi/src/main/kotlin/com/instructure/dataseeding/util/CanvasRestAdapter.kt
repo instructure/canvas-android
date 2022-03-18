@@ -57,7 +57,7 @@ object CanvasRestAdapter {
                 .build()
     }
 
-    fun okHttpClientWithToken(token: String): OkHttpClient {
+    private fun okHttpClientWithToken(token: String): OkHttpClient {
         val authInterceptor = AuthRequestInterceptor(token)
 
         return OkHttpClient.Builder()
@@ -67,6 +67,16 @@ object CanvasRestAdapter {
                 .addInterceptor(RestRetryInterceptor)
                 .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
                 .build()
+    }
+
+    fun okHttpClientForApollo(token: String): OkHttpClient {
+        val authInterceptor = AuthRequestInterceptor(token)
+
+        return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .addInterceptor(getLoggingInterceptor())
+            .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+            .build()
     }
 
     private val noAuthOkHttpClient: OkHttpClient by lazy {
