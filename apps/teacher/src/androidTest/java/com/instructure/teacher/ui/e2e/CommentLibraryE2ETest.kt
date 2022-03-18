@@ -88,18 +88,14 @@ class CommentLibraryE2ETest : TeacherTest() {
         UserApi.putSelfSettings(teacher.id, request) // Set comment library "Show suggestions when typing" user settings to be able to see the library comments.
 
         val apolloClient = ApolloClient.builder()
-            .serverUrl("https://mobileqa.beta.instructure.com/graphql")
+            .serverUrl("https://mobileqa.beta.instructure.com/api/graphql/")
             .okHttpClient(CanvasRestAdapter.okHttpClientForApollo(teacher.token))
             .build()
 
         val mutationCall = CreateCommentMutation(course.id.toString(), "Comment")
         apolloClient.mutate(mutationCall).enqueue(object : ApolloCall.Callback<CreateCommentMutation.Data>() {
-            override fun onResponse(response: Response<CreateCommentMutation.Data>) {
-                Log.d("asdasd", "Comment library response: ${response.toString()}")
-            }
-            override fun onFailure(e: ApolloException) {
-                Log.d("asdasd", "Comment library error: ${e.stackTraceToString()}")
-            }
+            override fun onResponse(response: Response<CreateCommentMutation.Data>) = Unit
+            override fun onFailure(e: ApolloException) = Unit
         })
 
         tokenLogin(teacher)
