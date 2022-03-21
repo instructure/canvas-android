@@ -16,13 +16,11 @@
 package com.instructure.teacher.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.view.accessibility.AccessibilityManager
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -49,6 +47,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
+import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.*
@@ -68,13 +67,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.forEach
-import kotlin.collections.isNotEmpty
-import kotlin.collections.joinToString
-import kotlin.collections.map
-import kotlin.collections.singleOrNull
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 class DiscussionsDetailsFragment : BasePresenterFragment<
@@ -714,12 +706,24 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsUnread('$markedAsUnreadId')") }
     }
 
+    override fun showAnonymousDiscussionView() {
+        anonymousDiscussionsNotSupported.setVisible()
+        openInBrowser.setVisible(mDiscussionTopicHeader.htmlUrl?.isNotEmpty() == true)
+        replyToDiscussionTopic.setGone()
+        swipeRefreshLayout.isEnabled = false
+        openInBrowser.onClick {
+            mDiscussionTopicHeader.htmlUrl?.let { url ->
+                requireContext().startActivity(InternalWebViewActivity.createIntent(requireContext(), url, "", true))
+            }
+        }
+    }
+
     /**
      * Checks to see if the webview element is within the viewable bounds of the scrollview.
      */
     private fun isElementInViewPortWithinScrollView(elementHeight: Int, topOffset: Int): Boolean {
         if (discussionsScrollView == null) return false
-        val scrollBounds = Rect().apply{ discussionsScrollView.getDrawingRect(this) }
+        val scrollBounds = Rect().apply { discussionsScrollView.getDrawingRect(this) }
 
         val discussionRepliesHeight = discussionRepliesWebView.height
         val discussionScrollViewContentHeight = discussionsScrollViewContentWrapper.height
