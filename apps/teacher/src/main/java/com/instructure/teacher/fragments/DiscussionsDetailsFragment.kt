@@ -707,7 +707,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     override fun showAnonymousDiscussionView() {
         anonymousDiscussionsNotSupported.setVisible()
-        openInBrowser.setVisible()
+        openInBrowser.setVisible(mDiscussionTopicHeader.htmlUrl?.isNotEmpty() == true)
         replyToDiscussionTopic.setGone()
         swipeRefreshLayout.isEnabled = false
         openInBrowser.onClick {

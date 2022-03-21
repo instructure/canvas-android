@@ -617,7 +617,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun showAnonymousDiscussionView() {
         anonymousDiscussionsNotSupported.setVisible()
-        openInBrowser.setVisible()
+        openInBrowser.setVisible(discussionTopicHeader.htmlUrl?.isNotEmpty() == true)
         replyToDiscussionTopic.setGone()
         swipeRefreshLayout.isEnabled = false
         openInBrowser.onClick {
