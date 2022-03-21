@@ -113,7 +113,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(studentName = student.name)
-        speedGraderPage.selectGradeTab()
+        speedGraderPage.selectGradesTab()
         speedGraderGradePage.openGradeDialog()
         val grade = "10"
         speedGraderGradePage.enterNewGrade(grade)

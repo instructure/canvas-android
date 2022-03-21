@@ -218,6 +218,6 @@ class SpeedGraderGradePageTest : TeacherTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.selectGradeTab()
+        speedGraderPage.selectGradesTab()
     }
 }
