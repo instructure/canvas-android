@@ -64,7 +64,7 @@ class SpeedGraderCommentsPage : BasePage() {
     }
 
     fun typeComment(comment: String) {
-        commentEditText.typeText(comment)
+        onView(withId(R.id.commentEditText) + withAncestor(R.id.commentInputContainer)).typeText(comment)
     }
 
     fun focusOnCommentEditTextField() {
@@ -72,7 +72,7 @@ class SpeedGraderCommentsPage : BasePage() {
     }
 
     fun clearComment() {
-        commentEditText.clearText()
+        onView(withId(R.id.commentEditText) + withAncestor(R.id.commentInputContainer)).clearText()
     }
 
     fun sendComment() {
