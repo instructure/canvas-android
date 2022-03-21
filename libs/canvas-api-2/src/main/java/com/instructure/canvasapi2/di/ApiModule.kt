@@ -122,4 +122,14 @@ class ApiModule {
     fun provideConferenceManager(): ConferenceManager {
         return ConferenceManager
     }
+
+    @Provides
+    fun provideCommunicationChannelsManager(): CommunicationChannelsManager {
+        return CommunicationChannelsManager
+    }
+
+    @Provides
+    fun provideNotificationPreferencesManager(): NotificationPreferencesManager {
+        return NotificationPreferencesManager
+    }
 }

@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.util.ArrayList
+import java.util.Locale
 
 @Parcelize
 data class StreamItem(
@@ -115,9 +116,9 @@ data class StreamItem(
     val contextType: CanvasContext.Type?
         get() {
             if (!hasSetContextType) {
-                if (context_type != null && (context_type.toLowerCase() == "course" || course_id > 0)) {
+                if (context_type != null && (context_type.lowercase(Locale.getDefault()) == "course" || course_id > 0)) {
                     canvasContextType = CanvasContext.Type.COURSE
-                } else if (context_type != null && (context_type.toLowerCase() == "group" || group_id > 0)) {
+                } else if (context_type != null && (context_type.lowercase(Locale.getDefault()) == "group" || group_id > 0)) {
                     canvasContextType = CanvasContext.Type.GROUP
                 }
                 hasSetContextType = true
@@ -187,15 +188,15 @@ data class StreamItem(
     fun getStreamItemType(): Type? = typeFromString(type)
 
     private fun typeFromString(type: String): Type = when {
-        type.toLowerCase() == "conversation" -> Type.CONVERSATION
-        type.toLowerCase() == "submission" -> Type.SUBMISSION
-        type.toLowerCase() == "discussiontopic" -> Type.DISCUSSION_TOPIC
-        type.toLowerCase() == "announcement" -> Type.ANNOUNCEMENT
-        type.toLowerCase() == "message" -> Type.MESSAGE
-        type.toLowerCase() == "conference" -> Type.CONFERENCE
-        type.toLowerCase() == "webconference" -> Type.CONFERENCE
-        type.toLowerCase() == "collaboration" -> Type.COLLABORATION
-        type.toLowerCase() == "collectionitem" -> Type.COLLECTION_ITEM
+        type.lowercase(Locale.getDefault()) == "conversation" -> Type.CONVERSATION
+        type.lowercase(Locale.getDefault()) == "submission" -> Type.SUBMISSION
+        type.lowercase(Locale.getDefault()) == "discussiontopic" -> Type.DISCUSSION_TOPIC
+        type.lowercase(Locale.getDefault()) == "announcement" -> Type.ANNOUNCEMENT
+        type.lowercase(Locale.getDefault()) == "message" -> Type.MESSAGE
+        type.lowercase(Locale.getDefault()) == "conference" -> Type.CONFERENCE
+        type.lowercase(Locale.getDefault()) == "webconference" -> Type.CONFERENCE
+        type.lowercase(Locale.getDefault()) == "collaboration" -> Type.COLLABORATION
+        type.lowercase(Locale.getDefault()) == "collectionitem" -> Type.COLLECTION_ITEM
         else -> Type.UNKNOWN
     }
 

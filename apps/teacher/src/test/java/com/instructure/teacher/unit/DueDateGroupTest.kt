@@ -41,7 +41,7 @@ class DueDateGroupTest {
 
     private val randy = Random()
 
-    private val sampleDateStrings = Array(15) { Date(Math.abs(randy.nextLong())).toApiString()!! }
+    private val sampleDateStrings = Array(15) { Date(Math.abs(randy.nextLong())).toApiString() }
 
     private val sampleDates = sampleDateStrings.map { it.toDate() }
 

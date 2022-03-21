@@ -97,7 +97,7 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(layoutResId(), container, false)
+        val view = inflater.inflate(layoutResId(), container, false)
 
         setupToolbar(view)
         view.findViewById<TextView>(R.id.menuDone).setTextColor(ThemePrefs.buttonColor)

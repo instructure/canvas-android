@@ -61,10 +61,10 @@ class AssignmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             dueDate.text = closedString + context.getString(R.string.multiple_due_dates)
         } else {
             if (assignment.dueAt != null) {
-                dueDate.text = closedString + context.getString(R.string.due, DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, assignment!!.dueDate, R.string.at))
+                dueDate.text = closedString + context.getString(R.string.due, DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, assignment.dueDate, R.string.at))
             } else if (assignment.allDates.size == 1 && assignment.allDates.get(0).dueAt != null) {
                 // If a due date is to one section and nothing for everyone else, we can still show the due date
-                dueDate.text = closedString + context.getString(R.string.due, DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, assignment!!.allDates.get(0).dueDate, R.string.at))
+                dueDate.text = closedString + context.getString(R.string.due, DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, assignment.allDates.get(0).dueDate, R.string.at))
             } else {
                 dueDate.text = closedString + context.getString(R.string.no_due_date)
             }

@@ -571,7 +571,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             loadDiscussionTopicHeaderViews(discussionTopicHeader)
             addAccessibilityButton()
 
-            if (forceRefresh || discussionTopic == null) {
+            // We only want to request the full discussion if it is not anonymous. Anonymous discussions are not supported by the API
+            if (forceRefresh || discussionTopic == null && discussionTopicHeader.anonymousState == null) {
                 // forceRefresh is true, fetch the discussion topic
                 discussionTopic = getDiscussionTopic()
 
@@ -583,6 +584,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 discussionProgressBar.setGone()
                 discussionTopicRepliesTitle.setGone()
                 swipeRefreshLayout.isRefreshing = false
+
+                if (discussionTopicHeader.anonymousState != null) {
+                    showAnonymousDiscussionView()
+                }
             } else {
                 val html = inBackground {
                     DiscussionUtils.createDiscussionTopicHtml(
@@ -607,6 +612,18 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             }
         } catch {
             Logger.e("Error loading discussion topic " + it.message)
+        }
+    }
+
+    private fun showAnonymousDiscussionView() {
+        anonymousDiscussionsNotSupported.setVisible()
+        openInBrowser.setVisible(discussionTopicHeader.htmlUrl?.isNotEmpty() == true)
+        replyToDiscussionTopic.setGone()
+        swipeRefreshLayout.isEnabled = false
+        openInBrowser.onClick {
+            discussionTopicHeader.htmlUrl?.let { url ->
+                InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(canvasContext, url, true, true))
+            }
         }
     }
 
@@ -685,7 +702,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
         attachmentIcon.onClick { _ ->
-            discussionTopicHeader.attachments?.let { viewAttachments(it) }
+            viewAttachments(discussionTopicHeader.attachments)
         }
     }
 

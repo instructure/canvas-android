@@ -226,7 +226,10 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
     override fun compare(item1: GradeableStudentSubmission, item2: GradeableStudentSubmission): Int {
         // Turns out we do need to sort them by sortable name, but not when anonymous grading is on
         if (item1.assignee is StudentAssignee && item2.assignee is StudentAssignee && !mAssignment.anonymousGrading) {
-            return (item1.assignee as StudentAssignee).student.sortableName?.toLowerCase(Locale.getDefault())?.compareTo((item2.assignee as StudentAssignee).student.sortableName?.toLowerCase()!!) ?: -1
+            return (item1.assignee as StudentAssignee).student.sortableName?.lowercase(Locale.getDefault())
+                ?.compareTo((item2.assignee as StudentAssignee).student.sortableName?.lowercase(
+                    Locale.getDefault()
+                )!!) ?: -1
         }
         return -1
     }

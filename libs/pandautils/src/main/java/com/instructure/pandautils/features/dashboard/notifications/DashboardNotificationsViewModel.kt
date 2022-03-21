@@ -141,11 +141,11 @@ class DashboardNotificationsViewModel @Inject constructor(
         val conferences = conferenceManager.getLiveConferencesAsync(forceNetwork).await().dataOrNull
             ?.filter { conference ->
                 // Remove blacklisted (i.e. 'dismissed') conferences
-                blackList.contains(conference.id.toString()).not() ?: false
+                blackList.contains(conference.id.toString()).not()
             }
             ?.onEach { conference ->
                 // Attempt to add full canvas context to conference items, fall back to generic built context
-                val contextType = conference.contextType.toLowerCase(Locale.US)
+                val contextType = conference.contextType.lowercase(Locale.US)
                 val contextId = conference.contextId
                 val genericContext = CanvasContext.fromContextCode("${contextType}_${contextId}")!!
                 conference.canvasContext = when (genericContext) {

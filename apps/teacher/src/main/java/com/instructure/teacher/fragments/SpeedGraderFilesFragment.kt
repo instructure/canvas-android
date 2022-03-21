@@ -70,7 +70,7 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
 
     override fun createAdapter(): AttachmentAdapter {
         return AttachmentAdapter(requireContext(), presenter) {
-            EventBus.getDefault().post(SubmissionFileSelectedEvent(presenter?.getSubmission()?.id ?: -1, it))
+            EventBus.getDefault().post(SubmissionFileSelectedEvent(presenter.getSubmission()?.id ?: -1, it))
         }
     }
 
@@ -93,8 +93,8 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSubmissionSelected(event: SubmissionSelectedEvent) {
-        if (event.submission?.id == presenter?.getSubmission()?.id) {
-            presenter?.setSubmission(event.submission)
+        if (event.submission?.id == presenter.getSubmission()?.id) {
+            presenter.setSubmission(event.submission)
             adapter.setSelectedPosition(0)
         }
     }

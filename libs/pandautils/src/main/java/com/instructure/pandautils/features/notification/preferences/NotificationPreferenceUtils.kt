@@ -1,33 +1,32 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2022 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.instructure.student.util
+package com.instructure.pandautils.features.notification.preferences
 
+import android.content.res.Resources
 import androidx.annotation.StringRes
-import com.instructure.student.R
-import com.instructure.student.model.NotificationCategoryHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.R
 
-object NotificationPreferenceUtils {
+class NotificationPreferenceUtils(private val resources: Resources) {
 
     enum class CategoryGroup {
         COURSE_ACTIVITIES, DISCUSSIONS, CONVERSATIONS, SCHEDULING, GROUPS, ALERTS, CONFERENCES
     }
     
-    private fun getString(@StringRes id: Int) = ContextKeeper.appContext.getString(id)
+    private fun getString(@StringRes id: Int) = resources.getString(id)
 
     val categoryTitleMap = hashMapOf(
             // COURSE ACTIVITIES
@@ -150,13 +149,13 @@ object NotificationPreferenceUtils {
     )
 
     val categoryGroupHeaderMap = mapOf(
-            CategoryGroup.COURSE_ACTIVITIES to NotificationCategoryHeader(getString(R.string.notification_cat_course_activities), 0),
-            CategoryGroup.DISCUSSIONS to NotificationCategoryHeader(getString(R.string.notification_cat_discussions), 1),
-            CategoryGroup.CONVERSATIONS to NotificationCategoryHeader(getString(R.string.notification_cat_conversations), 2),
-            CategoryGroup.SCHEDULING to NotificationCategoryHeader(getString(R.string.notification_cat_scheduling), 3),
-            CategoryGroup.GROUPS to NotificationCategoryHeader(getString(R.string.notification_cat_groups), 4),
-            CategoryGroup.ALERTS to NotificationCategoryHeader(getString(R.string.notification_cat_alerts), 5),
-            CategoryGroup.CONFERENCES to NotificationCategoryHeader(getString(R.string.notification_cat_conferences), 6)
+            CategoryGroup.COURSE_ACTIVITIES to NotificationCategoryHeaderViewData(getString(R.string.notification_cat_course_activities), 0),
+            CategoryGroup.DISCUSSIONS to NotificationCategoryHeaderViewData(getString(R.string.notification_cat_discussions), 1),
+            CategoryGroup.CONVERSATIONS to NotificationCategoryHeaderViewData(getString(R.string.notification_cat_conversations), 2),
+            CategoryGroup.SCHEDULING to NotificationCategoryHeaderViewData(getString(R.string.notification_cat_scheduling), 3),
+            CategoryGroup.GROUPS to NotificationCategoryHeaderViewData(getString(R.string.notification_cat_groups), 4),
+            CategoryGroup.ALERTS to NotificationCategoryHeaderViewData(getString(R.string.notification_cat_alerts), 5),
+            CategoryGroup.CONFERENCES to NotificationCategoryHeaderViewData(getString(R.string.notification_cat_conferences), 6)
     )
 
     // Used to match web sorting

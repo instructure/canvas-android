@@ -76,11 +76,11 @@ class AnnotationCommentDialog : AppCompatDialogFragment() {
 
         //Adjust the dialog to the top so keyboard does not cover it up, issue happens on tablets in landscape
         if (isTablet && requireContext().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            val params = dialog?.window?.attributes
+            val params = dialog.window?.attributes
             params?.gravity = Gravity.CENTER or Gravity.TOP
             params?.y = requireContext().resources.getDimensionPixelSize(R.dimen.utils_landscapeTabletDialogAdjustment)
-            dialog?.window?.attributes = params
-            dialog?.window?.setSoftInputMode(
+            dialog.window?.attributes = params
+            dialog.window?.setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN or
                             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
                             WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)

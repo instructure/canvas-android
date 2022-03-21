@@ -124,7 +124,7 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
     private fun shouldShowUpdateNotification(appUpdateInfo: AppUpdateInfo): Boolean {
 
         if (updatePrefs.lastUpdateNotificationDate.isBlank() || updatePrefs.lastUpdateNotificationVersionCode != appUpdateInfo.availableVersionCode()) {
-            updatePrefs.lastUpdateNotificationDate = Date().toApiString() ?: ""
+            updatePrefs.lastUpdateNotificationDate = Date().toApiString()
             updatePrefs.lastUpdateNotificationVersionCode = appUpdateInfo.availableVersionCode()
             updatePrefs.lastUpdateNotificationCount = 1
             updatePrefs.hasShownThisStart = true
@@ -143,7 +143,7 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
 
             if (diff >= FLEXIBLE_UPDATE_NOTIFICATION_INTERVAL_DAYS && updatePrefs.lastUpdateNotificationCount <= FLEXIBLE_UPDATE_NOTIFICATION_MAX_COUNT) {
                 updatePrefs.lastUpdateNotificationCount += 1
-                updatePrefs.lastUpdateNotificationDate = Date().toApiString() ?: ""
+                updatePrefs.lastUpdateNotificationDate = Date().toApiString()
                 return true
             }
         }

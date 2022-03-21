@@ -381,7 +381,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 if(!anonymousGradingOn) {
                     // We need to sort the submissions so they appear in the same order as the submissions list
                     putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions.sortedBy {
-                        (it.assignee as? StudentAssignee)?.student?.sortableName?.toLowerCase()
+                        (it.assignee as? StudentAssignee)?.student?.sortableName?.lowercase(Locale.getDefault())
                     }))
                 } else {
                     putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions))

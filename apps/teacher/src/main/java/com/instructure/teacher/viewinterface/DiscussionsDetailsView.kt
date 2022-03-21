@@ -31,4 +31,5 @@ interface DiscussionsDetailsView : FragmentViewInterface {
     fun updateDiscussionsMarkedAsUnreadCompleted(markedAsUnreadId: Long)
     fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry)
     fun updateDiscussionEntry(discussionEntry: DiscussionEntry)
+    fun showAnonymousDiscussionView()
 }

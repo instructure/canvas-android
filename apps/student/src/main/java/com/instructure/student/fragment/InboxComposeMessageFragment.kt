@@ -174,7 +174,7 @@ class InboxComposeMessageFragment : ParentFragment() {
 
         var previousCheckState = false
         chips.onRecipientsChanged = { recipients: List<Recipient> ->
-            val entryCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
+            val entryCount = recipients.sumOf { it.userCount.coerceAtLeast(1) }
             if (entryCount >= 100) {
                 if (sendIndividualSwitch.isEnabled) {
                     sendIndividualMessageWrapper.alpha = 0.3f
@@ -357,7 +357,7 @@ class InboxComposeMessageFragment : ParentFragment() {
         // Send message
         if (isNewMessage) {
             val recipients = chips.recipients
-            val recipientCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
+            val recipientCount = recipients.sumOf { it.userCount.coerceAtLeast(1) }
             val isBulk = recipientCount >= 100 || (recipientCount > 1 && sendIndividually)
             val contextId = selectedContext!!.contextId
             val subject = editSubject.text.toString()

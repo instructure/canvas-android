@@ -142,10 +142,8 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
         isLoadedFirstPage = true
         shouldShowLoadingFooter()
         if (!isNoNetwork) {
-            adapterToRecyclerViewCallback?.let {
-                it.setDisplayNoConnection(false)
-                it.setIsEmpty(isAllPagesLoaded && size() == 0)
-            }
+            adapterToRecyclerViewCallback.setDisplayNoConnection(false)
+            adapterToRecyclerViewCallback.setIsEmpty(isAllPagesLoaded && size() == 0)
         }
     }
 

@@ -77,16 +77,16 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         rceTextEditor.setHint(R.string.rce_empty_description)
         rceTextEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
 
-        if (CanvasWebView.containsLTI(presenter?.discussionEntry?.message.orEmpty(), "UTF-8")) {
-            rceTextEditor.setHtml(DiscussionUtils.createLTIPlaceHolders(requireContext(), presenter?.discussionEntry?.message.orEmpty()) { _, placeholder ->
+        if (CanvasWebView.containsLTI(presenter.discussionEntry.message.orEmpty(), "UTF-8")) {
+            rceTextEditor.setHtml(DiscussionUtils.createLTIPlaceHolders(requireContext(), presenter.discussionEntry.message.orEmpty()) { _, placeholder ->
                 placeHolderList.add(placeholder)
             }, "", "", ThemePrefs.brandColor, ThemePrefs.buttonColor)
         } else {
-            rceTextEditor.setHtml(presenter?.discussionEntry?.message, "", "", ThemePrefs.brandColor, ThemePrefs.buttonColor)
+            rceTextEditor.setHtml(presenter.discussionEntry.message, "", "", ThemePrefs.brandColor, ThemePrefs.buttonColor)
         }
 
 
-        presenter?.discussionEntry?.attachments?.firstOrNull()?.let {
+        presenter.discussionEntry.attachments?.firstOrNull()?.let {
             val attachmentView = AttachmentView(requireContext())
 
             attachmentView.setPendingRemoteFile(it, true) { action, attachment ->
@@ -143,7 +143,7 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
     private fun setupToolbar() {
         toolbar.title = getString(R.string.edit)
         toolbar.setupCloseButton {
-            if (presenter?.discussionEntry?.message == rceTextEditor?.html) {
+            if (presenter.discussionEntry.message == rceTextEditor?.html) {
                 activity?.onBackPressed()
             } else {
                 UnsavedChangesExitDialog.show(requireFragmentManager()) {
