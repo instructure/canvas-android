@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
+import com.google.android.exoplayer2.source.hls.DefaultHlsDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
@@ -41,6 +42,7 @@ import com.google.android.exoplayer2.upstream.*
 import com.google.android.exoplayer2.util.Util
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIDEO_VIEW
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.utils.ExoAgent
 import com.instructure.student.R
 import com.instructure.student.util.Const
 import kotlinx.android.synthetic.main.activity_video_view.player_view as simpleExoPlayerView
@@ -50,8 +52,8 @@ import kotlinx.android.synthetic.main.activity_video_view.player_view as simpleE
 class VideoViewActivity : AppCompatActivity() {
 
     private var player: SimpleExoPlayer? = null
-    private var trackSelector: DefaultTrackSelector? = null
-    private var mediaDataSourceFactory: DataSource.Factory? = null
+    private lateinit var trackSelector: DefaultTrackSelector
+    private lateinit var mediaDataSourceFactory: DataSource.Factory
     private var mainHandler: Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +76,7 @@ class VideoViewActivity : AppCompatActivity() {
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
-        return when (val type = Util.inferContentType(uri.lastPathSegment)) {
+        return when (val type = Util.inferContentType(uri.lastPathSegment ?: "")) {
             C.TYPE_SS -> SsMediaSource(
                 uri, buildDataSourceFactory(false),
                 DefaultSsChunkSource.Factory(mediaDataSourceFactory), mainHandler, null
@@ -83,7 +85,7 @@ class VideoViewActivity : AppCompatActivity() {
                 uri, buildDataSourceFactory(false),
                 DefaultDashChunkSource.Factory(mediaDataSourceFactory), mainHandler, null
             )
-            C.TYPE_HLS -> HlsMediaSource(uri, mediaDataSourceFactory, mainHandler, null)
+            C.TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(buildDataSourceFactory(false))).createMediaSource(uri)
             C.TYPE_OTHER -> ExtractorMediaSource(
                 uri, mediaDataSourceFactory,
                 DefaultExtractorsFactory(), mainHandler, null

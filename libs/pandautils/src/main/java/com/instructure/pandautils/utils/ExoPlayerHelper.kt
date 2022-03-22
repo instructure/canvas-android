@@ -25,6 +25,8 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
+import com.google.android.exoplayer2.source.hls.DefaultHlsDataSourceFactory
+import com.google.android.exoplayer2.source.hls.HlsDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
@@ -33,6 +35,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.trackselection.TrackSelector
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
@@ -83,10 +86,10 @@ class ExoAgent private constructor(val uri: Uri) {
     /** The media source that will feed data from the [uri] */
     @Suppress("DEPRECATION")
     private val mMediaSource by lazy {
-        when (Util.inferContentType(uri.lastPathSegment)) {
+        when (Util.inferContentType(uri.lastPathSegment ?: "")) {
             C.TYPE_SS -> SsMediaSource(uri, DATA_SOURCE_FACTORY, DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), Handler(), null)
             C.TYPE_DASH -> DashMediaSource(uri, DATA_SOURCE_FACTORY, DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), Handler(), null)
-            C.TYPE_HLS -> HlsMediaSource(uri, DATA_SOURCE_FACTORY, Handler(), null)
+            C.TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(DATA_SOURCE_FACTORY)).createMediaSource(uri)
             else -> ExtractorMediaSource(uri, DATA_SOURCE_FACTORY, DefaultExtractorsFactory(), Handler(), null)
         }
     }
@@ -136,7 +139,6 @@ class ExoAgent private constructor(val uri: Uri) {
         mPlayer = ExoPlayerFactory.newSimpleInstance(ContextKeeper.appContext, trackSelector)
 
         mPlayer?.addListener(object : Player.EventListener {
-            override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {}
             override fun onLoadingChanged(isLoading: Boolean) {}
             override fun onSeekProcessed() {}
             override fun onPositionDiscontinuity(reason: Int) {}
