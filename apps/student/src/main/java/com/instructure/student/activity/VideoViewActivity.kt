@@ -45,7 +45,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ExoAgent
 import com.instructure.student.R
 import com.instructure.student.util.Const
-import kotlinx.android.synthetic.main.activity_video_view.player_view as simpleExoPlayerView
+import kotlinx.android.synthetic.main.activity_video_view.player_view as playerView
 
 @ScreenView(SCREEN_VIEW_VIDEO_VIEW)
 @Suppress("DEPRECATION")
@@ -59,13 +59,13 @@ class VideoViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_view)
-        simpleExoPlayerView.requestFocus()
+        playerView.requestFocus()
         mediaDataSourceFactory = buildDataSourceFactory(true)
         mainHandler = Handler()
-        val videoTrackSelectionFactory: TrackSelection.Factory = AdaptiveTrackSelection.Factory(BANDWIDTH_METER)
-        trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
+        val videoTrackSelectionFactory: TrackSelection.Factory = AdaptiveTrackSelection.Factory()
+        trackSelector = DefaultTrackSelector(applicationContext, videoTrackSelectionFactory)
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, DefaultLoadControl())
-        simpleExoPlayerView.player = player
+        playerView.player = player
         player?.playWhenReady = true
         player?.prepare(buildMediaSource(Uri.parse(intent?.extras?.getString(Const.URL))))
     }

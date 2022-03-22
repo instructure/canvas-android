@@ -135,7 +135,7 @@ class ExoAgent private constructor(val uri: Uri) {
         currentState = ExoAgentState.PREPARING
 
         val trackSelectionFactory = AdaptiveTrackSelection.Factory()
-        val trackSelector: TrackSelector = DefaultTrackSelector(trackSelectionFactory)
+        val trackSelector: TrackSelector = DefaultTrackSelector(ContextKeeper.appContext, trackSelectionFactory)
         mPlayer = ExoPlayerFactory.newSimpleInstance(ContextKeeper.appContext, trackSelector)
 
         mPlayer?.addListener(object : Player.EventListener {
