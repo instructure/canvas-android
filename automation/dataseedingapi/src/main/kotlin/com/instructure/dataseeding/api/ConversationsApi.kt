@@ -19,7 +19,7 @@ package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.dataseeding.model.CreateConversation
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -32,7 +32,7 @@ object ConversationsApi {
     }
 
     private fun conversationsService(token: String): ConversationsService
-            = CanvasRestAdapter.retrofitWithToken(token).create(ConversationsApi.ConversationsService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(ConversationsApi.ConversationsService::class.java)
 
     fun createConversation(token: String, recipients: List<String>): List<ConversationApiModel> {
         val conversation = CreateConversation(recipients, Randomizer.randomConversationSubject(), Randomizer.randomConversationBody())

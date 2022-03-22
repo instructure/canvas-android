@@ -1,7 +1,7 @@
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -26,7 +26,7 @@ object ObserverApi {
     }
 
     private fun observerUserService(token: String): ObserverService
-            = CanvasRestAdapter.retrofitWithToken(token).create(ObserverService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(ObserverService::class.java)
 
     fun addObserverWithCredentials(loginId: String, password: String, token: String): ObserveeApiModel {
         val observee = CreateObserveeWithCredentialsWrapper(

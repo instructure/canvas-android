@@ -12,7 +12,7 @@ buildscript {
 
     dependencies {
         classpath Plugins.KOTLIN
-        classpath 'com.apollographql.apollo:apollo-gradle-plugin:2.5.9'
+        classpath Libs.APOLLO_RUNTIME
     }
 }
 
@@ -45,8 +45,7 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.github.javafaker:javafaker:0.17.2'
-    implementation 'com.apollographql.apollo:apollo-runtime:2.5.9'
-    implementation 'com.apollographql.apollo:apollo-coroutines-support:2.5.9'
+    implementation Libs.APOLLO_RUNTIME
 
 
     /* Test Dependencies */

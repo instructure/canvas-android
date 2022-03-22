@@ -18,7 +18,7 @@
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.jsoup.Connection
@@ -26,7 +26,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.FormElement
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -50,20 +49,13 @@ object UserApi {
                 @Query(value = "redirect_uri", encoded = true) redirectURI: String
         ): Call<OAuthToken>
 
-        @GET("users/{userId}/settings")
-        fun getSelfSettings(@Path("userId") userId: Long): Call<UserSettingsApiModel>
-
         @PUT("users/{userId}/settings")
         fun putSelfSettings(@Path("userId") userId: Long, @Body body: UserSettingsApiModel): Call<UserSettingsApiModel>
 
     }
 
     private val userAdminService: UserService by lazy {
-        CanvasRestAdapter.adminRetrofit.create(UserService::class.java)
-    }
-
-    fun getSelfSettings(userId: Long): UserSettingsApiModel {
-        return userAdminService.getSelfSettings(userId).execute().body()!!
+        CanvasNetworkAdapter.adminRetrofit.create(UserService::class.java)
     }
 
     fun putSelfSettings(userId: Long,
@@ -73,7 +65,7 @@ object UserApi {
 
         fun createCanvasUser(
             userService: UserService = userAdminService,
-            userDomain: String = CanvasRestAdapter.canvasDomain
+            userDomain: String = CanvasNetworkAdapter.canvasDomain
     ): CanvasUserApiModel {
         val teacherName = Randomizer.randomName()
         val user = User(teacherName.fullName, teacherName.firstName, teacherName.sortableName)
@@ -108,14 +100,14 @@ object UserApi {
     private fun getToken(
             userApiModel: CanvasUserApiModel,
             userService: UserService = userAdminService,
-            userDomain: String = CanvasRestAdapter.canvasDomain
+            userDomain: String = CanvasNetworkAdapter.canvasDomain
     ): String {
         val authCode = getAuthCode(userApiModel, userDomain)
         val response = userService.getToken(
-                CanvasRestAdapter.clientId,
-                CanvasRestAdapter.clientSecret,
+                CanvasNetworkAdapter.clientId,
+                CanvasNetworkAdapter.clientSecret,
                 authCode,
-                CanvasRestAdapter.redirectUri
+                CanvasNetworkAdapter.redirectUri
         ).execute()
         return response.body()?.accessToken ?: ""
     }
@@ -125,12 +117,12 @@ object UserApi {
      * @param[userApiModel] A [CanvasUserApiModel]
      * @return The [String] auth code to be used to acquire the userApiModel's access token
      */
-    private fun getAuthCode(userApiModel: CanvasUserApiModel, domain: String = CanvasRestAdapter.canvasDomain): String {
+    private fun getAuthCode(userApiModel: CanvasUserApiModel, domain: String = CanvasNetworkAdapter.canvasDomain): String {
         val loginPageResponse = Jsoup.connect("https://$domain/login/oauth2/auth")
                 .method(Connection.Method.GET)
-                .data("client_id", CanvasRestAdapter.clientId)
+                .data("client_id", CanvasNetworkAdapter.clientId)
                 .data("response_type", "code")
-                .data("redirect_uri", CanvasRestAdapter.redirectUri)
+                .data("redirect_uri", CanvasNetworkAdapter.redirectUri)
                 .execute()
         val loginForm = loginPageResponse.parse().select("form").first() as FormElement
         loginForm.getElementById("pseudonym_session_unique_id").`val`(userApiModel.loginId)

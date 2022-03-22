@@ -18,7 +18,7 @@
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -36,7 +36,7 @@ object AssignmentsApi {
     }
 
     private fun assignmentsService(token: String): AssignmentsService
-            = CanvasRestAdapter.retrofitWithToken(token).create(AssignmentsService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(AssignmentsService::class.java)
 
     data class CreateAssignmentRequest(
             val courseId : Long,

@@ -16,20 +16,15 @@
  */
 package com.instructure.teacher.ui.e2e
 
-import androidx.test.espresso.Espresso
-import com.apollographql.apollo.ApolloCall
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.Response
-import com.apollographql.apollo.exception.ApolloException
 import com.instructure.canvas.espresso.E2E
-import com.instructure.dataseeding.CreateCommentMutation
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.CommentLibraryApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.api.UserApi
+import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.model.UserSettingsApiModel
-import com.instructure.dataseeding.util.CanvasRestAdapter
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -60,51 +55,14 @@ class CommentLibraryE2ETest : TeacherTest() {
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        val testAssignment = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacher.token,
-                pointsPossible = 25.0,
-                dueAt = 1.days.fromNow.iso8601
-            )
-        )
+        //Preparing assignment and submit that with the student. Enable comment library in user settings.
+        val testAssignment = prepareData(course.id, student.token, teacher.token, teacher.id)
 
-        SubmissionsApi.submitCourseAssignment(
-            submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
-            courseId = course.id,
-            assignmentId = testAssignment.id,
-            fileIds = emptyList<Long>().toMutableList(),
-            studentToken = student.token
-        )
-
-        val request = UserSettingsApiModel(
-            manualMarkAsRead = false,
-            collapseGlobalNav = false,
-            hideDashCardColorOverlays = false,
-            commentLibrarySuggestions = true
-        )
-        UserApi.putSelfSettings(teacher.id, request) // Set comment library "Show suggestions when typing" user settings to be able to see the library comments.
-
-        val apolloClient = ApolloClient.builder()
-            .serverUrl("https://mobileqa.beta.instructure.com/api/graphql/")
-            .okHttpClient(CanvasRestAdapter.okHttpClientForApollo(teacher.token))
-            .build()
-
+        //Generate comments for comment library.
         val testComment = "Test Comment"
         val testComment2 = "This is another test comment."
-        val mutationCall = CreateCommentMutation(course.id.toString(), testComment)
-        val mutationCall2 = CreateCommentMutation(course.id.toString(), testComment2)
-        apolloClient.mutate(mutationCall).enqueue(object : ApolloCall.Callback<CreateCommentMutation.Data>() {
-            override fun onResponse(response: Response<CreateCommentMutation.Data>) = Unit
-            override fun onFailure(e: ApolloException) = Unit
-        })
-
-        apolloClient.mutate(mutationCall2).enqueue(object : ApolloCall.Callback<CreateCommentMutation.Data>() {
-            override fun onResponse(response: Response<CreateCommentMutation.Data>) = Unit
-            override fun onFailure(e: ApolloException) = Unit
-        })
+        CommentLibraryApi.createComment(course.id, teacher.token, testComment)
+        CommentLibraryApi.createComment(course.id, teacher.token, testComment2)
 
         tokenLogin(teacher)
 
@@ -156,5 +114,44 @@ class CommentLibraryE2ETest : TeacherTest() {
         speedGraderCommentsPage.typeComment("empty filter")
         commentLibraryPage.assertSuggestionListNotVisible()
         commentLibraryPage.assertEmptyViewVisible()
+    }
+
+    private fun prepareData(
+        courseId: Long,
+        studentToken: String,
+        teacherToken: String,
+        teacherId: Long
+    ): AssignmentApiModel {
+        val testAssignment = AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = courseId,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.POINTS,
+                teacherToken = teacherToken,
+                pointsPossible = 25.0,
+                dueAt = 1.days.fromNow.iso8601
+            )
+        )
+
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
+            courseId = courseId,
+            assignmentId = testAssignment.id,
+            fileIds = emptyList<Long>().toMutableList(),
+            studentToken = studentToken
+        )
+
+        val request = UserSettingsApiModel(
+            manualMarkAsRead = false,
+            collapseGlobalNav = false,
+            hideDashCardColorOverlays = false,
+            commentLibrarySuggestions = true
+        )
+        UserApi.putSelfSettings(
+            teacherId,
+            request
+        ) // Set comment library "Show suggestions when typing" user settings to be able to see the library comments.
+
+        return testAssignment
     }
 }
