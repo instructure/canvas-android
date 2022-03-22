@@ -19,7 +19,7 @@
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -45,7 +45,7 @@ object GroupsApi {
     }
 
     private fun groupsService(token: String): GroupsService
-            = CanvasRestAdapter.retrofitWithToken(token).create(GroupsService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(GroupsService::class.java)
 
     fun createCourseGroupCategory(courseId: Long, teacherToken: String): GroupCategoryApiModel {
         val groupCategory = CreateGroupCategory(Randomizer.randomCourseGroupCategoryName())

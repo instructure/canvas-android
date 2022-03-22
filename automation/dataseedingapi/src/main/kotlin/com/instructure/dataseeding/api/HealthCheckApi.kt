@@ -17,7 +17,7 @@
 
 package com.instructure.dataseeding.api
 
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import retrofit2.Call
 import retrofit2.http.GET
 
@@ -31,7 +31,7 @@ object HealthCheckApi {
     }
 
     private val healthCheckService: HealthCheckService by lazy {
-        CanvasRestAdapter.noAuthRetrofit.create(HealthCheckService::class.java)
+        CanvasNetworkAdapter.noAuthRetrofit.create(HealthCheckService::class.java)
     }
 
     fun healthCheck(): Boolean {

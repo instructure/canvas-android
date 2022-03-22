@@ -41,7 +41,7 @@ object GradingPeriodsApi {
     }
 
     private val adminGradingPeriodsService: GradingPeriodsService by lazy {
-        CanvasRestAdapter.adminRetrofit.create(GradingPeriodsService::class.java)
+        CanvasNetworkAdapter.adminRetrofit.create(GradingPeriodsService::class.java)
     }
 
     fun createGradingPeriodSet(enrollmentTermId: Long): GradingPeriodSetApiModelWrapper {

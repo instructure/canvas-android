@@ -30,7 +30,7 @@ import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.*
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.DataSeedingException
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.interactions.router.Route
@@ -379,7 +379,7 @@ fun File.toByteArray(): ByteArray {
 }
 
 fun TeacherTest.routeTo(route: String) {
-    val url = "canvas-teacher://${CanvasRestAdapter.canvasDomain}/$route"
+    val url = "canvas-teacher://${CanvasNetworkAdapter.canvasDomain}/$route"
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     if (context !is Activity) {

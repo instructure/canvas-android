@@ -64,11 +64,15 @@ class SpeedGraderCommentsPage : BasePage() {
     }
 
     fun typeComment(comment: String) {
-        commentEditText.typeText(comment)
+        onView(withId(R.id.commentEditText) + withAncestor(R.id.commentInputContainer)).typeText(comment)
+    }
+
+    fun focusOnCommentEditTextField() {
+        commentEditText.click()
     }
 
     fun clearComment() {
-        commentEditText.clearText()
+        onView(withId(R.id.commentEditText) + withAncestor(R.id.commentInputContainer)).clearText()
     }
 
     fun sendComment() {

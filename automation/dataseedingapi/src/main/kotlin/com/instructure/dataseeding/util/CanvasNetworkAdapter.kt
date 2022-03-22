@@ -17,6 +17,7 @@
 
 package com.instructure.dataseeding.util
 
+import com.apollographql.apollo.ApolloClient
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -24,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
-object CanvasRestAdapter {
+object CanvasNetworkAdapter {
 
     val canvasDomain = "mobileqa.beta.instructure.com"
     val baseUrl = "https://$canvasDomain/api/v1/"
@@ -32,6 +33,7 @@ object CanvasRestAdapter {
     val adminToken = DATA_SEEDING_ADMIN_TOKEN
     val clientId = DATA_SEEDING_CLIENT_ID
     val clientSecret = DATA_SEEDING_CLIENT_SECRET
+
     private var log = true
     private val TIMEOUT_IN_SECONDS = 60L
 
@@ -69,13 +71,30 @@ object CanvasRestAdapter {
                 .build()
     }
 
+    private fun okHttpClientForApollo(token: String): OkHttpClient {
+        val authInterceptor = AuthRequestInterceptor(token)
+
+        return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .addInterceptor(getLoggingInterceptor())
+            .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+            .build()
+    }
+
+    fun getApolloClient(token: String): ApolloClient {
+        return ApolloClient.builder()
+            .serverUrl("https://mobileqa.beta.instructure.com/api/graphql/")
+            .okHttpClient(okHttpClientForApollo(token))
+            .build()
+    }
+
     private val noAuthOkHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
-                .retryOnConnectionFailure(true)
-                .addInterceptor(getLoggingInterceptor())
-                .addInterceptor(RestRetryInterceptor)
-                .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .build()
+            .retryOnConnectionFailure(true)
+            .addInterceptor(getLoggingInterceptor())
+            .addInterceptor(RestRetryInterceptor)
+            .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+            .build()
     }
 
     val adminRetrofit: Retrofit by lazy {

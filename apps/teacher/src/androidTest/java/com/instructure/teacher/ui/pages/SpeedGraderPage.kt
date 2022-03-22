@@ -79,7 +79,7 @@ class SpeedGraderPage : BasePage() {
     }
 
     fun selectFilesTab(fileCount: Int) {
-        val filesTab = waitForViewWithText(getStringFromResource(R.string.sg_tab_files_w_counter, fileCount).uppercase(Locale.getDefault()))
+        val filesTab = waitForViewWithText(getStringFromResource(R.string.sg_tab_files_w_counter, fileCount).toUpperCase())
         filesTab.click()
     }
 

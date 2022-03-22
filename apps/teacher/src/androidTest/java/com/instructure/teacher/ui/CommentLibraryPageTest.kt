@@ -17,20 +17,31 @@
 package com.instructure.teacher.ui
 
 import com.instructure.canvas.espresso.mockCanvas.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.managers.CommentLibraryManager
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
+@UninstallModules(GraphQlApiModule::class)
 @HiltAndroidTest
 class CommentLibraryPageTest : TeacherTest() {
 
     override fun displaysPageObjects() = Unit
+
+    @BindValue
+    @JvmField
+    val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
 
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
@@ -187,7 +198,7 @@ class CommentLibraryPageTest : TeacherTest() {
         commentLibraryPage.assertSuggestionsCount(commentLibraryItems.size)
     }
 
-        private fun createCommentLibraryMockData(): List<String> {
+    private fun createCommentLibraryMockData(): List<String> {
         val data = MockCanvas.init(
             teacherCount = 1,
             studentCount = 1,

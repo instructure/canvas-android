@@ -30,7 +30,7 @@ import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.*
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.interactions.router.Route
 import com.instructure.student.R
@@ -201,7 +201,7 @@ fun StudentTest.tokenLoginElementary(user: CanvasUserApiModel) {
 }
 
 fun StudentTest.routeTo(route: String) {
-    val url = "canvas-student://${CanvasRestAdapter.canvasDomain}/$route"
+    val url = "canvas-student://${CanvasNetworkAdapter.canvasDomain}/$route"
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     if (context !is Activity) {
