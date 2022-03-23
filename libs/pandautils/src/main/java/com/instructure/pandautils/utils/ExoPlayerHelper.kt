@@ -148,7 +148,7 @@ class ExoAgent private constructor(val uri: Uri) {
                 if (mIsAudioOnly) mInfoListener?.setAudioOnly()
             }
 
-            override fun onPlayerError(exception: ExoPlaybackException) {
+            override fun onPlayerError(exception: PlaybackException) {
                 reset()
                 mInfoListener?.onError(exception.cause)
             }
