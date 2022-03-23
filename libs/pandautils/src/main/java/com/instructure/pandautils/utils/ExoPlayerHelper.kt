@@ -30,10 +30,7 @@ import com.google.android.exoplayer2.source.hls.HlsDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray
-import com.google.android.exoplayer2.trackselection.TrackSelector
+import com.google.android.exoplayer2.trackselection.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -84,11 +81,10 @@ class ExoAgent private constructor(val uri: Uri) {
         }
 
     /** The media source that will feed data from the [uri] */
-    @Suppress("DEPRECATION")
     private val mMediaSource by lazy {
         when (Util.inferContentType(uri.lastPathSegment ?: "")) {
-            C.TYPE_SS -> SsMediaSource(uri, DATA_SOURCE_FACTORY, DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), Handler(), null)
-            C.TYPE_DASH -> DashMediaSource(uri, DATA_SOURCE_FACTORY, DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), Handler(), null)
+            C.TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(uri)
+            C.TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(uri)
             C.TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(DATA_SOURCE_FACTORY)).createMediaSource(uri)
             else -> ExtractorMediaSource(uri, DATA_SOURCE_FACTORY, DefaultExtractorsFactory(), Handler(), null)
         }
@@ -148,7 +144,7 @@ class ExoAgent private constructor(val uri: Uri) {
             override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {}
 
             override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
-                mIsAudioOnly = trackSelections.all.filter { it != null }.none { it.selectedFormat.sampleMimeType?.startsWith("video") == true }
+                mIsAudioOnly = trackSelections.all.none { (it as? ExoTrackSelection)?.selectedFormat?.sampleMimeType?.startsWith("video") == true }
                 if (mIsAudioOnly) mInfoListener?.setAudioOnly()
             }
 

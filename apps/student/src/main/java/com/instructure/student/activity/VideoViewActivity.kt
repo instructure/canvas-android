@@ -37,6 +37,7 @@ import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.ExoTrackSelection
 import com.google.android.exoplayer2.trackselection.TrackSelection
 import com.google.android.exoplayer2.upstream.*
 import com.google.android.exoplayer2.util.Util
@@ -48,7 +49,6 @@ import com.instructure.student.util.Const
 import kotlinx.android.synthetic.main.activity_video_view.player_view as playerView
 
 @ScreenView(SCREEN_VIEW_VIDEO_VIEW)
-@Suppress("DEPRECATION")
 class VideoViewActivity : AppCompatActivity() {
 
     private var player: SimpleExoPlayer? = null
@@ -62,12 +62,13 @@ class VideoViewActivity : AppCompatActivity() {
         playerView.requestFocus()
         mediaDataSourceFactory = buildDataSourceFactory(true)
         mainHandler = Handler()
-        val videoTrackSelectionFactory: TrackSelection.Factory = AdaptiveTrackSelection.Factory()
+        val videoTrackSelectionFactory: ExoTrackSelection.Factory = AdaptiveTrackSelection.Factory()
         trackSelector = DefaultTrackSelector(applicationContext, videoTrackSelectionFactory)
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, DefaultLoadControl())
         playerView.player = player
         player?.playWhenReady = true
-        player?.prepare(buildMediaSource(Uri.parse(intent?.extras?.getString(Const.URL))))
+        player?.setMediaSource(buildMediaSource(Uri.parse(intent?.extras?.getString(Const.URL))))
+        player?.prepare()
     }
 
     public override fun onStop() {
@@ -77,14 +78,8 @@ class VideoViewActivity : AppCompatActivity() {
 
     private fun buildMediaSource(uri: Uri): MediaSource {
         return when (val type = Util.inferContentType(uri.lastPathSegment ?: "")) {
-            C.TYPE_SS -> SsMediaSource(
-                uri, buildDataSourceFactory(false),
-                DefaultSsChunkSource.Factory(mediaDataSourceFactory), mainHandler, null
-            )
-            C.TYPE_DASH -> DashMediaSource(
-                uri, buildDataSourceFactory(false),
-                DefaultDashChunkSource.Factory(mediaDataSourceFactory), mainHandler, null
-            )
+            C.TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(uri)
+            C.TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(uri)
             C.TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(buildDataSourceFactory(false))).createMediaSource(uri)
             C.TYPE_OTHER -> ExtractorMediaSource(
                 uri, mediaDataSourceFactory,
