@@ -17,7 +17,6 @@
 package com.instructure.pandautils.utils
 
 import android.net.Uri
-import android.os.Handler
 import android.view.SurfaceView
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -30,8 +29,9 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.trackselection.*
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
@@ -61,7 +61,7 @@ interface ExoInfoListener {
 class ExoAgent private constructor(val uri: Uri) {
 
     /** Current ExoPlayer */
-    private var mPlayer: SimpleExoPlayer? = null
+    private var mPlayer: ExoPlayer? = null
 
     /** Client's state/info listener */
     private var mInfoListener: ExoInfoListener? = null
@@ -94,7 +94,7 @@ class ExoAgent private constructor(val uri: Uri) {
      * [ExoInfoListener] will be immediately called with the current state of this agent.
      * NOTE: This function MUST be called before [prepare] is called by the same client.
      */
-    fun attach(playerView: PlayerView, listener: ExoInfoListener) {
+    fun attach(playerView: StyledPlayerView, listener: ExoInfoListener) {
         mInfoListener = listener
         mInfoListener?.onStateChanged(currentState)
         if (mIsAudioOnly) mInfoListener?.setAudioOnly()
@@ -106,12 +106,12 @@ class ExoAgent private constructor(val uri: Uri) {
      * Prepares the media and begins playback once prepared.
      * NOTE: The client MUST call [attach] prior to calling this function.
      */
-    fun prepare(playerView: PlayerView) {
+    fun prepare(playerView: StyledPlayerView) {
         if (mPlayer == null) preparePlayer()
         mPlayer?.switchSurface(playerView)
     }
 
-    private fun SimpleExoPlayer.switchSurface(playerView: PlayerView) {
+    private fun ExoPlayer.switchSurface(playerView: StyledPlayerView) {
         // Detach from current surface
         clearVideoSurface()
 
@@ -131,7 +131,7 @@ class ExoAgent private constructor(val uri: Uri) {
 
         val trackSelectionFactory = AdaptiveTrackSelection.Factory()
         val trackSelector: TrackSelector = DefaultTrackSelector(ContextKeeper.appContext, trackSelectionFactory)
-        mPlayer = SimpleExoPlayer.Builder(ContextKeeper.appContext)
+        mPlayer = ExoPlayer.Builder(ContextKeeper.appContext)
             .setTrackSelector(trackSelector)
             .build()
 
@@ -212,7 +212,7 @@ class ExoAgent private constructor(val uri: Uri) {
 
         private const val READ_TIMEOUT = 8000
 
-        private val BANDWIDTH_METER by lazy { DefaultBandwidthMeter() }
+        private val BANDWIDTH_METER by lazy { DefaultBandwidthMeter.Builder(ContextKeeper.appContext).build() }
 
         private val DATA_SOURCE_FACTORY by lazy {
             val httpSourceFactory = DefaultHttpDataSource.Factory()
@@ -221,7 +221,8 @@ class ExoAgent private constructor(val uri: Uri) {
                 .setConnectTimeoutMs(CONNECT_TIMEOUT)
                 .setReadTimeoutMs(READ_TIMEOUT)
                 .setAllowCrossProtocolRedirects(true)
-            DefaultDataSourceFactory(ContextKeeper.appContext, BANDWIDTH_METER, httpSourceFactory)
+            DefaultDataSource.Factory(ContextKeeper.appContext, httpSourceFactory)
+                .setTransferListener(BANDWIDTH_METER)
         }
 
         private var agentInstances: HashMap<String, ExoAgent> = hashMapOf()

@@ -22,10 +22,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -50,7 +47,7 @@ import kotlinx.android.synthetic.main.activity_video_view.player_view as playerV
 @ScreenView(SCREEN_VIEW_VIDEO_VIEW)
 class VideoViewActivity : AppCompatActivity() {
 
-    private var player: SimpleExoPlayer? = null
+    private var player: ExoPlayer? = null
     private lateinit var trackSelector: DefaultTrackSelector
     private lateinit var mediaDataSourceFactory: DataSource.Factory
     private var mainHandler: Handler? = null
@@ -63,7 +60,7 @@ class VideoViewActivity : AppCompatActivity() {
         mainHandler = Handler()
         val videoTrackSelectionFactory: ExoTrackSelection.Factory = AdaptiveTrackSelection.Factory()
         trackSelector = DefaultTrackSelector(applicationContext, videoTrackSelectionFactory)
-        player = SimpleExoPlayer.Builder(this)
+        player = ExoPlayer.Builder(this)
             .setTrackSelector(trackSelector)
             .setLoadControl(DefaultLoadControl())
             .build()
@@ -92,20 +89,19 @@ class VideoViewActivity : AppCompatActivity() {
     /**
      * Returns a new DataSource factory.
      *
-     * @param useBandwidthMeter Whether to set [BANDWIDTH_METER] as a listener to the new DataSource factory.
+     * @param useBandwidthMeter Whether to set DefaultBandwidthMeter as a listener to the new DataSource factory.
      * @return A new DataSource factory.
      */
     private fun buildDataSourceFactory(useBandwidthMeter: Boolean): DataSource.Factory {
-        val meter = if (useBandwidthMeter) BANDWIDTH_METER else null
+        val meter = if (useBandwidthMeter) DefaultBandwidthMeter.Builder(this).build() else null
         val httpDataSourceFactory = DefaultHttpDataSource.Factory()
             .setUserAgent("candroid")
             .setTransferListener(meter)
-        return DefaultDataSourceFactory(this, meter, httpDataSourceFactory)
+        return DefaultDataSource.Factory(this, httpDataSourceFactory)
+            .setTransferListener(meter)
     }
 
     companion object {
-        private val BANDWIDTH_METER = DefaultBandwidthMeter()
-
         fun createIntent(context: Context?, url: String?): Intent {
             val bundle = Bundle()
             bundle.putString(Const.URL, url)
