@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.ui.pages
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
@@ -45,6 +46,11 @@ class SpeedGraderPage : BasePage() {
     private val submissionDropDown by WaitForViewWithId(R.id.submissionVersionsButton)
     private val submissionVersionDialogTitle by WaitForViewWithText(R.string.submission_versions)
     private val commentLibraryContainer by OnViewWithId(R.id.commentLibraryFragmentContainer)
+
+    companion object {
+        const val ACTION_TAG = "SpeedGraderPage #ACTION# "
+        const val ASSERTION_TAG = "SpeedGraderPage #ASSERT# "
+    }
 
     fun assertHasSubmissionDropDown() {
         submissionDropDown.assertDisplayed()
@@ -137,6 +143,7 @@ class SpeedGraderPage : BasePage() {
     }
 
     fun assertCommentLibraryNotVisible() {
+        Log.d(ASSERTION_TAG, "Assert that comment library is not visible.")
         commentLibraryContainer.check(ViewAssertions.matches(ViewMatchers.hasChildCount(0)))
     }
 }

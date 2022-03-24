@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CommentLibraryApi
@@ -45,6 +46,12 @@ class CommentLibraryE2ETest : TeacherTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    companion object {
+        const val STEP_TAG = "CommentLibraryE2ETest #STEP# "
+        const val PREPARATION_TAG = "CommentLibraryE2ETest #PREPARATION# "
+    }
+
+
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.E2E)
@@ -55,10 +62,10 @@ class CommentLibraryE2ETest : TeacherTest() {
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        //Preparing assignment and submit that with the student. Enable comment library in user settings.
+        Log.d(PREPARATION_TAG,"Preparing assignment and submit that with the student. Enable comment library in user settings.")
         val testAssignment = prepareData(course.id, student.token, teacher.token, teacher.id)
 
-        //Generate comments for comment library.
+        Log.d(PREPARATION_TAG,"Generate comments for comment library.")
         val testComment = "Test Comment"
         val testComment2 = "This is another test comment."
         CommentLibraryApi.createComment(course.id, teacher.token, testComment)
@@ -66,7 +73,7 @@ class CommentLibraryE2ETest : TeacherTest() {
 
         tokenLogin(teacher)
 
-        //Open the test course, and then open the test assignment. After that, grade the submission, and navigate to comments tab, and focus on comment input text field.
+        Log.d(STEP_TAG,"Navigate to submission's comments tab.")
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(testAssignment)
@@ -74,43 +81,43 @@ class CommentLibraryE2ETest : TeacherTest() {
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectCommentsTab()
 
-        //Type 'another' word and check if there is only one matching suggestion visible.
-        speedGraderCommentsPage.typeComment("another")
+        val testText = "another"
+        Log.d(STEP_TAG,"Type $testText word and check if there is only one matching suggestion visible.")
+        speedGraderCommentsPage.typeComment(testText)
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
-        //Close the comment library and assert if it's closed.
         commentLibraryPage.closeCommentLibrary()
         speedGraderPage.assertCommentLibraryNotVisible()
 
-        //Clear comment input field, and check that after clearing, all the suggestions are displayed.
+        Log.d(STEP_TAG, "Clear comment input field and verify if all the suggestions is displayed again.")
         speedGraderCommentsPage.clearComment()
         commentLibraryPage.assertSuggestionsCount(2)
 
-        //Type the word 'test' into the comments input field, and check that the corresponding suggestion are displayed.
+        val testText2 = "test"
+        Log.d(STEP_TAG,"Type $testText2 word and check if there are two matching suggestion visible.")
         commentLibraryPage.closeCommentLibrary()
-        speedGraderCommentsPage.typeComment("test")
+        speedGraderCommentsPage.typeComment(testText2)
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(2)
-
         commentLibraryPage.assertSuggestionVisible(testComment)
         commentLibraryPage.assertSuggestionVisible(testComment2)
 
-        //Select one of the suggestions and assert if that it is filled into the input text field and the comment library is closed.
+        Log.d(STEP_TAG, "Select a suggestion and check if it's filled into the comment text field and the comment library is closed.")
         commentLibraryPage.selectSuggestion(testComment2)
         speedGraderCommentsPage.assertCommentFieldHasText(testComment2)
         speedGraderPage.assertCommentLibraryNotVisible()
 
-        //Send the previously selected comment and check if it's successfully sent.
+        Log.d(STEP_TAG,"Send the previously selected comment and check if it's successfully sent.")
         speedGraderCommentsPage.sendComment()
         speedGraderCommentsPage.assertDisplaysCommentText(testComment2)
 
-        //Clear the comment again, and check if all the suggestion are displayed, then close the comment library.
+        Log.d(STEP_TAG, "Clear the comment, check if all suggestions are displayed and the comment library is closed.")
         speedGraderCommentsPage.clearComment()
         commentLibraryPage.assertSuggestionsCount(2)
         commentLibraryPage.closeCommentLibrary()
 
-        //Type some words which does not match with any of the suggestions in the comment library. Check that suggestions are not visible and empty view is visible.
+        Log.d(STEP_TAG,"Type some words which does not match with any of the suggestions in the comment library. Check that suggestions are not visible and empty view is visible.")
         speedGraderCommentsPage.typeComment("empty filter")
         commentLibraryPage.assertSuggestionListNotVisible()
         commentLibraryPage.assertEmptyViewVisible()
