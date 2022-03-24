@@ -24,6 +24,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.MediaSource
@@ -78,11 +79,12 @@ class VideoViewActivity : AppCompatActivity() {
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
+        val mediaItem = MediaItem.fromUri(uri)
         return when (val type = Util.inferContentType(uri.lastPathSegment ?: "")) {
-            C.TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(uri)
-            C.TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(uri)
-            C.TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(buildDataSourceFactory(false))).createMediaSource(uri)
-            C.TYPE_OTHER -> ProgressiveMediaSource.Factory(mediaDataSourceFactory, DefaultExtractorsFactory()).createMediaSource(uri)
+            C.TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(mediaItem)
+            C.TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(mediaItem)
+            C.TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(buildDataSourceFactory(false))).createMediaSource(mediaItem)
+            C.TYPE_OTHER -> ProgressiveMediaSource.Factory(mediaDataSourceFactory, DefaultExtractorsFactory()).createMediaSource(mediaItem)
             else -> throw IllegalStateException("Unsupported type: $type")
         }
     }
