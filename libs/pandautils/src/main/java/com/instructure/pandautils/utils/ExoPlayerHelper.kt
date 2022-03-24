@@ -33,7 +33,7 @@ import com.google.android.exoplayer2.trackselection.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -134,7 +134,7 @@ class ExoAgent private constructor(val uri: Uri) {
             .setTrackSelector(trackSelector)
             .build()
 
-        mPlayer?.addListener(object : Player.EventListener {
+        mPlayer?.addListener(object : Player.Listener {
             override fun onLoadingChanged(isLoading: Boolean) {}
             override fun onSeekProcessed() {}
             override fun onPositionDiscontinuity(reason: Int) {}
@@ -170,7 +170,8 @@ class ExoAgent private constructor(val uri: Uri) {
         })
 
         mPlayer?.playWhenReady = true
-        mPlayer?.prepare(mMediaSource)
+        mPlayer?.setMediaSource(mMediaSource)
+        mPlayer?.prepare()
     }
 
     /** Resets the internal player but keeps this agent alive for reuse. */
@@ -213,7 +214,12 @@ class ExoAgent private constructor(val uri: Uri) {
         private val BANDWIDTH_METER by lazy { DefaultBandwidthMeter() }
 
         private val DATA_SOURCE_FACTORY by lazy {
-            val httpSourceFactory = DefaultHttpDataSourceFactory(ApiPrefs.userAgent, BANDWIDTH_METER, CONNECT_TIMEOUT, READ_TIMEOUT, true)
+            val httpSourceFactory = DefaultHttpDataSource.Factory()
+                .setUserAgent(ApiPrefs.userAgent)
+                .setTransferListener(BANDWIDTH_METER)
+                .setConnectTimeoutMs(CONNECT_TIMEOUT)
+                .setReadTimeoutMs(READ_TIMEOUT)
+                .setAllowCrossProtocolRedirects(true)
             DefaultDataSourceFactory(ContextKeeper.appContext, BANDWIDTH_METER, httpSourceFactory)
         }
 

@@ -37,10 +37,7 @@ import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.ExoTrackSelection
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.*
 import com.google.android.exoplayer2.util.Util
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIDEO_VIEW
 import com.instructure.pandautils.analytics.ScreenView
@@ -98,7 +95,10 @@ class VideoViewActivity : AppCompatActivity() {
      */
     private fun buildDataSourceFactory(useBandwidthMeter: Boolean): DataSource.Factory {
         val meter = if (useBandwidthMeter) BANDWIDTH_METER else null
-        return DefaultDataSourceFactory(this, meter, DefaultHttpDataSourceFactory("candroid", meter))
+        val httpDataSourceFactory = DefaultHttpDataSource.Factory()
+            .setUserAgent("candroid")
+            .setTransferListener(meter)
+        return DefaultDataSourceFactory(this, meter, httpDataSourceFactory)
     }
 
     companion object {
