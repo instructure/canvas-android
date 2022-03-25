@@ -24,6 +24,6 @@ import com.instructure.student.R
 class MediaSubmissionViewRenderPage : BasePage(R.id.mediaSubmissionView) {
     val mediaProgressBar by OnViewWithId(R.id.mediaProgressBar)
     val prepareMediaButton by OnViewWithId(R.id.prepareMediaButton)
-    val mediaPlaybackErrorView by OnViewWithId(R.id.mediaPlaybackErrorView)
+    val mediaPlaybackErrorView by WaitForViewWithId(R.id.mediaPlaybackErrorView)
     val submissionMediaPlayerView by OnViewWithId(R.id.submissionMediaPlayerView)
 }
