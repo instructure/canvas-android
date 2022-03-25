@@ -29,7 +29,7 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.trackselection.*
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -94,7 +94,7 @@ class ExoAgent private constructor(val uri: Uri) {
      * [ExoInfoListener] will be immediately called with the current state of this agent.
      * NOTE: This function MUST be called before [prepare] is called by the same client.
      */
-    fun attach(playerView: StyledPlayerView, listener: ExoInfoListener) {
+    fun attach(playerView: PlayerView, listener: ExoInfoListener) {
         mInfoListener = listener
         mInfoListener?.onStateChanged(currentState)
         if (mIsAudioOnly) mInfoListener?.setAudioOnly()
@@ -106,12 +106,12 @@ class ExoAgent private constructor(val uri: Uri) {
      * Prepares the media and begins playback once prepared.
      * NOTE: The client MUST call [attach] prior to calling this function.
      */
-    fun prepare(playerView: StyledPlayerView) {
+    fun prepare(playerView: PlayerView) {
         if (mPlayer == null) preparePlayer()
         mPlayer?.switchSurface(playerView)
     }
 
-    private fun ExoPlayer.switchSurface(playerView: StyledPlayerView) {
+    private fun ExoPlayer.switchSurface(playerView: PlayerView) {
         // Detach from current surface
         clearVideoSurface()
 

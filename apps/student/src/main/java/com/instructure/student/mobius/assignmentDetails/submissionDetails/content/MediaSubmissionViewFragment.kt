@@ -33,7 +33,7 @@ import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.student_exo_playback_control_view.*
+import kotlinx.android.synthetic.main.exo_player_control_view.view.*
 import kotlinx.android.synthetic.main.fragment_media_submission_view.*
 
 class MediaSubmissionViewFragment : Fragment() {
@@ -66,7 +66,7 @@ class MediaSubmissionViewFragment : Fragment() {
         ViewStyler.themeButton(openExternallyButton)
         openExternallyButton.onClick { uri.viewExternally(requireContext(), contentType) }
 
-        fullscreenButton.onClick {
+        submissionMediaPlayerView.fullscreenButton.onClick {
             exoAgent.flagForResume()
             val bundle = BaseViewMediaActivity.makeBundle(uri.toString(), thumbnailUrl, contentType, displayName, false)
             RouteMatcher.route(requireContext(), Route(bundle, RouteContext.MEDIA))
