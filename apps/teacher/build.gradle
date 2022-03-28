@@ -212,14 +212,6 @@ dependencies {
     implementation Libs.MOBIUS_ANDROID
     implementation Libs.MOBIUS_EXTRAS
 
-    implementation (Libs.FIREBASE_ANALYTICS) {
-        transitive = true
-    }
-
-    implementation (Libs.FIREBASE_CRASHLYTICS) {
-        transitive = true
-    }
-
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
@@ -262,7 +254,17 @@ dependencies {
     implementation Libs.ANDROIDX_VECTOR
     implementation Libs.PLAY_CORE
     implementation Libs.PLAY_CORE_KTX
+
+    /* Firebase */
+    implementation platform(Libs.FIREBASE_BOM)
     implementation Libs.FIREBASE_MESSAGING
+    implementation (Libs.FIREBASE_ANALYTICS) {
+        transitive = true
+    }
+    implementation (Libs.FIREBASE_CRASHLYTICS) {
+        transitive = true
+    }
+
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
     /* AAC */

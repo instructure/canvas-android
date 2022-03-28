@@ -270,10 +270,13 @@ dependencies {
     testImplementation Libs.THREETEN_BP
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
+    /* Firebase */
+    implementation platform(Libs.FIREBASE_BOM)
+    implementation Libs.FIREBASE_MESSAGING
+    implementation Libs.FIREBASE_CRASHLYTICS_NDK
     implementation (Libs.FIREBASE_ANALYTICS) {
         transitive = true
     }
-
     implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
@@ -306,7 +309,6 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.PLAY_SERVICES_ANALYTICS
-    implementation Libs.FIREBASE_MESSAGING
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_CORE
 
@@ -330,8 +332,6 @@ dependencies {
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
 
     androidTestImplementation Libs.UI_AUTOMATOR
-
-    implementation Libs.FIREBASE_CRASHLYTICS_NDK
 }
 
 // Comment out this line if the reporting logic starts going wonky.
