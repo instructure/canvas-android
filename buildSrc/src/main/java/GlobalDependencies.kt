@@ -23,9 +23,9 @@ object Versions {
     const val KOTLIN_COROUTINES = "1.5.2"
 
     /* Google, Play Services */
-    const val GOOGLE_SERVICES = "4.3.3"
+    const val GOOGLE_SERVICES = "4.3.10"
     const val FIREBASE_CONFIG = "18.0.0"
-    const val PLAY_CORE = "1.10.0"
+    const val PLAY_CORE = "1.10.3"
     const val PLAY_CORE_KTX = "1.8.1"
 
     /* Others */
@@ -86,9 +86,7 @@ object Libs {
     const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk"
 
     /* Play Services */
-    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:17.0.0"
-    const val PLAY_SERVICES_WEARABLE = "com.google.android.gms:play-services-wearable:16.0.1"
-    const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:16.0.1"
+    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:18.0.1"
     const val PLAY_CORE = "com.google.android.play:core:${Versions.PLAY_CORE}"
     const val PLAY_CORE_KTX = "com.google.android.play:core-ktx:${Versions.PLAY_CORE_KTX}"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
