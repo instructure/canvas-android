@@ -143,7 +143,7 @@ configure(coveredProject) { project ->
                 "src/$params.variantName/java", "src/$params.variantName/kotlin"
         ])
 
-        params.executionData.setFrom fileTree(dir: ".", includes: ['results/**/*.ec', "**/test${params.variantCapName}UnitTest.exec"])
+        params.executionData = fileTree(dir: ".", includes: ['results/**/*.ec', "**/test${params.variantCapName}UnitTest.exec"])
 
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
