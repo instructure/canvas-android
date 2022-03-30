@@ -102,7 +102,75 @@ configure(coveredProject) { project ->
         sourceDirectories.setFrom params.sourceDirectories
         executionData.setFrom params.executionData
         
+    }
+
+    task jacocoCombinedReport(type: JacocoReport) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports for FTL + unit tests."
+
+        def variant = null
+        def dependentTestTask = null
+        if (project.name == 'pandautils') {
+            variant = 'debug'
+            dependentTestTask = 'testDebugUnitTest'
+        } else {
+            variant = 'qaDebug'
+            dependentTestTask = 'testQaDebugUnitTest'
         }
+
+        def params = [:]
+        params.variantName = variant
+        params.variantCapName = variant.capitalize()
+
+        params.fileFilter = [
+                          '**/com/instructure/**/*.*',
+        ]
+        params.exclusions = ['**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/*$ViewBinder*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*',
+                           '**/generated/**',
+                           '**/*Reveiver*.*',
+                           '**/model*/**',
+                           '**/di/**',
+                           '**/service*/**']
+
+        params.classDirectories = files([fileTree(
+                dir: "$buildDir/intermediates/javac/$params.variantName",
+                includes: params.fileFilter,
+                excludes: params.exclusions
+        ) + fileTree(
+                dir: "$buildDir/tmp/kotlin-classes/$params.variantName",
+                includes: params.fileFilter,
+                excludes: params.exclusions
+        )])
+
+        // project.buildDir is /canvas-android/apps/teacher/build
+        params.sourceDirectories = files([
+                "src/main/java", "src/main/kotlin",
+                "src/$params.variantName/java", "src/$params.variantName/kotlin"
+        ])
+
+        if (project.name == 'pandautils') {
+            params.executionData.setFrom fileTree(dir: ".", includes: ["**/test${params.variantCapName}UnitTest.exec"])
+        } else {
+            params.executionData.setFrom fileTree(dir: ".", includes: ['results/**/*.ec', "**/test${params.variantCapName}UnitTest.exec"])
+        }
+       
+
+        reports {
+            // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
+            html.enabled true
+            csv.enabled  false
+            xml.enabled  false
+        }
+
+        classDirectories.setFrom params.classDirectories
+        sourceDirectories.setFrom params.sourceDirectories
+        executionData.setFrom params.executionData
+    }
 }
 
 /**
@@ -146,3 +214,40 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
     }
 }
 
+task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
+    group = 'Reporting'
+    description = 'Generates an aggregate report from all subprojects'
+
+    tasks.withType(Test) {
+        ignoreFailures true
+    }
+
+    def projects = coveredProject
+
+    //noinspection GrUnresolvedAccess
+    dependsOn(projects.jacocoCombinedReport)
+
+    final source = files(projects.jacocoCombinedReport.sourceDirectories)
+
+    additionalSourceDirs.setFrom source
+    sourceDirectories.setFrom source
+
+    classDirectories.setFrom files(projects.jacocoCombinedReport.classDirectories)
+    executionData.setFrom files(projects.jacocoCombinedReport.executionData)
+
+    reports {
+        html {
+            enabled true
+            destination file('build/reports/jacoco/html')
+        }
+        csv {
+            enabled true
+            destination file('build/reports/jacoco/jacocoFullCombinedReport.csv')
+        }
+    }
+
+    doFirst {
+        //noinspection GroovyAssignabilityCheck
+        executionData.setFrom files(executionData.findAll { it.exists() })
+    }
+}
