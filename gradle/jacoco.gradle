@@ -115,17 +115,24 @@ configure(coveredProject) { project ->
         params.fileFilter = [
                           '**/com/instructure/**/*.*',
         ]
-        params.exclusions = ['**/R.class',
-                           '**/R$*.class',
-                           '**/*$ViewInjector*.*',
-                           '**/*$ViewBinder*.*',
-                           '**/BuildConfig.*',
-                           '**/Manifest*.*',
-                           '**/generated/**',
-                           '**/*Reveiver*.*',
-                           '**/model*/**',
-                           '**/di/**',
-                           '**/service*/**']
+        params.exclusions = [
+            '**/R.class',
+            '**/BR.class', 
+            '**/R$*.class', 
+            '**/BuildConfig.*',
+            '**/DataBinderMapperImpl*.*',
+            '**/build/generated/**/*.*',
+            '**/Hilt_*.*',
+            '**/*GeneratedInjector*.*',
+            '**/*MembersInjector*.*',
+            '**/*_HiltComponents*.*',
+            '**/*_ComponentTreeDeps*.*',
+            '**/*_Provide*/**',
+            '**/*_Factory*/**',
+            '**/DataBinding*.*',
+            '**/di/**',
+            '**/databinding/**',
+        ]
 
         params.classDirectories = files([fileTree(
                 dir: "$buildDir/intermediates/javac/$params.variantName",
