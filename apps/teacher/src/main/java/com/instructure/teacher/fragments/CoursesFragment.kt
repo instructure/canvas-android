@@ -38,6 +38,7 @@ import com.instructure.teacher.factory.CoursesPresenterFactory
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.CoursesPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.CoursesView
 import kotlinx.android.synthetic.main.fragment_courses.*
@@ -86,7 +87,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     override fun onCreateView(view: View) {
-        val spanSize = requireContext().resources.getInteger(R.integer.course_list_span_count)
+        val spanSize = if (TeacherPrefs.listDashboard) 1 else requireContext().resources.getInteger(R.integer.course_list_span_count)
         mGridLayoutManager = GridLayoutManager(requireContext(), spanSize)
         mDecorator = VerticalGridSpacingDecoration(requireContext(), mGridLayoutManager, true, headerSpacingResId = R.dimen.course_header_spacing)
     }
@@ -140,6 +141,11 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
 
     private fun setupToolbar() {
         toolbar.setupMenu(R.menu.courses_fragment, menuItemCallback)
+
+        val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
+        val menuIconRes = if (TeacherPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
+        dashboardLayoutMenuItem.setIcon(menuIconRes)
+
         (activity as? InitActivity)?.attachNavigationDrawer(toolbar)
         toolbar.requestAccessibilityFocus()
     }
@@ -147,6 +153,19 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.menu_edit_favorite_courses -> editFavorites()
+            R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+        }
+    }
+
+    private fun changeDashboardLayout(item: MenuItem) {
+        if (TeacherPrefs.listDashboard) {
+            item.setIcon(R.drawable.ic_list_dashboard)
+            TeacherPrefs.listDashboard = false
+            mGridLayoutManager.spanCount = requireContext().resources.getInteger(R.integer.course_list_span_count)
+        } else {
+            item.setIcon(R.drawable.ic_grid_dashboard)
+            TeacherPrefs.listDashboard = true
+            mGridLayoutManager.spanCount = 1
         }
     }
 
