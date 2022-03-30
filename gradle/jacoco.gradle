@@ -144,7 +144,6 @@ configure(coveredProject) { project ->
                 excludes: params.exclusions
         )])
 
-        // project.buildDir is /canvas-android/apps/teacher/build
         params.sourceDirectories = files([
                 "src/main/java", "src/main/kotlin",
                 "src/$params.variantName/java", "src/$params.variantName/kotlin"
@@ -153,7 +152,6 @@ configure(coveredProject) { project ->
         params.executionData = fileTree(dir: ".", includes: ['results/**/*.ec', "**/test${params.variantCapName}UnitTest.exec"])
 
         reports {
-            // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
             html.enabled true
             csv.enabled  false
             xml.enabled  false
@@ -165,9 +163,6 @@ configure(coveredProject) { project ->
     }
 }
 
-/**
- *  Root task that generates an aggregated Jacoco test coverage report for all sub-projects
- */
 task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
     group = 'Reporting'
     description = 'Generates an aggregate report from all subprojects'
@@ -178,7 +173,6 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
 
     def projects = coveredProject
 
-    //noinspection GrUnresolvedAccess
     dependsOn(projects.jacocoReport)
 
     final source = files(projects.jacocoReport.sourceDirectories)
@@ -201,7 +195,6 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
     }
 
     doFirst {
-        //noinspection GroovyAssignabilityCheck
         executionData.setFrom files(executionData.findAll { it.exists() })
     }
 }
@@ -216,7 +209,6 @@ task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
 
     def projects = coveredProject
 
-    //noinspection GrUnresolvedAccess
     dependsOn(projects.jacocoCombinedReport)
 
     final source = files(projects.jacocoCombinedReport.sourceDirectories)
@@ -239,7 +231,6 @@ task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
     }
 
     doFirst {
-        //noinspection GroovyAssignabilityCheck
         executionData.setFrom files(executionData.findAll { it.exists() })
     }
 }
