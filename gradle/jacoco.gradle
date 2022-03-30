@@ -108,16 +108,6 @@ configure(coveredProject) { project ->
         group = "Reporting"
         description = "Generate Jacoco coverage reports for FTL + unit tests."
 
-        def variant = null
-        def dependentTestTask = null
-        if (project.name == 'pandautils') {
-            variant = 'debug'
-            dependentTestTask = 'testDebugUnitTest'
-        } else {
-            variant = 'qaDebug'
-            dependentTestTask = 'testQaDebugUnitTest'
-        }
-
         def params = [:]
         params.variantName = variant
         params.variantCapName = variant.capitalize()
