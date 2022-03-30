@@ -161,13 +161,19 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         if (TeacherPrefs.listDashboard) {
             item.setIcon(R.drawable.ic_list_dashboard)
             TeacherPrefs.listDashboard = false
-            mGridLayoutManager.spanCount = requireContext().resources.getInteger(R.integer.course_list_span_count)
         } else {
             item.setIcon(R.drawable.ic_grid_dashboard)
             TeacherPrefs.listDashboard = true
-            mGridLayoutManager.spanCount = 1
         }
-        view?.post { adapter.notifyDataSetChanged() }
+
+        recyclerView.fadeAnimationWithAction {
+            if (TeacherPrefs.listDashboard) {
+                mGridLayoutManager.spanCount = 1
+            } else {
+                mGridLayoutManager.spanCount = requireContext().resources.getInteger(R.integer.course_list_span_count)
+            }
+            view?.post { adapter.notifyDataSetChanged() }
+        }
     }
 
     override fun createAdapter(): CoursesAdapter {
