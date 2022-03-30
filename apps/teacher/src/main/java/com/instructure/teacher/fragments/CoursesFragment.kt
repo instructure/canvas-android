@@ -89,7 +89,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     override fun onCreateView(view: View) {
         val spanSize = if (TeacherPrefs.listDashboard) 1 else requireContext().resources.getInteger(R.integer.course_list_span_count)
         mGridLayoutManager = GridLayoutManager(requireContext(), spanSize)
-        mDecorator = VerticalGridSpacingDecoration(requireContext(), mGridLayoutManager, true, headerSpacingResId = R.dimen.course_header_spacing)
+        mDecorator = VerticalGridSpacingDecoration(requireContext(), mGridLayoutManager)
     }
 
     override fun onPresenterPrepared(presenter: CoursesPresenter) {}
@@ -167,6 +167,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
             TeacherPrefs.listDashboard = true
             mGridLayoutManager.spanCount = 1
         }
+        view?.post { adapter.notifyDataSetChanged() }
     }
 
     override fun createAdapter(): CoursesAdapter {
