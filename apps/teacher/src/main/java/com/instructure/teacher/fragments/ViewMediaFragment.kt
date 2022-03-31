@@ -36,7 +36,7 @@ import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.view.MediaContent
-import kotlinx.android.synthetic.main.exo_playback_control_view.*
+import kotlinx.android.synthetic.main.exo_player_control_view.view.*
 import kotlinx.android.synthetic.main.fragment_speed_grader_media.*
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
@@ -54,7 +54,7 @@ class ViewMediaFragment : Fragment(), ShareableFile {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        toolbar.setGone()
+        speedGraderMediaPlayerView.toolbar.setGone()
     }
 
     override fun onStart() {
@@ -75,7 +75,7 @@ class ViewMediaFragment : Fragment(), ShareableFile {
         ViewStyler.themeButton(openExternallyButton)
         openExternallyButton.onClick { mUri.viewExternally(requireContext(), mContentType) }
 
-        fullscreenButton.onClick {
+        speedGraderMediaPlayerView.fullscreenButton.onClick {
             mExoAgent.flagForResume()
             val bundle = BaseViewMediaActivity.makeBundle(mUri.toString(), mThumbnailUrl, mContentType, mDisplayName, false)
             RouteMatcher.route(requireContext(), Route(bundle, RouteContext.MEDIA))

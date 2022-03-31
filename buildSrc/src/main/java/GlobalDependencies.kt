@@ -123,7 +123,7 @@ object Libs {
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
-    const val EXOPLAYER = "com.github.google.ExoPlayer:exoplayer:r2.9.6"
+    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:2.17.1"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
     const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"
