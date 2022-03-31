@@ -39,18 +39,15 @@ import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+private const val STEP_TAG = "CommentLibraryE2ETest #STEP# "
+private const val PREPARATION_TAG = "CommentLibraryE2ETest #PREPARATION# "
+
 @HiltAndroidTest
 class CommentLibraryE2ETest : TeacherTest() {
 
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    companion object {
-        const val STEP_TAG = "CommentLibraryE2ETest #STEP# "
-        const val PREPARATION_TAG = "CommentLibraryE2ETest #PREPARATION# "
-    }
-
 
     @E2E
     @Test

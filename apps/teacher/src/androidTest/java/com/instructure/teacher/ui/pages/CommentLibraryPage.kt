@@ -16,12 +16,16 @@
  */
 package com.instructure.teacher.ui.pages
 
-import android.util.Log
-import com.instructure.espresso.*
-import com.instructure.teacher.R
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithContentDescription
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.teacher.R
 
 class CommentLibraryPage : BasePage(R.id.commentLibraryRoot) {
 
@@ -29,18 +33,11 @@ class CommentLibraryPage : BasePage(R.id.commentLibraryRoot) {
     private val recyclerView by OnViewWithId(R.id.commentLibraryRecyclerView)
     private val emptyView by OnViewWithId(R.id.commentLibraryEmtpyView, autoAssert = false)
 
-    companion object {
-        const val ACTION_TAG = "CommentLibraryPage #ACTION# "
-        const val ASSERTION_TAG = "CommentLibraryPage #ASSERT# "
-    }
-
     fun assertSuggestionVisible(suggestion: String) {
-        Log.d(ASSERTION_TAG, "Assert that '$suggestion' is visible.")
         onViewWithText(suggestion).assertDisplayed()
     }
 
     fun assertSuggestionsCount(expectedCount: Int) {
-        Log.d(ASSERTION_TAG, "Assert that the number of suggestions (comments) is: $expectedCount")
         recyclerView.check(RecyclerViewItemCountAssertion(expectedCount))
     }
 
@@ -49,22 +46,18 @@ class CommentLibraryPage : BasePage(R.id.commentLibraryRoot) {
     }
 
     fun assertSuggestionListNotVisible() {
-        Log.d(ASSERTION_TAG,"Assert that suggestion list is not visible.")
         recyclerView.assertNotDisplayed()
     }
 
     fun assertEmptyViewVisible() {
-        Log.d(ASSERTION_TAG, "Assert that empty view is visible.")
         emptyView.assertDisplayed()
     }
 
     fun selectSuggestion(suggestion: String) {
-        Log.d(ACTION_TAG, "Select suggestion: $suggestion")
         onViewWithText(suggestion).click()
     }
 
     fun closeCommentLibrary() {
-        Log.d(ACTION_TAG, "Close comment library.")
         onViewWithContentDescription(R.string.close).click()
     }
 
