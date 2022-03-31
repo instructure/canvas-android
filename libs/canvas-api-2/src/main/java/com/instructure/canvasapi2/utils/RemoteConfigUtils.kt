@@ -48,7 +48,7 @@ object RemoteConfigUtils {
         val configSettings = FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(3600) // once an hour allowed; you may want to adjust when debugging
                 .build()
-        remoteConfig.setConfigSettings(configSettings)
+        remoteConfig.setConfigSettingsAsync(configSettings)
 
         initialized = true
 

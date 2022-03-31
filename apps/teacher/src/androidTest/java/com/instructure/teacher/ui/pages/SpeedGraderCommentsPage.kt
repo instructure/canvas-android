@@ -16,13 +16,11 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 
 class SpeedGraderCommentsPage : BasePage() {
@@ -35,7 +33,7 @@ class SpeedGraderCommentsPage : BasePage() {
     }
 
     fun assertDisplaysCommentText(comment: String) {
-        waitForView(Matchers.allOf(withId(R.id.commentTextView), withEffectiveVisibility(Visibility.VISIBLE)))
+        waitForView(allOf(withId(R.id.commentTextView), withEffectiveVisibility(Visibility.VISIBLE)))
                 .assertHasText(comment)
     }
 
@@ -57,18 +55,8 @@ class SpeedGraderCommentsPage : BasePage() {
         commentEditText.assertHasText(text)
     }
 
-    fun addComment(comment: String) {
-        commentEditText.typeText(comment)
-        Espresso.closeSoftKeyboard()
-        callOnClick(withId(R.id.sendCommentButton))
-    }
-
     fun typeComment(comment: String) {
         onView(withId(R.id.commentEditText) + withAncestor(R.id.commentInputContainer)).typeText(comment)
-    }
-
-    fun focusOnCommentEditTextField() {
-        commentEditText.click()
     }
 
     fun clearComment() {
@@ -87,4 +75,11 @@ class SpeedGraderCommentsPage : BasePage() {
     fun assertDisplaysEmptyState() {
         onViewWithText(R.string.no_submission_comments).assertDisplayed()
     }
+
+    fun addComment(comment: String) {
+        commentEditText.typeText(comment)
+        Espresso.closeSoftKeyboard()
+        callOnClick(withId(R.id.sendCommentButton))
+    }
+
 }
