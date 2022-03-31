@@ -35,7 +35,7 @@ class GradesE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GRADES, TestCategory.E2E,  false)
+    @TestMetaData(Priority.P0, FeatureCategory.GRADES, TestCategory.E2E)
     fun testGradesE2E() {
         // Seed basic student/teacher/course data
         val data = seedData(students = 1, teachers = 1, courses = 1)

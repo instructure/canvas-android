@@ -17,25 +17,23 @@
 package com.instructure.pandautils.utils
 
 import android.net.Uri
-import android.os.Handler
 import android.view.SurfaceView
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
+import com.google.android.exoplayer2.source.hls.DefaultHlsDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray
-import com.google.android.exoplayer2.trackselection.TrackSelector
+import com.google.android.exoplayer2.trackselection.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -63,7 +61,7 @@ interface ExoInfoListener {
 class ExoAgent private constructor(val uri: Uri) {
 
     /** Current ExoPlayer */
-    private var mPlayer: SimpleExoPlayer? = null
+    private var mPlayer: ExoPlayer? = null
 
     /** Client's state/info listener */
     private var mInfoListener: ExoInfoListener? = null
@@ -81,13 +79,13 @@ class ExoAgent private constructor(val uri: Uri) {
         }
 
     /** The media source that will feed data from the [uri] */
-    @Suppress("DEPRECATION")
     private val mMediaSource by lazy {
-        when (Util.inferContentType(uri.lastPathSegment)) {
-            C.TYPE_SS -> SsMediaSource(uri, DATA_SOURCE_FACTORY, DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), Handler(), null)
-            C.TYPE_DASH -> DashMediaSource(uri, DATA_SOURCE_FACTORY, DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), Handler(), null)
-            C.TYPE_HLS -> HlsMediaSource(uri, DATA_SOURCE_FACTORY, Handler(), null)
-            else -> ExtractorMediaSource(uri, DATA_SOURCE_FACTORY, DefaultExtractorsFactory(), Handler(), null)
+        val mediaItem = MediaItem.fromUri(uri)
+        when (Util.inferContentType(uri.lastPathSegment ?: "")) {
+            C.TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
+            C.TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
+            C.TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(DATA_SOURCE_FACTORY)).createMediaSource(mediaItem)
+            else -> ProgressiveMediaSource.Factory(DATA_SOURCE_FACTORY, DefaultExtractorsFactory()).createMediaSource(mediaItem)
         }
     }
 
@@ -113,7 +111,7 @@ class ExoAgent private constructor(val uri: Uri) {
         mPlayer?.switchSurface(playerView)
     }
 
-    private fun SimpleExoPlayer.switchSurface(playerView: PlayerView) {
+    private fun ExoPlayer.switchSurface(playerView: PlayerView) {
         // Detach from current surface
         clearVideoSurface()
 
@@ -132,11 +130,12 @@ class ExoAgent private constructor(val uri: Uri) {
         currentState = ExoAgentState.PREPARING
 
         val trackSelectionFactory = AdaptiveTrackSelection.Factory()
-        val trackSelector: TrackSelector = DefaultTrackSelector(trackSelectionFactory)
-        mPlayer = ExoPlayerFactory.newSimpleInstance(ContextKeeper.appContext, trackSelector)
+        val trackSelector: TrackSelector = DefaultTrackSelector(ContextKeeper.appContext, trackSelectionFactory)
+        mPlayer = ExoPlayer.Builder(ContextKeeper.appContext)
+            .setTrackSelector(trackSelector)
+            .build()
 
-        mPlayer?.addListener(object : Player.EventListener {
-            override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {}
+        mPlayer?.addListener(object : Player.Listener {
             override fun onLoadingChanged(isLoading: Boolean) {}
             override fun onSeekProcessed() {}
             override fun onPositionDiscontinuity(reason: Int) {}
@@ -146,11 +145,11 @@ class ExoAgent private constructor(val uri: Uri) {
             override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {}
 
             override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
-                mIsAudioOnly = trackSelections.all.filter { it != null }.none { it.selectedFormat.sampleMimeType?.startsWith("video") == true }
+                mIsAudioOnly = trackSelections.all.none { (it as? ExoTrackSelection)?.selectedFormat?.sampleMimeType?.startsWith("video") == true }
                 if (mIsAudioOnly) mInfoListener?.setAudioOnly()
             }
 
-            override fun onPlayerError(exception: ExoPlaybackException) {
+            override fun onPlayerError(exception: PlaybackException) {
                 reset()
                 mInfoListener?.onError(exception.cause)
             }
@@ -172,7 +171,8 @@ class ExoAgent private constructor(val uri: Uri) {
         })
 
         mPlayer?.playWhenReady = true
-        mPlayer?.prepare(mMediaSource)
+        mPlayer?.setMediaSource(mMediaSource)
+        mPlayer?.prepare()
     }
 
     /** Resets the internal player but keeps this agent alive for reuse. */
@@ -212,11 +212,17 @@ class ExoAgent private constructor(val uri: Uri) {
 
         private const val READ_TIMEOUT = 8000
 
-        private val BANDWIDTH_METER by lazy { DefaultBandwidthMeter() }
+        private val BANDWIDTH_METER by lazy { DefaultBandwidthMeter.Builder(ContextKeeper.appContext).build() }
 
         private val DATA_SOURCE_FACTORY by lazy {
-            val httpSourceFactory = DefaultHttpDataSourceFactory(ApiPrefs.userAgent, BANDWIDTH_METER, CONNECT_TIMEOUT, READ_TIMEOUT, true)
-            DefaultDataSourceFactory(ContextKeeper.appContext, BANDWIDTH_METER, httpSourceFactory)
+            val httpSourceFactory = DefaultHttpDataSource.Factory()
+                .setUserAgent(ApiPrefs.userAgent)
+                .setTransferListener(BANDWIDTH_METER)
+                .setConnectTimeoutMs(CONNECT_TIMEOUT)
+                .setReadTimeoutMs(READ_TIMEOUT)
+                .setAllowCrossProtocolRedirects(true)
+            DefaultDataSource.Factory(ContextKeeper.appContext, httpSourceFactory)
+                .setTransferListener(BANDWIDTH_METER)
         }
 
         private var agentInstances: HashMap<String, ExoAgent> = hashMapOf()
