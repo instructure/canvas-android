@@ -296,7 +296,7 @@ if (coverageEnabled) {
                            '**/BuildConfig.*',
                            '**/Manifest*.*',
                            '**/generated/**',
-                           '**/*Reveiver*.*',
+                           '**/*Receiver*.*',
                            '**/model*/**',
                            '**/di/**',
                            '**/service*/**']
