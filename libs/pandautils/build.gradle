@@ -127,10 +127,11 @@ dependencies {
         exclude group: "androidx.exifinterface"
     }
 
+    implementation platform(Libs.FIREBASE_BOM)
+    implementation Libs.FIREBASE_MESSAGING
     implementation (Libs.FIREBASE_ANALYTICS) {
         transitive = true
     }
-
     implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
@@ -141,7 +142,6 @@ dependencies {
     implementation Libs.ANDROIDX_CARDVIEW
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_EXIF
-    implementation Libs.FIREBASE_MESSAGING
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
     implementation Libs.PLAY_CORE_KTX
