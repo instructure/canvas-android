@@ -20,7 +20,7 @@
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="3dp"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true"

@@ -181,6 +181,24 @@ fun Toolbar?.setupCloseButton(onClick: () -> Unit) = setupNavButtonWithCallback(
 @JvmName("setupToolbarCloseButton")
 fun Toolbar?.setupCloseButton(fragment: Fragment?) = setupCloseButton { fragment?.activity?.onBackPressed() }
 
+
+/**
+ * Inflates the provided menu resource into this Toolbar and propagates menu item click events
+ * to the provided callback
+ *
+ * Note: This clears any existing menu items. It is safe to call multiple times throughout
+ * the Activity/Fragment lifecycle, but should probably not be used when it is expected that
+ * the menu will also be populated by other sources.
+ */
+@JvmName("setupToolbarMenu")
+fun Toolbar?.setupMenu(@MenuRes menuResId: Int, callback: (MenuItem) -> Unit) {
+    if (this == null) return
+    menu.clear()
+    inflateMenu(menuResId)
+    setOnMenuItemClickListener { callback(it); true }
+}
+
+
 /**
  * Attempts to apply the Toolbar's text style to this TextView
  */

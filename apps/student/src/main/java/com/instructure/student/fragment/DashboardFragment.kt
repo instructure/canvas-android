@@ -166,14 +166,19 @@ class DashboardFragment : ParentFragment() {
         val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
         val menuIconRes = if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
         dashboardLayoutMenuItem.setIcon(menuIconRes)
+
+        val menuTitleRes = if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+        dashboardLayoutMenuItem.setTitle(menuTitleRes)
     }
 
     private fun changeDashboardLayout(item: MenuItem) {
         if (StudentPrefs.listDashboard) {
             item.setIcon(R.drawable.ic_list_dashboard)
+            item.setTitle(R.string.dashboardSwitchToListView)
             StudentPrefs.listDashboard = false
         } else {
             item.setIcon(R.drawable.ic_grid_dashboard)
+            item.setTitle(R.string.dashboardSwitchToGridView)
             StudentPrefs.listDashboard = true
         }
 

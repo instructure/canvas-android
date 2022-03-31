@@ -146,6 +146,9 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         val menuIconRes = if (TeacherPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
         dashboardLayoutMenuItem.setIcon(menuIconRes)
 
+        val menuTitleRes = if (TeacherPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+        dashboardLayoutMenuItem.setTitle(menuTitleRes)
+
         (activity as? InitActivity)?.attachNavigationDrawer(toolbar)
         toolbar.requestAccessibilityFocus()
     }
@@ -160,9 +163,11 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     private fun changeDashboardLayout(item: MenuItem) {
         if (TeacherPrefs.listDashboard) {
             item.setIcon(R.drawable.ic_list_dashboard)
+            item.setTitle(R.string.dashboardSwitchToListView)
             TeacherPrefs.listDashboard = false
         } else {
             item.setIcon(R.drawable.ic_grid_dashboard)
+            item.setTitle(R.string.dashboardSwitchToGridView)
             TeacherPrefs.listDashboard = true
         }
 
