@@ -22,16 +22,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
-apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'dagger.hilt.android.plugin'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
-
-if (coverageEnabled) {
-    apply from: '../../gradle/jacoco.gradle'
-}
 
 sqldelight {
     StudentDb {
@@ -360,43 +355,18 @@ if (coverageEnabled) {
                            '**/*$ViewInjector*.*',
                            '**/*$ViewBinder*.*',
                            '**/BuildConfig.*',
-                           '**/Manifest*.*'],
+                           '**/Manifest*.*',
+                           '**/generated/**',
+                           '**/*Receiver*.*',
+                           '**/model*/**',
+                           '**/di/**',
+                           '**/service*/**'],
                 //includes: ['**/com/instructure/*']
         )
 
         // project.buildDir is /canvas-android/apps/teacher/build
         sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
         executionData.setFrom fileTree(dir: "results", includes: ['**/*.ec'])
-
-        reports {
-            // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
-            html.enabled true
-            csv.enabled  false
-            xml.enabled  false
-        }
-    }
-
-    task combinedJacoco(type: JacocoReport) {
-        group = "Reporting"
-        description = "Generate Jacoco coverage reports for FTL + unit tests."
-
-        def productFlavor = 'qa'
-        def buildType = 'debug'
-
-        classDirectories.setFrom fileTree(
-                dir: "${project.buildDir}/tmp/kotlin-classes/qaDebug",
-                excludes: ['**/R.class',
-                           '**/R$*.class',
-                           '**/*$ViewInjector*.*',
-                           '**/*$ViewBinder*.*',
-                           '**/BuildConfig.*',
-                           '**/Manifest*.*'],
-                //includes: ['**/com/instructure/*']
-        )
-
-        // project.buildDir is /canvas-android/apps/teacher/build
-        sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
-        executionData.setFrom fileTree(dir: ".", includes: ['results/**/*.ec', '**/testQaDebugUnitTest.exec'])
 
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/

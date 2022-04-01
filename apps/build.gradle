@@ -58,3 +58,16 @@ task assembleAllApps() {
     dependsOn ':student:assembleDevDebug'
     dependsOn ':teacher:assembleDevDebug'
 }
+
+apply from: '../gradle/jacoco.gradle'
+
+configurations.all{
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.7"
+            }
+        }
+    }
+}
+

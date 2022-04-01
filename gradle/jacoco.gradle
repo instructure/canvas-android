@@ -14,10 +14,223 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+def coveredProject = subprojects.findAll { project -> project.name == 'student' || project.name == 'teacher' || project.name == 'pandautils'}
+
 apply plugin: 'jacoco'
 
-jacoco {
-    // https://bintray.com/bintray/jcenter/org.jacoco:org.jacoco.core
-    toolVersion = "0.8.7"
+configure(coveredProject) { project ->
+    apply plugin: 'jacoco'
+
+    jacoco {
+        toolVersion = "0.8.7"
+    }
+
+    def variant = null
+    def dependentTestTask = null
+    if (project.name == 'pandautils') {
+        variant = 'debug'
+        dependentTestTask = 'testDebugUnitTest'
+    } else {
+        variant = 'qaDebug'
+        dependentTestTask = 'testQaDebugUnitTest'
+    }
+
+    task jacocoReport(type: JacocoReport, dependsOn: dependentTestTask) {
+        group = 'Reporting'
+        description = 'Generate Jacoco coverage'
+
+        reports {
+            csv.enabled = true
+            xml.enabled = false
+            html.enabled = true
+        }
+        def params = [:]
+        params.variantName = variant
+        params.variantCapName = variant.capitalize()
+        params.fileFilter = [
+                          '**/com/instructure/**/*.*',
+        ]
+        params.exclusions = [
+            '**/R.class',
+            '**/BR.class', 
+            '**/R$*.class', 
+            '**/BuildConfig.*',
+            '**/DataBinderMapperImpl*.*',
+            '**/build/generated/**/*.*',
+            '**/Hilt_*.*',
+            '**/*GeneratedInjector*.*',
+            '**/*MembersInjector*.*',
+            '**/*_HiltComponents*.*',
+            '**/*_ComponentTreeDeps*.*',
+            '**/*_Provide*/**',
+            '**/*_Factory*/**',
+            '**/DataBinding*.*',
+            '**/*Fragment*.*',
+            '**/*Activity*.*',
+            '**/*Service*.*',
+            '**/generated/**',
+            '**/view*/**',
+            '**/*Dialog*.*',
+            '**/holders/**',
+            '**/ui/**',
+            '**/di/**',
+            '**/*Adapter*.*',
+            '**/adapter*/**',
+            '**/model/**',
+            '**/model*/**',
+            '**/fragment*/**',
+            '**/databinding/**',
+            '**/pandautils/**/utils/**'
+        ]
+        params.classDirectories = files([fileTree(
+                dir: "$buildDir/intermediates/javac/$params.variantName",
+                includes: params.fileFilter,
+                excludes: params.exclusions
+        ) + fileTree(
+                dir: "$buildDir/tmp/kotlin-classes/$params.variantName",
+                includes: params.fileFilter,
+                excludes: params.exclusions
+        )])
+
+        params.sourceDirectories = files([
+                "src/main/java", "src/main/kotlin",
+                "src/$params.variantName/java", "src/$params.variantName/kotlin"
+        ])
+        params.executionData = files("${buildDir}/jacoco/test${params.variantCapName}UnitTest.exec")
+        
+        classDirectories.setFrom params.classDirectories
+        sourceDirectories.setFrom params.sourceDirectories
+        executionData.setFrom params.executionData
+        
+    }
+
+    task jacocoCombinedReport(type: JacocoReport) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports for FTL + unit tests."
+
+        def params = [:]
+        params.variantName = variant
+        params.variantCapName = variant.capitalize()
+
+        params.fileFilter = [
+                          '**/com/instructure/**/*.*',
+        ]
+        params.exclusions = [
+            '**/R.class',
+            '**/BR.class', 
+            '**/R$*.class', 
+            '**/BuildConfig.*',
+            '**/DataBinderMapperImpl*.*',
+            '**/build/generated/**/*.*',
+            '**/Hilt_*.*',
+            '**/*GeneratedInjector*.*',
+            '**/*MembersInjector*.*',
+            '**/*_HiltComponents*.*',
+            '**/*_ComponentTreeDeps*.*',
+            '**/*_Provide*/**',
+            '**/*_Factory*/**',
+            '**/DataBinding*.*',
+            '**/di/**',
+            '**/databinding/**',
+        ]
+
+        params.classDirectories = files([fileTree(
+                dir: "$buildDir/intermediates/javac/$params.variantName",
+                includes: params.fileFilter,
+                excludes: params.exclusions
+        ) + fileTree(
+                dir: "$buildDir/tmp/kotlin-classes/$params.variantName",
+                includes: params.fileFilter,
+                excludes: params.exclusions
+        )])
+
+        params.sourceDirectories = files([
+                "src/main/java", "src/main/kotlin",
+                "src/$params.variantName/java", "src/$params.variantName/kotlin"
+        ])
+
+        params.executionData = fileTree(dir: ".", includes: ['results/**/*.ec', "**/test${params.variantCapName}UnitTest.exec"])
+
+        reports {
+            html.enabled true
+            csv.enabled  false
+            xml.enabled  false
+        }
+
+        classDirectories.setFrom params.classDirectories
+        sourceDirectories.setFrom params.sourceDirectories
+        executionData.setFrom params.executionData
+    }
 }
 
+task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
+    group = 'Reporting'
+    description = 'Generates an aggregate report from all subprojects'
+
+    tasks.withType(Test) {
+        ignoreFailures true
+    }
+
+    def projects = coveredProject
+
+    dependsOn(projects.jacocoReport)
+
+    final source = files(projects.jacocoReport.sourceDirectories)
+
+    additionalSourceDirs.setFrom source
+    sourceDirectories.setFrom source
+
+    classDirectories.setFrom files(projects.jacocoReport.classDirectories)
+    executionData.setFrom files(projects.jacocoReport.executionData)
+
+    reports {
+        html {
+            enabled true
+            destination file('build/reports/jacoco/html')
+        }
+        csv {
+            enabled true
+            destination file('build/reports/jacoco/jacocoFullReport.csv')
+        }
+    }
+
+    doFirst {
+        executionData.setFrom files(executionData.findAll { it.exists() })
+    }
+}
+
+task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
+    group = 'Reporting'
+    description = 'Generates an aggregate report from all subprojects'
+
+    tasks.withType(Test) {
+        ignoreFailures true
+    }
+
+    def projects = coveredProject
+
+    dependsOn(projects.jacocoCombinedReport)
+
+    final source = files(projects.jacocoCombinedReport.sourceDirectories)
+
+    additionalSourceDirs.setFrom source
+    sourceDirectories.setFrom source
+
+    classDirectories.setFrom files(projects.jacocoCombinedReport.classDirectories)
+    executionData.setFrom files(projects.jacocoCombinedReport.executionData)
+
+    reports {
+        html {
+            enabled true
+            destination file('build/reports/jacoco/html')
+        }
+        csv {
+            enabled true
+            destination file('build/reports/jacoco/jacocoFullCombinedReport.csv')
+        }
+    }
+
+    doFirst {
+        executionData.setFrom files(executionData.findAll { it.exists() })
+    }
+}
