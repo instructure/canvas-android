@@ -55,7 +55,7 @@ class ImportantDatesViewModel @Inject constructor(
 
     val data: LiveData<ImportantDatesViewData>
         get() = _data
-    private val _data = MutableLiveData<ImportantDatesViewData>()
+    private val _data = MutableLiveData<ImportantDatesViewData>(ImportantDatesViewData(emptyList()))
 
     val events: LiveData<Event<ImportantDatesAction>>
         get() = _events
