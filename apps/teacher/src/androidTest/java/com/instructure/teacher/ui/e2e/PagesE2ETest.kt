@@ -28,7 +28,6 @@ class PagesE2ETest : TeacherTest() {
     @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
     fun testPagesE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
-        val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
@@ -61,25 +60,25 @@ class PagesE2ETest : TeacherTest() {
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openPagesTab()
 
-        pageListPage.assertPageDisplayed(pageTitle = unpublishedPage.title)
-        pageListPage.assertPageIsUnpublished(pageTitle = unpublishedPage.title)
+        pageListPage.assertPageDisplayed(unpublishedPage.title)
+        pageListPage.assertPageIsUnpublished(unpublishedPage.title)
 
-        pageListPage.assertPageDisplayed(pageTitle = publishedPage.title)
-        pageListPage.assertPageIsPublished(pageTitle = publishedPage.title)
+        pageListPage.assertPageDisplayed(publishedPage.title)
+        pageListPage.assertPageIsPublished(publishedPage.title)
 
-        pageListPage.assertPageDisplayed(pageTitle = frontPage.title)
-        pageListPage.assertPageIsPublished(pageTitle = frontPage.title)
-        pageListPage.assertFrontPageDisplayed(pageTitle = frontPage.title)
+        pageListPage.assertPageDisplayed(frontPage.title)
+        pageListPage.assertPageIsPublished(frontPage.title)
+        pageListPage.assertFrontPageDisplayed(frontPage.title)
 
-        pageListPage.openPage(pageTitle = publishedPage.title)
+        pageListPage.openPage(publishedPage.title)
         editPageDetailsPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Regular Page Text"))
         Espresso.pressBack()
 
-        pageListPage.openPage(pageTitle = frontPage.title)
+        pageListPage.openPage(frontPage.title)
         editPageDetailsPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))
         Espresso.pressBack()
 
-        pageListPage.openPage(pageTitle = unpublishedPage.title)
+        pageListPage.openPage(unpublishedPage.title)
         editPageDetailsPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Unpublished Page Text"))
         Espresso.pressBack()
 
@@ -104,13 +103,13 @@ class PagesE2ETest : TeacherTest() {
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openPagesTab()
 
-        pageListPage.assertPageDisplayed(pageTitle = unpublishedPage.title)
+        pageListPage.assertPageDisplayed(unpublishedPage.title)
         pageListPage.assertPageIsUnpublished(unpublishedPage.title)
 
-        pageListPage.openPage(pageTitle = unpublishedPage.title)
+        pageListPage.openPage(unpublishedPage.title)
         editPageDetailsPage.openEdit()
         val editedUnpublishedPageName = "Page still unpublished"
-        editPageDetailsPage.editPageName(editedPageName = editedUnpublishedPageName)
+        editPageDetailsPage.editPageName(editedUnpublishedPageName)
         editPageDetailsPage.savePage()
         Espresso.pressBack()
         pageListPage.assertPageIsUnpublished(editedUnpublishedPageName)
@@ -135,15 +134,15 @@ class PagesE2ETest : TeacherTest() {
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openPagesTab()
 
-        pageListPage.assertPageDisplayed(pageTitle = publishedPage.title)
+        pageListPage.assertPageDisplayed(publishedPage.title)
         pageListPage.assertPageIsPublished(publishedPage.title)
 
-        pageListPage.openPage(pageTitle = publishedPage.title)
+        pageListPage.openPage(publishedPage.title)
         editPageDetailsPage.openEdit()
         editPageDetailsPage.toggleFrontPage()
         editPageDetailsPage.savePage()
         Espresso.pressBack()
-        pageListPage.assertFrontPageDisplayed(pageTitle = publishedPage.title)
+        pageListPage.assertFrontPageDisplayed(publishedPage.title)
     }
 
     @E2E
@@ -165,12 +164,12 @@ class PagesE2ETest : TeacherTest() {
         dashboardPage.waitForRender()
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openPagesTab()
-        pageListPage.openPage(pageTitle = unpublishedPage.title)
+        pageListPage.openPage(unpublishedPage.title)
         editPageDetailsPage.openEdit()
         editPageDetailsPage.togglePublished()
         editPageDetailsPage.savePage()
         Espresso.pressBack()
-        pageListPage.assertPageIsPublished(pageTitle = unpublishedPage.title)
+        pageListPage.assertPageIsPublished(unpublishedPage.title)
     }
 
     @E2E
@@ -192,10 +191,10 @@ class PagesE2ETest : TeacherTest() {
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openPagesTab()
 
-        pageListPage.assertPageDisplayed(pageTitle = frontPage.title)
-        pageListPage.assertPageIsPublished(pageTitle = frontPage.title)
+        pageListPage.assertPageDisplayed(frontPage.title)
+        pageListPage.assertPageIsPublished(frontPage.title)
 
-        pageListPage.openPage(pageTitle = frontPage.title)
+        pageListPage.openPage(frontPage.title)
         editPageDetailsPage.openEdit()
         editPageDetailsPage.togglePublished()
         editPageDetailsPage.toggleFrontPage()
@@ -203,7 +202,7 @@ class PagesE2ETest : TeacherTest() {
         editPageDetailsPage.togglePublished()
         editPageDetailsPage.savePage()
         Espresso.pressBack()
-        pageListPage.assertFrontPageDisplayed(pageTitle = frontPage.title)
-        pageListPage.assertPageIsPublished(pageTitle = frontPage.title)
+        pageListPage.assertFrontPageDisplayed(frontPage.title)
+        pageListPage.assertPageIsPublished(frontPage.title)
     }
 }

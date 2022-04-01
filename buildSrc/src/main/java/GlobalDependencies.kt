@@ -23,9 +23,9 @@ object Versions {
     const val KOTLIN_COROUTINES = "1.5.2"
 
     /* Google, Play Services */
-    const val GOOGLE_SERVICES = "4.3.3"
+    const val GOOGLE_SERVICES = "4.3.10"
     const val FIREBASE_CONFIG = "18.0.0"
-    const val PLAY_CORE = "1.10.0"
+    const val PLAY_CORE = "1.10.3"
     const val PLAY_CORE_KTX = "1.8.1"
 
     /* Others */
@@ -76,16 +76,17 @@ object Libs {
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
 
-    /* Google Dependencies */
-    const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics:${Versions.FIREBASE_ANALYTICS}"
-    const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics:${Versions.CRASHLYTICS}"
-    const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging:20.1.7"
-    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:17.0.0"
-    const val PLAY_SERVICES_WEARABLE = "com.google.android.gms:play-services-wearable:16.0.1"
-    const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:16.0.1"
-    const val FIREBASE_CORE = "com.google.firebase:firebase-core:17.2.0"
-    const val FIREBASE_CONFIG = "com.google.firebase:firebase-config:${Versions.FIREBASE_CONFIG}"
-    const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk:17.2.1"
+    /* Firebase */
+    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:29.3.0"
+    const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics"
+    const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
+    const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging"
+    const val FIREBASE_CORE = "com.google.firebase:firebase-core"
+    const val FIREBASE_CONFIG = "com.google.firebase:firebase-config"
+    const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk"
+
+    /* Play Services */
+    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:18.0.1"
     const val PLAY_CORE = "com.google.android.play:core:${Versions.PLAY_CORE}"
     const val PLAY_CORE_KTX = "com.google.android.play:core-ktx:${Versions.PLAY_CORE_KTX}"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
@@ -122,7 +123,7 @@ object Libs {
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
-    const val EXOPLAYER = "com.github.google.ExoPlayer:exoplayer:r2.9.6"
+    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:2.17.1"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
     const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"

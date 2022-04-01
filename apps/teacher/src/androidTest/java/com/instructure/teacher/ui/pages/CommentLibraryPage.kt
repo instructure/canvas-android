@@ -16,11 +16,16 @@
  */
 package com.instructure.teacher.ui.pages
 
-import com.instructure.espresso.*
-import com.instructure.teacher.R
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithContentDescription
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.teacher.R
 
 class CommentLibraryPage : BasePage(R.id.commentLibraryRoot) {
 

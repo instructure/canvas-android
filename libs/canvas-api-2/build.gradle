@@ -80,8 +80,6 @@ dependencies {
     api Libs.KOTLIN_COROUTINES_ANDROID
     testImplementation Libs.KOTLIN_COROUTINES_TEST
 
-    implementation Libs.FIREBASE_CORE
-
     /* Retrofit / GSON */
     api(Libs.RETROFIT) {
         exclude module: 'okhttp'
@@ -136,7 +134,9 @@ dependencies {
     /* Paper No SQl Storage */
     api Libs.PAPERDB
 
-    // Remote Config
+    // Firebase
+    implementation platform(Libs.FIREBASE_BOM)
+    implementation Libs.FIREBASE_CORE
     implementation Libs.FIREBASE_CONFIG
 
     implementation Libs.HILT

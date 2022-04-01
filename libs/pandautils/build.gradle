@@ -127,10 +127,11 @@ dependencies {
         exclude group: "androidx.exifinterface"
     }
 
+    implementation platform(Libs.FIREBASE_BOM)
+    implementation Libs.FIREBASE_MESSAGING
     implementation (Libs.FIREBASE_ANALYTICS) {
         transitive = true
     }
-
     implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
@@ -141,7 +142,6 @@ dependencies {
     implementation Libs.ANDROIDX_CARDVIEW
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_EXIF
-    implementation Libs.FIREBASE_MESSAGING
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
     implementation Libs.PLAY_CORE_KTX
@@ -162,4 +162,8 @@ dependencies {
     kapt Libs.LIFECYCLE_COMPILER
 
     implementation Libs.FLEXBOX_LAYOUT
+
+    // We need to add this dependency if we update ExoPlayer to 2.12.0
+    // More details here: classpath https://github.com/google/ExoPlayer/issues/7905
+    implementation 'com.google.guava:guava:29.0-android'
 }
