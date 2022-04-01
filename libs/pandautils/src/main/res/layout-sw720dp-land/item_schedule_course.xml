@@ -50,7 +50,7 @@
             app:layout_constraintEnd_toStartOf="@+id/plannerItems">
 
             <TextView
-                android:id="@+id/courseName"
+                android:id="@+id/scheduleCourseHeaderText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
