@@ -60,6 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:buttonTint="@color/schedule_checkbox_color_selector"
                 android:checked="@{itemViewModel.completed}"
                 android:onCheckedChanged="@{(checkbox, checked) -> itemViewModel.markAsDone.invoke(itemViewModel, checked)}"
