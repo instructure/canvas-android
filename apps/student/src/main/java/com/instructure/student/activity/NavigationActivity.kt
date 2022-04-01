@@ -534,9 +534,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun overrideFont() {
         super.overrideFont()
-        if (navigationBehavior.shouldOverrideFont) {
-            typefaceBehavior.overrideFont()
-        }
+        typefaceBehavior.overrideFont(navigationBehavior.fontFamily.fontPath)
     }
 
     //endregion

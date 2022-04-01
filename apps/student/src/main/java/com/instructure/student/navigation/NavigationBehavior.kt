@@ -19,6 +19,7 @@ package com.instructure.student.navigation
 import androidx.annotation.MenuRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.FontFamily
 import com.instructure.student.fragment.ParentFragment
 
 interface NavigationBehavior {
@@ -34,7 +35,7 @@ interface NavigationBehavior {
 
     val visibleAccountMenuItems: Set<AccountMenuItem>
 
-    val shouldOverrideFont: Boolean
+    val fontFamily: FontFamily
 
     @get:MenuRes
     val bottomBarMenu: Int

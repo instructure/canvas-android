@@ -174,7 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/lato_font_family"
                     android:gravity="start"
                     android:text="@string/previousLoginTitle"
                     android:textColor="@color/login_grayText"

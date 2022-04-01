@@ -54,6 +54,7 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Const
@@ -91,6 +92,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     @Inject
     lateinit var updateManager: UpdateManager
+
+    @Inject
+    lateinit var typefaceBehaviour: TypefaceBehavior
 
     private var selectedTab = 0
     private var drawerItemSelectedJob: Job? = null
@@ -151,6 +155,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        typefaceBehaviour.overrideFont(FontFamily.REGULAR.fontPath)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
 
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
