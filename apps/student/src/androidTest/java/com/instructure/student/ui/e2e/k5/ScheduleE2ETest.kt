@@ -108,12 +108,12 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.assertPageObjects()
 
         //Depends on how we handle Sunday, need to clarify with calendar team
-        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {  verifyIfCourseHeaderAndScheduleItemDisplayed(homeroomCourse.name,homeroomAnnouncement.title) }
+        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {  schedulePage.verifyIfCourseHeaderAndScheduleItemDisplayed(homeroomCourse.name,homeroomAnnouncement.title) }
         schedulePage.assertDayHeaderShownByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
 
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { schedulePage.assertDayHeaderShownByItemName(concatDayString(yesterDayCalendar), schedulePage.getStringFromResource(R.string.yesterday), schedulePage.getStringFromResource(R.string.yesterday))}
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 7) { schedulePage.assertDayHeaderShownByItemName(concatDayString(tomorrowCalendar), schedulePage.getStringFromResource(R.string.tomorrow), schedulePage.getStringFromResource(R.string.tomorrow))}
-        verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name,testMissingAssignment.name)
+        schedulePage.verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name,testMissingAssignment.name)
 
         //Scroll to missing item's section and verify that a missing assignment is appearing there
         schedulePage.scrollToItem(R.id.missingItemLayout,testMissingAssignment.name)
@@ -135,7 +135,7 @@ class ScheduleE2ETest : StudentTest() {
         if(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
             val twoWeeksBeforeDayString = twoWeeksBeforeCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
             schedulePage.assertDayHeaderShownByItemName(concatDayString(twoWeeksBeforeCalendar), twoWeeksBeforeDayString, twoWeeksBeforeDayString)
-            verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[1].name,testTwoWeeksBeforeAssignment.name)
+            schedulePage.verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[1].name,testTwoWeeksBeforeAssignment.name)
         }
 
         //Swipe from 2 weeks before current week to 2 weeks after current week
@@ -148,7 +148,7 @@ class ScheduleE2ETest : StudentTest() {
             val twoWeeksAfterDayString = twoWeeksAfterCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
             schedulePage.assertDayHeaderShownByItemName(concatDayString(twoWeeksAfterCalendar), twoWeeksAfterDayString, twoWeeksAfterDayString)
 
-            verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[0].name,testTwoWeeksAfterAssignment.name)
+            schedulePage.verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[0].name,testTwoWeeksAfterAssignment.name)
 
             //Open course and verify if we are landing on the course details page by checking it's title
             schedulePage.clickCourseHeader(nonHomeroomCourses[0].name)
@@ -164,7 +164,7 @@ class ScheduleE2ETest : StudentTest() {
 
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
 
-            verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name, testMissingAssignment.name)
+            schedulePage.verifyIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name, testMissingAssignment.name)
 
             //Open assignment and verify if we are landing on the assignment details page by checking it's title
             schedulePage.clickScheduleItem(testMissingAssignment.name)
@@ -184,12 +184,7 @@ class ScheduleE2ETest : StudentTest() {
         }
     }
 
-    private fun verifyIfCourseHeaderAndScheduleItemDisplayed(courseName: String, assignmentName: String) {
-        schedulePage.scrollToItem(R.id.scheduleCourseItemLayout, courseName)
-        schedulePage.assertCourseHeaderDisplayed(courseName)
-        schedulePage.scrollToItem(R.id.title, assignmentName, schedulePage.withAncestor(R.id.plannerItems))
-        schedulePage.assertScheduleItemDisplayed(assignmentName)
-    }
+
 
     private fun clickAndAssertMarkedAsDone(assignmentName: String) {
         schedulePage.scrollToItem(R.id.title, assignmentName, schedulePage.withAncestor(R.id.plannerItems))
