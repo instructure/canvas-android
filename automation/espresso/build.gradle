@@ -88,10 +88,10 @@ dependencies {
     //
     // https://maven.google.com/com/android/support/test/espresso/espresso-core/3.0.0/espresso-core-3.0.0.pom
 
-    def runnerVersion = "1.1.1"
-    def rulesVersion = "1.1.1"
-    def espressoVersion = "3.1.1"
-    def junitVersion = "4.13.1"
+    def runnerVersion = "1.4.0"
+    def rulesVersion = "1.4.0"
+    def espressoVersion = "3.4.0"
+    def junitVersion = "4.13.2"
 
     // Update exclusions based on ./gradlew :app:androidDependencies
     implementation("androidx.test:runner:$runnerVersion") {

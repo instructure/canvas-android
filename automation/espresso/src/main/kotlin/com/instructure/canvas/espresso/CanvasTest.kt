@@ -320,7 +320,8 @@ abstract class CanvasTest : InstructureTestingContract {
             override fun matches(item: Any): Boolean {
                 when(item) {
                     is AccessibilityViewCheckResult -> {
-                        val result = item.view.width < dim && item.view.height >= dim
+                        if (item.view == null) return false
+                        val result = item.view!!.width < dim && item.view!!.height >= dim
                         //Log.v("overflowWidth", "view=${getResourceName(item.view)}, desc=${item.view.contentDescription}, w=${item.view.width}, h=${item.view.height}, res=$result")
                         return result
                     }
@@ -377,7 +378,8 @@ abstract class CanvasTest : InstructureTestingContract {
                 if(density > 1) return false
                 when(item) {
                     is AccessibilityViewCheckResult -> {
-                        val v = item.view
+                        if (item.view == null) return false
+                        val v = item.view!!
                         val toss =
                                 v.height > 0 // Require some dimension in order to be tossed
                                 && v.width > 0
