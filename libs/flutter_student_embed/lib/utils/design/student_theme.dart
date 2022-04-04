@@ -133,6 +133,7 @@ class _StudentThemeState extends State<StudentTheme> {
       buttonColor: buttonColor,
       hintColor: StudentColors.ash,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, colorScheme: buttonColorScheme),
+      fontFamily: 'Lato'
     );
   }
 
