@@ -46,6 +46,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+private const val LIST_SPAN_COUNT = 1
+
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
 
@@ -87,8 +89,8 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     override fun onCreateView(view: View) {
-        val spanSize = if (TeacherPrefs.listDashboard) 1 else requireContext().resources.getInteger(R.integer.course_list_span_count)
-        mGridLayoutManager = GridLayoutManager(requireContext(), spanSize)
+        val spanCount = if (TeacherPrefs.listDashboard) LIST_SPAN_COUNT else requireContext().resources.getInteger(R.integer.course_list_span_count)
+        mGridLayoutManager = GridLayoutManager(requireContext(), spanCount)
         mDecorator = VerticalGridSpacingDecoration(requireContext(), mGridLayoutManager)
     }
 
@@ -173,7 +175,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
 
         recyclerView.fadeAnimationWithAction {
             if (TeacherPrefs.listDashboard) {
-                mGridLayoutManager.spanCount = 1
+                mGridLayoutManager.spanCount = LIST_SPAN_COUNT
             } else {
                 mGridLayoutManager.spanCount = requireContext().resources.getInteger(R.integer.course_list_span_count)
             }

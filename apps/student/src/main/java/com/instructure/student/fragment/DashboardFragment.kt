@@ -64,6 +64,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.listView as recyclerView
 
+private const val LIST_SPAN_COUNT = 1
+
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 @PageView
 class DashboardFragment : ParentFragment() {
@@ -72,8 +74,8 @@ class DashboardFragment : ParentFragment() {
 
     private var recyclerAdapter: DashboardRecyclerAdapter? = null
 
-    private var courseColumns: Int = 1
-    private var groupColumns: Int = 1
+    private var courseColumns: Int = LIST_SPAN_COUNT
+    private var groupColumns: Int = LIST_SPAN_COUNT
 
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -183,8 +185,8 @@ class DashboardFragment : ParentFragment() {
         }
 
         recyclerView.fadeAnimationWithAction {
-            courseColumns = if (StudentPrefs.listDashboard) 1 else resources.getInteger(R.integer.course_card_columns)
-            groupColumns = if (StudentPrefs.listDashboard) 1 else resources.getInteger(R.integer.group_card_columns)
+            courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
+            groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
             (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = courseColumns * groupColumns
             view?.post { recyclerAdapter?.notifyDataSetChanged() }
         }
@@ -211,8 +213,8 @@ class DashboardFragment : ParentFragment() {
 
     private fun configureRecyclerView() {
         // Set up GridLayoutManager
-        courseColumns = if (StudentPrefs.listDashboard) 1 else resources.getInteger(R.integer.course_card_columns)
-        groupColumns = if (StudentPrefs.listDashboard) 1 else resources.getInteger(R.integer.group_card_columns)
+        courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
+        groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
         val layoutManager = GridLayoutManager(
             context,
             courseColumns * groupColumns,

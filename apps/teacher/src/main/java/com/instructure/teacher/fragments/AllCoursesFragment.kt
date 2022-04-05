@@ -49,6 +49,8 @@ import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.swipeRefresh
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
+private const val LIST_SPAN_COUNT = 1
+
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCoursesView, CoursesViewHolder, AllCoursesAdapter>(), AllCoursesView {
 
@@ -77,7 +79,7 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
 
-        val spanCount = if (TeacherPrefs.listDashboard) 1 else requireContext().resources.getInteger(R.integer.course_list_span_count)
+        val spanCount = if (TeacherPrefs.listDashboard) LIST_SPAN_COUNT else requireContext().resources.getInteger(R.integer.course_list_span_count)
         val gridLayoutManager = GridLayoutManager(requireContext(), spanCount)
         mRecyclerView.layoutManager = gridLayoutManager
         mRecyclerView.addItemDecoration(VerticalGridSpacingDecoration(requireActivity(), gridLayoutManager))
@@ -133,7 +135,7 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
 
         recyclerView.fadeAnimationWithAction {
             if (TeacherPrefs.listDashboard) {
-                (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = 1
+                (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = LIST_SPAN_COUNT
             } else {
                 (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = requireContext().resources.getInteger(R.integer.course_list_span_count)
             }
