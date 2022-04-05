@@ -14,16 +14,20 @@ gcloud:
   test-targets:
     - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
   device:
-    - model: NexusLowRes
+    - model: Pixel2
       version: 27
       locale: en_US
       orientation: portrait
-    - model: NexusLowRes
+    - model: Pixel2
       version: 28
       locale: en_US
       orientation: portrait
-    - model: NexusLowRes
+    - model: Pixel2
       version: 29
+      locale: en_US
+      orientation: portrait
+    - model: Pixel2
+      version: 30
       locale: en_US
       orientation: portrait
 
