@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:textSize="22sp"
         android:textColor="@android:color/black"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="@font/lato_font_family"
         android:text="@string/whatsYourSchoolName"
         android:layout_marginTop="12dp"
         android:layout_marginStart="16dp"
@@ -93,7 +93,7 @@
         android:gravity="center"
         android:text="@string/logout"
         android:textColor="@color/login_grayText"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="@font/lato_font_family"
         android:background="?android:selectableItemBackground"
         android:visibility="gone"
         tools:visibility="visible"/>

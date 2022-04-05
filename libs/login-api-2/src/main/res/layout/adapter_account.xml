@@ -23,7 +23,7 @@
     android:layout_height="?android:listPreferredItemHeight"
     android:background="?android:selectableItemBackground"
     android:gravity="start|center_vertical"
-    android:fontFamily="sans-serif"
+    android:fontFamily="@font/lato_font_family"
     android:textSize="18sp"
     android:textColor="@color/login_darkText"
     android:paddingStart="16dp"
