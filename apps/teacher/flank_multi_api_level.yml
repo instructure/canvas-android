@@ -26,10 +26,6 @@ gcloud:
       version: 29
       locale: en_US
       orientation: portrait
-    - model: Pixel2
-      version: 30
-      locale: en_US
-      orientation: portrait
 
 flank:
   testShards: 10
