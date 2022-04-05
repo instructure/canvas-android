@@ -37,7 +37,7 @@ class EditSyllabusRenderPage : BasePage(R.id.editSyllabusPage) {
     private val saveButton by OnViewWithId(R.id.menuSaveSyllabus)
     private val savingProgressBar by OnViewWithId(R.id.savingProgressBar)
     private val contentLabel by OnViewWithId(R.id.contentLabel)
-    private val contentRceView by WaitForViewWithId(R.id.rce_webView)
+    private val contentRceView by WaitForViewWithId(R.id.contentRCEView)
     private val detailsLabel by OnViewWithId(R.id.detailsLabel)
     private val showCourseSummaryLabel by OnViewWithId(R.id.showSummaryLabel)
     private val showCourseSummarySwitch by OnViewWithId(R.id.showSummarySwitch)
