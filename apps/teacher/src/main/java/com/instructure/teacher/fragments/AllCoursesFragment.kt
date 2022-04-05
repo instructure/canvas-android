@@ -17,6 +17,7 @@
 package com.instructure.teacher.fragments
 
 import android.content.Context
+import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.fadeAnimationWithAction
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AllCoursesAdapter
 import com.instructure.teacher.decorations.VerticalGridSpacingDecoration
@@ -35,12 +37,19 @@ import com.instructure.teacher.factory.AllCoursesPresenterFactory
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.AllCoursesPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AllCoursesView
 import kotlinx.android.synthetic.main.fragment_all_courses.*
+import kotlinx.android.synthetic.main.fragment_all_courses.toolbar
+import kotlinx.android.synthetic.main.fragment_courses.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
+import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.swipeRefreshLayout
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+
+private const val LIST_SPAN_COUNT = 1
 
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCoursesView, CoursesViewHolder, AllCoursesAdapter>(), AllCoursesView {
@@ -69,10 +78,9 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
     override fun onPresenterPrepared(presenter: AllCoursesPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
-        val gridLayoutManager = GridLayoutManager(
-            requireContext(),
-            requireContext().resources.getInteger(R.integer.course_list_span_count)
-        )
+
+        val spanCount = if (TeacherPrefs.listDashboard) LIST_SPAN_COUNT else requireContext().resources.getInteger(R.integer.course_list_span_count)
+        val gridLayoutManager = GridLayoutManager(requireContext(), spanCount)
         mRecyclerView.layoutManager = gridLayoutManager
         mRecyclerView.addItemDecoration(VerticalGridSpacingDecoration(requireActivity(), gridLayoutManager))
         addSwipeToRefresh(swipeRefreshLayout)
@@ -92,9 +100,47 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
 
     override fun onResume() {
         super.onResume()
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
         toolbar.setTitle(R.string.all_courses)
         toolbar.setupBackButton(this)
+        toolbar.setupMenu(R.menu.menu_all_courses_fragment) { item ->
+            when (item.itemId) {
+                R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+            }
+        }
+
+        val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
+        val menuIconRes = if (TeacherPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
+        dashboardLayoutMenuItem.setIcon(menuIconRes)
+
+        val menuTitleRes = if (TeacherPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+        dashboardLayoutMenuItem.setTitle(menuTitleRes)
+
         ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+    }
+
+    private fun changeDashboardLayout(item: MenuItem) {
+        if (TeacherPrefs.listDashboard) {
+            item.setIcon(R.drawable.ic_list_dashboard)
+            item.setTitle(R.string.dashboardSwitchToListView)
+            TeacherPrefs.listDashboard = false
+        } else {
+            item.setIcon(R.drawable.ic_grid_dashboard)
+            item.setTitle(R.string.dashboardSwitchToGridView)
+            TeacherPrefs.listDashboard = true
+        }
+
+        recyclerView.fadeAnimationWithAction {
+            if (TeacherPrefs.listDashboard) {
+                (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = LIST_SPAN_COUNT
+            } else {
+                (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = requireContext().resources.getInteger(R.integer.course_list_span_count)
+            }
+            view?.post { adapter.notifyDataSetChanged() }
+        }
     }
 
     override fun onAttach(context: Context) {

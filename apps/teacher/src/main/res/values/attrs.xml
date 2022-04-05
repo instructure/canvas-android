@@ -28,10 +28,6 @@
         <attr name="dc_center_text_size" format="dimension"/>
     </declare-styleable>
 
-    <declare-styleable name="AspectRatioRelativeLayout">
-        <attr name="aspectRatio" format="float"/>
-    </declare-styleable>
-
     <declare-styleable name="PublishedStatusIconView">
         <attr name="published" format="boolean"/>
         <attr name="icon" format="reference"/>

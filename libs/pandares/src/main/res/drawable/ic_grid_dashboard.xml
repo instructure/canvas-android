@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (C) 2022 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M2.6,2C2.2686,2 2,2.2686 2,2.6V10.8C2,11.1314 2.2686,11.4 2.6,11.4H10.8C11.1314,11.4 11.4,11.1314 11.4,10.8V2.6C11.4,2.2686 11.1314,2 10.8,2H2.6ZM2.6,12.6001C2.2686,12.6001 2,12.8687 2,13.2001V21.4001C2,21.7315 2.2686,22.0001 2.6,22.0001H10.8C11.1314,22.0001 11.4,21.7315 11.4,21.4001V13.2001C11.4,12.8687 11.1314,12.6001 10.8,12.6001H2.6ZM12.6,2.6C12.6,2.2686 12.8686,2 13.2,2H21.4C21.7314,2 22,2.2686 22,2.6V10.8C22,11.1314 21.7314,11.4 21.4,11.4H13.2C12.8686,11.4 12.6,11.1314 12.6,10.8V2.6ZM13.2,12.6001C12.8686,12.6001 12.6,12.8687 12.6,13.2001V21.4001C12.6,21.7315 12.8686,22.0001 13.2,22.0001H21.4C21.7314,22.0001 22,21.7315 22,21.4001V13.2001C22,12.8687 21.7314,12.6001 21.4,12.6001H13.2Z"
+      android:fillColor="#ffffff"
+      android:fillType="evenOdd"/>
+</vector>

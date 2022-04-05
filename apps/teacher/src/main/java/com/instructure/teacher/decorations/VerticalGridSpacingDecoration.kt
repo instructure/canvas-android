@@ -25,12 +25,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.teacher.R
 
 class VerticalGridSpacingDecoration(
-        context: Context,
-        val layoutManager: GridLayoutManager,
-        private val hasSingleHeader: Boolean = false,
-        @DimenRes horizontalSpacingResId: Int = R.dimen.default_grid_spacing,
-        @DimenRes verticalSpacingResId: Int = R.dimen.default_grid_spacing,
-        @DimenRes headerSpacingResId: Int = R.dimen.default_grid_spacing
+    context: Context,
+    val layoutManager: GridLayoutManager,
+    @DimenRes horizontalSpacingResId: Int = R.dimen.default_grid_spacing,
+    @DimenRes verticalSpacingResId: Int = R.dimen.default_grid_spacing
 ) : RecyclerView.ItemDecoration() {
 
     init {
@@ -39,7 +37,6 @@ class VerticalGridSpacingDecoration(
 
     private val horizontalSpacing by lazy { context.resources.getDimensionPixelOffset(horizontalSpacingResId) }
     private val verticalSpacing by lazy { context.resources.getDimensionPixelOffset(verticalSpacingResId) }
-    private val headerSpacing by lazy { context.resources.getDimensionPixelOffset(headerSpacingResId) }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         with(outRect) {
@@ -47,7 +44,6 @@ class VerticalGridSpacingDecoration(
             right = horizontalSpacing
             top = verticalSpacing
             bottom = verticalSpacing
-            if (hasSingleHeader && parent.getChildAdapterPosition(view) == 0) bottom = headerSpacing
         }
     }
 }
