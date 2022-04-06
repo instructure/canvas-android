@@ -44,6 +44,7 @@
             android:layout_weight="1"
             android:background="?android:selectableItemBackground"
             android:clickable="@{itemViewModel.data.openable}"
+            android:contentDescription="@{@string/a11y_schedule_course_header_content_description(itemViewModel.data.courseName)}"
             android:importantForAccessibility="yes"
             android:minHeight="80dp"
             android:onClick="@{() -> itemViewModel.onHeaderClick.invoke()}"
