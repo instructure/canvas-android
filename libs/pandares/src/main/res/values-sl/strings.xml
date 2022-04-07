@@ -1241,4 +1241,18 @@
     <string name="toolbarCommentLibrary">Knjižnica komentarjev</string>
     <string name="commentLibraryNoSuggestions">Na voljo ni nobenih predlogov</string>
     <string name="speedGraderCommentHint">Komentar</string>
+    <string name="a11y_schedule_marked_as_done">%s označeno kot dokončano</string>
+    <string name="a11y_error_occured">Prišlo je napake, poskusite znova.</string>
+    <string name="a11y_content_description_accept_invite">Sprejemam povabilo</string>
+    <string name="a11y_content_description_decline_invite">Zavračam povabilo</string>
+    <string name="no_notifications_to_show">Ni obvestil za prikaz</string>
+
+    <string name="documentScanningTitle">Optično branje dokumentov</string>
+    <string name="filter_name_color">Barva</string>
+    <string name="filter_name_grayscale">Sivine</string>
+    <string name="filter_name_monochrome">Enobarvno</string>
+    <string name="filter_name_original">Izvirnik</string>
+    <string name="noCompatibleAppInstalled">Na vaši napravi ni nameščene nobene aplikacije, ki bi lahko odprla to povezavo.</string>
+    <string name="anonymousDiscussionNotSupported">Anonimne razprave v mobilnem prikazu trenutno niso podprte. Za ogled razprave jo odprite v brskalniku.</string>
+    <string name="discussionOpenInBrowser">Odpri v brskalniku</string>
 </resources>

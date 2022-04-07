@@ -50,6 +50,7 @@
     <string name="fromCamera">Fotoaparat</string>
     <string name="fromGallery">Galerija</string>
     <string name="fromDevice">Naprava</string>
+    <string name="fromDocumentScanning">Optični bralnik</string>
     <string name="fromOtherApplication">Drugo</string>
     <string name="Domain">Domena</string>
     <string name="files">Datoteke</string>
@@ -483,4 +484,5 @@
     <string name="a11y_mark_as_done">Označi kot dokončano</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Ojoj! Pri nalaganju podrobnosti o predmetu je prišlo do napake.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s označeno kot nedokončano</string>
 </resources>

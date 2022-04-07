@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">Ākonga Tuhipoka</string>
     <string name="submissionTypeStudentAnnotation">Ākonga Tuhipoka</string>
     <string name="gradesNoDueDate">Kāore he rā tika</string>
+    <string name="importantDatesNoDueDate">Kāore he rā tika</string>
     <string name="missingAssignment">Ngaro</string>
     <string name="dontSave">Kaua e tiaki</string>
     <string name="textSubmissionExitConfirmationTitle">Tiaki tauira?</string>
@@ -1233,4 +1234,21 @@
     <string name="submissionDraftAvailableTitle">Kei te wātea te tauira</string>
     <string name="errorLoadingSubmission">He hapa i puta i te wā o te uta ana i te tāpaetanga</string>
     <string name="loadFullContent">Pātō ki te kite i te ihirangi katoa</string>
+    <string name="dashboardTabImportantDates">Ngā rā nui</string>
+    <string name="importantDatesEmptyTitle">Kaore ngā rā nui</string>
+    <string name="important_dates">Ngā rā nui</string>
+
+    <string name="toolbarCommentLibrary">Tākupu Whare Pukapuka</string>
+    <string name="commentLibraryNoSuggestions">Kaore he whakaaro kei te wātea</string>
+    <string name="speedGraderCommentHint">Kōrero</string>
+    <string name="a11y_schedule_marked_as_done">%s kua tohua kua oti</string>
+    <string name="a11y_error_occured">I hapa, tēnā koa tamata anō.</string>
+    <string name="a11y_content_description_accept_invite">Whakaae pōhiri</string>
+    <string name="a11y_content_description_decline_invite">Whakakore pōhiri</string>
+    <string name="documentScanningTitle">Tuhinga Matawai ana</string>
+    <string name="filter_name_color">Tae</string>
+    <string name="filter_name_grayscale">Tauinehina</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Taketake</string>
+    <string name="noCompatibleAppInstalled">Karekau he tono i whakauruhia e to taputapu hei whakatuwhera i tenei hononga.</string>
 </resources>
