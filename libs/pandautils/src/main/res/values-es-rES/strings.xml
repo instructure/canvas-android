@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Elegir multimedia</string>
     <string name="takeVideo">Realizar video</string>
     <string name="noCameraOnDevice">No hay cámara</string>
@@ -49,6 +50,7 @@
     <string name="fromCamera">Cámara</string>
     <string name="fromGallery">Galería</string>
     <string name="fromDevice">Dispositivo</string>
+    <string name="fromDocumentScanning">Escáner</string>
     <string name="fromOtherApplication">Otro</string>
     <string name="Domain">Dominio</string>
     <string name="files">Archivos</string>
@@ -328,7 +330,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">La fecha de desbloqueo no puede ser posterior a la fecha de entrega</string>
     <string name="utils_lockBeforeDueDateError">La fecha de bloqueo no puede ser anterior a la fecha de entrega</string>
     <string name="utils_lockAfterUnlockError">La fecha de bloqueo no puede ser anterior a la fecha de desbloqueo</string>
@@ -484,4 +485,5 @@
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">¡Ay, no! Ha habido un error al cargar los detalles de la asignatura.</string>
 
+    <string name="a11y_schedule_marked_as_not_done">%s marcado como no hecho</string>
 </resources>

@@ -1243,4 +1243,19 @@
     <string name="toolbarCommentLibrary">Comment Library</string>
     <string name="commentLibraryNoSuggestions">No suggestions available</string>
     <string name="speedGraderCommentHint">Comment</string>
+    <string name="a11y_schedule_marked_as_done">%s marked as done</string>
+    <string name="a11y_error_occured">Error occured, please try again.</string>
+    <string name="a11y_content_description_accept_invite">Accept invite</string>
+    <string name="a11y_content_description_decline_invite">Decline invite</string>
+    <string name="no_notifications_to_show">No notifications to show</string>
+
+    <string name="documentScanningTitle">Document Scanning</string>
+    <string name="filter_name_color">Color</string>
+    <string name="filter_name_grayscale">Grayscale</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Your device does not have any applications installed that can open this link.</string>
+
+    <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
+    <string name="discussionOpenInBrowser">Open in browser</string>
 </resources>

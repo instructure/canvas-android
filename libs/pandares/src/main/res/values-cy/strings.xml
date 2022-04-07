@@ -1241,4 +1241,18 @@
     <string name="toolbarCommentLibrary">Llyfrgell Sylwadau</string>
     <string name="commentLibraryNoSuggestions">Dim awgrymiadau ar gael</string>
     <string name="speedGraderCommentHint">Sylw</string>
+    <string name="a11y_schedule_marked_as_done">%s wedi’i farcio fel wedi gorffen</string>
+    <string name="a11y_error_occured">Roedd gwall, rhowch gynnig arall arni.</string>
+    <string name="a11y_content_description_accept_invite">Derbyn y gwahoddiad</string>
+    <string name="a11y_content_description_decline_invite">Gwrthod y gwahoddiad</string>
+    <string name="no_notifications_to_show">Dim hysbysiadau i’w dangos</string>
+
+    <string name="documentScanningTitle">Sganio Dogfen</string>
+    <string name="filter_name_color">Lliw</string>
+    <string name="filter_name_grayscale">Graddfa lwyd</string>
+    <string name="filter_name_monochrome">Unliw</string>
+    <string name="filter_name_original">Gwreiddiol</string>
+    <string name="noCompatibleAppInstalled">Does gan eich dyfais ddim rhaglen wedi’i gosod a all agor y ddolen hon.</string>
+    <string name="anonymousDiscussionNotSupported">Does dim modd delio â thrafodaethau dienw ar ddyfeisiau symudol ar hyn o bryd. Agor mewn porwr i weld trafodaeth.</string>
+    <string name="discussionOpenInBrowser">Agor mewn porwr</string>
 </resources>

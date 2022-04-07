@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Velg media</string>
     <string name="takeVideo">Ta video</string>
     <string name="noCameraOnDevice">Ingen kamera</string>
@@ -49,6 +50,7 @@
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleri</string>
     <string name="fromDevice">Enhet</string>
+    <string name="fromDocumentScanning">Skanner</string>
     <string name="fromOtherApplication">Annet</string>
     <string name="Domain">Domene</string>
     <string name="files">Filer</string>
@@ -328,7 +330,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Publiseringsdatoen kan ikke være etter forfallsdato</string>
     <string name="utils_lockBeforeDueDateError">Låsedato kan ikke være før forfallsdato</string>
     <string name="utils_lockAfterUnlockError">Låsedato kan ikke være før publiseringsdato</string>
@@ -484,4 +485,5 @@
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Oi sann! Det oppsto en feil ved lasting av emnedetaljer.</string>
 
+    <string name="a11y_schedule_marked_as_not_done">%s merket som ikke ferdig</string>
 </resources>

@@ -50,6 +50,7 @@
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleria</string>
     <string name="fromDevice">Laite</string>
+    <string name="fromDocumentScanning">Skanneri</string>
     <string name="fromOtherApplication">Muu</string>
     <string name="Domain">Verkkotunnus</string>
     <string name="files">Tiedostot</string>
@@ -483,4 +484,5 @@
     <string name="a11y_mark_as_done">Merkitse valmiiksi</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Voi ei! Kurssin tietoja ladattaessa ilmeni virhe.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s merkitty ei valmiiksi</string>
 </resources>
