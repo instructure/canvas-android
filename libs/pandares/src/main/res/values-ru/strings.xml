@@ -1253,12 +1253,34 @@
     <string name="studentAnnotationToolbarTitle">Аннотация учащегося</string>
     <string name="submissionTypeStudentAnnotation">Аннотация учащегося</string>
     <string name="gradesNoDueDate">Срок выполнения не задан</string>
+    <string name="importantDatesNoDueDate">Срок выполнения не задан</string>
     <string name="missingAssignment">Отсутствует</string>
     <string name="dontSave">Не сохранять</string>
     <string name="textSubmissionExitConfirmationTitle">Сохранить черновик?</string>
     <string name="textSubmissionExitConfirmationMessage">В противном случае ваши изменения не будут сохранены</string>
     <string name="submissionDraftAvailableSubtitle">Нажмите здесь, чтобы продолжить</string>
     <string name="submissionDraftAvailableTitle">Черновик доступен</string>
-    <string name="errorLoadingSubmission">Произошла ошибка при загрузке отправки</string>
+    <string name="errorLoadingSubmission">Возникла ошибка при загрузке отправки</string>
     <string name="loadFullContent">Нажмите, чтобы увидеть полное содержание</string>
+    <string name="dashboardTabImportantDates">Важные даты</string>
+    <string name="importantDatesEmptyTitle">Нет важных дат</string>
+    <string name="important_dates">Важные даты</string>
+
+    <string name="toolbarCommentLibrary">Библиотека комментариев</string>
+    <string name="commentLibraryNoSuggestions">нет доступных предложений</string>
+    <string name="speedGraderCommentHint">Комментарий</string>
+    <string name="a11y_schedule_marked_as_done">%s отмечено как выполненное</string>
+    <string name="a11y_error_occured">Ошибка, попробуйте еще раз.</string>
+    <string name="a11y_content_description_accept_invite">Принять приглашение</string>
+    <string name="a11y_content_description_decline_invite">Отклонить приглашение</string>
+    <string name="no_notifications_to_show">Нет уведомлений для отображения</string>
+
+    <string name="documentScanningTitle">Сканирование документов</string>
+    <string name="filter_name_color">Цвет</string>
+    <string name="filter_name_grayscale">Оттенки серого</string>
+    <string name="filter_name_monochrome">Черно-белый</string>
+    <string name="filter_name_original">Исходный</string>
+    <string name="noCompatibleAppInstalled">На вашем устройстве не установлено приложение, с помощью которого можно открыть эту ссылку.</string>
+    <string name="anonymousDiscussionNotSupported">В настоящее время функция дискуссии не поддерживаются на мобильных устройствах. Открыть в браузере для просмотра дискуссии.</string>
+    <string name="discussionOpenInBrowser">Открыть в браузере</string>
 </resources>

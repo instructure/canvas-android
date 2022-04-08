@@ -18,7 +18,7 @@
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -31,7 +31,7 @@ object LatePolicyApi {
                 @Body latePolicy: LatePolicyWrapper): Call<LatePolicyWrapper>
     }
 
-    private fun latePolicyService(token: String): LatePolicyService = CanvasRestAdapter.retrofitWithToken(token).create(LatePolicyService::class.java)
+    private fun latePolicyService(token: String): LatePolicyService = CanvasNetworkAdapter.retrofitWithToken(token).create(LatePolicyService::class.java)
 
     fun createLatePolicy(courseId: Long,
                          latePolicy: LatePolicy,

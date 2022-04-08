@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">Nòt Elèv</string>
     <string name="submissionTypeStudentAnnotation">Nòt Elèv</string>
     <string name="gradesNoDueDate">San delè</string>
+    <string name="importantDatesNoDueDate">San delè</string>
     <string name="missingAssignment">Manke</string>
     <string name="dontSave">Pa anrejistre</string>
     <string name="textSubmissionExitConfirmationTitle">Anrejistre bouyon?</string>
@@ -1233,4 +1234,25 @@
     <string name="submissionDraftAvailableTitle">Bouyon Disponib</string>
     <string name="errorLoadingSubmission">Yon erè fèt pandan chajman soumisyon an</string>
     <string name="loadFullContent">Tape pou wè tout kontni an</string>
+    <string name="dashboardTabImportantDates">Dat Enpòtan</string>
+    <string name="importantDatesEmptyTitle">Pa gen Dat Enpòtan</string>
+    <string name="important_dates">Dat Enpòtan</string>
+
+    <string name="toolbarCommentLibrary">Bibliyotèk Kòmantè</string>
+    <string name="commentLibraryNoSuggestions">pa gen sijesyon disponib</string>
+    <string name="speedGraderCommentHint">Kòmantè</string>
+    <string name="a11y_schedule_marked_as_done">%s make ke li fini</string>
+    <string name="a11y_error_occured">Gen yon erè, tanpri eseye ankò.</string>
+    <string name="a11y_content_description_accept_invite">Aksepte envitasyon</string>
+    <string name="a11y_content_description_decline_invite">Refize envitasyon</string>
+    <string name="no_notifications_to_show">Pa gen notifikasyon pou afiche</string>
+
+    <string name="documentScanningTitle">Eskanaj Dokiman</string>
+    <string name="filter_name_color">Koulè</string>
+    <string name="filter_name_grayscale">Nivo Gri</string>
+    <string name="filter_name_monochrome">Monokwòm</string>
+    <string name="filter_name_original">Orijinal</string>
+    <string name="noCompatibleAppInstalled">Pa gen okenn nan aplikasyon ki enstale sou aparèy pi a ki ka ouvri lyen sa a.</string>
+    <string name="anonymousDiscussionNotSupported">Diskisyon anonim yo pa konpatib ak aparèy mobil yo. Ouvri nan navigatè pou ka wè diskisyon.</string>
+    <string name="discussionOpenInBrowser">Ouvri nan navigatè</string>
 </resources>

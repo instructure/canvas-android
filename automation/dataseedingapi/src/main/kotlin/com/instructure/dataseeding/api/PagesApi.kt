@@ -21,7 +21,7 @@ package com.instructure.dataseeding.api
 import com.instructure.dataseeding.model.CreatePage
 import com.instructure.dataseeding.model.CreatePageWrapper
 import com.instructure.dataseeding.model.PageApiModel
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -35,7 +35,7 @@ object PagesApi {
     }
 
     private fun pagesService(token: String): PagesService
-            = CanvasRestAdapter.retrofitWithToken(token).create(PagesService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(PagesService::class.java)
 
     fun createCoursePage(
             courseId: Long,

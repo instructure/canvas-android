@@ -1226,12 +1226,34 @@
     <string name="studentAnnotationToolbarTitle">Anotación del alumno</string>
     <string name="submissionTypeStudentAnnotation">Anotación del alumno</string>
     <string name="gradesNoDueDate">No hay fecha de entrega</string>
+    <string name="importantDatesNoDueDate">No hay fecha de entrega</string>
     <string name="missingAssignment">No presentado</string>
     <string name="dontSave">No guardar</string>
     <string name="textSubmissionExitConfirmationTitle">¿Guardar borrador?</string>
     <string name="textSubmissionExitConfirmationMessage">No se guardarán los cambios</string>
     <string name="submissionDraftAvailableSubtitle">Pulsar aquí para continuar</string>
     <string name="submissionDraftAvailableTitle">Borrador disponible</string>
-    <string name="errorLoadingSubmission">Ha habido un error al cargar la entrega</string>
+    <string name="errorLoadingSubmission">Ha ocurrido un error al cargar la entrega</string>
     <string name="loadFullContent">Pulsar para ver todo el contenido</string>
+    <string name="dashboardTabImportantDates">Fechas importantes</string>
+    <string name="importantDatesEmptyTitle">Fechas no importantes</string>
+    <string name="important_dates">Fechas importantes</string>
+
+    <string name="toolbarCommentLibrary">Biblioteca de comentarios</string>
+    <string name="commentLibraryNoSuggestions">No hay sugerencias disponibles</string>
+    <string name="speedGraderCommentHint">Comentario</string>
+    <string name="a11y_schedule_marked_as_done">%s marcado como hecho</string>
+    <string name="a11y_error_occured">Ha habido un error, inténtelo de nuevo.</string>
+    <string name="a11y_content_description_accept_invite">Aceptar la invitación</string>
+    <string name="a11y_content_description_decline_invite">Rechazar la invitación</string>
+    <string name="no_notifications_to_show">No hay notificaciones para mostrar</string>
+
+    <string name="documentScanningTitle">Escaneo de documentos</string>
+    <string name="filter_name_color">Color</string>
+    <string name="filter_name_grayscale">Escala de grises</string>
+    <string name="filter_name_monochrome">Monocromado</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Su dispositivo no tiene aplicaciones instaladas que puedan abrir este enlace.</string>
+    <string name="anonymousDiscussionNotSupported">Los foros de discusión anónimos actualmente no son compatibles en el móvil. Abrir en el navegador para ver el foro de discusión.</string>
+    <string name="discussionOpenInBrowser">Abrir en el navegador</string>
 </resources>

@@ -57,7 +57,7 @@ class AssignmentListPresenterTest {
 
 //    @Test
     fun baseStateTest_CourseNotNull() {
-        assertTrue(mPresenter!!.getCanvasContext() != null)
+        assertTrue(mPresenter.getCanvasContext() != null)
     }
 
 //    @Test

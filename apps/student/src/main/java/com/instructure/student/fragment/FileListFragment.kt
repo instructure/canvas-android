@@ -251,7 +251,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
             recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder!!, canvasContext), folder!!, adapterCallback)
         }
 
-        configureRecyclerView(view!!, requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
 
         setupToolbarMenu(toolbar)
 

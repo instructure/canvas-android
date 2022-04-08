@@ -19,7 +19,7 @@ package com.instructure.dataseeding.api
 
 import com.google.gson.annotations.SerializedName
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -54,7 +54,7 @@ object QuizzesApi {
     }
 
     private fun quizzesService(token: String): QuizzesService
-            = CanvasRestAdapter.retrofitWithToken(token).create(QuizzesService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(QuizzesService::class.java)
 
     data class CreateQuizRequest (
             val courseId: Long,

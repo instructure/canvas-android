@@ -99,7 +99,7 @@ class DiscussionsE2ETest: StudentTest() {
         discussionListPage.assertTopicNotDisplayed(announcement.title)
 
         discussionListPage.clickOnClearSearchButton()
-        discussionListPage.waitForDiscussionTopicToDisplay(announcement.title!!)
+        discussionListPage.waitForDiscussionTopicToDisplay(announcement.title)
         discussionListPage.assertTopicDisplayed(announcement2.title)
 
         Espresso.pressBack() // Click away from Search input

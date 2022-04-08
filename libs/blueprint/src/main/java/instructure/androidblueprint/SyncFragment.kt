@@ -85,11 +85,11 @@ abstract class SyncFragment<
     @Suppress("UNCHECKED_CAST")
     override fun onResume() {
         super.onResume()
-        onReadySetGo(presenter!!.onViewAttached(presenterView) as PRESENTER)
+        onReadySetGo(presenter.onViewAttached(presenterView) as PRESENTER)
     }
 
     override fun onPause() {
-        presenter?.onViewDetached()
+        presenter.onViewDetached()
         super.onPause()
     }
 
@@ -119,7 +119,7 @@ abstract class SyncFragment<
     protected fun addSwipeToRefresh(swipeRefreshLayout: SwipeRefreshLayout) {
         swipeRefreshLayout.setOnRefreshListener {
             addPagination()
-            presenter!!.refresh(true)
+            presenter.refresh(true)
         }
     }
 

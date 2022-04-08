@@ -98,7 +98,8 @@ class EditFavoritesPresenter(filter: (Course) -> Boolean) : SyncPresenter<Canvas
         o1.name == null && o2.name == null -> 0 // If both are null, we'll consider them equal
         o1.name == null -> -1 // If the first name is null, but not the second, consider it less than the second
         o2.name == null -> 1 // If the second name is null, but not the first, consider it greater than the first
-        else -> o1.name!!.toLowerCase(Locale.getDefault()).compareTo(o2.name!!.toLowerCase(Locale.getDefault())) // Normal comparison
+        else -> o1.name!!.lowercase(Locale.getDefault())
+            .compareTo(o2.name!!.lowercase(Locale.getDefault())) // Normal comparison
     }
     override fun areItemsTheSame(item1: CanvasContext, item2: CanvasContext): Boolean = item1.contextId.hashCode() == item2.contextId.hashCode()
     override fun areContentsTheSame(item1: CanvasContext, item2: CanvasContext): Boolean = if (item1 is Course && item2 is Course) item1.isFavorite == item2.isFavorite else false

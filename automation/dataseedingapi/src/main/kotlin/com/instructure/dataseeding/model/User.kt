@@ -18,7 +18,7 @@
 package com.instructure.dataseeding.model
 
 import com.google.gson.annotations.SerializedName
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 
 /**
  * Used as part of the initial creation of a user
@@ -64,5 +64,5 @@ data class CanvasUserApiModel(
         var password: String = "",
         val avatarUrl: String? = "",
         var token: String = "",
-        var domain: String = CanvasRestAdapter.canvasDomain
+        var domain: String = CanvasNetworkAdapter.canvasDomain
 )

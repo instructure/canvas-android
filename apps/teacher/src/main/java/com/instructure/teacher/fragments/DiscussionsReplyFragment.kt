@@ -156,10 +156,10 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
 
     private fun applyAttachment(file: FileSubmitObject?) {
         if(file != null) {
-            presenter?.setAttachment(file)
+            presenter.setAttachment(file)
             attachments.setAttachment(file.toAttachment()) { action, _ ->
                 if (action == AttachmentView.AttachmentAction.REMOVE) {
-                    presenter?.setAttachment(null)
+                    presenter.setAttachment(null)
                 }
             }
         }

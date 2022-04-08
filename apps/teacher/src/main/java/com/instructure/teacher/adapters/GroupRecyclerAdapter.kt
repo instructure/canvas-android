@@ -176,7 +176,7 @@ abstract class GroupedRecyclerAdapter<T : Any, C : ListItemCallback>(
 
     override fun getItemViewType(position: Int): Int {
         val item = if (sortedList.isVisualGroupPosition(position)) {
-            sortedList.getGroup(position)!!
+            sortedList.getGroup(position)
         } else {
             sortedList.getItem(position)!!
         }

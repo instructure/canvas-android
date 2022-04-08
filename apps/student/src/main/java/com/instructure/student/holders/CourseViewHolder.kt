@@ -45,7 +45,6 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 
-        cardView.setCardBackgroundColor(course.color)
         titleTextView.setTextColor(course.color)
 
         courseImageView.setCourseImage(

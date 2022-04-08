@@ -178,9 +178,9 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                         ApiPrefs.domain = user.domain
                         ApiPrefs.clientId = user.clientId.orEmpty()
                         ApiPrefs.clientSecret = user.clientSecret.orEmpty()
-                        user.accessToken?.let {
+                        user.accessToken?.let { accessToken ->
                             ApiPrefs.refreshToken = user.refreshToken
-                            ApiPrefs.accessToken = user.accessToken
+                            ApiPrefs.accessToken = accessToken
                         }
 
                         ApiPrefs.token = user.token

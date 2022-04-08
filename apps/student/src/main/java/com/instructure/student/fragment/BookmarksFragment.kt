@@ -114,7 +114,7 @@ class BookmarksFragment : ParentFragment() {
 
     private fun configureRecyclerView() {
         configureRecyclerAdapter()
-        configureRecyclerView(view!!, requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView, R.string.no_bookmarks)
+        configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView, R.string.no_bookmarks)
         listView.addItemDecoration(DividerDecoration(requireContext()))
         listView.isSelectionEnabled = false
     }

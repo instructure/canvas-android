@@ -1226,6 +1226,7 @@
     <string name="studentAnnotationToolbarTitle">Anotació de l\'estudiant</string>
     <string name="submissionTypeStudentAnnotation">Anotació de l\'estudiant</string>
     <string name="gradesNoDueDate">Sense data de lliurament</string>
+    <string name="importantDatesNoDueDate">Sense data de lliurament</string>
     <string name="missingAssignment">No presentat</string>
     <string name="dontSave">No ho desis</string>
     <string name="textSubmissionExitConfirmationTitle">Voleu desar l’esborrany?</string>
@@ -1234,4 +1235,25 @@
     <string name="submissionDraftAvailableTitle">L’esborrany està disponible</string>
     <string name="errorLoadingSubmission">S\'ha produït un error en carregar les entregues</string>
     <string name="loadFullContent">Toqueu per veure tot el contingut</string>
+    <string name="dashboardTabImportantDates">Dates importants</string>
+    <string name="importantDatesEmptyTitle">Sense dates importants</string>
+    <string name="important_dates">Dates importants</string>
+
+    <string name="toolbarCommentLibrary">Biblioteca de comentaris</string>
+    <string name="commentLibraryNoSuggestions">Sense suggeriments disponibles</string>
+    <string name="speedGraderCommentHint">Comentari</string>
+    <string name="a11y_schedule_marked_as_done">%s s’ha marcat com a fet</string>
+    <string name="a11y_error_occured">S\'ha produït un error; torneu-ho a provar.</string>
+    <string name="a11y_content_description_accept_invite">Accepta la invitació</string>
+    <string name="a11y_content_description_decline_invite">Rebutja la invitació</string>
+    <string name="no_notifications_to_show">No hi ha cap notificació que es pugui mostrar</string>
+
+    <string name="documentScanningTitle">Escaneig del document</string>
+    <string name="filter_name_color">Color</string>
+    <string name="filter_name_grayscale">Escala de grisos</string>
+    <string name="filter_name_monochrome">Monocrom</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">El dispositiu no té cap aplicació instal·lada per obrir aquest enllaç.</string>
+    <string name="anonymousDiscussionNotSupported">En aquest moment, no s’admeten fòrums anònims als dispositius mòbils. Obriu-lo al navegador per veure el fòrum.</string>
+    <string name="discussionOpenInBrowser">Obre\'l al navegador</string>
 </resources>

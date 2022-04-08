@@ -19,7 +19,7 @@ import android.os.Looper
 import androidx.test.espresso.Root
 
 object GetRootsOracle {
-    private val rootsOracle = RootsOracle_Factory.newRootsOracle(Looper.getMainLooper())
+    private val rootsOracle = RootsOracle_Factory.newInstance(Looper.getMainLooper())
 
     fun listActiveRoots(): List<Root> {
         return rootsOracle.listActiveRoots()

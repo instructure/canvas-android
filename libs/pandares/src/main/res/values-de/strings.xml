@@ -1225,12 +1225,34 @@
     <string name="studentAnnotationToolbarTitle">Studentenanmerkung</string>
     <string name="submissionTypeStudentAnnotation">Studentenanmerkung</string>
     <string name="gradesNoDueDate">Kein Abgabetermin</string>
+    <string name="importantDatesNoDueDate">Kein Abgabetermin</string>
     <string name="missingAssignment">Fehlt</string>
     <string name="dontSave">Nicht speichern</string>
     <string name="textSubmissionExitConfirmationTitle">Entwurf speichern?</string>
     <string name="textSubmissionExitConfirmationMessage">Anderenfalls werden Ihre Änderungen nicht gespeichert.</string>
     <string name="submissionDraftAvailableSubtitle">Tippen Sie hier, um fortzufahren.</string>
     <string name="submissionDraftAvailableTitle">Entwurf verfügbar</string>
-    <string name="errorLoadingSubmission">Beim Laden der Abgabe ist ein Fehler aufgetreten</string>
+    <string name="errorLoadingSubmission">Fehler bei, Laden der Abgabe</string>
     <string name="loadFullContent">Tippen Sie hier, um den vollständigen Content anzuzeigen</string>
+    <string name="dashboardTabImportantDates">Wichtige Termine</string>
+    <string name="importantDatesEmptyTitle">Keine wichtigen Termine</string>
+    <string name="important_dates">Wichtige Termine</string>
+
+    <string name="toolbarCommentLibrary">Kommentarbibliothek</string>
+    <string name="commentLibraryNoSuggestions">Keine Vorschläge vorhanden</string>
+    <string name="speedGraderCommentHint">Kommentar</string>
+    <string name="a11y_schedule_marked_as_done">%s als erledigt markiert</string>
+    <string name="a11y_error_occured">Ein Fehler ist aufgetreten. Versuchen Sie es erneut.</string>
+    <string name="a11y_content_description_accept_invite">Einladung annehmen</string>
+    <string name="a11y_content_description_decline_invite">Einladung ablehnen</string>
+    <string name="no_notifications_to_show">Keine Benachrichtigungen anzuzeigen</string>
+
+    <string name="documentScanningTitle">Scannen von Dokumenten</string>
+    <string name="filter_name_color">Farbe</string>
+    <string name="filter_name_grayscale">Graustufen</string>
+    <string name="filter_name_monochrome">Monochrom</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Auf dem Gerät sind keine Anwendungen installiert, die diesen Link öffnen können.</string>
+    <string name="anonymousDiscussionNotSupported">Anonyme Diskussionen werden derzeit auf Mobilgeräten nicht unterstützt. Im Browser öffnen, um die Diskussion anzuzeigen.</string>
+    <string name="discussionOpenInBrowser">Im Browser öffnen</string>
 </resources>

@@ -21,8 +21,7 @@ import com.instructure.dataseeding.model.AttachmentApiModel
 import com.instructure.dataseeding.model.FileUploadParams
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.StartFileUpload
-import com.instructure.dataseeding.util.CanvasRestAdapter
-import okhttp3.MediaType
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -55,10 +54,10 @@ object FileUploadsApi {
     }
 
     private fun fileUploadsService(token: String): FileUploadsService
-            = CanvasRestAdapter.retrofitWithToken(token).create(FileUploadsService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(FileUploadsService::class.java)
 
     private val noAuthUploadsService: FileUploadsService by lazy {
-        CanvasRestAdapter.noAuthRetrofit.create(FileUploadsService::class.java)
+        CanvasNetworkAdapter.noAuthRetrofit.create(FileUploadsService::class.java)
     }
 
     /**

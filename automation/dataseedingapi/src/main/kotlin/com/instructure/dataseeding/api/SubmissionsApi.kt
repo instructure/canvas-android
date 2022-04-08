@@ -18,7 +18,7 @@
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.dataseeding.util.RetryBackoff
 import retrofit2.Call
@@ -57,7 +57,7 @@ object SubmissionsApi {
     }
 
     private fun submissionsService(token: String): SubmissionsService
-            = CanvasRestAdapter.retrofitWithToken(token).create(SubmissionsService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(SubmissionsService::class.java)
 
     fun submitCourseAssignment(submissionType: SubmissionType,
                                courseId: Long,

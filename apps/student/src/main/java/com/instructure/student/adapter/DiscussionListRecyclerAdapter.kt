@@ -95,7 +95,7 @@ open class DiscussionListRecyclerAdapter(
 
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: String, discussionTopicHeader: DiscussionTopicHeader) {
-        context?.let { (holder as DiscussionListHolder).bind(it, discussionTopicHeader, ColorKeeper.getOrGenerateColor(canvasContext), isDiscussions, callback) }
+        context.let { (holder as DiscussionListHolder).bind(it, discussionTopicHeader, ColorKeeper.getOrGenerateColor(canvasContext), isDiscussions, callback) }
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: String, isExpanded: Boolean) {

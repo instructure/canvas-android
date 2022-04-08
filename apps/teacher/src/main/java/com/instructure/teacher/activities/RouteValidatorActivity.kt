@@ -133,7 +133,7 @@ class RouteValidatorActivity : FragmentActivity() {
                 // Allow the UI to show.
                 Handler().postDelayed({
                     // If it's a file link we need to start a service so that our app can download it before we show it
-                    val route = RouteMatcher.getInternalRoute(url ?: "", domain)
+                    val route = RouteMatcher.getInternalRoute(url, domain)
                     // If we've already downloaded the file we just want to route to it
                     val fileDownloaded = intent.extras?.getBoolean(Const.FILE_DOWNLOADED, false) ?: false
                     if (!fileDownloaded && (route?.routeContext == RouteContext.FILE || route?.primaryClass == FileListFragment::class.java && route.queryParamsHash.containsKey(RouterParams.PREVIEW))) {
@@ -144,7 +144,7 @@ class RouteValidatorActivity : FragmentActivity() {
                         intent.putExtras(bundle)
                         this@RouteValidatorActivity.startService(intent)
                     }
-                    RouteMatcher.routeUrl(this@RouteValidatorActivity, url ?: "", domain)
+                    RouteMatcher.routeUrl(this@RouteValidatorActivity, url, domain)
 
                     finish()
                 }, 1000)

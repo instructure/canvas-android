@@ -7,7 +7,7 @@ import com.instructure.dataseeding.model.ModuleApiModel
 import com.instructure.dataseeding.model.ModuleItemApiModel
 import com.instructure.dataseeding.model.UpdateModule
 import com.instructure.dataseeding.model.UpdateModuleWrapper
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -32,7 +32,7 @@ object ModulesApi {
     }
 
     private fun modulesService(token: String): ModulesService
-            = CanvasRestAdapter.retrofitWithToken(token).create(ModulesService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(ModulesService::class.java)
 
     fun createModule(courseId: Long, teacherToken: String, unlockAt: String?): ModuleApiModel {
         val module = CreateModuleWrapper(Randomizer.createModule(unlockAt))

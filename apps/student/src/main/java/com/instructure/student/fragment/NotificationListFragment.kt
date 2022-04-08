@@ -144,7 +144,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(
-            view!!,
+            requireView(),
             requireContext(),
             recyclerAdapter,
             R.id.swipeRefreshLayout,
@@ -191,7 +191,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
     companion object {
         fun addFragmentForStreamItem(streamItem: StreamItem, context: Context, fromWidget: Boolean) {
             if (fromWidget) {
-                RouteMatcher.routeUrl(context, streamItem.url ?: streamItem.htmlUrl ?: "") // If we get null URLs, we can't route, so the behavior will just launch the app to whatever screen they were on last
+                RouteMatcher.routeUrl(context, streamItem.url ?: streamItem.htmlUrl) // If we get null URLs, we can't route, so the behavior will just launch the app to whatever screen they were on last
                 return
             }
 

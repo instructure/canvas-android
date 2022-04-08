@@ -25,6 +25,7 @@ import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.not
 import java.text.DecimalFormat
+import java.util.Locale
 
 class SpeedGraderGradePage : BasePage() {
 
@@ -40,7 +41,7 @@ class SpeedGraderGradePage : BasePage() {
     //dialog views
     private val gradeEditText by WaitForViewWithId(R.id.gradeEditText)
     private val customizeGradeTitle by WaitForViewWithText(R.string.customize_grade)
-    private val confirmDialogButton by WaitForViewWithStringText(getStringFromResource(android.R.string.ok).toUpperCase())
+    private val confirmDialogButton by WaitForViewWithStringText(getStringFromResource(android.R.string.ok).uppercase(Locale.getDefault()))
 
 
     fun openGradeDialog() {

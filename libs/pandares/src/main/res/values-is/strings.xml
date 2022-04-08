@@ -1225,6 +1225,7 @@
     <string name="studentAnnotationToolbarTitle">Athugasemd nemanda</string>
     <string name="submissionTypeStudentAnnotation">Athugasemd nemanda</string>
     <string name="gradesNoDueDate">Enginn skiladagur</string>
+    <string name="importantDatesNoDueDate">Enginn skiladagur</string>
     <string name="missingAssignment">Vantar</string>
     <string name="dontSave">Ekki vista</string>
     <string name="textSubmissionExitConfirmationTitle">Vista uppkast?</string>
@@ -1233,4 +1234,25 @@
     <string name="submissionDraftAvailableTitle">Uppkast í boði</string>
     <string name="errorLoadingSubmission">Villa kom upp við að hlaða skilum</string>
     <string name="loadFullContent">Pikkaðu til að sjá allt efni</string>
+    <string name="dashboardTabImportantDates">Mikilvægar dagsetningar</string>
+    <string name="importantDatesEmptyTitle">Engar mikilvægar dagsetningar</string>
+    <string name="important_dates">Mikilvægar dagsetningar</string>
+
+    <string name="toolbarCommentLibrary">Athugasemdasafn</string>
+    <string name="commentLibraryNoSuggestions">Engar tillögur fundust</string>
+    <string name="speedGraderCommentHint">Athugasemd</string>
+    <string name="a11y_schedule_marked_as_done">%s merkt sem lokið</string>
+    <string name="a11y_error_occured">Villa kom upp, reyndu aftur.</string>
+    <string name="a11y_content_description_accept_invite">Þiggja boð</string>
+    <string name="a11y_content_description_decline_invite">Hafna boði</string>
+    <string name="no_notifications_to_show">Engar tilkynningar til að sýna</string>
+
+    <string name="documentScanningTitle">Skjalaskönnun</string>
+    <string name="filter_name_color">Litur</string>
+    <string name="filter_name_grayscale">Gráskala</string>
+    <string name="filter_name_monochrome">Einlitt</string>
+    <string name="filter_name_original">Upphaflegt</string>
+    <string name="noCompatibleAppInstalled">Tækið er ekki með uppsett forrit sem getur opnað þessa skrá.</string>
+    <string name="anonymousDiscussionNotSupported">Nafnlausar umræður eru ekki studdar í fartækjum eins og er. Opna í vafra til að skoða umræðu.</string>
+    <string name="discussionOpenInBrowser">Opna í vafra</string>
 </resources>

@@ -24,6 +24,7 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -55,12 +56,15 @@ import com.instructure.student.features.dashboard.edit.EditDashboardFragment
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
+import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.course_grid_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.fragment_course_grid.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.swipeRefreshLayout
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.listView as recyclerView
+
+private const val LIST_SPAN_COUNT = 1
 
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 @PageView
@@ -69,6 +73,9 @@ class DashboardFragment : ParentFragment() {
     private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private var recyclerAdapter: DashboardRecyclerAdapter? = null
+
+    private var courseColumns: Int = LIST_SPAN_COUNT
+    private var groupColumns: Int = LIST_SPAN_COUNT
 
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -92,7 +99,7 @@ class DashboardFragment : ParentFragment() {
 
             override fun onRefreshFinished() {
                 swipeRefreshLayout?.isRefreshing = false
-                notificationsFragment.setVisible()
+                notificationsFragment?.setVisible()
             }
 
             override fun onSeeAllCourses() {
@@ -149,8 +156,40 @@ class DashboardFragment : ParentFragment() {
 
     override fun applyTheme() {
         toolbar.title = title()
-        navigation?.attachNavigationDrawer(this, toolbar)
         // Styling done in attachNavigationDrawer
+        navigation?.attachNavigationDrawer(this, toolbar)
+
+        toolbar.setMenu(R.menu.menu_dashboard) { item ->
+            when (item.itemId) {
+                R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+            }
+        }
+
+        val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
+        val menuIconRes = if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
+        dashboardLayoutMenuItem.setIcon(menuIconRes)
+
+        val menuTitleRes = if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+        dashboardLayoutMenuItem.setTitle(menuTitleRes)
+    }
+
+    private fun changeDashboardLayout(item: MenuItem) {
+        if (StudentPrefs.listDashboard) {
+            item.setIcon(R.drawable.ic_list_dashboard)
+            item.setTitle(R.string.dashboardSwitchToListView)
+            StudentPrefs.listDashboard = false
+        } else {
+            item.setIcon(R.drawable.ic_grid_dashboard)
+            item.setTitle(R.string.dashboardSwitchToGridView)
+            StudentPrefs.listDashboard = true
+        }
+
+        recyclerView.fadeAnimationWithAction {
+            courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
+            groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
+            (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = courseColumns * groupColumns
+            view?.post { recyclerAdapter?.notifyDataSetChanged() }
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -174,12 +213,11 @@ class DashboardFragment : ParentFragment() {
 
     private fun configureRecyclerView() {
         // Set up GridLayoutManager
-        val courseColumns = resources.getInteger(R.integer.course_card_columns)
-        val groupColumns = resources.getInteger(R.integer.group_card_columns)
-        val totalColumns = courseColumns * groupColumns
+        courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
+        groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
         val layoutManager = GridLayoutManager(
             context,
-            totalColumns,
+            courseColumns * groupColumns,
             RecyclerView.VERTICAL,
             false
         )
@@ -189,7 +227,7 @@ class DashboardFragment : ParentFragment() {
                 return when (DashboardRecyclerAdapter.ItemType.values()[viewType]) {
                     DashboardRecyclerAdapter.ItemType.COURSE -> groupColumns
                     DashboardRecyclerAdapter.ItemType.GROUP -> courseColumns
-                    else -> totalColumns
+                    else -> courseColumns * groupColumns
                 }
             }
         }
@@ -207,8 +245,8 @@ class DashboardFragment : ParentFragment() {
                 swipeRefreshLayout.isRefreshing = false
             } else {
                 recyclerAdapter?.refresh()
-                notificationsFragment.setGone()
-                (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment).refresh()
+                notificationsFragment?.setGone()
+                (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment?)?.refresh()
             }
         }
 

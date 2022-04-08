@@ -91,6 +91,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private var discussionTitle: String? by NullableStringArg(key = DISCUSSION_TITLE)
     private var discussionEntryId: Long by LongArg(default = 0L, key = DISCUSSION_ENTRY_ID)
     private var isNestedDetail: Boolean by BooleanArg(default = false, key = IS_NESTED_DETAIL)
+    private val groupDiscussion: Boolean by BooleanArg(default = false, key = GROUP_DISCUSSION)
 
     private var scrollPosition: Int = 0
     private var authenticatedSessionURL: String? = null
@@ -247,7 +248,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                     discussionRepliesWebView?.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
                 }
             }
-            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+            if (!groupDiscussion) {
+                DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+            }
         } catch {
             Logger.e("Error with DiscussionDetailsFragment:markAsRead() " + it.message)
         }
@@ -287,7 +290,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                             entry.deleted = true
                             updateDiscussionAsDeleted(entry)
                             discussionTopicHeader.decrementDiscussionSubentryCount()
-                            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+                            if (!groupDiscussion) {
+                                DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+                            }
                         }
                     }
                 }
@@ -566,7 +571,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             loadDiscussionTopicHeaderViews(discussionTopicHeader)
             addAccessibilityButton()
 
-            if (forceRefresh || discussionTopic == null) {
+            // We only want to request the full discussion if it is not anonymous. Anonymous discussions are not supported by the API
+            if (forceRefresh || discussionTopic == null && discussionTopicHeader.anonymousState == null) {
                 // forceRefresh is true, fetch the discussion topic
                 discussionTopic = getDiscussionTopic()
 
@@ -578,6 +584,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 discussionProgressBar.setGone()
                 discussionTopicRepliesTitle.setGone()
                 swipeRefreshLayout.isRefreshing = false
+
+                if (discussionTopicHeader.anonymousState != null) {
+                    showAnonymousDiscussionView()
+                }
             } else {
                 val html = inBackground {
                     DiscussionUtils.createDiscussionTopicHtml(
@@ -602,6 +612,18 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             }
         } catch {
             Logger.e("Error loading discussion topic " + it.message)
+        }
+    }
+
+    private fun showAnonymousDiscussionView() {
+        anonymousDiscussionsNotSupported.setVisible()
+        openInBrowser.setVisible(discussionTopicHeader.htmlUrl?.isNotEmpty() == true)
+        replyToDiscussionTopic.setGone()
+        swipeRefreshLayout.isEnabled = false
+        openInBrowser.onClick {
+            discussionTopicHeader.htmlUrl?.let { url ->
+                InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(canvasContext, url, true, true))
+            }
         }
     }
 
@@ -680,7 +702,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
         attachmentIcon.onClick { _ ->
-            discussionTopicHeader.attachments?.let { viewAttachments(it) }
+            viewAttachments(discussionTopicHeader.attachments)
         }
     }
 
@@ -768,7 +790,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
             discussionTopicHeader.incrementDiscussionSubentryCount() // Update subentry count
             discussionTopicHeader.lastReplyDate?.time = Date().time // Update last post time
-            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+            if (!groupDiscussion) {
+                DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+            }
             // needed for when discussions are in modules
             applyTheme()
         }
@@ -803,6 +827,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         const val DISCUSSION_TOPIC = "discussion_topic"
         const val DISCUSSION_ENTRY_ID = "discussion_entry_id"
         const val IS_NESTED_DETAIL = "is_nested_detail"
+        const val GROUP_DISCUSSION = "group_discussion"
 
         private const val JS_CONST_SET_LIKED = "setLiked"
         private const val JS_CONST_SET_UNLIKED = "setUnliked"
@@ -815,11 +840,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             return Route(null, DiscussionDetailsFragment::class.java, canvasContext, bundle)
         }
 
-        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long, title: String? = null): Route {
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long, title: String? = null, groupDiscussion: Boolean = false): Route {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
                 putString(DISCUSSION_TITLE, title)
+                putBoolean(GROUP_DISCUSSION, groupDiscussion)
             }
             return Route(null, DiscussionDetailsFragment::class.java, canvasContext, bundle)
         }

@@ -250,12 +250,12 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             val threshold = scrollContent.height - loadMoreContainer.top
             val bottomOffset = contentContainer.height + contentContainer.scrollY - scrollContent.bottom
             if (scrollContent.height <= contentContainer.height) {
-                presenter?.loadMoreSubmissions()
+                presenter.loadMoreSubmissions()
             } else if (triggered && (threshold + touchSlop + bottomOffset < 0)) {
                 triggered = false
             } else if (!triggered && (threshold + bottomOffset > 0)) {
                 triggered = true
-                presenter?.loadMoreSubmissions()
+                presenter.loadMoreSubmissions()
             }
         }
 

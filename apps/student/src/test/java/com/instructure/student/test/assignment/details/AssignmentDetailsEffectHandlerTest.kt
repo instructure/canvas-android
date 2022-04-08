@@ -50,6 +50,7 @@ import kotlinx.coroutines.test.setMain
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -1342,7 +1343,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         null,
         null,
         Response.error<T>(
-            ResponseBody.create(null, ""),
+            "".toResponseBody(null),
             okhttp3.Response.Builder()
                 .protocol(Protocol.HTTP_1_1)
                 .message(message)

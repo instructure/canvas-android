@@ -79,11 +79,11 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     override fun onPresenterPrepared(presenter: CourseSettingsFragmentPresenter) {
         editCourseNameRoot.onClickWithRequireNetwork {
-            presenter?.editCourseNameClicked()
+            presenter.editCourseNameClicked()
         }
 
         editHomeRoot.onClickWithRequireNetwork {
-            presenter?.editCourseHomePageClicked()
+            presenter.editCourseHomePageClicked()
         }
     }
 
@@ -97,7 +97,7 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     override fun showEditCourseNameDialog() {
         val dialog: EditCourseNameDialog = EditCourseNameDialog.getInstance(requireActivity().supportFragmentManager, mCourse) { newName ->
-            presenter?.editCourseName(newName, mCourse)
+            presenter.editCourseName(newName, mCourse)
         }
 
         dialog.show(requireActivity().supportFragmentManager, EditCourseNameDialog::class.java.simpleName)
@@ -107,7 +107,7 @@ class CourseSettingsFragment : BasePresenterFragment<
         val (keys, values) = mHomePages.toList().unzip()
         val selectedIdx = keys.indexOf(mCourse.homePage?.apiString)
         val dialog = RadioButtonDialog.getInstance(requireActivity().supportFragmentManager, getString(R.string.set_home_to), values as ArrayList<String>, selectedIdx) { idx ->
-                presenter?.editCourseHomePage(keys[idx], mCourse)
+            presenter.editCourseHomePage(keys[idx], mCourse)
         }
 
        dialog.show(requireActivity().supportFragmentManager, RadioButtonDialog::class.java.simpleName)

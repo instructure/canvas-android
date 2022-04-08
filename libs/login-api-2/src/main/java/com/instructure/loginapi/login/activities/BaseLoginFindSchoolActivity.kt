@@ -55,6 +55,7 @@ import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
 import kotlinx.android.synthetic.main.activity_find_school.*
 import retrofit2.Response
+import java.util.Locale
 import java.util.regex.Pattern
 
 abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
@@ -216,7 +217,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
     }
 
     private fun validateDomain(accountDomain: AccountDomain) {
-        var url: String? = accountDomain.domain!!.toLowerCase().replace(" ", "")
+        var url: String? = accountDomain.domain!!.lowercase(Locale.getDefault()).replace(" ", "")
 
         //if the user enters nothing, try to connect to canvas.instructure.com
         if (url!!.trim { it <= ' ' }.isEmpty()) {

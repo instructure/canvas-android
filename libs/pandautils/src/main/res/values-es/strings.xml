@@ -50,6 +50,7 @@
     <string name="fromCamera">Cámara</string>
     <string name="fromGallery">Galería</string>
     <string name="fromDevice">Dispositivo</string>
+    <string name="fromDocumentScanning">Escáner</string>
     <string name="fromOtherApplication">Otro</string>
     <string name="Domain">Dominio</string>
     <string name="files">Archivos</string>
@@ -483,4 +484,5 @@
     <string name="a11y_mark_as_done">Marcar como realizado</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">¡Ay, no! Ocurrió un error al cargar los detalles del curso.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s marcado como no realizado</string>
 </resources>

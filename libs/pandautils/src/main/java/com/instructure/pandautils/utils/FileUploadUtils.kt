@@ -259,7 +259,7 @@ object FileUploadUtils {
         val index = fileNameWithExtension.indexOf(".")
         var ext = ""
         if (index != -1) {
-            ext = fileNameWithExtension.substring(index + 1).toLowerCase(Locale.getDefault()) // Add one so the dot isn't included
+            ext = fileNameWithExtension.substring(index + 1).lowercase(Locale.getDefault()) // Add one so the dot isn't included
         }
         return mime.getMimeTypeFromExtension(ext).orEmpty()
     }

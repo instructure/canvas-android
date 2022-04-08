@@ -23,15 +23,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
-apply from: '../../gradle/coverage.gradle'
 apply plugin: 'dagger.hilt.android.plugin'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
-
-if (coverageEnabled) {
-    apply from: '../../gradle/jacoco.gradle'
-}
 
 android {
     packagingOptions {
@@ -44,8 +39,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 45
-        versionName = '1.16.0'
+        versionCode = 46
+        versionName = '1.16.1'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -132,6 +127,11 @@ android {
             force 'android.arch.lifecycle:runtime:1.0.3'
 
             force Libs.KOTLIN_COROUTINES_CORE
+
+            // Some libraries want to resolve never versions of this library that requires targetSdkVersion 31.
+            // Once we upgrade the targetSdkVersion this should be removed.
+            force 'androidx.core:core:1.6.0'
+            force 'androidx.core:core-ktx:1.6.0'
         }
     }
 
@@ -212,14 +212,6 @@ dependencies {
     implementation Libs.MOBIUS_ANDROID
     implementation Libs.MOBIUS_EXTRAS
 
-    implementation (Libs.FIREBASE_ANALYTICS) {
-        transitive = true
-    }
-
-    implementation (Libs.FIREBASE_CRASHLYTICS) {
-        transitive = true
-    }
-
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
@@ -262,7 +254,17 @@ dependencies {
     implementation Libs.ANDROIDX_VECTOR
     implementation Libs.PLAY_CORE
     implementation Libs.PLAY_CORE_KTX
+
+    /* Firebase */
+    implementation platform(Libs.FIREBASE_BOM)
     implementation Libs.FIREBASE_MESSAGING
+    implementation (Libs.FIREBASE_ANALYTICS) {
+        transitive = true
+    }
+    implementation (Libs.FIREBASE_CRASHLYTICS) {
+        transitive = true
+    }
+
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
     /* AAC */
@@ -299,42 +301,17 @@ if (coverageEnabled) {
                            '**/*$ViewInjector*.*',
                            '**/*$ViewBinder*.*',
                            '**/BuildConfig.*',
-                           '**/Manifest*.*']
+                           '**/Manifest*.*',
+                           '**/generated/**',
+                           '**/*Receiver*.*',
+                           '**/model*/**',
+                           '**/di/**',
+                           '**/service*/**']
         )
 
         // project.buildDir is /canvas-android/apps/teacher/build
         sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
         executionData.setFrom fileTree(dir: "results", includes: ['**/*.ec'])
-
-        reports {
-            // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
-            html.enabled true
-            csv.enabled  false
-            xml.enabled  false
-        }
-    }
-
-    task combinedJacoco(type: JacocoReport) {
-        group = "Reporting"
-        description = "Generate Jacoco coverage reports for FTL + unit tests."
-
-        def productFlavor = 'qa'
-        def buildType = 'debug'
-
-        classDirectories.setFrom fileTree(
-                dir: "${project.buildDir}/tmp/kotlin-classes/qaDebug",
-                excludes: ['**/R.class',
-                           '**/R$*.class',
-                           '**/*$ViewInjector*.*',
-                           '**/*$ViewBinder*.*',
-                           '**/BuildConfig.*',
-                           '**/Manifest*.*'],
-                //includes: ['**/com/instructure/*']
-        )
-
-        // project.buildDir is /canvas-android/apps/teacher/build
-        sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
-        executionData.setFrom fileTree(dir: ".", includes: ['results/**/*.ec', '**/testQaDebugUnitTest.exec'])
 
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/

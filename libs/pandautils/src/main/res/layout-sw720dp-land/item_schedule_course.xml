@@ -44,13 +44,14 @@
             android:layout_weight="1"
             android:background="?android:selectableItemBackground"
             android:clickable="@{itemViewModel.data.openable}"
+            android:contentDescription="@{@string/a11y_schedule_course_header_content_description(itemViewModel.data.courseName)}"
             android:importantForAccessibility="yes"
             android:minHeight="80dp"
             android:onClick="@{() -> itemViewModel.onHeaderClick.invoke()}"
             app:layout_constraintEnd_toStartOf="@+id/plannerItems">
 
             <TextView
-                android:id="@+id/courseName"
+                android:id="@+id/scheduleCourseHeaderText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

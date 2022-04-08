@@ -50,6 +50,7 @@
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Oriel</string>
     <string name="fromDevice">Dyfais</string>
+    <string name="fromDocumentScanning">Sganiwr</string>
     <string name="fromOtherApplication">Arall</string>
     <string name="Domain">Parth</string>
     <string name="files">Ffeiliau</string>
@@ -483,4 +484,5 @@
     <string name="a11y_mark_as_done">Marcio eu bod wedi’u gwneud</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">O na! Gwall wrth lwytho manylion y cwrs.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s wedi’i farcio fel heb ei gwblhau</string>
 </resources>
