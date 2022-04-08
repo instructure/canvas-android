@@ -1269,4 +1269,18 @@
     <string name="toolbarCommentLibrary">Библиотека комментариев</string>
     <string name="commentLibraryNoSuggestions">нет доступных предложений</string>
     <string name="speedGraderCommentHint">Комментарий</string>
+    <string name="a11y_schedule_marked_as_done">%s отмечено как выполненное</string>
+    <string name="a11y_error_occured">Ошибка, попробуйте еще раз.</string>
+    <string name="a11y_content_description_accept_invite">Принять приглашение</string>
+    <string name="a11y_content_description_decline_invite">Отклонить приглашение</string>
+    <string name="no_notifications_to_show">Нет уведомлений для отображения</string>
+
+    <string name="documentScanningTitle">Сканирование документов</string>
+    <string name="filter_name_color">Цвет</string>
+    <string name="filter_name_grayscale">Оттенки серого</string>
+    <string name="filter_name_monochrome">Черно-белый</string>
+    <string name="filter_name_original">Исходный</string>
+    <string name="noCompatibleAppInstalled">На вашем устройстве не установлено приложение, с помощью которого можно открыть эту ссылку.</string>
+    <string name="anonymousDiscussionNotSupported">В настоящее время функция дискуссии не поддерживаются на мобильных устройствах. Открыть в браузере для просмотра дискуссии.</string>
+    <string name="discussionOpenInBrowser">Открыть в браузере</string>
 </resources>

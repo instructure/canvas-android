@@ -79,7 +79,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     // Default number will get reset
     private var itemsCount = 3
 
-    private lateinit var adapter: CourseModuleProgressionAdapter
+    private var adapter: CourseModuleProgressionAdapter? = null
 
     // There's a case where we try to get the previous module and the previous module has a paginated list
     // of items.  A task will get those items and populate them in the background, but it throws off the
@@ -126,7 +126,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     // This function is mostly for the internal web view fragments so we can go back in the webview
     override fun handleBackPressed(): Boolean {
         if (viewPager != null && viewPager.currentItem != -1 && items.isNotEmpty()) {
-            val pFrag = adapter.instantiateItem(viewPager, viewPager.currentItem) as? ParentFragment
+            val pFrag = adapter?.instantiateItem(viewPager, viewPager.currentItem) as? ParentFragment
             if (pFrag != null && pFrag.handleBackPressed()) {
                 return true
             }
@@ -279,7 +279,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             // Reload the sequential module object to update the subsequent items that may now be unlocked
             // The user has viewed the item, and may have completed the contribute/submit requirements for a
             // discussion/assignment.
-            adapter.notifyDataSetChanged()
+            adapter?.notifyDataSetChanged()
             addLockedIconIfNeeded(modules, items, groupPos, childPos)
 
             // Mark the item as viewed
@@ -385,7 +385,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 currentPos += itemsAdded
             }
 
-            adapter.notifyDataSetChanged()
+            adapter?.notifyDataSetChanged()
 
             // When we tap on a module item it will try to load the previous and next_item modules, this can throw off the module item that was already loaded,
             // so load it to the current position

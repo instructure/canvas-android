@@ -50,6 +50,7 @@
     <string name="fromCamera">Videocamera</string>
     <string name="fromGallery">Galleria</string>
     <string name="fromDevice">Dispositivo</string>
+    <string name="fromDocumentScanning">Analizzatore</string>
     <string name="fromOtherApplication">Altro</string>
     <string name="Domain">Dominio</string>
     <string name="files">File</string>
@@ -483,4 +484,5 @@
     <string name="a11y_mark_as_done">Contrassegna come fatto</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Spiacenti. Si è verificato un errore durante il caricamento dei dettagli del corso.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s contrassegnato come non fatto</string>
 </resources>

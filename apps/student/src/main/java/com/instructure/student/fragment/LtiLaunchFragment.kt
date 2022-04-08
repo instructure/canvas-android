@@ -153,7 +153,9 @@ class LtiLaunchFragment : ParentFragment() {
 
     private fun displayError() {
         toast(R.string.errorOccurred)
-        (requireContext() as? Activity)?.onBackPressed()
+        if (activity != null) {
+            requireActivity().onBackPressed()
+        }
     }
 
     private suspend fun getLtiTool(url: String): LTITool? {

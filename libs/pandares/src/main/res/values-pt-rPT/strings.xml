@@ -1241,4 +1241,18 @@
     <string name="toolbarCommentLibrary">Biblioteca de Comentários</string>
     <string name="commentLibraryNoSuggestions">Não há sugestões disponíveis</string>
     <string name="speedGraderCommentHint">Comentário</string>
+    <string name="a11y_schedule_marked_as_done">%s marcado como feito</string>
+    <string name="a11y_error_occured">Ocorreu um erro, por favor tente novamente.</string>
+    <string name="a11y_content_description_accept_invite">Aceitar convite</string>
+    <string name="a11y_content_description_decline_invite">Declinar convite</string>
+    <string name="no_notifications_to_show">Nenhuma notificação para mostrar</string>
+
+    <string name="documentScanningTitle">Digitalização de documentos</string>
+    <string name="filter_name_color">Cor</string>
+    <string name="filter_name_grayscale">Escala de cinzentos</string>
+    <string name="filter_name_monochrome">Monocromático</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">O seu dispositivo não tem nenhuma aplicação instalada que possa abrir esta ligação.</string>
+    <string name="anonymousDiscussionNotSupported">No momento, discussões anónimas não são suportadas no telemóvel. Abrir no navegador para ver a discussão.</string>
+    <string name="discussionOpenInBrowser">Abrir no navegador</string>
 </resources>

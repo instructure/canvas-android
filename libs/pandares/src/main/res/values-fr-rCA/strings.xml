@@ -1241,4 +1241,14 @@
     <string name="toolbarCommentLibrary">Bibliothèque de commentaires</string>
     <string name="commentLibraryNoSuggestions">Aucune suggestion disponible</string>
     <string name="speedGraderCommentHint">Commentaire</string>
+    <string name="a11y_schedule_marked_as_done">%s marqué comme terminé</string>
+    <string name="a11y_error_occured">Une erreur s\'est produite, veuillez réessayer.</string>
+    <string name="a11y_content_description_accept_invite">Accepter l’invitation</string>
+    <string name="a11y_content_description_decline_invite">Refuser l\'invitation</string>
+    <string name="documentScanningTitle">Numérisation de documents</string>
+    <string name="filter_name_color">Couleur</string>
+    <string name="filter_name_grayscale">Niveaux de gris</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Votre dispositif ne dispose pas des applications qui peuvent ouvrir ce lien.</string>
 </resources>

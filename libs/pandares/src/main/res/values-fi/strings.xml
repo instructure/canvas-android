@@ -1241,4 +1241,18 @@
     <string name="toolbarCommentLibrary">Huomautuskirjasto</string>
     <string name="commentLibraryNoSuggestions">Ei ehdotuksia saatavissa</string>
     <string name="speedGraderCommentHint">Kommentti</string>
+    <string name="a11y_schedule_marked_as_done">%s merkitty tehdyksi</string>
+    <string name="a11y_error_occured">Ilmeni virhe, yritä uudelleen.</string>
+    <string name="a11y_content_description_accept_invite">Hyväksy kutsu</string>
+    <string name="a11y_content_description_decline_invite">Kiellä kutsu</string>
+    <string name="no_notifications_to_show">Ei näytettäviä huomautuksia</string>
+
+    <string name="documentScanningTitle">Asiakirjan skannaus</string>
+    <string name="filter_name_color">Väri</string>
+    <string name="filter_name_grayscale">Harmaasävy</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Alkuperäinen</string>
+    <string name="noCompatibleAppInstalled">Laitteessasi ei ole asennettuna sovelluksia, jotka voisivat avata tämän linkin.</string>
+    <string name="anonymousDiscussionNotSupported">Nimettömiä keskusteluita ei tällä hetkellä tueta matkapuhelimessa. Avaa selaimessa tarkastellaksesi keskustelua.</string>
+    <string name="discussionOpenInBrowser">Avaa selaimessa</string>
 </resources>

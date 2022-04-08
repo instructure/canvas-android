@@ -50,6 +50,7 @@
     <string name="fromCamera">摄像机、照相机</string>
     <string name="fromGallery">画廊</string>
     <string name="fromDevice">设备</string>
+    <string name="fromDocumentScanning">扫描仪</string>
     <string name="fromOtherApplication">其他</string>
     <string name="Domain">域</string>
     <string name="files">文件</string>
@@ -477,4 +478,5 @@
     <string name="a11y_mark_as_done">标记为完成</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">嗳哟！加载课程详情时遇到错误。</string>
+    <string name="a11y_schedule_marked_as_not_done">%s 已标记为未完成</string>
 </resources>

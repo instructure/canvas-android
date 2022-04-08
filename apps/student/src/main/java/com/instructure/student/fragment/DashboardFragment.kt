@@ -99,7 +99,7 @@ class DashboardFragment : ParentFragment() {
 
             override fun onRefreshFinished() {
                 swipeRefreshLayout?.isRefreshing = false
-                notificationsFragment.setVisible()
+                notificationsFragment?.setVisible()
             }
 
             override fun onSeeAllCourses() {
@@ -245,8 +245,8 @@ class DashboardFragment : ParentFragment() {
                 swipeRefreshLayout.isRefreshing = false
             } else {
                 recyclerAdapter?.refresh()
-                notificationsFragment.setGone()
-                (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment).refresh()
+                notificationsFragment?.setGone()
+                (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment?)?.refresh()
             }
         }
 

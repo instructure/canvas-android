@@ -1241,4 +1241,18 @@
     <string name="toolbarCommentLibrary">Kommentarbibliothek</string>
     <string name="commentLibraryNoSuggestions">Keine Vorschläge vorhanden</string>
     <string name="speedGraderCommentHint">Kommentar</string>
+    <string name="a11y_schedule_marked_as_done">%s als erledigt markiert</string>
+    <string name="a11y_error_occured">Ein Fehler ist aufgetreten. Versuchen Sie es erneut.</string>
+    <string name="a11y_content_description_accept_invite">Einladung annehmen</string>
+    <string name="a11y_content_description_decline_invite">Einladung ablehnen</string>
+    <string name="no_notifications_to_show">Keine Benachrichtigungen anzuzeigen</string>
+
+    <string name="documentScanningTitle">Scannen von Dokumenten</string>
+    <string name="filter_name_color">Farbe</string>
+    <string name="filter_name_grayscale">Graustufen</string>
+    <string name="filter_name_monochrome">Monochrom</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Auf dem Gerät sind keine Anwendungen installiert, die diesen Link öffnen können.</string>
+    <string name="anonymousDiscussionNotSupported">Anonyme Diskussionen werden derzeit auf Mobilgeräten nicht unterstützt. Im Browser öffnen, um die Diskussion anzuzeigen.</string>
+    <string name="discussionOpenInBrowser">Im Browser öffnen</string>
 </resources>
