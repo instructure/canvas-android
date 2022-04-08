@@ -316,14 +316,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "Es posible que las asignaturas de sus alumnos aún no estén publicadas.",
+  "Your student’s courses might not be published yet.": "Es posible que las asignaturas de sus estudiantes aún no estén publicadas.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your your student’s courses.": "Ha habido un error al cargar las asignaturas de sus alumnos.",
+  "There was an error loading your your student’s courses.": "Ha habido un error al cargar las asignaturas de sus estudiantes.",
   "@There was an error loading your your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",

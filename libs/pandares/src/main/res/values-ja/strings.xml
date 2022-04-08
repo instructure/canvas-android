@@ -46,7 +46,7 @@
     <string name="submissionAndRubric">提出 &amp; ルブリック</string>
     <string name="commentsAndRubric">コメント &amp; ルブリック</string>
     <string name="errorLoadingAssignment">この課題の読み込み中、問題がありました。接続を確認して、もう一度お試しください。</string>
-    <string name="submitted">タスクの成績を送信</string>
+    <string name="submitted">タスクの評定を送信</string>
     <string name="notSubmitted">未提出</string>
     <string name="allowedFileTypes">許可されているファイルタイプ</string>
     <string name="attempts">回数</string>
@@ -107,7 +107,7 @@
     <string name="outOfPointsFormatted">/%s 点</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s 点</string>
     <string name="gradeExcused">免除</string>
-    <string name="finalGradeFormatted">最終的な成績：%s</string>
+    <string name="finalGradeFormatted">最終的な評定：%s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s 点/ %2$s 点</string>
     <string name="enterWhatIfScore">仮説スコアを入力する</string>
@@ -134,7 +134,7 @@
     <string name="commentSubmissionTypeText">テキストの提出</string>
     <string name="commentSubmissionTypeExternalTool">外部ツール提出</string>
     <string name="commentSubmissionTypeDiscussion">ディスカッションへの提出</string>
-    <string name="commentSubmissionTypeQuiz">クイズへの提出物</string>
+    <string name="commentSubmissionTypeQuiz">小テストへの提出物</string>
     <string name="commentSubmissionTypeQuizAttempt">%d 試行</string>
     <string name="commentSubmissionTypeMediaFile">メディアファイル</string>
     <string name="commentSubmissionTypeAudio">オーディオ</string>
@@ -242,7 +242,7 @@
     <string name="unread">未読</string>
     <string name="archived">アーカイブ済み</string>
     <string name="sent">送信済み</string>
-    <string name="grade">成績</string>
+    <string name="grade">評定</string>
     <string name="clearFilter">フィルターをクリア</string>
     <string name="addMessage">メッセージを追加</string>
     <string name="monologue">モノローグ</string>
@@ -394,8 +394,8 @@
     <string name="syllabus">シラバス</string>
     <string name="summary">概要</string>
     <string name="coursePeople">メンバー</string>
-    <string name="teachersTas">講師&amp; TAs</string>
-    <string name="students">受講生</string>
+    <string name="teachersTas">教員&amp; TAs</string>
+    <string name="students">受講者</string>
     <string name="observers">オブザーバー</string>
     <string name="syllabusMissing">シラバスが追加されていません。</string>
     <string name="syllabusEventsError">モジュールの読込時にエラーが発生しました。</string>
@@ -412,11 +412,11 @@
     <string name="defaultIcon">デフォルトアイコン</string>
     <string name="discussionIcon">ディスカッションアイコン</string>
     <string name="gradesIcon">採点アイコン</string>
-    <string name="grades">成績</string>
+    <string name="grades">評定</string>
     <string name="allGradingPeriods">すべての採点期間</string>
-    <string name="calendar">予定表</string>
+    <string name="calendar">カレンダー</string>
     <string name="bookmarks">ブックマーク</string>
-    <string name="showGrades">成績を表示</string>
+    <string name="showGrades">評定を表示</string>
     <string name="colorOverlay">カラーオーバーレイ</string>
     <string name="gradesAreHidden">このコースには、採点は表示されません。</string>
 
@@ -445,9 +445,9 @@
 
     <string name="emptyId">IDは空欄にはできません</string>
 
-    <string name="goToQuiz">クイズへ移動</string>
+    <string name="goToQuiz">小テストへ移動</string>
 
-    <string name="quizzes">クイズ</string>
+    <string name="quizzes">小テスト</string>
 
     <string name="lastDiscussionPost">最後のポスト</string>
 
@@ -498,7 +498,7 @@
     <string name="lockedAssignmentDesc">この課題はモジュールの一部であり、%sロックがまだ解除されていません。</string>
     <string name="lockedPageDesc">このページは、%sモジュールの一部であり、まだアンロックされていません。</string>
     <string name="lockedFileDesc">このファイルは、%sモジュールの一部であり、まだアンロックされていません。</string>
-    <string name="lockedQuizDesc">このクイズは、%sモジュールの一部であり、まだアンロックされていません。</string>
+    <string name="lockedQuizDesc">この小テストは、%sモジュールの一部であり、まだアンロックされていません。</string>
     <string name="lockedDiscussionDesc">このディスカッションは、%sモジュールの一部であり、まだアンロックされていません。</string>
     <string name="mustComplete">まずは終了してください:</string>
     <string name="unlockedAt">次においてロック解除されます:</string>
@@ -564,7 +564,7 @@
     <string name="collaborations">コラボレーション</string>
     <string name="conferences">会議</string>
     <string name="chat">チャット</string>
-    <string name="outcomes">結果</string>
+    <string name="outcomes">アウトカム</string>
 
     <!-- Submission View Strings -->
     <string name="visitPage">ページを訪問する:</string>
@@ -595,15 +595,15 @@
     <string name="canvasOnGithub">GitHubのキャンバス</string>
 
     <!-- Quiz Strings -->
-    <string name="assignmentQuizzes">課題クイズ</string>
-    <string name="practiceQuizzes">練習クイズ</string>
+    <string name="assignmentQuizzes">課題小テスト</string>
+    <string name="practiceQuizzes">練習小テスト</string>
     <string name="gradedSurveys">採点されたアンケート</string>
     <string name="surveys">サーベイ</string>
 
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">タスク</string>
-    <string name="gradesWidgetTitle">成績</string>
+    <string name="gradesWidgetTitle">評定</string>
     <string name="notificationWidgetTitle">通知</string>
     <string name="todoWidgetTitleLong">Canvas - タスク</string>
     <string name="gradesWidgetTitleLong">Canvas - 採点</string>
@@ -633,7 +633,7 @@
 
     <!-- Ask Instructor -->
     <string name="whichCourse">この質問はどのコースについてですか？</string>
-    <string name="allTeachers">このメッセージは、そのコースのすべての講師とTAに送信されます</string>
+    <string name="allTeachers">このメッセージは、そのコースのすべての教員とTAに送信されます</string>
     <string name="sending">&#8230;を送信中</string>
     <string name="error">エラー</string>
 
@@ -650,7 +650,7 @@
     <string name="pairWithObserverDetails">あなたとペアリングするために、親にCanvas ParentアプリからこのQRコードをスキャンしてもらいます。このコードは7日間後または1回使用した後に有効期限が切れます。</string>
     <string name="pairingCodeLabel">ペアリングコード：\u0020</string>
     <string name="pairingCodeErrorTitle">ペアリングコードエラー</string>
-    <string name="pairingCodeErrorDescription">ペアリングコードを取得できません。この機能は受講生にのみサポートされています。</string>
+    <string name="pairingCodeErrorDescription">ペアリングコードを取得できません。この機能は受講者にのみサポートされています。</string>
 
     <string name="launchSpeedgrader">SpeedGraderを開く</string>
 
@@ -676,7 +676,7 @@
 
     <string name="no_courses">タップしてコースに追加する</string>
     <string name="no_courses_available">ここにはコースはありません、休みを取りましょう！</string>
-    <string name="no_courses_grades">コースに登録して、成績を表示してください</string>
+    <string name="no_courses_grades">コースに登録して、評定を表示してください</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">ナビゲーションの引き出しを開く</string>
     <string name="navigation_drawer_close">ナビゲーションの引き出しを閉じる</string>
@@ -722,7 +722,7 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
-    <string name="content_description_speed_grader_slider">成績スライダー</string>
+    <string name="content_description_speed_grader_slider">評定スライダー</string>
 
     <string name="createNewCalendarEvent">新しいイベントを作成</string>
     <string name="enableFunMode">パンダをオフにする</string>
@@ -766,11 +766,11 @@
     <string name="notification_pref_conversation_message">会話メッセージ</string>
     <string name="notification_pref_conversations_created_by_you">あなたに作製された会話</string>
 
-    <string name="notification_pref_student_appointment_signups">受講生予約サインアップ</string>
-    <string name="notification_pref_appointment_signups">受講生予約サインアップ</string>
+    <string name="notification_pref_student_appointment_signups">受講者予約サインアップ</string>
+    <string name="notification_pref_appointment_signups">受講者予約サインアップ</string>
     <string name="notification_pref_appointment_cancelations">予約のキャンセル</string>
     <string name="notification_pref_appointment_availability">予約利用可能性</string>
-    <string name="notification_pref_calendar">予定表</string>
+    <string name="notification_pref_calendar">カレンダー</string>
 
     <string name="notification_pref_membership_update">メンバーシップ更新</string>
     <string name="notification_pref_admin">管理のお知らせ</string>
@@ -786,7 +786,7 @@
 
     <string name="notification_desc_due_date">課題期日が変更されたときに通知を受け取ります。</string>
     <string name="notification_desc_grading_policies">コースの採点方針が変更されたときに通知を受け取ります。</string>
-    <string name="notification_desc_course_content">WikiPages、クイズ、および課題でコースコンテンツが変更されたときに通知を受け取ります。</string>
+    <string name="notification_desc_course_content">WikiPages、小テスト、および課題でコースコンテンツが変更されたときに通知を受け取ります。</string>
     <string name="notification_desc_files">コースに新しいファイルが追加されたときに通知を受け取ります。</string>
     <string name="notification_desc_announcement">コースに新しいアナウンスメントがあるときに通知を受け取ります。</string>
     <string name="notification_desc_announcement_created_by_you">アナウンスメントを作成するとき、およびアナウンスに誰かが返信したときに通知を受け取ります。</string>
@@ -806,7 +806,7 @@
     <string name="notification_desc_appointment_availability">予約時間帯が利用可能になったときに通知を受け取ります。</string>
     <string name="notification_desc_calendar">新しいカレンダーアイテムや更新されたカレンダーアイテムについて通知を受け取ります。</string>
     <string name="notification_desc_membership_update">管理者のみ。保留中の登録が有効になりました。グループ登録が承認または拒否されたときに通知を受け取ります。</string>
-    <string name="notification_desc_admin">インストラクターと管理者のみ。コースの登録、生成されたレポート、エクスポートされたコンテンツ、移行レポート、新しいアカウントユーザー、新しい受講生グループについて通知を受け取ります。</string>
+    <string name="notification_desc_admin">インストラクターと管理者のみ。コースの登録、生成されたレポート、エクスポートされたコンテンツ、移行レポート、新しいアカウントユーザー、新しい受講者グループについて通知を受け取ります。</string>
     <string name="notification_desc_recording_ready">会議録画の準備ができたときに通知を受け取ります。</string>
 
     <string name="unlimited">無制限</string>
@@ -947,7 +947,7 @@
     <string name="inviteAccepted">招待が受け入れられました！</string>
     <string name="inviteDeclined">招待が拒否されました。</string>
     <string name="latePenalty">遅延ペナルティ (-%s)</string>
-    <string name="finalGrade">最終的な成績</string>
+    <string name="finalGrade">最終的な評定</string>
 
     <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
@@ -988,13 +988,13 @@
     <string name="conferencesNotSupported">会議はまだモバイルではサポートされていません。</string>
     <string name="filePreviewContentDescription">ファイルプレビュー画像</string>
     <string name="pdfError">このPDFを削除しようとしてエラーが発生しました。</string>
-    <string name="featureNotAllowedInStudentView">申し訳ありません！この機能は受講生のビューでは許可されていません。</string>
+    <string name="featureNotAllowedInStudentView">申し訳ありません！この機能は受講者のビューでは許可されていません。</string>
     <string name="nothingToSeeHere">ここには何もありません</string>
     <string name="unsupportedFeature">サポートされていない機能</string>
 
     <!-- Parent Strings -->
-    <string name="addChildTitle">受講生を追加</string>
-    <string name="addChildSubTitle">提供されている受講生ペアリングコードを入力します。</string>
+    <string name="addChildTitle">受講者を追加</string>
+    <string name="addChildSubTitle">提供されている受講者ペアリングコードを入力します。</string>
     <string name="addChildHint">ペアリングコード...</string>
     <string name="addChildErrorMessage">ペアリングに失敗しました。ペアリングコードが正しいこと、使用期限内であることを確認してください。</string>
     <string name="gradeComplete">完了</string>
@@ -1002,34 +1002,34 @@
 
     <!--Teacher Strings-->
     <string name="postPolicyTitle">掲示設定</string>
-    <string name="postGradesTab">成績表の掲示</string>
-    <string name="hideGradesTab">成績を非表示にする</string>
+    <string name="postGradesTab">評定表の掲示</string>
+    <string name="hideGradesTab">評定を非表示にする</string>
     <plurals name="gradesPostedCount">
-        <item quantity="other">%d 現在掲示されている成績</item>
+        <item quantity="other">%d 現在掲示されている評定</item>
     </plurals>
     <plurals name="gradesHiddenCount">
-        <item quantity="other">%d 現在非表示の成績</item>
+        <item quantity="other">%d 現在非表示の評定</item>
     </plurals>
     <string name="postPolicyPostTo">掲示先：</string>
     <string name="postPolicySections">特定のセクション</string>
     <string name="postToEveryoneTitle">全員</string>
-    <string name="postToEveryoneMessage">成績はすべての受講生に表示されます</string>
+    <string name="postToEveryoneMessage">評定はすべての受講者に表示されます</string>
     <string name="postToGradedTitle">採点済み</string>
-    <string name="postToGradedMessage">成績は、提出物が採点された受講生が閲覧できるよう表示されます。</string>
+    <string name="postToGradedMessage">評定は、提出物が採点された受講者が閲覧できるよう表示されます。</string>
     <string name="postPolicyAllHiddenTitle">すべて非表示</string>
-    <string name="postPolicyAllHiddenMessage">すべての成績は今、非表示になっています。</string>
+    <string name="postPolicyAllHiddenMessage">すべての評定は今、非表示になっています。</string>
     <string name="postPolicyAllPostedTitle">すべて掲示済</string>
-    <string name="postPolicyAllPostedMessage">すべての成績は今、掲示されています。</string>
-    <string name="postPolicyPostedToast">成績掲示済み</string>
-    <string name="postPolicyHiddenToast">成績非表示</string>
-    <string name="postPolicyPostFailedToast">成績掲示に失敗</string>
-    <string name="postPolicyHideFailedToast">成績非表示に失敗</string>
-    <string name="gradeBeforePosting">投稿前の成績</string>
-    <string name="gradeAfterPosting">投稿後の成績</string>
-    <string name="gradeOverride">成績上書き</string>
-    <string name="currentGrade">現在の成績 </string>
-    <string name="opensInCanvasStudent">Canvas受講生内で開く</string>
-    <string name="tab_student_view">受講生ビュー</string>
+    <string name="postPolicyAllPostedMessage">すべての評定は今、掲示されています。</string>
+    <string name="postPolicyPostedToast">評定掲示済み</string>
+    <string name="postPolicyHiddenToast">評定非表示</string>
+    <string name="postPolicyPostFailedToast">評定掲示に失敗</string>
+    <string name="postPolicyHideFailedToast">評定非表示に失敗</string>
+    <string name="gradeBeforePosting">投稿前の評定</string>
+    <string name="gradeAfterPosting">投稿後の評定</string>
+    <string name="gradeOverride">評定上書き</string>
+    <string name="currentGrade">現在の評定 </string>
+    <string name="opensInCanvasStudent">Canvas受講者内で開く</string>
+    <string name="tab_student_view">受講者ビュー</string>
 
 
     <!-- Panda Avatar Content Descriptions -->
@@ -1093,7 +1093,7 @@
     <string name="allowedAttemptsLabel">許可回数:</string>
     <string name="instructions">指示</string>
     <string name="quizNoTimeLimit">なし</string>
-    <string name="viewQuiz">クイズを表示</string>
+    <string name="viewQuiz">小テストを表示</string>
     <string name="viewDiscussion">ディスカッションを表示</string>
     <string name="lockedModule">この課題はモジュール \"%1$s\"にロックされています。</string>
     <string name="chooseMediaFile">メディアファイルを選択する</string>
@@ -1155,7 +1155,7 @@
     <string name="navDrawerAccount">アカウント</string>
     <string name="dashboardTabHomeroom">ホームルーム</string>
     <string name="dashboardTabSchedule">スケジュール</string>
-    <string name="dashboardTabGrades">成績</string>
+    <string name="dashboardTabGrades">評定</string>
     <string name="dashboardTabResources">リソース</string>
     <string name="homeroomWelcomeMessage">ようこそ、%1$sさん！</string>
     <string name="homeroomMySubjects">マイ教科</string>
@@ -1172,13 +1172,13 @@
     <string name="gradesSelect">選択</string>
     <string name="selectGradingPeriod">採点期間を選択</string>
     <string name="currentGradingPeriod">現在の採点期間</string>
-    <string name="failedToLoadGrades">成績読み込みに失敗</string>
-    <string name="failedToLoadGradesForGradingPeriod">採点期間中に成績をロードできませんでした</string>
-    <string name="failedToRefreshGrades">成績更新に失敗</string>
-    <string name="noGradesToDisplay">表示する成績なし</string>
+    <string name="failedToLoadGrades">評定読み込みに失敗</string>
+    <string name="failedToLoadGradesForGradingPeriod">採点期間中に評定をロードできませんでした</string>
+    <string name="failedToRefreshGrades">評定更新に失敗</string>
+    <string name="noGradesToDisplay">表示する評定なし</string>
     <string name="notGraded">未採点</string>
     <string name="a11y_gradingPeriodSelectorClickDescription">採点期間を変更</string>
-    <string name="a11y_gradesNotAvailableContentDescription">利用可能な成績なし</string>
+    <string name="a11y_gradesNotAvailableContentDescription">利用可能な評定なし</string>
     <string name="bottomBarHomeroom">ホームルーム</string>
 
     <string name="settingsHomeroomView">ホームルームビュー</string>
@@ -1187,8 +1187,8 @@
     <string name="staffContactInfo">スタッフの連絡先情報</string>
     <string name="chooseACourse">コースを選択する</string>
     <string name="webViewImportantLinksTitle">重要なリンク</string>
-    <string name="staffRoleTeacher">講師</string>
-    <string name="staffRoleTeacherAssistant">講師の助手</string>
+    <string name="staffRoleTeacher">教員</string>
+    <string name="staffRoleTeacherAssistant">教員の助手</string>
     <string name="resourcesEmptyMessage">あなたリソースはここに表示されます。</string>
     <string name="failedToLoadResources">リソース読み込みに失敗</string>
     <string name="failedToRefreshResources">リソース更新に失敗</string>
@@ -1206,10 +1206,10 @@
     <string name="a11y_contact_info_content_description">%1$s、%2$s</string>
     <string name="a11y_contact_info_click_description">メッセージを送信</string>
     <string name="somethingWentWrong">なにかが失敗しました</string>
-    <string name="failedToLoadQuiz">クイズ読み込みに失敗しました</string>
+    <string name="failedToLoadQuiz">小テスト読み込みに失敗しました</string>
     <string name="failedToLoadSubmission">提出読み込みに失敗しました</string>
-    <string name="studentAnnotationToolbarTitle">受講生の注釈</string>
-    <string name="submissionTypeStudentAnnotation">受講生の注釈</string>
+    <string name="studentAnnotationToolbarTitle">受講者の注釈</string>
+    <string name="submissionTypeStudentAnnotation">受講者の注釈</string>
     <string name="gradesNoDueDate">締切日なし</string>
     <string name="importantDatesNoDueDate">締切日なし</string>
     <string name="missingAssignment">提出なし</string>

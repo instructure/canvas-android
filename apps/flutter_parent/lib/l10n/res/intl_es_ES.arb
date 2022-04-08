@@ -21,35 +21,35 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "No Students": "No hay alumnos",
+  "No Students": "No hay estudiantes",
   "@No Students": {
     "description": "Text for when an observer has no students they are observing",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to show student selector": "Pulse para ver el selector de alumnos",
+  "Tap to show student selector": "Pulse para ver el selector de estudiantes",
   "@Tap to show student selector": {
     "description": "Semantics label for the area that will show the student selector when tapped",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to pair with a new student": "Pulse para emparejar con un nuevo alumno",
+  "Tap to pair with a new student": "Pulse para emparejar con un nuevo estudiante",
   "@Tap to pair with a new student": {
     "description": "Semantics label for the add student button in the student selector",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to select this student": "Pulse para seleccionar este alumno",
+  "Tap to select this student": "Pulse para seleccionar este estudiante",
   "@Tap to select this student": {
     "description": "Semantics label on individual students in the student switcher",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Manage Students": "Administrar alumnos",
+  "Manage Students": "Administrar estudiantes",
   "@Manage Students": {
     "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
     "type": "text",
@@ -196,7 +196,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student's calendar": "Ha habido un error al cargar el calendario de su alumno",
+  "There was an error loading your student's calendar": "Ha habido un error al cargar el calendario de su estudiante",
   "@There was an error loading your student's calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
     "type": "text",
@@ -686,14 +686,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "Es posible que las asignaturas de sus alumnos aún no estén publicadas.",
+  "Your student’s courses might not be published yet.": "Es posible que las asignaturas de sus estudiantes aún no estén publicadas.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student’s courses.": "Ha habido un error al cargar las asignaturas de su alumno.",
+  "There was an error loading your student’s courses.": "Ha habido un error al cargar las asignaturas de su estudiante.",
   "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
@@ -1090,14 +1090,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "We couldn't find any students associated with this account": "No hemos podido encontrar ningún alumno relacionado con esta cuenta",
+  "We couldn't find any students associated with this account": "No hemos podido encontrar ningún estudiante relacionado con esta cuenta",
   "@We couldn't find any students associated with this account": {
     "description": "Subtitle for the screen that shows when the user is not observing any students",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Are you a student or teacher?": "¿Es alumno o profesor?",
+  "Are you a student or teacher?": "¿Es estudiante o profesor?",
   "@Are you a student or teacher?": {
     "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
     "type": "text",
@@ -1118,7 +1118,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "STUDENT": "ALUMNO",
+  "STUDENT": "ESTUDIANTE",
   "@STUDENT": {
     "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
     "type": "text",
@@ -1433,7 +1433,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student's alerts.": "Ha habido un error al cargar las alertas de sus alumnos.",
+  "There was an error loading your student's alerts.": "Ha habido un error al cargar las alertas de sus estudiantes.",
   "@There was an error loading your student's alerts.": {
     "type": "text",
     "placeholders_order": [],
@@ -1471,7 +1471,7 @@
       }
     }
   },
-  "Select Student Color": "Seleccionar color del alumno",
+  "Select Student Color": "Seleccionar color del estudiante",
   "@Select Student Color": {
     "description": "Title for screen that allows users to assign a color to a specific student",
     "type": "text",
@@ -1544,7 +1544,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Student": "Alumno",
+  "Student": "Estudiante",
   "@Student": {
     "description": "Label for the Student enrollment type",
     "type": "text",
@@ -1593,25 +1593,25 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add student with…": "Añadir alumno con...",
+  "Add student with…": "Añadir estudiante con...",
   "@Add student with…": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add Student": "Añadir alumno",
+  "Add Student": "Añadir estudiante",
   "@Add Student": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You are not observing any students.": "No está observando a ningún alumno.",
+  "You are not observing any students.": "No está observando a ningún estudiante.",
   "@You are not observing any students.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your students.": "Ha habido un error al cargar sus alumnos.",
+  "There was an error loading your students.": "Ha habido un error al cargar sus estudiantes.",
   "@There was an error loading your students.": {
     "type": "text",
     "placeholders_order": [],
@@ -1623,13 +1623,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Students can obtain a pairing code through the Canvas website": "Los alumnos pueden obtener un código de emparejamiento a través del sitio web de Canvas",
+  "Students can obtain a pairing code through the Canvas website": "Los estudiantes pueden obtener un código de emparejamiento a través del sitio web de Canvas",
   "@Students can obtain a pairing code through the Canvas website": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Introduzca el código de emparejamiento de alumno que se le ha proporcionado. Si el código de emparejamiento no funciona, es posible que haya caducado",
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Introduzca el código de emparejamiento de estudiante que se le ha proporcionado. Si el código de emparejamiento no funciona, es posible que haya caducado",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
     "placeholders_order": [],
@@ -1653,13 +1653,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Students can create a QR code using the Canvas Student app on their mobile device": "Los alumnos pueden crear un código QR mediante la aplicación Canvas Student en sus dispositivos móviles",
+  "Students can create a QR code using the Canvas Student app on their mobile device": "Los estudiantes pueden crear un código QR mediante la aplicación Canvas Student en sus dispositivos móviles",
   "@Students can create a QR code using the Canvas Student app on their mobile device": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add new student": "Añadir nuevo alumno",
+  "Add new student": "Añadir nuevo estudiante",
   "@Add new student": {
     "description": "Semantics label for the FAB on the Manage Students Screen",
     "type": "text",
@@ -2269,7 +2269,7 @@
       }
     }
   },
-  "Student Pairing": "Emparejamiento del alumno",
+  "Student Pairing": "Emparejamiento del estudiante",
   "@Student Pairing": {
     "description": "Title for the screen where users can pair to students using a QR code",
     "type": "text",
@@ -2283,7 +2283,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Para continuar, debe abrir la aplicación Canvas Student de su alumno. Vaya a Menú Principal > Configuraciones > Emparejar con Observador y escanee el código QR que aparece allí.",
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Para continuar, debe abrir la aplicación Canvas Student de su estudiante. Vaya a Menú Principal > Configuraciones > Emparejar con Observador y escanee el código QR que aparece allí.",
   "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
     "description": "Message explaining how QR code pairing works",
     "type": "text",
@@ -2304,13 +2304,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "Es posible que el código QR que ha escaneado haya caducado. Actualice el código en el dispositivo del alumno y vuelva a intentarlo.",
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "Es posible que el código QR que ha escaneado haya caducado. Actualice el código en el dispositivo del estudiante y vuelva a intentarlo.",
   "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "A network error occurred when adding this student. Check your connection and try again.": "Ha habido un error de la red al añadir a este alumno. Compruebe su conexión y vuelva a intentarlo.",
+  "A network error occurred when adding this student. Check your connection and try again.": "Ha habido un error de la red al añadir a este estudiante. Compruebe su conexión y vuelva a intentarlo.",
   "@A network error occurred when adding this student. Check your connection and try again.": {
     "type": "text",
     "placeholders_order": [],
@@ -2330,7 +2330,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "El alumno que está intentando añadir pertenece a una escuela diferente. Inicie sesión o cree una cuenta con esa escuela para escanear el código.",
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "El estudiante que está intentando añadir pertenece a una escuela diferente. Inicie sesión o cree una cuenta con esa escuela para escanear el código.",
   "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
     "type": "text",
     "placeholders_order": [],
@@ -2343,14 +2343,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "This will unpair and remove all enrollments for this student from your account.": "Deshará el emparejamiento y eliminará todas las inscripciones de este alumno en su cuenta.",
+  "This will unpair and remove all enrollments for this student from your account.": "Deshará el emparejamiento y eliminará todas las inscripciones de este estudiante en su cuenta.",
   "@This will unpair and remove all enrollments for this student from your account.": {
     "description": "Confirmation message shown when the user tries to delete a student from their account",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was a problem removing this student from your account. Please check your connection and try again.": "Ha habido un problema al eliminar a este alumno de su cuenta. Compruebe su conexión y vuelva a intentarlo.",
+  "There was a problem removing this student from your account. Please check your connection and try again.": "Ha habido un problema al eliminar a este estudiante de su cuenta. Compruebe su conexión y vuelva a intentarlo.",
   "@There was a problem removing this student from your account. Please check your connection and try again.": {
     "type": "text",
     "placeholders_order": [],

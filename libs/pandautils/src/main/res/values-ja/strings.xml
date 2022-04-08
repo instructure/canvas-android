@@ -118,7 +118,7 @@
     <string name="loadingAssignments">課題をロード中...</string>
     <string name="noAssignmentSelected">課題を選択してください</string>
     <string name="noAssignmentsWithFileUpload">このコースには、ファイルのアップロードが可能な課題がありません。</string>
-    <string name="teacherNotAllowedFileSubmission">このコースの講師として、ファイルを提出することはできません</string>
+    <string name="teacherNotAllowedFileSubmission">このコースの教員として、ファイルを提出することはできません</string>
     <string name="noFilesUploaded">あなたはどのファイルも選択していません。</string>
     <string name="oneOrMoreExtensionNotAllowed">1つ以上のファイルのファイル拡張子が許可されていません</string>
     <string name="extensionNotAllowed">選択されたファイルタイプは許可されていません。</string>
@@ -142,7 +142,7 @@
     <string name="addCoursesGroups">コースとグループを追加</string>
     <string name="noDiscussions">ディスカッションなし</string>
     <string name="noDiscussionsSubtext">他の人たちと会話を始める。</string>
-    <string name="noDiscussionsTeacher">受講生徒と会話を始めましょう。</string>
+    <string name="noDiscussionsTeacher">受講者徒と会話を始めましょう。</string>
     <string name="nothingUnread">受信トレイゼロ！</string>
     <string name="nothingUnreadSubtext">あなたは深くかかわっています！</string>
     <string name="nothingStarred">スターありメッセージはありません</string>
@@ -151,9 +151,9 @@
     <string name="nothingSentSubtext">あなたは何のメッセージも送信していません。</string>
     <string name="nothingArchived">何もアーカイブされていない</string>
     <string name="nothingArchivedSubtext">あなたは何のメッセージも選択していません。</string>
-    <string name="noQuizzes">クイズなし</string>
-    <string name="noQuizzesSubtext">すみません、まだクイズは存在しません。</string>
-    <string name="noQuizzesTeacher">表示する公開されているクイズはありません。</string>
+    <string name="noQuizzes">小テストなし</string>
+    <string name="noQuizzesSubtext">すみません、まだ小テストは存在しません。</string>
+    <string name="noQuizzesTeacher">表示する公開されている小テストはありません。</string>
     <string name="noAnnouncements">アナウンスメントなし</string>
     <string name="noAnnouncementsSubtext">まだなにもアナウンスされていません</string>
     <string name="noCourses">コースなし</string>
@@ -169,7 +169,7 @@
     <string name="noEvents">今日は、イベントはありません！</string>
     <string name="noEventsSubtext">少し休んでリラックスする、素晴らしい日のようです。</string>
     <string name="noSubmission">提出なし</string>
-    <string name="noSubmissionTeacher">この受講生にはまだ提出物がありません。</string>
+    <string name="noSubmissionTeacher">この受講者にはまだ提出物がありません。</string>
     <string name="locked">ロックされています</string>
     <string name="lockedSubtext">この課題は%1$sまで%2$sでロックされます。</string>
     <string name="chooseFile">ファイルの選択</string>
@@ -229,7 +229,7 @@
 
     <!-- App Names -->
     <string name="utils_canvas">Canvas</string>
-    <string name="utils_canvasTeacher">Canvas 講師</string>
+    <string name="utils_canvasTeacher">Canvas 教員</string>
     <string name="utils_canvasParent">Canvas Parent</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
@@ -278,7 +278,7 @@
     <string name="utils_emptyDiscussions">このセクションに表示するディスカッションはありません。</string>
     <string name="utils_description">説明</string>
     <string name="utils_allowThreadedReplies">スレッドでの返信を許可する</string>
-    <string name="utils_usersMustPost">受講生は返信を表示する前に投稿しなければなりません</string>
+    <string name="utils_usersMustPost">受講者は返信を表示する前に投稿しなければなりません</string>
     <string name="utils_discussionsClosed">コメントを閉じました</string>
     <string name="utils_discussionsOpen">コメントを受け付ける</string>
     <string name="utils_discussionsPin">固定</string>
@@ -422,7 +422,7 @@
     <string name="searchAnnouncementsHint">お知らせ検索</string>
     <string name="searchDiscussionsHint">ディスカッション検索</string>
     <string name="searchPagesHint">ページ検索</string>
-    <string name="searchQuizzesHint">クイズ検索</string>
+    <string name="searchQuizzesHint">小テスト検索</string>
     <string name="noItemsMatchingQuery">\"%s\"にマッチするアイテムなし</string>
 
     <string name="selected">選択されました</string>
@@ -467,10 +467,10 @@
     <string name="a11y_schedule_course_header_content_description">コース%s</string>
     <string name="a11y_announcement">発表</string>
     <string name="a11y_discussion_topic">ディスカッション</string>
-    <string name="a11y_calendar_event">予定表のイベント</string>
+    <string name="a11y_calendar_event">カレンダーのイベント</string>
     <string name="a11y_assignment">課題</string>
     <string name="a11y_planner_note">計画者のメモ</string>
-    <string name="a11y_quiz">クイズ</string>
+    <string name="a11y_quiz">小テスト</string>
     <string name="a11y_todo">タスク</string>
     <string name="a11y_page">ページ</string>
     <string name="a11y_marked_as_done">完了としてマークする</string>

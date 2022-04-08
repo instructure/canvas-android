@@ -169,7 +169,7 @@
     <string name="noEvents">No hay ningún evento hoy</string>
     <string name="noEventsSubtext">Parece un día perfecto para descansar y relajarse.</string>
     <string name="noSubmission">No hay entregas</string>
-    <string name="noSubmissionTeacher">Este alumno no tiene ninguna presentación aún.</string>
+    <string name="noSubmissionTeacher">Este estudiante no tiene ninguna presentación aún.</string>
     <string name="locked">Bloqueado</string>
     <string name="lockedSubtext">Esta actividad está bloqueada hasta el %1$s a las %2$s.</string>
     <string name="chooseFile">Elegir un archivo</string>
@@ -279,7 +279,7 @@
     <string name="utils_emptyDiscussions">No hay foros de discusión que mostrar en esta sección.</string>
     <string name="utils_description">Descripción</string>
     <string name="utils_allowThreadedReplies">Permitir respuestas agrupadas</string>
-    <string name="utils_usersMustPost">Los alumnos deben publicar antes de ver las respuestas</string>
+    <string name="utils_usersMustPost">Los estudiantes deben publicar antes de ver las respuestas</string>
     <string name="utils_discussionsClosed">No admite comentarios</string>
     <string name="utils_discussionsOpen">Abierto para comentarios</string>
     <string name="utils_discussionsPin">Fijar</string>

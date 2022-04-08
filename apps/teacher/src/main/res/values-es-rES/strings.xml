@@ -205,7 +205,7 @@
     <string name="successfully_updated_quiz">Se ha actualizado la prueba.</string>
     <string name="failure_updating_assignment">Ha habido un error al actualizar la actividad. Inténtelo de nuevo.</string>
     <string name="failure_deleting_assignment">Ha habido un error al eliminar la actividad. Inténtelo de nuevo.</string>
-    <string name="cant_unpublish">No se puede cancelar la publicación si hay entregas de alumnos.</string>
+    <string name="cant_unpublish">No se puede cancelar la publicación si hay entregas de estudiantes.</string>
     <string name="messages">Mensajes</string>
     <plurals name="reply_message_plus_label">
         <item quantity="one">+ %d mensaje</item>
@@ -219,9 +219,9 @@
     <string name="delete_assignment_message">¿Está seguro de que desea eliminar esta actividad?</string>
 
     <string name="max_count">99+</string>
-    <string name="message_student">Enviar mensaje al alumno</string>
+    <string name="message_student">Enviar mensaje al estudiante</string>
 
-    <string name="message_these_students">Enviar un mensaje a estos alumnos</string>
+    <string name="message_these_students">Enviar un mensaje a estos estudiantes</string>
     <string name="submission_status_missing">No presentado</string>
     <string name="submission_status_late">Con atraso</string>
     <string name="submission_status_submitted">Entregado</string>
@@ -232,7 +232,7 @@
     <string name="turnOnAnonymousGrading">Activar evaluación anónima</string>
     <string name="turnOffAnonymousGrading">Desactivar evaluación anónima</string>
     <string name="anonymousGradingLabel">Nota anónima</string>
-    <string name="anonymousStudentLabel">Alumno</string>
+    <string name="anonymousStudentLabel">Estudiante</string>
 
     <!-- TODO -->
     <string name="coming_soon">Funcionalidad que se añadirá próximamente</string>
@@ -318,7 +318,7 @@
     <string name="multiple_due_dates">Varias fechas de entrega</string>
     <string name="everyone">Todos</string>
     <string name="everyone_else">Todos los demás</string>
-    <string name="unknown_student">Alumno desconocido</string>
+    <string name="unknown_student">Estudiante desconocido</string>
     <string name="closed">Cerrado</string>
     <string name="no_date_filler">--</string>
     <string name="due_date_at_time" formatted="false">Fecha de entrega el %1s a las %2s</string>
@@ -337,8 +337,8 @@
     <string name="assignment_details">Detalles de la actividad</string>
     <string name="no_content">No hay contenido</string>
     <string name="submissions">Entregas</string>
-    <string name="no_assignment_description_filler">Ayude a sus alumnos a realizar esta actividad añadiendo instrucciones.</string>
-    <string name="no_quiz_description_filler">Ayude a sus alumnos a realizar esta prueba añadiendo instrucciones.</string>
+    <string name="no_assignment_description_filler">Ayude a sus estudiantes a realizar esta actividad añadiendo instrucciones.</string>
+    <string name="no_quiz_description_filler">Ayude a sus estudiantes a realizar esta prueba añadiendo instrucciones.</string>
     <string name="page_title_due_dates">Fechas de entrega</string>
     <string name="edit_assignment">Editar actividad</string>
     <string name="edit_quiz">Editar prueba</string>
@@ -353,7 +353,7 @@
     <string name="out_of_points">De %1$s</string>
     <string name="gpa">Promedio general de notas</string>
     <string name="letter_grade">Nota por letra</string>
-    <string name="excuse_student">Justificar al alumno</string>
+    <string name="excuse_student">Justificar al estudiante</string>
     <string name="excuseGroup">Justificar al grupo</string>
     <string name="complete_grade">Completo</string>
     <string name="incomplete_grade">Incompleto</string>
@@ -372,7 +372,7 @@
     <string name="quiz_points_must_be_set">Se deben establecer los puntos de la prueba.</string>
     <string name="assignee_type_course_sections">Secciones de la asignatura</string>
     <string name="assignee_type_groups">Grupos</string>
-    <string name="assignee_type_students">Alumnos</string>
+    <string name="assignee_type_students">Estudiantes</string>
     <string name="page_title_add_assignees">Añadir personas asignadas</string>
     <string name="assign_to">Asignar a</string>
     <string name="available_from">Disponible desde</string>
@@ -680,13 +680,13 @@
     <string name="discussion_sent_failure">No se ha podido enviar la respuesta al foro de discusión en este momento.</string>
     <string name="discussion_first_to_respond">Sea el primero en responder añadiendo una respuesta.</string>
     <string name="addMorePeopleToMessage">Añadir otro destinatario. No se pueden enviar los mensajes dirigidos a usted solamente.</string>
-    <string name="tutorialSwipeMessage">Deslice el dedo hacia la izquierda o hacia la derecha para ver a otros alumnos.</string>
+    <string name="tutorialSwipeMessage">Deslice el dedo hacia la izquierda o hacia la derecha para ver a otros estudiantes.</string>
     <string name="tutorialRubricMessage">Mantenga presionado el número para ver la descripción.</string>
 
     <string name="viewQuizSubmission">Ver entrega</string>
     <string name="gradeQuizSubmission">Evaluar entrega</string>
     <string name="comment">Comentario</string>
-    <string name="messageStudentsWho">Enviar mensaje a alumnos que&#8230;</string>
+    <string name="messageStudentsWho">Enviar mensaje a estudiantes que&#8230;</string>
 
     <string name="on">activado</string>
 
@@ -754,7 +754,7 @@
     <string name="addNew">Añadir nuevo</string>
     <string name="sendMessage">Enviar mensaje</string>
     <string name="addMessage">Añadir mensaje</string>
-    <string name="messageThisStudent">Enviar un mensaje a este alumno</string>
+    <string name="messageThisStudent">Enviar un mensaje a este estudiante</string>
     <string name="scrollInstructions">Desplácese para ver todos los detalles</string>
     <string name="dueTime">Hora de entrega</string>
     <string name="available_from_date">Disponible desde la fecha</string>
@@ -775,7 +775,7 @@
     <string name="loadMore">Cargar más</string>
     <string name="latestStudentActivityAtFormatted">Última actividad el %1$s a las %2$s.</string>
     <string name="errorLoadingStudentContextCard">No se han podido cargar los detalles de este usuario.</string>
-    <string name="enrollmentTypeStudent">Alumno</string>
+    <string name="enrollmentTypeStudent">Estudiante</string>
     <string name="enrollmentTypeTeacher">Profesor</string>
     <string name="enrollmentTypeObserver">Observador</string>
     <string name="enrollmentTypeTeachingAssistant">Profesor auxiliar</string>
@@ -825,8 +825,8 @@
     <string name="restrictedAccess">Acceso restringido</string>
     <string name="restricted">Restringido</string>
     <string name="hidden">Oculto, los archivos del interior estarán disponibles con enlaces.</string>
-    <string name="studentsWithLink">Disponible solo para alumnos con enlace. No disponible en los archivos de los alumnos.</string>
-    <string name="scheduleAvailability">Programar la disponibilidad de los alumnos</string>
+    <string name="studentsWithLink">Disponible solo para estudiantes con enlace. No disponible en los archivos de los estudiantes.</string>
+    <string name="scheduleAvailability">Programar la disponibilidad de los estudiantes</string>
     <string name="folderCreationError">Ha habido un error durante la creación de la carpeta.</string>
 
     <string name="setAsFrontPage">Establecer como página de inicio</string>
@@ -844,7 +844,7 @@
     <string name="frontPageUnpublishedError">Una página no puede ser la página de inicio y no publicarse.</string>
 
     <string name="onlyTeachers">Solo profesores</string>
-    <string name="teachersAndStudents">Profesores y alumnos</string>
+    <string name="teachersAndStudents">Profesores y estudiantes</string>
     <string name="anyone">Cualquiera</string>
     <string name="groupMembers">Solo miembros</string>
     <string name="license">Licencia</string>

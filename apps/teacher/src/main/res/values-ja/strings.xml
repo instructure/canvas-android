@@ -25,7 +25,7 @@
     <string name="tab_assignments">課題</string>
     <string name="tab_profile">プロフィール</string>
     <string name="tab_people">メンバー</string>
-    <string name="tab_quizzes">クイズ</string>
+    <string name="tab_quizzes">小テスト</string>
     <string name="tab_discussions">ディスカッション</string>
     <string name="tab_announcements">発表</string>
     <string name="tab_attendance">出席状況</string>
@@ -45,7 +45,7 @@
     <string name="share_your_love">アプリへの愛を共有しましょう</string>
     <string name="share_your_love_details">このアプリの好きな部分を教えてください</string>
     <string name="masquerade">マスカレード</string>
-    <string name="issue_with_teacher_app">講師用アプリの問題[Android]</string>
+    <string name="issue_with_teacher_app">教員用アプリの問題[Android]</string>
     <string name="no_items_to_display_short">アイテムなし</string>
     <string name="rate_the_app">アプリを評価する</string>
     <string name="rate_the_app_icon">アプリを評価するためのアイコン</string>
@@ -87,7 +87,7 @@
     <string name="common_edit">編集</string>
 
     <!-- Feature Request -->
-    <string name="feature_subject">講師用アプリのアイデア[Android]</string>
+    <string name="feature_subject">教員用アプリのアイデア[Android]</string>
     <string name="understand_request">次の情報は、あなたのアイデアをより良く理解するために役立ちます:</string>
     <string name="send_mail">メールを送信しています&#8230;</string>
 
@@ -158,7 +158,7 @@
     </plurals>
 
     <plurals name="assignees_without_grades">
-        <item quantity="other">成績のない課題提出者が%dいます。</item>
+        <item quantity="other">評定のない課題提出者が%dいます。</item>
     </plurals>
 
     <string name="inbox_empty_title">メッセージなし</string>
@@ -200,10 +200,10 @@
     <string name="edit">編集</string>
     <string name="save">保存</string>
     <string name="successfully_updated_assignment">課題の更新に成功しました</string>
-    <string name="successfully_updated_quiz">クイズの更新に成功しました</string>
+    <string name="successfully_updated_quiz">小テストの更新に成功しました</string>
     <string name="failure_updating_assignment">課題を更新する際に問題が生じました。もう一度試してください。</string>
     <string name="failure_deleting_assignment">課題を削除する際に問題が生じました。もう一度試してください。</string>
-    <string name="cant_unpublish">受講生の提出がある場合は公開を取り消すことはできません。</string>
+    <string name="cant_unpublish">受講者の提出がある場合は公開を取り消すことはできません。</string>
     <string name="messages">メッセージ</string>
     <plurals name="reply_message_plus_label">
         <item quantity="other">+ %d メッセージ</item>
@@ -214,12 +214,12 @@
 
     <string name="delete_assignment_message">この課題を削除してもよろしいですか?</string>
     <string name="max_count">99+</string>
-    <string name="message_student">受講生にメッセージ</string>
+    <string name="message_student">受講者にメッセージ</string>
 
-    <string name="message_these_students">これら受講生にメッセージ</string>
+    <string name="message_these_students">これら受講者にメッセージ</string>
     <string name="submission_status_missing">欠如</string>
     <string name="submission_status_late">遅れている</string>
-    <string name="submission_status_submitted">タスクの成績を送信</string>
+    <string name="submission_status_submitted">タスクの評定を送信</string>
     <string name="submission_status_not_submitted">未提出</string>
     <string name="submission_status_excused">免除</string>
     <string name="last_login_format">最終ログイン：%s</string>
@@ -236,8 +236,8 @@
         <item>すべての提出物</item>
         <item>遅れた提出物</item>
         <item>不在の提出物</item>
-        <item>成績高</item>
-        <item>成績低</item>
+        <item>評定高</item>
+        <item>評定低</item>
     </string-array>
 
     <string-array name="people_filters">
@@ -312,7 +312,7 @@
     <string name="multiple_due_dates">複数の締切日</string>
     <string name="everyone">全員</string>
     <string name="everyone_else">他の全員</string>
-    <string name="unknown_student">未知の受講生</string>
+    <string name="unknown_student">未知の受講者</string>
     <string name="closed">終了済み</string>
     <string name="no_date_filler">--</string>
     <string name="due_date_at_time" formatted="false">%1s の %2s が期限</string>
@@ -331,15 +331,15 @@
     <string name="assignment_details">課題の詳細</string>
     <string name="no_content">コンテンツなし</string>
     <string name="submissions">提出物</string>
-    <string name="no_assignment_description_filler">指示を追加して、この課題を受講生に分かりやすくしてください。</string>
-    <string name="no_quiz_description_filler">指示を追加して、このクイズを受講生に分かりやすくしてください。</string>
+    <string name="no_assignment_description_filler">指示を追加して、この課題を受講者に分かりやすくしてください。</string>
+    <string name="no_quiz_description_filler">指示を追加して、この小テストを受講者に分かりやすくしてください。</string>
     <string name="page_title_due_dates">期日</string>
     <string name="edit_assignment">課題を編集する</string>
-    <string name="edit_quiz">クイズの編集</string>
+    <string name="edit_quiz">小テストの編集</string>
     <string name="title">タイトル</string>
     <string name="description">説明</string>
-    <string name="grade_total">成績合計</string>
-    <string name="grade">成績</string>
+    <string name="grade_total">評定合計</string>
+    <string name="grade">評定</string>
     <string name="enter_grade">グレードを入力する</string>
     <string name="override">上書き</string>
     <string name="calculated_by_rubric">ルブリックで計算しました</string>
@@ -357,16 +357,16 @@
     <string name="grade_value_format_talk_back">%1$s / %2$s</string>
     <string name="publish">公開</string>
     <string name="error_saving_assignment">課題を保存しようとしてエラーが発生しました。もう一度試してください。</string>
-    <string name="error_saving_quiz">クイズを保存しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="error_saving_quiz">小テストを保存しようとしてエラーが発生しました。もう一度試してください。</string>
     <string name="assignment_name_must_be_set">課題名を設定しなければなりません。</string>
     <string name="announcement_name_must_be_set">アナウンスメントのタイトルを設定しなければなりません。</string>
-    <string name="quiz_title_must_be_set">クイズのタイトルを設定しなければなりません。</string>
+    <string name="quiz_title_must_be_set">小テストのタイトルを設定しなければなりません。</string>
     <string name="assignment_points_must_be_set">課題ポイントを設定しなければなりません。</string>
     <string name="assignment_points_must_be_a_number">配点は数値で入力してください</string>
-    <string name="quiz_points_must_be_set">クイズポイントを設定しなければなりません。</string>
+    <string name="quiz_points_must_be_set">小テストポイントを設定しなければなりません。</string>
     <string name="assignee_type_course_sections">コース セクション</string>
     <string name="assignee_type_groups">グループ</string>
-    <string name="assignee_type_students">受講生</string>
+    <string name="assignee_type_students">受講者</string>
     <string name="page_title_add_assignees">課題対象者を追加する</string>
     <string name="assign_to">～へ割り当てられました</string>
     <string name="available_from">次の日時から</string>
@@ -382,10 +382,10 @@
     <string name="needsGrading">採点が必要です</string>
     <string name="not_submitted">未提出</string>
     <string name="a11y_viewSubmissionAction">提出の詳細を表示する</string>
-    <string name="content_description_submission_donut_graded" formatted="false">成績評価 、%s 中 %s</string>
+    <string name="content_description_submission_donut_graded" formatted="false">評定評価 、%s 中 %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">採点が必要、%s 中 %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">未提出、%s 中 %s</string>
-    <string name="display_grade_as">成績を&#8230;として表示する</string>
+    <string name="display_grade_as">評定を&#8230;として表示する</string>
     <string name="percentage">割合</string>
     <string name="complete_incomplete">完了/未完了</string>
     <string name="points">ポイント</string>
@@ -408,9 +408,9 @@
         <item>@string/gpa_scale</item>
     </string-array>
 
-  <string name="not_a_teacher">講師ではありませんか？</string>
+  <string name="not_a_teacher">教員ではありませんか？</string>
     <string name="not_a_teacher_tap_to_visit_play_store">私たちの他のアプリのうちの1つのほうが、もと合うかもしれません。1つタップしてPlay Storeにアクセスする。</string>
-    <string name="sg_tab_grade">成績</string>
+    <string name="sg_tab_grade">評定</string>
     <string name="sg_tab_comments">コメント</string>
     <string name="sg_tab_files">ファイル</string>
     <string name="sg_tab_files_w_counter">ファイル (%d)</string>
@@ -523,20 +523,20 @@
 
     <string name="emptyDetailsMessage">リスト内の項目をタップて、し詳細を表示する</string>
 
-    <string name="assignmentQuizzes">課題クイズ</string>
-    <string name="practiceQuizzes">練習クイズ</string>
+    <string name="assignmentQuizzes">課題小テスト</string>
+    <string name="practiceQuizzes">練習小テスト</string>
     <string name="gradedSurveys">採点されたアンケート</string>
     <string name="surveys">サーベイ</string>
-    <string name="editQuiz">クイズ詳細を編集</string>
+    <string name="editQuiz">小テスト詳細を編集</string>
     <string name="requireAccessCode">アクセスコードが必要</string>
     <string name="accessCode">アクセス コード</string>
     <string name="mustHaveAccessCode">アクセスコードを入力する。またはアクセスコードは不要。</string>
-    <string name="errorSavingQuiz">クイズを保存しようとしてエラーが発生しました。もう一度試してください。</string>
-    <string name="successfullyUpdatedQuiz">クイズの更新に成功しました</string>
-    <string name="quizType">クイズ タイプ</string>
+    <string name="errorSavingQuiz">小テストを保存しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="successfullyUpdatedQuiz">小テストの更新に成功しました</string>
+    <string name="quizType">小テスト タイプ</string>
 
-    <string name="practiceQuiz">練習クイズ</string>
-    <string name="gradedQuiz">採点済みのクイズ</string>
+    <string name="practiceQuiz">練習小テスト</string>
+    <string name="gradedQuiz">採点済みの小テスト</string>
     <string name="gradedSurvey">採点済みのサーベイ</string>
     <string name="ungradedSurvey">未採点のサーベイ</string>
 
@@ -570,16 +570,16 @@
     <string name="quiz_settings_label_anonymous_submissions">匿名での提出：</string>
     <string name="quiz_settings_label_lock_questions_after_answering">回答後質問をロック：</string>
 
-    <string name="quizPreview">クイズプレビュー</string>
-    <string name="preview_quiz">プレビュークイズ</string>
-    <string name="quiz_details">クイズの詳細情報</string>
+    <string name="quizPreview">小テストプレビュー</string>
+    <string name="preview_quiz">プレビュー小テスト</string>
+    <string name="quiz_details">小テストの詳細情報</string>
     <string name="submission_versions">提出バージョン</string>
-    <string name="speedgrader_student_no_submissions">この受講生にはこの課題の提出はありません。</string>
+    <string name="speedgrader_student_no_submissions">この受講者にはこの課題の提出はありません。</string>
     <string name="speedgrader_group_no_submissions">このグループにはこの課題の提出はありません。</string>
     <string name="speedgrader_unsupported_type">サポートされていない送信タイプ</string>
     <string name="unlimited">無制限</string>
-    <string name="practice_quiz">練習クイズ</string>
-    <string name="graded_quiz">採点済みのクイズ</string>
+    <string name="practice_quiz">練習小テスト</string>
+    <string name="graded_quiz">採点済みの小テスト</string>
     <string name="graded_survey">採点済みのサーベイ</string>
     <string name="ungraded_survey">未採点のサーベイ</string>
     <string name="no_time_limit">時間制限なし</string>
@@ -634,7 +634,7 @@
     <string name="speedGraderTextSubmission">テキストの提出</string>
     <string name="speedGraderExternalToolSubmission">外部ツール提出</string>
     <string name="speedGraderDiscussionSubmission">ディスカッションへの提出</string>
-    <string name="speedGraderQuizSubmission">クイズへの提出物</string>
+    <string name="speedGraderQuizSubmission">小テストへの提出物</string>
     <string name="speedGraderMediaFile">メディアファイル</string>
     <string name="submissionTypeAudio">オーディオ</string>
     <string name="submissionTypeVideo">ビデオ</string>
@@ -669,7 +669,7 @@
     <string name="tutorialRubricMessage">番号をタップ＆ホールドして説明を表示します。</string>
 
     <string name="viewQuizSubmission">提出を見る</string>
-    <string name="gradeQuizSubmission">成績提出</string>
+    <string name="gradeQuizSubmission">評定提出</string>
     <string name="comment">コメント</string>
     <string name="messageStudentsWho">次の状態の受講者にメッセージを送る&#8230;</string>
 
@@ -731,7 +731,7 @@
     <string name="fullVersion">バージョン %s (%d)</string>
     <string name="tap_to_view_submissions_list">タップして提出リストを表示します。</string>
     <string name="assignmentDescriptionContentDescription">課題説明</string>
-    <string name="quizDescriptionContentDescription">クイズ説明</string>
+    <string name="quizDescriptionContentDescription">小テスト説明</string>
     <string name="removeDueDate">期限を削除する</string>
     <string name="removeDueDateMessage">これにより、期日と関連するすべての課題対象者が削除されます。</string>
     <string name="email">メールアドレス</string>
@@ -739,7 +739,7 @@
     <string name="addNew">新規を追加する</string>
     <string name="sendMessage">メッセージを送信</string>
     <string name="addMessage">メッセージを追加</string>
-    <string name="messageThisStudent">この受講生にメッセージを送る</string>
+    <string name="messageThisStudent">この受講者にメッセージを送る</string>
     <string name="scrollInstructions">スクロールしてすべての詳細を表示する</string>
     <string name="dueTime">期限存</string>
     <string name="available_from_date">利用可能期間の開始日付</string>
@@ -761,7 +761,7 @@
     <string name="latestStudentActivityAtFormatted">%1$sへの%2$sでの最新のアクティビティ.</string>
     <string name="errorLoadingStudentContextCard">このユーザーの詳細を読み込むことができません。</string>
     <string name="enrollmentTypeStudent">受講者</string>
-    <string name="enrollmentTypeTeacher">講師</string>
+    <string name="enrollmentTypeTeacher">教員</string>
     <string name="enrollmentTypeObserver">オブザーバー</string>
     <string name="enrollmentTypeTeachingAssistant">TA</string>
     <string name="enrollmentTypeDesigner">設計者</string>
@@ -769,7 +769,7 @@
     <string name="unableToLoadAttendance">今回出席を読み込めませんでした。</string>
     <string name="markRemainingAsPresent">出席としてマークする</string>
     <string name="markAllAsPresent">全員を出席としてマークする</string>
-    <string name="calendar">予定表</string>
+    <string name="calendar">カレンダー</string>
     <string name="filterSections">セクションをフィルタリングする</string>
     <string name="addVideoComment">動画コメントを追加</string>
     <string name="addAudioComment">音声コメントを追加</string>
@@ -810,8 +810,8 @@
     <string name="restrictedAccess">制限されたアクセス</string>
     <string name="restricted">部外秘</string>
     <string name="hidden">非表示の内部ファイルはリンクで利用できます。</string>
-    <string name="studentsWithLink">リンク付きの受講生のみ利用可能です。受講生ファイルでは使用できません。</string>
-    <string name="scheduleAvailability">受講生の利用可能状況をスケジュール</string>
+    <string name="studentsWithLink">リンク付きの受講者のみ利用可能です。受講者ファイルでは使用できません。</string>
+    <string name="scheduleAvailability">受講者の利用可能状況をスケジュール</string>
     <string name="folderCreationError">フォルダー作成中にエラーが起こりました。</string>
 
     <string name="setAsFrontPage">フロントページとして設定</string>
@@ -828,8 +828,8 @@
     <string name="errorSavingPage">この発表を保存しようとしてエラーが発生しました。もう一度試してください。</string>
     <string name="frontPageUnpublishedError">ページを先フロントページにした場合、未公開にすることはできません。</string>
 
-    <string name="onlyTeachers">講師のみ</string>
-    <string name="teachersAndStudents">講師と受講者</string>
+    <string name="onlyTeachers">教員のみ</string>
+    <string name="teachersAndStudents">教員と受講者</string>
     <string name="anyone">全員</string>
     <string name="groupMembers">メンバーのみ</string>
     <string name="license">ライセンス</string>
@@ -850,7 +850,7 @@
     <string name="filterBySection">セクションで分類する</string>
     <string name="filterSubmissionsLowercase">フィルターを提出</string>
     <string name="latePenalty">遅延ペナルティ</string>
-    <string name="finalGrade">最終的な成績</string>
+    <string name="finalGrade">最終的な評定</string>
     <string name="moderatedGradingUnsupported">修正された採点は、現在モバイルの SpeedGrader ではサポートされていません。</string>
     <plurals name="latePolicyPenalty">
         <item quantity="other">-%s 点</item>
@@ -880,7 +880,7 @@
     <string name="editSyllabusShowCourseSummary">コースサマリーを表示する</string>
     <string name="editSyllabusContentAccessibilityLabel">シラバスの内容</string>
 
-    <string name="no_grade">成績なし</string>
+    <string name="no_grade">評定なし</string>
     <string name="excuse">免除</string>
     <string name="speed_grader_overgraded_by">採点が %s 過剰</string>
 </resources>

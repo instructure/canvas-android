@@ -57,7 +57,7 @@
     <string name="canvasAPI_onlineURL">URL de la página web</string>
     <string name="canvasAPI_mediaRecording">Grabación multimedia</string>
     <string name="canvasAPI_attendance">Asistencia</string>
-    <string name="canvasAPI_studentAnnotation">Anotación del alumno</string>
+    <string name="canvasAPI_studentAnnotation">Anotación del estudiante</string>
     <string name="quiz_scoring_policy_highest">Más alta</string>
     <string name="quiz_scoring_policy_average">Promedio</string>
     <string name="quiz_scoring_policy_latest">Más reciente</string>
@@ -70,7 +70,7 @@
     <string name="andMore">\u0020y %d más</string>
 
     <!-- Enrollment Types -->
-    <string name="enrollmentTypeStudent">Alumno</string>
+    <string name="enrollmentTypeStudent">Estudiante</string>
     <string name="enrollmentTypeTeacher">Profesor</string>
     <string name="enrollmentTypeObserver">Observador</string>
     <string name="enrollmentTypeTeachingAssistant">Profesor auxiliar</string>

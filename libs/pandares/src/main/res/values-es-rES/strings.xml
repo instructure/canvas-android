@@ -401,7 +401,7 @@
     <string name="summary">Resumen</string>
     <string name="coursePeople">Personas</string>
     <string name="teachersTas">Profesores y profesores auxiliares</string>
-    <string name="students">Alumnos</string>
+    <string name="students">Estudiantes</string>
     <string name="observers">Observadores</string>
     <string name="syllabusMissing">No se ha añadido un programa de la asignatura.</string>
     <string name="syllabusEventsError">Ha habido un error en la carga de los contenidos.</string>
@@ -656,7 +656,7 @@
     <string name="pairWithObserverDetails">Pídale a su padre/madre que escanee este código QR desde la aplicación Canvas Parent para emparejarse con usted. Este código caducará en siete días, o después de usarse.</string>
     <string name="pairingCodeLabel">Código de emparejamiento:\u0020</string>
     <string name="pairingCodeErrorTitle">Ha habido un error con el código de emparejamiento</string>
-    <string name="pairingCodeErrorDescription">No se ha podido obtener un código de emparejamiento. Esta funcionalidad solo es compatible para los alumnos.</string>
+    <string name="pairingCodeErrorDescription">No se ha podido obtener un código de emparejamiento. Esta funcionalidad solo es compatible para los estudiantes.</string>
 
     <string name="launchSpeedgrader">Abrir SpeedGrader</string>
 
@@ -772,7 +772,7 @@
     <string name="notification_pref_conversation_message">Mensaje de conversación</string>
     <string name="notification_pref_conversations_created_by_you">Conversaciones creadas por usted</string>
 
-    <string name="notification_pref_student_appointment_signups">Registros de citas para alumnos</string>
+    <string name="notification_pref_student_appointment_signups">Registros de citas para estudiantes</string>
     <string name="notification_pref_appointment_signups">Registros para citas</string>
     <string name="notification_pref_appointment_cancelations">Cancelaciones de citas</string>
     <string name="notification_pref_appointment_availability">Disponibilidad de citas</string>
@@ -812,7 +812,7 @@
     <string name="notification_desc_appointment_availability">Reciba una notificación cuando haya disponible un espacio horario para una cita.</string>
     <string name="notification_desc_calendar">Reciba una notificación sobre ítems nuevos y actualizados del calendario.</string>
     <string name="notification_desc_membership_update">Solo para administradores, activación de inscripciones pendientes. Reciba una notificación cuando se acepte o rechace una inscripción de grupo.</string>
-    <string name="notification_desc_admin">Profesor y administrador solamente. Reciba notificaciones sobre inscripciones de la asignatura, informes generados, contenido exportado, informes de migración, nuevos usuarios de cuenta y nuevos grupos de alumnos.</string>
+    <string name="notification_desc_admin">Profesor y administrador solamente. Reciba notificaciones sobre inscripciones de la asignatura, informes generados, contenido exportado, informes de migración, nuevos usuarios de cuenta y nuevos grupos de estudiantes.</string>
     <string name="notification_desc_recording_ready">Reciba notificaciones cuando esté lista la grabación de una conferencia.</string>
 
     <string name="unlimited">Ilimitado</string>
@@ -999,13 +999,13 @@
     <string name="conferencesNotSupported">Los teléfonos móviles aún no admiten conferencias.</string>
     <string name="filePreviewContentDescription">Imagen de vista previa del archivo</string>
     <string name="pdfError">Se ha producido un error al intentar cargar este PDF.</string>
-    <string name="featureNotAllowedInStudentView">¡Lo sentimos! Esta funcionalidad no se permite en la vista del alumno.</string>
+    <string name="featureNotAllowedInStudentView">¡Lo sentimos! Esta funcionalidad no se permite en la vista del estudiante.</string>
     <string name="nothingToSeeHere">No hay nada que ver aquí</string>
     <string name="unsupportedFeature">Funcionalidad no compatible</string>
 
     <!-- Parent Strings -->
-    <string name="addChildTitle">Añadir alumno</string>
-    <string name="addChildSubTitle">Introduzca el código de emparejamiento de alumno que se le ha proporcionado.</string>
+    <string name="addChildTitle">Añadir estudiante</string>
+    <string name="addChildSubTitle">Introduzca el código de emparejamiento de estudiante que se le ha proporcionado.</string>
     <string name="addChildHint">Código de emparejamiento...</string>
     <string name="addChildErrorMessage">Ha habido un error en el emparejamiento. Asegúrese de que su código de emparejamiento sea correcto y esté dentro del límite de tiempo de utilización.</string>
     <string name="gradeComplete">Completo</string>
@@ -1026,9 +1026,9 @@
     <string name="postPolicyPostTo">Publicar en...</string>
     <string name="postPolicySections">Secciones específicas</string>
     <string name="postToEveryoneTitle">Todos</string>
-    <string name="postToEveryoneMessage">Todos los alumnos podrán ver las notas</string>
+    <string name="postToEveryoneMessage">Todos los estudiantes podrán ver las notas</string>
     <string name="postToGradedTitle">Evaluado</string>
-    <string name="postToGradedMessage">Todos los alumnos que tengan entregas con nota podrán ver las notas.</string>
+    <string name="postToGradedMessage">Todos los estudiantes que tengan entregas con nota podrán ver las notas.</string>
     <string name="postPolicyAllHiddenTitle">Todas ocultas</string>
     <string name="postPolicyAllHiddenMessage">Todas las notas están ocultas actualmente.</string>
     <string name="postPolicyAllPostedTitle">Todas publicadas</string>
@@ -1042,7 +1042,7 @@
     <string name="gradeOverride">Anulación de nota</string>
     <string name="currentGrade">Nota actual</string>
     <string name="opensInCanvasStudent">Se abre en Canvas Student</string>
-    <string name="tab_student_view">Vista del alumno</string>
+    <string name="tab_student_view">Vista del estudiante</string>
 
 
     <!-- Panda Avatar Content Descriptions -->
@@ -1196,7 +1196,7 @@
     <string name="bottomBarHomeroom">Aula principal</string>
     <string name="settingsHomeroomView">Vista del aula</string>
     <string name="importantLinksTitle">Enlaces importantes</string>
-    <string name="studentApplications">Solicitudes del alumno</string>
+    <string name="studentApplications">Solicitudes del estudiante</string>
     <string name="staffContactInfo">Información de contacto del personal</string>
     <string name="chooseACourse">Seleccione una asignatura</string>
     <string name="webViewImportantLinksTitle">Enlaces importantes</string>
@@ -1212,7 +1212,7 @@
     <string name="a11y_content_description_inbox_subject">Tema</string>
     <string name="a11y_content_description_inbox_course_spinner">Seleccione una asignatura, %s</string>
 
-    <string name="speedGraderAnonymousSubmissionMessage">Las respuestas de los alumnos están ocultas porque esta actividad es anónima.</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Las respuestas de los estudiantes están ocultas porque esta actividad es anónima.</string>
 
     <string name="schedule_marked_as_done">Lo ha marcado como terminado.</string>
     <string name="error_saving_assignment_closed_grading_period">No se puede cambiar la fecha de entrega cuando está vencida en un período de evaluación cerrado.</string>
@@ -1223,8 +1223,8 @@
     <string name="somethingWentWrong">Ha habido un error.</string>
     <string name="failedToLoadQuiz">No se ha podido cargar la prueba</string>
     <string name="failedToLoadSubmission">No se ha podido cargar la entrega</string>
-    <string name="studentAnnotationToolbarTitle">Anotación del alumno</string>
-    <string name="submissionTypeStudentAnnotation">Anotación del alumno</string>
+    <string name="studentAnnotationToolbarTitle">Anotación del estudiante</string>
+    <string name="submissionTypeStudentAnnotation">Anotación del estudiante</string>
     <string name="gradesNoDueDate">No hay fecha de entrega</string>
     <string name="importantDatesNoDueDate">No hay fecha de entrega</string>
     <string name="missingAssignment">No presentado</string>

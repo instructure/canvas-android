@@ -1245,10 +1245,14 @@
     <string name="a11y_error_occured">I hapa, tēnā koa tamata anō.</string>
     <string name="a11y_content_description_accept_invite">Whakaae pōhiri</string>
     <string name="a11y_content_description_decline_invite">Whakakore pōhiri</string>
+    <string name="no_notifications_to_show">Kāo whakamohiotanga ki te whakaatu</string>
+
     <string name="documentScanningTitle">Tuhinga Matawai ana</string>
     <string name="filter_name_color">Tae</string>
     <string name="filter_name_grayscale">Tauinehina</string>
     <string name="filter_name_monochrome">Monochrome</string>
     <string name="filter_name_original">Taketake</string>
     <string name="noCompatibleAppInstalled">Karekau he tono i whakauruhia e to taputapu hei whakatuwhera i tenei hononga.</string>
+    <string name="anonymousDiscussionNotSupported">Ingoakore kōrerorero kei tenei wa kaore tautokona i runga pūkoro. Tuwhera i roto pūtirotiro ki te tiro kōrerorero.</string>
+    <string name="discussionOpenInBrowser">Tuwhera i roto i te pūtirotiro</string>
 </resources>
