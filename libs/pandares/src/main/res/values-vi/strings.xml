@@ -1242,4 +1242,18 @@
     <string name="toolbarCommentLibrary">Thư Viện Bình Luận</string>
     <string name="commentLibraryNoSuggestions">Không có đề xuất nào</string>
     <string name="speedGraderCommentHint">Bình Luận</string>
+    <string name="a11y_schedule_marked_as_done">%s Được đánh dấu là đã xong</string>
+    <string name="a11y_error_occured">Có lỗi xảy ra, vui lòng thử lại.</string>
+    <string name="a11y_content_description_accept_invite">Chấp nhận lời mời</string>
+    <string name="a11y_content_description_decline_invite">Từ chối lời mời</string>
+    <string name="no_notifications_to_show">Không có thông báo nào để hiển thị</string>
+
+    <string name="documentScanningTitle">Quét Tài Liệu</string>
+    <string name="filter_name_color">Màu</string>
+    <string name="filter_name_grayscale">Thước Xám</string>
+    <string name="filter_name_monochrome">Đơn Sắc</string>
+    <string name="filter_name_original">Gốc</string>
+    <string name="noCompatibleAppInstalled">Thiết bị của bạn không có ứng dụng được cài đặt có thể mở liên kết này.</string>
+    <string name="anonymousDiscussionNotSupported">Thảo luận ẩn danh hiện không được hỗ trợ trên di động. Mở trong trình duyệt để xem thảo luận.</string>
+    <string name="discussionOpenInBrowser">Mở trong trình duyệt</string>
 </resources>

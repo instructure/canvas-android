@@ -209,4 +209,8 @@
         <item name="cornerSize">4dp</item>
     </style>
 
+    <style name="SwitchTheme">
+        <item name="colorControlActivated">@color/electricBlueBadge</item>
+    </style>
+
 </resources>

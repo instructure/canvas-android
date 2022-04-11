@@ -35,6 +35,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.QuizListRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToFragmentCallback
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.quiz_list_layout.*
@@ -92,7 +93,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(
-            view!!,
+            requireView(),
             requireContext(),
             recyclerAdapter!!,
             R.id.swipeRefreshLayout,
@@ -135,7 +136,13 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
             /* The quiz list endpoint is currently missing the quiz question types, so we'll route using the quiz url
             which should pull the full quiz details including the question types. */
             if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain, false)) {
-                RouteMatcher.routeUrl(requireContext(), quiz.htmlUrl!!, ApiPrefs.domain, secondaryClass = BasicQuizViewFragment::class.java)
+                val route = RouteMatcher.getInternalRoute(quiz.htmlUrl!!, ApiPrefs.domain)
+                val secondaryClass = when (route?.primaryClass) {
+                    QuizListFragment::class.java -> BasicQuizViewFragment::class.java
+                    AssignmentListFragment::class.java -> AssignmentDetailsFragment::class.java
+                    else -> null
+                }
+                RouteMatcher.routeUrl(requireContext(), quiz.htmlUrl!!, ApiPrefs.domain, secondaryClass = secondaryClass)
             } else {
                 RouteMatcher.route(requireContext(), BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
             }

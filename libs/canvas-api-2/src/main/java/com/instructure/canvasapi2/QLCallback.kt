@@ -70,7 +70,7 @@ abstract class QLCallback<DATA> : ApolloCall.Callback<DATA>() {
             Logger.d("QLCallback: callback was cancelled")
             return
         }
-        onResponse(response, if (response.fromCache()) ApiType.CACHE else ApiType.API)
+        onResponse(response, if (response.isFromCache) ApiType.CACHE else ApiType.API)
     }
 
     override fun onFailure(e: ApolloException) {

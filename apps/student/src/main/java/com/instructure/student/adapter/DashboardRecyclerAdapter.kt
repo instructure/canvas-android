@@ -135,7 +135,7 @@ class DashboardRecyclerAdapter(
 
             // Map not null is needed because the dashboard api can return unpublished courses
             val visibleCourses = dashboardCards.mapNotNull { mCourseMap[it.id] }
-                    .filter { it.isCurrentEnrolment() }
+                    .filter { it.isCurrentEnrolment() || it.isFutureEnrolment() }
 
             // Filter groups
             val allActiveGroups = groups.filter { group -> group.isActive(mCourseMap[group.courseId])}

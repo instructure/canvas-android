@@ -20,5 +20,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class DashboardCard(
-    override val id: Long = 0
+    override val id: Long = 0,
+    val isK5Subject: Boolean = false
 ) : CanvasModel<DashboardCard>()

@@ -144,7 +144,7 @@ object MasqueradeHelper {
                 // No-op
             } finally {
                 // Delays process rebirth long enough for all the shared preferences to be saved and caches to be cleared.
-                delay(500)
+                delay(1000)
                 ProcessPhoenix.triggerRebirth(ContextKeeper.appContext, startupIntent)
             }
         }

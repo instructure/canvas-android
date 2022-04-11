@@ -20,7 +20,7 @@ package com.instructure.dataseeding.api
 import com.instructure.dataseeding.model.CreateEnrollmentTerm
 import com.instructure.dataseeding.model.CreateEnrollmentTermWrapper
 import com.instructure.dataseeding.model.EnrollmentTermApiModel
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -34,7 +34,7 @@ object EnrollmentTermsApi {
     }
 
     private val adminEnrollmentTermsService: EnrollmentTermsService by lazy {
-        CanvasRestAdapter.adminRetrofit.create(EnrollmentTermsService::class.java)
+        CanvasNetworkAdapter.adminRetrofit.create(EnrollmentTermsService::class.java)
     }
 
     fun createEnrollmentTerm(): EnrollmentTermApiModel {

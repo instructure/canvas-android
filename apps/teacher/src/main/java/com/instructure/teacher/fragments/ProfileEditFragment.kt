@@ -190,16 +190,16 @@ class ProfileEditFragment : BasePresenterFragment<
             }
 
         } else if (requestCode == RequestCodes.CAMERA_PIC_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (presenter?.capturedImageUri == null) {
-                presenter?.capturedImageUri = Uri.parse(FilePrefs.tempCaptureUri)
+            if (presenter.capturedImageUri == null) {
+                presenter.capturedImageUri = Uri.parse(FilePrefs.tempCaptureUri)
             }
 
-            if (presenter?.capturedImageUri == null) {
+            if (presenter.capturedImageUri == null) {
                 showToast(R.string.errorGettingPhoto)
                 return
             }
 
-            presenter?.capturedImageUri?.let {
+            presenter.capturedImageUri?.let {
                 val cropConfig = AvatarCropConfig(it)
                 startActivityForResult(AvatarCropActivity.createIntent(requireContext(), cropConfig), RequestCodes.CROP_IMAGE)
             }

@@ -187,7 +187,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         // Set up recipients view
         var previousCheckState = false
         chips.onRecipientsChanged = { recipients: List<Recipient> ->
-            val entryCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
+            val entryCount = recipients.sumOf { it.userCount.coerceAtLeast(1) }
             if (entryCount >= 100) {
                 if (sendIndividualSwitch.isEnabled) {
                     sendIndividualMessageWrapper.alpha = 0.3f
@@ -382,7 +382,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         if (isNewMessage || isMessageStudentsWho) {
             // Send bulk if recipient count exceeds 99, OR if count exceeds one AND 'send individually' is checked
             val recipients = chips.recipients
-            val recipientCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
+            val recipientCount = recipients.sumOf { it.userCount.coerceAtLeast(1) }
             var isBulk = recipientCount >= 100 || (recipientCount > 1 && sendIndividually)
 
             val contextId: String

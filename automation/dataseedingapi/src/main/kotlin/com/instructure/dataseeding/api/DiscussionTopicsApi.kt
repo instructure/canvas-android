@@ -19,7 +19,7 @@ package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.CreateDiscussionTopic
 import com.instructure.dataseeding.model.DiscussionApiModel
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -33,7 +33,7 @@ object DiscussionTopicsApi {
     }
 
     private fun discussionTopicsService(token: String): DiscussionTopicsService
-            = CanvasRestAdapter.retrofitWithToken(token).create(DiscussionTopicsService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(DiscussionTopicsService::class.java)
 
     fun createDiscussion(courseId: Long, isAnnouncement: Boolean = false, token: String): DiscussionApiModel {
         val discussionTopic = Randomizer.randomDiscussion(isAnnouncement)

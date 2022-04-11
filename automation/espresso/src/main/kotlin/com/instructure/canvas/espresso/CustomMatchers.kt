@@ -213,7 +213,8 @@ fun withOnlyWidthLessThan(dimInDp: Int) : BaseMatcher<AccessibilityViewCheckResu
         override fun matches(item: Any): Boolean {
             when(item) {
                 is AccessibilityViewCheckResult -> {
-                    return item.view.width < dim && item.view.height >= dim
+                    if (item.view == null) return false
+                    return item.view!!.width < dim && item.view!!.height >= dim
                 }
                 else -> return false
             }

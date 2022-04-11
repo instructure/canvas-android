@@ -26,7 +26,7 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.panda_annotations.*
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -136,7 +136,7 @@ class LoginE2ETest : StudentTest() {
     fun testVanityDomainLoginE2E() {
         // Create a Retrofit client for our vanity domain
         val domain = "canvas.beta.jitops.computer" // Our test vanity domain
-        val retrofitClient = CanvasRestAdapter.createAdminRetrofitClient(domain)
+        val retrofitClient = CanvasNetworkAdapter.createAdminRetrofitClient(domain)
 
         // Create services off of that Retrofit client
         val userService = retrofitClient.create(UserApi.UserService::class.java)

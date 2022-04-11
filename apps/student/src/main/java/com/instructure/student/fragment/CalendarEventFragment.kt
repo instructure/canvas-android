@@ -66,7 +66,7 @@ class CalendarEventFragment : ParentFragment() {
 
     //region Fragment Lifecycle Overrides
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_calendar_event, container, false)
+        inflater.inflate(R.layout.fragment_calendar_event, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

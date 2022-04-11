@@ -33,6 +33,7 @@ import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.getDisplayGrade
 import com.instructure.teacher.utils.getResForSubmission
 import kotlinx.android.synthetic.main.adapter_student_context_submission.view.*
+import java.util.Locale
 
 
 @SuppressLint("ViewConstructor")
@@ -63,7 +64,8 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
             val displayGrade = getDisplayGrade(
                 context = context,
                 gradingStatus = submission.gradingStatus,
-                gradingType = submission.assignment?.gradingType?.name?.toLowerCase().orEmpty(),
+                gradingType = submission.assignment?.gradingType?.name?.lowercase(Locale.getDefault())
+                    .orEmpty(),
                 grade = submission.grade,
                 enteredGrade = "",
                 score = submission.score,

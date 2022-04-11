@@ -1296,4 +1296,18 @@
     <string name="toolbarCommentLibrary">مكتبة التعليقات</string>
     <string name="commentLibraryNoSuggestions">لا توجد مقترحات متاحة</string>
     <string name="speedGraderCommentHint">التعليق</string>
+    <string name="a11y_schedule_marked_as_done">تم وضع علامة تم على %s</string>
+    <string name="a11y_error_occured">حدث خطأ، يُرجى إعادة المحاولة.</string>
+    <string name="a11y_content_description_accept_invite">قبول الدعوة</string>
+    <string name="a11y_content_description_decline_invite">رفض الدعوة</string>
+    <string name="no_notifications_to_show">لا توجد إعلامات متاحة للإظهار</string>
+
+    <string name="documentScanningTitle">مسح المستند</string>
+    <string name="filter_name_color">اللون</string>
+    <string name="filter_name_grayscale">التدرج الرمادي</string>
+    <string name="filter_name_monochrome">أحادي اللون</string>
+    <string name="filter_name_original">الأصلي</string>
+    <string name="noCompatibleAppInstalled">لا توجد أي تطبيقات مثبتة على جهازك قادرة على فتح هذا الرابط.</string>
+    <string name="anonymousDiscussionNotSupported">النقاشات المجهولة غير مدعومة حاليًا على الأجهزة المحمولة. الفتح في المستعرض لعرض النقاش.</string>
+    <string name="discussionOpenInBrowser">الفتح في المستعرض</string>
 </resources>

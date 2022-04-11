@@ -45,9 +45,9 @@ class AuthenticationDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        if (arguments != null && arguments!![DOMAIN] != null) {
+        if (arguments != null && requireArguments()[DOMAIN] != null) {
             val bundle = Bundle()
-            bundle.putString(AnalyticsParamConstants.DOMAIN_PARAM, arguments!!.getString(DOMAIN))
+            bundle.putString(AnalyticsParamConstants.DOMAIN_PARAM, requireArguments().getString(DOMAIN))
             logEvent(AnalyticsEventConstants.AUTHENTICATION_DIALOG, bundle)
         }
         val builder = AlertDialog.Builder(requireContext())

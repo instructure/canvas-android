@@ -87,7 +87,6 @@ class SettingsInteractionTest : StudentTest() {
 
     // Should display the privacy policy in a WebView
     @Test
-    @Stub  //need to consider how to fix this, it is breaking sometimes on low res mode
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testLegal_showPrivacyPolicy() {
         setUpAndSignIn()

@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.Parcelize
 import java.util.Date
+import java.util.Locale
 
 @Parcelize
 data class Assignment(
@@ -268,7 +269,10 @@ data class Assignment(
                     else -> SubmissionType.NONE
                 }
 
-        fun submissionTypeToAPIString(submissionType: SubmissionType?): String = submissionType?.name?.toLowerCase() ?: ""
+        fun submissionTypeToAPIString(submissionType: SubmissionType?): String = submissionType?.name?.lowercase(
+            Locale.getDefault()
+        )
+            ?: ""
 
         fun submissionTypeStringToPrettyPrintString(submissionType: String?, context: Context): String? =
                 submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(submissionType), context)
@@ -313,7 +317,9 @@ data class Assignment(
             else -> null
         }
 
-        fun gradingTypeToAPIString(gradingType: GradingType?): String? = gradingType?.name?.toLowerCase()
+        fun gradingTypeToAPIString(gradingType: GradingType?): String? = gradingType?.name?.lowercase(
+            Locale.getDefault()
+        )
 
         fun gradingTypeToPrettyPrintString(gradingType: String, context: Context): String? =
                 gradingTypeToPrettyPrintString(getGradingTypeFromAPIString(gradingType), context)

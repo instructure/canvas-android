@@ -22,7 +22,7 @@ import androidx.work.impl.utils.futures.SettableFuture
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.utils.Logger
@@ -36,15 +36,13 @@ class PushNotificationRegistrationWorker(appContext: Context, params: WorkerPara
     override fun startWork(): ListenableFuture<Result> {
         Logger.e("PushNotificationRegistrationWorker : startWork()")
         val runnable = Runnable {
-            var firebaseInstance: FirebaseInstanceId? = null
             var token: String? = ""
             var responseBody: Response<ResponseBody>? = null
             try {
-                firebaseInstance = FirebaseInstanceId.getInstance()
-                firebaseInstance.instanceId.addOnCompleteListener(OnCompleteListener { task ->
+                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
                     val apiRunnable = Runnable {
                         try {
-                            token = task.result?.token
+                            token = task.result
 
                             if (!task.isSuccessful || token == null) {
                                 Logger.e("PushNotificationRegistrationWorker: startWork() - failed to get instanceId (token)")
@@ -63,13 +61,13 @@ class PushNotificationRegistrationWorker(appContext: Context, params: WorkerPara
                             }
                             future.set(Result.success())
                         } catch (e: Throwable) {
-                            handleError(e, firebaseInstance, responseBody, token)
+                            handleError(e, responseBody, token)
                         }
                     }
                     Thread(apiRunnable).start()
                 })
             } catch (e: Throwable) {
-                handleError(e, firebaseInstance, responseBody, token)
+                handleError(e, responseBody, token)
             }
         }
 
@@ -78,12 +76,9 @@ class PushNotificationRegistrationWorker(appContext: Context, params: WorkerPara
         return future
     }
 
-    private fun handleError(e: Throwable, firebaseInstance: FirebaseInstanceId?, responseBody: Response<ResponseBody>?, token: String?) {
+    private fun handleError(e: Throwable, responseBody: Response<ResponseBody>?, token: String?) {
         FirebaseCrashlytics.getInstance().recordException(Exception("PushNotificationRegistrationWorker : startWork() - Error registering push notifications.\n" +
             "Error message: ${e.message}\n" +
-            "InstanceId: $firebaseInstance\n\t" +
-            "Id: ${firebaseInstance?.id}\n\t" +
-            "Creation Time: ${firebaseInstance?.creationTime}\n\t" +
             "Token: $token\n" +
             "Canvas Token Registration Response Body: $responseBody\n\t" +
             "isSuccessful: ${responseBody?.isSuccessful}\n\t" +

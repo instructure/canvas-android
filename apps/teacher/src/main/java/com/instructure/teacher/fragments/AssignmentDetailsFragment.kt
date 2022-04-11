@@ -232,7 +232,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
                 }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
-                    val args = LtiLaunchFragment.makeBundle(mCourse, ltiUrl!!, assignment.name!!, true)
+                    val args = LtiLaunchFragment.makeBundle(mCourse, ltiUrl, assignment.name!!, true)
                     RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
                 }
             }

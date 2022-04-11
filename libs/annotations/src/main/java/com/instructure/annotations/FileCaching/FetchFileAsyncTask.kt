@@ -108,7 +108,7 @@ class FetchFileAsyncTask private constructor(
             var read: Long
 
             // Perform download.
-            read = source?.read(sink.buffer(), BUFFER_SIZE) ?: 0
+            read = source?.read(sink.buffer, BUFFER_SIZE) ?: 0
             if (total > 0) mCallback.onProgress(0f)
             while (read > 0 && !isCancelled) {
                 sink.flush()
@@ -119,7 +119,7 @@ class FetchFileAsyncTask private constructor(
                         mCallback.onProgress(downloaded / total)
                     }
                 }
-                read = source?.read(sink.buffer(), BUFFER_SIZE) ?: 0
+                read = source?.read(sink.buffer, BUFFER_SIZE) ?: 0
             }
             if (total > 0) mCallback.onProgress(1f)
 

@@ -27,6 +27,7 @@ import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import java.util.Locale
 
 class ColorsTest {
     private val course = CoursesApi.createCourse()
@@ -47,6 +48,6 @@ class ColorsTest {
                 hexcode = "#BADADD"
         )
         assertThat(color, instanceOf(ColorApiModel::class.java))
-        assertEquals("#BADADD", color.hexcode.toUpperCase())
+        assertEquals("#BADADD", color.hexcode.uppercase(Locale.getDefault()))
     }
 }

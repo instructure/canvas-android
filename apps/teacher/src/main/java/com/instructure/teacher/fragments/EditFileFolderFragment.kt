@@ -357,7 +357,9 @@ class EditFileFolderFragment : BasePresenterFragment<
 
         // Setup initial value
         val initialPosition =
-                when (presenter.currentFileOrFolder.usageRights?.useJustification?.name?.toLowerCase()) {
+                when (presenter.currentFileOrFolder.usageRights?.useJustification?.name?.lowercase(
+                    Locale.getDefault()
+                )) {
                     "own_copyright" -> spinnerAdapter.getPosition(getString(R.string.holdCopyright))
                     "used_by_permission" -> spinnerAdapter.getPosition(getString(R.string.havePermission))
                     "public_domain" -> spinnerAdapter.getPosition(getString(R.string.publicDomain))
@@ -407,8 +409,8 @@ class EditFileFolderFragment : BasePresenterFragment<
 
         updateFileFolder = updateFileFolder.copy(name = titleEditText.text.toString())
 
-        mAccessStatus.lockAt = lockDate.toApiString() ?: ""
-        mAccessStatus.unlockAt = unlockDate.toApiString() ?: ""
+        mAccessStatus.lockAt = lockDate.toApiString()
+        mAccessStatus.unlockAt = unlockDate.toApiString()
 
         presenter.updateFileFolder(updateFileFolder, mAccessStatus, mUsageType, mLicenseType, copyrightEditText.text.toString())
     }

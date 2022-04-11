@@ -138,7 +138,7 @@ class CreateOrEditAnnouncementFragment :
 
     fun setupToolbar() {
         toolbar.setupCloseButton {
-            if(presenter?.announcement?.message == announcementRCEView?.html) {
+            if(presenter.announcement.message == announcementRCEView?.html) {
                 activity?.onBackPressed()
             } else {
                 UnsavedChangesExitDialog.show(requireFragmentManager()) {

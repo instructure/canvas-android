@@ -1242,4 +1242,18 @@
     <string name="toolbarCommentLibrary">Kommentarbibliotek</string>
     <string name="commentLibraryNoSuggestions">Ingen forslag tilgjengelige</string>
     <string name="speedGraderCommentHint">Kommentar</string>
+    <string name="a11y_schedule_marked_as_done">%s merket som ferdig</string>
+    <string name="a11y_error_occured">Det oppsto en feil, prøv igjen.</string>
+    <string name="a11y_content_description_accept_invite">Godta invitasjon</string>
+    <string name="a11y_content_description_decline_invite">Avslå invitasjon</string>
+    <string name="no_notifications_to_show">Ingen varslinegr å vise</string>
+
+    <string name="documentScanningTitle">Dokumentskanning</string>
+    <string name="filter_name_color">Farge</string>
+    <string name="filter_name_grayscale">Gråtoner</string>
+    <string name="filter_name_monochrome">Monokrom</string>
+    <string name="filter_name_original">Opprinnelig</string>
+    <string name="noCompatibleAppInstalled">Enheten din har ikke noen installerte applikasjoner som kan åpne denne lenken.</string>
+    <string name="anonymousDiscussionNotSupported">Anonyme diskusjoner støttes for øyeblikket ikke på mobiltelefon. Åpne i nettleser for å se diskusjoner.</string>
+    <string name="discussionOpenInBrowser">Åpne i nettleser</string>
 </resources>

@@ -32,7 +32,7 @@ class EmptyFragment: Fragment() {
     private var mTitle: String by StringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_empty, container, false)
+        return inflater.inflate(R.layout.fragment_empty, container, false)
     }
 
     override fun onResume() {

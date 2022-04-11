@@ -32,10 +32,10 @@ class AnnotationCommentListAdapter(
     override fun itemLayoutResId(viewType: Int) = AnnotationCommentViewHolder.HOLDER_RES
     override fun bindHolder(model: CanvaDocAnnotation, holder: AnnotationCommentViewHolder, position: Int) {
         val canDelete = (presenter as AnnotationCommentListPresenter).docSession.annotationMetadata?.canManage() == true
-                || ((presenter as AnnotationCommentListPresenter).docSession.annotationMetadata?.canWrite() == true
-                && model.userId == (presenter as AnnotationCommentListPresenter).docSession.annotationMetadata?.userId)
-        val canEdit = (presenter as AnnotationCommentListPresenter).docSession.annotationMetadata?.canWrite() == true
-                && model.userId == ((presenter as AnnotationCommentListPresenter).docSession.annotationMetadata?.userId)
+                || (presenter.docSession.annotationMetadata?.canWrite() == true
+                && model.userId == presenter.docSession.annotationMetadata?.userId)
+        val canEdit = presenter.docSession.annotationMetadata?.canWrite() == true
+                && model.userId == (presenter.docSession.annotationMetadata?.userId)
 
         holder.bind(model, canEdit, canDelete, editCallback, deleteCallback)
     }

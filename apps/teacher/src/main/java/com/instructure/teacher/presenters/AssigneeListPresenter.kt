@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.teacher.events.AssigneesUpdatedEvent
 import com.instructure.teacher.models.AssigneeCategory
@@ -28,7 +29,7 @@ import com.instructure.teacher.utils.EditDateGroups
 import com.instructure.teacher.viewinterface.AssigneeListView
 import instructure.androidblueprint.SyncExpandablePresenter
 import org.greenrobot.eventbus.EventBus
-import java.util.ArrayList
+import java.util.*
 
 class AssigneeListPresenter(
         val mAllDateGroups: EditDateGroups,
@@ -109,6 +110,10 @@ class AssigneeListPresenter(
         if (group == AssigneeCategory.SECTIONS) {
             if (item1 is EveryoneAssignee) return -1
             else if (item2 is EveryoneAssignee) return 1
+        }
+
+        if (group == AssigneeCategory.STUDENTS) {
+            return NaturalOrderComparator.compare((item1 as User).sortableName?.lowercase(Locale.getDefault()).orEmpty(), (item2 as User).sortableName?.lowercase(Locale.getDefault()).orEmpty())
         }
         return compareValues(item1, item2)
     }

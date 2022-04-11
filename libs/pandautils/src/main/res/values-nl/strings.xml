@@ -50,6 +50,7 @@
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Galerij</string>
     <string name="fromDevice">Apparaat</string>
+    <string name="fromDocumentScanning">Scanner</string>
     <string name="fromOtherApplication">Overige</string>
     <string name="Domain">Domein</string>
     <string name="files">Bestanden</string>
@@ -483,4 +484,5 @@
     <string name="a11y_mark_as_done">Markeren als klaar</string>
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Let op! Er is een fout opgetreden tijdens het laden van de cursusdetails.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s niet gemarkeerd als klaar</string>
 </resources>

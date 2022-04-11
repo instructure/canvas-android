@@ -87,7 +87,7 @@ abstract class PresenterFragment<PRESENTER : FragmentPresenter<VIEW>, VIEW : Fra
 
 
     protected fun addSwipeToRefresh(swipeRefreshLayout: SwipeRefreshLayout) {
-        swipeRefreshLayout.setOnRefreshListener { presenter?.refresh(true) }
+        swipeRefreshLayout.setOnRefreshListener { presenter.refresh(true) }
     }
 
     companion object {

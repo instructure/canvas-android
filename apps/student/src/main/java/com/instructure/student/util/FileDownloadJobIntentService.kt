@@ -153,7 +153,7 @@ class FileDownloadJobIntentService : JobIntentService() {
             updateCallback(0)
 
             val bufferSize = 8L * 1024
-            val sinkBuffer = sink.buffer()
+            val sinkBuffer = sink.buffer
 
             // Perform download.
             read = source.read(sinkBuffer, bufferSize)

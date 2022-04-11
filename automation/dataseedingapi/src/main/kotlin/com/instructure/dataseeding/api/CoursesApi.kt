@@ -21,7 +21,7 @@ import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.CreateCourse
 import com.instructure.dataseeding.model.CreateCourseWrapper
 import com.instructure.dataseeding.model.FavoriteApiModel
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -46,11 +46,11 @@ object CoursesApi {
     }
 
     private val adminCoursesService: CoursesService by lazy {
-        CanvasRestAdapter.adminRetrofit.create(CoursesService::class.java)
+        CanvasNetworkAdapter.adminRetrofit.create(CoursesService::class.java)
     }
 
     private fun coursesService(token: String): CoursesService =
-        CanvasRestAdapter.retrofitWithToken(token).create(CoursesService::class.java)
+        CanvasNetworkAdapter.retrofitWithToken(token).create(CoursesService::class.java)
 
     fun createCourseInSubAccount(
         enrollmentTermId: Long? = null,

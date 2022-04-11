@@ -1241,4 +1241,18 @@
     <string name="toolbarCommentLibrary">Kommentarbibliotek</string>
     <string name="commentLibraryNoSuggestions">Inga förslag finns tillgängliga</string>
     <string name="speedGraderCommentHint">Kommentar</string>
+    <string name="a11y_schedule_marked_as_done">%s har markerats som färdig</string>
+    <string name="a11y_error_occured">Ett fel inträffade. Försök igen senare.</string>
+    <string name="a11y_content_description_accept_invite">Acceptera inbjudan</string>
+    <string name="a11y_content_description_decline_invite">Avvisa inbjudan</string>
+    <string name="no_notifications_to_show">Inga aviseringar att visa</string>
+
+    <string name="documentScanningTitle">Dokumentskanning</string>
+    <string name="filter_name_color">Färg</string>
+    <string name="filter_name_grayscale">Gråskala</string>
+    <string name="filter_name_monochrome">Monokrom</string>
+    <string name="filter_name_original">Ursprunglig</string>
+    <string name="noCompatibleAppInstalled">Din enhet har inga program som kan öppna den här länken.</string>
+    <string name="anonymousDiscussionNotSupported">Anonyma diskussioner stöds för närvarande inte på mobila enheter. Öppna i webbläsare för att visa diskussionen.</string>
+    <string name="discussionOpenInBrowser">Öppna i webbläsare</string>
 </resources>

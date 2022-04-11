@@ -34,6 +34,7 @@ import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.Const
+import java.util.Locale
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_PASS_FAIL_GRADE)
@@ -78,7 +79,7 @@ class PassFailGradeDailog : AppCompatDialogFragment() {
         }
 
         //set the spinner selection to the user's current grade, default is complete (also 'complete' comes back as the grade regardless of the language)
-        when(grade?.toLowerCase()) {
+        when(grade?.lowercase(Locale.getDefault())) {
             "complete" -> passFailSpinner.setSelection(0)
             "incomplete" -> passFailSpinner.setSelection(1)
             else -> passFailSpinner.setSelection(0)
@@ -88,13 +89,13 @@ class PassFailGradeDailog : AppCompatDialogFragment() {
                 .setCancelable(true)
                 .setTitle(getString(R.string.customize_grade))
                 .setView(view)
-                .setPositiveButton(getString(android.R.string.ok).toUpperCase()) { _, _ ->
+                .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault())) { _, _ ->
                     // The api needs the string "complete" or "incomplete" in English, not whatever language is currently selected
                     val complete = if (passFailSpinner.selectedItemPosition == 0) "complete" else "incomplete"
 
                     mPassFailGradeCallback(complete, excusedCheckBox.isChecked)
                 }
-            .setNegativeButton(getString(android.R.string.cancel).toUpperCase(), null)
+            .setNegativeButton(getString(android.R.string.cancel).uppercase(Locale.getDefault()), null)
                 .create()
 
         passFailDialog.setOnShowListener {

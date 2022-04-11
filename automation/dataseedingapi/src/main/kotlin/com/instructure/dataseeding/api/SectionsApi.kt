@@ -21,7 +21,7 @@ package com.instructure.dataseeding.api
 import com.instructure.dataseeding.model.CreateSection
 import com.instructure.dataseeding.model.CreateSectionWrapper
 import com.instructure.dataseeding.model.SectionApiModel
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -35,7 +35,7 @@ object SectionsApi {
     }
 
     private val sectionsService: SectionsService by lazy {
-        CanvasRestAdapter.adminRetrofit.create(SectionsService::class.java)
+        CanvasNetworkAdapter.adminRetrofit.create(SectionsService::class.java)
     }
 
     fun createSection(courseId: Long): SectionApiModel {

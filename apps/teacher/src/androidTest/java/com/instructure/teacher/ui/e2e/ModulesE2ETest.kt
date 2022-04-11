@@ -93,12 +93,8 @@ class ModulesE2ETest : TeacherTest() {
                 teacherToken = teacher.token
         )
 
-        Espresso.pressBack()
-        courseBrowserPage.refresh()
-        courseBrowserPage.openModulesTab()
         modulesPage.refresh()
-
-        modulesPage.assertModuleIsPresent(moduleTitle = module.name)
+        modulesPage.assertModuleIsPresent(module.name)
         modulesPage.assertModuleIsPublished()
         modulesPage.assertModuleItemIsPresent(assignment.name)
         modulesPage.assertModuleItemIsPresent(quiz.title)
@@ -119,9 +115,7 @@ class ModulesE2ETest : TeacherTest() {
 
         courseBrowserPage.openModulesTab()
         modulesPage.assertEmptyView()
-
         Espresso.pressBack()
-
         courseBrowserPage.assertCourseBrowserPageDisplayed()
     }
 }

@@ -61,6 +61,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         sourceCamera.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.CameraClicked) }
         sourceDevice.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.SelectFileClicked) }
         sourceGallery.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.GalleryClicked) }
+        sourceDocumentScanning.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.DocumentScanningClicked) }
     }
 
     override fun onConnect(output: Consumer<PickerSubmissionUploadEvent>) {

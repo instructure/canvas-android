@@ -54,7 +54,7 @@ class AssigneeListPage : BasePage(pageResId = R.id.assigneeListPage) {
             groupNames: List<String> = emptyList(),
             studentNames: List<String> = emptyList()) {
         for (assigneeName in (sectionNames + groupNames + studentNames)) {
-            var targetView = allOf(withText(assigneeName), hasSibling(withId(R.id.assigneeTitleView)))
+            var targetView = allOf(withText(assigneeName), withId(R.id.assigneeTitleView))
             scrollRecyclerView(R.id.recyclerView, targetView)
             onView(targetView).assertDisplayed()
         }

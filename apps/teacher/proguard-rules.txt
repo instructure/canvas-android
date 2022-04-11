@@ -20,10 +20,7 @@
 -verbose
 
 -dontpreverify
--repackageclasses ''
--allowaccessmodification
 -optimizations !code/simplification/arithmetic
--dontskipnonpubliclibraryclasses
 
 -keepattributes *Annotation*,Signature,EnclosingMethod,ElementList,Root,Annotation,InnerClasses,SourceFile,LineNumberTable
 

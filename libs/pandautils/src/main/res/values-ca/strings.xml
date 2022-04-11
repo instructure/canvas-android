@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Tria un element multimèdia</string>
     <string name="takeVideo">Enregistra vídeo</string>
     <string name="noCameraOnDevice">Sense càmera</string>
@@ -49,6 +50,7 @@
     <string name="fromCamera">Càmera</string>
     <string name="fromGallery">Galeria</string>
     <string name="fromDevice">Dispositiu</string>
+    <string name="fromDocumentScanning">Escàner</string>
     <string name="fromOtherApplication">Altres</string>
     <string name="Domain">Domini</string>
     <string name="files">Fitxers</string>
@@ -328,7 +330,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">La data de desbloqueig no pot ser posterior a la fi de la secció</string>
     <string name="utils_lockBeforeDueDateError">La data de bloqueig no pot ser anterior a la data d\'inici</string>
     <string name="utils_lockAfterUnlockError">La data de bloqueig no pot ser anterior a la data de desbloqueig</string>
@@ -484,4 +485,5 @@
     <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Oh! S\'ha produït un error en carregar els detalls de l\'assignatura.</string>
 
+    <string name="a11y_schedule_marked_as_not_done">%s s’ha marcat com a no fet</string>
 </resources>

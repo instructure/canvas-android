@@ -108,7 +108,7 @@ class RubricEditView @JvmOverloads constructor(
 
         // Get points possible
         mPointsPossible = assignment.rubricSettings?.pointsPossible
-                ?: assignment.rubric!!.sumByDouble { it.points }
+                ?: assignment.rubric!!.sumOf { it.points }
 
         // Clone original assessment to hold unsaved changes
         mOriginalAssessment = submission?.rubricAssessment ?: hashMapOf()
@@ -195,7 +195,7 @@ class RubricEditView @JvmOverloads constructor(
     /** Calculates the working score and updates the UI */
     private fun refreshScore(): Double {
         val scoringAssessments = mAssessment.filterKeys { criteriaMap[it]?.ignoreForScoring != true }.values
-        val sum = scoringAssessments.sumByDouble { it.points ?: 0.0 }
+        val sum = scoringAssessments.sumOf { it.points ?: 0.0 }
         rubricScoreView.text = context.getString(R.string.rubric_assessment_score_out_of_total,
                 NumberHelper.formatDecimal(sum, 2, true),
                 NumberHelper.formatDecimal(mPointsPossible, 2, true))

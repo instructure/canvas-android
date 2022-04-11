@@ -263,7 +263,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             context += "."
 
             // We want it to be lowercase.
-            context = context.toLowerCase(Locale.getDefault())
+            context = context.lowercase(Locale.getDefault())
 
             loadHtml(resources.getString(R.string.noPagesInContext) + " " + context, "text/html", "utf-8", null)
         } else {

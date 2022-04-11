@@ -1,7 +1,7 @@
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.ColorApiModel
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.PUT
@@ -16,7 +16,7 @@ object ColorsApi {
     }
 
     private fun colorsService(token: String): ColorsService
-            = CanvasRestAdapter.retrofitWithToken(token).create(ColorsService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(ColorsService::class.java)
 
     fun setColor(studentToken: String, contextId: String, hexcode: String): ColorApiModel
             = colorsService(studentToken)
