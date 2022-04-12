@@ -29,6 +29,8 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
@@ -41,6 +43,10 @@ class BookmarkPage : BasePage() {
         onView(matcher).assertDisplayed()
     }
 
+    fun assertEmptyView() {
+        onView(withText(R.string.no_bookmarks)).assertDisplayed()
+    }
+
     fun clickBookmark(bookmarkName: String) {
         val matcher = allOf(withId(R.id.title), withText(bookmarkName))
         scrollRecyclerView(R.id.listView, matcher)
@@ -50,13 +56,7 @@ class BookmarkPage : BasePage() {
     fun changeBookmarkName(originalName: String, newName: String) {
 
         // Open the overflow menu for the bookmark
-        val matcher = allOf(
-                withId(R.id.overflow),
-                hasSibling(withText(originalName))
-        )
-        scrollRecyclerView(R.id.listView, matcher)
-        onView(matcher).click()
-
+        clickOnMoreMenu(originalName)
         // Click on "Edit"
         onView(allOf(withId(R.id.title), withText("Edit"), isDisplayed())).click()
 
@@ -66,5 +66,20 @@ class BookmarkPage : BasePage() {
 
         // Save
         onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DONE"))).click()
+    }
+
+    fun clickOnMoreMenu(bookmarkName: String) {
+        val matcher = allOf(
+            withId(R.id.overflow),
+            hasSibling(withText(bookmarkName))
+        )
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).click()
+    }
+
+    fun deleteBookmark(bookmarkName: String) {
+        clickOnMoreMenu(bookmarkName)
+        onView(allOf(withId(R.id.title), withText("Delete"), isDisplayed())).click()
+        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
 }
