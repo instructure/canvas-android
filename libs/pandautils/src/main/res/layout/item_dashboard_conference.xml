@@ -32,7 +32,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/announcement_card_background"
-        android:backgroundTint="@color/electricBlueBadge"
+        android:backgroundTint="@color/borderInfo"
         android:gravity="center_vertical"
         android:minHeight="55dp"
         android:onClick="@{() -> itemViewModel.handleJoin()}"
@@ -44,7 +44,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="@drawable/announcement_card_icon_background"
-            android:backgroundTint="@color/electricBlueBadge">
+            android:backgroundTint="@color/backgroundInfo">
 
             <ImageView
                 android:id="@+id/icon"

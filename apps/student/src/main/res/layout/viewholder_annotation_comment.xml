@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:tint="@color/navigationDrawerTextLight"
+            android:tint="@color/textDark"
             android:contentDescription="@string/edit"
             app:srcCompat="@drawable/ic_edit"/>
 

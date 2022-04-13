@@ -210,7 +210,7 @@
     </style>
 
     <style name="SwitchTheme">
-        <item name="colorControlActivated">@color/electricBlueBadge</item>
+        <item name="colorControlActivated">@color/backgroundInfo</item>
     </style>
 
 </resources>

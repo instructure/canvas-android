@@ -28,18 +28,49 @@
             able to change colors without having to add new ones
     -->
 
-
-    <!-- Student Specific Colors -->
-    <color name="navigationDrawerTextDark">#2D3B45</color>
-    <color name="navigationDrawerTextLight">#73818C</color>
-    <color name="notificationTintInvite">#00AC18</color>
-    <color name="notificationTintError">#EE0612</color>
-    <color name="notificationTintWarning">#FC5E13</color>
-    <color name="bottomBarNavigationColor">#C7CDD1</color>
-    <color name="bottomBarUnselectedItemColor">#2D3B45</color>
-    <color name="electricBlueBadge">#008EE2</color>
-    <color name="lockedDiscussionColor">#73818C</color>
-
+    <!-- InstUI colors -->
+    <color name="ash">#556572</color>
+    <color name="backgroundAlert">#BF32A4</color>
+    <color name="backgroundDanger">#EE0612</color>
+    <color name="backgroundDark">#556572</color>
+    <color name="backgroundDarkest">#2D3B45</color>
+    <color name="backgroundGrouped">#F5F5F5</color>
+    <color name="backgroundGroupedCell">#FFFFFF</color>
+    <color name="backgroundInfo">#008EE2</color>
+    <color name="backgroundLight">#F5F5F5</color>
+    <color name="backgroundLightest">#FFFFFF</color>
+    <color name="backgroundMedium">#C7CDD1</color>
+    <color name="backgroundSuccess">#00AC18</color>
+    <color name="backgroundWarning">#FC5E13</color>
+    <color name="barney">#BF32A4</color>
+    <color name="borderAlert">#BF32A4</color>
+    <color name="borderDanger">#EE0612</color>
+    <color name="borderDark">#556572</color>
+    <color name="borderDarkest">#2D3B45</color>
+    <color name="borderInfo">#008EE2</color>
+    <color name="borderLight">#F5F5F5</color>
+    <color name="borderLightest">#FFFFFF</color>
+    <color name="borderMedium">#C7CDD1</color>
+    <color name="borderSuccess">#00AC18</color>
+    <color name="borderWarning">#FC5E13</color>
+    <color name="crimson">#EE0612</color>
+    <color name="electric">#008EE2</color>
+    <color name="fire">#FC5E13</color>
+    <color name="licorice">#2D3B45</color>
+    <color name="oxford">#394B58</color>
+    <color name="porcelain">#F5F5F5</color>
+    <color name="shamrock">#00AC18</color>
+    <color name="textAlert">#BF32A4</color>
+    <color name="textDanger">#EE0612</color>
+    <color name="textDark">#556572</color>
+    <color name="textDarkest">#2D3B45</color>
+    <color name="textInfo">#008EE2</color>
+    <color name="textLight">#F5F5F5</color>
+    <color name="textLightest">#FFFFFF</color>
+    <color name="textSuccess">#00AC18</color>
+    <color name="textWarning">#FC5E13</color>
+    <color name="tiara">#C7CDD1</color>
+    <color name="white">#FFFFFF</color>
 
     <!-- Teacher Specific Colors -->
     <color name="teacher_colorPrimary">#394b58</color>
@@ -147,7 +178,6 @@
     <color name="colorTangerine">#FFFA9800</color>
     <color name="colorBloodOrange">#FFF2581B</color>
     <color name="colorSriracha">#FFF2422E</color>
-    <color name="white">#FFFFFFFF</color>
     <color name="glassWhite">#77FFFFFF</color>
     <color name="whiteNoAlpha">#FFFFFF</color>
     <color name="yellow">#FFFF00</color>

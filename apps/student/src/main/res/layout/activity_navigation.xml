@@ -49,7 +49,7 @@
             android:id="@+id/bottomBarDivider"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/bottomBarNavigationColor"
+            android:background="@color/backgroundMedium"
             android:importantForAccessibility="no"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
