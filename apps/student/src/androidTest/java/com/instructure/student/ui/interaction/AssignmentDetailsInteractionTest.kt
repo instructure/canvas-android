@@ -111,13 +111,6 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     */
     }
 
-    @Stub
-    @Test
-    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, FeatureCategory.BOOKMARKS)
-    fun testAssignments_createBookmark() {
-        // Student can bookmark the assignment
-    }
-
     private fun goToAssignmentFromList() {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
         val data = MockCanvas.init(

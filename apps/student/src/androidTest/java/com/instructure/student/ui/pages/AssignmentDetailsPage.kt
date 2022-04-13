@@ -109,7 +109,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         waitForMatcherWithSleeps(withId(R.id.descriptionWebView), waitMs = 30000, sleepMs = 1000).scrollTo()
     }
 
-    fun bookmark(bookmarkName: String) {
+    fun addBookmark(bookmarkName: String) {
         Espresso.onView(
                 allOf(
                         ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),
