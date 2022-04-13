@@ -49,7 +49,7 @@ class BookmarkInteractionTest : StudentTest() {
         courseBrowserPage.selectAssignments()
         assignmentListPage.clickAssignment(assignment)
         val bookmarkName = "Bookmark name 1"
-        assignmentDetailsPage.bookmark(bookmarkName)
+        assignmentDetailsPage.addBookmark(bookmarkName)
         Espresso.pressBack() // to assignment list
         Espresso.pressBack() // to course
         Espresso.pressBack() // to main dashboard
