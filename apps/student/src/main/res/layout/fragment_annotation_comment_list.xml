@@ -49,7 +49,7 @@
             android:id="@+id/sendingErrorTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/error"
+            android:background="@color/textDanger"
             android:gravity="center"
             android:padding="4dp"
             android:text="@string/errorSendingMessage"
@@ -70,7 +70,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/send"
             android:src="@drawable/ic_send"
-            android:tint="@color/canvasDefaultButton"/>
+            android:tint="@color/textInfo"/>
 
         <EditText
             android:id="@+id/commentEditText"

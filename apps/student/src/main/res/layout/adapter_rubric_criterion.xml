@@ -55,7 +55,7 @@
             android:minHeight="48dp"
             android:paddingTop="14dp"
             android:text="@string/description"
-            android:textColor="@color/defaultActionColor"/>
+            android:textColor="@color/textInfo"/>
 
         <com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.CriterionRatingLayout
             android:id="@+id/ratingLayout"

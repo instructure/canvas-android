@@ -109,7 +109,7 @@ object ConferenceListPresenter : Presenter<ConferenceListModel, ConferenceListVi
             item.startedAt != null -> {
                 isJoinable = true
                 label = context.getString(R.string.inProgress)
-                labelTint = ContextCompat.getColor(context, R.color.publishedGreen)
+                labelTint = ContextCompat.getColor(context, R.color.textSuccess)
             }
             else -> {
                 label = context.getString(R.string.notStarted)

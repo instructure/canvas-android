@@ -27,7 +27,7 @@
         android:layout_gravity="center_horizontal"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_warning"
-        android:tint="@color/alertRed" />
+        android:tint="@color/textDanger" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:backgroundTint="@color/defaultActionColor"
+        android:backgroundTint="@color/backgroundInfo"
         android:paddingStart="48dp"
         android:paddingEnd="48dp"
         android:text="@string/retry"

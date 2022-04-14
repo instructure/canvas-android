@@ -109,7 +109,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             if (it.score > presenter.assignment.pointsPossible) {
                 val numberFormatter = DecimalFormat("##.##")
                 gradeText.text = getString(R.string.speed_grader_overgraded_by, numberFormatter.format(it.score - presenter.assignment.pointsPossible))
-                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.alertOrange))
+                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textWarning))
             } else {
                 gradeText.setText(R.string.grade)
                 gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))

@@ -216,7 +216,7 @@
                     android:layout_height="18dp"
                     android:layout_marginEnd="11dp"
                     android:importantForAccessibility="no"
-                    android:tint="@color/destructive"
+                    android:tint="@color/textDanger"
                     app:srcCompat="@drawable/ic_trash" />
 
                 <TextView
@@ -226,7 +226,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/deleteImage"
                     android:text="@string/utils_discussionsDelete"
-                    android:textColor="@color/destructive"
+                    android:textColor="@color/textDanger"
                     android:textSize="16sp"
                     android:importantForAccessibility="yes"/>
 

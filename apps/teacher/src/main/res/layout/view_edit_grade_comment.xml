@@ -64,6 +64,6 @@
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         app:srcCompat="@drawable/ic_checkmark"
-        tools:tint="@color/defaultActionColor"/>
+        tools:tint="@color/textInfo"/>
 
 </RelativeLayout>

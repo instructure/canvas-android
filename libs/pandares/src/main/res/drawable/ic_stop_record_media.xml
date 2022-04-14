@@ -35,7 +35,7 @@
             <size
                 android:width="@dimen/mediaRecordingButton"
                 android:height="@dimen/mediaRecordingButton" />
-            <solid android:color="@color/red" />
+            <solid android:color="@color/textDanger" />
         </shape>
     </item>
 

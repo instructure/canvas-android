@@ -67,7 +67,7 @@
             android:padding="4dp"
             android:layout_margin="12dp"
             android:text="@string/clear_filter"
-            android:textColor="@color/defaultActionColor"
+            android:textColor="@color/textInfo"
             android:visibility="gone"
             tools:text="Clear filter"/>
     </RelativeLayout>

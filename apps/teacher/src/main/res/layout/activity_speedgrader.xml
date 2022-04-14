@@ -67,7 +67,7 @@
             android:layout_height="@dimen/speedGraderTutorialTouchSize"
             android:layout_below="@+id/tutorialCard"
             android:layout_centerHorizontal="true"
-            app:tsv_color="@color/speedGraderTutorialColor"/>
+            app:tsv_color="@color/borderSuccess"/>
 
     </RelativeLayout>
 

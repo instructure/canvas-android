@@ -41,7 +41,7 @@
             android:minWidth="48dp"
             android:paddingTop="12dp"
             android:text="@string/add_comment"
-            android:textColor="@color/canvasDefaultButton"/>
+            android:textColor="@color/textInfo"/>
 
         <TextView
             android:id="@+id/criterionActionSeparator"
@@ -63,7 +63,7 @@
             android:minWidth="48dp"
             android:paddingTop="12dp"
             android:text="@string/rubric_view_long_description"
-            android:textColor="@color/canvasDefaultButton"/>
+            android:textColor="@color/textInfo"/>
 
     </LinearLayout>
 

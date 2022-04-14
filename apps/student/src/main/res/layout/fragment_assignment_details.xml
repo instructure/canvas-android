@@ -131,7 +131,7 @@
                                 android:layout_marginStart="12dp"
                                 android:importantForAccessibility="no"
                                 tools:src="@drawable/ic_complete_solid"
-                                tools:tint="@color/alertGreen" />
+                                tools:tint="@color/textSuccess" />
 
                             <TextView
                                 android:id="@+id/submissionStatus"
@@ -186,7 +186,7 @@
                                 android:layout_marginTop="6dp"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusUploadingSubtitle"
-                                android:textColor="@color/canvasDefaultAccent" />
+                                android:textColor="@color/textInfo" />
 
                         </LinearLayout>
 
@@ -219,7 +219,7 @@
                                 android:layout_marginTop="6dp"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusFailedSubtitle"
-                                android:textColor="@color/canvasDefaultAccent" />
+                                android:textColor="@color/textInfo" />
 
                         </LinearLayout>
 
@@ -256,7 +256,7 @@
                                 android:layout_marginTop="6dp"
                                 android:gravity="center"
                                 android:text="@string/submissionDraftAvailableSubtitle"
-                                android:textColor="@color/canvasDefaultAccent" />
+                                android:textColor="@color/textInfo" />
 
                         </LinearLayout>
 
@@ -499,7 +499,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/submissionAndRubric"
-                            android:textColor="@color/canvasDefaultAccent"
+                            android:textColor="@color/textInfo"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -755,7 +755,7 @@
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/canvasDefaultAccent"
+            android:background="@color/backgroundInfo"
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/submitAssignment"
             android:textAllCaps="false"

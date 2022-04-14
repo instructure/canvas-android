@@ -116,7 +116,7 @@ class FileFolderPublishedStatusIconView @JvmOverloads constructor(
         if (!fileFolder.isLocked && !fileFolder.isHidden && fileFolder.lockDate == null && fileFolder.unlockDate == null) {
             // Published
             mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_complete_solid))
-            mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.publishedGreen))
+            mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.textSuccess))
             mPublishedStatusIcon.contentDescription = context.getString(R.string.published)
         } else if (fileFolder.isLocked) {
             // Unpublished
@@ -126,7 +126,7 @@ class FileFolderPublishedStatusIconView @JvmOverloads constructor(
         } else if (fileFolder.isHidden || fileFolder.lockDate != null || fileFolder.unlockDate != null) {
             // Restricted
             mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_restricted))
-            mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.red))
+            mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.textDanger))
             mPublishedStatusIcon.contentDescription = context.getString(R.string.restricted)
         }
     }

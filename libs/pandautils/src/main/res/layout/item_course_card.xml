@@ -54,7 +54,7 @@
                     android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
                     app:imageUrl="@{itemViewModel.data.imageUrl}"
                     app:overlayColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
-                    tools:background="@color/canvasDefaultAccent"/>
+                    tools:background="@color/backgroundInfo"/>
 
                 <TextView
                     android:id="@+id/courseNameText"
@@ -81,7 +81,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
-                    tools:background="@color/canvasDefaultAccent" />
+                    tools:background="@color/backgroundInfo" />
 
                 <LinearLayout
                     android:id="@+id/todoLayout"
@@ -102,7 +102,7 @@
                         android:src="@drawable/ic_homeroom_todo"
                         android:tint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
                         android:importantForAccessibility="no"
-                        tools:tint="@color/canvasDefaultAccent" />
+                        tools:tint="@color/textInfo" />
 
                     <TextView
                         android:id="@+id/todoText"
@@ -146,7 +146,7 @@
                         android:src="@drawable/ic_homeroom_announcement"
                         android:tint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
                         android:importantForAccessibility="no"
-                        tools:tint="@color/canvasDefaultAccent" />
+                        tools:tint="@color/textInfo" />
 
                     <TextView
                         android:id="@+id/announcementText"

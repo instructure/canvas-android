@@ -33,7 +33,7 @@
         android:layout_height="28dp"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_warning"
-        android:tint="@color/error"/>
+        android:tint="@color/textDanger"/>
 
     <TextView
         android:id="@+id/errorMessage"
@@ -50,6 +50,6 @@
         android:layout_height="wrap_content"
         android:text="@string/retry"
         android:textColor="@color/white"
-        tools:backgroundTint="@color/canvasDefaultButton"/>
+        tools:backgroundTint="@color/backgroundInfo"/>
 
 </LinearLayout>

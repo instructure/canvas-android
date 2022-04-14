@@ -91,7 +91,7 @@
                 android:contentDescription="@string/no_grade"
                 android:minHeight="0dp"
                 android:text="@string/no_grade"
-                android:textColor="@color/speed_grader_button_text_color" />
+                android:textColor="@color/textInfo" />
 
         </FrameLayout>
 
@@ -116,7 +116,7 @@
                 android:contentDescription="@string/excuse"
                 android:minHeight="0dp"
                 android:text="@string/excuse"
-                android:textColor="@color/speed_grader_button_text_color" />
+                android:textColor="@color/textInfo" />
 
         </FrameLayout>
 

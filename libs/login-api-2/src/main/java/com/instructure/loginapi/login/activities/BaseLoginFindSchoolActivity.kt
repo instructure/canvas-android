@@ -175,7 +175,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
                     } else {
                         mNextActionButton!!.isEnabled = true
                         mNextActionButton!!.setTextColor(ContextCompat.getColor(
-                                this@BaseLoginFindSchoolActivity, R.color.login_loginFlowBlue))
+                                this@BaseLoginFindSchoolActivity, R.color.textInfo))
                     }
                 }
             }

@@ -57,7 +57,7 @@
                 android:layout_marginBottom="10dp"
                 android:importantForAccessibility="no"
                     android:background="@drawable/ic_circle"
-                    android:backgroundTint="@color/canvasDefaultAccent"/>
+                    android:backgroundTint="@color/backgroundInfo"/>
 
                 <ImageView
                     android:id="@+id/overflow"

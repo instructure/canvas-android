@@ -81,24 +81,17 @@
     <color name="inboxFilterGray">#212121</color>
     <color name="divider">#D1D3D4</color>
     <color name="messageTextColor">#333333</color>
-    <color name="submissionStatusColorLate">#F68508</color>
-    <color name="submissionStatusColorMissing">#C30016</color>
-    <color name="submissionStatusColorSubmitted">#00AC18</color>
-    <color name="speedGraderTutorialColor">#00AC18</color>
     <color name="defaultUnselectedDonutGray">#F5F5F5</color>
     <color name="disabledText">#9D9FA2</color>
-    <color name="publishedGreen">#00ac18</color>
     <color name="textLightGray">#556572</color>
     <color name="semiTransparentDark">#50000000</color>
     <color name="progressBarBackground">#F5F5F5</color>
     <color name="recordButtonStroke">#EBEDEE</color>
     <color name="recordFloatingViewBackground">#F5F5F5</color>
-    <color name="recordReplayTextColor">#76848D</color>
-    <color name="commentBubbleOutgoing">#178FDF</color>
     <color name="commentBubbleIncoming">#F5F5F5</color>
 
 
-    <!-- Annotation Colors -->
+    <!-- Annotation Colors KEEP THIS -->
     <color name="annotationToolbarBackground">#556572</color>
     <color name="submenuAnnotationToolbarBackground">#FF485864</color>
     <color name="redAnnotation">#EE0612</color>
@@ -120,49 +113,20 @@
     <color name="transparentWhite">#88FFFFFF</color>
 
 
-    <!-- Parent Specific Colors -->
-    <color name="parent_colorPrimary">#008EE2</color>
-    <color name="parent_colorPrimaryDark">#0079bf</color>
-    <color name="parent_colorAccent">#4452A6</color>
-    <color name="blueAnnouncement">#018ecf</color>
-    <color name="parentYellow">#F5A623</color>
-    <color name="parentBlue">#0096DB</color>
-    <color name="parentRed">#D0021B</color>
-    <color name="parentBackgroundDarkBlue">#d6001ec2</color>
-    <color name="parentBackgroundLightBlue">#d600E1FF</color>
-    <color name="parentButtonBluePressed">#0055b1</color>
-    <color name="parentButtonBlue">#0068D8</color>
-    <color name="parentButtonBlueTransparent">#990068D8</color>
-    <color name="parentButtonTextDisabled">#abffffff</color>
-    <color name="parentGreen">#48AF49</color>
-    <color name="colorPrimaryAlpha">#ff3f51b5</color>
-    <color name="colorGradientYellow">#CCFFC700</color>
-    <color name="colorGradientRed">#CCFF0000</color>
-    <color name="colorGradientCyan">#CC00E1FF</color>
-    <color name="colorGradientBlue">#CC001EC2</color>
-    <color name="parentAppBackground">#EFEFF1</color>
-    <color name="alertGreen">#00AC18</color>
-    <color name="alertRed">#EE0612</color>
-    <color name="alertOrange">#FC5E13</color>
-
-
-    <!-- Login Colors -->
+    <!-- Login Colors KEEP THIS 3-->
     <color name="login_teacherAppTheme">#ffc100</color>
     <color name="login_parentAppTheme">#008ee2</color>
     <color name="login_studentAppTheme">#ee0612</color>
-    <color name="login_loginFlowBlue">#008ee2</color>
-    <color name="login_helpLinkBlue">#0f78db</color>
+
     <color name="login_grayCanvasLogo">#c7cdd1</color>
     <color name="login_grayText">#556572</color>
     <color name="login_darkText">#2d3b45</color>
     <color name="login_mediumText">#78848c</color>
     <color name="login_dividerColor">#E0E0E0</color>
-    <color name="login_textButton">#73818C</color>
-    <color name="login_masqueradeHighlight">#BE32A3</color>
 
     <!-- ***SHARED COLORS***-->
 
-    <!-- Course Colors - Primary -->
+    <!-- Course Colors - Primary KEEP THIS -->
     <color name="colorCottonCandy">#FFF26090</color>
     <color name="colorBarbie">#FFEA1661</color>
     <color name="colorBarneyPurple">#FF903A99</color>
@@ -178,37 +142,25 @@
     <color name="colorTangerine">#FFFA9800</color>
     <color name="colorBloodOrange">#FFF2581B</color>
     <color name="colorSriracha">#FFF2422E</color>
+
     <color name="glassWhite">#77FFFFFF</color>
-    <color name="whiteNoAlpha">#FFFFFF</color>
-    <color name="yellow">#FFFF00</color>
-    <color name="red">#FF0000</color>
     <color name="gray">#808080</color>
     <color name="darkGray">#696969</color>
     <color name="darkerGray">#333</color>
-    <color name="realBlue">#0000FF</color>
     <color name="black">#000000</color>
     <color name="lightGray">#D3D3D3</color>
     <color name="translucentBlack">#99000000</color>
-    <color name="linkBlue">#5858F8</color>
     <color name="eventIconGray">#838383</color>
 
     <!-- Canvas Style Guide Colors -->
-    <color name="canvasRed">#D64027</color>
-    <color name="canvasOrange">#F25622</color>
-    <color name="canvasBlue">#0076A3</color>
     <color name="canvasBlueRowSelected">#FFE3E3E3</color>
-    <color name="canvasBlueGreyRowSelected">#FFE3E3E3</color>
-    <color name="canvasBlueSelectedTransparent">#AAE3E3E3</color>
     <color name="canvasBackgroundDark">#1B1B1B</color>
-    <color name="canvasBackgroundMediumDark">#2D2D2D</color>
     <color name="canvasBackgroundMedium">#FFE3E3E3</color>
     <color name="canvasBackgroundLight">#FFF9F9F9</color>
     <color name="canvasBackgroundWhite">#FFFFFF</color>
     <color name="canvasSectionDivider">#A4A4A4</color>
     <color name="canvasTextDark">#3B3B3B</color>
     <color name="canvasTextMedium">#939393</color>
-    <color name="backgroundTabPressed">#FFE3E3E3</color>
-    <color name="submissionBackground">#FFEBEBEB</color>
     <color name="primaryText">#333333</color>
     <color name="secondaryText">#777777</color>
     <color name="dividerColor">#E0E0E0</color>
@@ -222,13 +174,6 @@
     <color name="listviewDefault">#00000000</color>
     <color name="listviewFocused">#00000000</color>
     <color name="listviewPressed">#FFE3E3E3</color>
-
-    <!-- Calendar -->
-    <color name="calendarEventBar">#9D9E9E</color>
-    <color name="calendarTodayHighlight">#92dedede</color>
-
-    <!-- Sidebar -->
-    <color name="tabletSidebarSelected">#FFE3E3E3</color>
 
     <!-- Button colors -->
     <color name="buttonNormal">#DDD</color>
@@ -247,7 +192,7 @@
     <color name="discussionLiking">#556572</color>
     <color name="profileBorderColor">#d8dcdf</color>
 
-    <!--Attachment View-->
+    <!--Attachment View KEEP THIS??? -->
     <color name="attachmentColorDoc">#2ca3de</color>
     <color name="attachmentColorPdf">#f2422e</color>
     <color name="attachmentColorVideo">#f2422e</color>
@@ -260,15 +205,9 @@
 
     <!-- Generic Shared Colors -->
     <color name="messageBackgroundGray">#F5F5F5</color>
-    <color name="error">#FFD50000</color>
-    <color name="defaultActionColor">#008ee2</color>
-    <color name="destructive">#EE0612</color>
     <color name="unselectedRadioColor">#010101</color>
-    <color name="removeOverrideColor">#EE0612</color>
     <color name="canvasDefaultPrimary">#34444F</color>
     <color name="canvasDefaultPrimaryText">#FFFFFF</color>
-    <color name="canvasDefaultAccent">#0081BD</color>
-    <color name="canvasDefaultButton">#0096DB</color>
     <color name="canvasDefaultButtonText">#FFFFFF</color>
     <color name="canvasEditTextColor">#C7CDD1</color>
     <color name="defaultThumbColor">#EBEDEE</color>
@@ -282,7 +221,6 @@
     <color name="blue">@color/defaultPrimary</color>
     <color name="darker_blue">@color/defaultPrimaryDark</color>
 
-    <color name="speed_grader_button_text_color">#008EE2</color>
     <color name="nav_drawer_text_color">#2D3B45</color>
 
     <color name="k5SeparatorColor">#C6C6C8</color>

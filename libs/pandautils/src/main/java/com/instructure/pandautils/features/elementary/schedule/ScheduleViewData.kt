@@ -90,9 +90,9 @@ sealed class PlannerItemTag(val text: Int, @ColorRes val color: Int) {
     object Graded : PlannerItemTag(R.string.schedule_tag_graded, R.color.textLightGray)
     data class Replies(val replyCount: Int) : PlannerItemTag(R.plurals.schedule_tag_replies, R.color.textLightGray)
     object Feedback : PlannerItemTag(R.string.schedule_tag_feedback, R.color.textLightGray)
-    object Late : PlannerItemTag(R.string.schedule_tag_late, R.color.canvasRed)
-    object Redo : PlannerItemTag(R.string.schedule_tag_redo, R.color.canvasRed)
-    object Missing : PlannerItemTag(R.string.schedule_tag_missing, R.color.canvasRed)
+    object Late : PlannerItemTag(R.string.schedule_tag_late, R.color.textDanger)
+    object Redo : PlannerItemTag(R.string.schedule_tag_redo, R.color.textDanger)
+    object Missing : PlannerItemTag(R.string.schedule_tag_missing, R.color.textDanger)
 }
 
 sealed class ScheduleAction {

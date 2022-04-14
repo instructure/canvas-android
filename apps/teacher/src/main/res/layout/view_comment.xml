@@ -57,7 +57,7 @@
         android:paddingTop="8dp"
         android:textColor="#FFF"
         android:layout_marginTop="4dp"
-        app:bubbleColor="@color/canvasDefaultButton"
+        app:bubbleColor="@color/backgroundInfo"
         app:targetAvatarId="@+id/avatarView"
         tools:text="The due date has passed. Are you planning on submitting it?"/>
 

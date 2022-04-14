@@ -96,7 +96,7 @@
             app:layout_constraintStart_toStartOf="@id/title"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="Math"
-            tools:textColor="@color/colorBloodOrange" />
+            tools:textColor="@color/textWarning" />
 
         <LinearLayout
             android:id="@+id/detailsLayout"

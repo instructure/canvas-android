@@ -41,7 +41,7 @@
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:text="@string/open_alternate_view"
-        android:textColor="@color/defaultActionColor"
+        android:textColor="@color/textInfo"
         android:textSize="16sp"
         android:visibility="gone" />
 
@@ -460,7 +460,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="16dp"
-                    android:textColor="@color/defaultActionColor"
+                    android:textColor="@color/textInfo"
                     android:visibility="gone"
                     android:text="@string/openInBrowser" />
 

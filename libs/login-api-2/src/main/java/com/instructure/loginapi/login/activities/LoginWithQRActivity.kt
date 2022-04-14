@@ -85,6 +85,6 @@ abstract class LoginWithQRActivity : AppCompatActivity() {
         }
 
         val nextText: TextView = findViewById(R.id.next)
-        nextText.setTextColor(ContextCompat.getColor(this@LoginWithQRActivity, R.color.login_loginFlowBlue))
+        nextText.setTextColor(ContextCompat.getColor(this@LoginWithQRActivity, R.color.textInfo))
     }
 }

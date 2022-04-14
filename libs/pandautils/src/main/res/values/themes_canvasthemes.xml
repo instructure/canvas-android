@@ -70,8 +70,8 @@
     </style>
 
     <style name="AccentDialogTheme" parent="CanvasDialogTheme_Default">
-        <item name="colorAccent">@color/defaultActionColor</item>
-        <item name="android:colorAccent">@color/defaultActionColor</item>
+        <item name="colorAccent">@color/textInfo</item>
+        <item name="android:colorAccent">@color/textInfo</item>
     </style>
 
 </resources>

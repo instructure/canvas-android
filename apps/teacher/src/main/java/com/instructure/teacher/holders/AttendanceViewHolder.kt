@@ -53,9 +53,9 @@ class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         studentAvatar.onClick { callback.onAvatarClicked(attendance, position) }
 
         val (drawable: Int, color: Int) = when(attendance.attendanceStatus()) {
-            Attendance.Attendance.ABSENT -> R.drawable.ic_attendance_missing to R.color.alertRed
-            Attendance.Attendance.LATE -> R.drawable.ic_clock to R.color.alertOrange
-            Attendance.Attendance.PRESENT -> R.drawable.ic_complete to R.color.alertGreen
+            Attendance.Attendance.ABSENT -> R.drawable.ic_attendance_missing to R.color.textDanger
+            Attendance.Attendance.LATE -> R.drawable.ic_clock to R.color.textWarning
+            Attendance.Attendance.PRESENT -> R.drawable.ic_complete to R.color.textSuccess
             else -> R.drawable.ic_no to R.color.defaultTextGray
         }
         attendanceIndicator.setImageResource(drawable)

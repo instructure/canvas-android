@@ -70,7 +70,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/inProgress"
-                        android:textColor="@color/publishedGreen" />
+                        android:textColor="@color/textSuccess" />
 
                     <View
                         android:id="@+id/inProgressIndicatorDivider"
@@ -154,7 +154,7 @@
         android:id="@+id/joinContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/publishedGreen">
+        android:background="@color/backgroundSuccess">
 
         <Button
             android:id="@+id/joinButton"

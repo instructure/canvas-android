@@ -73,7 +73,7 @@
             android:layout_gravity="bottom|end"
             android:paddingEnd="16dp"
             android:text="@string/see_all"
-            android:textColor="@color/defaultActionColor"
+            android:textColor="@color/textInfo"
             android:paddingBottom="2dp"
             android:paddingStart="16dp"
             android:paddingTop="27dp"

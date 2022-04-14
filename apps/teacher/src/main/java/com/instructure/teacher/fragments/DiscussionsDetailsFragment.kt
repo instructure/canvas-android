@@ -184,9 +184,9 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if(!mIsAnnouncements) {
             if (discussionTopicHeader.published) {
                 publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
-                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.publishedGreen))
+                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textSuccess))
                 publishStatusTextView.setText(R.string.published)
-                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.publishedGreen))
+                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textSuccess))
             } else {
                 publishStatusIconView.setImageResource(R.drawable.ic_complete)
                 publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.defaultTextGray))

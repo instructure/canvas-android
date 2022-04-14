@@ -170,7 +170,7 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                 commentTextColor = context.getColorCompat(R.color.defaultTextDark)
             }
             CommentDirection.OUTGOING -> {
-                setCommentBubbleColor(context.getColorCompat(R.color.commentBubbleOutgoing))
+                setCommentBubbleColor(context.getColorCompat(R.color.backgroundInfo))
                 commentTextColor = Color.WHITE
             }
         }

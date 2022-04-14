@@ -45,9 +45,9 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     var primaryTextColor by ColorPref(R.color.canvasDefaultPrimaryText)
 
-    var accentColor by ColorPref(R.color.canvasDefaultAccent)
+    var accentColor by ColorPref(R.color.textInfo)
 
-    var buttonColor by ColorPref(R.color.canvasDefaultButton)
+    var buttonColor by ColorPref(R.color.backgroundInfo)
 
     var buttonTextColor by ColorPref(R.color.canvasDefaultButtonText)
 

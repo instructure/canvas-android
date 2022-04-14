@@ -111,7 +111,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/featureFlagsTitle"
-                android:textColor="@color/colorOcean11"
+                android:textColor="@color/textInfo"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible"/>
@@ -126,7 +126,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/remoteConfigParamsTitle"
-                android:textColor="@color/colorOcean11"
+                android:textColor="@color/textInfo"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible"/>

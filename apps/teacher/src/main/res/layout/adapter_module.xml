@@ -54,7 +54,7 @@
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/published"
         android:src="@drawable/ic_complete_solid"
-        android:tint="@color/publishedGreen"/>
+        android:tint="@color/textSuccess"/>
 
     <ImageView
         android:id="@+id/unpublishedIcon"

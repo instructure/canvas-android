@@ -283,7 +283,7 @@
                 android:layout_height="18dp"
                 android:layout_centerVertical="true"
                 android:importantForAccessibility="no"
-                android:tint="@color/destructive"
+                android:tint="@color/textDanger"
                 app:srcCompat="@drawable/ic_trash" />
 
             <TextView
@@ -296,7 +296,7 @@
                 android:layout_toEndOf="@id/deleteImage"
                 android:importantForAccessibility="yes"
                 android:text="@string/deleteFile"
-                android:textColor="@color/destructive"
+                android:textColor="@color/textDanger"
                 android:textSize="16sp" />
 
         </RelativeLayout>

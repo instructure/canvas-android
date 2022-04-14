@@ -395,7 +395,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 // No badge, we need to create one
                 val badge = LayoutInflater.from(this).inflate(R.layout.unread_count, bottomBar, false) as TextView
                 badge.text = todoCountDisplay
-                ColorUtils.colorIt(getColorCompat(R.color.defaultActionColor), badge.background)
+                ColorUtils.colorIt(getColorCompat(R.color.textInfo), badge.background)
                 view.addView(badge)
             }
         } else {

@@ -78,7 +78,7 @@
             android:paddingStart="12dp"
             android:paddingTop="24dp"
             android:text="@string/clearFilter"
-            android:textColor="@color/canvasDefaultAccent"
+            android:textColor="@color/textInfo"
             android:visibility="gone"
             tools:text="Clear filter"
             tools:visibility="visible"/>

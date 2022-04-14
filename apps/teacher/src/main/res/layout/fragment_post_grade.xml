@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_alignParentBottom="true"
-            tools:background="@color/defaultActionColor">
+            tools:background="@color/backgroundInfo">
             <TextView
                 android:id="@+id/postGradeButton"
                 android:layout_width="match_parent"

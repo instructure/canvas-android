@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackground"
                     android:text="@string/whatsNewText"
-                    android:textColor="@color/linkBlue"
+                    android:textColor="@color/textInfo"
                     android:textSize="14sp"/>
             </LinearLayout>
 

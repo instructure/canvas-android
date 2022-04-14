@@ -320,14 +320,14 @@
                     android:layout_marginEnd="12dp"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_trash"
-                    android:tint="@color/removeOverrideColor" />
+                    android:tint="@color/textDanger" />
 
                 <TextView
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/deleteAnnouncement"
-                    android:textColor="@color/removeOverrideColor"
+                    android:textColor="@color/textDanger"
                     android:textSize="16sp" />
 
             </LinearLayout>

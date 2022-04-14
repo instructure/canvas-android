@@ -43,13 +43,13 @@
             android:layout_marginEnd="4dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_warning"
-            android:tint="@color/error"/>
+            android:tint="@color/textDanger"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/error_sending_message"
-            android:textColor="@color/error"
+            android:textColor="@color/textDanger"
             android:textSize="12sp"/>
 
     </LinearLayout>
@@ -69,7 +69,7 @@
             android:layout_marginEnd="4dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_warning"
-            android:tint="@color/error"/>
+            android:tint="@color/textDanger"/>
 
         <TextView
             android:layout_width="wrap_content"

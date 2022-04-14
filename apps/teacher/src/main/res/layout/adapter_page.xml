@@ -29,7 +29,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        android:background="@color/publishedGreen"/>
+        android:background="@color/backgroundSuccess"/>
 
     <com.instructure.teacher.view.PublishedStatusIconView
         android:id="@+id/pageIcon"

@@ -70,7 +70,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/send"
             android:src="@drawable/ic_send"
-            android:tint="@color/canvasDefaultButton"/>
+            android:tint="@color/textInfo"/>
 
     </LinearLayout>
 

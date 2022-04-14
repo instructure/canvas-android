@@ -67,7 +67,7 @@
                 <TextView
                     android:id="@+id/sortByTextView"
                     style="@style/TextFont.Regular"
-                    android:textColor="@color/defaultActionColor"
+                    android:textColor="@color/textInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"

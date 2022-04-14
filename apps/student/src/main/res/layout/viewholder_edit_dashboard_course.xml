@@ -49,7 +49,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:src="@{itemViewModel.favorite ? @drawable/ic_star_filled : @drawable/ic_star_outline}"
-                android:tint="@{itemViewModel.favoriteable ? @color/canvasDefaultAccent : @color/defaultTextDark}"
+                android:tint="@{itemViewModel.favoriteable ? @color/textInfo : @color/defaultTextDark}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

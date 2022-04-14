@@ -40,7 +40,7 @@
         android:layout_marginEnd="32dp"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_quiz"
-        android:tint="@color/canvasDefaultAccent"/>
+        android:tint="@color/textInfo"/>
 
     <ProgressBar
         android:id="@+id/moduleItemLoadingView"
@@ -82,7 +82,7 @@
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/published"
         android:src="@drawable/ic_complete_solid"
-        android:tint="@color/publishedGreen"/>
+        android:tint="@color/textSuccess"/>
 
     <ImageView
         android:id="@+id/moduleItemUnpublishedIcon"

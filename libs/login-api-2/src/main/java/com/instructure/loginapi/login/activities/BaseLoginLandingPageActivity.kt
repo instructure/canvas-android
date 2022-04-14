@@ -243,7 +243,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     private fun applyTheme() {
         // Colors
         val color = themeColor()
-        val buttonColor = ContextCompat.getColor(this, R.color.login_loginFlowBlue)
+        val buttonColor = ContextCompat.getColor(this, R.color.textInfo)
 
         // Button
         val wrapDrawable = DrawableCompat.wrap(findMySchool.background)

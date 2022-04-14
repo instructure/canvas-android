@@ -65,7 +65,7 @@ class DonutChartView(context: Context, attrs: AttributeSet) : View(context, attr
             progress = 0.65f
             color = ContextCompat.getColor(
                 context,
-                R.color.canvasDefaultAccent
+                R.color.backgroundInfo
             )
         }
     }

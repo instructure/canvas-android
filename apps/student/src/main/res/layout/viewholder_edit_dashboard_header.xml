@@ -73,7 +73,7 @@
                     android:layout_marginEnd="4dp"
                     android:importantForAccessibility="no"
                     android:src="@{itemViewModel.hasItemSelected ? @drawable/ic_star_outline : @drawable/ic_star_filled}"
-                    android:tint="@color/canvasDefaultAccent"
+                    android:tint="@color/textInfo"
                     tools:src="@drawable/ic_star_outline" />
 
                 <TextView
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="no"
                     android:text="@{itemViewModel.hasItemSelected ? @string/unselect_all : @string/select_all}"
-                    android:textColor="@color/canvasDefaultAccent"
+                    android:textColor="@color/textInfo"
                     tools:text="Unselect All" />
 
             </LinearLayout>

@@ -172,7 +172,7 @@ class ConferenceListPresenterTest : Assert() {
             title  = conference.title!!,
             subtitle = conference.description!!,
             label = context.getString(R.string.inProgress),
-            labelTint = context.getColor(R.color.publishedGreen),
+            labelTint = context.getColor(R.color.textSuccess),
             conferenceId = conference.id,
             isJoinable = true
         )

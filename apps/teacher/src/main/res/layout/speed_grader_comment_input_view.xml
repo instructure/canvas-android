@@ -34,7 +34,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/send"
         android:src="@drawable/ic_send"
-        app:tint="@color/canvasDefaultButton"/>
+        app:tint="@color/textInfo"/>
 
 
     <ImageButton
@@ -49,7 +49,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/addMediaComment"
         android:src="@drawable/ic_attachment"
-        app:tint="@color/canvasDefaultButton"/>
+        app:tint="@color/textInfo"/>
 
     <EditText
         android:id="@+id/commentEditText"

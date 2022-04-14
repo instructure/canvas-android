@@ -57,7 +57,7 @@
             app:layout_constraintTop_toBottomOf="@id/courseSeparator"
             app:imageUrl="@{itemViewModel.data.courseImageUrl}"
             app:overlayColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
-            tools:background="@color/red"
+            tools:background="@color/textDanger"
             />
 
         <TextView
@@ -79,7 +79,7 @@
             app:layout_constraintStart_toEndOf="@id/courseImage"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="Math"
-            tools:textColor="@color/red" />
+            tools:textColor="@color/textDanger" />
 
         <ImageView
             android:id="@+id/chevronIcon"
@@ -109,7 +109,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_rounded_rectangle"
                 android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
-                tools:backgroundTint="@color/red"
+                tools:backgroundTint="@color/textDanger"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -125,7 +125,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="@{itemViewModel.percentage}"
                 app:layout_constraintHorizontal_bias="0"
-                tools:background="@color/red" />
+                tools:background="@color/textDanger" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
