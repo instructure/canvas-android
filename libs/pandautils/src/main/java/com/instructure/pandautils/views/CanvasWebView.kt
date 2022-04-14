@@ -520,7 +520,7 @@ class CanvasWebView @JvmOverloads constructor(
         // If this html that we're about to load has a math tag and isn't just an image we want to parse it with MathJax.
         // This is the version that web currently uses (the 2.7.1 is the version number) and this is the check that they do to
         // decide if they'll run the MathJax script on the webview
-        if (content.contains("<math") && !content.contains("<img class='equation_image'")) {
+        if ((content.contains("<math") || content.contains(Regex("\\\$\\\$.+\\\$\\\$|\\\\\\(.+\\\\\\)"))) && !content.contains("<img class='equation_image'")) {
             return """<script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         </script>$content"""
