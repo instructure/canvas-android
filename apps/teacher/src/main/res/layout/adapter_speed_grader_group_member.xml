@@ -30,7 +30,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:importantForAccessibility="no"
-        tools:src="@color/defaultTextGray"/>
+        tools:src="@color/textDark"/>
 
     <TextView
         android:id="@+id/memberNameView"

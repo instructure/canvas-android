@@ -120,7 +120,7 @@ class PublishedStatusIconView @JvmOverloads constructor(
             }
             else -> {
                 mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_complete))
-                mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.defaultTextGray))
+                mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.textDark))
                 mPublishedStatusIcon.contentDescription = context.getString(R.string.not_published)
             }
         }

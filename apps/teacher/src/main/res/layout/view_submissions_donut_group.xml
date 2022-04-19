@@ -144,7 +144,7 @@
         android:layout_height="60dp"
         android:contentDescription="@string/full_submission_details"
         android:importantForAccessibility="yes"
-        android:tint="@color/defaultTextGray"
+        android:tint="@color/textDark"
         app:srcCompat="@drawable/ic_forward_arrow"/>
 
 </LinearLayout>

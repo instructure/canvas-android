@@ -87,7 +87,7 @@
                 android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
-                android:tint="@color/defaultTextGray"
+                android:tint="@color/textDark"
                 app:srcCompat="@drawable/ic_close"
                 tools:visibility="gone"/>
 
@@ -201,7 +201,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:gravity="start"
                 tools:text="Low: 1.0" />
 
@@ -211,7 +211,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:gravity="center"
                 tools:text="Mean: 7.2" />
 
@@ -221,7 +221,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:gravity="end"
                 tools:text="High: 9.5" />
 

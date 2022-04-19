@@ -76,7 +76,7 @@
                 app:srcCompat="@drawable/ic_forward_arrow"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:tint="@color/defaultTextGray"/>
+                android:tint="@color/textDark"/>
 
         </RelativeLayout>
 

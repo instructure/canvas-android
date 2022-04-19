@@ -124,7 +124,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/tapToViewAnnouncement"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="14sp"
                 tools:visibility="gone" />
 

@@ -61,7 +61,7 @@
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:text="@string/quizStatusPendingReview"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="12sp"
             android:visibility="invisible"
             tools:visibility="visible"

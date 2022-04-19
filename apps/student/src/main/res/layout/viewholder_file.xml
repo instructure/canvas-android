@@ -55,7 +55,7 @@
             style="@style/TextFont.Regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             tools:text="234 KB"/>
 
     </LinearLayout>
@@ -70,6 +70,6 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/options"
         android:src="@drawable/ic_overflow_white_18dp"
-        android:tint="@color/defaultTextGray"/>
+        android:tint="@color/textDark"/>
 
 </LinearLayout>

@@ -74,7 +74,7 @@
         android:layout_alignStart="@+id/authorName"
         android:layout_below="@+id/authorName"
         android:layout_toEndOf="@+id/authorAvatar"
-        android:textColor="@color/defaultTextGray"
+        android:textColor="@color/textDark"
         android:textSize="12sp"
         tools:text="Mar 18, 2015, 9:03 AM" />
 

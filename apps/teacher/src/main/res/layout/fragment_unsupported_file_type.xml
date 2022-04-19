@@ -74,7 +74,7 @@
                 android:gravity="center"
                 android:importantForAccessibility="yes"
                 android:text="@string/unsupportedFileMessage"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="12sp" />
 
             <Button

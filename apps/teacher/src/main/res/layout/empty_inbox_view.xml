@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/noAssignmentsSubtext"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="@dimen/message_text_size"
             android:visibility="gone"
             tools:visibility="visible"/>

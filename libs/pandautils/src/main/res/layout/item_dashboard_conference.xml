@@ -86,7 +86,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@{itemViewModel.data.subtitle}"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 tools:text="Biology 101" />
 
         </LinearLayout>

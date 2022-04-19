@@ -277,8 +277,8 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         }
         setupDisplayGradeAs()
 
-        ViewStyler.themeInputTextLayout(assignmentNameTextInput, requireContext().getColorCompat(R.color.defaultTextGray))
-        ViewStyler.themeInputTextLayout(gradeTotalTextInput, requireContext().getColorCompat(R.color.defaultTextGray))
+        ViewStyler.themeInputTextLayout(assignmentNameTextInput, requireContext().getColorCompat(R.color.textDark))
+        ViewStyler.themeInputTextLayout(gradeTotalTextInput, requireContext().getColorCompat(R.color.textDark))
         ViewStyler.setToolbarElevation(requireContext(), toolbar, R.dimen.toolbar_elevation_small)
 
         // Description
@@ -397,7 +397,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                     ThemePrefs.brandColor, ThemePrefs.buttonColor)
         }
         // when the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        descriptionEditor.setLabel(assignmentDescLabel, R.color.textDarkest, R.color.defaultTextGray)
+        descriptionEditor.setLabel(assignmentDescLabel, R.color.textDarkest, R.color.textDark)
 
         // Take down progress bar
         descriptionProgressBar.setGone()

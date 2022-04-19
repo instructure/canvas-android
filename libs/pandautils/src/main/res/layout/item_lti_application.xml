@@ -63,7 +63,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:tint="@color/defaultTextGray"
+                android:tint="@color/textDark"
                 android:src="@drawable/ic_chevron_right"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

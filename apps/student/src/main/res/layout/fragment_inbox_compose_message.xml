@@ -113,7 +113,7 @@
                     android:minHeight="48dp"
                     android:minWidth="48dp"
                     android:padding="16dp"
-                    tools:tint="@color/defaultTextGray"
+                    tools:tint="@color/textDark"
                     app:srcCompat="@drawable/ic_add"/>
 
             </RelativeLayout>
@@ -133,7 +133,7 @@
                 android:inputType="textCapSentences"
                 android:lines="1"
                 android:padding="16dp"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 android:textSize="16sp"
                 android:visibility="gone"/>
 
@@ -208,7 +208,7 @@
                 android:scrollHorizontally="false"
                 android:singleLine="false"
                 android:textColor="@color/textDarkest"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 android:textSize="16sp"/>
 
             <com.instructure.student.view.AttachmentLayout

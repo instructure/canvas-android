@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/filterByPoints"
         android:layout_alignBaseline="@id/filterByPoints"
-        android:textColor="@color/defaultTextGray"
+        android:textColor="@color/textDark"
         android:layout_marginStart="?dialogPreferredPadding"
         android:paddingEnd="4dp"
         android:paddingStart="4dp"

@@ -49,7 +49,7 @@
             style="@style/TextFont.Regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textStyle="italic"
             android:text="@{itemViewModel.helpLinkViewData.subtitle}"
             tools:text="@string/reportProblemDetails" />

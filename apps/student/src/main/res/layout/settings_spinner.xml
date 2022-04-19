@@ -43,6 +43,6 @@
         android:layout_marginTop="4dp"
         android:importantForAccessibility="no"
         app:srcCompat="@drawable/ic_expand"
-        android:tint="@color/defaultTextGray"/>
+        android:tint="@color/textDark"/>
 
 </LinearLayout>

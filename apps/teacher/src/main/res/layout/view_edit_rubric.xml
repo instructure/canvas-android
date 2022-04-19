@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:focusable="true"
                     android:importantForAccessibility="yes"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     tools:text="5.0 out of 20.0"/>
 
             </LinearLayout>

@@ -132,7 +132,7 @@
                 android:inputType="textCapSentences"
                 android:lines="1"
                 android:padding="16dp"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
@@ -205,7 +205,7 @@
                 android:scrollHorizontally="false"
                 android:singleLine="false"
                 android:textColor="@color/textDarkest"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 android:textSize="16sp" />
 
             <com.instructure.pandautils.views.AttachmentLayout

@@ -86,7 +86,7 @@
                     style="@style/TextFont.Regular"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:textSize="12sp"
                     android:text="@string/settingsElementaryViewSubtitle"
                     app:layout_constraintStart_toStartOf="parent"

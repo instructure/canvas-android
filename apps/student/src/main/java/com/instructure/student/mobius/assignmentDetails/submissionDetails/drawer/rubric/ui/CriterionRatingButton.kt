@@ -66,7 +66,7 @@ class CriterionRatingButton(context: Context, data: RatingData, val tint: Int) :
                 intArrayOf(android.R.attr.state_activated) to Color.WHITE,
                 intArrayOf(android.R.attr.state_selected) to tint,
                 intArrayOf(android.R.attr.state_pressed) to tint,
-                intArrayOf() to ContextCompat.getColor(context, R.color.defaultTextGray)
+                intArrayOf() to ContextCompat.getColor(context, R.color.textDark)
             )
         )
 

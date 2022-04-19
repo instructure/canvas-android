@@ -39,9 +39,9 @@
 
     <!-- Used for stand alone PSPDFKit activity, pdf fragment uses values in CanvasMaterialTheme_Default-->
     <style name="PSPDFKitTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/annotationToolbarBackground</item>
-        <item name="colorAccent">@color/annotationToolbarBackground</item>
-        <item name="colorPrimaryDark">@color/annotationToolbarBackground</item>
+        <item name="colorPrimary">@color/backgroundDark</item>
+        <item name="colorAccent">@color/backgroundDark</item>
+        <item name="colorPrimaryDark">@color/backgroundDark</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
@@ -49,8 +49,8 @@
     </style>
 
     <style name="ContextualToolbarStyle">
-        <item name="pspdf__backgroundColor">@color/annotationToolbarBackground</item>
-        <item name="pspdf__submenuBackgroundColor">@color/submenuAnnotationToolbarBackground</item>
+        <item name="pspdf__backgroundColor">@color/backgroundDark</item>
+        <item name="pspdf__submenuBackgroundColor">@color/backgroundDarkest</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">
@@ -76,13 +76,13 @@
     </style>
 
     <style name="StampPickerStyle">
-        <item name="pspdf__titleBackground">@color/annotationToolbarBackground</item>
+        <item name="pspdf__titleBackground">@color/backgroundDark</item>
         <item name="pspdf__maxHeight">320dp</item>
         <item name="pspdf__maxWidth">100dp</item>
     </style>
 
     <style name="ModalDialogStyle">
-        <item name="pspdf__titleBackground">@color/annotationToolbarBackground</item>
+        <item name="pspdf__titleBackground">@color/backgroundDark</item>
     </style>
 
     <style name="Theme.Notorious" parent="CanvasMaterialTheme_Default">
@@ -218,7 +218,7 @@
         <item name="android:editable">false</item>
         <item name="android:text">--</item>
         <item name="android:minWidth">140dp</item>
-        <item name="android:textColorHint">@color/defaultTextGray</item>
+        <item name="android:textColorHint">@color/textDark</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -237,7 +237,7 @@
         <item name="android:layout_width">24dp</item>
         <item name="android:layout_height">24dp</item>
         <item name="android:layout_marginEnd">18dp</item>
-        <item name="android:tint">@color/textLightGray</item>
+        <item name="android:tint">@color/textDark</item>
     </style>
 
     <style name="SearchTheme">

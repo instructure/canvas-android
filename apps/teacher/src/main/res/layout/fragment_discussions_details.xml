@@ -81,7 +81,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:visibility="gone"
                     tools:text="Section 1"
                     tools:visibility="visible"/>
@@ -103,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
-                        android:textColor="@color/defaultTextGray"
+                        android:textColor="@color/textDark"
                         android:visibility="gone"
                         tools:visibility="visible"
                         tools:text="30 pts"/>
@@ -145,7 +145,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginEnd="16dp"
                         android:contentDescription="@string/full_due_date_details"
-                        android:tint="@color/defaultTextGray"
+                        android:tint="@color/textDark"
                         app:srcCompat="@drawable/ic_forward_arrow"/>
 
                     <LinearLayout
@@ -166,7 +166,7 @@
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 android:importantForAccessibility="no"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 app:srcCompat="@drawable/ic_calendarclock"/>
 
                             <TextView
@@ -175,7 +175,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"
                                 android:text="@string/due_date_header_label"
-                                android:textColor="@color/defaultTextGray"/>
+                                android:textColor="@color/textDark"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -193,7 +193,7 @@
                                 android:importantForAccessibility="no"
                                 android:text="@string/due_label"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"/>
+                                android:tint="@color/textDark"/>
 
                             <TextView
                                 android:id="@+id/dueDateTextView"
@@ -202,7 +202,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 tools:text="April 1 at 11:59 PM"/>
                         </LinearLayout>
 
@@ -341,7 +341,7 @@
                         android:layout_height="wrap_content"
                         android:importantForAccessibility="yes"
                         android:text="@string/submissions"
-                        android:textColor="@color/defaultTextGray"/>
+                        android:textColor="@color/textDark"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -397,7 +397,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:textColor="@color/defaultTextGray"
+                            android:textColor="@color/textDark"
                             android:textSize="12sp"
                             tools:text="Aug 1 at 8:30 AM"/>
 

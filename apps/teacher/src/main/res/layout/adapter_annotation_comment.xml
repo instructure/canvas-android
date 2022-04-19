@@ -51,7 +51,7 @@
             android:layout_below="@+id/commentAuthorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             tools:text="Sept 29 at 3:16 AM "/>
 
         <ImageView

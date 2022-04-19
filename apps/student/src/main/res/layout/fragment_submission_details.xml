@@ -90,7 +90,7 @@
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/error_loading_submission"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:textSize="16sp"/>
 
                 <Button
@@ -129,7 +129,7 @@
                     android:id="@+id/submissionVersionsSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:backgroundTint="@color/defaultTextGray"
+                    android:backgroundTint="@color/backgroundDark"
                     android:dropDownWidth="10000dp"
                     android:prompt="@string/submissionVersions"
                     android:spinnerMode="dropdown"

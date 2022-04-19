@@ -76,7 +76,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:padding="8dp"
-        android:tint="@color/defaultTextGray"
+        android:tint="@color/textDark"
         app:srcCompat="@drawable/ic_close"
         android:contentDescription="@string/contentDescription_removePreviousUser"
         android:background="?android:selectableItemBackground"/>

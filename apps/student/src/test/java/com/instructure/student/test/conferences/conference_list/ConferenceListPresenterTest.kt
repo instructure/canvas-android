@@ -200,7 +200,7 @@ class ConferenceListPresenterTest : Assert() {
             title  = conference.title!!,
             subtitle = conference.description!!,
             label = context.getString(R.string.notStarted),
-            labelTint = context.getColor(R.color.defaultTextGray),
+            labelTint = context.getColor(R.color.textDark),
             conferenceId = conference.id,
             isJoinable = false
         )
@@ -228,7 +228,7 @@ class ConferenceListPresenterTest : Assert() {
             title  = conference.title!!,
             subtitle = conference.description!!,
             label = "Concluded Jan 1 at 8:57 AM",
-            labelTint = context.getColor(R.color.defaultTextGray),
+            labelTint = context.getColor(R.color.textDark),
             conferenceId = conference.id,
             isJoinable = false
         )

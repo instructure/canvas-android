@@ -62,7 +62,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:text="@string/editSyllabusContent"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -96,7 +96,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/editSyllabusDetails"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider" />
 

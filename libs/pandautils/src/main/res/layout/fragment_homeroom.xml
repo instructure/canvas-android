@@ -109,7 +109,7 @@
                             android:layout_marginBottom="16dp"
                             android:gravity="center_horizontal"
                             android:text="@string/homeroomNoSubjects"
-                            android:textColor="@color/defaultTextGray"
+                            android:textColor="@color/textDark"
                             android:textSize="@dimen/message_text_size"
                             android:visibility="@{viewModel.data.courseCards.empty ? View.VISIBLE : View.GONE}" />
 

@@ -75,7 +75,7 @@
                 android:importantForAccessibility="no"
                 android:text="@{itemViewModel.termTitle}"
                 android:textAllCaps="true"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="12sp"
                 android:visibility="@{itemViewModel.termTitle == null ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"

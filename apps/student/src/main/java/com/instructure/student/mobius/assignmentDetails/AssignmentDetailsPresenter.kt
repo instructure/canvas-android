@@ -100,7 +100,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
                 // Mark it missing if the teacher marked it missing or if it's past due
                 Triple(R.string.missingSubmissionLabel, R.color.textDanger, R.drawable.ic_no)
             } else {
-                Triple(R.string.notSubmitted, R.color.defaultTextGray, R.drawable.ic_no)
+                Triple(R.string.notSubmitted, R.color.textDark, R.drawable.ic_no)
             }
         }
 

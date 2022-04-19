@@ -70,7 +70,7 @@
             android:id="@+id/moduleItemSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             tools:text="Due Apr 25 at 11:59pm"/>
 
     </LinearLayout>
@@ -91,6 +91,6 @@
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/not_published"
         android:src="@drawable/ic_no"
-        android:tint="@color/defaultTextGray"/>
+        android:tint="@color/textDark"/>
 
 </LinearLayout>

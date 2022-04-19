@@ -348,7 +348,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
             if (ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
                 val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = getColorCompat(R.color.avatarGray)
+                val color = getColorCompat(R.color.textDark)
                 val drawable = TextDrawable.builder()
                     .beginConfig()
                     .height(resources.getDimensionPixelSize(R.dimen.profileAvatarSize))

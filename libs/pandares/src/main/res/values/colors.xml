@@ -82,7 +82,6 @@
     <color name="messageTextColor">#333333</color>
     <color name="defaultUnselectedDonutGray">#F5F5F5</color>
     <color name="disabledText">#9D9FA2</color>
-    <color name="textLightGray">#556572</color>
     <color name="semiTransparentDark">#50000000</color>
     <color name="progressBarBackground">#F5F5F5</color>
     <color name="recordButtonStroke">#EBEDEE</color>
@@ -91,8 +90,6 @@
 
 
     <!-- Annotation Colors KEEP THIS -->
-    <color name="annotationToolbarBackground">#556572</color>
-    <color name="submenuAnnotationToolbarBackground">#FF485864</color>
     <color name="redAnnotation">#EE0612</color>
     <color name="orangeAnnotation">#FC5E13</color>
     <color name="yellowAnnotation">#FCB900</color>
@@ -182,7 +179,6 @@
     <color name="widgetLightColor">#FAFAFA</color>
 
     <!--Discussions-->
-    <color name="discussionLiking">#556572</color>
     <color name="profileBorderColor">#d8dcdf</color>
 
     <!--Attachment View KEEP THIS??? -->
@@ -205,8 +201,6 @@
     <color name="canvasEditTextColor">#C7CDD1</color>
     <color name="defaultThumbColor">#EBEDEE</color>
     <color name="defaultTrackColor">#C7CDD1</color>
-    <color name="avatarGray">#556572</color>
-    <color name="defaultTextGray">#556572</color>
     <color name="mediaOverlayBackground">#AA000000</color>
 
     <!-- Override these colors to change the text colors of the date picker -->

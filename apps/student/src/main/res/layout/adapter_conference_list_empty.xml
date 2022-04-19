@@ -48,7 +48,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/noConferencesMessage"
-        android:textColor="@color/defaultTextGray"
+        android:textColor="@color/textDark"
         android:textSize="16sp"/>
 
 </LinearLayout>

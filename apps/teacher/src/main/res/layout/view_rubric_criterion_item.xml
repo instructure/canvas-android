@@ -52,7 +52,7 @@
             android:layout_marginTop="12dp"
             android:importantForAccessibility="no"
             android:text="@string/utils_dotWithSpaces"
-            android:textColor="@color/defaultTextGray"/>
+            android:textColor="@color/textDark"/>
 
         <TextView
             android:id="@+id/viewLongDescriptionButton"

@@ -54,7 +54,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:importantForAccessibility="no"
-                    app:civ_circle_background_color="@color/avatarGray" />
+                    app:civ_circle_background_color="@color/backgroundDark" />
 
             </RelativeLayout>
 
@@ -81,7 +81,7 @@
                 android:maxLines="1"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 tools:text="allen-thomas187@gmail.com" />
 
             <!--Navigation Items-->
@@ -327,7 +327,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="12dp"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 tools:text="v. 1.2.3" />
 
         </LinearLayout>

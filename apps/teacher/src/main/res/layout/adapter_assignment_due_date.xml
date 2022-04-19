@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/details_due_for_label"
-            android:textColor="@color/defaultTextGray"/>
+            android:textColor="@color/textDark"/>
 
         <TextView
             android:id="@+id/dueForTextView"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/details_available_from_label"
-            android:textColor="@color/defaultTextGray"/>
+            android:textColor="@color/textDark"/>
 
         <TextView
             android:id="@+id/availableFromTextView"
@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/details_available_to_label"
-            android:textColor="@color/defaultTextGray"/>
+            android:textColor="@color/textDark"/>
 
         <TextView
             android:id="@+id/availableToTextView"

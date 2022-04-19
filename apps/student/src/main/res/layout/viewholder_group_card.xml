@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="12sp"
                 tools:ignore="Deprecated"
                 tools:text="Spring 2017"/>

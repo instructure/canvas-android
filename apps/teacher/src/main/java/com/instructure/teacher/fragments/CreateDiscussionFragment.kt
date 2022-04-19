@@ -294,7 +294,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         }
 
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        descriptionRCEView.setLabel(discussionDescLabel, R.color.textDarkest, R.color.defaultTextGray)
+        descriptionRCEView.setLabel(discussionDescLabel, R.color.textDarkest, R.color.textDark)
 
         if (!mHasLoadedDataForEdit)
             mDiscussionTopicHeader?.let {

@@ -31,7 +31,7 @@
             style="@style/OverrideViewTextInputLayoutDate"
             android:layout_width="match_parent"
             android:layout_marginTop="12dp"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel"
             android:labelFor="@+id/assignTo"
             android:contentDescription="@string/utils_assignTo">
@@ -70,7 +70,7 @@
             android:labelFor="@+id/dueDate"
             android:contentDescription="@string/utils_dueDate"
             style="@style/OverrideViewTextInputLayoutDate"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -86,7 +86,7 @@
             android:labelFor="@+id/dueTime"
             android:contentDescription="@string/utils_dueTime"
             style="@style/OverrideViewTextInputLayoutTime"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -109,7 +109,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fromDateTextInput"
             style="@style/OverrideViewTextInputLayoutDate"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <TextView
@@ -131,7 +131,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fromTimeTextInput"
             style="@style/OverrideViewTextInputLayoutTime"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <TextView
@@ -162,7 +162,7 @@
             android:id="@+id/toDateTextInput"
             style="@style/OverrideViewTextInputLayoutDate"
             android:hint="@string/utils_availableTo"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <TextView
@@ -184,7 +184,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/toTimeTextInput"
             style="@style/OverrideViewTextInputLayoutTime"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <TextView

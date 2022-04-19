@@ -121,7 +121,7 @@ class FileFolderPublishedStatusIconView @JvmOverloads constructor(
         } else if (fileFolder.isLocked) {
             // Unpublished
             mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_complete))
-            mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.defaultTextGray))
+            mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.textDark))
             mPublishedStatusIcon.contentDescription = context.getString(R.string.not_published)
         } else if (fileFolder.isHidden || fileFolder.lockDate != null || fileFolder.unlockDate != null) {
             // Restricted

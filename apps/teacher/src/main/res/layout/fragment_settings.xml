@@ -161,7 +161,7 @@
                     android:layout_marginStart="8dp"
                     android:focusable="true"
                     android:importantForAccessibility="yes"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:textSize="12sp"
                     tools:text="Version 1.4"/>
 

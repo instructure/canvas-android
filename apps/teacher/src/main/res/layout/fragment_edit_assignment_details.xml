@@ -66,7 +66,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:background="@android:color/transparent"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <!-- Define speakable text for EditText below. -->
@@ -85,7 +85,7 @@
                     android:minHeight="48dp"
                     android:hint="@string/title"
                     android:maxLines="2"
-                    android:textColorHint="@color/defaultTextGray"
+                    android:textColorHint="@color/textDark"
                     android:textSize="16sp"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -98,7 +98,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/description"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:focusable="true"/>
 
             <FrameLayout
@@ -139,7 +139,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:background="@android:color/transparent"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <!-- define speakable text for editGradePoints EditText below -->
@@ -159,7 +159,7 @@
                     android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:minHeight="48dp"
-                    android:textColorHint="@color/defaultTextGray"
+                    android:textColorHint="@color/textDark"
                     android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -172,7 +172,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/display_grade_as"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:labelFor="@+id/displayGradeAsSpinner"/>
 
             <androidx.appcompat.widget.AppCompatSpinner

@@ -60,7 +60,7 @@
             android:layout_below="@+id/filterTitle"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/clearFilterTextView"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="12sp"
             tools:text="Anonymous Grading, Grades Muted" />
 

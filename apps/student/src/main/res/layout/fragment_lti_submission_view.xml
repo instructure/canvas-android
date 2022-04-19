@@ -55,7 +55,7 @@
             android:gravity="center"
             android:importantForAccessibility="yes"
             android:text="@string/speedGraderExternalToolMessage"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="12sp" />
 
         <Space

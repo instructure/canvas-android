@@ -93,7 +93,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             submissionState.setVisible()
         } else if (!assignment.isSubmitted && !isEdit) {
             submissionState.text = context.getString(R.string.notSubmitted)
-            submissionState.setTextColor(ContextCompat.getColor(context, R.color.defaultTextGray))
+            submissionState.setTextColor(ContextCompat.getColor(context, R.color.textDark))
             submissionState.setVisible()
         } else {
             submissionState.setGone()

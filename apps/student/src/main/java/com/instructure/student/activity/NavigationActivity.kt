@@ -389,7 +389,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
             if(ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
                 val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = ContextCompat.getColor(context, R.color.avatarGray)
+                val color = ContextCompat.getColor(context, R.color.textDark)
                 val drawable = TextDrawable.builder()
                         .beginConfig()
                         .height(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))

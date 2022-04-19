@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             tools:text="allen_thomas@hotmail.com"/>
 
     </LinearLayout>

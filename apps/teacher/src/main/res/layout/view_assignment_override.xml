@@ -31,7 +31,7 @@
             style="@style/OverrideViewTextInputLayoutDate"
             android:layout_width="match_parent"
             android:layout_marginTop="12dp"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel"
             android:contentDescription="@string/assign_to">
 
@@ -76,7 +76,7 @@
             android:id="@+id/dueDateTextInput"
             android:contentDescription="@string/due_date"
             style="@style/OverrideViewTextInputLayoutDate"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <!-- Define speakable text for EditText below. -->
@@ -99,7 +99,7 @@
             android:id="@+id/dueTimeTextInput"
             android:contentDescription="@string/dueTime"
             style="@style/OverrideViewTextInputLayoutTime"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <!-- Define speakable text for EditText below. -->
@@ -132,7 +132,7 @@
             android:id="@+id/fromDateTextInput"
             style="@style/OverrideViewTextInputLayoutDate"
             android:contentDescription="@string/available_from_date"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <!-- Define speakable text for EditText below. -->
@@ -155,7 +155,7 @@
             android:id="@+id/fromTimeTextInput"
             style="@style/OverrideViewTextInputLayoutTime"
             android:contentDescription="@string/available_from_time"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <!-- Define speakable text for EditText below. -->
@@ -187,7 +187,7 @@
             style="@style/OverrideViewTextInputLayoutDate"
             android:contentDescription="@string/available_to_date"
             android:hint="@string/available_to"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <!-- Define speakable text for EditText below. -->
@@ -210,7 +210,7 @@
             android:id="@+id/toTimeTextInput"
             style="@style/OverrideViewTextInputLayoutTime"
             android:contentDescription="@string/available_to_time"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <!-- Define speakable text for EditText below. -->

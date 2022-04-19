@@ -50,7 +50,7 @@ class PeopleListFilterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             title.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
             //this is a header, so we want it a gray color
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-            title.setTextColor(context.getColorCompat(R.color.defaultTextGray))
+            title.setTextColor(context.getColorCompat(R.color.textDark))
         } else {
             title.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             checkbox.contentDescription = context.getString(R.string.contentDescriptionFilterSection, canvasContext.name)

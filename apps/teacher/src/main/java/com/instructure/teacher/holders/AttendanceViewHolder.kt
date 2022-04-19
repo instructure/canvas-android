@@ -56,7 +56,7 @@ class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             Attendance.Attendance.ABSENT -> R.drawable.ic_attendance_missing to R.color.textDanger
             Attendance.Attendance.LATE -> R.drawable.ic_clock to R.color.textWarning
             Attendance.Attendance.PRESENT -> R.drawable.ic_complete to R.color.textSuccess
-            else -> R.drawable.ic_no to R.color.defaultTextGray
+            else -> R.drawable.ic_no to R.color.textDark
         }
         attendanceIndicator.setImageResource(drawable)
         attendanceIndicator.imageTintList = ContextCompat.getColor(context, color).asStateList()

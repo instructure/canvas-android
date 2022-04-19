@@ -64,7 +64,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
             android:text="@string/emptyDetailsMessage"
-            android:textColor="@color/textLightGray"
+            android:textColor="@color/textDark"
             android:textSize="16sp" />
 
     </LinearLayout>

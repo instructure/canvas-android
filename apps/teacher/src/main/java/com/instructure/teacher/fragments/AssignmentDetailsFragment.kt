@@ -171,9 +171,9 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textSuccess))
         } else {
             publishStatusIconView.setImageResource(R.drawable.ic_complete)
-            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.defaultTextGray))
+            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textDark))
             publishStatusTextView.setText(R.string.not_published)
-            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.defaultTextGray))
+            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textDark))
         }
     }
 

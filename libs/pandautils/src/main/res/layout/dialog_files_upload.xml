@@ -63,7 +63,7 @@
             android:textAlignment="center"
             style="@style/TextFont.Regular"
             android:textSize="14sp"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:layout_marginBottom="8dp"/>
 
         <TextView

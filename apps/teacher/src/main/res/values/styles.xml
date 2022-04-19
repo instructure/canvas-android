@@ -37,8 +37,8 @@
     </style>
 
     <style name="ContextualToolbarStyle">
-        <item name="pspdf__backgroundColor">@color/annotationToolbarBackground</item>
-        <item name="pspdf__submenuBackgroundColor">@color/submenuAnnotationToolbarBackground</item>
+        <item name="pspdf__backgroundColor">@color/backgroundDark</item>
+        <item name="pspdf__submenuBackgroundColor">@color/backgroundDarkest</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">
@@ -129,7 +129,7 @@
         <item name="android:editable">false</item>
         <item name="android:text">--</item>
         <item name="android:minWidth">140dp</item>
-        <item name="android:textColorHint">@color/defaultTextGray</item>
+        <item name="android:textColorHint">@color/textDark</item>
         <item name="android:textSize">16sp</item>
     </style>
 

@@ -241,7 +241,7 @@ object DiscussionUtils {
 
         val builder = StringBuilder()
         val brandColor = ThemePrefs.brandColor
-        val likeColor = ContextCompat.getColor(context, R.color.discussionLiking)
+        val likeColor = ContextCompat.getColor(context, R.color.textDark)
         val converter = DiscussionEntryHtmlConverter()
         val template = DiscussionHtmlTemplates.getItem(context)
         val likeImage = makeBitmapForWebView(brandColor, getBitmapFromAssets(context, "discussion_liked.png"))

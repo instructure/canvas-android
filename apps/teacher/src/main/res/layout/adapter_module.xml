@@ -63,6 +63,6 @@
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/not_published"
         android:src="@drawable/ic_no"
-        android:tint="@color/defaultTextGray"/>
+        android:tint="@color/textDark"/>
 
 </LinearLayout>
