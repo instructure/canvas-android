@@ -60,7 +60,7 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         if (item.isChecked) {
             setBackgroundColor(ContextCompat.getColor(context, R.color.lightGray))
         } else {
-            setBackgroundColor(ContextCompat.getColor(context, R.color.canvasBackgroundWhite))
+            setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundLightest))
         }
 
         var todoDetails: String? = ""

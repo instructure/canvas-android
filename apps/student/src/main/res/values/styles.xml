@@ -143,7 +143,7 @@
 
     <style name="TermSpinner" parent="android:Widget.Holo.Light.Spinner">
         <item name="android:dropDownSelector">?android:selectableItemBackground</item>
-        <item name="android:background">@color/canvasBackgroundWhite</item>
+        <item name="android:background">@color/backgroundLightest</item>
         <item name="android:divider">@null</item>
         <item name="android:dividerHeight">0dp</item>
     </style>

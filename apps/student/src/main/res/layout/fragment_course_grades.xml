@@ -20,7 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundWhite"
+    android:background="@color/backgroundLightest"
     android:id="@+id/courseGradesPage">
 
     <androidx.appcompat.widget.Toolbar
@@ -49,7 +49,7 @@
                 android:id="@+id/headerWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/canvasBackgroundWhite"
+                android:background="@color/backgroundLightest"
                 android:minHeight="?android:listPreferredItemHeightSmall"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 

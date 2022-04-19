@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:foreground="?android:selectableItemBackground"
         android:minHeight="?android:listPreferredItemHeightLarge"
-        app:cardBackgroundColor="@color/canvasBackgroundWhite"
+        app:cardBackgroundColor="@color/backgroundLightest"
         app:cardCornerRadius="6dp"
         app:cardElevation="6dp">
 

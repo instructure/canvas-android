@@ -22,13 +22,13 @@
     android:id="@+id/assignmentListPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundWhite">
+    android:background="@color/backgroundLightest">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/canvasBackgroundWhite">
+        android:background="@color/backgroundLightest">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

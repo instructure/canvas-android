@@ -25,7 +25,7 @@
         <item name="colorAccent">@color/defaultAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/canvasBackgroundWhite</item>
+        <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>

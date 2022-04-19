@@ -20,7 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundWhite"
+    android:background="@color/backgroundLightest"
     android:id="@+id/modulesPage">
 
     <androidx.appcompat.widget.Toolbar

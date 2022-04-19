@@ -43,13 +43,13 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     val darkPrimaryColor: Int
         get() = darker(primaryColor, DARK_MULTIPLIER)
 
-    var primaryTextColor by ColorPref(R.color.canvasDefaultPrimaryText)
+    var primaryTextColor by ColorPref(R.color.textLightest)
 
     var accentColor by ColorPref(R.color.textInfo)
 
     var buttonColor by ColorPref(R.color.backgroundInfo)
 
-    var buttonTextColor by ColorPref(R.color.canvasDefaultButtonText)
+    var buttonTextColor by ColorPref(R.color.textLightest)
 
     var logoUrl by StringPref()
 
