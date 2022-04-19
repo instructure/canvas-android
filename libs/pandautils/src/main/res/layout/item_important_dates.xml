@@ -33,7 +33,7 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:onClick="@{() -> itemViewModel.open()}"
         app:backgroundColor="@{@color/white}"
-        app:borderColor="@{@color/defaultTrackColor}">
+        app:borderColor="@{@color/borderMedium}">
 
         <View
             android:id="@+id/line"

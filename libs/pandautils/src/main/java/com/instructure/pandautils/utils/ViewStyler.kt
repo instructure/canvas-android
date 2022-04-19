@@ -68,19 +68,19 @@ object ViewStyler {
     }
 
     fun themeEditText(context: Context, editText: AppCompatEditText, @ColorInt brand: Int) {
-        val defaultColor = ContextCompat.getColor(context, R.color.canvasEditTextColor)
+        val defaultColor = ContextCompat.getColor(context, R.color.backgroundMedium)
         editText.supportBackgroundTintList = makeColorStateList(defaultColor, brand)
         editText.highlightColor = ThemePrefs.increaseAlpha(brand)
     }
 
     fun themeRadioButton(context: Context, radioButton: AppCompatRadioButton, @ColorInt brand: Int) {
-        val defaultColor = ContextCompat.getColor(context, R.color.canvasEditTextColor)
+        val defaultColor = ContextCompat.getColor(context, R.color.backgroundMedium)
         radioButton.supportButtonTintList = makeColorStateList(defaultColor, brand)
         radioButton.highlightColor = ThemePrefs.increaseAlpha(defaultColor)
     }
 
     fun themeSpinner(context: Context, spinner: AppCompatSpinner, @ColorInt brand: Int) {
-        val defaultColor = ContextCompat.getColor(context, R.color.canvasEditTextColor)
+        val defaultColor = ContextCompat.getColor(context, R.color.backgroundMedium)
         spinner.supportBackgroundTintList = makeColorStateList(defaultColor, brand)
     }
 
@@ -99,7 +99,7 @@ object ViewStyler {
         // setting the track color
         switch.trackDrawable.setTintList(ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(trackColor, ContextCompat.getColor(context, R.color.defaultTrackColor))))
+                intArrayOf(trackColor, ContextCompat.getColor(context, R.color.backgroundMedium))))
     }
 
     fun themeInputTextLayout(textInputLayout: TextInputLayout, @ColorInt color: Int) {
@@ -162,7 +162,7 @@ object ViewStyler {
     }
 
     fun themeCheckBox(context: Context, checkBox: AppCompatCheckBox, @ColorInt brand: Int) {
-        val defaultColor = ContextCompat.getColor(context, R.color.canvasEditTextColor)
+        val defaultColor = ContextCompat.getColor(context, R.color.backgroundMedium)
         checkBox.supportButtonTintList = makeColorStateList(defaultColor, brand)
         checkBox.highlightColor = ThemePrefs.increaseAlpha(defaultColor)
     }
@@ -247,7 +247,7 @@ object ViewStyler {
 }
 
 fun AppCompatCheckBox.applyTheme(@ColorInt brand: Int) {
-    val defaultColor = ContextCompat.getColor(context, R.color.canvasEditTextColor)
+    val defaultColor = ContextCompat.getColor(context, R.color.backgroundMedium)
     supportButtonTintList = ViewStyler.makeColorStateList(defaultColor, brand)
     highlightColor = ThemePrefs.increaseAlpha(defaultColor)
 }

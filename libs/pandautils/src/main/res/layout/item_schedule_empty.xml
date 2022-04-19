@@ -30,7 +30,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="24dp"
         android:padding="16dp"
-        app:borderColor="@{@color/defaultTrackColor}">
+        app:borderColor="@{@color/borderMedium}">
 
         <TextView
             android:layout_width="wrap_content"

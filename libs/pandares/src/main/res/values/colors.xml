@@ -198,9 +198,7 @@
     <color name="canvasDefaultPrimary">#34444F</color>
     <color name="canvasDefaultPrimaryText">#FFFFFF</color>
     <color name="canvasDefaultButtonText">#FFFFFF</color>
-    <color name="canvasEditTextColor">#C7CDD1</color>
     <color name="defaultThumbColor">#EBEDEE</color>
-    <color name="defaultTrackColor">#C7CDD1</color>
     <color name="mediaOverlayBackground">#AA000000</color>
 
     <!-- Override these colors to change the text colors of the date picker -->

@@ -139,7 +139,7 @@ class RatingButtonDrawable(context: Context, val tint: Int) : Drawable() {
         intArrayOf() to AnimState(
             padding = context.DP(2),
             backgroundColor = Color.TRANSPARENT,
-            strokeColor = ContextCompat.getColor(context, R.color.defaultTrackColor)
+            strokeColor = ContextCompat.getColor(context, R.color.backgroundMedium)
         )
     )
 

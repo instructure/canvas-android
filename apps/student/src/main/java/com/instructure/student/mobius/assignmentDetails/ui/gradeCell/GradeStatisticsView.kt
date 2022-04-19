@@ -25,7 +25,7 @@ class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context,
         strokeCap = Paint.Cap.ROUND
         isAntiAlias = true
         strokeWidth = context.DP(2)
-        color = ContextCompat.getColor(context, R.color.defaultTrackColor)
+        color = ContextCompat.getColor(context, R.color.backgroundMedium)
     }
 
     private val darkLinePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {

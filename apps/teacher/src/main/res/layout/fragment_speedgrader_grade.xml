@@ -236,7 +236,7 @@
             android:layout_width="match_parent"
             android:layout_height=".5dp"
             android:layout_marginTop="8dp"
-            android:background="@color/defaultTrackColor"
+            android:background="@color/backgroundMedium"
             tools:layout_height="1dp" />
 
         <com.instructure.teacher.view.edit_rubric.RubricEditView
