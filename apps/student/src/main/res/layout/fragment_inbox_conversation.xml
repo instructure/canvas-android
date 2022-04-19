@@ -68,7 +68,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/header"
-        android:background="@color/messageBackgroundGray">
+        android:background="@color/backgroundLight">
 
         <View
             android:layout_width="match_parent"

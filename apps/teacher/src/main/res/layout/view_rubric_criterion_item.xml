@@ -87,7 +87,7 @@
             android:paddingStart="12dp"
             android:paddingTop="8dp"
             android:textColor="@color/textDarkest"
-            app:bubbleColor="@color/defaultUnselectedDonutGray"
+            app:bubbleColor="@color/backgroundLight"
             tools:text="Could've done better on this one."
             android:focusable="true"
             android:importantForAccessibility="yes"/>

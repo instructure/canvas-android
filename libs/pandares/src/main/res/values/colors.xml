@@ -80,13 +80,9 @@
     <color name="inboxFilterGray">#212121</color>
     <color name="divider">#D1D3D4</color>
     <color name="messageTextColor">#333333</color>
-    <color name="defaultUnselectedDonutGray">#F5F5F5</color>
     <color name="disabledText">#9D9FA2</color>
     <color name="semiTransparentDark">#50000000</color>
-    <color name="progressBarBackground">#F5F5F5</color>
     <color name="recordButtonStroke">#EBEDEE</color>
-    <color name="recordFloatingViewBackground">#F5F5F5</color>
-    <color name="commentBubbleIncoming">#F5F5F5</color>
 
 
     <!-- Annotation Colors KEEP THIS -->
@@ -193,7 +189,6 @@
     <color name="attachmentColorMisc">#00bcd5</color>
 
     <!-- Generic Shared Colors -->
-    <color name="messageBackgroundGray">#F5F5F5</color>
     <color name="unselectedRadioColor">#010101</color>
     <color name="canvasDefaultPrimary">#34444F</color>
     <color name="canvasDefaultPrimaryText">#FFFFFF</color>

@@ -23,7 +23,7 @@ class DonutChart(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     private var selected = 0
     private var total = 0
     private var selectedColor = 0
-    private val grayColor: Int
+    private val unselectedColor: Int
     private var centerText: String? = ""
     private var centerTextSize = 0f
     private var textX = 0f
@@ -63,7 +63,7 @@ class DonutChart(context: Context, attrs: AttributeSet?) : View(context, attrs) 
             resources.displayMetrics
         )
         textPaint.textSize = textSize
-        grayColor = ContextCompat.getColor(context, R.color.defaultUnselectedDonutGray)
+        unselectedColor = ContextCompat.getColor(context, R.color.backgroundLight)
         path = Path()
         outerCircle = RectF()
         innerCircle = RectF()
@@ -106,7 +106,7 @@ class DonutChart(context: Context, attrs: AttributeSet?) : View(context, attrs) 
         val endGray = 359.9999f * interpolatedProgress * selected / total
 
         // Gray
-        paint.color = grayColor
+        paint.color = unselectedColor
         drawDonut(canvas, paint, 0f, 359.9999f)
 
         // Theme color

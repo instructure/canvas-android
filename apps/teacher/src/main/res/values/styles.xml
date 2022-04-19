@@ -223,7 +223,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:background">@drawable/bg_button_rounded</item>
-        <item name="android:backgroundTint">@color/messageBackgroundGray</item>
+        <item name="android:backgroundTint">@color/backgroundLight</item>
         <item name="android:gravity">center</item>
         <item name="android:orientation">vertical</item>
         <item name="android:paddingStart">8dp</item>

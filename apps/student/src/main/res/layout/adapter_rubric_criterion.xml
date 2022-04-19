@@ -106,7 +106,7 @@
             android:id="@+id/commentContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:ctv_color="@color/commentBubbleIncoming">
+            app:ctv_color="@color/textLight">
 
             <TextView
                 android:id="@+id/comment"
