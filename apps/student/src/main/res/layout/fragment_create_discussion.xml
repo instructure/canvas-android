@@ -154,7 +154,7 @@
                     android:maxWidth="48dp"
                     android:minHeight="48dp"
                     android:padding="2dp"
-                    app:backgroundTint="@color/canvasDefaultPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 
@@ -187,7 +187,7 @@
                     android:maxWidth="48dp"
                     android:minHeight="48dp"
                     android:padding="2dp"
-                    app:backgroundTint="@color/canvasDefaultPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 

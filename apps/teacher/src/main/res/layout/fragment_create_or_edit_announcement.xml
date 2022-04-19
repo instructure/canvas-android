@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="2dp"
-        tools:background="@color/teacher_colorPrimary"
+        tools:background="@color/backgroundDarkest"
         tools:ignore="UnusedAttribute">
 
         <ProgressBar
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:backgroundTint="@color/teacher_colorPrimary"
+                    android:backgroundTint="@color/backgroundDarkest"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
                     tools:checked="true" />
@@ -263,7 +263,7 @@
                     android:minWidth="48dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:backgroundTint="@color/teacher_colorPrimary"/>
+                    android:backgroundTint="@color/backgroundDarkest"/>
 
             </RelativeLayout>
 
@@ -294,7 +294,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:backgroundTint="@color/teacher_colorPrimary"
+                    android:backgroundTint="@color/backgroundDarkest"
                     android:minWidth="48dp"
                     android:minHeight="48dp" />
 

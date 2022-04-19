@@ -44,7 +44,7 @@
             android:layout_marginBottom="24dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@color/k5SeparatorColor"
+            android:background="@color/backgroundMedium"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

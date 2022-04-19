@@ -100,7 +100,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Due Date(s) -->
@@ -296,7 +296,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
 
@@ -355,7 +355,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Submissions -->
@@ -391,7 +391,7 @@
                     android:id="@+id/submissionsLayoutDivider"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Assignment Description -->

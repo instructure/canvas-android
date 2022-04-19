@@ -80,7 +80,7 @@
             android:paddingStart="8dp"
             android:paddingTop="2dp"
             android:textSize="11sp"
-            android:textColor="@color/canvasDefaultPrimary"
+            android:textColor="@color/textDarkest"
             tools:text="3 ungraded"/>
 
     </LinearLayout>

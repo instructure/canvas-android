@@ -82,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentTop="true"
-                    android:background="@color/dividerColor" />
+                    android:background="@color/backgroundMedium" />
 
                 <TextView
                     android:id="@+id/toLabel"
@@ -146,7 +146,7 @@
                 android:hint="@string/no_subject"
                 android:lines="1"
                 android:padding="16dp"
-                android:textColorHint="@color/messageTextColor"
+                android:textColorHint="@color/textDarkest"
                 android:textSize="16sp" />
 
             <include layout="@layout/view_divider" />
@@ -188,7 +188,7 @@
                 android:id="@+id/sendIndividualDivider"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/dividerColor"
+                android:background="@color/backgroundMedium"
                 android:visibility="gone"/>
 
             <EditText

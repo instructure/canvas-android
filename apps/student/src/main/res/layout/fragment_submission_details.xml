@@ -139,7 +139,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"/>
+                    android:background="@color/backgroundMedium"/>
 
                 <FrameLayout
                     android:id="@+id/submissionContent"
@@ -184,7 +184,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/divider"/>
+                    android:background="@color/backgroundMedium"/>
 
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/drawerViewPager"

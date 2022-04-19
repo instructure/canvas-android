@@ -95,14 +95,14 @@
                     android:id="@+id/middleTopDivider"
                     android:layout_width="match_parent"
                     android:layout_height="?android:actionBarSize"
-                    android:background="@color/divider"/>
+                    android:background="@color/backgroundMedium"/>
 
                 <View
                     android:id="@+id/middleBottomDivider"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:background="@color/divider"/>
+                    android:background="@color/backgroundMedium"/>
 
             </LinearLayout>
 
@@ -120,8 +120,8 @@
             android:layout_height="56dp"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
-            app:itemIconTint="@color/canvasDefaultTabUnselected"
-            app:itemTextColor="@color/canvasDefaultTabUnselected"
+            app:itemIconTint="@color/textDarkest"
+            app:itemTextColor="@color/textDarkest"
             app:menu="@menu/bottom_navigation_items"/>
 
     </RelativeLayout>

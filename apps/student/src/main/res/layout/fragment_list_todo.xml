@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/canvasBackgroundMedium"
+        android:background="@color/backgroundMedium"
         android:elevation="6dp"
         android:minHeight="42dp"
         android:orientation="horizontal"

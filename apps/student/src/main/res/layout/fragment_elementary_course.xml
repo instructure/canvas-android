@@ -78,7 +78,7 @@
                 android:id="@+id/tabLayoutDivider"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/dividerColor"
+                android:background="@color/backgroundMedium"
                 app:layout_constraintTop_toBottomOf="@id/courseTabLayout" />
 
             <com.instructure.pandautils.views.ViewPagerNonSwipeable

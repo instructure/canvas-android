@@ -342,7 +342,7 @@
                         android:id="@+id/repliesDivider"
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="@color/lightGray" />
+                        android:background="@color/backgroundMedium" />
 
                     <TextView
                         android:id="@+id/anonymousDiscussionsNotSupported"

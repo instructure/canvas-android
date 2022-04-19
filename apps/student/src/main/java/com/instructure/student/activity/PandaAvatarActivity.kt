@@ -159,7 +159,7 @@ class PandaAvatarActivity : ParentActivity() {
     }
 
     private fun setAsAvatar() {
-        val file = saveImageAsPNG(false, ContextCompat.getColor(this, R.color.canvasBackgroundMedium), false) ?: return
+        val file = saveImageAsPNG(false, ContextCompat.getColor(this, R.color.backgroundMedium), false) ?: return
         val data = Intent()
         data.putExtra(Const.PATH, file.path)
         data.putExtra(Const.SIZE, file.length())

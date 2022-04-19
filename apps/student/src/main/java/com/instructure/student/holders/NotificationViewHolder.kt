@@ -81,7 +81,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         }
 
         if (item.isChecked) {
-            setBackgroundColor(ContextCompat.getColor(context, R.color.lightGray))
+            setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundMedium))
         } else {
             setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundLightest))
         }

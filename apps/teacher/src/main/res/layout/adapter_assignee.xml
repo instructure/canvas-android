@@ -31,7 +31,7 @@
             android:id="@+id/assigneeAvatarImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            tools:src="@color/canvasDefaultPrimary"/>
+            tools:src="@color/backgroundDarkest"/>
 
         <ImageView
             android:id="@+id/checkMarkImageView"

@@ -93,7 +93,7 @@ object ViewStyler {
         // setting the thumb color
         switch.thumbDrawable.setTintList(ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.defaultThumbColor)))
+                intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.backgroundLight)))
         )
 
         // setting the track color

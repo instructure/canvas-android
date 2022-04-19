@@ -77,7 +77,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:progress="50"
-        android:progressBackgroundTint="@color/defaultThumbColor"
+        android:progressBackgroundTint="@color/textLight"
         android:progressTint="@color/backgroundInfo"
         android:scaleY=".3"
         app:layout_constraintEnd_toEndOf="@id/uploadStatusStateProgressLabel"

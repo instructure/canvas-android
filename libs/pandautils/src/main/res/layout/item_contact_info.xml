@@ -100,7 +100,7 @@
             android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/k5SeparatorColor"
+            android:background="@color/backgroundMedium"
             android:importantForAccessibility="no"
             app:layout_constraintBottom_toBottomOf="parent" />
 

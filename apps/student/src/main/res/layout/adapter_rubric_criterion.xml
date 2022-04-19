@@ -126,7 +126,7 @@
             android:layout_height="0.5dp"
             android:layout_gravity="bottom"
             android:layout_marginTop="16dp"
-            android:background="@color/divider"/>
+            android:background="@color/backgroundMedium"/>
 
     </LinearLayout>
 </FrameLayout>

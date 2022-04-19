@@ -66,7 +66,7 @@ class RadioButtonDialog : AppCompatDialogFragment() {
             // Dynamically created RadioButtons keep losing tint after selection - here's a workaround
             // NOTE: We are not using the ViewStyler.themeRadioButton for these due to issues with the buttons not unchecking,
             //       probably an issue with how they are setup in the RadioGroup
-            val unselectedColor = requireActivity().getColorCompat(R.color.unselectedRadioColor)
+            val unselectedColor = requireActivity().getColorCompat(R.color.textDarkest)
             (radioGroup.getChildAt(currentSelectionIdx) as? AppCompatRadioButton)?.let {
                 val colorStateList = ViewStyler.makeColorStateListForRadioGroup(ThemePrefs.brandColor, ThemePrefs.brandColor)
                 CompoundButtonCompat.setButtonTintList(it, colorStateList)

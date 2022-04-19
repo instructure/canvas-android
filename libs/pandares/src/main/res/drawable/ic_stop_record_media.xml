@@ -22,7 +22,7 @@
                 android:height="@dimen/mediaRecordingButton" />
             <stroke
                 android:width="2dp"
-                android:color="@color/recordButtonStroke" />
+                android:color="@color/borderLight" />
         </shape>
     </item>
 

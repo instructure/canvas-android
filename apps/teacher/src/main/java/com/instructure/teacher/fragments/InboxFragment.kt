@@ -217,7 +217,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
 
     private fun setupFilter(presenter: InboxPresenter) {
         filterText.text = getTextByScope(presenter.scope)
-        filterIndicator.setImageDrawable(ColorUtils.colorIt(requireContext().getColorCompat(R.color.inboxFilterGray), filterIndicator.drawable))
+        filterIndicator.setImageDrawable(ColorUtils.colorIt(requireContext().getColorCompat(R.color.textDarkest), filterIndicator.drawable))
         filterButton.setOnClickListener(View.OnClickListener {
             if (context == null) return@OnClickListener
 

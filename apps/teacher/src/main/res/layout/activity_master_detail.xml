@@ -64,14 +64,14 @@
             android:id="@+id/middleTopDivider"
             android:layout_height="?android:actionBarSize"
             android:layout_width="match_parent"
-            android:background="@color/divider"/>
+            android:background="@color/backgroundMedium"/>
 
         <View
             android:id="@+id/middleBottomDivider"
             android:layout_height="0dp"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:background="@color/divider"/>
+            android:background="@color/backgroundMedium"/>
 
     </LinearLayout>
 

@@ -19,7 +19,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundMedium"
+    android:background="@color/tiara"
     android:id="@+id/panda_create_layout">
 
     <include layout="@layout/toolbar_layout" android:id="@+id/toolbar"/>
@@ -107,7 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="128dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/canvasSectionDivider"
+        android:background="@color/ash"
         android:visibility="gone">
         <HorizontalScrollView
             android:layout_width="match_parent"

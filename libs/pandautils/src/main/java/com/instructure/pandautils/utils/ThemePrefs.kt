@@ -34,11 +34,11 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     const val DARK_MULTIPLIER = 0.85f
     const val ALPHA_VALUE = 0x32
 
-    var brandColor by ColorPref(R.color.canvasDefaultPrimary)
+    var brandColor by ColorPref(R.color.backgroundDarkest)
 
-    var fontColor by ColorPref(R.color.canvasDefaultPrimary)
+    var fontColor by ColorPref(R.color.textDarkest)
 
-    var primaryColor by ColorPref(R.color.canvasDefaultPrimary)
+    var primaryColor by ColorPref(R.color.textDarkest)
 
     val darkPrimaryColor: Int
         get() = darker(primaryColor, DARK_MULTIPLIER)

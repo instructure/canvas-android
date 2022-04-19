@@ -170,8 +170,8 @@ class CriterionRatingButton @JvmOverloads constructor(
         val pressedState = context.getDrawableCompat(R.drawable.bg_criterion_button_unselected)
         val defaultState = context.getDrawableCompat(R.drawable.bg_criterion_button_unselected)
         if (isInEditMode) {
-            selectedState.setColorFilter(context.getColorCompat(R.color.canvasDefaultPrimary), PorterDuff.Mode.SRC_ATOP)
-            pressedState.setColorFilter(context.getColorCompat(R.color.canvasDefaultPrimary), PorterDuff.Mode.SRC_ATOP)
+            selectedState.setColorFilter(context.getColorCompat(R.color.backgroundDarkest), PorterDuff.Mode.SRC_ATOP)
+            pressedState.setColorFilter(context.getColorCompat(R.color.backgroundDarkest), PorterDuff.Mode.SRC_ATOP)
         } else {
             selectedState.setColorFilter(ThemePrefs.brandColor, PorterDuff.Mode.SRC_ATOP)
             pressedState.setColorFilter(ThemePrefs.brandColor, PorterDuff.Mode.SRC_ATOP)

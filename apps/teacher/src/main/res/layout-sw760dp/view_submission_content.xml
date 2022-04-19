@@ -142,7 +142,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/divider" />
+            android:background="@color/backgroundMedium" />
 
         <com.instructure.pandautils.views.ViewPagerNonSwipeable
             android:id="@+id/bottomViewPager"
@@ -177,7 +177,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/dividerColor" />
+            android:background="@color/backgroundMedium" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -240,7 +240,7 @@
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_toStartOf="@+id/panelContent"
-        android:background="@color/divider" />
+        android:background="@color/backgroundMedium" />
 
     <com.instructure.pandautils.views.FloatingRecordingView
         android:id="@+id/floatingRecordingView"

@@ -11,7 +11,7 @@
         app:title="@string/feedback_form"
         app:theme="@style/ToolBarStyle"
         app:popupTheme="@style/ToolBarPopupStyle"
-        android:background="@color/teacher_colorPrimary"
+        android:background="@color/backgroundDarkest"
         android:elevation="6dp"/>
 
     <WebView

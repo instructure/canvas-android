@@ -80,7 +80,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="2dp"
-                        android:background="@color/dividerColor" />
+                        android:background="@color/backgroundMedium" />
 
                     <TextView
                         android:id="@+id/status"
@@ -97,7 +97,7 @@
                     android:layout_height="0.5dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@color/divider" />
+                    android:background="@color/backgroundMedium" />
 
                 <TextView
                     style="@style/TextFont.Bold"
@@ -126,7 +126,7 @@
                         android:layout_height="0.5dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@color/divider" />
+                        android:background="@color/backgroundMedium" />
 
                     <TextView
                         style="@style/TextFont.Bold"

@@ -54,7 +54,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="@dimen/med_padding"
             android:layout_marginTop="@dimen/med_padding"
-            android:background="@color/canvasSectionDivider"/>
+            android:background="@color/backgroundMedium"/>
 
     </LinearLayout>
 

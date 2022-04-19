@@ -57,7 +57,7 @@
     <color name="electric">#008EE2</color>
     <color name="fire">#FC5E13</color>
     <color name="licorice">#2D3B45</color>
-    <color name="oxford">#394B58</color>
+    <color name="oxford">#394B58</color> <!-- Only shade of gray that does not have pair in dark mode -->
     <color name="porcelain">#F5F5F5</color>
     <color name="shamrock">#00AC18</color>
     <color name="textAlert">#BF32A4</color>
@@ -72,18 +72,14 @@
     <color name="tiara">#C7CDD1</color>
     <color name="white">#FFFFFF</color>
 
-    <!-- Teacher Specific Colors -->
-    <color name="teacher_colorPrimary">#394b58</color>
-    <color name="teacher_colorPrimaryDark">#27333d</color>
-    <color name="teacher_colorAccent">#394b58</color>
-    <color name="canvasDefaultTabUnselected">#73818C</color>
-    <color name="inboxFilterGray">#212121</color>
-    <color name="divider">#D1D3D4</color>
-    <color name="messageTextColor">#333333</color>
-    <color name="disabledText">#9D9FA2</color>
+    <!-- Transparent colors TODO -->
     <color name="semiTransparentDark">#50000000</color>
-    <color name="recordButtonStroke">#EBEDEE</color>
-
+    <color name="transparentWhite">#88FFFFFF</color>
+    <color name="glassWhite">#77FFFFFF</color>
+    <color name="mediaOverlayBackground">#AA000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="dimLighterGray">#80E0E0E0</color>
+    <color name="translucentBlack">#99000000</color>
 
     <!-- Annotation Colors KEEP THIS -->
     <color name="redAnnotation">#EE0612</color>
@@ -102,15 +98,12 @@
     <color name="greenHighlightAnnotation">#99EBA4</color>
     <color name="blueHighlightAnnotation">#80D0FF</color>
     <color name="pinkHighlightAnnotation">#FFB9F1</color>
-    <color name="transparentWhite">#88FFFFFF</color>
 
 
-    <!-- Login Colors KEEP THIS 3-->
+    <!-- Login Colors KEEP THIS -->
     <color name="login_teacherAppTheme">#ffc100</color>
     <color name="login_parentAppTheme">#008ee2</color>
     <color name="login_studentAppTheme">#ee0612</color>
-
-    <!-- ***SHARED COLORS***-->
 
     <!-- Course Colors - Primary KEEP THIS -->
     <color name="colorCottonCandy">#FFF26090</color>
@@ -129,26 +122,19 @@
     <color name="colorBloodOrange">#FFF2581B</color>
     <color name="colorSriracha">#FFF2422E</color>
 
-    <color name="glassWhite">#77FFFFFF</color>
     <color name="gray">#808080</color>
     <color name="darkGray">#696969</color>
     <color name="darkerGray">#333</color>
     <color name="black">#000000</color>
-    <color name="lightGray">#D3D3D3</color>
-    <color name="translucentBlack">#99000000</color>
     <color name="eventIconGray">#838383</color>
 
     <!-- Canvas Style Guide Colors -->
-    <color name="canvasBlueRowSelected">#FFE3E3E3</color>
     <color name="canvasBackgroundDark">#1B1B1B</color>
-    <color name="canvasBackgroundMedium">#FFE3E3E3</color>
     <color name="canvasBackgroundLight">#FFF9F9F9</color>
-    <color name="canvasSectionDivider">#A4A4A4</color>
     <color name="canvasTextDark">#3B3B3B</color>
     <color name="canvasTextMedium">#939393</color>
     <color name="primaryText">#333333</color>
     <color name="secondaryText">#777777</color>
-    <color name="dividerColor">#E0E0E0</color>
     <color name="moduleItemBackground">#FFF9F9F9</color>
     <color name="expandCollapseArrow">#73818C</color>
     <color name="navigationTextColor">#202020</color>
@@ -156,25 +142,15 @@
     <color name="defaultPrimaryDark">#333845</color>
     <color name="defaultAccent">#333845</color>
     <color name="actionbarGrayLight">#515456</color>
-    <color name="listviewDefault">#00000000</color>
-    <color name="listviewFocused">#00000000</color>
-    <color name="listviewPressed">#FFE3E3E3</color>
 
-    <!-- Button colors -->
+    <!-- Button colors TODO Maybe we don't need these at all -->
     <color name="buttonNormal">#DDD</color>
     <color name="buttonPressed">#CCC</color>
     <color name="buttonDisabled">#E2E2E2</color>
 
-    <!--Material Dialogs -->
-    <color name="transparent">#00000000</color>
-    <color name="dimLighterGray">#80E0E0E0</color>
-
     <!--Widgets -->
     <color name="widgetDarkColor">#212121</color>
     <color name="widgetLightColor">#FAFAFA</color>
-
-    <!--Discussions-->
-    <color name="profileBorderColor">#d8dcdf</color>
 
     <!--Attachment View KEEP THIS??? -->
     <color name="attachmentColorDoc">#2ca3de</color>
@@ -187,16 +163,8 @@
     <color name="attachmentColorAudio">#4452a6</color>
     <color name="attachmentColorMisc">#00bcd5</color>
 
-    <!-- Generic Shared Colors -->
-    <color name="unselectedRadioColor">#010101</color>
-    <color name="canvasDefaultPrimary">#34444F</color>
-    <color name="defaultThumbColor">#EBEDEE</color>
-    <color name="mediaOverlayBackground">#AA000000</color>
-
     <!-- Override these colors to change the text colors of the date picker -->
     <color name="blue">@color/defaultPrimary</color>
     <color name="darker_blue">@color/defaultPrimaryDark</color>
-
-    <color name="k5SeparatorColor">#C6C6C8</color>
 
 </resources>

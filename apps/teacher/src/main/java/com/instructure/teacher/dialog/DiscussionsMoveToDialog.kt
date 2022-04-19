@@ -132,7 +132,7 @@ class DiscussionsMoveToDialog : DialogFragment() {
             CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(destructiveColor, destructiveColor))
             radioButton.setTextColor(destructiveColor)
         } else {
-            val unselectedColor = requireContext().getColorCompat(R.color.unselectedRadioColor)
+            val unselectedColor = requireContext().getColorCompat(R.color.textDarkest)
             CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(unselectedColor, ThemePrefs.brandColor))
         }
     }

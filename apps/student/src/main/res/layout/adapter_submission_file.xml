@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_pdf"
-            android:tint="@color/canvasDefaultPrimary"/>
+            android:tint="@color/textDarkest"/>
 
         <ImageView
             android:id="@+id/thumbnail"

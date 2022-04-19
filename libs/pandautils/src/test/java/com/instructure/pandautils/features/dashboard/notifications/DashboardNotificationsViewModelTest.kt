@@ -156,14 +156,14 @@ class DashboardNotificationsViewModelTest {
                         2,
                         "AC2",
                         "AC2",
-                        color = "#${resources.getColor(R.color.canvasDefaultPrimary).toHexString()}",
+                        color = "#${resources.getColor(R.color.textDarkest).toHexString()}",
                         icon = R.drawable.ic_calendar
                 ),
                 AnnouncementViewData(
                         3,
                         "AC3",
                         "AC3",
-                        color = "#${resources.getColor(R.color.canvasDefaultPrimary).toHexString()}",
+                        color = "#${resources.getColor(R.color.textDarkest).toHexString()}",
                         icon = R.drawable.ic_question_mark
                 ),
                 AnnouncementViewData(

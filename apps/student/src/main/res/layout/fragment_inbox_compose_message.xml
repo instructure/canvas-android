@@ -81,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentTop="true"
-                    android:background="@color/dividerColor"/>
+                    android:background="@color/backgroundMedium"/>
 
                 <TextView
                     android:id="@+id/toLabel"
@@ -191,7 +191,7 @@
                 android:id="@+id/sendIndividualDivider"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/dividerColor"
+                android:background="@color/backgroundMedium"
                 android:visibility="gone"/>
 
             <EditText

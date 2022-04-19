@@ -48,7 +48,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/lightGray"
+                android:background="@color/backgroundMedium"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView

@@ -120,7 +120,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/teacher_colorPrimary"
+                android:backgroundTint="@color/backgroundDarkest"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 app:layout_constraintBaseline_toBaselineOf="@id/showSummaryLabel"

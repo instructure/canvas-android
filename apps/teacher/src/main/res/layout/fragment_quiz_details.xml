@@ -104,7 +104,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Due Date(s) -->
@@ -301,7 +301,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Submissions -->
@@ -337,7 +337,7 @@
                     android:id="@+id/submissionsHR"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Assignment Description -->
@@ -404,7 +404,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Quiz Settings -->
@@ -427,7 +427,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <include layout="@layout/view_quiz_preview_button"/>

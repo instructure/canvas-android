@@ -18,9 +18,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/teacher_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/teacher_colorPrimaryDark</item>
-        <item name="colorAccent">@color/teacher_colorAccent</item>
+        <item name="colorPrimary">@color/textDark</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDark</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
     </style>
@@ -72,7 +72,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/teacher_colorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/backgroundDarkest</item>
     </style>
 
     <style name="Widget.ActionButton.Overflow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -81,9 +81,9 @@
     </style>
 
     <style name="Theme.BottomSheet" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-        <item name="colorPrimary">@color/teacher_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/teacher_colorPrimaryDark</item>
-        <item name="colorAccent">@color/teacher_colorAccent</item>
+        <item name="colorPrimary">@color/textDark</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDark</item>
         <item name="android:background">#00000000</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

@@ -134,7 +134,7 @@
                     android:minWidth="48dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:backgroundTint="@color/canvasDefaultPrimary"/>
+                    android:backgroundTint="@color/backgroundDarkest"/>
 
             </RelativeLayout>
 
@@ -165,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:backgroundTint="@color/canvasDefaultPrimary"
+                    android:backgroundTint="@color/backgroundDarkest"
                     android:minWidth="48dp"
                     android:minHeight="48dp" />
 

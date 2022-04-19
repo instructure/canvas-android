@@ -470,7 +470,7 @@ object DiscussionUtils {
                     context, discussionEntry.author!!.displayName!!,
                     Color.TRANSPARENT,
                     ContextCompat.getColor(context, R.color.textDarkest),
-                    ContextCompat.getColor(context, R.color.profileBorderColor))
+                    ContextCompat.getColor(context, R.color.borderMedium))
             val outputStream = ByteArrayOutputStream()
             avatarBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
             val byteArray = outputStream.toByteArray()
@@ -484,7 +484,7 @@ object DiscussionUtils {
                         context, "?",
                         Color.TRANSPARENT,
                         ContextCompat.getColor(context, R.color.textDarkest),
-                        ContextCompat.getColor(context, R.color.profileBorderColor))
+                        ContextCompat.getColor(context, R.color.borderMedium))
                 val outputStream = ByteArrayOutputStream()
                 avatarBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
                 val byteArray = outputStream.toByteArray()
