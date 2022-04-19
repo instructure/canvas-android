@@ -33,6 +33,7 @@ extension WebViewUtils on WebViewController {
     String fileText = await rootBundle.loadString('assets/html/html_wrapper.html');
     html = _applyWorkAroundForDoubleSlashesAsUrlSource(html);
     html = _addProtocolToLinks(html);
+    html = _checkForMathTags(html);
     html = fileText.replaceAll('{CANVAS_CONTENT}', html);
     html = html.replaceAll('{PADDING}', horizontalPadding.toString());
     this.loadData(baseUrl, html, 'text/html', 'utf-8');
@@ -44,6 +45,16 @@ extension WebViewUtils on WebViewController {
   Future<void> loadRawHtml(String html, Map<String, String> headers) async {
     String uri = Uri.dataFromString(html, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString();
     this.loadUrl(uri);
+  }
+}
+
+String _checkForMathTags(String html) {
+  if ((RegExp('\$\$.+\$\$|\\\(.+\\\)').hasMatch(html) || html.contains('<math')) && !html.contains("<img class='equation_image'")) {
+    return """<script type="text/javascript"
+                  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+          </script>$html""";
+  } else {
+    return html;
   }
 }
 
