@@ -28,7 +28,7 @@
         android:background="@color/white"
         android:elevation="6dp"
         app:title="@string/featureFlagsTitle"
-        app:titleTextColor="@color/defaultTextDark"/>
+        app:titleTextColor="@color/textDarkest"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

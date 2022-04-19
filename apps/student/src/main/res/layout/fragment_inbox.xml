@@ -57,7 +57,7 @@
             android:maxLines="1"
             android:paddingTop="16dp"
             android:text="@string/allCourses"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"
             tools:text="All Courses"/>
 
@@ -120,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="18sp"
                     tools:text="Inbox"/>
 
@@ -134,7 +134,7 @@
                     android:layout_marginTop="8dp"
                     android:importantForAccessibility="no"
                     android:padding="2dp"
-                    android:tint="@color/defaultTextDark"
+                    android:tint="@color/textDarkest"
                     android:src="@drawable/ic_cv_expand_white"/>
 
             </LinearLayout>

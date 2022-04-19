@@ -109,7 +109,7 @@
                 android:labelFor="@+id/cardView"
                 android:singleLine="true"
                 android:text="@{itemViewModel.data.subject}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="18sp"
                 tools:text="Permission Slips!" />
 

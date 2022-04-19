@@ -49,7 +49,7 @@
             android:layout_marginTop="6dp"
             android:gravity="center"
             android:text="@string/submissionStatusSuccessSubtitle"
-            android:textColor="@color/defaultTextDark"/>
+            android:textColor="@color/textDarkest"/>
 
     </LinearLayout>
 
@@ -105,7 +105,7 @@
                     android:maxLines="1"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="32sp"
                     android:textStyle="bold"
                     app:autoSizeTextType="uniform"
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/canvasAPI_points"
-                    android:textColor="@color/defaultTextDark"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -136,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 tools:text="89%"/>
@@ -146,7 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 tools:text="Out of 100 pts"/>
 
             <TextView
@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="Final Grade: 89 pts"/>

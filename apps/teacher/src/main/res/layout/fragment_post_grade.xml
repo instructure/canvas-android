@@ -63,7 +63,7 @@
                         android:paddingTop="18dp"
                         android:paddingBottom="18dp"
                         android:text="@string/postPolicyPostTo"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -149,7 +149,7 @@
             android:layout_marginTop="40dp"
             android:layout_gravity="center_horizontal"
             android:textSize="20sp"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textStyle="bold"
             tools:text="@string/postPolicyAllHiddenTitle" />
 

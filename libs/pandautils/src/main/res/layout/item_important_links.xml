@@ -44,7 +44,7 @@
             android:drawableStart="@drawable/ic_book"
             android:drawablePadding="8dp"
             android:text="@{itemViewModel.data.courseName}"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="17sp"
             android:textStyle="bold"
             android:visibility="@{itemViewModel.data.courseName.empty ? View.GONE : View.VISIBLE}"

@@ -62,7 +62,7 @@
             android:importantForAccessibility="no"
             android:layout_marginStart="36dp"
             android:text="@string/tab_courses"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"/>
 
         <TextView

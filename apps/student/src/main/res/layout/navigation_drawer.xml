@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/files"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/bookmarks"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/studio"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -166,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/gauge"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -186,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/settings"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -228,7 +228,7 @@
                     android:labelFor="@+id/navigationDrawerShowGradesSwitch"
                     android:text="@string/showGrades"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/navigationDrawerShowGradesSwitch"
@@ -249,7 +249,7 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
                     android:padding="1dp"
-                    android:tint="@color/defaultTextDark"
+                    android:tint="@color/textDarkest"
                     app:srcCompat="@drawable/ic_courses" />
 
                 <TextView
@@ -258,7 +258,7 @@
                     android:layout_weight="1"
                     android:labelFor="@+id/navigationDrawerColorOverlaySwitch"
                     android:text="@string/colorOverlay"
-                    android:textColor="@color/nav_drawer_text_color"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -291,7 +291,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/help"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -309,7 +309,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/changeUser"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -327,7 +327,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/logout"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -352,7 +352,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/actAsUser"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -372,7 +372,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/stopMasquerading"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 

@@ -112,7 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_above="@+id/bottomBar"
-            android:background="@color/bottomNavBarBg"/>
+            android:background="@color/backgroundMedium"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomBar"

@@ -469,7 +469,7 @@ object DiscussionUtils {
             val avatarBitmap = ProfileUtils.getInitialsAvatarBitMap(
                     context, discussionEntry.author!!.displayName!!,
                     Color.TRANSPARENT,
-                    ContextCompat.getColor(context, R.color.defaultTextDark),
+                    ContextCompat.getColor(context, R.color.textDarkest),
                     ContextCompat.getColor(context, R.color.profileBorderColor))
             val outputStream = ByteArrayOutputStream()
             avatarBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
@@ -483,7 +483,7 @@ object DiscussionUtils {
                 val avatarBitmap = ProfileUtils.getInitialsAvatarBitMap(
                         context, "?",
                         Color.TRANSPARENT,
-                        ContextCompat.getColor(context, R.color.defaultTextDark),
+                        ContextCompat.getColor(context, R.color.textDarkest),
                         ContextCompat.getColor(context, R.color.profileBorderColor))
                 val outputStream = ByteArrayOutputStream()
                 avatarBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)

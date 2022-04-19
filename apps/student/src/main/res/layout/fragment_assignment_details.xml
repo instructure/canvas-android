@@ -175,7 +175,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusUploadingTitle"
-                                android:textColor="@color/defaultTextDark"
+                                android:textColor="@color/textDarkest"
                                 android:textSize="20sp" />
 
                             <TextView
@@ -208,7 +208,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusFailedTitle"
-                                android:textColor="@color/defaultTextDark"
+                                android:textColor="@color/textDarkest"
                                 android:textSize="20sp" />
 
                             <TextView
@@ -245,7 +245,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/submissionDraftAvailableTitle"
-                                android:textColor="@color/defaultTextDark"
+                                android:textColor="@color/textDarkest"
                                 android:textSize="20sp" />
 
                             <TextView
@@ -665,7 +665,7 @@
                             android:layout_marginBottom="16dp"
                             android:importantForAccessibility="yes"
                             android:text="@string/noAssignmentDescriptionStudent"
-                            android:textColor="@color/defaultTextDark"
+                            android:textColor="@color/textDarkest"
                             android:visibility="gone"
                             tools:visibility="visible" />
 

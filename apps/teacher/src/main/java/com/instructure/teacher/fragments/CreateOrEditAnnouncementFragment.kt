@@ -209,7 +209,7 @@ class CreateOrEditAnnouncementFragment :
             )
         }
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        announcementRCEView.setLabel(announcementDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        announcementRCEView.setLabel(announcementDescLabel, R.color.textDarkest, R.color.defaultTextGray)
     }
 
     private fun setupDeleteButton() {

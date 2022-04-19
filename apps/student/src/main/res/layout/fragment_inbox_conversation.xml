@@ -45,7 +45,7 @@
             android:layout_toStartOf="@+id/starred"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="18sp"
             tools:text="This is a subject Line Demo that is really long"/>
 

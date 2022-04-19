@@ -75,7 +75,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/conferenceInProgress"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="18sp" />
 
             <TextView

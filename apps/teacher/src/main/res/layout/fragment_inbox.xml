@@ -52,7 +52,7 @@
             android:maxLines="1"
             android:paddingTop="16dp"
             android:text="@string/all_courses"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"
             tools:text="All Courses" />
 

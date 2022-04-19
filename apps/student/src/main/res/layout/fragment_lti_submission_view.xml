@@ -42,7 +42,7 @@
             android:focusable="true"
             android:importantForAccessibility="yes"
             android:text="@string/commentSubmissionTypeExternalTool"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp" />
 
         <TextView

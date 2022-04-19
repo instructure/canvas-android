@@ -342,7 +342,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
 
 
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        descriptionWebView.setLabel(quizDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        descriptionWebView.setLabel(quizDescLabel, R.color.textDarkest, R.color.defaultTextGray)
 
         // Dismiss the progress bar
         descriptionProgressBar.setGone()

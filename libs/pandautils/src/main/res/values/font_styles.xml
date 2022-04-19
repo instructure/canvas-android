@@ -2,7 +2,7 @@
 <resources>
 
     <style name="TextFont" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
         <item name="android:textSize">14sp</item>
     </style>
 

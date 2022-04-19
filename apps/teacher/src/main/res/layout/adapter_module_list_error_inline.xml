@@ -42,7 +42,7 @@
         android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:text="@string/errorLoadingModules"
-        android:textColor="@color/defaultTextDark"/>
+        android:textColor="@color/textDarkest"/>
 
     <Button
         android:id="@+id/retryButton"

@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
-            android:background="@color/login_dividerColor" />
+            android:background="@color/backgroundMedium" />
 
         <EditText
             android:id="@+id/domainInput"
@@ -83,7 +83,7 @@
             android:id="@+id/bottomDivider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/login_dividerColor" />
+            android:background="@color/backgroundMedium" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/findSchoolRecyclerView"
@@ -102,7 +102,7 @@
         android:minWidth="120dp"
         android:gravity="center"
         android:text="@string/logout"
-        android:textColor="@color/login_grayText"
+        android:textColor="@color/textDark"
         android:fontFamily="sans-serif-medium"
         android:background="?android:selectableItemBackground"
         android:visibility="gone"

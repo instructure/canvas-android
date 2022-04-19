@@ -96,7 +96,7 @@
                     android:maxLines="1"
                     android:paddingStart="8dp"
                     android:singleLine="true"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     tools:ignore="Deprecated,RtlSymmetry"
                     tools:text="This is a Title" />
 
@@ -109,7 +109,7 @@
                     android:maxLines="1"
                     android:paddingStart="8dp"
                     android:singleLine="true"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     tools:ignore="Deprecated,RtlSymmetry"
                     tools:text="This is a Subtitle" />
 

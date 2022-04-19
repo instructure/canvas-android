@@ -49,7 +49,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:src="@{itemViewModel.favorite ? @drawable/ic_star_filled : @drawable/ic_star_outline}"
-                android:tint="@{itemViewModel.favoriteable ? @color/textInfo : @color/defaultTextDark}"
+                android:tint="@{itemViewModel.favoriteable ? @color/textInfo : @color/textDarkest}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
                 android:text="@{itemViewModel.name}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toTopOf="@+id/termTitle"
                 app:layout_constraintEnd_toStartOf="@+id/openButton"

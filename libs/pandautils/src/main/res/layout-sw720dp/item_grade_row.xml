@@ -138,7 +138,7 @@
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="16dp"
             android:textSize="17sp"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:text="@{itemViewModel.data.gradeText}"
             android:contentDescription="@{itemViewModel.gradeContentDescription}"
             app:layout_constraintStart_toEndOf="@id/courseImage"

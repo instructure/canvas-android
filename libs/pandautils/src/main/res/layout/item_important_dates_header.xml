@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@{itemViewModel.data.title}"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text="Monday, January 10" />

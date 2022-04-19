@@ -148,7 +148,7 @@
         <item name="android:layout_marginStart">7dp</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:importantForAccessibility">no</item>
-        <item name="android:tint">@color/login_grayCanvasLogo</item>
+        <item name="android:tint">@color/backgroundMedium</item>
         <item name="android:src">@drawable/ic_canvas_wordmark</item>
     </style>
 
@@ -205,7 +205,7 @@
         <item name="android:paddingStart">20dp</item>
         <item name="android:paddingEnd">20dp</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:tint">@color/defaultTextDark</item>
+        <item name="android:tint">@color/textDarkest</item>
     </style>
 
     <style name="NavigationDrawerIcon">
@@ -215,7 +215,7 @@
         <item name="android:importantForAccessibility">no</item>
         <item name="android:layout_marginEnd">24dp</item>
         <item name="android:tint">@color/textDarkest</item>
-        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
     </style>
 
     <style name="StudentContextInfoCell">
@@ -237,7 +237,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
         <item name="android:textSize">20sp</item>
     </style>
 
@@ -245,7 +245,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
         <item name="android:textSize">12sp</item>
         <item name="android:layout_marginTop">4dp</item>
     </style>

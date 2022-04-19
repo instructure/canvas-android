@@ -44,7 +44,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:text="@string/speedGraderExternalToolSubmission"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"
             android:focusable="true"
             android:importantForAccessibility="yes"/>

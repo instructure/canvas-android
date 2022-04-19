@@ -76,7 +76,7 @@
                 android:labelFor="@+id/cardView"
                 android:singleLine="true"
                 android:text="@{itemViewModel.accepted == null ? itemViewModel.data.title : (itemViewModel.accepted ? @string/inviteAccepted : @string/inviteDeclined)}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="18sp" />
 
             <TextView
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:text="@{itemViewModel.data.description}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"
                 android:visibility="@{itemViewModel.accepted == null ? View.VISIBLE : View.GONE, default = visible}"
                 tools:text="Art history 101, section 500" />

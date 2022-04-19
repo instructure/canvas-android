@@ -51,7 +51,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingTop="16dp"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"
             tools:text="Pancakes v Flapjacks" />
 

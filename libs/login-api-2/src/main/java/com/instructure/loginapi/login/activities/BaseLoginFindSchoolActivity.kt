@@ -149,7 +149,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
         mNextActionButton = findViewById(R.id.next)
         mNextActionButton!!.isEnabled = false
-        mNextActionButton!!.setTextColor(ContextCompat.getColor(this@BaseLoginFindSchoolActivity, R.color.login_grayCanvasLogo))
+        mNextActionButton!!.setTextColor(ContextCompat.getColor(this@BaseLoginFindSchoolActivity, R.color.backgroundMedium))
 
         domainInput.setOnEditorActionListener { _, _, _ ->
             validateDomain(AccountDomain(domainInput!!.text.toString()))
@@ -171,7 +171,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
                     if (TextUtils.isEmpty(s.toString())) {
                         mNextActionButton!!.isEnabled = false
                         mNextActionButton!!.setTextColor(ContextCompat.getColor(
-                                this@BaseLoginFindSchoolActivity, R.color.login_grayCanvasLogo))
+                                this@BaseLoginFindSchoolActivity, R.color.backgroundMedium))
                     } else {
                         mNextActionButton!!.isEnabled = true
                         mNextActionButton!!.setTextColor(ContextCompat.getColor(

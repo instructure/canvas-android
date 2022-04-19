@@ -97,7 +97,7 @@ class CanvasContextSpinnerAdapter(context: Context, private val mData: ArrayList
                 viewHolder.title!!.setTextColor(mInflater.context.resources.getColor(R.color.defaultTextGray))
             } else {
                 viewHolder.title!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-                viewHolder.title!!.setTextColor(mInflater.context.resources.getColor(R.color.defaultTextDark))
+                viewHolder.title!!.setTextColor(mInflater.context.resources.getColor(R.color.textDarkest))
             }
         }
 

@@ -55,7 +55,7 @@ class PeopleListFilterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             title.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             checkbox.contentDescription = context.getString(R.string.contentDescriptionFilterSection, canvasContext.name)
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-            title.setTextColor(context.getColorCompat(R.color.defaultTextDark))
+            title.setTextColor(context.getColorCompat(R.color.textDarkest))
         }
     }
 }

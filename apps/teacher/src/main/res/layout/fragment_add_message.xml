@@ -91,7 +91,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="16dp"
                     android:text="@string/label_to"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
                 <com.instructure.pandautils.views.RecipientChipsInput
@@ -168,7 +168,7 @@
                     android:layout_toStartOf="@+id/sendIndividualSwitch"
                     android:labelFor="@+id/sendIndividualSwitch"
                     android:text="@string/sendIndividualMessage"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -204,7 +204,7 @@
                 android:padding="16dp"
                 android:scrollHorizontally="false"
                 android:singleLine="false"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textColorHint="@color/defaultTextGray"
                 android:textSize="16sp" />
 

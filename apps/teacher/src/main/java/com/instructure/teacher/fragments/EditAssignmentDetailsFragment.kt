@@ -397,7 +397,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                     ThemePrefs.brandColor, ThemePrefs.buttonColor)
         }
         // when the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        descriptionEditor.setLabel(assignmentDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        descriptionEditor.setLabel(assignmentDescLabel, R.color.textDarkest, R.color.defaultTextGray)
 
         // Take down progress bar
         descriptionProgressBar.setGone()

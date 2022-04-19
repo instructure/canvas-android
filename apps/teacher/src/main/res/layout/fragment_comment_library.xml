@@ -77,7 +77,7 @@
             android:background="@color/white"
             android:text="@string/commentLibraryNoSuggestions"
             android:gravity="center"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="15sp"
             android:visibility="@{viewModel.data.empty ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/commentLibraryToolbar"

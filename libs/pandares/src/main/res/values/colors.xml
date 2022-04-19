@@ -76,7 +76,6 @@
     <color name="teacher_colorPrimary">#394b58</color>
     <color name="teacher_colorPrimaryDark">#27333d</color>
     <color name="teacher_colorAccent">#394b58</color>
-    <color name="bottomNavBarBg">#c7cdd1</color>
     <color name="canvasDefaultTabUnselected">#73818C</color>
     <color name="inboxFilterGray">#212121</color>
     <color name="divider">#D1D3D4</color>
@@ -117,12 +116,6 @@
     <color name="login_teacherAppTheme">#ffc100</color>
     <color name="login_parentAppTheme">#008ee2</color>
     <color name="login_studentAppTheme">#ee0612</color>
-
-    <color name="login_grayCanvasLogo">#c7cdd1</color>
-    <color name="login_grayText">#556572</color>
-    <color name="login_darkText">#2d3b45</color>
-    <color name="login_mediumText">#78848c</color>
-    <color name="login_dividerColor">#E0E0E0</color>
 
     <!-- ***SHARED COLORS***-->
 
@@ -213,15 +206,12 @@
     <color name="defaultThumbColor">#EBEDEE</color>
     <color name="defaultTrackColor">#C7CDD1</color>
     <color name="avatarGray">#556572</color>
-    <color name="defaultTextDark">#2d3b45</color>
     <color name="defaultTextGray">#556572</color>
     <color name="mediaOverlayBackground">#AA000000</color>
 
     <!-- Override these colors to change the text colors of the date picker -->
     <color name="blue">@color/defaultPrimary</color>
     <color name="darker_blue">@color/defaultPrimaryDark</color>
-
-    <color name="nav_drawer_text_color">#2D3B45</color>
 
     <color name="k5SeparatorColor">#C6C6C8</color>
 

@@ -32,7 +32,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text="This is for week 1: Origin of the Earth and the Problem with Complexity and Diversity"/>
@@ -45,7 +45,7 @@
         android:layout_marginEnd="16dp"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_collapse_group"
-        android:tint="@color/defaultTextDark"/>
+        android:tint="@color/textDarkest"/>
 
     <ImageView
         android:id="@+id/publishedIcon"

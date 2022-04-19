@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             tools:text="March 13" />
 
     </LinearLayout>

@@ -40,7 +40,7 @@
             style="@style/TextFont.Regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:text="@{itemViewModel.helpLinkViewData.title}"
             tools:text="@string/reportProblem" />
 

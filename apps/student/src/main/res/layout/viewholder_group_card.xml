@@ -55,7 +55,7 @@
                 android:labelFor="@+id/cardView"
                 android:singleLine="true"
                 android:maxLines="1"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="18sp"
                 tools:text="Student Group 1"/>
 
@@ -69,7 +69,7 @@
                 android:maxLines="2"
                 android:textSize="16sp"
                 tools:text="American Literature 401"
-                tools:textColor="@color/defaultTextDark"/>
+                tools:textColor="@color/textDarkest"/>
 
             <TextView
                 android:id="@+id/termView"

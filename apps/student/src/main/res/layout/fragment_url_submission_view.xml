@@ -37,7 +37,7 @@
             android:gravity="center"
             android:importantForAccessibility="yes"
             android:text="@string/urlSubmissionDisclaimer"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="12sp"/>
 
         <TextView

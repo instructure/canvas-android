@@ -41,7 +41,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp"
         tools:ignore="Deprecated"
         tools:text="Student Name"/>

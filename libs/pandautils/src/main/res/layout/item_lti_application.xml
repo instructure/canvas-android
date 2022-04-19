@@ -75,7 +75,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:textSize="17sp"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:text="@{itemViewModel.data.title}"
                 app:layout_constraintStart_toEndOf="@id/ltiIcon"
                 app:layout_constraintEnd_toStartOf="@id/ltiChevron"

@@ -76,7 +76,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Configures whatIf editing boxes and listener for dialog
         edit.setVisible(isEdit)
         if (isEdit) {
-            edit.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_edit, ContextCompat.getColor(context, R.color.defaultTextDark)))
+            edit.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_edit, ContextCompat.getColor(context, R.color.textDarkest)))
             edit.setOnClickListener { whatIfDialogCallback.onClick(assignment, adapterPosition) }
         }
 

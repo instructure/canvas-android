@@ -40,7 +40,7 @@ class CanvasContextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             title.setTextColor(ContextCompat.getColor(context, R.color.defaultTextGray))
         } else {
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-            title.setTextColor(ContextCompat.getColor(context, R.color.defaultTextDark))
+            title.setTextColor(ContextCompat.getColor(context, R.color.textDarkest))
         }
 
         onClick {

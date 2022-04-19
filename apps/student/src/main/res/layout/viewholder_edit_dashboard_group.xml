@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
                 android:text="@{itemViewModel.name}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="17sp"
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
                 app:layout_constraintStart_toEndOf="@id/favoriteButton"

@@ -25,7 +25,7 @@
     android:gravity="start|center_vertical"
     android:fontFamily="sans-serif"
     android:textSize="18sp"
-    android:textColor="@color/login_darkText"
+    android:textColor="@color/textDarkest"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
     tools:text="Elephants and Pandas" />

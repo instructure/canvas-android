@@ -112,7 +112,7 @@
                         android:layout_marginTop="6dp"
                         android:layout_marginEnd="8dp"
                         android:text="@{itemViewModel.assignmentsInfo}"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="13sp"
                         tools:text="Nothing due today" />
 
@@ -159,7 +159,7 @@
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:text="@{itemViewModel.data.announcementText}"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="13sp"
                         tools:text="Remember! Addition quiz this Month" />
 

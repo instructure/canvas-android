@@ -62,7 +62,7 @@
         android:layout_marginStart="12dp"
         android:layout_toEndOf="@+id/authorAvatar"
         android:layout_toStartOf="@+id/messageOptions"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="14sp"
         tools:text="Emily Skinner" />
 
@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/headerDivider"
         android:layout_margin="16dp"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp"
         android:autoLink="web"
         tools:text="This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. Only for show. He who searches for meaning here will be sorely disappointed." />

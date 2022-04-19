@@ -73,7 +73,7 @@
             app:tabPaddingStart="8dp"
             app:tabSelectedTextColor="@color/blueAnnotation"
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
-            app:tabTextColor="@color/defaultTextDark">
+            app:tabTextColor="@color/textDarkest">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
