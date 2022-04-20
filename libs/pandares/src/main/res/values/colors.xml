@@ -17,7 +17,7 @@
   -->
 <resources>
 
-    <!-- InstUI colors -->
+    <!-- InstUI colors - We should use these colors to build standard UI elements -->
     <color name="ash">#556572</color>
     <color name="backgroundAlert">#BF32A4</color>
     <color name="backgroundDanger">#EE0612</color>
@@ -68,7 +68,7 @@
     <color name="dimLighterGray">#80E0E0E0</color>
     <color name="translucentBlack">#99000000</color>
 
-    <!-- Annotation Colors KEEP THIS -->
+    <!-- Annotation Colors  -->
     <color name="redAnnotation">#EE0612</color>
     <color name="orangeAnnotation">#FC5E13</color>
     <color name="yellowAnnotation">#FCB900</color>
@@ -109,7 +109,7 @@
     <color name="colorBloodOrange">#FFF2581B</color>
     <color name="colorSriracha">#FFF2422E</color>
 
-    <!--Attachment View KEEP THIS??? -->
+    <!-- Attachment View colors -->
     <color name="attachmentColorDoc">#2ca3de</color>
     <color name="attachmentColorPdf">#f2422e</color>
     <color name="attachmentColorVideo">#f2422e</color>

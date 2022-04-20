@@ -127,7 +127,7 @@
             android:layout_alignParentBottom="true"
             android:text="@string/back"
             android:textColor="@color/white"
-            android:background="@color/ash"
+            android:background="@color/licorice"
             android:textAllCaps="true"/>
     </RelativeLayout>
 </RelativeLayout>
