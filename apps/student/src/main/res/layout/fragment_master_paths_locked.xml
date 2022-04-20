@@ -38,7 +38,7 @@
         android:gravity="center"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:textColor="@color/canvasTextMedium"
+        android:textColor="@color/textDark"
         android:textSize="22sp" />
 
 </RelativeLayout>

@@ -31,7 +31,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:textSize="16sp"
-        android:textColor="@color/canvasTextMedium"
+        android:textColor="@color/textDark"
         android:singleLine="true"
         android:ellipsize="end"/>
 </LinearLayout>

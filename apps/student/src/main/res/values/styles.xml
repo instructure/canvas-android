@@ -108,7 +108,7 @@
 
     <style name="TextStyle.Secondary">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/canvasTextMedium</item>
+        <item name="android:textColor">@color/textDark</item>
     </style>
 
     <style name="TextStyle.Secondary.SingleLine">
@@ -122,7 +122,7 @@
 
     <style name="TextStyle.Tertiary">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/canvasTextMedium</item>
+        <item name="android:textColor">@color/textDark</item>
     </style>
 
     <style name="TextStyle.Tertiary.SingleLine">

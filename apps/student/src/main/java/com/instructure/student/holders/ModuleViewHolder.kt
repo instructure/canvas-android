@@ -71,7 +71,7 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val requirement = moduleItem.completionRequirement!!
             val complete = requirement.completed
             description.setVisible()
-            description.setTextColor(ContextCompat.getColor(context, R.color.canvasTextMedium))
+            description.setTextColor(ContextCompat.getColor(context, R.color.textDark))
             val text: String? = when (ModuleObject.State.values().firstOrNull { it.apiString == requirement.type }) {
                 ModuleObject.State.MustSubmit -> {
                     if (complete) description.setTextColor(courseColor)

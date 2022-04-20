@@ -56,7 +56,7 @@
             android:id="@+id/courseGrade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/canvasTextMedium" />
+            android:textColor="@color/textDark" />
 
         <ImageView
             android:id="@+id/lockedGradeImage"

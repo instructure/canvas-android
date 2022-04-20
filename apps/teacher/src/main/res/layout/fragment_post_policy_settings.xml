@@ -43,7 +43,7 @@
         app:tabPaddingEnd="4dp"
         app:tabPaddingStart="4dp"
         app:tabSelectedTextColor="#00bcd5"
-        app:tabTextColor="@color/gray">
+        app:tabTextColor="@color/textDark">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"

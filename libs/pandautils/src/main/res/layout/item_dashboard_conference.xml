@@ -97,7 +97,7 @@
             android:layout_height="24dp"
             android:layout_marginEnd="12dp"
             android:contentDescription="@string/loading"
-            android:indeterminateTint="@color/gray"
+            android:indeterminateTint="@color/backgroundDark"
             android:visibility="@{itemViewModel.joining ? View.VISIBLE : View.GONE}" />
 
         <ImageButton
@@ -110,7 +110,7 @@
             android:minHeight="48dp"
             android:layout_marginEnd="12dp"
             android:onClick="@{() -> itemViewModel.handleDismiss()}"
-            android:tint="@color/gray"
+            android:tint="@color/textDark"
             android:visibility="@{itemViewModel.joining ? View.GONE : View.VISIBLE}"
             app:srcCompat="@drawable/ic_close" />
 

@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="12dp"
             android:indeterminate="true"
-            android:indeterminateTint="@color/darkGray"
+            android:indeterminateTint="@color/backgroundDark"
             android:visibility="invisible"
             tools:visibility="visible"/>
 

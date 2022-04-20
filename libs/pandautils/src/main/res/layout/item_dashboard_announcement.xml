@@ -80,7 +80,7 @@
                     android:contentDescription="@string/dismiss"
                     android:onClick="@{() -> itemViewModel.dismiss()}"
                     android:padding="12dp"
-                    android:tint="@color/gray"
+                    android:tint="@color/textDark"
                     android:visibility="@{itemViewModel.inProgress ? View.GONE : View.VISIBLE}"
                     app:srcCompat="@drawable/ic_close"
                     tools:visibility="gone" />
@@ -90,7 +90,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:contentDescription="@string/loading"
-                    android:indeterminateTint="@color/gray"
+                    android:indeterminateTint="@color/backgroundDark"
                     android:layout_gravity="center"
                     android:visibility="@{itemViewModel.inProgress ? View.VISIBLE : View.GONE}" />
 

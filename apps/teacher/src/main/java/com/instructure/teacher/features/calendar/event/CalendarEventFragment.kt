@@ -127,7 +127,7 @@ class CalendarEventFragment : BaseFragment() {
     }
 
     private fun loadCalendarHtml(html: String, contentDescription: String?) {
-        calendarEventWebView?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.canvasBackgroundLight))
+        calendarEventWebView?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
         calendarEventWebView?.loadHtml(html, contentDescription)
     }
 

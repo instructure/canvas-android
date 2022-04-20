@@ -19,5 +19,5 @@
         android:bottomLeftRadius="4dp"
         android:topLeftRadius="4dp"/>
     <solid
-        android:color="@color/gray"/>
+        android:color="@color/backgroundDark"/>
 </shape>

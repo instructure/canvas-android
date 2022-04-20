@@ -47,7 +47,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/uploadFiles"
             android:src="@drawable/ic_add"
-            android:tint="@color/gray"/>
+            android:tint="@color/textDark"/>
 
         <EditText
             android:id="@+id/commentInput"

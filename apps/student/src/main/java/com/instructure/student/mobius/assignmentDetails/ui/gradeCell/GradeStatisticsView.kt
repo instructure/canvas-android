@@ -33,7 +33,7 @@ class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context,
         strokeCap = Paint.Cap.ROUND
         isAntiAlias = true
         strokeWidth = context.DP(3)
-        color = ContextCompat.getColor(context, R.color.gray)
+        color = ContextCompat.getColor(context, R.color.textDark)
     }
 
     private val meanLinePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {

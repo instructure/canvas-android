@@ -57,7 +57,7 @@
 
     <style name="TextStyle.NoGrade">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/canvasTextMedium</item>
+        <item name="android:textColor">@color/textDark</item>
         <item name="android:textStyle">normal</item>
     </style>
 
@@ -75,7 +75,7 @@
     </style>
 
     <style name="ButtonCanvasTheme" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/button_states</item>
+        <item name="android:background">@color/backgroundMedium</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:minWidth">88dp</item>
         <item name="android:padding">8dp</item>

@@ -42,7 +42,7 @@
             android:layout_height="24dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="28dp"
-            android:indeterminateTint="@color/gray"/>
+            android:indeterminateTint="@color/backgroundDark"/>
 
         <TextView
             style="@style/TextFont.Regular"
@@ -75,7 +75,7 @@
             android:layout_height="24dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="28dp"
-            android:indeterminateTint="@color/gray"/>
+            android:indeterminateTint="@color/backgroundDark"/>
 
         <TextView
             android:id="@+id/ungradedLabel"
@@ -109,7 +109,7 @@
             android:layout_height="24dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="28dp"
-            android:indeterminateTint="@color/gray"/>
+            android:indeterminateTint="@color/backgroundDark"/>
 
         <TextView
             style="@style/TextFont.Regular"

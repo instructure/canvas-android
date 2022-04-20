@@ -39,7 +39,7 @@
         android:contentDescription="@string/messageOptions"
         android:focusable="true"
         android:padding="14dp"
-        android:tint="@color/darkGray"
+        android:tint="@color/textDark"
         app:srcCompat="@drawable/ic_overflow_white_18dp"/>
 
     <de.hdodenhof.circleimageview.CircleImageView

@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/dialogTitle"
             android:layout_toEndOf="@+id/avatar"
-            android:textColor="@color/canvasTextMedium"
+            android:textColor="@color/textDark"
             android:textSize="16sp"
             android:visibility="invisible"/>
     </RelativeLayout>

@@ -20,7 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundLight"
+    android:background="@color/backgroundLightest"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -36,12 +36,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/canvasBackgroundLight">
+        android:background="@color/backgroundLightest">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/canvasBackgroundLight"
+            android:background="@color/backgroundLightest"
             android:orientation="vertical"
             android:padding="16dp">
 

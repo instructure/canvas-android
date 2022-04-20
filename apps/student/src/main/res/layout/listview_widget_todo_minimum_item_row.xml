@@ -59,7 +59,7 @@
             android:singleLine="true"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textColor="@color/canvasTextMedium"
+            android:textColor="@color/textDark"
             android:textSize="13sp" />
 
     </LinearLayout>
