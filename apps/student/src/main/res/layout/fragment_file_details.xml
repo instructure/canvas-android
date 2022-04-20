@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_alignParentTop="true"
-        android:background="@color/defaultPrimary"
+        android:background="@color/textDarkest"
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
@@ -47,7 +47,7 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:singleLine="false"
-        android:textColor="@color/canvasTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="22sp"/>
 
     <TextView
@@ -61,7 +61,7 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:singleLine="true"
-        android:textColor="@color/canvasTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="22sp"/>
 
     <ImageView

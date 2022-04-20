@@ -256,7 +256,7 @@ class CanvasWebView @JvmOverloads constructor(
             // Title of the link, use a custom view so we can show the entire link in the style we want
             val title = TextView(context)
             title.text = result.extra
-            title.setTextColor(context.resources.getColor(R.color.canvasTextDark))
+            title.setTextColor(context.resources.getColor(R.color.textDarkest))
             val padding = context.DP(8).toInt()
             title.setPadding(padding * 2, padding, padding * 2, 0)
             menu.setHeaderView(title)

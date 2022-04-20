@@ -30,7 +30,7 @@
         style="@style/TextFont.Regular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/canvasTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp"
         tools:text="Setting"/>
 

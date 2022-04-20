@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{itemViewModel.data.title}"
-            android:textColor="@color/canvasTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

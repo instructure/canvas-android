@@ -58,7 +58,7 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager() {
             }
         }
 
-        ColorKeeper.defaultColor = getColorCompat(R.color.defaultPrimary)
+        ColorKeeper.defaultColor = getColorCompat(R.color.textDarkest)
 
         try {
             PSPDFKit.initialize(this, BuildConfig.PSPDFKIT_LICENSE_KEY)

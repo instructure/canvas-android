@@ -33,7 +33,7 @@
         app:navigationIcon="@drawable/ic_back_arrow"
         app:theme="@style/ToolBarStyle"
         app:title="@string/editSyllabusTitle"
-        app:titleTextColor="@color/black" >
+        app:titleTextColor="@color/textDarkest" >
 
         <ProgressBar
             android:id="@+id/savingProgressBar"

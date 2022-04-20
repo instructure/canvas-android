@@ -47,7 +47,7 @@
             android:singleLine="true"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textColor="@color/canvasTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="14sp"
             android:textStyle="bold" />
 

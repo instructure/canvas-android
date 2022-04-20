@@ -39,7 +39,7 @@
         android:layout_marginBottom="32dp"
         android:gravity="center"
         android:text="@string/conferenceListError"
-        android:textColor="@color/black"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp" />
 
     <Button

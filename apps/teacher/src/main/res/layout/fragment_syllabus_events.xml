@@ -60,7 +60,7 @@
             android:layout_marginTop="24dp"
             android:gravity="center"
             android:text="@string/syllabusEventsError"
-            android:textColor="@color/black"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp" />
 
         <Button

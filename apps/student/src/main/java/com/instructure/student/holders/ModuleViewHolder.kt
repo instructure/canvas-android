@@ -60,10 +60,10 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             || ModuleItem.Type.ChooseAssignmentGroup.toString().equals(moduleItem.type, ignoreCase = true)
         ) {
             title.setTypeface(null, Typeface.ITALIC)
-            title.setTextColor(ContextCompat.getColor(context, R.color.secondaryText))
+            title.setTextColor(ContextCompat.getColor(context, R.color.textDark))
         } else {
             title.setTypeface(null, Typeface.NORMAL)
-            title.setTextColor(ContextCompat.getColor(context, R.color.primaryText))
+            title.setTextColor(ContextCompat.getColor(context, R.color.textDarkest))
         }
 
         // Description

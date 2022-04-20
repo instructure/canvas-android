@@ -41,7 +41,7 @@ class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context,
         strokeCap = Paint.Cap.ROUND
         isAntiAlias = true
         strokeWidth = context.DP(3)
-        color = ContextCompat.getColor(context, R.color.darkerGray)
+        color = ContextCompat.getColor(context, R.color.textDarkest)
     }
 
     private val circlePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {

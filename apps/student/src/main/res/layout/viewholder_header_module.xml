@@ -52,7 +52,7 @@
             <TextView
                 android:id="@+id/title"
                 style="@style/AdapterItemTitleText"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"

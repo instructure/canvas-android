@@ -38,7 +38,7 @@
             android:background="@color/white"
             android:elevation="6dp"
             app:theme="@style/ToolBarStyle"
-            app:titleTextColor="@color/black"
+            app:titleTextColor="@color/textDarkest"
             app:title="@string/toolbarCommentLibrary"
             app:layout_constraintTop_toTopOf="parent"/>
 

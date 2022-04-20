@@ -25,7 +25,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/defaultPrimary"
+        android:background="@color/textDarkest"
         android:elevation="6dp"
         app:title="@string/tab_courses"
         app:popupTheme="@style/ToolBarPopupStyle"

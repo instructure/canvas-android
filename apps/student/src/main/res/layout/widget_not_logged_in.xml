@@ -22,7 +22,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:text="@string/notLoggedIn"
-    android:textColor="@color/black"
+    android:textColor="@color/textDarkest"
     android:textSize="17sp"
     android:textStyle="bold"
     android:visibility="gone" />

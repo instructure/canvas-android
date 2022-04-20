@@ -50,7 +50,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:text="@string/uploadToCanvas"
-            android:textColor="@color/canvasBackgroundDark"
+            android:textColor="@color/textDarkest"
             android:layout_toRightOf="@+id/avatar"
             android:layout_toEndOf="@+id/avatar"
             android:visibility="invisible"/>

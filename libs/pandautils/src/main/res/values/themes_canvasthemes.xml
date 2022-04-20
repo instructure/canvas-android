@@ -20,9 +20,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="CanvasMaterialTheme_Default" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/defaultPrimary</item>
-        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="colorAccent">@color/defaultAccent</item>
+        <item name="colorPrimary">@color/textDarkest</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDarkest</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/triangle_bg</item>
@@ -37,9 +37,9 @@
     </style>
 
     <style name="CanvasMaterialTheme_DefaultNoTransparency" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/defaultPrimary</item>
-        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="colorAccent">@color/defaultAccent</item>
+        <item name="colorPrimary">@color/textDarkest</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDarkest</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -60,12 +60,12 @@
     </style>
 
     <style name="CanvasDialogTheme_Default" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/defaultPrimary</item>
-        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="colorAccent">@color/defaultAccent</item>
-        <item name="android:colorPrimary">@color/defaultPrimary</item>
-        <item name="android:colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="android:colorAccent">@color/defaultAccent</item>
+        <item name="colorPrimary">@color/textDarkest</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDarkest</item>
+        <item name="android:colorPrimary">@color/textDarkest</item>
+        <item name="android:colorPrimaryDark">@color/textDarkest</item>
+        <item name="android:colorAccent">@color/textDarkest</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 

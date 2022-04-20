@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="?android:actionBarSize"
             android:layout_alignParentTop="true"
-            android:background="@color/defaultPrimary"
+            android:background="@color/textDarkest"
             app:popupTheme="@style/ToolBarPopupStyle"
             app:theme="@style/ToolBarStyle"
             tools:targetApi="lollipop" />

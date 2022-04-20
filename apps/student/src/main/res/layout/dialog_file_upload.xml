@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/avatar"
             android:text="@string/uploadToCanvas"
-            android:textColor="@color/canvasBackgroundDark"
+            android:textColor="@color/textDarkest"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="invisible"/>
@@ -77,7 +77,7 @@
             android:id="@+id/allowedExtensions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/canvasTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp"
             android:visibility="gone"/>
 
@@ -108,7 +108,7 @@
                 android:minHeight="?android:attr/listPreferredItemHeight"
                 android:text="@string/addItem"
                 android:textAllCaps="true"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textStyle="bold"/>
 
         </RelativeLayout>

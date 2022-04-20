@@ -63,7 +63,7 @@
 
     <style name="TextStyle.Primary">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/canvasTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
     </style>
 
     <style name="TextStyle.Primary.Bold">

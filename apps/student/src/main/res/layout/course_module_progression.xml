@@ -47,7 +47,7 @@
         android:layout_above="@+id/markDoneWrapper"
         android:gravity="center"
         android:text="@string/moduleItemNotFound"
-        android:textColor="@color/secondaryText"
+        android:textColor="@color/textDark"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -86,7 +86,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="4dp"
                 android:text="@string/markDone"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="15sp" />
 
             <CheckBox
@@ -141,7 +141,7 @@
                 android:maxLines="2"
                 android:scaleType="centerInside"
                 android:singleLine="false"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="14sp"
                 tools:text="Hello Papa, Hello Mama" />
 

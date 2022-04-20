@@ -21,14 +21,14 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
-        <item name="actionModeBackground">@color/defaultPrimary</item>
+        <item name="actionModeBackground">@color/textDarkest</item>
     </style>
 
     <style name="ToolBarPopupStyle" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/defaultPrimary</item>
-        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="colorAccent">@color/defaultAccent</item>
-        <item name="actionModeBackground">@color/defaultPrimary</item>
+        <item name="colorPrimary">@color/textDarkest</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDarkest</item>
+        <item name="actionModeBackground">@color/textDarkest</item>
     </style>
 
     <style name="CustomViewAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -46,7 +46,7 @@
 
     <style name="TextStyle.Primary">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/canvasTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
     </style>
 
     <style name="TextStyle.Grade">

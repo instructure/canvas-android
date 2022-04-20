@@ -55,7 +55,7 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         // Get courseColor
-        val courseColor = item.canvasContext?.color ?: ContextCompat.getColor(context, R.color.defaultPrimary)
+        val courseColor = item.canvasContext?.color ?: ContextCompat.getColor(context, R.color.textDarkest)
 
         if (item.isChecked) {
             setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundMedium))

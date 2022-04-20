@@ -106,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/files"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -126,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/studio"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -146,7 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/gauge"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -203,7 +203,7 @@
                     android:layout_weight="1"
                     android:labelFor="@id/navigationDrawerColorOverlaySwitch"
                     android:text="@string/colorOverlay"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -233,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/help"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -251,7 +251,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/changeUser"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -269,7 +269,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/logout"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -294,7 +294,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/actAsUser"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -314,7 +314,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/stopActAsUser"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>

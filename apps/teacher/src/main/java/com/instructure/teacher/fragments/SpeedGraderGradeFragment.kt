@@ -112,7 +112,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
                 gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textWarning))
             } else {
                 gradeText.setText(R.string.grade)
-                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textDarkest))
             }
         }
 

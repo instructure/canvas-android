@@ -124,33 +124,20 @@
 
     <color name="gray">#808080</color>
     <color name="darkGray">#696969</color>
-    <color name="darkerGray">#333</color>
-    <color name="black">#000000</color>
     <color name="eventIconGray">#838383</color>
 
     <!-- Canvas Style Guide Colors -->
-    <color name="canvasBackgroundDark">#1B1B1B</color>
     <color name="canvasBackgroundLight">#FFF9F9F9</color>
-    <color name="canvasTextDark">#3B3B3B</color>
     <color name="canvasTextMedium">#939393</color>
-    <color name="primaryText">#333333</color>
-    <color name="secondaryText">#777777</color>
     <color name="moduleItemBackground">#FFF9F9F9</color>
     <color name="expandCollapseArrow">#73818C</color>
-    <color name="navigationTextColor">#202020</color>
-    <color name="defaultPrimary">#333845</color>
-    <color name="defaultPrimaryDark">#333845</color>
-    <color name="defaultAccent">#333845</color>
+
     <color name="actionbarGrayLight">#515456</color>
 
     <!-- Button colors TODO Maybe we don't need these at all -->
     <color name="buttonNormal">#DDD</color>
     <color name="buttonPressed">#CCC</color>
     <color name="buttonDisabled">#E2E2E2</color>
-
-    <!--Widgets -->
-    <color name="widgetDarkColor">#212121</color>
-    <color name="widgetLightColor">#FAFAFA</color>
 
     <!--Attachment View KEEP THIS??? -->
     <color name="attachmentColorDoc">#2ca3de</color>
@@ -164,7 +151,7 @@
     <color name="attachmentColorMisc">#00bcd5</color>
 
     <!-- Override these colors to change the text colors of the date picker -->
-    <color name="blue">@color/defaultPrimary</color>
-    <color name="darker_blue">@color/defaultPrimaryDark</color>
+    <color name="blue">@color/textDarkest</color>
+    <color name="darker_blue">@color/textDarkest</color>
 
 </resources>

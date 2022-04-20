@@ -53,7 +53,7 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/clearFilter"
             android:src="@drawable/ic_close"
-            android:tint="@color/black"
+            android:tint="@color/textDarkest"
             android:visibility="gone"
             tools:visibility="visible"/>
 
