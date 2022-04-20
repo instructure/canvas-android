@@ -109,7 +109,7 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     // Assert that a module item is displayed and, optionally, click it
     private fun assertAndClickModuleItem(moduleName: String, itemTitle: String, clickItem: Boolean = false) {
         try {
-            onView(withText(itemTitle)).scrollTo()
+            scrollRecyclerView(R.id.listView, withText(itemTitle))
             if(clickItem) {
                 onView(withText(itemTitle)).click()
             }

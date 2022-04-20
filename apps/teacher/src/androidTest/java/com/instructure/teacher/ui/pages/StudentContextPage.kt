@@ -23,6 +23,7 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.page.*
+import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
 class StudentContextPage : BasePage(R.id.studentContextPage) {
@@ -39,7 +40,7 @@ class StudentContextPage : BasePage(R.id.studentContextPage) {
         waitForView(withParent(R.id.toolbar) + withText(student.shortName)).assertDisplayed()
         studentName.assertHasText(student.shortName)
         studentEmail.assertHasText(student.loginId)
-        onView(withId(R.id.gradeItems)).assertDisplayed()
+        onView(withId(R.id.gradeItems)).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysCourseInfo(course: CourseApiModel) {
