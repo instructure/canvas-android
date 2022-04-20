@@ -70,7 +70,7 @@
     </style>
 
     <style name="AnnotationNoteHinter">
-        <item name="pspdf__noteHinterColor">@color/blueAnnotation</item>
+        <item name="pspdf__noteHinterColor">@color/textInfo</item>
         <item name="pspdf__noteHinterAlpha">255</item>
         <item name="pspdf__noteHinterIcon">@drawable/ic_annotation_comment_indicator</item>
     </style>

@@ -61,11 +61,9 @@
     <color name="tiara">#C7CDD1</color>
     <color name="white">#FFFFFF</color>
 
-    <!-- Transparent colors TODO -->
+    <!-- Transparent colors -->
     <color name="semiTransparentDark">#50000000</color>
     <color name="transparentWhite">#88FFFFFF</color>
-    <color name="glassWhite">#77FFFFFF</color>
-    <color name="mediaOverlayBackground">#AA000000</color>
     <color name="transparent">#00000000</color>
     <color name="dimLighterGray">#80E0E0E0</color>
     <color name="translucentBlack">#99000000</color>
@@ -89,12 +87,12 @@
     <color name="pinkHighlightAnnotation">#FFB9F1</color>
 
 
-    <!-- Login Colors KEEP THIS -->
+    <!-- App theme colors -->
     <color name="login_teacherAppTheme">#ffc100</color>
     <color name="login_parentAppTheme">#008ee2</color>
     <color name="login_studentAppTheme">#ee0612</color>
 
-    <!-- Course Colors - Primary KEEP THIS -->
+    <!-- Course Colors for customization -->
     <color name="colorCottonCandy">#FFF26090</color>
     <color name="colorBarbie">#FFEA1661</color>
     <color name="colorBarneyPurple">#FF903A99</color>

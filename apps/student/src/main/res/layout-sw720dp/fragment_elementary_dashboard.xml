@@ -65,14 +65,14 @@
             app:tabContentStart="8dp"
             app:tabIconTint="@color/tab_layout_icon_tint"
             app:tabIndicator="@drawable/tab_bar_indicator"
-            app:tabIndicatorColor="@color/blueAnnotation"
+            app:tabIndicatorColor="@color/textInfo"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabInlineLabel="true"
             app:tabMode="scrollable"
             app:tabPaddingEnd="12dp"
             app:tabPaddingStart="8dp"
-            app:tabSelectedTextColor="@color/blueAnnotation"
+            app:tabSelectedTextColor="@color/textInfo"
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
             app:tabTextColor="@color/textDarkest">
 

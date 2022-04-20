@@ -40,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="8dp"
-            app:backgroundColor="@{itemViewModel.selected ? @color/yellowAnnotation : @color/backgroundMedium}"
+            app:backgroundColor="@{itemViewModel.selected ? @color/borderWarning : @color/backgroundMedium}"
             app:borderCornerRadius="@{4}"
             app:layout_constraintBottom_toTopOf="@+id/filterName"
             app:layout_constraintEnd_toEndOf="parent"
