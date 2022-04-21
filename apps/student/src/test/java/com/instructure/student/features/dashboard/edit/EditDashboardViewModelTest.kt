@@ -844,6 +844,137 @@ class EditDashboardViewModelTest {
         assertEquals("Future section past term course", futureCourseItemViewModel.name)
     }
 
+    @Test
+    fun `Course with past and current section only shows up in the current`() {
+        val courses = listOf(
+                createCourse(
+                        id = 1L,
+                        name = "Course with past and current enrollment",
+                        isFavorite = false,
+                        term = createTerm(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
+                        sections = listOf(
+                                createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
+                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
+                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString())
+                        ),
+                        restrictEnrolmentsToCourseDate = false
+                )
+        )
+
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        assertEquals(4, data.size)
+
+        assert(data[2] is EditDashboardEnrollmentItemViewModel)
+        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.current_enrollments, currentHeader.title)
+
+        assert(data[3] is EditDashboardCourseItemViewModel)
+        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
+        assertEquals("Course with past and current enrollment", currentCourseItemViewModel.name)
+    }
+
+    @Test
+    fun `Course with past and current section only shows up as current`() {
+        val courses = listOf(
+                createCourse(
+                        id = 1L,
+                        name = "Course with current and future enrollment",
+                        isFavorite = false,
+                        term = createTerm(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
+                        sections = listOf(
+                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
+                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
+                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString(),
+                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 2).toApiString())
+                        ),
+                        restrictEnrolmentsToCourseDate = false
+                )
+        )
+
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        assertEquals(4, data.size)
+
+        assert(data[2] is EditDashboardEnrollmentItemViewModel)
+        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.current_enrollments, currentHeader.title)
+
+        assert(data[3] is EditDashboardCourseItemViewModel)
+        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
+        assertEquals("Course with current and future enrollment", currentCourseItemViewModel.name)
+    }
+
+    @Test
+    fun `Course with past and future section only shows up as future`() {
+        val courses = listOf(
+                createCourse(
+                        id = 1L,
+                        name = "Course with past and future enrollment",
+                        isFavorite = false,
+                        term = createTerm(
+                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
+                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
+                        sections = listOf(
+                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 2).toApiString(),
+                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
+                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString(),
+                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 2).toApiString())
+                        ),
+                        restrictEnrolmentsToCourseDate = false
+                )
+        )
+
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        assertEquals(4, data.size)
+
+        assert(data[2] is EditDashboardEnrollmentItemViewModel)
+        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.future_enrollments, currentHeader.title)
+
+        assert(data[3] is EditDashboardCourseItemViewModel)
+        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
+        assertEquals("Course with past and future enrollment", currentCourseItemViewModel.name)
+    }
+
     private fun createCourse(
             id: Long,
             name: String,
