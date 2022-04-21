@@ -22,10 +22,10 @@ class StudentColors {
   static const defaultPrimary = Color(0xFF2D3B45);
 
   /// Default Canvas accent color
-  static const defaultAccent = Color(0xFF008EE2);
+  static const defaultAccent = Color(0xFF0081BD);
 
   /// Default Canvas button color
-  static const defaultButton = Color(0xFF008EE2);
+  static const defaultButton = Color(0xFF007BC2);
 
   static const defaultPrimaryText = Colors.white;
 
