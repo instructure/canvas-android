@@ -90,7 +90,7 @@
                 android:layout_margin="4dp"
                 app:cardElevation="0dp"
                 app:cardCornerRadius="0dp"
-                app:cardBackgroundColor="@color/white"/>
+                app:cardBackgroundColor="@color/backgroundLightest"/>
 
             <RelativeLayout
                 android:id="@+id/radioGroup"

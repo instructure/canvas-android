@@ -21,7 +21,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:background="@color/backgroundLightest"
     android:minHeight="?android:listPreferredItemHeight">
 
     <LinearLayout

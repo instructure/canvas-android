@@ -21,7 +21,7 @@
         <item name="colorPrimary">@color/textDark</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDark</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
     </style>
 

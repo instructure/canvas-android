@@ -80,7 +80,7 @@
             android:paddingEnd="8dp"
             android:paddingBottom="2dp"
             android:text="@string/frontPage"
-            android:textColor="@color/white"
+            android:textColor="@color/textLightest"
             tools:visibility="visible"
             />
 

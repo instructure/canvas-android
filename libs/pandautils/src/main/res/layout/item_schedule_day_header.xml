@@ -33,7 +33,7 @@
         android:id="@+id/scheduleHeaderLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:contentDescription="@{@string/a11y_schedule_day_header_content_description(itemViewModel.dayText, itemViewModel.dateText)}"
         android:importantForAccessibility="yes"
         android:orientation="vertical">

@@ -38,7 +38,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/white"
+            android:background="@color/backgroundLightest"
             android:elevation="6dp"
             app:layout_constraintTop_toTopOf="parent"
             app:titleTextColor="@color/textDarkest">
@@ -75,7 +75,7 @@
             android:id="@+id/filters"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/backgroundLightest"
             android:orientation="horizontal"
             app:itemViewModels="@{viewModel.data.filterItemViewModels}"
             app:layout_constraintBottom_toBottomOf="parent" />

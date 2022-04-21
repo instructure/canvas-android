@@ -32,7 +32,7 @@
         android:layout_marginTop="12dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:onClick="@{() -> itemViewModel.open()}"
-        app:backgroundColor="@{@color/white}"
+        app:backgroundColor="@{@color/backgroundLightest}"
         app:borderColor="@{@color/borderMedium}">
 
         <View

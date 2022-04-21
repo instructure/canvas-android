@@ -26,7 +26,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:background="@color/backgroundDarkest"
+            android:background="@color/licorice"
             android:layout_width="match_parent"
             android:layout_height="48dp">
 

@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         app:tabIndicatorColor="#00bcd5"
         app:tabIndicatorHeight="2dp"
         app:tabPaddingEnd="4dp"
