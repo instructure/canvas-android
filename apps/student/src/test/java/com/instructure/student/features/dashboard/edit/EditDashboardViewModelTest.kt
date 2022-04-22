@@ -888,7 +888,7 @@ class EditDashboardViewModelTest {
     }
 
     @Test
-    fun `Course with past and current section only shows up as current`() {
+    fun `Course with current and future section only shows up as current`() {
         val courses = listOf(
                 createCourse(
                         id = 1L,
