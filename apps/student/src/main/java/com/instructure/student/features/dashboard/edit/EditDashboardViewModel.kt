@@ -336,7 +336,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun getPastCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
-        val pastCourses = courses.filter { it.isPastEnrolment() }
+        val pastCourses = courses.filter { it.isPastEnrolment() && !it.isCurrentEnrolment() && !it.isFutureEnrolment() }
         return pastCourses.map {
             EditDashboardCourseItemViewModel(
                     id = it.id,
@@ -351,7 +351,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun getFutureCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
-        val futureCourses = courses.filter { it.isFutureEnrolment() }
+        val futureCourses = courses.filter { it.isFutureEnrolment() && !it.isCurrentEnrolment() }
         favoriteCourseMap.putAll(futureCourses.filter { it.isFavorite }.associateBy { it.id })
         return futureCourses.map {
             EditDashboardCourseItemViewModel(
