@@ -245,9 +245,7 @@ class NotificationListRecyclerAdapter(
             if (!isNoNetwork) { // Double negative, only happens when there is network
                 adapterToRecyclerViewCallback.setDisplayNoConnection(false)
                 // We check mStreamItems here as onCallbackFinished is called prior to populating the adapter
-                if (streamItems != null) {
-                    adapterToRecyclerViewCallback.setIsEmpty(isAllPagesLoaded && streamItems!!.isEmpty())
-                }
+                adapterToRecyclerViewCallback.setIsEmpty(isAllPagesLoaded && (streamItems?.isEmpty() ?: true))
             }
         }
     }

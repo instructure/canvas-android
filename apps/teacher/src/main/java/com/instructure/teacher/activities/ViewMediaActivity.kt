@@ -33,7 +33,7 @@ class ViewMediaActivity : BaseViewMediaActivity() {
     override fun allowCopyingUrl() = true
     override fun handleEditing(editableFile: EditableFile) {
         val args = EditFileFolderFragment.makeBundle(editableFile.file, editableFile.usageRights, editableFile.licenses, editableFile.canvasContext!!.id)
-        RouteMatcher.route(applicationContext, Route(EditFileFolderFragment::class.java, editableFile.canvasContext, args))
+        RouteMatcher.route(this, Route(EditFileFolderFragment::class.java, editableFile.canvasContext, args))
     }
 
     companion object {
