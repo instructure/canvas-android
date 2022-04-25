@@ -94,7 +94,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                         } ?: RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(canvasContext, model))
                     }.catch {  }
                 } else {
-                    RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(canvasContext, model))
+                    RouteMatcher.route(requireActivity(), com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment.makeRoute(canvasContext, model))
                 }
             }
 

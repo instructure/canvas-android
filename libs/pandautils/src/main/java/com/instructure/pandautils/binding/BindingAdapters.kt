@@ -197,3 +197,10 @@ fun bindAccessibleTouchTarget(view: View, accessibleTouchTarget: Boolean?) {
         view.accessibleTouchTarget()
     }
 }
+
+@BindingAdapter("url")
+fun bindUrl(canvasWebView: CanvasWebView, url: String?) {
+    url?.let {
+        canvasWebView.loadUrl(it)
+    }
+}
