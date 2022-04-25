@@ -45,6 +45,10 @@ class BookmarksE2ETest : StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.BOOKMARKS, TestCategory.E2E)

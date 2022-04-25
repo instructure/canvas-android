@@ -24,6 +24,7 @@ import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -140,6 +141,17 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onWebView(withId(R.id.discussionRepliesWebView))
                 .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 3)
                 .check(webMatches(getText(),containsString(reply.message)))
+    }
+
+    fun assertReplyDisplayed(reply: DiscussionEntry) {
+        onWebView(withId(R.id.discussionRepliesWebView))
+            .withElement(findElement(Locator.TAG_NAME, "html"))
+            .check(webMatches(getText(), containsString(reply.message)))
+    }
+
+    fun assertIfThereIsAReply() {
+        onView(withId(R.id.discussionTopicRepliesTitle)).assertDisplayed()
+        onView(withId(R.id.discussionRepliesWebView)).assertDisplayed()
     }
 
     fun assertFavoritingEnabled(reply: DiscussionEntry) {
