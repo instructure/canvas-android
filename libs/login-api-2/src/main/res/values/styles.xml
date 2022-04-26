@@ -27,6 +27,7 @@
 
     <style name="LoginFlowTheme.NoActionBar">
         <item name="windowActionBar">false</item>
+        <item name="android:forceDarkAllowed">true</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">#FFFFFF</item>
@@ -34,6 +35,7 @@
 
     <style name="LoginFlowTheme.Splash_Student" parent="@style/LoginFlowTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background_student</item>
+        <item name="android:forceDarkAllowed">true</item>
     </style>
 
     <style name="LoginFlowTheme.Splash_Teacher" parent="@style/LoginFlowTheme.NoActionBar">

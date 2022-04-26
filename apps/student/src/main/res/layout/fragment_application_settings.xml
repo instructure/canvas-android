@@ -96,6 +96,34 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <LinearLayout
+                android:id="@+id/appThemeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:paddingEnd="12dp"
+                android:paddingStart="16dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/appThemeTitle"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="@string/appThemeSettingsTitle" />
+
+                <TextView
+                    android:id="@+id/appThemeStatus"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textDark"
+                    android:textSize="12sp"
+                    android:text="@string/appThemeLight" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/profileSettings"
                 style="@style/TextFont.Medium"

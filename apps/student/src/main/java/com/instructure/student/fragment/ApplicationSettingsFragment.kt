@@ -17,12 +17,15 @@
 package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -121,6 +124,8 @@ class ApplicationSettingsFragment : ParentFragment() {
             }
         }
 
+        setUpAppThemeSelector()
+
         if (BuildConfig.DEBUG) {
             featureFlags.setVisible()
             featureFlags.onClick {
@@ -136,5 +141,14 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     private fun addFragment(fragment: Fragment) {
         (activity as? SettingsActivity)?.addFragment(fragment)
+    }
+
+    private fun setUpAppThemeSelector() {
+        val initialAppTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
+        appThemeStatus.setText(initialAppTheme.themeNameRes)
+
+        appThemeContainer.onClick {
+            AppThemeSelector.showAppThemeSelectorDialog(requireContext(), appThemeStatus)
+        }
     }
 }

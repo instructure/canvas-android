@@ -23,6 +23,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:forceDarkAllowed">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
@@ -35,6 +36,7 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:forceDarkAllowed">true</item>
     </style>
 
     <!-- Used for stand alone PSPDFKit activity, pdf fragment uses values in CanvasMaterialTheme_Default-->
@@ -42,6 +44,7 @@
         <item name="colorPrimary">@color/backgroundDark</item>
         <item name="colorAccent">@color/backgroundDark</item>
         <item name="colorPrimaryDark">@color/backgroundDark</item>
+        <item name="android:forceDarkAllowed">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>

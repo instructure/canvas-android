@@ -23,10 +23,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.EditText
 import com.instructure.canvasapi2.models.CanvasTheme
-import com.instructure.canvasapi2.utils.BooleanPref
-import com.instructure.canvasapi2.utils.ColorPref
-import com.instructure.canvasapi2.utils.PrefManager
-import com.instructure.canvasapi2.utils.StringPref
+import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.R
 
 object ThemePrefs : PrefManager("CanvasTheme") {
@@ -54,6 +51,10 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     var logoUrl by StringPref()
 
     var isThemeApplied by BooleanPref()
+
+    var appTheme by IntPref(defaultValue = 0)
+
+    override fun keepBaseProps() = listOf(::appTheme)
 
     override fun onClearPrefs() {
     }
