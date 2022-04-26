@@ -46,7 +46,7 @@ class BookmarksE2ETest : StudentTest() {
     }
 
     override fun enableAndConfigureAccessibilityChecks() {
-        //Intentionally empty, because we don't check accessibility in E2E tests.
+        //We don't want to see accessibility errors on E2E tests
     }
 
     @E2E
