@@ -40,6 +40,7 @@
 
     <style name="LoginFlowTheme.Splash_Teacher" parent="@style/LoginFlowTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background_teacher</item>
+        <item name="android:forceDarkAllowed">true</item>
     </style>
 
     <style name="ToolBarStyle" parent="Theme.AppCompat.Light.DarkActionBar">

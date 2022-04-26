@@ -25,10 +25,7 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.isTablet
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.LegalDialog
@@ -52,12 +49,22 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), com.instructure.pandautils.utils.AppType.TEACHER) }
         legalButton.onClick { LegalDialog().show(requireFragmentManager(), LegalDialog.TAG) }
         notificationPreferenesButton.onClick { RouteMatcher.route(requireContext(), Route(NotificationPreferencesFragment::class.java, null)) }
+        setUpAppThemeSelector()
         if (BuildConfig.DEBUG) {
             featureFlagButton.setVisible()
             featureFlagButton.onClick { RouteMatcher.route(requireContext(), Route(FeatureFlagsFragment::class.java, null)) }
 
             remoteConfigButton.setVisible()
             remoteConfigButton.onClick { RouteMatcher.route(requireContext(), Route(RemoteConfigParamsFragment::class.java, null))}
+        }
+    }
+
+    private fun setUpAppThemeSelector() {
+        val initialAppTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
+        appThemeStatus.setText(initialAppTheme.themeNameRes)
+
+        appThemeContainer.onClick {
+            AppThemeSelector.showAppThemeSelectorDialog(requireContext(), appThemeStatus)
         }
     }
 

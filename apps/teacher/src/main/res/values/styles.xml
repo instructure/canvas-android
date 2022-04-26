@@ -21,6 +21,7 @@
         <item name="colorPrimary">@color/textDark</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDark</item>
+        <item name="android:forceDarkAllowed">true</item>
         <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
     </style>
@@ -29,6 +30,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="android:forceDarkAllowed">true</item>
         <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
@@ -71,6 +73,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:forceDarkAllowed">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/backgroundDarkest</item>
     </style>
@@ -91,6 +94,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:forceDarkAllowed">true</item>
     </style>
 
     <style name="RoundedContextDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
