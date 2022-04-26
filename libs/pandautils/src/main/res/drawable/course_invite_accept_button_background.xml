@@ -16,5 +16,5 @@
   -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <corners android:radius="4dp"/>
-    <solid android:color="@color/notificationTintInvite"/>
+    <solid android:color="@color/backgroundSuccess"/>
 </shape>

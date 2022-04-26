@@ -62,7 +62,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
             is Group -> {
                 cachedColors.getOrElse(canvasContext.contextId) {
                     val courseContextId = CanvasContext.makeContextId(CanvasContext.Type.COURSE, canvasContext.courseId)
-                    cachedColors.getOrElse(courseContextId) { ContextCompat.getColor(ContextKeeper.appContext, R.color.avatarGray) }
+                    cachedColors.getOrElse(courseContextId) { ContextCompat.getColor(ContextKeeper.appContext, R.color.backgroundDark) }
                 }
             }
             else -> defaultColor

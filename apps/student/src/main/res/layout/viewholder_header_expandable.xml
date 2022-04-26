@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:tint="@color/expandCollapseArrow"
+        android:tint="@color/textDark"
         app:srcCompat="@drawable/ic_expand"
         android:importantForAccessibility="no"/>
 

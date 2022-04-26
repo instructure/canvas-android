@@ -33,8 +33,8 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:orientation="horizontal"
-        app:borderColor="@{@color/notificationTintInvite}"
-        tools:backgroundTint="@color/notificationTintInvite"
+        app:borderColor="@{@color/borderSuccess}"
+        tools:backgroundTint="@color/borderSuccess"
         tools:layout_margin="16dp">
 
         <FrameLayout
@@ -42,7 +42,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="@drawable/announcement_card_icon_background"
-            android:backgroundTint="@color/notificationTintInvite">
+            android:backgroundTint="@color/backgroundSuccess">
 
             <ImageView
                 android:id="@+id/announcementIcon"
@@ -76,7 +76,7 @@
                 android:labelFor="@+id/cardView"
                 android:singleLine="true"
                 android:text="@{itemViewModel.accepted == null ? itemViewModel.data.title : (itemViewModel.accepted ? @string/inviteAccepted : @string/inviteDeclined)}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="18sp" />
 
             <TextView
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:text="@{itemViewModel.data.description}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"
                 android:visibility="@{itemViewModel.accepted == null ? View.VISIBLE : View.GONE, default = visible}"
                 tools:text="Art history 101, section 500" />
@@ -134,7 +134,7 @@
                             android:importantForAccessibility="no"
                             android:text="@string/declineCourseInvitation"
                             android:textAllCaps="false"
-                            android:textColor="@color/defaultTextGray"
+                            android:textColor="@color/textDark"
                             android:textSize="16sp" />
                     </LinearLayout>
 

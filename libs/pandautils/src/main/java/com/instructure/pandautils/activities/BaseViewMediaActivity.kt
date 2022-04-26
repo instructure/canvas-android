@@ -94,7 +94,7 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
         }
         toolbar.setupAsCloseButton { onBackPressed() }
         ViewStyler.setToolbarElevationSmall(this, toolbar)
-        ViewStyler.themeToolbar(this, toolbar, ContextCompat.getColor(this, R.color.mediaOverlayBackground), Color.WHITE)
+        ViewStyler.themeToolbar(this, toolbar, ContextCompat.getColor(this, R.color.translucentBlack), Color.WHITE)
     }
 
     override fun onStart() {

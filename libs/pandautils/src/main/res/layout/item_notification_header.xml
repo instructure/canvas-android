@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
             android:text="@{itemViewModel.data.title}"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             tools:text="Course Activities" />
 
     </FrameLayout>

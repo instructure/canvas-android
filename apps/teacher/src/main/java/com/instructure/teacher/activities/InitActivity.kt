@@ -126,8 +126,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
             val colors = intArrayOf(
                 ThemePrefs.brandColor,
-                getColorCompat(R.color.bottomBarUnselectedItemColor),
-                getColorCompat(R.color.bottomBarUnselectedItemColor)
+                getColorCompat(R.color.textDarkest),
+                getColorCompat(R.color.textDarkest)
             )
 
             return ColorStateList(states, colors)
@@ -348,7 +348,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
             if (ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
                 val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = getColorCompat(R.color.avatarGray)
+                val color = getColorCompat(R.color.textDark)
                 val drawable = TextDrawable.builder()
                     .beginConfig()
                     .height(resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
@@ -395,7 +395,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 // No badge, we need to create one
                 val badge = LayoutInflater.from(this).inflate(R.layout.unread_count, bottomBar, false) as TextView
                 badge.text = todoCountDisplay
-                ColorUtils.colorIt(getColorCompat(R.color.defaultActionColor), badge.background)
+                ColorUtils.colorIt(getColorCompat(R.color.textInfo), badge.background)
                 view.addView(badge)
             }
         } else {

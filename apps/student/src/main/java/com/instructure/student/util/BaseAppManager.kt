@@ -82,7 +82,7 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
         }
 
-        ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.defaultPrimary)
+        ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.textDarkest)
 
         // There appears to be a bug when the user is installing/updating the android webview stuff.
         // http://code.google.com/p/android/issues/detail?id=175124

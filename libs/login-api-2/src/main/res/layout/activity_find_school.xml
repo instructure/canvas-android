@@ -22,13 +22,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/backgroundLightest">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:elevation="0dp"
         app:theme="@style/ToolBarStyleDark"
         tools:ignore="UnusedAttribute"/>
@@ -50,7 +50,7 @@
         android:id="@+id/topDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/login_dividerColor"
+        android:background="@color/backgroundMedium"
         android:layout_marginTop="12dp"/>
 
     <EditText
@@ -74,7 +74,7 @@
         android:id="@+id/bottomDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/login_dividerColor"/>
+        android:background="@color/backgroundMedium"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/findSchoolRecyclerView"
@@ -92,7 +92,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="@string/logout"
-        android:textColor="@color/login_grayText"
+        android:textColor="@color/textDark"
         android:fontFamily="sans-serif-medium"
         android:background="?android:selectableItemBackground"
         android:visibility="gone"

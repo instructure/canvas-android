@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:foreground="?android:selectableItemBackground"
         android:minHeight="?android:listPreferredItemHeightLarge"
-        app:cardBackgroundColor="@color/canvasBackgroundWhite"
+        app:cardBackgroundColor="@color/backgroundLightest"
         app:cardCornerRadius="6dp"
         app:cardElevation="6dp">
 
@@ -76,7 +76,7 @@
                 app:srcCompat="@drawable/ic_forward_arrow"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:tint="@color/defaultTextGray"/>
+                android:tint="@color/textDark"/>
 
         </RelativeLayout>
 

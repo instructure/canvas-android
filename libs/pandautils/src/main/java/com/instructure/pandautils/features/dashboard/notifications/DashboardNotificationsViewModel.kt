@@ -109,8 +109,8 @@ class DashboardNotificationsViewModel @Inject constructor(
         return accountNotifications?.map {
 
             val color = when (it.icon) {
-                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> resources.getColor(R.color.notificationTintError)
-                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> resources.getColor(R.color.notificationTintWarning)
+                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> resources.getColor(R.color.backgroundDanger)
+                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> resources.getColor(R.color.backgroundWarning)
                 else -> colorKeeper.defaultColor
             }
 

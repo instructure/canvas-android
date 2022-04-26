@@ -23,6 +23,6 @@
         android:width="1dp"
         android:height=".5dp" />
 
-    <solid android:color="@color/dividerColor" />
+    <solid android:color="@color/backgroundMedium" />
 
 </shape>

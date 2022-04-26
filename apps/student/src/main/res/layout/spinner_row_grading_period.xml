@@ -27,7 +27,7 @@
     <TextView
         android:id="@+id/periodName"
         android:textSize="18sp"
-        android:textColor="@color/canvasTextDark"
+        android:textColor="@color/textDarkest"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:paddingLeft="8dp"

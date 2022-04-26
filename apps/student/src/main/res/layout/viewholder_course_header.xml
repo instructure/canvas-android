@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@id/editDashboardTextView"
         android:text="@string/courses"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="24sp"/>
 
     <TextView

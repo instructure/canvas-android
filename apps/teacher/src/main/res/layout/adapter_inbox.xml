@@ -87,7 +87,7 @@
                     android:layout_height="18dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
-                    android:tint="@color/canvasTextMedium"
+                    android:tint="@color/textDark"
                     android:contentDescription="@string/attachment_icon"
                     app:srcCompat="@drawable/ic_attachment"
                     android:layout_gravity="center_vertical"/>
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="14sp"
                 tools:text="Here is some text of the message" />
 

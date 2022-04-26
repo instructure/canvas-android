@@ -32,6 +32,6 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="16dp"
-        android:textColor="@color/unselectedRadioColor"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp" />
 </LinearLayout>

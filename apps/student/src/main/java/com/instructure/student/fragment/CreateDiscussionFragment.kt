@@ -190,7 +190,7 @@ class CreateDiscussionFragment : ParentFragment() {
         descriptionRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
 
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        descriptionRCEView.setLabel(discussionDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        descriptionRCEView.setLabel(discussionDescLabel, R.color.textDarkest, R.color.textDark)
 
         if (!hasLoadedDataForEdit) discussionTopicHeader?.let {
             editDiscussionName.setText(it.title)

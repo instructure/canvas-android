@@ -508,7 +508,7 @@ fun View.clearAvatarA11y() {
 @JvmName("setUserAvatarImage")
 fun CircleImageView.setAvatarImage(context: Context, userName: String?) {
     val initials = ProfileUtils.getUserInitials(userName)
-    val color = ContextCompat.getColor(context, R.color.gray)
+    val color = ContextCompat.getColor(context, R.color.textDark)
     val drawable = TextDrawable.builder()
             .beginConfig()
             .height(context.resources.getDimensionPixelSize(com.instructure.pandautils.R.dimen.avatar_size))

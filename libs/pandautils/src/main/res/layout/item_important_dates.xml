@@ -32,8 +32,8 @@
         android:layout_marginTop="12dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:onClick="@{() -> itemViewModel.open()}"
-        app:backgroundColor="@{@color/white}"
-        app:borderColor="@{@color/defaultTrackColor}">
+        app:backgroundColor="@{@color/backgroundLightest}"
+        app:borderColor="@{@color/borderMedium}">
 
         <View
             android:id="@+id/line"
@@ -44,7 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:background="@color/canvasRed" />
+            tools:background="@color/backgroundDanger" />
 
         <TextView
             android:id="@+id/courseName"
@@ -62,7 +62,7 @@
             app:layout_constraintStart_toEndOf="@id/line"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Math"
-            tools:textColor="@color/canvasRed" />
+            tools:textColor="@color/textDanger" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -84,7 +84,7 @@
                 android:tint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
                 app:imageRes="@{itemViewModel.data.icon}"
                 tools:src="@drawable/ic_quiz"
-                tools:tint="@color/canvasRed" />
+                tools:tint="@color/backgroundDanger" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -92,7 +92,7 @@
                 android:layout_marginStart="4dp"
                 android:gravity="center_vertical"
                 android:text="@{itemViewModel.data.title}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="15sp"
                 tools:text="Chapter 7 Test" />
         </LinearLayout>

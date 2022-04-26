@@ -26,7 +26,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:elevation="2dp"
         app:theme="@style/ToolBarStyleDark"
         tools:ignore="UnusedAttribute" />
@@ -34,7 +34,7 @@
     <LinearLayout
         android:layout_width="550dp"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:orientation="vertical"
         android:layout_below="@+id/toolbar"
         android:layout_above="@+id/loginFlowLogout"
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
-            android:background="@color/login_dividerColor" />
+            android:background="@color/backgroundMedium" />
 
         <EditText
             android:id="@+id/domainInput"
@@ -83,7 +83,7 @@
             android:id="@+id/bottomDivider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/login_dividerColor" />
+            android:background="@color/backgroundMedium" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/findSchoolRecyclerView"
@@ -102,7 +102,7 @@
         android:minWidth="120dp"
         android:gravity="center"
         android:text="@string/logout"
-        android:textColor="@color/login_grayText"
+        android:textColor="@color/textDark"
         android:fontFamily="sans-serif-medium"
         android:background="?android:selectableItemBackground"
         android:visibility="gone"

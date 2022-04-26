@@ -37,10 +37,10 @@ class CanvasContextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         if(canvasContext.id == -1L) {
             //this is a header, so we want it a gray color
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-            title.setTextColor(context.getColorCompat(R.color.defaultTextGray))
+            title.setTextColor(context.getColorCompat(R.color.textDark))
         } else {
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-            title.setTextColor(context.getColorCompat(R.color.defaultTextDark))
+            title.setTextColor(context.getColorCompat(R.color.textDarkest))
         }
         itemView.setOnClickListener {
             // The headers have an id of -1

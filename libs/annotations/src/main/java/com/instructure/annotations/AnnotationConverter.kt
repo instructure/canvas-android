@@ -65,7 +65,7 @@ private fun convertInkType(canvaDocAnnotation: CanvaDocAnnotation, context: Cont
     inkAnnotation.lineWidth = canvaDocAnnotation.width ?: 0f
     inkAnnotation.boundingBox = canvaDocAnnotation.rect?.let { RectF(it[0][0], it[0][1], it[1][0], it[1][1]) } ?: RectF()
     inkAnnotation.lines = canvaDocAnnotation.inklist?.gestures?.map { it.map { PointF(it.x, it.y) }.toMutableList() }!!.toMutableList()
-    inkAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.canvasDefaultButton)))
+    inkAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.textInfo)))
     inkAnnotation.contents = canvaDocAnnotation.contents
     inkAnnotation.name = canvaDocAnnotation.annotationId
 
@@ -81,7 +81,7 @@ private fun convertHighlightType(canvaDocAnnotation: CanvaDocAnnotation, context
             userId = canvaDocAnnotation.userId
     ))
     highLightAnnotation.contents = canvaDocAnnotation.contents
-    highLightAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.canvasDefaultButton)))
+    highLightAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.textInfo)))
     highLightAnnotation.name = canvaDocAnnotation.annotationId
 
     return highLightAnnotation
@@ -96,7 +96,7 @@ private fun convertStrikeoutType(canvaDocAnnotation: CanvaDocAnnotation, context
             userId = canvaDocAnnotation.userId
     ))
     strikeOutAnnotation.contents = canvaDocAnnotation.contents
-    strikeOutAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.canvasDefaultButton)))
+    strikeOutAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.textInfo)))
     strikeOutAnnotation.name = canvaDocAnnotation.annotationId
 
     return strikeOutAnnotation
@@ -110,7 +110,7 @@ private fun convertSquareType(canvaDocAnnotation: CanvaDocAnnotation, context: C
             userId = canvaDocAnnotation.userId
     ))
     squareAnnotation.contents = canvaDocAnnotation.contents
-    squareAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.canvasDefaultButton)))
+    squareAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.textInfo)))
     squareAnnotation.borderWidth = canvaDocAnnotation.width?.toFloat() ?: 2f //default width of 2
     squareAnnotation.name = canvaDocAnnotation.annotationId
 

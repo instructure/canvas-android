@@ -99,7 +99,7 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                     submissionGrade.text = context.getString(R.string.submission_status_excused)
                     submissionGrade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
                     submissionGrade.background = null
-                    submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.defaultTextDark))
+                    submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.textDarkest))
                 }
                 submission.isGraded -> {
                     if (submission.postedAt == null) hiddenIcon.setVisible()
@@ -130,7 +130,7 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                     }
                     submissionGrade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
                     submissionGrade.background = null
-                    submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.defaultTextDark))
+                    submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.textDarkest))
                 }
                 else -> {
                     submissionGrade.text = ViewStyler.applyKerning(context.getString(R.string.needsGrading)

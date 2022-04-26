@@ -32,7 +32,7 @@
         android:layout_height="154dp"
         android:layout_marginBottom="8dp"
         android:importantForAccessibility="no"
-        android:src="@color/teacher_colorPrimary"/>
+        android:src="@color/backgroundDarkest"/>
 
     <include layout="@layout/view_rename_course"/>
 

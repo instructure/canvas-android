@@ -94,10 +94,10 @@ class CanvasContextSpinnerAdapter(context: Context, private val mData: ArrayList
 
             if (item.id == GROUP_SEPARATOR.toLong() || item.id == COURSE_SEPARATOR.toLong()) {
                 viewHolder.title!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-                viewHolder.title!!.setTextColor(mInflater.context.resources.getColor(R.color.defaultTextGray))
+                viewHolder.title!!.setTextColor(mInflater.context.resources.getColor(R.color.textDark))
             } else {
                 viewHolder.title!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-                viewHolder.title!!.setTextColor(mInflater.context.resources.getColor(R.color.defaultTextDark))
+                viewHolder.title!!.setTextColor(mInflater.context.resources.getColor(R.color.textDarkest))
             }
         }
 

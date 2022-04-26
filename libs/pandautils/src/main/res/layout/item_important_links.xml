@@ -44,7 +44,7 @@
             android:drawableStart="@drawable/ic_book"
             android:drawablePadding="8dp"
             android:text="@{itemViewModel.data.courseName}"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="17sp"
             android:textStyle="bold"
             android:visibility="@{itemViewModel.data.courseName.empty ? View.GONE : View.VISIBLE}"
@@ -65,7 +65,7 @@
             android:layout_height="0.5dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:background="@color/k5SeparatorColor"
+            android:background="@color/backgroundMedium"
             android:visibility="@{itemViewModel.data.hasDivider ? View.VISIBLE : View.GONE}" />
 
     </LinearLayout>

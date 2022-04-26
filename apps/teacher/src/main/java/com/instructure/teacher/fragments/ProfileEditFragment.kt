@@ -90,7 +90,7 @@ class ProfileEditFragment : BasePresenterFragment<
 
         if(ProfileUtils.shouldLoadAltAvatarImage(user?.avatarUrl)) {
             val initials = ProfileUtils.getUserInitials(user?.shortName ?: "")
-            val color = requireContext().getColorCompat(R.color.defaultTextGray)
+            val color = requireContext().getColorCompat(R.color.textDark)
             val drawable = TextDrawable.builder()
                     .beginConfig()
                     .height(requireContext().resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
@@ -100,7 +100,7 @@ class ProfileEditFragment : BasePresenterFragment<
                     .textColor(color)
                     .endConfig()
                     .buildRound(initials, Color.WHITE)
-            usersAvatar.borderColor = requireContext().getColorCompat(R.color.defaultTextGray)
+            usersAvatar.borderColor = requireContext().getColorCompat(R.color.textDark)
             usersAvatar.borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6F, requireContext().resources.displayMetrics).toInt()
             usersAvatar.setImageDrawable(drawable)
         } else {

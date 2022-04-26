@@ -87,8 +87,8 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
     override fun updateSelectedAssignees(assigneeNames: ArrayList<CharSequence>, displayEveryone: Boolean, displayAsEveryoneElse: Boolean) {
         if (displayEveryone) assigneeNames.add(0, getString(if (displayAsEveryoneElse) R.string.everyone_else else R.string.everyone))
         val span = SpannableStringBuilder()
-        val nameColor = requireContext().getColorCompat(R.color.defaultActionColor)
-        val separatorColor = requireContext().getColorCompat(R.color.defaultTextGray)
+        val nameColor = requireContext().getColorCompat(R.color.textInfo)
+        val separatorColor = requireContext().getColorCompat(R.color.textDark)
         for (name in assigneeNames) {
             span.appendColored(name, nameColor)
             if (name !== assigneeNames.last()) span.appendColored(", ", separatorColor)

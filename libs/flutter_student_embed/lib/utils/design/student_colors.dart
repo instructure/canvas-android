@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 
 class StudentColors {
   /// Default Canvas primary color
-  static const defaultPrimary = Color(0xFF34444F);
+  static const defaultPrimary = Color(0xFF2D3B45);
 
   /// Default Canvas accent color
   static const defaultAccent = Color(0xFF0081BD);

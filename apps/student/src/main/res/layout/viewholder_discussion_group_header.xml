@@ -35,7 +35,7 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/defaultTextGray"
+        android:textColor="@color/textDark"
         tools:text="&lt;Assignment Group Name&gt;" />
 
     <ImageView

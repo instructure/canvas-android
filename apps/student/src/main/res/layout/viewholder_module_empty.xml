@@ -21,7 +21,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:minHeight="?android:listPreferredItemHeight"
-    android:background="@color/moduleItemBackground">
+    android:background="@color/backgroundLightest">
 
     <TextView
         android:id="@+id/titleText"

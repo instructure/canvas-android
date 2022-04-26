@@ -26,7 +26,7 @@
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true"
     app:contentPadding="0dp"
-    tools:backgroundTint="@color/defaultTextDark"
+    tools:backgroundTint="@color/textDarkest"
     tools:layout_width="156dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +57,7 @@
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/ic_circle"
-                android:backgroundTint="@color/canvasDefaultAccent"
+                android:backgroundTint="@color/textInfo"
                 android:importantForAccessibility="no" />
 
             <ImageView
@@ -99,7 +99,7 @@
                 android:maxLines="2"
                 android:textSize="16sp"
                 tools:text="American Literature 401"
-                tools:textColor="@color/defaultTextDark" />
+                tools:textColor="@color/textDarkest" />
 
             <TextView
                 android:id="@+id/courseCode"
@@ -108,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="12sp"
                 tools:ignore="Deprecated"
                 tools:text="LIT 401" />
@@ -134,7 +134,7 @@
                 style="@style/TextFont.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"
                 tools:text="98.6%" />
 

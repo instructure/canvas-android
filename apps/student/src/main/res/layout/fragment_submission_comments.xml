@@ -30,7 +30,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/divider"/>
+        android:background="@color/backgroundMedium"/>
 
     <LinearLayout
         android:id="@+id/commentInputContainer"
@@ -47,7 +47,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/uploadFiles"
             android:src="@drawable/ic_add"
-            android:tint="@color/gray"/>
+            android:tint="@color/textDark"/>
 
         <EditText
             android:id="@+id/commentInput"
@@ -70,7 +70,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/send"
             android:src="@drawable/ic_send"
-            android:tint="@color/canvasDefaultButton"/>
+            android:tint="@color/textInfo"/>
 
     </LinearLayout>
 

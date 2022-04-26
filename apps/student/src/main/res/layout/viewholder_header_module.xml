@@ -21,7 +21,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:background="@color/backgroundLightest"
     android:minHeight="?android:listPreferredItemHeight">
 
     <LinearLayout
@@ -52,7 +52,7 @@
             <TextView
                 android:id="@+id/title"
                 style="@style/AdapterItemTitleText"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -76,7 +76,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height=".5dp"
-        android:background="@color/dividerColor"
+        android:background="@color/backgroundMedium"
         android:layout_gravity="bottom"/>
 
 </FrameLayout>

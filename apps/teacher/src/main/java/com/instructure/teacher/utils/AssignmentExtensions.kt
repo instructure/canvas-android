@@ -319,33 +319,33 @@ fun Assignment.getResForSubmission(submission: Submission?): Pair<Int, Int> {
         ASSIGNMENT_STATE_MISSING -> {
             // If they haven't turned it in but there is no due date, we just want to show it as "Not Submitted"
             return if(this.dueAt == null) {
-                Pair(R.string.submission_status_not_submitted, R.color.defaultTextGray)
+                Pair(R.string.submission_status_not_submitted, R.color.textDark)
             } else {
-                Pair(R.string.submission_status_missing, R.color.submissionStatusColorMissing)
+                Pair(R.string.submission_status_missing, R.color.textDanger)
             }
         }
 
         ASSIGNMENT_STATE_GRADED, ASSIGNMENT_STATE_GRADED_MISSING -> {
             return when {
                 submission != null && (submission.attempt > 0 || Assignment.SubmissionType.ON_PAPER.apiString in submissionTypesRaw) -> // User has made attempts, so it has been submitted, or there is a submission and it was on paper
-                    Pair(R.string.submission_status_submitted, R.color.submissionStatusColorSubmitted)
+                    Pair(R.string.submission_status_submitted, R.color.textSuccess)
                 this.dueAt == null -> // No Due date + no submission + graded == Not Submitted
-                    Pair(R.string.submission_status_not_submitted, R.color.defaultTextGray)
+                    Pair(R.string.submission_status_not_submitted, R.color.textDark)
                 (this.dueAt.toDate()?.time ?: 0) >= Calendar.getInstance().timeInMillis -> // Not past due date + no submission + grade == Not submitted yet
-                    Pair(R.string.submission_status_not_submitted, R.color.defaultTextGray)
+                    Pair(R.string.submission_status_not_submitted, R.color.textDark)
                 else -> // Past due + no submission + grade == Missing
-                    Pair(R.string.submission_status_missing, R.color.submissionStatusColorMissing)
+                    Pair(R.string.submission_status_missing, R.color.textDanger)
             }
         }
 
         ASSIGNMENT_STATE_SUBMITTED_LATE, ASSIGNMENT_STATE_GRADED_LATE ->
-            return Pair(R.string.submission_status_late, R.color.submissionStatusColorLate)
+            return Pair(R.string.submission_status_late, R.color.textWarning)
 
         ASSIGNMENT_STATE_SUBMITTED ->
-            return Pair(R.string.submission_status_submitted, R.color.submissionStatusColorSubmitted)
+            return Pair(R.string.submission_status_submitted, R.color.textSuccess)
 
         ASSIGNMENT_STATE_DUE ->
-            return Pair(R.string.submission_status_not_submitted, R.color.defaultTextGray)
+            return Pair(R.string.submission_status_not_submitted, R.color.textDark)
 
         else -> return Pair(-1, -1)
     }
@@ -353,10 +353,10 @@ fun Assignment.getResForSubmission(submission: Submission?): Pair<Int, Int> {
 
 fun getResForSubmission(submissionStatus: String?): Pair<Int, Int> {
     return when(submissionStatus) {
-        "missing" -> Pair(R.string.submission_status_missing, R.color.submissionStatusColorMissing)
-        "late" -> Pair(R.string.submission_status_late, R.color.submissionStatusColorLate)
-        "submitted" -> Pair(R.string.submission_status_submitted, R.color.submissionStatusColorSubmitted)
-        "unsubmitted" -> Pair(R.string.submission_status_not_submitted, R.color.defaultTextGray)
+        "missing" -> Pair(R.string.submission_status_missing, R.color.textDanger)
+        "late" -> Pair(R.string.submission_status_late, R.color.textWarning)
+        "submitted" -> Pair(R.string.submission_status_submitted, R.color.textSuccess)
+        "unsubmitted" -> Pair(R.string.submission_status_not_submitted, R.color.textDark)
         else -> Pair(-1, -1)
     }
 }

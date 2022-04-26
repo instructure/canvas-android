@@ -23,7 +23,7 @@
         <shape android:shape="oval" >
             <size android:height="8dp"
                 android:width="8dp"/>
-            <solid android:color="@color/lightGray" />
+            <solid android:color="@color/backgroundMedium" />
         </shape>
     </item>
 </layer-list>
