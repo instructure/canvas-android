@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/middleDivider"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:minHeight="80dp"
             android:orientation="vertical"
             android:padding="8dp"

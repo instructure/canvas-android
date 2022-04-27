@@ -52,7 +52,7 @@
             android:layout_marginTop="12dp"
             android:fontFamily="sans-serif-medium"
             android:text="@string/whatsYourSchoolName"
-            android:textColor="@android:color/black"
+            android:textColor="@color/textDarkest"
             android:textSize="22sp" />
 
         <View

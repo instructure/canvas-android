@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="22sp"
-        android:textColor="@android:color/black"
+        android:textColor="@color/textDarkest"
         android:fontFamily="sans-serif-medium"
         android:text="@string/whatsYourSchoolName"
         android:layout_marginTop="12dp"

@@ -28,12 +28,12 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@android:color/white"
+        android:background="@color/backgroundLightest"
         android:elevation="2dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
         app:title="@string/settings"
-        app:titleTextColor="@android:color/black"
+        app:titleTextColor="@color/backgroundDarkest"
         tools:ignore="UnusedAttribute"/>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"

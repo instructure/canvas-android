@@ -18,10 +18,10 @@
 <resources>
 
     <style name="ToolBarStyle" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
-        <item name="actionModeBackground">@color/textDarkest</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="actionModeBackground">@color/licorice</item>
     </style>
 
     <style name="ToolBarPopupStyle" parent="Theme.AppCompat.Light">

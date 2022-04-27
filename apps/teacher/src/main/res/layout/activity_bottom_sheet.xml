@@ -32,7 +32,7 @@
         app:cardUseCompatPadding="true"
         app:cardPreventCornerOverlap="false"
         app:contentPadding="0dp"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="@color/backgroundLightest"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/bottomSheetCardBottomPadding"
