@@ -49,7 +49,7 @@ class AnnouncementsE2ETest : StudentTest() {
     fun testAnnouncementsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 2)
+        val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 2, locked = true)
         val student = data.studentsList[0]
         val course = data.coursesList[0]
         val announcement = data.announcementsList[0]
@@ -114,15 +114,5 @@ class AnnouncementsE2ETest : StudentTest() {
         refresh()
         discussionListPage.assertTopicDisplayed(announcement.title)
         discussionListPage.assertTopicDisplayed(secondAnnouncement.title)
-
-        Log.d(STEP_TAG,"Create a 'valid' announcement and assert that it has been displayed on the Discussion List Page after creation.")
-        discussionListPage.createAnnouncement("Announcement Topic", "Awesome announcement topic", true)
-
-        Log.d(STEP_TAG,"Create an 'invalid' announcement with missing title. Assert that an announcement will be created with 'No Title' title.")
-        discussionListPage.createAnnouncement("", "Missing title announcement", true)
-
-        Log.d(STEP_TAG,"Create an 'invalid' announcement with missing description. Assert that the announcement cannot be created without a description and the user remains on the New Announcement Page.")
-        discussionListPage.createAnnouncement("Missing description announcement", "", false)
-        discussionListPage.assertOnNewAnnouncementPage()
-    }
+      }
 }

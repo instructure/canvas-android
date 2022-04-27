@@ -27,19 +27,20 @@ object SeedApi {
 
     // Seed data request
     data class SeedDataRequest (
-            val teachers: Int = 0,
-            val students: Int = 0,
-            val courses: Int = 0,
-            val pastCourses: Int = 0,
-            val favoriteCourses: Int = 0,
-            val homeroomCourses: Int = 0,
-            val accountId: Long? = null,
-            val gradingPeriods: Boolean = false,
-            val discussions: Int = 0,
-            val announcements: Int = 0,
-            val publishCourses: Boolean = true,
-            val TAs: Int = 0,
-            val syllabusBody: String? = null
+        val teachers: Int = 0,
+        val students: Int = 0,
+        val courses: Int = 0,
+        val pastCourses: Int = 0,
+        val favoriteCourses: Int = 0,
+        val homeroomCourses: Int = 0,
+        val accountId: Long? = null,
+        val gradingPeriods: Boolean = false,
+        val discussions: Int = 0,
+        val announcements: Int = 0,
+        val locked: Boolean = false,
+        val publishCourses: Boolean = true,
+        val TAs: Int = 0,
+        val syllabusBody: String? = null
     )
 
     // Seed data object/model, made to look very much like the old proto-generated SeededData class
@@ -140,7 +141,7 @@ object SeedApi {
             // Seed discussions
             addAllDiscussions(
                 (0 until request.discussions).map {
-                    DiscussionTopicsApi.createDiscussion(coursesList[0].id, false, teachersList[0].token)
+                    DiscussionTopicsApi.createDiscussion(coursesList[0].id, teachersList[0].token, false)
                 }
             )
 
@@ -205,16 +206,28 @@ object SeedApi {
             // Seed discussions
             addAllDiscussions(
                     (0 until request.discussions).map {
-                        DiscussionTopicsApi.createDiscussion(coursesList[0].id, false, teachersList[0].token)
+                        DiscussionTopicsApi.createDiscussion(coursesList[0].id, teachersList[0].token, false)
                     }
             )
 
             // Seed announcements
-            addAllAnnouncements(
+            if(request.locked) {
+                addAllAnnouncements(
                     (0 until request.announcements).map {
-                        DiscussionTopicsApi.createAnnouncement(coursesList[0].id, teachersList[0].token)
+                        DiscussionTopicsApi.createAnnouncement(coursesList[0].id, teachersList[0].token, false, false)
                     }
-            )
+                )
+            }
+            else {
+                addAllAnnouncements(
+                    (0 until request.announcements).map {
+                        DiscussionTopicsApi.createAnnouncement(
+                            coursesList[0].id,
+                            teachersList[0].token
+                        )
+                    }
+                )
+            }
         }
 
         return seededData
