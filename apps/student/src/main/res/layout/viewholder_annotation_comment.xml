@@ -52,7 +52,7 @@
             android:layout_below="@+id/commentAuthorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             tools:text="Sept 29 at 3:16 AM "/>
 
         <ImageView
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:tint="@color/navigationDrawerTextLight"
+            android:tint="@color/textDark"
             android:contentDescription="@string/edit"
             app:srcCompat="@drawable/ic_edit"/>
 
@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:paddingTop="6dp"
-        android:textColor="@color/error"
+        android:textColor="@color/textDanger"
         tools:text="Removed 01-01-2001 by Hodor"/>
 
 </LinearLayout>

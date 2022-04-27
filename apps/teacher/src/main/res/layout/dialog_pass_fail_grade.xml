@@ -22,7 +22,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="-8dp"
         android:layout_marginBottom="8dp"
-        android:background="@color/defaultTrackColor" />
+        android:background="@color/backgroundMedium" />
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/excuseStudentCheckbox"

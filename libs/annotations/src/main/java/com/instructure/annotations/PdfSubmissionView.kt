@@ -431,7 +431,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         fileJob?.cancel()
         fileJob = tryWeave {
             progressBar.isIndeterminate = true
-            progressBar.setColor(ContextCompat.getColor(this@PdfSubmissionView.context, R.color.defaultTextGray))
+            progressBar.setColor(ContextCompat.getColor(this@PdfSubmissionView.context, R.color.textDark))
             val teacherYellow = ContextCompat.getColor(this@PdfSubmissionView.context, progressColor)
 
             val jitterThreshold = 300L

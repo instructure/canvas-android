@@ -76,7 +76,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Configures whatIf editing boxes and listener for dialog
         edit.setVisible(isEdit)
         if (isEdit) {
-            edit.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_edit, ContextCompat.getColor(context, R.color.defaultTextDark)))
+            edit.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_edit, ContextCompat.getColor(context, R.color.textDarkest)))
             edit.setOnClickListener { whatIfDialogCallback.onClick(assignment, adapterPosition) }
         }
 
@@ -89,11 +89,11 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         if (assignment.isMissing() && !isEdit && assignment.submission?.grade == null) {
             submissionState.text = context.getString(R.string.missingAssignment)
-            submissionState.setTextColor(ContextCompat.getColor(context, R.color.canvasRed))
+            submissionState.setTextColor(ContextCompat.getColor(context, R.color.textDanger))
             submissionState.setVisible()
         } else if (!assignment.isSubmitted && !isEdit) {
             submissionState.text = context.getString(R.string.notSubmitted)
-            submissionState.setTextColor(ContextCompat.getColor(context, R.color.defaultTextGray))
+            submissionState.setTextColor(ContextCompat.getColor(context, R.color.textDark))
             submissionState.setVisible()
         } else {
             submissionState.setGone()

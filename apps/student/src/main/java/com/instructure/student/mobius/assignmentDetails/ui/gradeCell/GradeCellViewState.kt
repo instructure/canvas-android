@@ -107,7 +107,7 @@ sealed class GradeCellViewState {
                     showCompleteIcon = isComplete,
                     showIncompleteIcon = !isComplete,
                     grade = context.getString(if (isComplete) R.string.gradeComplete else R.string.gradeIncomplete),
-                    accentColor = if (isComplete) accentColor else ContextCompat.getColor(context, R.color.defaultTextGray),
+                    accentColor = if (isComplete) accentColor else ContextCompat.getColor(context, R.color.textDark),
                     outOf = outOfText,
                     outOfContentDescription = outOfContentDescriptionText,
                     graphPercent = 1.0f

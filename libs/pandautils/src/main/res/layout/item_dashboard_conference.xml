@@ -32,7 +32,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/announcement_card_background"
-        android:backgroundTint="@color/electricBlueBadge"
+        android:backgroundTint="@color/borderInfo"
         android:gravity="center_vertical"
         android:minHeight="55dp"
         android:onClick="@{() -> itemViewModel.handleJoin()}"
@@ -44,7 +44,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="@drawable/announcement_card_icon_background"
-            android:backgroundTint="@color/electricBlueBadge">
+            android:backgroundTint="@color/backgroundInfo">
 
             <ImageView
                 android:id="@+id/icon"
@@ -75,7 +75,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/conferenceInProgress"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="18sp" />
 
             <TextView
@@ -86,7 +86,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@{itemViewModel.data.subtitle}"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 tools:text="Biology 101" />
 
         </LinearLayout>
@@ -97,7 +97,7 @@
             android:layout_height="24dp"
             android:layout_marginEnd="12dp"
             android:contentDescription="@string/loading"
-            android:indeterminateTint="@color/gray"
+            android:indeterminateTint="@color/backgroundDark"
             android:visibility="@{itemViewModel.joining ? View.VISIBLE : View.GONE}" />
 
         <ImageButton
@@ -110,7 +110,7 @@
             android:minHeight="48dp"
             android:layout_marginEnd="12dp"
             android:onClick="@{() -> itemViewModel.handleDismiss()}"
-            android:tint="@color/gray"
+            android:tint="@color/textDark"
             android:visibility="@{itemViewModel.joining ? View.GONE : View.VISIBLE}"
             app:srcCompat="@drawable/ic_close" />
 

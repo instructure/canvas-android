@@ -53,7 +53,7 @@ class DonutChartView(context: Context, attrs: AttributeSet) : View(context, attr
     /** The color of the background arc */
     private val bgColor: Int = ContextCompat.getColor(
         context,
-        R.color.defaultThumbColor
+        R.color.textLight
     )
 
     /** The animator used to animated the foreground arc from its current progress value to a new progress value. */
@@ -65,7 +65,7 @@ class DonutChartView(context: Context, attrs: AttributeSet) : View(context, attr
             progress = 0.65f
             color = ContextCompat.getColor(
                 context,
-                R.color.canvasDefaultAccent
+                R.color.backgroundInfo
             )
         }
     }

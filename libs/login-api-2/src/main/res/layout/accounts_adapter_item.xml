@@ -62,7 +62,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@color/primaryText"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp" />
 
         <TextView
@@ -74,7 +74,7 @@
             android:layout_marginStart="16dp"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@color/secondaryText"
+            android:textColor="@color/textDark"
             android:textSize="14sp"
             android:textStyle="italic" />
     </LinearLayout>

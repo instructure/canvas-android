@@ -21,7 +21,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundWhite">
+    android:background="@color/backgroundLightest">
 
     <LinearLayout
         android:id="@+id/fullscreenWrapper"
@@ -49,14 +49,14 @@
             android:id="@+id/bottomBarDivider"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/bottomBarNavigationColor"
+            android:background="@color/backgroundMedium"
             android:importantForAccessibility="no"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/backgroundLightest"
             app:elevation="0dp"
             app:labelVisibilityMode="labeled" />
 

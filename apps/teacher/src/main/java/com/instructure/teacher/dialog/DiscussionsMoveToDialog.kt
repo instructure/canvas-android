@@ -128,11 +128,11 @@ class DiscussionsMoveToDialog : DialogFragment() {
         radioButton.isChecked = isChecked
 
         if(group == DiscussionListPresenter.DELETE) {
-            val destructiveColor =  requireContext().getColorCompat(R.color.destructive)
+            val destructiveColor =  requireContext().getColorCompat(R.color.textDanger)
             CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(destructiveColor, destructiveColor))
             radioButton.setTextColor(destructiveColor)
         } else {
-            val unselectedColor = requireContext().getColorCompat(R.color.unselectedRadioColor)
+            val unselectedColor = requireContext().getColorCompat(R.color.textDarkest)
             CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(unselectedColor, ThemePrefs.brandColor))
         }
     }

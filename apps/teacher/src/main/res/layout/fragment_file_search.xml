@@ -52,7 +52,7 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/clear_filter"
             android:src="@drawable/ic_close"
-            android:tint="@color/defaultTextDark"
+            android:tint="@color/textDarkest"
             android:visibility="gone"
             tools:visibility="visible"/>
 
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_gravity="center_vertical"
-            android:background="@color/dividerColor"/>
+            android:background="@color/backgroundMedium"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="12dp"
             android:indeterminate="true"
-            android:indeterminateTint="@color/darkGray"
+            android:indeterminateTint="@color/backgroundDark"
             android:visibility="invisible"
             tools:visibility="visible"/>
 

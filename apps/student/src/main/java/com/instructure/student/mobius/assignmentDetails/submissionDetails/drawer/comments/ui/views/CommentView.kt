@@ -44,11 +44,11 @@ class CommentView @JvmOverloads constructor(
             extrasContainer.layoutDirection = resources.configuration.layoutDirection
             commentTextColor = when (value) {
                 CommentDirection.INCOMING -> {
-                    setCommentBubbleColor(ContextCompat.getColor(context, R.color.commentBubbleIncoming))
-                    ContextCompat.getColor(context, R.color.defaultTextDark)
+                    setCommentBubbleColor(ContextCompat.getColor(context, R.color.backgroundLight))
+                    ContextCompat.getColor(context, R.color.textDarkest)
                 }
                 CommentDirection.OUTGOING -> {
-                    setCommentBubbleColor(ContextCompat.getColor(context, R.color.commentBubbleOutgoing))
+                    setCommentBubbleColor(ContextCompat.getColor(context, R.color.backgroundInfo))
                     Color.WHITE
                 }
             }

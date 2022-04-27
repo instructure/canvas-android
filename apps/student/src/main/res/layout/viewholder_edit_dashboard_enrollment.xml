@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@{itemViewModel.title}"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="14sp"
             android:textStyle="bold"
             tools:text="Current enrollments" />
@@ -42,6 +42,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/dividerColor" />
+            android:background="@color/backgroundMedium" />
     </RelativeLayout>
 </layout>

@@ -31,7 +31,7 @@
         tools:background="#fff"
         tools:navigationIcon="@drawable/ic_back_arrow"
         tools:title="@string/submission"
-        tools:titleTextColor="@color/defaultTextDark"/>
+        tools:titleTextColor="@color/textDarkest"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filePickerRecycler"
@@ -57,7 +57,7 @@
         android:id="@+id/sourcesDivider"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/dividerColor"
+        android:background="@color/backgroundMedium"
         app:layout_constraintBottom_toTopOf="@id/sourcesContainer"/>
 
     <LinearLayout
@@ -85,7 +85,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:importantForAccessibility="no"
-                android:tint="@color/defaultActionColor"
+                android:tint="@color/textInfo"
                 app:srcCompat="@drawable/ic_add_from_camera"/>
 
             <TextView
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fromCamera"
-                android:textColor="@color/defaultActionColor"
+                android:textColor="@color/textInfo"
                 android:textSize="12sp"/>
 
         </LinearLayout>
@@ -115,7 +115,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:importantForAccessibility="no"
-                android:tint="@color/defaultActionColor"
+                android:tint="@color/textInfo"
                 app:srcCompat="@drawable/ic_add_from_gallery"/>
 
             <TextView
@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fromGallery"
-                android:textColor="@color/defaultActionColor"
+                android:textColor="@color/textInfo"
                 android:textSize="12sp"/>
 
         </LinearLayout>
@@ -145,7 +145,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:importantForAccessibility="no"
-                android:tint="@color/defaultActionColor"
+                android:tint="@color/textInfo"
                 app:srcCompat="@drawable/ic_add_from_device"/>
 
             <TextView
@@ -154,7 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fromDevice"
-                android:textColor="@color/defaultActionColor"
+                android:textColor="@color/textInfo"
                 android:textSize="12sp"/>
 
         </LinearLayout>
@@ -175,7 +175,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:importantForAccessibility="no"
-                android:tint="@color/defaultActionColor"
+                android:tint="@color/textInfo"
                 app:srcCompat="@drawable/ic_scan"/>
 
             <TextView
@@ -184,7 +184,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fromDocumentScanning"
-                android:textColor="@color/defaultActionColor"
+                android:textColor="@color/textInfo"
                 android:textSize="12sp"/>
 
         </LinearLayout>
@@ -195,7 +195,7 @@
         android:id="@+id/fileLoading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminateTint="@color/defaultActionColor"
+        android:indeterminateTint="@color/backgroundInfo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

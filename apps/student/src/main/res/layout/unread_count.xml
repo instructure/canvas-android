@@ -31,6 +31,6 @@
     android:padding="2dp"
     android:textColor="@color/white"
     android:textSize="10sp"
-    tools:backgroundTint="@color/electricBlueBadge"
+    tools:backgroundTint="@color/backgroundInfo"
     tools:ignore="SmallSp"
     tools:text="9+" />

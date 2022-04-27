@@ -82,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentTop="true"
-                    android:background="@color/dividerColor" />
+                    android:background="@color/backgroundMedium" />
 
                 <TextView
                     android:id="@+id/toLabel"
@@ -91,7 +91,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="16dp"
                     android:text="@string/label_to"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
                 <com.instructure.pandautils.views.RecipientChipsInput
@@ -132,7 +132,7 @@
                 android:inputType="textCapSentences"
                 android:lines="1"
                 android:padding="16dp"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
@@ -146,7 +146,7 @@
                 android:hint="@string/no_subject"
                 android:lines="1"
                 android:padding="16dp"
-                android:textColorHint="@color/messageTextColor"
+                android:textColorHint="@color/textDarkest"
                 android:textSize="16sp" />
 
             <include layout="@layout/view_divider" />
@@ -168,7 +168,7 @@
                     android:layout_toStartOf="@+id/sendIndividualSwitch"
                     android:labelFor="@+id/sendIndividualSwitch"
                     android:text="@string/sendIndividualMessage"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -188,7 +188,7 @@
                 android:id="@+id/sendIndividualDivider"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/dividerColor"
+                android:background="@color/backgroundMedium"
                 android:visibility="gone"/>
 
             <EditText
@@ -204,8 +204,8 @@
                 android:padding="16dp"
                 android:scrollHorizontally="false"
                 android:singleLine="false"
-                android:textColor="@color/defaultTextDark"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColor="@color/textDarkest"
+                android:textColorHint="@color/textDark"
                 android:textSize="16sp" />
 
             <com.instructure.pandautils.views.AttachmentLayout

@@ -92,7 +92,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 UploadListItemViewState(
                     0,
                     R.drawable.ic_attachment,
-                    ContextCompat.getColor(context, R.color.defaultActionColor),
+                    ContextCompat.getColor(context, R.color.textInfo),
                     "File",
                     "1 B",
                     false,
@@ -101,7 +101,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 UploadListItemViewState(
                     1,
                     R.drawable.ic_warning,
-                    ContextCompat.getColor(context, R.color.destructive),
+                    ContextCompat.getColor(context, R.color.textDanger),
                     "File",
                     "1 B",
                     true,
@@ -128,7 +128,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 UploadListItemViewState(
                     0,
                     R.drawable.ic_attachment,
-                    ContextCompat.getColor(context, R.color.defaultActionColor),
+                    ContextCompat.getColor(context, R.color.textInfo),
                     "File",
                     "1 B",
                     false,
@@ -137,7 +137,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 UploadListItemViewState(
                     1,
                     R.drawable.ic_attachment,
-                    ContextCompat.getColor(context, R.color.defaultActionColor),
+                    ContextCompat.getColor(context, R.color.textInfo),
                     "File",
                     "1 B",
                     false,
@@ -164,7 +164,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 UploadListItemViewState(
                     0,
                     R.drawable.ic_attachment,
-                    ContextCompat.getColor(context, R.color.defaultActionColor),
+                    ContextCompat.getColor(context, R.color.textInfo),
                     "File",
                     "1 B",
                     false,
@@ -173,7 +173,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 UploadListItemViewState(
                     1,
                     R.drawable.ic_attachment,
-                    ContextCompat.getColor(context, R.color.defaultActionColor),
+                    ContextCompat.getColor(context, R.color.textInfo),
                     "File",
                     "1 B",
                     false,
@@ -182,7 +182,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 UploadListItemViewState(
                     2,
                     R.drawable.ic_attachment,
-                    ContextCompat.getColor(context, R.color.defaultActionColor),
+                    ContextCompat.getColor(context, R.color.textInfo),
                     "File",
                     "1 B",
                     false,

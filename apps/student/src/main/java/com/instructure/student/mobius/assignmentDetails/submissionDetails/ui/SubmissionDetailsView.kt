@@ -107,7 +107,7 @@ class SubmissionDetailsView(
         // Tint the tab with the course color
         val tint = canvasContext.color
         drawerTabLayout.setSelectedTabIndicatorColor(tint)
-        drawerTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.defaultTextDark), tint)
+        drawerTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.textDarkest), tint)
 
         // Use 90% luminance to ensure a 'light' ripple effect that doesn't overpower the tab text
         val rippleTint = tint.withLuminance(0.90f).asStateList()

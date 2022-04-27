@@ -62,7 +62,7 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <TextView
@@ -80,7 +80,7 @@
                     android:minHeight="48dp"
                     android:hint="@string/title"
                     android:maxLines="2"
-                    android:textColorHint="@color/defaultTextGray"
+                    android:textColorHint="@color/textDark"
                     android:textSize="16sp"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -93,7 +93,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/utils_description"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:focusable="true"/>
 
             <instructure.rceditor.RCETextEditorView
@@ -134,7 +134,7 @@
                     android:minWidth="48dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:backgroundTint="@color/canvasDefaultPrimary"/>
+                    android:backgroundTint="@color/backgroundDarkest"/>
 
             </RelativeLayout>
 
@@ -165,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:backgroundTint="@color/canvasDefaultPrimary"
+                    android:backgroundTint="@color/backgroundDarkest"
                     android:minWidth="48dp"
                     android:minHeight="48dp" />
 

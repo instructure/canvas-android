@@ -22,20 +22,20 @@
     android:id="@+id/assignmentListPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundWhite">
+    android:background="@color/backgroundLightest">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/canvasBackgroundWhite">
+        android:background="@color/backgroundLightest">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:actionBarSize"
             android:layout_alignParentTop="true"
-            android:background="@color/defaultPrimary"
+            android:background="@color/textDarkest"
             app:popupTheme="@style/ToolBarPopupStyle"
             app:theme="@style/ToolBarStyle"
             tools:targetApi="lollipop" />
@@ -67,7 +67,7 @@
                 <TextView
                     android:id="@+id/sortByTextView"
                     style="@style/TextFont.Regular"
-                    android:textColor="@color/defaultActionColor"
+                    android:textColor="@color/textInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"

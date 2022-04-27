@@ -137,7 +137,7 @@ class AnnotationCommentListFragment : ParentFragment() {
             commentInputContainer.setVisible(false)
         } else {
             sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
-                    intArrayOf(-android.R.attr.state_enabled) to ContextCompat.getColor(requireContext(), R.color.defaultTextGray),
+                    intArrayOf(-android.R.attr.state_enabled) to ContextCompat.getColor(requireContext(), R.color.textDark),
                     intArrayOf() to ThemePrefs.buttonColor
             )
 

@@ -389,7 +389,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
             if(ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
                 val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = ContextCompat.getColor(context, R.color.avatarGray)
+                val color = ContextCompat.getColor(context, R.color.textDark)
                 val drawable = TextDrawable.builder()
                         .beginConfig()
                         .height(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
@@ -594,7 +594,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun setupBottomNavigation() {
         Logger.d("NavigationActivity:setupBottomNavigation()")
-        bottomBar.applyTheme(ThemePrefs.brandColor, ContextCompat.getColor(this, R.color.bottomBarUnselectedItemColor))
+        bottomBar.applyTheme(ThemePrefs.brandColor, ContextCompat.getColor(this, R.color.textDarkest))
         bottomBar.setOnNavigationItemSelectedListener(bottomBarItemSelectedListener)
         bottomBar.setOnNavigationItemReselectedListener(bottomBarItemReselectedListener)
         updateBottomBarContentDescriptions()
@@ -1048,7 +1048,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                         .inflate(R.layout.unread_count, bottomBar, false)
                 (badge as TextView).text = unreadCountDisplay
 
-                ColorUtils.colorIt(ContextCompat.getColor(context, R.color.electricBlueBadge), badge.background)
+                ColorUtils.colorIt(ContextCompat.getColor(context, R.color.backgroundInfo), badge.background)
                 addView(badge)
             }
         }

@@ -44,7 +44,7 @@
             android:layout_marginBottom="24dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@color/k5SeparatorColor"
+            android:background="@color/backgroundMedium"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -64,7 +64,7 @@
             android:textColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
             app:layout_constraintTop_toBottomOf="@id/courseSeparator"
             tools:text="Math"
-            tools:textColor="@color/red" />
+            tools:textColor="@color/textDanger" />
 
         <ImageView
             android:id="@+id/chevronIcon"
@@ -93,7 +93,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_rounded_rectangle"
                 android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
-                tools:backgroundTint="@color/red"
+                tools:backgroundTint="@color/textDanger"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -110,7 +110,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="@{itemViewModel.percentage}"
                 app:layout_constraintHorizontal_bias="0"
-                tools:background="@color/red" />
+                tools:background="@color/textDanger" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -123,7 +123,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:textSize="17sp"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:text="@{itemViewModel.data.gradeText}"
             android:contentDescription="@{itemViewModel.gradeContentDescription}"
             app:layout_constraintTop_toBottomOf="@id/progressLayout"

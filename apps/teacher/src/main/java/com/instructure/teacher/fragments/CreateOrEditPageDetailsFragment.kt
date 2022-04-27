@@ -178,7 +178,7 @@ class CreateOrEditPageDetailsFragment :
             )
         }
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        pageRCEView.setLabel(pageDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        pageRCEView.setLabel(pageDescLabel, R.color.textDarkest, R.color.textDark)
     }
 
     private fun setupFrontPageSwitch() {

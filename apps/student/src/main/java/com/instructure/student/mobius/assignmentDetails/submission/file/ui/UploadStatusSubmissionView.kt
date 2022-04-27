@@ -148,8 +148,8 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
             .setNegativeButton(R.string.no, null)
             .create()
         dialog?.setOnShowListener {
-            dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(ContextCompat.getColor(context, R.color.destructive))
-            dialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(ContextCompat.getColor(context, R.color.gray))
+            dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(ContextCompat.getColor(context, R.color.textDanger))
+            dialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(ContextCompat.getColor(context, R.color.textDark))
         }
         dialog?.setOnCancelListener {
             dialog = null

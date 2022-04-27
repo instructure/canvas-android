@@ -82,7 +82,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
                 row.setInt(R.id.icon, "setColorFilter", color)
             } else {
                 val color = if(streamItem.canvasContext != null) ColorKeeper.getOrGenerateColor(streamItem.canvasContext)
-                            else ContextCompat.getColor(applicationContext, R.color.canvasRed)
+                            else ContextCompat.getColor(applicationContext, R.color.textDanger)
                 row.setInt(R.id.icon, "setColorFilter", color)
             }
 

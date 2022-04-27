@@ -22,7 +22,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/backgroundLightest">
 
     <FrameLayout
         android:id="@+id/rootView"
@@ -77,7 +77,7 @@
                         android:background="?android:selectableItemBackground"
                         android:padding="8dp"
                         android:text="@string/loginWithQRCode"
-                        android:textColor="@color/login_grayText"
+                        android:textColor="@color/textDark"
                         android:textSize="16sp"/>
 
                     <View
@@ -87,7 +87,7 @@
                         android:layout_height="18dp"
                         android:layout_marginTop="4dp"
                         android:layout_gravity="center"
-                        android:background="@color/login_grayText"/>
+                        android:background="@color/backgroundDark"/>
 
                     <TextView
                         android:id="@+id/canvasNetwork"
@@ -99,7 +99,7 @@
                         android:background="?android:selectableItemBackground"
                         android:padding="8dp"
                         android:text="@string/canvasNetwork"
-                        android:textColor="@color/login_grayText"
+                        android:textColor="@color/textDark"
                         android:textSize="16sp"/>
 
                 </LinearLayout>
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/weMadeChanges"
-                    android:textColor="@color/login_grayText"
+                    android:textColor="@color/textDark"
                     android:textSize="14sp"/>
 
                 <TextView
@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackground"
                     android:text="@string/whatsNewText"
-                    android:textColor="@color/linkBlue"
+                    android:textColor="@color/textInfo"
                     android:textSize="14sp"/>
             </LinearLayout>
 
@@ -149,14 +149,14 @@
                     android:fontFamily="sans-serif-medium"
                     android:gravity="start"
                     android:text="@string/previousLoginTitle"
-                    android:textColor="@color/login_grayText"
+                    android:textColor="@color/textDark"
                     android:textSize="16sp"/>
 
                 <View
                     android:id="@+id/previousLoginDivider"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/login_dividerColor"/>
+                    android:background="@color/backgroundMedium"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/previousLoginRecyclerView"
@@ -182,7 +182,7 @@
             android:contentDescription="@string/help"
             android:focusable="true"
             android:src="@drawable/ic_cv_question"
-            android:tint="@color/login_grayCanvasLogo"
+            android:tint="@color/backgroundMedium"
             tools:ignore="UnusedAttribute"/>
 
     </FrameLayout>

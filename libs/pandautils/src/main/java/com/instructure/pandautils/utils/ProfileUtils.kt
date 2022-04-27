@@ -127,7 +127,7 @@ object ProfileUtils {
 
     private fun createAvatarDrawable(context: Context, userName: String): Drawable {
         val initials = getUserInitials(userName)
-        val color = ContextCompat.getColor(context, R.color.gray)
+        val color = ContextCompat.getColor(context, R.color.textDark)
         return TextDrawable.builder()
             .beginConfig()
             .height(context.resources.getDimensionPixelSize(R.dimen.avatar_size))

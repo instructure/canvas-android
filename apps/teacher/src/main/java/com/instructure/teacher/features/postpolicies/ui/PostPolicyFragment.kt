@@ -62,7 +62,7 @@ class PostPolicyFragment : Fragment() {
 
         val courseColor = ColorKeeper.getOrGenerateColor(course)
         postPolicyTabLayout.setSelectedTabIndicatorColor(courseColor)
-        postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.gray), courseColor)
+        postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.textDark), courseColor)
     }
 
     companion object {

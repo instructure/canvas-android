@@ -20,7 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundWhite"
+    android:background="@color/backgroundLightest"
     android:id="@+id/courseGradesPage">
 
     <androidx.appcompat.widget.Toolbar
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
         android:layout_alignParentTop="true"
-        android:background="@color/defaultPrimary"
+        android:background="@color/textDarkest"
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
@@ -49,7 +49,7 @@
                 android:id="@+id/headerWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/canvasBackgroundWhite"
+                android:background="@color/backgroundLightest"
                 android:minHeight="?android:listPreferredItemHeightSmall"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -171,7 +171,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_below="@id/whatIfView"
-                    android:background="@color/lightGray" />
+                    android:background="@color/backgroundMedium" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/termSpinner"

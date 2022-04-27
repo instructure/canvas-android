@@ -20,7 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/backgroundLightest">
 
     <include
         android:id="@+id/toolbar"
@@ -45,7 +45,7 @@
             android:layout_toStartOf="@+id/starred"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="18sp"
             tools:text="This is a subject Line Demo that is really long"/>
 
@@ -68,12 +68,12 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/header"
-        android:background="@color/messageBackgroundGray">
+        android:background="@color/backgroundLight">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/canvasEditTextColor"/>
+            android:background="@color/backgroundMedium"/>
 
         <include
             layout="@layout/panda_recycler_refresh_layout"

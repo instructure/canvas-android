@@ -24,4 +24,4 @@
     android:text="@string/selectCourse"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    android:textColor="@color/defaultTextGray" />
+    android:textColor="@color/textDark" />

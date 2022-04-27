@@ -80,7 +80,7 @@
                     android:contentDescription="@string/dismiss"
                     android:onClick="@{() -> itemViewModel.dismiss()}"
                     android:padding="12dp"
-                    android:tint="@color/gray"
+                    android:tint="@color/textDark"
                     android:visibility="@{itemViewModel.inProgress ? View.GONE : View.VISIBLE}"
                     app:srcCompat="@drawable/ic_close"
                     tools:visibility="gone" />
@@ -90,7 +90,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:contentDescription="@string/loading"
-                    android:indeterminateTint="@color/gray"
+                    android:indeterminateTint="@color/backgroundDark"
                     android:layout_gravity="center"
                     android:visibility="@{itemViewModel.inProgress ? View.VISIBLE : View.GONE}" />
 
@@ -109,7 +109,7 @@
                 android:labelFor="@+id/cardView"
                 android:singleLine="true"
                 android:text="@{itemViewModel.data.subject}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="18sp"
                 tools:text="Permission Slips!" />
 
@@ -124,7 +124,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/tapToViewAnnouncement"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="14sp"
                 tools:visibility="gone" />
 

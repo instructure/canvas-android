@@ -76,7 +76,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:importantForAccessibility="yes"
-                            android:textColor="@color/defaultTextGray"
+                            android:textColor="@color/textDark"
                             tools:text="30 pts"/>
 
                         <ImageView
@@ -104,7 +104,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Due Date(s) -->
@@ -122,7 +122,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginEnd="16dp"
                         android:contentDescription="@string/full_due_date_details"
-                        android:tint="@color/defaultTextGray"
+                        android:tint="@color/textDark"
                         app:srcCompat="@drawable/ic_forward_arrow"/>
 
                     <LinearLayout
@@ -143,7 +143,7 @@
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 android:importantForAccessibility="no"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 app:srcCompat="@drawable/ic_calendarclock"/>
 
                             <TextView
@@ -152,7 +152,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"
                                 android:text="@string/due_date_header_label"
-                                android:textColor="@color/defaultTextGray"/>
+                                android:textColor="@color/textDark"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -170,7 +170,7 @@
                                 android:importantForAccessibility="no"
                                 android:text="@string/due_label"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"/>
+                                android:tint="@color/textDark"/>
 
                             <TextView
                                 android:id="@+id/dueDateTextView"
@@ -179,7 +179,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 tools:text="April 1 at 11:59 PM"/>
                         </LinearLayout>
 
@@ -301,7 +301,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Submissions -->
@@ -319,7 +319,7 @@
                         android:layout_height="wrap_content"
                         android:importantForAccessibility="yes"
                         android:text="@string/submissions"
-                        android:textColor="@color/defaultTextGray"/>
+                        android:textColor="@color/textDark"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -337,7 +337,7 @@
                     android:id="@+id/submissionsHR"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Assignment Description -->
@@ -357,7 +357,7 @@
                         android:labelFor="@+id/noInstructionsTextView"
                         android:importantForAccessibility="yes"
                         android:text="@string/description"
-                        android:textColor="@color/defaultTextGray"/>
+                        android:textColor="@color/textDark"/>
 
                     <TextView
                         android:id="@+id/noInstructionsTextView"
@@ -404,7 +404,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <!-- Quiz Settings -->
@@ -427,7 +427,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:importantForAccessibility="no"/>
 
                 <include layout="@layout/view_quiz_preview_button"/>

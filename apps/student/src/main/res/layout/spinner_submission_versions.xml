@@ -23,5 +23,5 @@
     android:fontFamily="sans-serif-medium"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    android:textColor="@color/defaultTextGray"
+    android:textColor="@color/textDark"
     tools:text="July 29, 2016 at 4:16 PM"/>

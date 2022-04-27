@@ -24,7 +24,7 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="false"
     android:minHeight="?android:listPreferredItemHeight"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@color/backgroundLightest"
     app:cardElevation="@dimen/card_elevation"
     app:cardUseCompatPadding="true"
     app:contentPadding="@dimen/card_inner_padding">
