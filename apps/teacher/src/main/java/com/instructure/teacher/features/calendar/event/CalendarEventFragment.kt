@@ -80,7 +80,7 @@ class CalendarEventFragment : BaseFragment() {
 
     private fun applyTheme(viewState: CalendarEventViewState) {
         toolbar?.title = viewState.eventTitle
-        ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
     }
 

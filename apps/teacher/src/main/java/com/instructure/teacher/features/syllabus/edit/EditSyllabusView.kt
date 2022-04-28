@@ -17,7 +17,6 @@
 package com.instructure.teacher.features.syllabus.edit
 
 import android.app.Activity
-import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -64,7 +63,7 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
                 R.id.menuSaveSyllabus -> activity?.withRequireNetwork { savePage() }
             }
         }
-        ViewStyler.themeToolbarBottomSheet(activity!!, context.resources.getBoolean(com.instructure.pandautils.R.bool.isDeviceTablet), toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(activity!!, toolbar)
         saveMenuView?.setTextColor(ThemePrefs.buttonColor)
     }
 

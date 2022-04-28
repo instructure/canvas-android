@@ -16,7 +16,6 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.annnotation
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -77,7 +76,7 @@ class AnnotationSubmissionUploadFragment : Fragment() {
                 }
             }
         }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), false, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     companion object {

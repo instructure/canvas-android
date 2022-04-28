@@ -18,7 +18,6 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -166,7 +165,7 @@ class CreateDiscussionFragment : ParentFragment() {
             //R.id.menuAddAttachment -> if (discussionTopicHeader == null) addAttachment() BLOCKED COMMS 868
             }
         }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, createDiscussionToolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), createDiscussionToolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), createDiscussionToolbar)
         sendButton?.setTextColor(ThemePrefs.buttonColor)
         saveButton?.setTextColor(ThemePrefs.buttonColor)

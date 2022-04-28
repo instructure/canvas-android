@@ -17,7 +17,6 @@
 package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
 import android.app.Activity
-import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -96,7 +95,7 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     override fun onDispose() { }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarBottomSheet(context as Activity, false, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(context as Activity, toolbar)
     }
 
     fun setInitialSubmissionText(text: String?) {

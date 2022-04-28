@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
@@ -267,7 +266,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
             }
         }
 
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
 
         sendButton?.setTextColor(ThemePrefs.buttonColor)

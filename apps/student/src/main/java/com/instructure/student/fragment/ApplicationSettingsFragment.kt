@@ -17,15 +17,11 @@
 package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -62,7 +58,7 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     override fun applyTheme() {
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     @SuppressLint("SetTextI18n")

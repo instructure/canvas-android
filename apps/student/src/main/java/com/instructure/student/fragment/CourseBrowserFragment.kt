@@ -158,8 +158,8 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     //region Fragment Interaction Overrides
 
     override fun applyTheme() {
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), noOverlayToolbar, Color.WHITE)
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), overlayToolbar, Color.WHITE)
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), noOverlayToolbar, requireContext().getColor(R.color.white))
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), overlayToolbar, requireContext().getColor(R.color.white))
         ViewStyler.setStatusBarDark(requireActivity(), canvasContext.color)
     }
 

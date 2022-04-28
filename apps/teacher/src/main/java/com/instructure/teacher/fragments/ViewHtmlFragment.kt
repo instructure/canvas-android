@@ -105,7 +105,7 @@ class ViewHtmlFragment : InternalWebViewFragment() {
         }
 
         if(isTablet && toolbarColor != 0) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar!!, toolbarColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, requireContext().getColor(R.color.white))
         } else {
             super.setupToolbar(courseColor)
         }

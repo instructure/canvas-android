@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
@@ -153,7 +152,7 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         }
         toolbar.setupMenu(R.menu.menu_discussion_update, menuItemCallback)
 
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 

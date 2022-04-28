@@ -184,7 +184,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             toolbar.setMenu(R.menu.menu_edit_generic, menuItemCallback)
         }
         */
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     //endregion

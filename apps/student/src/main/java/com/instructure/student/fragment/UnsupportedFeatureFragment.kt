@@ -47,7 +47,7 @@ open class UnsupportedFeatureFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         initViews()
     }
 

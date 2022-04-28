@@ -108,7 +108,7 @@ class AssignmentDetailsView(
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
     }
 
     override fun onConnect(output: Consumer<AssignmentDetailsEvent>) {

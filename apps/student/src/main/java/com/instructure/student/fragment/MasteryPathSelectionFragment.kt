@@ -133,7 +133,7 @@ class MasteryPathSelectionFragment : ParentFragment() {
         toolbar.let {
             it.title = getString(R.string.chooseAssignmentPath)
             it.setupAsBackButton(this)
-            ViewStyler.themeToolbar(requireActivity(), it, canvasContext)
+            ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
         }
     }
 

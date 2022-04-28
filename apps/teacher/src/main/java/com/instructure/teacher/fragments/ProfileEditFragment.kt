@@ -133,7 +133,7 @@ class ProfileEditFragment : BasePresenterFragment<
         toolbar.setupCloseButton(this)
         toolbar.title = getString(R.string.editProfile)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveProfile() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         saveButton?.setTextColor(ThemePrefs.buttonColor)
     }

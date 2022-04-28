@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.TextView
 import com.instructure.canvasapi2.StudentContextCardQuery.*
-import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.StudentAssignee
@@ -122,7 +121,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         if (activity is MasterDetailInteractions) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
                 toolbar.updateToolbarExpandCollapseIcon(this)
-                ViewStyler.themeToolbar(requireActivity(), toolbar, courseColor, Color.WHITE)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseColor, requireContext().getColor(R.color.white))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
         } else {
@@ -130,7 +129,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         }
         toolbar.title = Pronouns.span(student.shortName, student.pronouns)
         toolbar.subtitle = course.name
-        ViewStyler.themeToolbar(requireActivity(), toolbar, courseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseColor, requireContext().getColor(R.color.white))
 
         // Message FAB
         messageButton.setVisible()

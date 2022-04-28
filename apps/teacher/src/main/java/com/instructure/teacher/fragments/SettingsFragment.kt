@@ -16,7 +16,6 @@
 */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
@@ -77,7 +76,7 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
     fun setupToolbar() {
         toolbar.setupBackButton(this)
         toolbar.title = getString(R.string.settings)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 

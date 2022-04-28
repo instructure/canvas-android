@@ -77,12 +77,12 @@ class ViewImageFragment : Fragment(), ShareableFile {
         }
 
         if (isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mToolbarColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupAsBackButton {
                 requireActivity().onBackPressed()
             }
-            ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         }
     }

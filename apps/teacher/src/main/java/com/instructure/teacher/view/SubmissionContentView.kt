@@ -161,7 +161,7 @@ class SubmissionContentView(
         //if we can share the content with another app, show the share icon
         speedGraderToolbar.menu.findItem(R.id.menu_share)?.isVisible = fragment is ShareableFile || fragment is PdfFragment
 
-        ViewStyler.colorToolbarIconsAndText(context as Activity, speedGraderToolbar, Color.BLACK)
+        ViewStyler.colorToolbarIconsAndText(context as Activity, speedGraderToolbar, context.getColor(R.color.textDarkest))
     }
 
     //region view lifecycle
@@ -461,7 +461,7 @@ class SubmissionContentView(
         }
 
         speedGraderToolbar.setupMenu(R.menu.menu_share_file, menuItemCallback)
-        ViewStyler.colorToolbarIconsAndText(context as Activity, speedGraderToolbar, Color.BLACK)
+        ViewStyler.colorToolbarIconsAndText(context as Activity, speedGraderToolbar, context.getColor(R.color.textDarkest))
         ViewStyler.setStatusBarLight(context as Activity)
         ViewStyler.setToolbarElevationSmall(context, speedGraderToolbar)
 

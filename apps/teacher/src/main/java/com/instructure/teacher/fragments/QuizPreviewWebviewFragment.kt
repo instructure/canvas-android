@@ -17,7 +17,6 @@
 package com.instructure.teacher.fragments
 
 import android.app.Activity
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.webkit.WebView
@@ -25,12 +24,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_PREVIEW
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.utils.setupBackButton
 import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import kotlinx.coroutines.Job
@@ -95,7 +92,7 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
                 }
             }
             ViewStyler.setToolbarElevationSmall(requireContext(), it)
-            ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, it, Color.BLACK, false)
+            ViewStyler.themeToolbarLight(requireActivity(), it)
         }
     }
 

@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -124,7 +123,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         toolbar.setupCloseButton(this)
         toolbar.title = getString(R.string.page_title_add_assignees)
         toolbar.setupMenu(R.menu.menu_save_generic) { performSave() }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         saveButton?.setTextColor(ThemePrefs.buttonColor)
     }

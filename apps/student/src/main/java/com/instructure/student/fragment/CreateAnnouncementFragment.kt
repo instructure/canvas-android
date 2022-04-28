@@ -18,7 +18,6 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -150,7 +149,7 @@ class CreateAnnouncementFragment : ParentFragment() {
                 }
             }
         }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, createAnnouncementToolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), createAnnouncementToolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), createAnnouncementToolbar)
         if (isEditing) with(mSaveMenuButton) {
             setIcon(0)

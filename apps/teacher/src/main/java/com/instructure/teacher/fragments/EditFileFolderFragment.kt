@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import com.google.android.material.textfield.TextInputLayout
@@ -29,7 +28,6 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.canvasapi2.utils.toApiString
@@ -140,7 +138,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         else toolbar.title = getString(R.string.editFolder)
 
         toolbar.setupMenu(R.menu.menu_save_generic) { saveFileFolder() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
 
 
 

@@ -73,7 +73,7 @@ class AccountPreferencesFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     private fun setupViews() {

@@ -118,7 +118,7 @@ class CalendarEventFragment : ParentFragment() {
         }
 
         toolbar.setupAsBackButtonAsBackPressedOnly(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     override fun title(): String = scheduleItem?.title ?: getString(R.string.Event)

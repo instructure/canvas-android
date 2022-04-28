@@ -28,6 +28,7 @@
     <color name="backgroundInfo">#008EE2</color>
     <color name="backgroundLight">#394B58</color>
     <color name="backgroundLightest">#121212</color>
+    <color name="backgroundLightestElavated">#232323</color>
     <color name="backgroundMedium">#556572</color>
     <color name="backgroundSuccess">#00AC18</color>
     <color name="backgroundWarning">#FC5E13</color>

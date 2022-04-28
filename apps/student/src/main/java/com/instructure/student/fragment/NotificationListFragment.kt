@@ -133,7 +133,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
         val canvasContext = canvasContext
         if (canvasContext is Course || canvasContext is Group) {
             toolbar.setupAsBackButton(this)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         } else {
             val navigation = navigation
             navigation?.attachNavigationDrawer(this, toolbar!!)

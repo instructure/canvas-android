@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
@@ -121,7 +120,7 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
         toolbar.setupCloseButton(this)
         toolbar.setupMenu(R.menu.menu_discussion_reply, menuItemCallback)
 
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 

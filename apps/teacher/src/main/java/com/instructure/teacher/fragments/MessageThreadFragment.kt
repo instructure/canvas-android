@@ -244,7 +244,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     private fun initToolbar() {
         toolbar.setTitle(R.string.message)
 
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
 
         if (activity is InitActivity && resources.getBoolean(R.bool.isDeviceTablet)) {
             // Don't have an arrow because going back will close the app

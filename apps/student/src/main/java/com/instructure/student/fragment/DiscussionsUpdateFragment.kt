@@ -16,7 +16,6 @@
  */
 package com.instructure.student.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -101,7 +100,7 @@ class DiscussionsUpdateFragment : ParentFragment() {
             }
         }
         toolbar.setMenu(R.menu.menu_discussion_update, menuItemCallback)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
     //endregion
