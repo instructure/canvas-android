@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,8 +42,10 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
     fun loadData(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader) {
         viewModelScope.launch {
             try {
+                val locale = Locale.getDefault().language
+                val timezone = TimeZone.getDefault().id
                 val url = "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/${discussionTopicHeader.id}"
-                val authenticatedUrl = "${oauthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl}&embed=true"
+                val authenticatedUrl = "${oauthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl}&embed=true&session_locale=$locale&session_timezone=$timezone"
 
                 _data.postValue(DiscussionDetailsWebViewViewData(authenticatedUrl))
             } catch (e: Exception) {
