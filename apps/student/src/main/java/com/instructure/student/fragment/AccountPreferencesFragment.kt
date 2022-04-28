@@ -100,7 +100,7 @@ class AccountPreferencesFragment : ParentFragment() {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view: View = convertView ?: inflater.inflate(R.layout.settings_spinner, parent, false)
-            view.indicator.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_expand, Color.WHITE))
+            view.indicator.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_expand, requireContext().getColor(R.color.white)))
             view.indicator.setColorFilter(ContextCompat.getColor(requireContext(), R.color.textDark))
             view.title.text = getItem(position).toString()
             return view

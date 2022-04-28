@@ -501,7 +501,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(webView: CanvasWebView, addJSSupport: Boolean) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(Color.WHITE)
+        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.javaScriptEnabled = true
         if(addJSSupport) webView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
         webView.settings.useWideViewPort = true

@@ -211,7 +211,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                 // Set color of last grade item
                 visibleGradeItems.lastOrNull()?.apply {
                     backgroundTintList = courseColor.asStateList()
-                    children<TextView>().onEach { it.setTextColor(Color.WHITE) }
+                    children<TextView>().onEach { it.setTextColor(requireContext().getColor(R.color.backgroundLightest)) }
                 }
             }
 

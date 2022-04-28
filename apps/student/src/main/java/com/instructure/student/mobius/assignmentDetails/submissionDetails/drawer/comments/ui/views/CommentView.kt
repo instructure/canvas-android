@@ -49,7 +49,7 @@ class CommentView @JvmOverloads constructor(
                 }
                 CommentDirection.OUTGOING -> {
                     setCommentBubbleColor(ContextCompat.getColor(context, R.color.backgroundInfo))
-                    Color.WHITE
+                    context.getColor(R.color.white)
                 }
             }
         }

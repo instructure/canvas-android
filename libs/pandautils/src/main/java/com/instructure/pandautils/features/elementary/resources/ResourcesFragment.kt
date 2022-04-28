@@ -108,7 +108,7 @@ class ResourcesFragment : Fragment() {
 
     private fun setupWebView(webView: CanvasWebView) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(Color.WHITE)
+        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.allowFileAccess = true
         webView.settings.loadWithOverviewMode = true
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
