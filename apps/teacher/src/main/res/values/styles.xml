@@ -16,12 +16,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/textDark</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDark</item>
-        <item name="android:forceDarkAllowed">true</item>
+
         <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
     </style>
@@ -30,7 +30,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="android:forceDarkAllowed">true</item>
+
         <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
@@ -73,7 +73,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:forceDarkAllowed">true</item>
+
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/backgroundDarkest</item>
     </style>
@@ -83,7 +83,7 @@
         <item name="android:src">@drawable/ic_overflow</item>
     </style>
 
-    <style name="Theme.BottomSheet" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+    <style name="Theme.BottomSheet" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <item name="colorPrimary">@color/textDark</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDark</item>
@@ -94,10 +94,9 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:forceDarkAllowed">true</item>
     </style>
 
-    <style name="RoundedContextDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="RoundedContextDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTitleStyle">@null</item>
@@ -167,7 +166,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Theme.AppCompat.Light.Translucent">
+    <style name="Theme.AppCompat.DayNight.Translucent">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>

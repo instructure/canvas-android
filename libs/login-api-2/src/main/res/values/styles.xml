@@ -18,7 +18,7 @@
 
 <resources>
 
-    <style name="LoginFlowTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="LoginFlowTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/textLightest</item>
         <item name="colorPrimaryDark">@color/textLightest</item>
         <item name="colorAccent">@color/backgroundDark</item>
@@ -27,7 +27,6 @@
 
     <style name="LoginFlowTheme.NoActionBar">
         <item name="windowActionBar">false</item>
-        <item name="android:forceDarkAllowed">true</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">#FFFFFF</item>
@@ -35,21 +34,19 @@
 
     <style name="LoginFlowTheme.Splash_Student" parent="@style/LoginFlowTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background_student</item>
-        <item name="android:forceDarkAllowed">true</item>
     </style>
 
     <style name="LoginFlowTheme.Splash_Teacher" parent="@style/LoginFlowTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background_teacher</item>
-        <item name="android:forceDarkAllowed">true</item>
     </style>
 
-    <style name="ToolBarStyle" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ToolBarStyle" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="ToolBarStyleDark" parent="ThemeOverlay.AppCompat.Light">
+    <style name="ToolBarStyleDark" parent="ThemeOverlay.AppCompat.DayNight">
         <item name="colorControlNormal">@color/licorice</item>
         <item name="android:textColorPrimary">@color/licorice</item>
         <item name="android:textColorSecondary">@color/licorice</item>

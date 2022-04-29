@@ -71,7 +71,7 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?) = AppCompatDialog(requireContext(), R.style.Theme_AppCompat_Light_Translucent).apply {
+    override fun onCreateDialog(savedInstanceState: Bundle?) = AppCompatDialog(requireContext(), R.style.Theme_AppCompat_DayNight_Translucent).apply {
         setContentView(R.layout.view_edit_grade_comment)
 
         // Send event bus on save, dismiss dialog. Send null if text is blank (i.e. delete comment)

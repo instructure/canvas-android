@@ -201,7 +201,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
              from external sources. */
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             bottomBar.setVisible(visible)
-            bottomBarDivider.setVisible(visible)
         }
     }
 

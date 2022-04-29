@@ -24,7 +24,6 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.ColorDrawable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -35,9 +34,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.*
 import androidx.core.content.ContextCompat
@@ -127,7 +124,7 @@ object ViewStyler {
     }
 
     fun themeToolbarLight(activity: Activity, toolbar: Toolbar) {
-        val backgroundColor = activity.getColor(R.color.backgroundLightestElavated)
+        val backgroundColor = activity.getColor(R.color.backgroundLightestElevated)
         val contentColor = activity.getColor(R.color.textDarkest)
         themeToolbar(activity, toolbar, backgroundColor, contentColor)
 
