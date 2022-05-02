@@ -54,7 +54,6 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_marginTop="24dp"
-            android:textColor="#2D3B45"
             android:textSize="24sp"
             tools:text="Biology 101" />
 
