@@ -136,7 +136,6 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     private fun setupHeader() {
-        courseLabel.setTextColor(ThemePrefs.fontColor)
         seeAllTextView.setTextColor(ThemePrefs.buttonColor)
         seeAllTextView.setOnClickListener { mCourseListCallback?.onShowAllCoursesList() }
     }

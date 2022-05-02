@@ -47,10 +47,10 @@
     </style>
 
     <style name="ToolBarStyleDark" parent="ThemeOverlay.AppCompat.DayNight">
-        <item name="colorControlNormal">@color/licorice</item>
-        <item name="android:textColorPrimary">@color/licorice</item>
-        <item name="android:textColorSecondary">@color/licorice</item>
-        <item name="actionMenuTextColor">@color/licorice</item>
+        <item name="colorControlNormal">@color/textDarkest</item>
+        <item name="android:textColorPrimary">@color/textDarkest</item>
+        <item name="android:textColorSecondary">@color/textDarkest</item>
+        <item name="actionMenuTextColor">@color/textDarkest</item>
     </style>
 
     <!--Text Styles-->
@@ -79,7 +79,7 @@
     <style name="ButtonStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/textLightest</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:background">@drawable/bg_button_rounded</item>
         <item name="android:layout_marginBottom">12dp</item>

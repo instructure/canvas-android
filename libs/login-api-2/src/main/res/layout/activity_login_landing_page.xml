@@ -60,7 +60,7 @@
                     android:adjustViewBounds="true"
                     android:layout_marginBottom="2dp"
                     android:importantForAccessibility="no"
-                    android:tint="@color/backgroundMedium"
+                    android:tint="@color/tiara"
                     app:srcCompat="@drawable/ic_canvas_wordmark"/>
 
                 <TextView

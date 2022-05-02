@@ -80,7 +80,7 @@
             android:id="@+id/textContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/backgroundLightestElevated"
             android:minHeight="80dp"
             android:orientation="vertical"
             android:padding="8dp"

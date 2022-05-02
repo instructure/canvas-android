@@ -33,8 +33,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     var brandColor by ColorPref(R.color.backgroundDarkest)
 
-    var fontColor by ColorPref(R.color.textDarkest)
-
     var primaryColor by ColorPref(R.color.textDarkest)
 
     val darkPrimaryColor: Int
@@ -111,7 +109,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     fun applyCanvasTheme(theme: CanvasTheme) {
         brandColor = parseColor(theme.brand, brandColor)
-        fontColor = parseColor(theme.fontColorDark, fontColor)
         primaryColor = parseColor(theme.primary, primaryColor)
         primaryTextColor = parseColor(theme.primaryText, primaryTextColor)
         accentColor = parseColor(theme.accent, accentColor)
