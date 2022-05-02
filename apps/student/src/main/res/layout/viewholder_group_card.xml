@@ -36,7 +36,7 @@
             android:id="@+id/accentBar"
             android:layout_width="4dp"
             android:layout_height="match_parent"
-            android:background="#888"/>
+            android:background="@color/backgroundDark"/>
 
         <LinearLayout
             android:paddingStart="16dp"

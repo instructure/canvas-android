@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_chevron_right"
             android:layout_marginEnd="8dp"
-            android:tint="#8B969E"
+            android:tint="@color/textDark"
             app:layout_constraintTop_toBottomOf="@id/gradesCourseNameText"
             app:layout_constraintEnd_toEndOf="parent" />
 

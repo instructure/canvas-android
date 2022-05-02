@@ -61,6 +61,7 @@
     <color name="textWarning">#FC5E13</color>
     <color name="tiara">#C7CDD1</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
     <!-- Transparent colors -->
     <color name="semiTransparentDark">#50000000</color>

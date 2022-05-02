@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:elevation="6dp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:background="#fff"
+        tools:background="@color/backgroundLightestElevated"
         tools:navigationIcon="@drawable/ic_back_arrow"
         tools:title="@string/submission"
         tools:titleTextColor="@color/textDarkest"/>

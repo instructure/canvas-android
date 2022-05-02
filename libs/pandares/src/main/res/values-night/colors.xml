@@ -22,7 +22,7 @@
     <color name="backgroundAlert">#BF32A4</color>
     <color name="backgroundDanger">#EE0612</color>
     <color name="backgroundDark">#C7CDD1</color>
-    <color name="backgroundDarkest">#F7F7F7</color>
+    <color name="backgroundDarkest">#FFFFFF</color>
     <color name="backgroundGrouped">#121212</color>
     <color name="backgroundGroupedCell">#1C1C1E</color>
     <color name="backgroundInfo">#008EE2</color>
@@ -36,7 +36,7 @@
     <color name="borderAlert">#BF32A4</color>
     <color name="borderDanger">#EE0612</color>
     <color name="borderDark">#C7CDD1</color>
-    <color name="borderDarkest">#F7F7F7</color>
+    <color name="borderDarkest">#FFFFFF</color>
     <color name="borderInfo">#008EE2</color>
     <color name="borderLight">#394B58</color>
     <color name="borderLightest">#121212</color>
@@ -53,14 +53,15 @@
     <color name="textAlert">#BF32A4</color>
     <color name="textDanger">#EE0612</color>
     <color name="textDark">#C7CDD1</color>
-    <color name="textDarkest">#F7F7F7</color>
+    <color name="textDarkest">#FFFFFF</color>
     <color name="textInfo">#008EE2</color>
     <color name="textLight">#394B58</color>
     <color name="textLightest">#121212</color>
     <color name="textSuccess">#00AC18</color>
     <color name="textWarning">#FC5E13</color>
     <color name="tiara">#C7CDD1</color>
-    <color name="white">#F7F7F7</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
     <!-- Course Colors for customization -->
     <color name="colorCottonCandy">#FFF26090</color>
