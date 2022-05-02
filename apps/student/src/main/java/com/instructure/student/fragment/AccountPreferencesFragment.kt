@@ -16,7 +16,6 @@
  */
 package com.instructure.student.fragment
 
-import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.BaseAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.LocaleUtils

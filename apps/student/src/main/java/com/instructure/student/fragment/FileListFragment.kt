@@ -16,7 +16,6 @@
  */
 package com.instructure.student.fragment
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
@@ -27,6 +26,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.managers.FileFolderManager
