@@ -30,13 +30,16 @@ import com.instructure.teacher.ui.utils.*
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+private const val STEP_TAG = "AssignmentE2ETest #STEP# "
+private const val PREPARATION_TAG = "AssignmentE2ETest #PREPARATION# "
+
 @HiltAndroidTest
 class AssignmentE2ETest : TeacherTest() {
 
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() {
-        //We dont want to see accessibility errors on E2E tests
+        //We don't want to see accessibility errors on E2E tests
     }
 
     @E2E
