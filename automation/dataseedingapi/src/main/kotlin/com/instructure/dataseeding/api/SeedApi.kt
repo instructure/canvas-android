@@ -141,7 +141,7 @@ object SeedApi {
             // Seed discussions
             addAllDiscussions(
                 (0 until request.discussions).map {
-                    DiscussionTopicsApi.createDiscussion(coursesList[0].id, teachersList[0].token, false)
+                    DiscussionTopicsApi.createDiscussion(coursesList[0].id, teachersList[0].token)
                 }
             )
 
@@ -206,7 +206,7 @@ object SeedApi {
             // Seed discussions
             addAllDiscussions(
                     (0 until request.discussions).map {
-                        DiscussionTopicsApi.createDiscussion(coursesList[0].id, teachersList[0].token, false)
+                        DiscussionTopicsApi.createDiscussion(coursesList[0].id, teachersList[0].token)
                     }
             )
 
@@ -214,7 +214,7 @@ object SeedApi {
             if(request.locked) {
                 addAllAnnouncements(
                     (0 until request.announcements).map {
-                        DiscussionTopicsApi.createAnnouncement(coursesList[0].id, teachersList[0].token, false, false)
+                        DiscussionTopicsApi.createAnnouncement(coursesList[0].id, teachersList[0].token)
                     }
                 )
             }
