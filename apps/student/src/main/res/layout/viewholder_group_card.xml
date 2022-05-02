@@ -26,6 +26,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="@color/backgroundLightestElevated"
         app:cardCornerRadius="3dp"
         app:cardPreventCornerOverlap="false"

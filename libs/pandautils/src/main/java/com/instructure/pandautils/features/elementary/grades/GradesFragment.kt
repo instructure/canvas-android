@@ -69,7 +69,7 @@ class GradesFragment : Fragment() {
             .map { it.name }
             .toTypedArray()
 
-        AlertDialog.Builder(requireActivity())
+        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
             .setTitle(R.string.selectGradingPeriod)
             .setSingleChoiceItems(gradingPeriodNames, action.selectedGradingPeriodIndex) { dialog, which -> sortOrderSelected(dialog, which, action.gradingPeriods) }
             .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
