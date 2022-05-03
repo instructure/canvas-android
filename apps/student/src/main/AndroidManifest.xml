@@ -59,7 +59,7 @@
         android:xlargeScreens="true" />
 
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:logo="@drawable/canvas_logo_white"
         android:label="@string/student_app_name"
