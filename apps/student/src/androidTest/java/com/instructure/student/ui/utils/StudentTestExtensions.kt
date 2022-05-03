@@ -96,6 +96,7 @@ fun StudentTest.seedData(
     favoriteCourses: Int = 0,
     homeroomCourses: Int = 0,
     announcements: Int = 0,
+    locked: Boolean = false,
     discussions: Int = 0,
     syllabusBody: String? = null,
     gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
@@ -111,6 +112,7 @@ fun StudentTest.seedData(
             gradingPeriods = gradingPeriods,
             discussions = discussions,
             announcements = announcements,
+            locked = locked,
             syllabusBody = syllabusBody
     )
     return SeedApi.seedData(request)
