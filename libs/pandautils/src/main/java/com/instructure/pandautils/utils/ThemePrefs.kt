@@ -120,7 +120,7 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     private fun parseColor(hexColor: String, defaultColor: Int): Int {
         try {
-            return Color.parseColor("#${hexColor.trimMargin("#")}")
+            return ColorUtils.parseColor("#${hexColor.trimMargin("#")}", "")
         } catch (e: IllegalArgumentException) {
             return defaultColor
         }
