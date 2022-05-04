@@ -130,12 +130,7 @@ object ViewStyler {
 
         val isTablet = activity.resources.getBoolean(R.bool.isDeviceTablet)
         if (!isTablet) {
-            // If we have dark mode enabled we will never have a light Toolbar/status bar
-            if(darkModeEnabled(activity)) {
-                setStatusBarDark(activity, backgroundColor)
-            } else {
-                setStatusBarLight(activity)
-            }
+            themeStatusBar(activity)
         }
     }
 
@@ -149,6 +144,17 @@ object ViewStyler {
         toolbar.setTitleTextAppearance(activity, R.style.ToolbarStyle)
         toolbar.setSubtitleTextAppearance(activity, R.style.ToolbarStyle_Subtitle)
         colorToolbarIconsAndText(activity, toolbar, contentColor)
+    }
+
+    fun themeStatusBar(activity: Activity) {
+        val backgroundColor = activity.getColor(R.color.backgroundLightestElevated)
+
+        // If we have dark mode enabled we will never have a light Toolbar/status bar
+        if(darkModeEnabled(activity)) {
+            setStatusBarDark(activity, backgroundColor)
+        } else {
+            setStatusBarLight(activity)
+        }
     }
 
     fun themeProgressBar(progressBar: ProgressBar, @ColorInt brand: Int) {

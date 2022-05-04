@@ -39,9 +39,9 @@
 
     <!-- Used for stand alone PSPDFKit activity, pdf fragment uses values in CanvasMaterialTheme_Default-->
     <style name="PSPDFKitTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/backgroundDark</item>
-        <item name="colorAccent">@color/backgroundDark</item>
-        <item name="colorPrimaryDark">@color/backgroundDark</item>
+        <item name="colorPrimary">@color/ash</item>
+        <item name="colorAccent">@color/ash</item>
+        <item name="colorPrimaryDark">@color/ash</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
@@ -49,8 +49,8 @@
     </style>
 
     <style name="ContextualToolbarStyle">
-        <item name="pspdf__backgroundColor">@color/backgroundDark</item>
-        <item name="pspdf__submenuBackgroundColor">@color/backgroundDarkest</item>
+        <item name="pspdf__backgroundColor">@color/ash</item>
+        <item name="pspdf__submenuBackgroundColor">@color/licorice</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">
@@ -76,13 +76,13 @@
     </style>
 
     <style name="StampPickerStyle">
-        <item name="pspdf__titleBackground">@color/backgroundDark</item>
+        <item name="pspdf__titleBackground">@color/ash</item>
         <item name="pspdf__maxHeight">320dp</item>
         <item name="pspdf__maxWidth">100dp</item>
     </style>
 
     <style name="ModalDialogStyle">
-        <item name="pspdf__titleBackground">@color/backgroundDark</item>
+        <item name="pspdf__titleBackground">@color/ash</item>
     </style>
 
     <style name="Theme.Notorious" parent="CanvasMaterialTheme_Default">

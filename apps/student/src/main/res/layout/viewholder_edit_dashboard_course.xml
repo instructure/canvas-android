@@ -91,6 +91,7 @@
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_open_arrow"
                 android:visibility="@{itemViewModel.openable ? View.VISIBLE : View.GONE}"
+                android:tint="@color/textDark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
