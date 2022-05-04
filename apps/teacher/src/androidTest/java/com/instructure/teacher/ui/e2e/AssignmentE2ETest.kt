@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.SubmissionType
@@ -46,18 +47,26 @@ class AssignmentE2ETest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testAssignmentsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 3, favoriteCourses = 1)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
         val student = data.studentsList[0]
         val gradedStudent = data.studentsList[1]
 
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
-        dashboardPage.openCourse(courseName = course.name)
+
+        Log.d(STEP_TAG,"Open ${course.name} course.")
+        dashboardPage.openCourse(course.name)
+
+        Log.d(STEP_TAG,"Navigate to ${course.name} course's Assignments Tab and assert that there isn't any assignment displayed.")
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.assertDisplaysNoAssignmentsView()
 
+        Log.d(PREPARATION_TAG,"Seeding assignment.")
         val assignment = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
@@ -66,14 +75,17 @@ class AssignmentE2ETest : TeacherTest() {
                 pointsPossible = 15.0
         )
 
+        Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed.")
         assignmentListPage.refresh()
         assignmentListPage.assertHasAssignment(assignment[0])
+
+        Log.d(STEP_TAG,"Click on ${assignment[0].name} assignment and assert the numbers of 'Not Submitted' and 'Needs Grading' submissions.")
         assignmentListPage.clickAssignment(assignment[0])
         assignmentDetailsPage.waitForRender()
         assignmentDetailsPage.assertNotSubmitted(3,3)
         assignmentDetailsPage.assertNeedsGrading(0,3)
 
-        //seed one submission for one student and assert changes
+        Log.d(PREPARATION_TAG,"Seed a submission for ${student.name} student.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -84,12 +96,13 @@ class AssignmentE2ETest : TeacherTest() {
                 studentToken = student.token
         )
 
+        Log.d(STEP_TAG,"Refresh the page. Assert that because of the previously seeded submission, the number of 'Needs Grading' is increased and the number of 'Not Submitted' is decreased.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.waitForRender()
         assignmentDetailsPage.assertNotSubmitted(2,3)
         assignmentDetailsPage.assertNeedsGrading(1,3)
 
-        //seed another submission and grade it then assert changes
+        Log.d(PREPARATION_TAG,"Seed a submission for ${gradedStudent.name} student.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -100,6 +113,7 @@ class AssignmentE2ETest : TeacherTest() {
                 studentToken = gradedStudent.token
         )
 
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${gradedStudent.name} student.")
         SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
@@ -109,6 +123,7 @@ class AssignmentE2ETest : TeacherTest() {
                 excused = false
         )
 
+        Log.d(STEP_TAG,"Refresh the page. Assert that the number of 'Graded' is increased and the number of 'Not Submitted' and 'Needs Grading' are decreased.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.waitForRender()
         assignmentDetailsPage.assertNotSubmitted(1,3)
@@ -120,16 +135,22 @@ class AssignmentE2ETest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testEditAssignmentE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
-        dashboardPage.openCourse(courseName = course.name)
+
+        Log.d(STEP_TAG,"Navigate to ${course.name} course's Assignments Tab and assert that there isn't any assignment displayed.")
+        dashboardPage.openCourse(course.name)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.assertDisplaysNoAssignmentsView()
 
+        Log.d(PREPARATION_TAG,"Seeding assignment.")
         val assignment = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
@@ -138,10 +159,11 @@ class AssignmentE2ETest : TeacherTest() {
                 pointsPossible = 15.0
         )
 
+        Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed.")
         assignmentListPage.refresh()
         assignmentListPage.assertHasAssignment(assignment[0])
 
-        //assert assignment is created correctly
+        Log.d(STEP_TAG,"Click on ${assignment[0].name} assignment and assert the numbers of 'Not Submitted' and 'Needs Grading' submissions.")
         assignmentListPage.clickAssignment(assignment[0])
         assignmentDetailsPage.waitForRender()
         assignmentDetailsPage.assertAssignmentDetails(assignment[0])
@@ -149,32 +171,36 @@ class AssignmentE2ETest : TeacherTest() {
         assignmentDetailsPage.assertNeedsGrading(0,1)
         assignmentDetailsPage.assertSubmissionTypeOnlineTextEntry()
 
-        //change and assert assignment name
+        val newAssignmentName = "New Assignment Name"
+        Log.d(STEP_TAG,"Edit ${assignment[0].name} assignment's name  to: $newAssignmentName.")
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.clickAssignmentNameEditText()
-        editAssignmentDetailsPage.editAssignmentName(newName = "New Assignment Name")
+        editAssignmentDetailsPage.editAssignmentName(newAssignmentName)
 
+        Log.d(STEP_TAG,"Refresh the page. Assert that the name has been changed to $newAssignmentName.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.waitForRender()
-        assignmentDetailsPage.assertAssignmentNameChanged(newAssignmentName = "New Assignment Name")
+        assignmentDetailsPage.assertAssignmentNameChanged(newAssignmentName)
 
-        //edit and assert assignment points
+        Log.d(STEP_TAG,"Edit $newAssignmentName assignment's points to 20.")
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.clickPointsPossibleEditText()
-        editAssignmentDetailsPage.editAssignmentPoints(newPoints = 20.0)
+        editAssignmentDetailsPage.editAssignmentPoints(20.0)
 
+        Log.d(STEP_TAG,"Refresh the page. Assert that the points of $newAssignmentName assignment has been changed to 20.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.waitForRender()
-        assignmentDetailsPage.assertAssignmentPointsChanged(newAssignmentPoints = "20")
+        assignmentDetailsPage.assertAssignmentPointsChanged("20")
 
-        //change assignment to unpublished
+        Log.d(STEP_TAG,"Publish $newAssignmentName assignment. Click on Save.")
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.clickPublishSwitch()
         editAssignmentDetailsPage.saveAssignment()
 
+        Log.d(STEP_TAG,"Refresh the page. Assert that $newAssignmentName assignment has been published.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.waitForRender()
-        assignmentDetailsPage.assertPublishedStatus(published = false)
+        assignmentDetailsPage.assertPublishedStatus(false)
     }
 
 }
