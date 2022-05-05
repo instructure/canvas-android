@@ -55,10 +55,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         val firstCourse = data.coursesList[0]
         val secondCourse = data.coursesList[1]
 
-        Log.d(
-            STEP_TAG,
-            "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}"
-        )
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
         tokenLogin(teacher)
 
         Log.d(STEP_TAG, "Open ${firstCourse.name} course and click on Course Settings button.")
