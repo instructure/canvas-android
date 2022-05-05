@@ -32,12 +32,14 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+        <item name="pspdf__propertyInspectorStyle">@style/PropertyInspector</item>
         <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
         <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
         <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
         <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLight</item>
     </style>
 
     <style name="CanvasMaterialTheme_Default.Translucent">

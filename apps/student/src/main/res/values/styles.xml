@@ -46,6 +46,12 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/PSPDFAnnotationCreationToolbarIconsStyle</item>
+        <item name="pspdf__actionBarIconsStyle">@style/PSPDFKitActionBarIconsStyle</item>
+    </style>
+
+    <style name="PSPDFKitActionBarIconsStyle">
+        <item name="pspdf__iconsColor">@color/white</item>
+        <item name="pspdf__iconsColorActivated">@color/textInfo</item>
     </style>
 
     <style name="ContextualToolbarStyle">
@@ -76,13 +82,18 @@
     </style>
 
     <style name="StampPickerStyle">
-        <item name="pspdf__titleBackground">@color/ash</item>
         <item name="pspdf__maxHeight">320dp</item>
         <item name="pspdf__maxWidth">100dp</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
     </style>
 
     <style name="ModalDialogStyle">
         <item name="pspdf__titleBackground">@color/ash</item>
+    </style>
+
+    <style name="PropertyInspector">
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+        <item name="pspdf__textColor">@color/textDarkest</item>
     </style>
 
     <style name="Theme.Notorious" parent="CanvasMaterialTheme_Default">

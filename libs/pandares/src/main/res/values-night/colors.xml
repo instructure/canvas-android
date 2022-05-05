@@ -63,6 +63,10 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <!-- Special one off colors that should be different in two modes but are not in the color palette  -->
+    <color name="studentDocumentSharingColor">#780612</color>
+    <color name="uploadFileDialogBackground">#00FFFFFF</color>
+
     <!-- Course Colors for customization -->
     <color name="colorCottonCandy">#FFF26090</color>
     <color name="colorBarbie">#FFEA1661</color>
