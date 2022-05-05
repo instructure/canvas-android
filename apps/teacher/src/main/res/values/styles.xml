@@ -24,6 +24,7 @@
 
         <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLight</item>
     </style>
 
     <style name="PSPDFKitTheme" parent="AppTheme.NoActionBar">
@@ -36,11 +37,14 @@
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
         <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
         <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
+        <item name="pspdf__propertyInspectorStyle">@style/PropertyInspector</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLight</item>
+        <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
     </style>
 
     <style name="ContextualToolbarStyle">
-        <item name="pspdf__backgroundColor">@color/backgroundDark</item>
-        <item name="pspdf__submenuBackgroundColor">@color/backgroundDarkest</item>
+        <item name="pspdf__backgroundColor">@color/ash</item>
+        <item name="pspdf__submenuBackgroundColor">@color/licorice</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">
@@ -68,6 +72,16 @@
     <style name="StampPickerStyle">
         <item name="pspdf__maxHeight">320dp</item>
         <item name="pspdf__maxWidth">100dp</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+    </style>
+
+    <style name="PropertyInspector">
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+        <item name="pspdf__textColor">@color/textDarkest</item>
+    </style>
+
+    <style name="ModalDialogStyle">
+        <item name="pspdf__titleBackground">@color/ash</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

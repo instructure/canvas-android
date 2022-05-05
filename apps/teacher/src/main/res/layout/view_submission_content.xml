@@ -184,6 +184,7 @@
                         android:contentDescription="@string/sg_tab_comments"
                         android:elevation="2dp"
                         android:visibility="gone"
+                        android:tint="@color/white"
                         app:srcCompat="@drawable/ic_discussion"
                         tools:visibility="visible"/>
 
