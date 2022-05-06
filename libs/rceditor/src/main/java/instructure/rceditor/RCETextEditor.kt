@@ -33,6 +33,11 @@ class RCETextEditor @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.webViewStyle
 ) : RichEditor(context, attrs, defStyleAttr) {
 
+    init {
+        setEditorBackgroundColor(context.getColor(R.color.rce_backgroundColor))
+        setEditorFontColor(context.getColor(R.color.rce_defaultTextColor))
+    }
+
     fun applyHtml(contents: String, title: String = "") {
         super.setHtml(formatHTML(contents, title))
         loadCSS("rce_style.css")

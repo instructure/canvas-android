@@ -20,6 +20,8 @@
     <color name="rce_gray">#AAAAAA</color>
     <color name="rce_divider">#D1D3D4</color>
     <color name="rce_dimStatusBarGray">#80E0E0E0</color>
+    <color name="rce_backgroundColor">#FFFFFF</color>
+    <color name="rce_defaultTextColor">#000000</color>
 
     <color name="rce_pickerWhite">#FFFFFF</color>
     <color name="rce_pickerBlack">#000000</color>
