@@ -70,7 +70,7 @@ import com.instructure.loginapi.login.util.PreviousUsersUtils.add
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.ViewStyler.setStatusBarLight
+import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
 import kotlinx.android.synthetic.main.activity_find_school.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
@@ -139,7 +139,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     }
 
     private fun applyTheme() {
-        setStatusBarLight(this)
+        themeStatusBar(this)
     }
 
     /**

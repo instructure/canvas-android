@@ -265,7 +265,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
         toolbar!!.addView(view)
 
-        ViewStyler.setStatusBarLight(this)
+        ViewStyler.themeStatusBar(this)
     }
 
     /**
