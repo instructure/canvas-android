@@ -17,6 +17,7 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
+import android.view.View
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
@@ -48,7 +49,6 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), com.instructure.pandautils.utils.AppType.TEACHER) }
         legalButton.onClick { LegalDialog().show(requireFragmentManager(), LegalDialog.TAG) }
         notificationPreferenesButton.onClick { RouteMatcher.route(requireContext(), Route(NotificationPreferencesFragment::class.java, null)) }
-        setUpAppThemeSelector()
         if (BuildConfig.DEBUG) {
             featureFlagButton.setVisible()
             featureFlagButton.onClick { RouteMatcher.route(requireContext(), Route(FeatureFlagsFragment::class.java, null)) }
@@ -56,6 +56,11 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
             remoteConfigButton.setVisible()
             remoteConfigButton.onClick { RouteMatcher.route(requireContext(), Route(RemoteConfigParamsFragment::class.java, null))}
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpAppThemeSelector()
     }
 
     private fun setUpAppThemeSelector() {
