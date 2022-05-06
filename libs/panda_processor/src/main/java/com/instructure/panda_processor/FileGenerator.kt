@@ -79,8 +79,7 @@ class FileGenerator : AbstractProcessor(){
                 totalStubbed,
                 testCounts,
                 priorityCounts,
-                featureCounts,
-                manualOnly
+                featureCounts
         ).getContent()
     }
 
