@@ -38,7 +38,7 @@ class DashboardE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testDashboardE2E() {
 
         val data = seedData(teachers = 1, courses = 2)

@@ -19,7 +19,6 @@ package com.instructure.student.ui.interaction
 import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.utils.toDate
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -41,7 +40,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowCalendarEvents() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -56,7 +55,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowAssignment() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -72,7 +71,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testEmptyView() {
         val data = createMockData(courseCount = 1)
 
@@ -83,7 +82,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testPullToRefresh() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -104,7 +103,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCalendarEvent() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -124,7 +123,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenAssignment() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -144,7 +143,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowMultipleCalendarEventsOnSameDay() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -168,7 +167,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testMultipleCalendarEventsOnDifferentDays() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]

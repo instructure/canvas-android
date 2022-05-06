@@ -34,7 +34,7 @@ class InboxInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_createAndSendMessageToIndividual() {
         // Should be able to create and send a message to an individual recipient
         val data = goToInbox()
@@ -52,7 +52,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_createAndSendMessageToMultiple() {
         // Should be able to create and send a message to multiple recipients
         val data = goToInbox(teacherCount = 3)
@@ -70,7 +70,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_createAndSendMessageToAllUsers() {
         // Should be able to create and send a message to all users in a course
         // Note: There isn't a "single" way to send a message to all users, so I'm just going to select all the
@@ -90,7 +90,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_createAndSendMessageToIndividualWithAttachment() {
         // Should be able to create and send a message, with an attachment, to an individual recipient
         val data = goToInbox()
@@ -120,7 +120,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_createAndSendMessageToMultipleWithAttachment() {
         // Should be able to create and send a message, with an attachment, to multiple recipients
         val data = goToInbox()
@@ -149,7 +149,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_createAndSendMessageToAllUsersWithAttachment() {
         // Should be able to create and send a message, with an attachment, to all users in a course
         val data = goToInbox()
@@ -178,7 +178,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_replyToMessage() {
         // Should be able to reply to a message
         val data = goToInbox()
@@ -191,7 +191,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_replyToMessageWithAttachment() {
         // Should be able to reply (with attachment) to a message
         val data = goToInbox()
@@ -212,7 +212,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeAll() {
         // Should be able to filter messages by All
         val data = goToInbox()
@@ -223,7 +223,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeUnread() {
         // Should be able to filter messages by Unread
         val data = goToInbox()
@@ -237,7 +237,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeStarred() {
         // Should be able to filter messages by Starred
         val data = goToInbox()
@@ -251,7 +251,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeSend() {
         // Should be able to filter messages by Send
         val data = goToInbox()
@@ -265,7 +265,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeArchived() {
         // Should be able to filter messages by Archived
         val data = goToInbox()
@@ -279,7 +279,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByContext() {
         // Should be able to filter messages by course or group
         val data = goToInbox(courseCount = 2)
@@ -291,7 +291,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_canComposeAndSendToRoleGroupsIfPermissionEnabled() {
         // Can compose and send messages to one or more role groups if "Send messages to the entire class is enabled"
         val data = goToInbox(teacherCount = 3)
@@ -309,7 +309,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_canNotComposeAndSendToRoleGroupsIfPermissionDisabled() {
         // Can NOT compose and send messages to one or more role groups if "Send messages to the entire class is disabled"
         val data = goToInbox(sendMessagesAll = false)
@@ -320,7 +320,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_canComposeAndSendToIndividualCourseMembersIfPermissionEnabled() {
         // Can compose and send messages to individual course members if "Send messages to individual course members" is enabled
         // This test is identical to testInbox_createAndSendMessageToIndividual, not sure if its worth having both
@@ -339,7 +339,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_canNotComposeAndSendToIndividualCourseMembersIfPermissionDisabled() {
         // Can NOT compose and send messages to individual course members if "Send messages to individual course members" is disabled
         // This test is controlled by the api, so while we are utilizing a mocked CanvasContextPermission value, the only
@@ -352,7 +352,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_replyAll() {
         val data = goToInbox(studentCount = 3, teacherCount = 1)
         val conversationSubject = "Reply All Message Subject"
@@ -375,7 +375,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_toggleStarred() {
         val data = goToInbox(studentCount = 3, teacherCount = 1)
         val conversationSubject = "Toggle Starred Message Subject"
@@ -398,7 +398,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_markUnread() {
         val data = goToInbox(studentCount = 3, teacherCount = 1)
         val conversationSubject = "Mark Unread Message Subject"
@@ -422,7 +422,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_archive() {
         val data = goToInbox(studentCount = 3, teacherCount = 1)
         val conversationSubject = "Archive Message Subject"
@@ -443,7 +443,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_deleteConversation() {
         val data = goToInbox(studentCount = 3, teacherCount = 1)
         val conversationSubject = "Delete Conversation Message Subject"
@@ -463,7 +463,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_deleteMessage() {
         val data = goToInbox(studentCount = 3, teacherCount = 1)
         val conversationSubject = "Delete Message Message Subject"

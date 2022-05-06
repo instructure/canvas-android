@@ -18,15 +18,12 @@ package com.instructure.student.ui.interaction
 
 import android.os.Build
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
-import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
 import com.instructure.canvas.espresso.mockCanvas.addFolderToCourse
 import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
 import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
-import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -59,7 +56,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group opens group browser - eg: "/groups/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false)
     fun testGroupLink_base() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -68,7 +65,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to groups opens dashboard - eg: "/groups"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DASHBOARD)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DASHBOARD)
     fun testGroupLink_dashboard() {
         setUpGroupAndSignIn()
         dashboardPage.assertDisplaysGroup(group, course)
@@ -76,7 +73,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_filePreview() {
 
         // MBL-13499: This will cause an http request to our mock web server, and http requests from webviews are illegal
@@ -97,7 +94,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group announcement opens announcement - eg: "/groups/:id/discussion_topics/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.ANNOUNCEMENTS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.ANNOUNCEMENTS)
     fun testGroupLink_announcement() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -109,7 +106,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group announcements list opens announcements - eg: "/groups/:id/announcements"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.ANNOUNCEMENTS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.ANNOUNCEMENTS)
     fun testGroupLink_announcementList() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -119,7 +116,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group discussion opens discussion - eg: "/groups/:id/discussion_topics/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_discussion() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -130,7 +127,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group discussion list opens list - eg: "/groups/:id/discussion_topics"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_discussionList() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -140,7 +137,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group files list opens group files list - eg: "/groups/:id/files"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_files() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -150,7 +147,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group files folder opens folder - eg: "/groups/:id/files/folder/:id/"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_fileFolder() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -162,7 +159,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group page list opens pages - eg: "/groups/:id/pages"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
     fun testGroupLink_pagesList() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -172,7 +169,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group page opens page - eg: "/groups/:id/pages/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
     fun testGroupLink_Page() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -185,7 +182,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group people list opens list - eg: "/groups/:id/users"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PEOPLE)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PEOPLE)
     fun testGroupLink_people() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)

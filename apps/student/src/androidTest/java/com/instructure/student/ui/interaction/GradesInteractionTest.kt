@@ -39,7 +39,7 @@ class GradesInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowGrades() {
         val data = createMockData(courseCount = 3)
         goToGradesTab(data)
@@ -52,7 +52,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testRefresh() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)
@@ -72,7 +72,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCourseGrades() {
         val data = createMockData(courseCount = 3)
         goToGradesTab(data)
@@ -90,7 +90,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testChangeGradingPeriod() {
         val data = createMockData(courseCount = 3, withGradingPeriods = true)
         goToGradesTab(data)
@@ -104,7 +104,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testEmptyView() {
         val data = createMockData(homeroomCourseCount = 1)
         goToGradesTab(data)
@@ -114,7 +114,7 @@ class GradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowPercentageOnlyIfNoAlphabeticalGrade() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)

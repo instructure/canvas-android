@@ -37,7 +37,7 @@ class DiscussionsE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.E2E)
     fun testDiscussionE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1, discussions = 1)
         val teacher = data.teachersList[0]

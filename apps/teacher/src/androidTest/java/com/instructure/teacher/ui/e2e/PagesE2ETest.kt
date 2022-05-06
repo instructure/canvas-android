@@ -25,7 +25,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testPagesE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
@@ -86,7 +86,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testEditPageTitleE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
@@ -117,7 +117,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testPublishFrontPageE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
@@ -147,7 +147,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testPublishUnpublishedPageE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
@@ -174,7 +174,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testUnableToUnpublishFrontPageE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]

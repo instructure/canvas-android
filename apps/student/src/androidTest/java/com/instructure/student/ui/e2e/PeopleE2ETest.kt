@@ -44,7 +44,7 @@ class PeopleE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PEOPLE, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PEOPLE, TestCategory.E2E)
     fun testPeopleE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

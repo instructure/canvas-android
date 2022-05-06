@@ -72,7 +72,6 @@ class FileGenerator : AbstractProcessor(){
             testCounts[annotationWrapper.annotation.testCategory] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
             priorityCounts[annotationWrapper.annotation.priority] = TestCount(priorityCount.stubbed + stubbedCount, priorityCount.written + writtenCount)
             featureCounts[annotationWrapper.annotation.featureCategory] = TestCount(featureCount.stubbed + stubbedCount, featureCount.written + writtenCount)
-            if(annotationWrapper.annotation.manualOnly) manualOnly.add(annotationWrapper.annotatedElement.simpleName.toString())
         }
 
         return CustomFileBuilder(

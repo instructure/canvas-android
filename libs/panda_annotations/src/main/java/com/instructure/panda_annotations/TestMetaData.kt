@@ -20,22 +20,25 @@ package com.instructure.panda_annotations
 @Retention(AnnotationRetention.SOURCE)
 @MustBeDocumented
 annotation class TestMetaData(
-        val priority: Priority,
-        val featureCategory: FeatureCategory,
-        val testCategory: TestCategory,
-        val stubbed: Boolean = false,
-        val secondaryFeature: FeatureCategory = FeatureCategory.NONE,
-        val manualOnly: Boolean = false
+    val priority: Priority,
+    val featureCategory: FeatureCategory,
+    val testCategory: TestCategory,
+    val stubbed: Boolean = false,
+    val secondaryFeature: SecondaryFeatureCategory = SecondaryFeatureCategory.NONE
 )
 
 enum class Priority {
-    P0, P1, P2, P3
+    MANDATORY, IMPORTANT, COMMON, NICE_TO_HAVE, BUG_CASE
 }
 
 enum class FeatureCategory {
     ASSIGNMENTS, SUBMISSIONS, LOGIN, COURSE, DASHBOARD, GROUPS, SETTINGS, PAGES, DISCUSSIONS, MODULES,
     INBOX, GRADES, FILES, EVENTS, PEOPLE, CONFERENCES, COLLABORATIONS, SYLLABUS, TODOS, QUIZZES, NOTIFICATIONS,
     ANNOTATIONS, ANNOUNCEMENTS, COMMENTS, BOOKMARKS, NONE, K5_DASHBOARD, SPEED_GRADER
+}
+
+enum class SecondaryFeatureCategory {
+    NONE, LOGIN_K5, SUBMISSIONS_TEXT_ENTRY, SUBMISSIONS_ANNOTATIONS
 }
 
 enum class TestCategory {

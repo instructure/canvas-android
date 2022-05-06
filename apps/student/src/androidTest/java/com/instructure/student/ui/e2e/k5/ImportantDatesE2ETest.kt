@@ -18,11 +18,8 @@ package com.instructure.student.ui.e2e.k5
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.refresh
-import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
@@ -51,7 +48,7 @@ class ImportantDatesE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun importantDatesE2ETest() {
 
         // Seed data for K5 sub-account

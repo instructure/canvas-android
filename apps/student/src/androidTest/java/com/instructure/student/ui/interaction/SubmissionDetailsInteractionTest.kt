@@ -17,10 +17,8 @@
 package com.instructure.student.ui.interaction
 
 import android.os.SystemClock.sleep
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.mockCanvas.AssignmentGroupType
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
@@ -31,13 +29,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.SubmissionComment
-import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.api.FileUploadsApi
-import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -58,7 +52,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     // Clicking the "Description" button on a rubric criterion item should show a new page with the full description
     // Also checks to see that the rubric criterion is displayed correctly, and responds to clicks correctly
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testRubrics_showCriterionDescription() {
 
         val data = getToCourse()
@@ -103,7 +97,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
     // Should be able to add a comment on a submission
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testComments_addCommentToSubmission() {
 
         val data = getToCourse()
@@ -127,7 +121,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
     // Student can preview an assignment comment attachment
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testComments_previewAttachment() {
 
         val data = getToCourse()
@@ -192,14 +186,14 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testComments_videoCommentPlayback() {
         // After recording a video comment, user should be able to view a replay
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testComments_audioCommentPlayback() {
         // After recording an audio comment, user should be able to hear an audio playback
     }

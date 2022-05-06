@@ -41,7 +41,7 @@ class AssignmentE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testAssignmentsE2E() {
         val data = seedData(teachers = 1, courses = 1, students = 3, favoriteCourses = 1)
         val teacher = data.teachersList[0]
@@ -115,7 +115,7 @@ class AssignmentE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testEditAssignmentE2E() {
         val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
         val teacher = data.teachersList[0]

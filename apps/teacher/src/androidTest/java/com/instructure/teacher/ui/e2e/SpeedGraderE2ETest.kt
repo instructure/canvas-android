@@ -48,7 +48,7 @@ class SpeedGraderE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GRADES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E)
     fun testSpeedGraderE2E() {
 
         val data = seedData(teachers = 1, courses = 1, students = 3, favoriteCourses = 1)

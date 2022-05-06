@@ -15,7 +15,6 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.User
@@ -34,7 +33,7 @@ class PeopleInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.PEOPLE, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.PEOPLE, TestCategory.INTERACTION, false)
     fun testClick_openContextCard() {
         // Should be able to view all enrolled users and tap on one to open their context card
         goToPeopleList()

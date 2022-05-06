@@ -15,7 +15,6 @@
  */
 package com.instructure.student.ui.interaction
 
-import android.os.SystemClock.sleep
 import android.text.Html
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
@@ -46,7 +45,6 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
@@ -71,7 +69,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping an Assignment module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.ASSIGNMENTS)
     fun testModules_launchesIntoAssignment() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -88,7 +86,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping a Discussion module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
     fun testModules_launchesIntoDiscussion() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -105,14 +103,14 @@ class ModuleInteractionTest : StudentTest() {
     // I'm punting on LTI testing for now.  But MBL-13517 captures this work.
     @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
     fun testModules_launchesIntoExternalTool() {
         // Tapping an ExternalTool module item should navigate to that item's detail page
     }
 
     // Tapping an ExternalURL module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_launchesIntoExternalURL() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -127,7 +125,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping a File module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.FILES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testModules_launchesIntoFile() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -141,7 +139,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping a Page module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
     fun testModules_launchesIntoPage() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -167,7 +165,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping a Quiz module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.QUIZZES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.QUIZZES)
     fun testModules_launchesIntoQuiz() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -189,7 +187,7 @@ class ModuleInteractionTest : StudentTest() {
     // Tapping a module should collapse and hide all of that module's items in the module list
     // Tapping a collapsed module should expand it
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_modulesExpandAndCollapse() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -214,7 +212,7 @@ class ModuleInteractionTest : StudentTest() {
     // After entering the detail page for a module item, pressing the back button or back arrow should navigate back
     // to the module list. This should also work if the detail page is accessed via deep link
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_navigateBackToModuleListFromModuleItem() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -234,7 +232,7 @@ class ModuleInteractionTest : StudentTest() {
     // When viewing the detail page for an item in a module with multiple items, the detail page should have
     // 'next' and 'previous' navigation buttons. Clicking these should navigate to the next/previous module items.
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_navigateToNextAndPreviousModuleItems() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -288,7 +286,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Module can't be accessed unless all prerequisites have been fulfilled
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_moduleLockedWithUnfulfilledPrerequisite() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -329,7 +327,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Module can't be accessed until the availability date has passed
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_moduleLockedUntilAvailabilityDate() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)

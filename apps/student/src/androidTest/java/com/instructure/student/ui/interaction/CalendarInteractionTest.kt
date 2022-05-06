@@ -30,42 +30,42 @@ class CalendarInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
     fun testMonthView_tappingADayDisplaysAllItemsForThatDay() {
         // Tapping a day in the calendar view should display all items for that day in the list view
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
     fun testMonthView_itemListIsScrollable() {
         // List of calendar items should be scrollable
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
     fun testMonthView_todayButtonGoesToCurrentDate() {
         // The 'today' button in the toolbar should select the current date in the calendar
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
     fun testMonthView_tappingDayWithWeekRangeShowsAllItemsForThatWeek() {
         // The Week range/selected date is displayed and shows all events for that week range
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
     fun testMonthView_monthRangeShowsAllItemsForThatMonth() {
         // The Month range/selected date is displayed and shows all events for that month range
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
     fun testMonthView_addEventUpdatesList() {
         // *key note, these are personal events only
         // The user should be able to add an event, success is measured by the new event showing up in the list
@@ -73,7 +73,7 @@ class CalendarInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
     fun testMonthView_deleteEventUpdatesList() {
         // *key note, these are personal events only
         // The user should be able to delete an event, success is measured by the deleted event being removed from the list
@@ -81,35 +81,35 @@ class CalendarInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.EVENTS, TestCategory.INTERACTION, true)
     fun testMonthView_pullToRefresh() {
         // The user should be able to ptr to refresh the screen
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.ASSIGNMENTS)
     fun testMonthView_tappingAssignmentItemDisplaysDetails() {
         // Tapping Assignment item navigates user to assignment details
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
     fun testMonthView_tappingDiscussionItemDisplaysDetails() {
         // Tapping Discussion item navigates user to discussion details
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.QUIZZES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.QUIZZES)
     fun testMonthView_tappingQuizItemDisplaysDetails() {
         // Tapping Quiz item navigates user to quiz details
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.NOTIFICATIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.NOTIFICATIONS)
     fun testMonthView_tappingNotificationItemDisplaysDetails() {
         // Tapping Notification item navigates user to details
     }

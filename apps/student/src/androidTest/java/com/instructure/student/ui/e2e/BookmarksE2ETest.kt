@@ -51,7 +51,7 @@ class BookmarksE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.BOOKMARKS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.BOOKMARKS, TestCategory.E2E)
     fun testBookmarksE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")

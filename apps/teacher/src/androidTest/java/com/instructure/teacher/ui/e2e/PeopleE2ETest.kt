@@ -41,7 +41,7 @@ class PeopleE2ETest: TeacherTest() {
     
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PEOPLE, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PEOPLE, TestCategory.E2E)
     fun testPeopleE2E() {
 
         val data = seedData(teachers = 1, students = 2, courses = 1)

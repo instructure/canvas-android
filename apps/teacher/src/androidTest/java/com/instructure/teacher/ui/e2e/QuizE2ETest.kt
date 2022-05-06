@@ -39,7 +39,7 @@ class QuizE2ETest: TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.QUIZZES, TestCategory.E2E)
     fun testQuizE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
@@ -91,7 +91,7 @@ class QuizE2ETest: TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.QUIZZES, TestCategory.E2E)
     fun editQuizE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]

@@ -28,7 +28,7 @@ class ModulesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.E2E)
     fun testModulesE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
@@ -102,7 +102,7 @@ class ModulesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.E2E)
     fun testModulesEmptyE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
