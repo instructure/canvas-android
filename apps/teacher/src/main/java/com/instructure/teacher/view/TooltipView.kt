@@ -97,7 +97,7 @@ abstract class TooltipView @JvmOverloads constructor(
 
     /** Paint used in drawing the tooltip text */
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
+        color = context.getColorCompat(R.color.white)
         textSize = context.SP(16f)
     }
 
@@ -106,7 +106,7 @@ abstract class TooltipView @JvmOverloads constructor(
 
     /** Paint used to draw the tooltip bubble and tail */
     private val bubblePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = context.getColorCompat(R.color.textDarkest)
+        color = context.getColorCompat(R.color.licorice)
     }
 
     init {

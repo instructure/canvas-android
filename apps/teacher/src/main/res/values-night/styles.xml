@@ -17,8 +17,8 @@
 <resources>
 
     <style name="ContextualToolbarStyle">
-        <item name="pspdf__backgroundColor">@color/backgroundLightestElevated</item>
-        <item name="pspdf__submenuBackgroundColor">@color/backgroundLightestElevated</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+        <item name="pspdf__submenuBackgroundColor">@color/backgroundLightest</item>
     </style>
 
     <style name="ModalDialogStyle">
