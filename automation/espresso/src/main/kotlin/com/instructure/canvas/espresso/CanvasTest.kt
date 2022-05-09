@@ -63,6 +63,9 @@ import java.net.URL
 // InstructureTest wrapper for Canvas code
 abstract class CanvasTest : InstructureTestingContract {
 
+    val STEP_TAG = "${this::class.java.simpleName} #STEP# "
+    val PREPARATION_TAG = "${this::class.java.simpleName} #PREPARATION# "
+
     abstract val activityRule: InstructureActivityTestRule<out Activity>
 
     abstract val isTesting: Boolean

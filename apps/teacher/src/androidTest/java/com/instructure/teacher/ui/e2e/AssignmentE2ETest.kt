@@ -31,9 +31,6 @@ import com.instructure.teacher.ui.utils.*
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
-private const val STEP_TAG = "AssignmentE2ETest #STEP# "
-private const val PREPARATION_TAG = "AssignmentE2ETest #PREPARATION# "
-
 @HiltAndroidTest
 class AssignmentE2ETest : TeacherTest() {
 
@@ -66,7 +63,7 @@ class AssignmentE2ETest : TeacherTest() {
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.assertDisplaysNoAssignmentsView()
 
-        Log.d(PREPARATION_TAG,"Seeding assignment.")
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
         val assignment = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,

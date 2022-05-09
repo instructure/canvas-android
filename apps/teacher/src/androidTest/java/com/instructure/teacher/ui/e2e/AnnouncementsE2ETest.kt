@@ -29,9 +29,6 @@ import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
-private const val STEP_TAG = "AnnouncementsE2ETest #STEP# "
-private const val PREPARATION_TAG = "AnnouncementsE2ETest #PREPARATION# "
-
 @HiltAndroidTest
 class AnnouncementsE2ETest : TeacherTest() {
 
