@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -43,7 +44,7 @@ class SpeedGraderE2ETest : TeacherTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() {
-        //We dont want to see accessibility errors on E2E tests
+        //We don't want to see accessibility errors on E2E tests
     }
 
     @E2E
@@ -51,6 +52,7 @@ class SpeedGraderE2ETest : TeacherTest() {
     @TestMetaData(Priority.P0, FeatureCategory.GRADES, TestCategory.E2E)
     fun testSpeedGraderE2E() {
 
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 3, favoriteCourses = 1)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -58,6 +60,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         val gradedStudent = data.studentsList[1]
         val noSubStudent = data.studentsList[2]
 
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
         val assignment = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
@@ -65,6 +68,8 @@ class SpeedGraderE2ETest : TeacherTest() {
                 teacherToken = teacher.token,
                 pointsPossible = 15.0
         )
+
+        Log.d(PREPARATION_TAG,"Seed a submission for ${assignment[0].name} assignment with ${student.name} student.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -75,6 +80,7 @@ class SpeedGraderE2ETest : TeacherTest() {
                 studentToken = student.token
         )
 
+        Log.d(PREPARATION_TAG,"Seed a submission for ${assignment[0].name} assignment with ${gradedStudent.name} student.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -85,6 +91,7 @@ class SpeedGraderE2ETest : TeacherTest() {
                 studentToken = gradedStudent.token
         )
 
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${gradedStudent.name} student.")
         SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
@@ -94,43 +101,64 @@ class SpeedGraderE2ETest : TeacherTest() {
                 excused = false
         )
 
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
         tokenLogin(teacher)
 
+        Log.d(STEP_TAG,"Open ${course.name} course and navigate to Assignments Page.")
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
 
+        Log.d(STEP_TAG,"Click on ${assignment[0].name} assignment and assert that that there is one 'Needs Grading' submission (for ${noSubStudent.name} student) and one 'Not Submitted' submission (for ${student.name} student. ")
         assignmentListPage.clickAssignment(assignment[0])
         assignmentDetailsPage.assertNeedsGrading(actual = 1, outOf = 3)
         assignmentDetailsPage.assertNotSubmitted(actual = 1, outOf = 3)
+
+        Log.d(STEP_TAG,"Open 'Not Submitted' submissions and assert that the submission of ${noSubStudent.name} student is displayed. Navigate back.")
         assignmentDetailsPage.openNotSubmittedSubmissions()
-        assignmentSubmissionListPage.assertHasStudentSubmission(canvasUser = noSubStudent)
+        assignmentSubmissionListPage.assertHasStudentSubmission(noSubStudent)
         Espresso.pressBack()
 
+        Log.d(STEP_TAG,"Open 'Graded' submissions and assert that the submission of ${gradedStudent.name} student is displayed. Navigate back.")
         assignmentDetailsPage.openGradedSubmissions()
-        assignmentSubmissionListPage.assertHasStudentSubmission(canvasUser = gradedStudent)
+        assignmentSubmissionListPage.assertHasStudentSubmission(gradedStudent)
         Espresso.pressBack()
 
+        Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of ${student.name} student is displayed.")
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(studentName = student.name)
+        speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
+
+        Log.d(STEP_TAG,"Select 'Grades' Tab and open the grade dialog.")
         speedGraderPage.selectGradesTab()
         speedGraderGradePage.openGradeDialog()
         val grade = "10"
+
+        Log.d(STEP_TAG,"Enter $grade as the new grade and assert that it has applied. Navigate back and refresh the page.")
         speedGraderGradePage.enterNewGrade(grade)
         speedGraderGradePage.assertHasGrade(grade)
         Espresso.pressBack()
         refresh()
 
+        Log.d(STEP_TAG,"Click on filter button and click on 'Filter submissions'.")
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterSubmissions()
+
+        Log.d(STEP_TAG,"Select 'Not Graded' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterUngraded()
         assignmentSubmissionListPage.clickFilterDialogOk()
+
+        Log.d(STEP_TAG,"Assert that there isn't any submission displayed.")
         assignmentSubmissionListPage.assertHasNoSubmission()
 
+        Log.d(STEP_TAG,"Click on filter button and click on 'Filter submissions'.")
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterSubmissions()
+
+        Log.d(STEP_TAG,"Select 'Not Submitted' and click on 'OK'.")
         onView(withText(R.string.not_submitted)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
         assignmentSubmissionListPage.clickFilterDialogOk()
+
+        Log.d(STEP_TAG,"Assert that there is one submission displayed.")
         assignmentSubmissionListPage.assertHasSubmission(1)
     }
 }

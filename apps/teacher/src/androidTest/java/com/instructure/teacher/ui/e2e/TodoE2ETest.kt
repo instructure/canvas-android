@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.SubmissionType
@@ -36,7 +37,7 @@ class TodoE2ETest : TeacherTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() {
-        //We dont want to see accessibility errors on E2E tests
+        //We don't want to see accessibility errors on E2E tests
     }
 
     @E2E
@@ -52,11 +53,13 @@ class TodoE2ETest : TeacherTest() {
             return
         }
 
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
         val assignment = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
@@ -65,6 +68,7 @@ class TodoE2ETest : TeacherTest() {
                 pointsPossible = 15.0
         )
 
+        Log.d(PREPARATION_TAG,"Seed a submission for ${assignment[0].name} assignment with ${student.name} student.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -75,13 +79,18 @@ class TodoE2ETest : TeacherTest() {
                 studentToken = student.token
         )
 
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
         tokenLogin(teacher)
-
         dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Navigate to 'To Do' Page.")
         dashboardPage.openTodo()
         todoPage.waitForRender()
-        todoPage.assertTodoElementIsDisplayed(courseName = course.name)
 
+        Log.d(STEP_TAG,"Assert that the previously seeded ${assignment[0].name} assignment is displayed as a To Do element for the ${course.name} course.")
+        todoPage.assertTodoElementIsDisplayed(course.name)
+
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${student.name} student.")
         SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
@@ -91,6 +100,7 @@ class TodoE2ETest : TeacherTest() {
                 excused = false
         )
 
+        Log.d(STEP_TAG,"Refresh the To Do Page. Assert that the empty view is displayed so that the To Do has disappeared because it has been graded.")
         todoPage.refresh()
         todoPage.assertEmptyView()
     }

@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -36,7 +37,7 @@ class PeopleE2ETest: TeacherTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() {
-        //We dont want to see accessibility errors on E2E tests
+        //We don't want to see accessibility errors on E2E tests
     }
     
     @E2E
@@ -44,12 +45,14 @@ class PeopleE2ETest: TeacherTest() {
     @TestMetaData(Priority.P0, FeatureCategory.PEOPLE, TestCategory.E2E)
     fun testPeopleE2E() {
 
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, students = 2, courses = 1)
         val teacher = data.teachersList[0]
         val notGradedStudent = data.studentsList[0]
         val gradedStudent = data.studentsList[1]
         val course = data.coursesList[0]
 
+        Log.d(PREPARATION_TAG,"Seed a 'Text Entry' assignment for course: ${course.name}.")
         val assignments = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
@@ -58,6 +61,7 @@ class PeopleE2ETest: TeacherTest() {
                 pointsPossible = 10.0
         )
 
+        Log.d(PREPARATION_TAG,"Seed a submission for ${assignments[0].name} assignment.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -68,6 +72,7 @@ class PeopleE2ETest: TeacherTest() {
                 studentToken = gradedStudent.token
         )
 
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${assignments[0].name} assignment.")
         SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
@@ -77,22 +82,27 @@ class PeopleE2ETest: TeacherTest() {
                 excused = false
         )
 
-
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
         tokenLogin(teacher)
 
+        Log.d(STEP_TAG,"Open ${course.name} course and navigate to People Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openPeopleTab()
+
+        Log.d(STEP_TAG,"Click on ${teacher.name} teacher person and assert the that the teacher course info is displayed on Context Page.")
         peopleListPage.clickPerson(teacher)
         studentContextPage.assertDisplaysCourseInfo(course)
-        Espresso.pressBack()
 
+        Log.d(STEP_TAG,"Navigate back and click on ${notGradedStudent.name} student and assert that the NOT GRADED student course info is displayed properly on Context Page.")
+        Espresso.pressBack()
         peopleListPage.clickPerson(notGradedStudent)
         studentContextPage.assertDisplaysStudentInfo(notGradedStudent)
         studentContextPage.assertDisplaysCourseInfo(course)
         studentContextPage.assertStudentGrade("--")
         studentContextPage.assertStudentSubmission("--")
-        Espresso.pressBack()
 
+        Log.d(STEP_TAG,"Navigate back and click on ${gradedStudent.name} student and assert that the GRADED student info is displayed propery on the Context Page.")
+        Espresso.pressBack()
         peopleListPage.clickPerson(gradedStudent)
         studentContextPage.assertDisplaysStudentInfo(gradedStudent)
         studentContextPage.assertDisplaysCourseInfo(course)
