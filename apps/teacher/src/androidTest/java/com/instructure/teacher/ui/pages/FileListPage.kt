@@ -62,7 +62,7 @@ class FileListPage : BasePage(R.id.fileListPage) {
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
-    fun openOptionMenuFor(itemName: String) {
+    private fun openOptionMenuFor(itemName: String) {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(itemName))
             .perform(click());

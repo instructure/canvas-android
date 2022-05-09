@@ -184,7 +184,7 @@ class AssignmentSubmissionListPage : BasePage() {
         Espresso.onView(matcher).assertDisplayed()
     }
 
-    fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String, click:Boolean = false) {
+    fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
         val commentMatcher = Matchers.allOf(
             ViewMatchers.withId(R.id.commentHolder),
             ViewMatchers.hasDescendant(
