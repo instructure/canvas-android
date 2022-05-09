@@ -18,10 +18,17 @@ package com.instructure.espresso
 
 import androidx.test.espresso.util.HumanReadables
 import android.view.View
+import androidx.test.espresso.Espresso
 
 object ViewUtils {
 
     fun toString(view: View): String {
         return HumanReadables.getViewHierarchyErrorMessage(view, null, "", null)
+    }
+
+    fun pressBackButton(times: Int) {
+        for(i in 1..times) {
+            Espresso.pressBack()
+        }
     }
 }

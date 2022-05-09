@@ -94,4 +94,9 @@ class DashboardPage : BasePage() {
     fun openTodo() {
         todoTab.click()
     }
+
+    fun gotoGlobalFiles() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_files).click()
+    }
 }
