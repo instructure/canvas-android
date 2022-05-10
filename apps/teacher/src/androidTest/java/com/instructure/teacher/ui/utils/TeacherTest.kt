@@ -90,6 +90,7 @@ abstract class TeacherTest : CanvasTest() {
     val syllabusPage = SyllabusPage()
     val todoPage = TodoPage()
     val webViewLoginPage = WebViewLoginPage()
+    val fileListPage = FileListPage()
 
 }
 

@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
@@ -41,39 +42,59 @@ class DashboardE2ETest : TeacherTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testDashboardE2E() {
 
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 2)
         val teacher = data.teachersList[0]
+        val course1 = data.coursesList[0]
+        val course2 = data.coursesList[1]
 
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
         tokenLogin(teacher)
-
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
-        dashboardPage.assertDisplaysCourses()
-        dashboardPage.assertDisplaysCourse(data.coursesList[0])
 
-        dashboardPage.clickSeeAll() //allCoursesListPage appearing as the result of this operation
+        Log.d(STEP_TAG,"Assert that the ${course1.name} and ${course2.name} courses are displayed.")
+        dashboardPage.assertDisplaysCourses()
+        dashboardPage.assertDisplaysCourse(course1)
+        dashboardPage.assertDisplaysCourse(course2)
+
+        Log.d(STEP_TAG,"Click on 'See All' button.")
+        dashboardPage.clickSeeAll()
+
+        Log.d(STEP_TAG,"Refresh the page. Assert that both of the courses, ${course1.name} and ${course2.name} are displayed.")
         refresh()
         for (course in data.coursesList) {
             allCoursesListPage.assertDisplaysCourse(course)
         }
 
-        allCoursesListPage.navigateBack() //navigate back to the dashboard
+        Log.d(STEP_TAG,"Navigate back to the Dashboard Page.")
+        allCoursesListPage.navigateBack()
 
+        Log.d(STEP_TAG,"Click on 'Edit Courses' and toggle 'Favourite' icon of ${course2.name} course")
         dashboardPage.openEditCoursesListPage()
-        editCoursesListPage.toggleFavoritingCourse(data.coursesList[1].name) //navigate to edit courses list page and select second course as favourite
-        editCoursesListPage.navigateBack() //navigate back to the dashboard
-        refresh()
+        editCoursesListPage.toggleFavoritingCourse(course2.name)
 
-        dashboardPage.assertDisplaysCourse(data.coursesList[1])
-        dashboardPage.assertOpensCourse(data.coursesList[1])
-        Espresso.pressBack()
-
-        dashboardPage.openEditCoursesListPage()
-        editCoursesListPage.toggleFavoritingCourse(data.coursesList[1].name) //unfavourite course
+        Log.d(STEP_TAG,"Navigate back to Dashboard Page and refresh it.")
         editCoursesListPage.navigateBack()
         refresh()
 
-        dashboardPage.assertDisplaysCourse(data.coursesList[0])
-        dashboardPage.assertDisplaysCourse(data.coursesList[1])
+        Log.d(STEP_TAG,"Assert that only the favourited course (${course2.name} is displayed.")
+        dashboardPage.assertDisplaysCourse(course2)
+
+        Log.d(STEP_TAG,"Opens ${course2.name} course and assert if Course Details Page has been opened. Navigate back to Dashboard Page.")
+        dashboardPage.assertOpensCourse(course2)
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG,"Click on 'Edit Courses' and untoggle 'Favourite' icon of ${course2.name} course.")
+        dashboardPage.openEditCoursesListPage()
+        editCoursesListPage.toggleFavoritingCourse(course2.name)
+
+        Log.d(STEP_TAG,"Navigate back to Dashboard Page and refresh it.")
+        editCoursesListPage.navigateBack()
+        refresh()
+
+        Log.d(STEP_TAG,"Assert that both of the courses, ${course1.name} and ${course2.name} are displayed.")
+        dashboardPage.assertDisplaysCourse(course1)
+        dashboardPage.assertDisplaysCourse(course2)
     }
 }
