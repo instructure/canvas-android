@@ -18,6 +18,7 @@ package com.instructure.student.ui.interaction
 import com.instructure.canvas.espresso.Stub
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.SecondaryFeatureCategory
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
@@ -88,28 +89,28 @@ class CalendarInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, SecondaryFeatureCategory.EVENTS_ASSIGNMENTS)
     fun testMonthView_tappingAssignmentItemDisplaysDetails() {
         // Tapping Assignment item navigates user to assignment details
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, SecondaryFeatureCategory.EVENTS_DISCUSSIONS)
     fun testMonthView_tappingDiscussionItemDisplaysDetails() {
         // Tapping Discussion item navigates user to discussion details
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.QUIZZES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, SecondaryFeatureCategory.EVENTS_QUIZZES)
     fun testMonthView_tappingQuizItemDisplaysDetails() {
         // Tapping Quiz item navigates user to quiz details
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.NOTIFICATIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, SecondaryFeatureCategory.EVENTS_NOTIFICATIONS)
     fun testMonthView_tappingNotificationItemDisplaysDetails() {
         // Tapping Notification item navigates user to details
     }

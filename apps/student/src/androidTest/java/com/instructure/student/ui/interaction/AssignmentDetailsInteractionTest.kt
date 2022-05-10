@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.SecondaryFeatureCategory
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
@@ -34,7 +35,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false, FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.SUBMISSIONS_ONLINE_URL)
     fun testSubmission_submitAssignment() {
         // TODO - Test submitting for each submission type
         // For now, I'm going to just test one submission type
@@ -61,7 +62,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false, FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testNavigating_viewSubmissionDetails() {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
         goToAssignmentFromList()
@@ -79,7 +80,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, FeatureCategory.QUIZZES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, SecondaryFeatureCategory.ASSIGNMENT_QUIZZES)
     fun testQuizzesNext_launchQuizzesNextAssignment() {
         // Launch into Quizzes.Next assignment
     /* First attempt based on hardcoded verifier response

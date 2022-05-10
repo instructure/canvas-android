@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.espresso.assertGone
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.SecondaryFeatureCategory
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.pandautils.utils.ThemePrefs
@@ -146,242 +147,17 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         assignmentDetailsRenderPage.assertDisplaysSubmissionTypes("Not Graded")
     }
 
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
-    fun displaysQuizDetails() {
-        val quizId = 123L
-        val timeLimit = 10
-        val allowedAttempts = 1
-        val questionCount = 1
-        val assignment = Assignment(
-            name = "Test Assignment",
-            submissionTypesRaw = listOf("online_quiz"),
-            quizId = quizId
-        )
-        val quiz = Quiz(
-            id = quizId,
-            timeLimit = timeLimit,
-            allowedAttempts = allowedAttempts,
-            questionCount = questionCount
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertQuizDescription(timeLimit.toString(), allowedAttempts.toString(), questionCount.toString())
-    }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
-    fun displaysQuizDetailsNoTimeLimit() {
-        val quizId = 123L
-        val timeLimit = 0
-        val allowedAttempts = 1
-        val questionCount = 1
-        val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("online_quiz"),
-                quizId = quizId
-        )
-        val quiz = Quiz(
-                id = quizId,
-                timeLimit = timeLimit,
-                allowedAttempts = allowedAttempts,
-                questionCount = questionCount
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertQuizDescription(R.string.quizNoTimeLimit, allowedAttempts.toString(), questionCount.toString())
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
-    fun displaysQuizDetailsUnlimitedAttempts() {
-        val quizId = 123L
-        val timeLimit = 10
-        val allowedAttempts = -1
-        val questionCount = 1
-        val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("online_quiz"),
-                quizId = quizId
-        )
-        val quiz = Quiz(
-                id = quizId,
-                timeLimit = timeLimit,
-                allowedAttempts = allowedAttempts,
-                questionCount = questionCount
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertQuizDescription(timeLimit.toString(), R.string.unlimited, questionCount.toString())
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
-    fun displaysNoSubmissionTypesForQuiz() {
-        val quizId = 123L
-        val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("online_quiz"),
-                quizId = quizId
-        )
-        val quiz = Quiz(id = quizId)
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.submissionTypes.assertGone()
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
-    fun displaysNoSubmissionTypesForDiscussion() {
-        val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("discussion_topic"),
-                discussionTopicHeader = DiscussionTopicHeader(id = 123L, author = DiscussionParticipant(displayName = "hodor"), postedDate = Date())
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.submissionTypes.assertGone()
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
-    fun displaysDiscussionTopicHeader() {
-        val authorAvatarUrl = "pretty-hodor.com"
-        val authorName = "hodor"
-        val authoredDate = "Jul 23 at 9:59 AM"
-        val attachmentIconVisibility = false
-        val discussionMessage = "yo yo yo"
-        val calendar = GregorianCalendar.getInstance()
-        calendar.set(2019, 6, 23, 9, 59)
-        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
-        val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("discussion_topic"),
-                discussionTopicHeader = discussionTopicHeader
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDiscussionHeader(authorName, authoredDate, attachmentIconVisibility)
-    }
-
-    @Test
-    @TestMetaData(
-        Priority.COMMON,
-        FeatureCategory.ASSIGNMENTS,
-        TestCategory.RENDER,
-        secondaryFeature = FeatureCategory.DISCUSSIONS
-    )
-    fun displaysDiscussionTopicHeaderWithAuthorPronouns() {
-        val authorAvatarUrl = "pretty-hodor.com"
-        val authorName = "hodor"
-        val authorPronouns = "Pro/Noun"
-        val authoredDate = "Jul 23 at 9:59 AM"
-        val attachmentIconVisibility = false
-        val discussionMessage = "yo yo yo"
-        val calendar = GregorianCalendar.getInstance()
-        calendar.set(2019, 6, 23, 9, 59)
-        val discussionTopicHeader = DiscussionTopicHeader(
-            id = 123L,
-            message = discussionMessage,
-            author = DiscussionParticipant(
-                displayName = authorName,
-                pronouns = authorPronouns,
-                avatarImageUrl = authorAvatarUrl
-            ),
-            postedDate = calendar.time
-        )
-        val assignment = Assignment(
-            name = "Test Assignment",
-            submissionTypesRaw = listOf("discussion_topic"),
-            discussionTopicHeader = discussionTopicHeader
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDiscussionHeader("hodor (Pro/Noun)", authoredDate, attachmentIconVisibility)
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
-    fun displaysDiscussionTopicHeaderWithAttachments() {
-        val authorAvatarUrl = "pretty-hodor.com"
-        val authorName = "hodor"
-        val authoredDate = "Jul 23 at 9:59 AM"
-        val attachmentIconVisibility = true
-        val attachmentId = 12345L
-        val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
-        val discussionMessage = "yo yo yo"
-        val calendar = GregorianCalendar.getInstance()
-        calendar.set(2019, 6, 23, 9, 59)
-        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, attachments = remoteFiles, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
-        val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("discussion_topic"),
-                discussionTopicHeader = discussionTopicHeader
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDiscussionHeader(authorName, authoredDate, attachmentIconVisibility)
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
-    fun displaysDiscussionDescription() {
-        val authorAvatarUrl = "pretty-hodor.com"
-        val authorName = "hodor"
-        val attachmentId = 12345L
-        val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
-        val discussionMessage = "yo yo yo"
-        val calendar = GregorianCalendar.getInstance()
-        calendar.set(2019, 6, 23, 9, 59)
-        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, attachments = remoteFiles, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
-        val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("discussion_topic"),
-                discussionTopicHeader = discussionTopicHeader
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDisplaysDiscussionDescription(discussionMessage)
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun neverDisplaysSubmitButtonForObserver() {
         val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("online_upload")
+            name = "Test Assignment",
+            submissionTypesRaw = listOf("online_upload")
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), isObserver = true)
         loadPageWithModel(model)
         assignmentDetailsRenderPage.submitButton.assertGone()
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
-    fun displaysViewQuizButton() {
-        val quizId = 123L
-        val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("online_quiz"),
-                quizId = quizId
-        )
-        val quiz = Quiz(id = quizId)
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertSubmitButton(R.string.viewQuiz)
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
-    fun displaysViewDiscussionButton() {
-        val assignment = Assignment(
-                name = "Test Assignment",
-                submissionTypesRaw = listOf("discussion_topic"),
-                discussionTopicHeader = DiscussionTopicHeader(id = 123L, author = DiscussionParticipant(displayName = "hodor"), postedDate = Date())
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertSubmitButton(R.string.viewDiscussion)
     }
 
     @Test
@@ -552,7 +328,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun hideSubmissionStatusSubmissionTypeNone() {
         val allTypes = listOf(Assignment.SubmissionType.NONE)
         val assignment = Assignment(
@@ -568,15 +344,15 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun hideSubmissionStatusSubmissionTypeOnPaper() {
         val allTypes = listOf(Assignment.SubmissionType.ON_PAPER)
         val assignment = Assignment(
-                id = 123,
-                name = "Assignment Name",
-                description = "This is a description",
-                pointsPossible = 35.0,
-                submissionTypesRaw = allTypes.map { it.apiString }
+            id = 123,
+            name = "Assignment Name",
+            description = "This is a description",
+            pointsPossible = 35.0,
+            submissionTypesRaw = allTypes.map { it.apiString }
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
@@ -584,16 +360,16 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun showsSubmissionStatusSubmissionTypeOnPaperWithGrade() {
         val allTypes = listOf(Assignment.SubmissionType.ON_PAPER)
         val assignment = Assignment(
-                id = 123,
-                name = "Assignment Name",
-                description = "This is a description",
-                pointsPossible = 35.0,
-                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date()),
-                submissionTypesRaw = allTypes.map { it.apiString }
+            id = 123,
+            name = "Assignment Name",
+            description = "This is a description",
+            pointsPossible = 35.0,
+            submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date()),
+            submissionTypesRaw = allTypes.map { it.apiString }
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
@@ -601,24 +377,24 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun showSubmissionStatusSubmissionTypeOnline() {
         val allTypes = listOf(
-                Assignment.SubmissionType.ONLINE_UPLOAD,
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                Assignment.SubmissionType.ONLINE_URL,
-                Assignment.SubmissionType.BASIC_LTI_LAUNCH,
-                Assignment.SubmissionType.EXTERNAL_TOOL,
-                Assignment.SubmissionType.ATTENDANCE,
-                Assignment.SubmissionType.MEDIA_RECORDING
+            Assignment.SubmissionType.ONLINE_UPLOAD,
+            Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            Assignment.SubmissionType.ONLINE_URL,
+            Assignment.SubmissionType.BASIC_LTI_LAUNCH,
+            Assignment.SubmissionType.EXTERNAL_TOOL,
+            Assignment.SubmissionType.ATTENDANCE,
+            Assignment.SubmissionType.MEDIA_RECORDING
         )
         val assignment = Assignment(
-                id = 123,
-                name = "Assignment Name",
-                description = "This is a description",
-                pointsPossible = 35.0,
-                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date()),
-                submissionTypesRaw = allTypes.map { it.apiString }
+            id = 123,
+            name = "Assignment Name",
+            description = "This is a description",
+            pointsPossible = 35.0,
+            submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date()),
+            submissionTypesRaw = allTypes.map { it.apiString }
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
@@ -626,24 +402,24 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun showSubmissionStatusSubmissionTypeOnlineWithGrade() {
         val allTypes = listOf(
-                Assignment.SubmissionType.ONLINE_UPLOAD,
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                Assignment.SubmissionType.ONLINE_URL,
-                Assignment.SubmissionType.BASIC_LTI_LAUNCH,
-                Assignment.SubmissionType.EXTERNAL_TOOL,
-                Assignment.SubmissionType.ATTENDANCE,
-                Assignment.SubmissionType.MEDIA_RECORDING
+            Assignment.SubmissionType.ONLINE_UPLOAD,
+            Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            Assignment.SubmissionType.ONLINE_URL,
+            Assignment.SubmissionType.BASIC_LTI_LAUNCH,
+            Assignment.SubmissionType.EXTERNAL_TOOL,
+            Assignment.SubmissionType.ATTENDANCE,
+            Assignment.SubmissionType.MEDIA_RECORDING
         )
         val assignment = Assignment(
-                id = 123,
-                name = "Assignment Name",
-                description = "This is a description",
-                pointsPossible = 35.0,
+            id = 123,
+            name = "Assignment Name",
+            description = "This is a description",
+            pointsPossible = 35.0,
 
-                submissionTypesRaw = allTypes.map { it.apiString }
+            submissionTypesRaw = allTypes.map { it.apiString }
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
@@ -651,21 +427,21 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun showSubmissionStatusSubmissionTypeQuiz() {
         val allTypes = listOf(
-                Assignment.SubmissionType.ONLINE_QUIZ
+            Assignment.SubmissionType.ONLINE_QUIZ
         )
         val quiz = Quiz(
-                id = 123L
+            id = 123L
         )
         val assignment = Assignment(
-                id = 123,
-                name = "Assignment Name",
-                description = "This is a description",
-                pointsPossible = 35.0,
-                submissionTypesRaw = allTypes.map { it.apiString },
-                quizId = quiz.id
+            id = 123,
+            name = "Assignment Name",
+            description = "This is a description",
+            pointsPossible = 35.0,
+            submissionTypesRaw = allTypes.map { it.apiString },
+            quizId = quiz.id
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
         loadPageWithModel(model)
@@ -673,27 +449,27 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun showSubmissionStatusSubmissionTypeDiscussion() {
         val allTypes = listOf(
-                Assignment.SubmissionType.DISCUSSION_TOPIC
+            Assignment.SubmissionType.DISCUSSION_TOPIC
         )
         val discussion = DiscussionTopicHeader(
-                id = 123L,
-                message = "discussion message",
-                author = DiscussionParticipant(
-                        displayName = "Hodor",
-                        avatarImageUrl = "pretty-hodor.com"
-                ),
-                postedDate = Date()
+            id = 123L,
+            message = "discussion message",
+            author = DiscussionParticipant(
+                displayName = "Hodor",
+                avatarImageUrl = "pretty-hodor.com"
+            ),
+            postedDate = Date()
         )
         val assignment = Assignment(
-                id = 123,
-                name = "Assignment Name",
-                description = "This is a description",
-                pointsPossible = 35.0,
-                submissionTypesRaw = allTypes.map { it.apiString },
-                discussionTopicHeader = discussion
+            id = 123,
+            name = "Assignment Name",
+            description = "This is a description",
+            pointsPossible = 35.0,
+            submissionTypesRaw = allTypes.map { it.apiString },
+            discussionTopicHeader = discussion
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
@@ -744,6 +520,227 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
         assignmentDetailsRenderPage.assertAssignmentAttemptsGone()
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_QUIZZES)
+    fun displaysQuizDetails() {
+        val quizId = 123L
+        val timeLimit = 10
+        val allowedAttempts = 1
+        val questionCount = 1
+        val assignment = Assignment(
+            name = "Test Assignment",
+            submissionTypesRaw = listOf("online_quiz"),
+            quizId = quizId
+        )
+        val quiz = Quiz(
+            id = quizId,
+            timeLimit = timeLimit,
+            allowedAttempts = allowedAttempts,
+            questionCount = questionCount
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertQuizDescription(timeLimit.toString(), allowedAttempts.toString(), questionCount.toString())
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_QUIZZES)
+    fun displaysQuizDetailsNoTimeLimit() {
+        val quizId = 123L
+        val timeLimit = 0
+        val allowedAttempts = 1
+        val questionCount = 1
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = quizId
+        )
+        val quiz = Quiz(
+                id = quizId,
+                timeLimit = timeLimit,
+                allowedAttempts = allowedAttempts,
+                questionCount = questionCount
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertQuizDescription(R.string.quizNoTimeLimit, allowedAttempts.toString(), questionCount.toString())
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_QUIZZES)
+    fun displaysQuizDetailsUnlimitedAttempts() {
+        val quizId = 123L
+        val timeLimit = 10
+        val allowedAttempts = -1
+        val questionCount = 1
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = quizId
+        )
+        val quiz = Quiz(
+                id = quizId,
+                timeLimit = timeLimit,
+                allowedAttempts = allowedAttempts,
+                questionCount = questionCount
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertQuizDescription(timeLimit.toString(), R.string.unlimited, questionCount.toString())
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_QUIZZES)
+    fun displaysNoSubmissionTypesForQuiz() {
+        val quizId = 123L
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = quizId
+        )
+        val quiz = Quiz(id = quizId)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.submissionTypes.assertGone()
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_QUIZZES)
+    fun displaysViewQuizButton() {
+        val quizId = 123L
+        val assignment = Assignment(
+            name = "Test Assignment",
+            submissionTypesRaw = listOf("online_quiz"),
+            quizId = quizId
+        )
+        val quiz = Quiz(id = quizId)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmitButton(R.string.viewQuiz)
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_DISCUSSIONS)
+    fun displaysNoSubmissionTypesForDiscussion() {
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = DiscussionTopicHeader(id = 123L, author = DiscussionParticipant(displayName = "hodor"), postedDate = Date())
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.submissionTypes.assertGone()
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_DISCUSSIONS)
+    fun displaysDiscussionTopicHeader() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val authoredDate = "Jul 23 at 9:59 AM"
+        val attachmentIconVisibility = false
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = discussionTopicHeader
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDiscussionHeader(authorName, authoredDate, attachmentIconVisibility)
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_DISCUSSIONS)
+    fun displaysDiscussionTopicHeaderWithAuthorPronouns() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val authorPronouns = "Pro/Noun"
+        val authoredDate = "Jul 23 at 9:59 AM"
+        val attachmentIconVisibility = false
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = DiscussionTopicHeader(
+            id = 123L,
+            message = discussionMessage,
+            author = DiscussionParticipant(
+                displayName = authorName,
+                pronouns = authorPronouns,
+                avatarImageUrl = authorAvatarUrl
+            ),
+            postedDate = calendar.time
+        )
+        val assignment = Assignment(
+            name = "Test Assignment",
+            submissionTypesRaw = listOf("discussion_topic"),
+            discussionTopicHeader = discussionTopicHeader
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDiscussionHeader("hodor (Pro/Noun)", authoredDate, attachmentIconVisibility)
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_DISCUSSIONS)
+    fun displaysDiscussionTopicHeaderWithAttachments() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val authoredDate = "Jul 23 at 9:59 AM"
+        val attachmentIconVisibility = true
+        val attachmentId = 12345L
+        val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, attachments = remoteFiles, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = discussionTopicHeader
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDiscussionHeader(authorName, authoredDate, attachmentIconVisibility)
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_DISCUSSIONS)
+    fun displaysDiscussionDescription() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val attachmentId = 12345L
+        val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, attachments = remoteFiles, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = discussionTopicHeader
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDisplaysDiscussionDescription(discussionMessage)
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_DISCUSSIONS)
+    fun displaysViewDiscussionButton() {
+        val assignment = Assignment(
+            name = "Test Assignment",
+            submissionTypesRaw = listOf("discussion_topic"),
+            discussionTopicHeader = DiscussionTopicHeader(id = 123L, author = DiscussionParticipant(displayName = "hodor"), postedDate = Date())
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmitButton(R.string.viewDiscussion)
     }
 
     private fun mockkSubmission(failed: Boolean = false) = com.instructure.student.Submission(

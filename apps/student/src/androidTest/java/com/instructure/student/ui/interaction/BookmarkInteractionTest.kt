@@ -38,7 +38,7 @@ class BookmarkInteractionTest : StudentTest() {
 
     // Test that we can create a bookmark via the UI and see it in the bookmark list
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION, false, FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION, false)
     fun testBookmark_create() {
         val data = init()
         val course = data.courses.values.first()
@@ -60,7 +60,7 @@ class BookmarkInteractionTest : StudentTest() {
 
     // Tests that we can click a bookmark and end up in the bookmarked location
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION, false, FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION, false)
     fun testBookmark_click() {
         val data = init()
         val student = data.students.first()
@@ -83,7 +83,7 @@ class BookmarkInteractionTest : StudentTest() {
 
     // Tests that we can change the name of a bookmark and still click through to the intended location
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION, false, FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION, false)
     fun testBookmark_changeName() {
         val data = init()
         val student = data.students.first()

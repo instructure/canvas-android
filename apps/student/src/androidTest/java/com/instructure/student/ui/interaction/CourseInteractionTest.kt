@@ -81,7 +81,7 @@ class CourseInteractionTest : StudentTest() {
 
     // user should be able to open/preview course file
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE, TestCategory.INTERACTION, false, FeatureCategory.FILES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.INTERACTION, false)
     fun testCourse_openFile() {
 
         // MBL-13499: Don't run this test on API 28 and above until we add HTTPS support

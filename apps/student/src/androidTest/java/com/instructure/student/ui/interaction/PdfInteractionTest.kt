@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.SecondaryFeatureCategory
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
@@ -50,14 +51,14 @@ class PdfInteractionTest : StudentTest() {
     private lateinit var attachment: Attachment
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.SUBMISSIONS_ANNOTATIONS)
     fun testAnnotations_viewPdfSubmission() {
         goToAssignmentPdfSubmission()
         submissionDetailsPage.assertFileDisplayed(pdfFileName)
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.SUBMISSIONS_ANNOTATIONS)
     fun testAnnotations_viewAndSelectAnnotationsInSubmission() {
         goToAssignmentPdfSubmission()
         submissionDetailsPage.clickSubmissionContentAtPosition(.5f, .5f)
@@ -65,7 +66,7 @@ class PdfInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.SUBMISSIONS_ANNOTATIONS)
     fun testAnnotations_selectAndCommentOnAnnotationWithNoExistingComments() {
         val sentCommentContents = "what up dog"
         // Configure the comment to be sent in mock Canvas
@@ -78,7 +79,7 @@ class PdfInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.SUBMISSIONS_ANNOTATIONS)
     fun testAnnotations_selectAndCommentOnAnnotationWithExistingComments() {
         val sentCommentContents = "what up dog"
         // Configure the comment to be sent in mock Canvas and the existing comment
@@ -92,7 +93,7 @@ class PdfInteractionTest : StudentTest() {
 
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false, SecondaryFeatureCategory.SUBMISSIONS_ANNOTATIONS)
     fun testAnnotations_openPdfFilesInPSPDFKit() {
         // Annotation toolbar icon needs to be present
         val data = getToCourse()
@@ -113,7 +114,7 @@ class PdfInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.SUBMISSIONS_ANNOTATIONS)
     fun testAnnotations_openPdfsInPSPDFKitFromLinksInAssignment() {
         // Annotation toolbar icon needs to be present, this link is specific to assignment details, as that was the advertised use case
         val data = MockCanvas.init(

@@ -43,6 +43,7 @@ import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.SecondaryFeatureCategory
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
@@ -69,7 +70,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping an Assignment module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, SecondaryFeatureCategory.MODULES_ASSIGNMENTS)
     fun testModules_launchesIntoAssignment() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -86,7 +87,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping a Discussion module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, SecondaryFeatureCategory.MODULES_DISCUSSIONS)
     fun testModules_launchesIntoDiscussion() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -125,7 +126,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping a File module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.FILES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, SecondaryFeatureCategory.MODULES_FILES)
     fun testModules_launchesIntoFile() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -139,7 +140,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping a Page module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, SecondaryFeatureCategory.MODULES_PAGES)
     fun testModules_launchesIntoPage() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
@@ -165,7 +166,7 @@ class ModuleInteractionTest : StudentTest() {
 
     // Tapping a Quiz module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.QUIZZES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, false, SecondaryFeatureCategory.EVENTS_QUIZZES)
     fun testModules_launchesIntoQuiz() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)
