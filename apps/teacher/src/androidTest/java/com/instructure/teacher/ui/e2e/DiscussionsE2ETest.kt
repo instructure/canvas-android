@@ -38,7 +38,7 @@ class DiscussionsE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.E2E)
     fun testDiscussionE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

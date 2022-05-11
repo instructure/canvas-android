@@ -44,7 +44,7 @@ class CommentLibraryPageTest : TeacherTest() {
     val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllItemsWhenCommentFieldIsClicked() {
         val commentLibraryItems = createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -58,7 +58,7 @@ class CommentLibraryPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAndSelectFilteredCommentCloseCommentLibrary() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -76,7 +76,7 @@ class CommentLibraryPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionAndSendComment() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -100,7 +100,7 @@ class CommentLibraryPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun sendCommentFromCommentLibraryWithoutSelectingSuggestion() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -120,7 +120,7 @@ class CommentLibraryPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun reopenCommentLibraryWhenTextIsModified() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -141,7 +141,7 @@ class CommentLibraryPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showEmptyViewWhenFilteringHasNoSuggestion() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -152,7 +152,7 @@ class CommentLibraryPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionFromMultipleItemResult() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -173,7 +173,7 @@ class CommentLibraryPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllCommentLibraryItemsAfterClearingCommentFieldFilter() {
         val commentLibraryItems = createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()

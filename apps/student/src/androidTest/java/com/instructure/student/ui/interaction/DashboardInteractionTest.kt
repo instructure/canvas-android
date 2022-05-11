@@ -17,10 +17,8 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAccountNotification
-import com.instructure.canvas.espresso.mockCanvas.addEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.panda_annotations.FeatureCategory
@@ -38,7 +36,7 @@ class DashboardInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testNavigateToDashboard() {
         // User should be able to tap and navigate to dashboard page
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1)
@@ -52,7 +50,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_emptyState() {
         // Empty state should be displayed with a 'Add Courses' button, when nothing is favorited (and courses are completed/concluded)
         // With the new DashboardCard api being used, if nothing is a favorite it will default to active enrollments
@@ -61,7 +59,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_addFavorite() {
         // Starring should add course to favorite list
 
@@ -82,7 +80,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_removeFavorite() {
         // Un-starring should remove course from favorite list
 
@@ -105,7 +103,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_addAllToFavorites() {
         val data = getToDashboard(courseCount = 3, favoriteCourseCount = 0)
         val toFavorite = data.courses.values
@@ -123,7 +121,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_removeAllFromFavorites() {
         val data = getToDashboard(courseCount = 3, favoriteCourseCount = 2)
         val toRemove = data.courses.values.filter { it.isFavorite }
@@ -141,7 +139,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardAnnouncement_refresh() {
         // Pull to refresh loads new announcements
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1) // No announcements initially
@@ -152,7 +150,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardAnnouncement_dismiss() {
         // Tapping dismiss should remove the announcement. Refresh should not display it again.
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
@@ -166,7 +164,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardInvite_accept() {
         val data = getToDashboard(courseCount = 2, invitedCourseCount = 1)
         val invitedCourse = data.courses.values.first { it.enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_INVITED } ?: false }
@@ -182,7 +180,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardInvite_decline() {
         val data = getToDashboard(courseCount = 2, invitedCourseCount = 1)
         val invitedCourse = data.courses.values.first { it.enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_INVITED } ?: false }
@@ -198,7 +196,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardAnnouncement_view() {
         // Tapping global announcement displays the content
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1, announcementCount = 1)
@@ -212,7 +210,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false, FeatureCategory.COURSE)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false)
     fun testDashboardCourses_tappingCourseCardDisplaysCourseBrowser() {
         // Tapping on a course card opens course browser page
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1)
@@ -229,7 +227,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false, FeatureCategory.COURSE)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false)
     fun testDashboardCourses_gradeIsDisplayedWhenShowGradesIsSelected() {
         // [Student] Grade is displayed when 'Show Grades' (located in navigation drawer) is selected
         getToDashboard(courseCount = 1, favoriteCourseCount = 1)
@@ -238,7 +236,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false, FeatureCategory.COURSE)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false)
     fun testDashboardCourses_gradeIsNotDisplayedWhenShowGradesIsDeSelected() {
         // [Student] Grade is NOT displayed when 'Show Grades' (located in navigation drawer) is de-selected
         getToDashboard(courseCount = 1, favoriteCourseCount = 1)

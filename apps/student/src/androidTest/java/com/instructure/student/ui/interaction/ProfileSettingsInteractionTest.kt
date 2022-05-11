@@ -31,7 +31,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
     )
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testProfileSettings_changeUsername() {
         val data = MockCanvas.init(studentCount = 1, teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val student = data.students[0]
@@ -53,7 +53,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testProfileSettings_disabledIfNoPermissions() {
         val data = MockCanvas.init(studentCount = 1, teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val student = data.students[0]
@@ -69,7 +69,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
 
     // Creates a panda avatar, saves it, and verifies that a new panda avatar was saved.
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testProfileSettings_createPandaAvatar() {
         val data = MockCanvas.init(studentCount = 1, teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val student = data.students[0]

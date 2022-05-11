@@ -25,7 +25,7 @@ class InboxE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -69,7 +69,7 @@ class InboxE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxNewMessageE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

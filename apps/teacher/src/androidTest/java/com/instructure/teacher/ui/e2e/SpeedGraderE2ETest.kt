@@ -49,7 +49,7 @@ class SpeedGraderE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GRADES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E)
     fun testSpeedGraderE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

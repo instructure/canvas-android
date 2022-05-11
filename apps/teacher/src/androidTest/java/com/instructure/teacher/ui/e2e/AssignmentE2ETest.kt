@@ -42,7 +42,7 @@ class AssignmentE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testAssignmentsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -130,7 +130,7 @@ class AssignmentE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testEditAssignmentE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

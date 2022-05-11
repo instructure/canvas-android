@@ -41,7 +41,7 @@ class LoginE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginE2E() {
 
         // Seed data
@@ -92,7 +92,7 @@ class LoginE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testUserRolesLoginE2E() {
 
         // Seed student, teacher, TA and parent data
@@ -132,7 +132,7 @@ class LoginE2ETest : StudentTest() {
     // Verify that students can sign into vanity domain
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testVanityDomainLoginE2E() {
         // Create a Retrofit client for our vanity domain
         val domain = "canvas.beta.jitops.computer" // Our test vanity domain

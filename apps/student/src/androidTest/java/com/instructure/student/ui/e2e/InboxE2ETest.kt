@@ -38,7 +38,7 @@ class InboxE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxE2E() {
 
         // Seed basic data

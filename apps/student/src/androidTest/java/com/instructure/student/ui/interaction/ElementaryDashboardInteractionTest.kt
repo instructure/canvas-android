@@ -18,8 +18,6 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -36,7 +34,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testNavigateToElementaryDashboard() {
         // User should be able to tap and navigate to dashboard page
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
@@ -48,7 +46,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testTabsNavigation() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
@@ -72,7 +70,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyElementarySpecificNavigationItemsShownInTheNavigationDrawer() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.openDrawer()

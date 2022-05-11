@@ -39,7 +39,7 @@ class DashboardE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testDashboardE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

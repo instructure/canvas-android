@@ -20,7 +20,6 @@ import android.os.Environment
 import android.util.Log
 import androidx.test.espresso.Espresso.pressBack
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
@@ -56,7 +55,7 @@ class FilesE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.FILES, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E, false)
     fun testFilesE2E() {
 
         // Seed basic data

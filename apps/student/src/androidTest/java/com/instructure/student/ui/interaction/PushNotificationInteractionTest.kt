@@ -39,7 +39,7 @@ class PushNotificationInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.NONE, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NONE, TestCategory.INTERACTION, false)
     fun testClick_itWorks() {
         // Test that push notifications work when you click on them
         val data = goToNotifications()

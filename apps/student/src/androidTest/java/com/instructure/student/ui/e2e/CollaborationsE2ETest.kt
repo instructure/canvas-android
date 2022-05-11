@@ -25,7 +25,7 @@ class CollaborationsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.COLLABORATIONS, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COLLABORATIONS, TestCategory.E2E, false)
     fun testCollaborationsE2E() {
 
         // Seed basic student/teacher/course data

@@ -41,7 +41,7 @@ class SettingsE2ETest : StudentTest() {
     // they seemed like legitimate targets for an E2E test.
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testSettingsE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
@@ -65,7 +65,7 @@ class SettingsE2ETest : StudentTest() {
     // Marked as P2 because this is not testing user-facing functionality.
     @E2E
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SETTINGS, TestCategory.E2E)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testRemoteConfigSettingsE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]

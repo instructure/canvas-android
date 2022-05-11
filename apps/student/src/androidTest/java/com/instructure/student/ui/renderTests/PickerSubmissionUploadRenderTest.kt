@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.renderTests
 
-import android.os.Build
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
@@ -50,7 +49,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     private val baseVisibilities = PickerVisibilities(sources = true)
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysEmptyState() {
         loadPageWithViewState(PickerSubmissionUploadViewState.Empty(baseVisibilities))
         page.emptyView.assertVisible()
@@ -62,7 +61,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysEmptyStateWithLoading() {
         loadPageWithViewState(PickerSubmissionUploadViewState.Empty(baseVisibilities.copy(loading = true)))
         page.emptyView.assertVisible()
@@ -75,7 +74,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysListState() {
         val fileItemStates = listOf(
             PickerListItemViewState(0, R.drawable.ic_media_recordings, "title", "12.3 KB")
@@ -95,7 +94,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysListStateWithLoading() {
         val fileItemStates = listOf(
             PickerListItemViewState(0, R.drawable.ic_media_recordings, "title", "12.3 KB")
@@ -116,7 +115,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysSourceButtons() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
@@ -135,7 +134,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun showsOnlyCameraSource() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
@@ -156,7 +155,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun showsOnlyGallerySource() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
@@ -178,7 +177,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun showsOnlyFileSource() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
@@ -199,7 +198,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysCorrectStringsForSubmissionMode() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(baseVisibilities)
@@ -209,7 +208,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysCorrectStringsForCommentMode() {
         loadPageWithViewState(
             viewState = PickerSubmissionUploadViewState.Empty(baseVisibilities),
@@ -220,7 +219,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun hidesSourceButtons() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
