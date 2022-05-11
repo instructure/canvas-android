@@ -59,7 +59,6 @@ class FileGenerator : AbstractProcessor(){
         val testCounts = HashMap<TestCategory, TestCount>()
         val priorityCounts = HashMap<Priority, TestCount>()
         val featureCounts = HashMap<FeatureCategory, TestCount>()
-        val manualOnly = ArrayList<String>()
 
         annotationWrapperList.forEach { annotationWrapper ->
             val stubbedCount = if(annotationWrapper.annotation.stubbed) 1 else 0
