@@ -25,7 +25,8 @@
     android:orientation="vertical"
     android:paddingBottom="22dp"
     android:paddingStart="24dp"
-    android:paddingTop="18dp">
+    android:paddingTop="18dp"
+    android:id="@+id/legalPage">
 
     <LinearLayout
         android:id="@+id/privacyPolicy"
