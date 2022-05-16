@@ -227,6 +227,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
+            finish()
         }
 
         bottomBar.inflateMenu(navigationBehavior.bottomBarMenu)
