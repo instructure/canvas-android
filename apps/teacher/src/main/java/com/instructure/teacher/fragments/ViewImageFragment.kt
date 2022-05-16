@@ -38,8 +38,8 @@ import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
