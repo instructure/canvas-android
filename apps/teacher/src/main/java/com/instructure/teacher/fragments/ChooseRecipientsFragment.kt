@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -133,7 +132,7 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
             }
 
             // Apply toolbar theme
-            ViewStyler.themeToolbarBottomSheet(requireActivity(), resources.getBoolean(R.bool.isDeviceTablet), this, Color.BLACK, false)
+            ViewStyler.themeToolbarLight(requireActivity(), this)
         }
     }
 

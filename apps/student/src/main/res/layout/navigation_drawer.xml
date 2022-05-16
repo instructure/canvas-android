@@ -23,7 +23,7 @@
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
+        android:background="@color/backgroundLightest"
         android:fillViewport="true"
         android:fitsSystemWindows="false"
         android:scrollbars="none"

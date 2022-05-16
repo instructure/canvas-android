@@ -257,7 +257,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         appDescriptionType?.setTextColor(color)
         appDescriptionType?.setText(appTypeName())
 
-        ViewStyler.setStatusBarLight(this)
+        ViewStyler.themeStatusBar(this)
     }
 
     private fun setupGesture() {

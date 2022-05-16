@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.features.speedgrader.commentlibrary
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -65,7 +64,7 @@ class CommentLibraryFragment : Fragment() {
 
     private fun setupToolbar() {
         commentLibraryToolbar.setupCloseButton(this)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), resources.getBoolean(com.instructure.pandautils.R.bool.isDeviceTablet), commentLibraryToolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), commentLibraryToolbar)
     }
 
     companion object {

@@ -22,9 +22,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.LayoutDirection
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.core.text.TextUtilsCompat
 import com.instructure.annotations.CanvasPdfMenuGrouping
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PSPDFKIT
@@ -86,6 +88,11 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setOnContextualToolbarLifecycleListener(this)
+
+        val typedValue = TypedValue()
+        theme.resolveAttribute(R.attr.colorPrimaryDark, typedValue, true)
+        @ColorInt val color = typedValue.data
+        ViewStyler.setStatusBarDark(this, color)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {

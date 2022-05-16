@@ -63,7 +63,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
         syllabusTabLayout.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
     }
 

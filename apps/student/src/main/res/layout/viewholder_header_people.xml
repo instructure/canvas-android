@@ -22,6 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/backgroundLightest"
+    android:foreground="?attr/selectableItemBackground"
     android:minHeight="?android:listPreferredItemHeight">
 
     <FrameLayout
@@ -56,6 +57,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:layout_gravity="center"
+            android:tint="@color/textDarkest"
             app:srcCompat="@drawable/ic_expand"
             android:importantForAccessibility="no"/>
 

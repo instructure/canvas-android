@@ -69,10 +69,9 @@ import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.utils.Utils
-import com.instructure.pandautils.utils.ViewStyler.setStatusBarLight
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
+import kotlinx.android.synthetic.main.activity_find_school.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Response
@@ -118,10 +117,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     private fun setupViews() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = accountDomain.domain
-        toolbar.setNavigationIcon(R.drawable.ic_action_arrow_back)
         toolbar.navigationIcon?.isAutoMirrored = true
-        toolbar.setNavigationContentDescription(R.string.close)
-        toolbar.setNavigationOnClickListener { finish() }
+        toolbar.setupAsBackButton { finish() }
         webView = findViewById(R.id.webView)
         clearCookies()
         CookieManager.getInstance().setAcceptCookie(true)
@@ -142,7 +139,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     }
 
     private fun applyTheme() {
-        setStatusBarLight(this)
+        themeStatusBar(this)
     }
 
     /**

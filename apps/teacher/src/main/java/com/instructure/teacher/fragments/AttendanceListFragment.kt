@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
@@ -131,10 +130,10 @@ class AttendanceListFragment : BaseSyncFragment<
 
     private fun themeToolbar() {
         if(isTablet) {
-            ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         } else {
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mCanvasContext.color, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
         }
     }
 

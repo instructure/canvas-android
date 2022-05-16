@@ -16,29 +16,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/textDark</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDark</item>
+
         <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLight</item>
     </style>
 
     <style name="PSPDFKitTheme" parent="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
+
         <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
         <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
         <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
+        <item name="pspdf__propertyInspectorStyle">@style/PropertyInspector</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLight</item>
+        <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
     </style>
 
     <style name="ContextualToolbarStyle">
-        <item name="pspdf__backgroundColor">@color/backgroundDark</item>
-        <item name="pspdf__submenuBackgroundColor">@color/backgroundDarkest</item>
+        <item name="pspdf__backgroundColor">@color/ash</item>
+        <item name="pspdf__submenuBackgroundColor">@color/licorice</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">
@@ -66,11 +72,22 @@
     <style name="StampPickerStyle">
         <item name="pspdf__maxHeight">320dp</item>
         <item name="pspdf__maxWidth">100dp</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+    </style>
+
+    <style name="PropertyInspector">
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+        <item name="pspdf__textColor">@color/textDarkest</item>
+    </style>
+
+    <style name="ModalDialogStyle">
+        <item name="pspdf__titleBackground">@color/ash</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/backgroundDarkest</item>
     </style>
@@ -80,7 +97,7 @@
         <item name="android:src">@drawable/ic_overflow</item>
     </style>
 
-    <style name="Theme.BottomSheet" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+    <style name="Theme.BottomSheet" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <item name="colorPrimary">@color/textDark</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDark</item>
@@ -93,7 +110,7 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="RoundedContextDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="RoundedContextDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTitleStyle">@null</item>
@@ -163,7 +180,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Theme.AppCompat.Light.Translucent">
+    <style name="Theme.AppCompat.DayNight.Translucent">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
@@ -174,9 +191,9 @@
     </style>
 
     <style name="ToolBarStyle" parent="AppTheme">
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="ColorPickerDialogItem">

@@ -369,11 +369,10 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
-                        android:background="#f5f5f5"
                         android:clickable="true"
                         android:padding="12dp"
                         android:text="@string/no_assignment_description_filler"
-                        android:textColor="#2D3B45"
+                        android:textColor="@color/textDarkest"
                         android:visibility="gone"
                         tools:visibility="visible"/>
 

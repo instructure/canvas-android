@@ -55,7 +55,7 @@
         android:paddingEnd="12dp"
         android:paddingStart="12dp"
         android:paddingTop="8dp"
-        android:textColor="#FFF"
+        android:textColor="@color/white"
         android:layout_marginTop="4dp"
         app:bubbleColor="@color/backgroundInfo"
         app:targetAvatarId="@+id/avatarView"

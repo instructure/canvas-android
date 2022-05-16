@@ -17,7 +17,6 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Color
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER_EMPTY
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -43,7 +42,7 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
 
     private fun setupToolbar(courseColor: Int?) {
         if(courseColor != null) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar, courseColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseColor, requireContext().getColor(R.color.white))
         }
     }
 

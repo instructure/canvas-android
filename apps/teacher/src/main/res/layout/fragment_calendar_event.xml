@@ -42,6 +42,7 @@
         android:layout_marginTop="20dp"
         android:contentDescription="@string/timeIconDescription"
         android:src="@drawable/ic_clock"
+        android:tint="@color/textDark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
@@ -79,6 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:tint="@color/textDark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dateSubtitle"
         app:srcCompat="@drawable/ic_marker" />

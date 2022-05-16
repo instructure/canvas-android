@@ -150,7 +150,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         swipeRefreshLayout.isRefreshing = false
 
         // Theme the toolbar again since visibilities may have changed
-        ViewStyler.themeToolbar(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
 
         updateStatuses() // Muted is now also set by not being in the new gradebook
     }
@@ -175,7 +175,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             assignmentSubmissionListToolbar.title = getString(R.string.submissions)
             assignmentSubmissionListToolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbar(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
         ViewStyler.themeFAB(addMessage, ThemePrefs.buttonColor)
     }
 

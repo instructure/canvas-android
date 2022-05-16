@@ -97,12 +97,12 @@ class ViewImageFragment : Fragment(), ShareableFile {
         }
 
         if (isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mToolbarColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()
             }
-            ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         }
     }
@@ -144,7 +144,7 @@ class ViewImageFragment : Fragment(), ShareableFile {
     fun colorBackground(bitmap: Bitmap) {
         // Generate palette asynchronously
         Palette.from(bitmap).generate { palette ->
-            palette?.let { viewImageRootView.setBackgroundColor(it.getDarkMutedColor(Color.WHITE)) }
+            palette?.let { viewImageRootView.setBackgroundColor(it.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest))) }
         }
     }
 

@@ -48,6 +48,7 @@
             android:textSize="17sp"
             android:textStyle="bold"
             android:visibility="@{itemViewModel.data.courseName.empty ? View.GONE : View.VISIBLE}"
+            app:drawableTint="@color/textDarkest"
             tools:text="Homeroom 1" />
 
         <com.instructure.pandautils.views.CanvasWebView

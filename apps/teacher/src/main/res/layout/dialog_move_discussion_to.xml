@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:checked="false"
             android:textSize="@dimen/dialogRadioButtonTextSize"
+            android:textColor="@color/textDarkest"
             android:minHeight="?android:listPreferredItemHeightSmall"/>
 
         <androidx.appcompat.widget.AppCompatRadioButton
@@ -49,6 +50,7 @@
             android:layout_height="wrap_content"
             android:checked="false"
             android:textSize="@dimen/dialogRadioButtonTextSize"
+            android:textColor="@color/textDarkest"
             android:minHeight="?android:listPreferredItemHeightSmall"/>
 
         <androidx.appcompat.widget.AppCompatRadioButton

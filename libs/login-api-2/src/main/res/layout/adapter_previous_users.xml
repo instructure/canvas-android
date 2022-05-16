@@ -48,7 +48,7 @@
             android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#2d3b45"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp"
             android:fontFamily="sans-serif-medium"
             android:textStyle="bold"

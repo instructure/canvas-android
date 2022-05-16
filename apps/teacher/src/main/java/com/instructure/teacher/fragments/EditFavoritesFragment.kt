@@ -16,7 +16,6 @@
 */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -113,7 +112,7 @@ class EditFavoritesFragment : BaseSyncFragment<
     private fun setupToolbar() {
         toolbar.title = getString(R.string.edit_courses)
         toolbar.setupBackButton(this)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 

@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.notification.preferences
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -67,7 +66,7 @@ class NotificationPreferencesFragment : Fragment() {
 
     private fun setupToolbar() {
         toolbar.setupAsBackButton { requireActivity().onBackPressed() }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     companion object {

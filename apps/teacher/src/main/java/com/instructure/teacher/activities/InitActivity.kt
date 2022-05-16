@@ -29,6 +29,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -116,23 +117,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         true
     }
 
-    private val navigationColorStateList: ColorStateList
-        get() {
-            val states = arrayOf(
-                intArrayOf(android.R.attr.state_checked),
-                intArrayOf(-android.R.attr.state_checked),
-                intArrayOf(android.R.attr.state_selected)
-            )
-
-            val colors = intArrayOf(
-                ThemePrefs.brandColor,
-                getColorCompat(R.color.textDarkest),
-                getColorCompat(R.color.textDarkest)
-            )
-
-            return ColorStateList(states, colors)
-        }
-
     private lateinit var checkListener: CompoundButton.OnCheckedChangeListener
 
     private val isDrawerOpen: Boolean
@@ -188,9 +172,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     override fun onReadySetGo(presenter: InitActivityPresenter) {
-        val colorStateList = navigationColorStateList
-        bottomBar.itemTextColor = colorStateList
-        bottomBar.itemIconTintList = colorStateList
+        bottomBar.applyTheme(ThemePrefs.brandColor, getColor(R.color.textDarkest))
         bottomBar.setOnNavigationItemSelectedListener(mTabSelectedListener)
         fakeToolbar.setBackgroundColor(ThemePrefs.primaryColor)
         when (selectedTab) {
@@ -298,7 +280,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         setupUserDetails(ApiPrefs.user)
 
-        ViewStyler.themeToolbar(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
 
         navigationDrawerItem_startMasquerading.setVisible(!ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true)
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)

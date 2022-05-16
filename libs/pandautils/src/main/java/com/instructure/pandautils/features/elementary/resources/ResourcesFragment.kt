@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.elementary.resources
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
@@ -24,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.LTITool
@@ -84,7 +84,7 @@ class ResourcesFragment : Fragment() {
             .map { it.contextName }
             .toTypedArray()
 
-        AlertDialog.Builder(context, R.style.AccentDialogTheme)
+        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
             .setTitle(R.string.chooseACourse)
             .setItems(dialogEntries) { dialog, which -> openSelectedLti(dialog, which, ltiTools) }
             .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
@@ -108,7 +108,7 @@ class ResourcesFragment : Fragment() {
 
     private fun setupWebView(webView: CanvasWebView) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(Color.WHITE)
+        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.allowFileAccess = true
         webView.settings.loadWithOverviewMode = true
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {

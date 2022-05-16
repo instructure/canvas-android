@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -15,127 +14,122 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?android:listPreferredItemHeightLarge"
-    app:contentPadding="4dp">
+    android:orientation="horizontal"
+    android:foreground="?attr/selectableItemBackground"
+    android:padding="4dp">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:padding="8dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_size"
+            android:layout_height="@dimen/avatar_size"
+            android:layout_marginStart="4dp"
+            android:padding="4dp"
+            tools:src="@drawable/ic_group" />
+
+        <View
+            android:id="@+id/unreadMark"
+            android:layout_width="@dimen/unread_message_marker_size"
+            android:layout_height="@dimen/unread_message_marker_size"
+            android:layout_gravity="top|start"
+            android:layout_marginStart="-4dp"
+            android:layout_marginTop="-4dp"
+            android:background="@drawable/ic_circle"
+            android:contentDescription="@string/unread" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:padding="8dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/avatar"
-                android:layout_width="@dimen/avatar_size"
-                android:layout_height="@dimen/avatar_size"
-                android:layout_marginStart="4dp"
-                android:padding="4dp"
-                tools:src="@drawable/ic_group"/>
-
-            <View
-                android:id="@+id/unreadMark"
-                android:layout_width="@dimen/unread_message_marker_size"
-                android:layout_height="@dimen/unread_message_marker_size"
-                android:layout_gravity="top|start"
-                android:layout_marginStart="-4dp"
-                android:layout_marginTop="-4dp"
-                android:background="@drawable/ic_circle"
-                android:contentDescription="@string/unread"/>
-
-        </FrameLayout>
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/titleWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/titleWrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextFont.Medium"
-                    android:id="@+id/userName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textSize="16sp"
-                    tools:text="Emily WithAReallyLongLastName"
-                    android:layout_gravity="center_vertical"/>
-
-                <ImageView
-                    android:id="@+id/attachment"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:tint="@color/textDark"
-                    android:contentDescription="@string/attachment_icon"
-                    app:srcCompat="@drawable/ic_attachment"
-                    android:layout_gravity="center_vertical"/>
-
-                <ImageView
-                    android:id="@+id/star"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:contentDescription="@string/star_icon"
-                    android:src="@drawable/ic_star_solid"
-                    android:layout_gravity="center_vertical"/>
-
-                <TextView
-                    android:id="@+id/date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    tools:text="Yesterday"
-                    android:layout_gravity="center_vertical"/>
-
-            </LinearLayout>
+            android:orientation="horizontal">
 
             <TextView
-                style="@style/TextFont.Regular"
-                android:id="@+id/subject"
-                android:layout_width="wrap_content"
+                android:id="@+id/userName"
+                style="@style/TextFont.Medium"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textSize="14sp"
-                tools:text="This is my subject" />
+                android:textSize="16sp"
+                tools:text="Emily WithAReallyLongLastName" />
+
+            <ImageView
+                android:id="@+id/attachment"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="@string/attachment_icon"
+                android:tint="@color/textDark"
+                app:srcCompat="@drawable/ic_attachment" />
+
+            <ImageView
+                android:id="@+id/star"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="@string/star_icon"
+                android:src="@drawable/ic_star_solid" />
 
             <TextView
-                style="@style/TextFont.Regular"
-                android:id="@+id/message"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/textDark"
-                android:textSize="14sp"
-                tools:text="Here is some text of the message" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                tools:text="Yesterday" />
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/subject"
+            style="@style/TextFont.Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="14sp"
+            tools:text="This is my subject" />
+
+        <TextView
+            android:id="@+id/message"
+            style="@style/TextFont.Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/textDark"
+            android:textSize="14sp"
+            tools:text="Here is some text of the message" />
+
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</LinearLayout>

@@ -60,7 +60,7 @@
                     android:adjustViewBounds="true"
                     android:layout_marginBottom="2dp"
                     android:importantForAccessibility="no"
-                    android:tint="@color/backgroundMedium"
+                    android:tint="@color/tiara"
                     app:srcCompat="@drawable/ic_canvas_wordmark"/>
 
                 <TextView
@@ -223,7 +223,7 @@
         android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:background="@android:color/white">
+        android:background="@color/backgroundLightest">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -239,7 +239,7 @@
                 android:layout_marginEnd="12dp"
                 android:gravity="center"
                 android:text="No Snicker Doodles Could be Found or Eaten"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textDarkest"
                 android:textSize="20sp"
                 android:visibility="gone"
                 tools:ignore="HardcodedText"/>

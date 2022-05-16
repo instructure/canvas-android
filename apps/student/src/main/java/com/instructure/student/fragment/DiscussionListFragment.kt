@@ -237,7 +237,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             }
             recyclerAdapter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), discussionListToolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext)
     }
 
     override fun title(): String = getString(R.string.discussion)

@@ -55,6 +55,7 @@ class DonutChart(context: Context, attrs: AttributeSet?) : View(context, attrs) 
         textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG)
         textPaint.textAlign = Paint.Align.CENTER //Draw text from center
         textPaint.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+        textPaint.color = ContextCompat.getColor(context, R.color.textDarkest)
 
         // Convert the dips to pixels
         val textSize = TypedValue.applyDimension(
@@ -63,7 +64,7 @@ class DonutChart(context: Context, attrs: AttributeSet?) : View(context, attrs) 
             resources.displayMetrics
         )
         textPaint.textSize = textSize
-        unselectedColor = ContextCompat.getColor(context, R.color.backgroundLight)
+        unselectedColor = ContextCompat.getColor(context, R.color.porcelain)
         path = Path()
         outerCircle = RectF()
         innerCircle = RectF()

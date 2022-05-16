@@ -17,7 +17,6 @@
 
 package com.instructure.student.fragment
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
@@ -26,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -147,7 +147,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     private fun setupSortByButton() {
         sortByButton.onClick {
             val checkedItemIndex = sortOrder.index
-            AlertDialog.Builder(context, R.style.AccentDialogTheme)
+            AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
                 .setTitle(R.string.sortByDialogTitle)
                 .setSingleChoiceItems(R.array.assignmentsSortByOptions, checkedItemIndex, this@AssignmentListFragment::sortOrderSelected)
                 .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
@@ -181,7 +181,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             }
             recyclerAdapter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     private fun setupGradingPeriods(periods: List<GradingPeriod>) {

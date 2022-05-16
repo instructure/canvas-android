@@ -60,7 +60,7 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:importantForAccessibility="yes"
-                android:textColor="#2D3B45"
+                android:textColor="@color/textDarkest"
                 android:textSize="20sp"
                 tools:text="sample_file_name.png" />
 

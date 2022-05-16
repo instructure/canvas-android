@@ -18,13 +18,16 @@ package com.instructure.teacher.utils
 
 import android.content.IntentFilter
 import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.*
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.teacher.R
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.pspdfkit.PSPDFKit
@@ -40,6 +43,9 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager() {
             return
         }
         super.onCreate()
+
+        val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
+        AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
 
         // Call it superstition, but I don't trust BuildConfig flags to be set correctly
         // in library builds.  IS_TESTING, for example, does not percolate down to libraries

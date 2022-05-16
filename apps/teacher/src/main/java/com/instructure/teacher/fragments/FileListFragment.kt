@@ -17,7 +17,6 @@
 package com.instructure.teacher.fragments
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -285,8 +284,8 @@ class FileListFragment : BaseSyncFragment<
 
         if (mCanvasContext.isUser) {
             // User's files, no CanvasContext
-            ViewStyler.themeToolbar(requireActivity(), fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-        } else ViewStyler.themeToolbar(requireActivity(), fileListToolbar, courseColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        } else ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, courseColor, requireContext().getColor(R.color.white))
     }
 
     private fun animateFabs() = if (fabOpen) {

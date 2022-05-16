@@ -53,6 +53,7 @@ import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.Const
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setupAsBackButton
 import kotlinx.android.synthetic.main.activity_find_school.*
 import retrofit2.Response
 import java.util.Locale
@@ -118,9 +119,8 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
         mWhatsYourSchoolName = findViewById(R.id.whatsYourSchoolName)
         mLoginFlowLogout = findViewById(R.id.loginFlowLogout)
         toolbar.apply {
-            navigationIcon = ContextCompat.getDrawable(this@BaseLoginFindSchoolActivity, R.drawable.ic_action_arrow_back)
             navigationIcon?.isAutoMirrored = true
-            setNavigationContentDescription(R.string.close)
+            setupAsBackButton { finish() }
             inflateMenu(R.menu.menu_next)
             setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
                 if (item.itemId == R.id.next) {
@@ -134,7 +134,6 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
                 }
                 false
             })
-            setNavigationOnClickListener { finish() }
         }
 
         val a11yManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -266,7 +265,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
         toolbar!!.addView(view)
 
-        ViewStyler.setStatusBarLight(this)
+        ViewStyler.themeStatusBar(this)
     }
 
     /**

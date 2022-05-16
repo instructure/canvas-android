@@ -21,7 +21,6 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -85,7 +84,7 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
 
     override fun applyTheme() {
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     private fun setupViews() {

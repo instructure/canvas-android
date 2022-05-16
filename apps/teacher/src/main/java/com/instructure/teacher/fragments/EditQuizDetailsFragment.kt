@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
@@ -176,7 +175,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         toolbar.setupCloseButton(this)
         toolbar.title = getString(R.string.editQuiz)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveQuiz() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         saveButton?.setTextColor(ThemePrefs.buttonColor)
     }

@@ -20,7 +20,7 @@
     android:animateLayoutChanges="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/backgroundLightest">
+    android:background="@color/backgroundLightestElevated">
 
     <ImageButton
         android:id="@+id/sendCommentButton"

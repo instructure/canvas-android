@@ -17,21 +17,21 @@
   -->
 <resources>
 
-    <style name="ToolBarStyle" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
-        <item name="actionModeBackground">@color/textDarkest</item>
+    <style name="ToolBarStyle" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="actionModeBackground">@color/licorice</item>
     </style>
 
-    <style name="ToolBarPopupStyle" parent="Theme.AppCompat.Light">
+    <style name="ToolBarPopupStyle" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/textDarkest</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDarkest</item>
         <item name="actionModeBackground">@color/textDarkest</item>
     </style>
 
-    <style name="CustomViewAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="CustomViewAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:windowBackground">@color/transparent</item>
     </style>
 

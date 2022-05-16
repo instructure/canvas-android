@@ -741,7 +741,8 @@
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:minHeight="48dp"
-                            android:scrollbars="none" />
+                            android:scrollbars="none"
+                            android:background="@color/backgroundLightest" />
 
                     </LinearLayout>
 

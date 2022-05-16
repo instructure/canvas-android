@@ -64,7 +64,7 @@ class ProfileFragment : BaseFragment() {
         toolbar.setupMenu(R.menu.menu_settings_edit, menuItemCallback)
         toolbar.setupBackButtonAsBackPressedOnly(this)
         titleTextView.adoptToolbarStyle(toolbar)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         toolbar.requestAccessibilityFocus()
     }
 

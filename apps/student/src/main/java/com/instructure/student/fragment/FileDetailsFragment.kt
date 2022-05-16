@@ -102,7 +102,7 @@ class FileDetailsFragment : ParentFragment() {
     override fun applyTheme() {
         setupToolbarMenu(toolbar)
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         ViewStyler.themeButton(openButton)
         ViewStyler.themeButton(downloadButton)
     }

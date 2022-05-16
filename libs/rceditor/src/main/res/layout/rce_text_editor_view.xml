@@ -20,7 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/rce_view_min_height"
-    android:background="@android:color/white">
+    android:background="@color/rce_backgroundColor">
 
     <instructure.rceditor.RCETextEditor
         android:id="@+id/rce_webView"

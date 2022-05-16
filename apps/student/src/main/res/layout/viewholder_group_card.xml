@@ -26,6 +26,8 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/backgroundLightestElevated"
         app:cardCornerRadius="3dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
@@ -35,7 +37,7 @@
             android:id="@+id/accentBar"
             android:layout_width="4dp"
             android:layout_height="match_parent"
-            android:background="#888"/>
+            android:background="@color/backgroundDark"/>
 
         <LinearLayout
             android:paddingStart="16dp"

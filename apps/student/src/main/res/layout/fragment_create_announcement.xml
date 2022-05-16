@@ -38,8 +38,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <include layout="@layout/view_divider"/>
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
