@@ -481,8 +481,6 @@
     <string name="a11y_page">Pàgina</string>
     <string name="a11y_marked_as_done">Marcada com a feta</string>
     <string name="a11y_not_marked_as_done">No marcada com a feta</string>
-    <string name="a11y_mark_as_done">Marca com a feta</string>
-    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Oh! S\'ha produït un error en carregar els detalls de l\'assignatura.</string>
 
     <string name="a11y_schedule_marked_as_not_done">%s s’ha marcat com a no fet</string>

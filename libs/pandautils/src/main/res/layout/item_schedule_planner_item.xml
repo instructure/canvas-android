@@ -68,7 +68,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:importantForAccessibility="yes"
-                android:contentDescription="@{itemViewModel.completed ? @string/a11y_mark_as_done : @string/a11y_mark_as_not_done}"/>
+                android:contentDescription="@{itemViewModel.completed ? @string/a11y_markAsNotDoneWithName(itemViewModel.data.title) : @string/a11y_markAsDoneWithName(itemViewModel.data.title)}"/>
 
             <ImageView
                 android:id="@+id/icon"

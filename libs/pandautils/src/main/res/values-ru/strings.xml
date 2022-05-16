@@ -495,8 +495,6 @@
     <string name="a11y_page">Страница</string>
     <string name="a11y_marked_as_done">Отмечено как выполненное</string>
     <string name="a11y_not_marked_as_done">Не отмечено как выполненное</string>
-    <string name="a11y_mark_as_done">Отметить как выполненное</string>
-    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Ой-ой! Произошла ошибка при загрузке информации о курсе.</string>
     <string name="a11y_schedule_marked_as_not_done">%s отмечено как невыполненное</string>
 </resources>
