@@ -24,8 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
 import com.instructure.teacher.presenters.ViewPdfFragmentPresenter
 import com.instructure.interactions.router.Route

@@ -42,8 +42,8 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.LongNameArrayAdapter
 import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.EditFilePresenterFactory
 import com.instructure.teacher.presenters.EditFileFolderPresenter
@@ -125,7 +125,7 @@ class EditFileFolderFragment : BasePresenterFragment<
     }
 
     override fun fileFolderUpdated(updatedFileFolder: FileFolder) {
-        FileFolderUpdatedEvent(updatedFileFolder).post()
+        FileFolderUpdatedEvent(updatedFileFolder).postSticky()
         requireActivity().onBackPressed()
     }
 

@@ -41,8 +41,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.FileListAdapter
 import com.instructure.teacher.dialog.CreateFolderDialog
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.factory.FileListPresenterFactory
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.holders.FileFolderViewHolder
