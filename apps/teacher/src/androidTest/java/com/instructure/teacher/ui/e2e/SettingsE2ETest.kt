@@ -135,9 +135,7 @@ class SettingsE2ETest : TeacherTest() {
         settingsPage.openRateAppDialog()
 
         Log.d(STEP_TAG,"Assert that the five starts are displayed.")
-        for (i in 1 until 6) {
-            onView(withId(R.id.star + i)).check(matches(isDisplayed()))
-        }
+        settingsPage.assertFiveStarRatingDisplayed()
     }
 
     @E2E

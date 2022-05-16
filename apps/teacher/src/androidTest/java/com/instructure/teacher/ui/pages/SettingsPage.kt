@@ -16,6 +16,9 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -53,5 +56,12 @@ class SettingsPage : BasePage(R.id.settingsPage) {
 
     fun openRemoteConfigParamsPage() {
         remoteConfigLabel.scrollTo().click()
+    }
+
+    fun assertFiveStarRatingDisplayed() {
+        for (i in 1 until 6) {
+            Espresso.onView(ViewMatchers.withId(R.id.star + i))
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        }
     }
 }
