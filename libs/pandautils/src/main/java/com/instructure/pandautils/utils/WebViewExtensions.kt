@@ -16,8 +16,11 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
@@ -147,5 +150,17 @@ class JsExternalToolInterface(val callback: (ltiUrl: String) -> Unit) {
     @JavascriptInterface
     fun onLtiToolButtonPressed(ltiUrl: String) {
         callback(ltiUrl)
+    }
+}
+
+fun WebView.setDarkModeSupport() {
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+            WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_ON)
+            WebSettingsCompat.setForceDarkStrategy(settings, WebSettingsCompat.DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING)
+        } else {
+            WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_OFF)
+        }
     }
 }
