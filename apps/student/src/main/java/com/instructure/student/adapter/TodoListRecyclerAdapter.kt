@@ -163,7 +163,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
             return
         }
 
-        val todos = ToDoManager.mergeToDoUpcoming(todoList, null)
+        val todos = todoList?.sortedBy { it.comparisonDate ?: Date(0) } ?: emptyList()
 
         // Now populate the todoList and upcomingList with the course information
         todos
