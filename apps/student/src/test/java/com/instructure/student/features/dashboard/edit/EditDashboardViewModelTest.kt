@@ -646,7 +646,7 @@ class EditDashboardViewModelTest {
                         id = 2L,
                         name = "Current course with past section",
                         isFavorite = false,
-                        sections = listOf(createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString())),
+                        sections = listOf(createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(), restrictEnrolmentsToCourseDate = false)),
                         restrictEnrolmentsToCourseDate = true
                 ),
                 createCourse(
@@ -1006,10 +1006,11 @@ class EditDashboardViewModelTest {
                 sections = sections ?: emptyList())
     }
 
-    private fun createSection(startAt: String? = null, endAt: String? = null): Section {
+    private fun createSection(startAt: String? = null, endAt: String? = null, restrictEnrolmentsToCourseDate: Boolean = true): Section {
         return Section(
                 startAt = startAt,
-                endAt = endAt)
+                endAt = endAt,
+                restrictEnrollmentsToSectionDates = restrictEnrolmentsToCourseDate)
     }
 
     private fun createTerm(startAt: String? = null, endAt: String? = null): Term {
