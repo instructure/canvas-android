@@ -82,6 +82,8 @@
             android:id="@+id/urlPreviewWebView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/backgroundLightest"
+            android:visibility="gone"
             tools:background="#EEE"
             tools:scaleType="center"
             tools:src="@tools:sample/backgrounds/scenic" />

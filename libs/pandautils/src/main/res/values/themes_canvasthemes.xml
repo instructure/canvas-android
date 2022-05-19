@@ -63,10 +63,12 @@
         <item name="colorPrimary">@color/textDarkest</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDarkest</item>
+        <item name="background">@color/backgroundLightestElevated</item>
         <item name="android:colorPrimary">@color/textDarkest</item>
         <item name="android:colorPrimaryDark">@color/textDarkest</item>
         <item name="android:colorAccent">@color/textDarkest</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@color/backgroundLightestElevated</item>
     </style>
 
     <style name="AccentDialogTheme" parent="CanvasDialogTheme_Default">

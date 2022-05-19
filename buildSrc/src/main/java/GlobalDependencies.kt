@@ -74,6 +74,7 @@ object Libs {
     const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.1.0"
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
+    const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.4.0"
 
     /* Firebase */
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:29.3.0"

@@ -13,6 +13,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_FEEDBACK
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.setupBackButton
 import kotlinx.android.synthetic.main.activity_feedback.*
@@ -41,6 +42,7 @@ class FeedbackActivity : AppCompatActivity() {
         webView.setWebChromeClient(WebChromeClient())
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(false)
+        webView.setDarkModeSupport()
         webView.loadUrl(buildUrl())
     }
 

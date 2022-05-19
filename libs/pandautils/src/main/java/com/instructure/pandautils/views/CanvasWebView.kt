@@ -164,6 +164,7 @@ class CanvasWebView @JvmOverloads constructor(
             }
         }
         CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
+        setDarkModeSupport()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
