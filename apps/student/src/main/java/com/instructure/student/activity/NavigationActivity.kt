@@ -230,6 +230,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             finish()
         }
 
+        FlutterComm.updateDarkMode(this)
+
         bottomBar.inflateMenu(navigationBehavior.bottomBarMenu)
 
         supportFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)

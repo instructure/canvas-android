@@ -47,7 +47,7 @@ class CalendarDay extends StatelessWidget {
     final isSelected = date.isSameDayAs(selectedDay);
 
     TextStyle textStyle = theme.textTheme.headline5;
-    if (date.isWeekend() || date.month != selectedDay.month) textStyle = textStyle.copyWith(color: StudentColors.ash);
+    if (date.isWeekend() || date.month != selectedDay.month) textStyle = textStyle.copyWith(color: StudentColors.textDark);
     BoxDecoration decoration;
 
     if (isToday) {
@@ -133,7 +133,7 @@ class CalendarDay extends StatelessWidget {
                 child: Container(
                   width: 4,
                   height: 4,
-                  decoration: BoxDecoration(color: StudentColors.ash, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: StudentColors.textDark, shape: BoxShape.circle),
                 ),
               );
             },
