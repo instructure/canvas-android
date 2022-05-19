@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
@@ -59,10 +60,10 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     private val favoriteCourseMap: MutableMap<Long, Course> = mutableMapOf()
     private val favoriteGroupMap: MutableMap<Long, Group> = mutableMapOf()
 
-    private lateinit var courses: List<Course>
+    private lateinit var currentCourses: List<Course>
+    private lateinit var pastCourses: List<Course>
+    private lateinit var futureCourses: List<Course>
     private lateinit var groups: List<Group>
-
-    private lateinit var groupsViewData: List<EditDashboardGroupItemViewModel>
 
     private lateinit var groupHeader: EditDashboardHeaderViewModel
     private lateinit var courseHeader: EditDashboardHeaderViewModel
@@ -70,6 +71,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     private lateinit var currentCoursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var pastCoursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var futureCoursesViewData: List<EditDashboardCourseItemViewModel>
+    private lateinit var groupsViewData: List<EditDashboardGroupItemViewModel>
 
     var hasChanges = false
 
@@ -81,15 +83,22 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     fun loadItems() {
         viewModelScope.launch {
             try {
-                courses = courseManager.getCoursesWithConcludedAsync(true).await().dataOrThrow
-                courses = courses.filter { it.isNotDeleted() && !it.isInvited() && !it.isEnrollmentDeleted() }
-                courseMap = courses.associateBy { it.id }
+                val coursesTriple = awaitApis<List<Course>, List<Course>, List<Course>>(
+                        { courseManager.getCoursesByEnrollmentState("active", true, it) },
+                        { courseManager.getCoursesByEnrollmentState("completed", true, it) },
+                        { courseManager.getCoursesByEnrollmentState("invited_or_pending", true, it) }
+                )
+                currentCourses = coursesTriple.first
+                pastCourses = coursesTriple.second
+                futureCourses = coursesTriple.third
+
+                courseMap = (currentCourses + pastCourses + futureCourses).associateBy { it.id }
 
                 groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow
                 groups = groups.filter { it.isActive(courseMap?.get(it.courseId)) }
                 groupMap = groups.associateBy { it.id }
 
-                val items = createListItems(courses, groups)
+                val items = createListItems(currentCourses, pastCourses, futureCourses, groups)
                 _data.postValue(EditDashboardViewData(items))
                 if (items.isEmpty()) {
                     _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
@@ -320,9 +329,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
 
     private fun getCurrentCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
         favoriteCourseMap.clear()
-        val currentCourses = courses.filter { it.hasActiveEnrollment() && it.isCurrentEnrolment() }
-        favoriteCourseMap.putAll(currentCourses.filter { it.isFavorite }.associateBy { it.id })
-        return currentCourses.map {
+        favoriteCourseMap.putAll(courses.filter { it.isFavorite }.associateBy { it.id })
+        return courses.map {
             EditDashboardCourseItemViewModel(
                     id = it.id,
                     name = it.name,
@@ -336,8 +344,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun getPastCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
-        val pastCourses = courses.filter { it.isPastEnrolment() && !it.isCurrentEnrolment() && !it.isFutureEnrolment() }
-        return pastCourses.map {
+        return courses.map {
             EditDashboardCourseItemViewModel(
                     id = it.id,
                     name = it.name,
@@ -351,9 +358,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun getFutureCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
-        val futureCourses = courses.filter { it.isFutureEnrolment() && !it.isCurrentEnrolment() }
-        favoriteCourseMap.putAll(futureCourses.filter { it.isFavorite }.associateBy { it.id })
-        return futureCourses.map {
+        favoriteCourseMap.putAll(courses.filter { it.isFavorite }.associateBy { it.id })
+        return courses.map {
             EditDashboardCourseItemViewModel(
                     id = it.id,
                     name = it.name,
@@ -375,10 +381,10 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         }
     }
 
-    private fun createListItems(courses: List<Course>, groups: List<Group>, isFiltered: Boolean = false): List<ItemViewModel> {
-        currentCoursesViewData = getCurrentCourses(courses)
-        pastCoursesViewData = getPastCourses(courses)
-        futureCoursesViewData = getFutureCourses(courses)
+    private fun createListItems(currentCourses: List<Course>, pastCourses: List<Course>, futureCourses: List<Course>, groups: List<Group>, isFiltered: Boolean = false): List<ItemViewModel> {
+        currentCoursesViewData = getCurrentCourses(currentCourses)
+        pastCoursesViewData = getPastCourses(pastCourses)
+        futureCoursesViewData = getFutureCourses(futureCourses)
         groupsViewData = getGroups(groups)
 
         val items = mutableListOf<ItemViewModel>()
@@ -414,12 +420,14 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
 
     fun queryItems(query: String) {
         val items = if (query.isBlank()) {
-            createListItems(courses, groups)
+            createListItems(currentCourses, pastCourses, futureCourses, groups)
         } else {
-            val queriedCourses = courses.filter { it.name.contains(query, true) }
+            val queriedCurrentCourses = currentCourses.filter { it.name.contains(query, true) }
+            val queriedPastCourses = pastCourses.filter { it.name.contains(query, true) }
+            val queriedFutureCourses = futureCourses.filter { it.name.contains(query, true) }
             val queriedGroups = groups.filter { it.name?.contains(query, true) ?: false || it.description?.contains(query, true) ?: false || courseMap?.get(it.courseId)?.name?.contains(query, true) ?: false }
 
-            createListItems(queriedCourses, queriedGroups, true)
+            createListItems(queriedCurrentCourses, queriedPastCourses, queriedFutureCourses, queriedGroups, true)
         }
         if (items.isEmpty()) {
             _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
