@@ -134,6 +134,7 @@ class _StudentThemeState extends State<StudentTheme> {
       buttonColor: buttonColor,
       hintColor: StudentColors.textDark,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, colorScheme: buttonColorScheme),
+      unselectedWidgetColor: StudentColors.textDarkest
     );
   }
 
