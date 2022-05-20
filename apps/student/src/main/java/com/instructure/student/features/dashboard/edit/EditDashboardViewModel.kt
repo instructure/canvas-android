@@ -84,13 +84,16 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     fun loadItems() {
         viewModelScope.launch {
             try {
-                val (currentCourses, pastCourses, futureCourses) = listOf(
+                val (currentCoursesDeferred, pastCoursesDeferred, futureCoursesDeferred) = listOf(
                         courseManager.getCoursesByEnrollmentStateAsync("active", true),
                         courseManager.getCoursesByEnrollmentStateAsync("completed", true),
                         courseManager.getCoursesByEnrollmentStateAsync("invited_or_pending", true)
                 )
                         .awaitAll()
-                        .map { it.dataOrThrow }
+
+                currentCourses = currentCoursesDeferred.dataOrThrow
+                pastCourses = pastCoursesDeferred.dataOrThrow
+                futureCourses = futureCoursesDeferred.dataOrThrow
 
                 courseMap = (currentCourses + pastCourses + futureCourses).associateBy { it.id }
 
@@ -348,7 +351,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             EditDashboardCourseItemViewModel(
                     id = it.id,
                     name = it.name,
-                    isFavorite = it.isFavorite,
+                    isFavorite = false,
                     favoriteable = false,
                     openable = it.isNotDeleted() && it.isPublished(),
                     termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",

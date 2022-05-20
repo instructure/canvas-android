@@ -635,12 +635,248 @@ class EditDashboardViewModelTest {
         assertEquals("Group", groupItemViewModel.name)
     }
 
+    @Test
+    fun `Past courses cannot be favorited`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Past course"))
+
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(courses), DataResult.Success(emptyList()))
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(4, data.size)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onFavoriteClick()
+        assert(!itemViewModel.isFavorite)
+
+        val failedEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(failedEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.inactive_courses_cant_be_added_to_dashboard, (failedEvent as EditDashboardItemAction.ShowSnackBar).res)
+    }
+
+    @Test
+    fun `Future courses can only be favorited if they are published`() {
+        val courses = listOf(
+                createCourse(1L, "Published future course"),
+                createCourse(2L, "Unpublished future course", workflowState = Course.WorkflowState.UNPUBLISHED)
+        )
+
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(courses))
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(5, data.size)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+
+        val publishedItem = (data[3] as EditDashboardCourseItemViewModel)
+        publishedItem.onFavoriteClick()
+        assert(publishedItem.isFavorite)
+
+        val successfulEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(successfulEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.added_to_dashboard, (successfulEvent as EditDashboardItemAction.ShowSnackBar).res)
+
+        val unpublishedItem = (data[4] as EditDashboardCourseItemViewModel)
+        unpublishedItem.onFavoriteClick()
+        assert(!unpublishedItem.isFavorite)
+
+        val failedEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(failedEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.inactive_courses_cant_be_added_to_dashboard, (failedEvent as EditDashboardItemAction.ShowSnackBar).res)
+    }
+
+    @Test
+    fun `Open course`() {
+        val courses = listOf(createCourse(1L, "Current course"))
+
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(4, data.size)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onClick()
+
+        val openEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(openEvent is EditDashboardItemAction.OpenItem)
+        assertEquals(1L, (openEvent as EditDashboardItemAction.OpenItem).canvasContext?.id)
+    }
+
+    @Test
+    fun `Open group`() {
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+
+        val groups = listOf(createGroup(1L, "Group"))
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(groups)
+        }
+
+        every { groupManager.addGroupToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(3, data.size)
+        assertTrue(data[2] is EditDashboardGroupItemViewModel)
+
+        val itemViewModel = (data[2] as EditDashboardGroupItemViewModel)
+        itemViewModel.onClick()
+
+        val openEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(openEvent is EditDashboardItemAction.OpenItem)
+        assertEquals(1L, (openEvent as EditDashboardItemAction.OpenItem).canvasContext?.id)
+    }
+
+    @Test
+    fun `Unpublished courses cannot be opened`() {
+        val courses = listOf(createCourse(1L, "Unpublished course", workflowState = Course.WorkflowState.UNPUBLISHED))
+
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(courses))
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(4, data.size)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onClick()
+
+        val openEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(openEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.unauthorized, (openEvent as EditDashboardItemAction.ShowSnackBar).res)
+    }
+
+    @Test
+    fun `Deleted courses cannot be opened`() {
+        val courses = listOf(createCourse(1L, "Deleted course", workflowState = Course.WorkflowState.DELETED))
+
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(courses), DataResult.Success(emptyList()))
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(4, data.size)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onClick()
+
+        val openEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(openEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.unauthorized, (openEvent as EditDashboardItemAction.ShowSnackBar).res)
+    }
+
     private fun createCourse(
             id: Long,
             name: String,
             isFavorite: Boolean = false,
             startOffsetDate: OffsetDateTime? = null,
-            endOffsetDate: OffsetDateTime? = null
+            endOffsetDate: OffsetDateTime? = null,
+            workflowState: Course.WorkflowState = Course.WorkflowState.AVAILABLE,
     ): Course {
 
         val startDate = startOffsetDate ?: OffsetDateTime.now()
@@ -657,7 +893,8 @@ class EditDashboardViewModelTest {
                 endAt = DateTimeUtils.toDate(endDate.atZoneSimilarLocal(ZoneId.systemDefault()).toInstant()).toApiString(),
                 startAt = DateTimeUtils.toDate(startDate.atZoneSimilarLocal(ZoneId.systemDefault()).toInstant()).toApiString(),
                 isFavorite = isFavorite,
-                enrollments = enrollments)
+                enrollments = enrollments,
+                workflowState = workflowState)
     }
 
     private fun createGroup(id: Long, name: String, isFavorite: Boolean = false, courseId: Long = 0): Group {
