@@ -34,6 +34,7 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.itemviewmodels.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -83,14 +84,13 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     fun loadItems() {
         viewModelScope.launch {
             try {
-                val coursesTriple = awaitApis<List<Course>, List<Course>, List<Course>>(
-                        { courseManager.getCoursesByEnrollmentState("active", true, it) },
-                        { courseManager.getCoursesByEnrollmentState("completed", true, it) },
-                        { courseManager.getCoursesByEnrollmentState("invited_or_pending", true, it) }
+                val (currentCourses, pastCourses, futureCourses) = listOf(
+                        courseManager.getCoursesByEnrollmentStateAsync("active", true),
+                        courseManager.getCoursesByEnrollmentStateAsync("completed", true),
+                        courseManager.getCoursesByEnrollmentStateAsync("invited_or_pending", true)
                 )
-                currentCourses = coursesTriple.first
-                pastCourses = coursesTriple.second
-                futureCourses = coursesTriple.third
+                        .awaitAll()
+                        .map { it.dataOrThrow }
 
                 courseMap = (currentCourses + pastCourses + futureCourses).associateBy { it.id }
 
