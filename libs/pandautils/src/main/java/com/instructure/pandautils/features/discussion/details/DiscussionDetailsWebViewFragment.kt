@@ -36,13 +36,8 @@ import kotlinx.android.synthetic.main.fragment_discussion_details_web_view.*
 class DiscussionDetailsWebViewFragment : Fragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
-    private var discussionTopic: DiscussionTopic? by NullableParcelableArg(key = DISCUSSION_TOPIC)
     private var discussionTopicHeader: DiscussionTopicHeader by ParcelableArg(default = DiscussionTopicHeader(), key = DISCUSSION_TOPIC_HEADER)
     private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DISCUSSION_TOPIC_HEADER_ID)
-    private var discussionTitle: String? by NullableStringArg(key = DISCUSSION_TITLE)
-    private var discussionEntryId: Long by LongArg(default = 0L, key = DISCUSSION_ENTRY_ID)
-    private var isNestedDetail: Boolean by BooleanArg(default = false, key = IS_NESTED_DETAIL)
-    private val groupDiscussion: Boolean by BooleanArg(default = false, key = GROUP_DISCUSSION)
 
     private val viewModel: DiscussionDetailsWebViewViewModel by viewModels()
 
@@ -59,6 +54,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
+        discussionWebView.canvasWebViewClientCallback = viewModel.webViewCallback
     }
 
     private fun applyTheme() {
@@ -71,44 +67,11 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
         const val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
         const val DISCUSSION_TOPIC_HEADER_ID = "discussion_topic_header_id"
-        const val DISCUSSION_TITLE = "discussion_title"
         const val DISCUSSION_TOPIC = "discussion_topic"
-        const val DISCUSSION_ENTRY_ID = "discussion_entry_id"
-        const val IS_NESTED_DETAIL = "is_nested_detail"
-        const val GROUP_DISCUSSION = "group_discussion"
-
-        private const val JS_CONST_SET_LIKED = "setLiked"
-        private const val JS_CONST_SET_UNLIKED = "setUnliked"
 
         fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Route {
             val bundle = Bundle().apply {
                 putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
-            }
-
-            return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)
-        }
-
-        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long, title: String? = null, groupDiscussion: Boolean = false): Route {
-            val bundle = Bundle().apply {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
-                putString(DISCUSSION_TITLE, title)
-                putBoolean(GROUP_DISCUSSION, groupDiscussion)
-            }
-            return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)
-        }
-
-        fun makeRoute(
-                canvasContext: CanvasContext,
-                discussionTopicHeader: DiscussionTopicHeader,
-                discussionTopic: DiscussionTopic,
-                discussionEntryId: Long): Route {
-            val bundle = Bundle().apply {
-                // Used for viewing more entries, beyond the default nesting
-                putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
-                putParcelable(DISCUSSION_TOPIC, discussionTopic)
-                putLong(DISCUSSION_ENTRY_ID, discussionEntryId)
-                putBoolean(IS_NESTED_DETAIL, true)
             }
 
             return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)

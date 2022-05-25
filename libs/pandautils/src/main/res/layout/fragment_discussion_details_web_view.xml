@@ -23,31 +23,42 @@
             type="com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/defaultPrimary"
-            android:elevation="6dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:theme="@style/ToolBarStyle" />
+            android:layout_height="match_parent">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
-
-            <com.instructure.pandautils.views.CanvasWebView
-                android:id="@+id/discussionWebView"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:url="@{viewModel.data.url}" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/defaultPrimary"
+                android:elevation="6dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:theme="@style/ToolBarStyle" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+                <com.instructure.pandautils.views.CanvasWebView
+                    android:id="@+id/discussionWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:url="@{viewModel.data.url}" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:emptyViewState="@{viewModel.state}" />
+    </FrameLayout>
 </layout>

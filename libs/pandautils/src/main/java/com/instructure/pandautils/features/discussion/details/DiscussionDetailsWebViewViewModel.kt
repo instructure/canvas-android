@@ -16,6 +16,8 @@
 
 package com.instructure.pandautils.features.discussion.details
 
+import android.content.res.Resources
+import android.webkit.WebView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +26,9 @@ import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.R
+import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -32,16 +37,44 @@ import javax.inject.Inject
 @HiltViewModel
 class DiscussionDetailsWebViewViewModel @Inject constructor(
         private val oauthManager: OAuthManager,
-        private val apiPrefs: ApiPrefs
+        private val apiPrefs: ApiPrefs,
+        private val resources: Resources
 ) : ViewModel() {
 
     val data: LiveData<DiscussionDetailsWebViewViewData>
         get() = _data
     private val _data = MutableLiveData<DiscussionDetailsWebViewViewData>()
 
+    val state: LiveData<ViewState>
+        get() = _state
+    private val _state = MutableLiveData<ViewState>()
+
+    val webViewCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+
+        }
+
+        override fun onPageStartedCallback(webView: WebView, url: String) {
+
+        }
+
+        override fun onPageFinishedCallback(webView: WebView, url: String) {
+            _state.postValue(ViewState.Success)
+        }
+
+        override fun routeInternallyCallback(url: String) {
+        }
+
+        override fun canRouteInternallyDelegate(url: String): Boolean {
+            return false
+        }
+
+    }
+
     fun loadData(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader) {
         viewModelScope.launch {
             try {
+                _state.postValue(ViewState.Loading)
                 val locale = Locale.getDefault().language
                 val timezone = TimeZone.getDefault().id
                 val url = "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/${discussionTopicHeader.id}"
@@ -50,6 +83,7 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
                 _data.postValue(DiscussionDetailsWebViewViewData(authenticatedUrl))
             } catch (e: Exception) {
                 e.printStackTrace()
+                _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
             }
         }
     }

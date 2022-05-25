@@ -50,11 +50,13 @@ import com.instructure.student.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.course_discussion_topic.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
 @PageView(url = "{canvasContext}/discussion_topics")
@@ -92,9 +94,14 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 // If the discussion/announcement hasn't been published take them back to the publish screen
                 if (model.groupTopicChildren.isNotEmpty()) {
                     groupsJob = tryWeave {
-                        DiscussionDetailsFragment.getDiscussionGroup(model)?.let {
-                            RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(it.first, it.second, groupDiscussion = true))
-                        } ?: RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(canvasContext, model))
+                        if (discussionRedesignEnabled) {
+                            RouteMatcher.route(requireActivity(), DiscussionDetailsWebViewFragment.makeRoute(canvasContext, model))
+                        } else {
+                            DiscussionDetailsFragment.getDiscussionGroup(model)?.let {
+                                RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(it.first, it.second, groupDiscussion = true))
+                            }
+                                    ?: RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(canvasContext, model))
+                        }
                     }.catch {  }
                 } else {
                     if (discussionRedesignEnabled) {
@@ -260,6 +267,11 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         featureFlagsJob = weave {
             if (canvasContext.isCourse) {
                 val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(canvasContext.id, true).await().dataOrNull
+                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false
+            }
+
+            if (canvasContext.isGroup) {
+                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync((canvasContext as Group).courseId, true).await().dataOrNull
                 discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false
             }
         }

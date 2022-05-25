@@ -128,10 +128,10 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun createAdapter(): DiscussionListAdapter {
         return DiscussionListAdapter(requireContext(), presenter, mCourseColor, mIsAnnouncements,
             { discussionTopicHeader ->
-                val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, mIsAnnouncements)
+                val route = presenter.getDetailsRoute(discussionTopicHeader, mIsAnnouncements)
                 RouteMatcher.route(
                     requireContext(),
-                    Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args)
+                    route
                 )
             },
             { group, discussionTopicHeaderOverflow ->
