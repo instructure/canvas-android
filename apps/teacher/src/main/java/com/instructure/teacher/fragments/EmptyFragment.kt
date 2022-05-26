@@ -44,7 +44,7 @@ class EmptyFragment: Fragment() {
         toolbar.title = ""
         emptyTitle.text = mTitle
         emptyMessage.text = getString(R.string.emptyDetailsMessage)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse?.color ?: ThemePrefs.primaryColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse?.color ?: ThemePrefs.primaryColor, requireContext().getColor(R.color.white))
     }
 
     companion object {

@@ -39,7 +39,7 @@ class DiscussionsE2ETest: StudentTest() {
     // Includes test logic for Announcements
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.E2E, false)
     fun testDiscussionsE2E() {
 
         // Seed basic data

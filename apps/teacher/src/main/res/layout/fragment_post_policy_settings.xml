@@ -37,13 +37,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
-        android:background="@color/white"
-        app:tabIndicatorColor="#00bcd5"
+        android:background="@color/backgroundLightest"
+        app:tabIndicatorColor="@color/textInfo"
         app:tabIndicatorHeight="2dp"
         app:tabPaddingEnd="4dp"
         app:tabPaddingStart="4dp"
-        app:tabSelectedTextColor="#00bcd5"
-        app:tabTextColor="@color/gray">
+        app:tabSelectedTextColor="@color/textInfo"
+        app:tabTextColor="@color/textDark">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"

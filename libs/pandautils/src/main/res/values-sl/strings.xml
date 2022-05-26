@@ -481,8 +481,6 @@
     <string name="a11y_page">Stran</string>
     <string name="a11y_marked_as_done">Označi kot dokončano</string>
     <string name="a11y_not_marked_as_done">Ni označeno kot dokončano</string>
-    <string name="a11y_mark_as_done">Označi kot dokončano</string>
-    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Ojoj! Pri nalaganju podrobnosti o predmetu je prišlo do napake.</string>
     <string name="a11y_schedule_marked_as_not_done">%s označeno kot nedokončano</string>
 </resources>

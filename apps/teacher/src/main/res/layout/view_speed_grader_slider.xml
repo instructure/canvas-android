@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height=".5dp"
             android:layout_marginTop="16dp"
-            android:background="@color/defaultTrackColor"
+            android:background="@color/backgroundMedium"
             app:layout_constraintTop_toBottomOf="@id/slider"
             tools:layout_height="1dp" />
 
@@ -91,7 +91,7 @@
                 android:contentDescription="@string/no_grade"
                 android:minHeight="0dp"
                 android:text="@string/no_grade"
-                android:textColor="@color/speed_grader_button_text_color" />
+                android:textColor="@color/textInfo" />
 
         </FrameLayout>
 
@@ -116,7 +116,7 @@
                 android:contentDescription="@string/excuse"
                 android:minHeight="0dp"
                 android:text="@string/excuse"
-                android:textColor="@color/speed_grader_button_text_color" />
+                android:textColor="@color/textInfo" />
 
         </FrameLayout>
 

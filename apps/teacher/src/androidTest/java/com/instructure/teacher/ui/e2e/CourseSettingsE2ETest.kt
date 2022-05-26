@@ -30,9 +30,6 @@ import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
-private const val STEP_TAG = "CourseSettingsE2ETest #STEP# "
-private const val PREPARATION_TAG = "CourseSettingsE2ETest #PREPARATION# "
-
 @HiltAndroidTest
 class CourseSettingsE2ETest : TeacherTest() {
 
@@ -46,7 +43,7 @@ class CourseSettingsE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.COURSE, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE, TestCategory.E2E)
     fun testCourseSettingsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -55,10 +52,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         val firstCourse = data.coursesList[0]
         val secondCourse = data.coursesList[1]
 
-        Log.d(
-            STEP_TAG,
-            "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}"
-        )
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
         tokenLogin(teacher)
 
         Log.d(STEP_TAG, "Open ${firstCourse.name} course and click on Course Settings button.")

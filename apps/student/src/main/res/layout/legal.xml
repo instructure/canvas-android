@@ -52,7 +52,7 @@
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
             android:text="@string/privacyPolicy"
-            android:textColor="@color/defaultPrimary"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp"/>
 
     </LinearLayout>
@@ -82,7 +82,7 @@
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
             android:text="@string/termsOfUse"
-            android:textColor="@color/defaultPrimary"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp"/>
 
     </LinearLayout>
@@ -112,7 +112,7 @@
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
             android:text="@string/canvasOnGithub"
-            android:textColor="@color/defaultPrimary"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp"/>
 
     </LinearLayout>

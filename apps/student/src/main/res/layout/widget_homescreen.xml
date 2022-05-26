@@ -46,7 +46,7 @@
         android:paddingRight="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/canvasTextDark" />
+        android:textColor="@color/textDarkest" />
 
     <ImageView
         android:id="@+id/widget_refresh"

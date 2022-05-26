@@ -128,8 +128,8 @@ class DashboardNotificationsViewModelTest {
     }
 
     private fun setupResources() {
-        every { resources.getColor(R.color.notificationTintError) } returns Color.parseColor("#EE0612")
-        every { resources.getColor(R.color.notificationTintWarning) } returns Color.parseColor("#FC5E13")
+        every { resources.getColor(R.color.backgroundDanger) } returns Color.parseColor("#EE0612")
+        every { resources.getColor(R.color.backgroundWarning) } returns Color.parseColor("#FC5E13")
         every { resources.getString(R.string.courseInviteTitle) } returns "You have been invited"
         every { resources.getString(R.string.errorOccurred) } returns "An unexpected error occurred."
     }
@@ -149,28 +149,28 @@ class DashboardNotificationsViewModelTest {
                         1,
                         "AC1",
                         "AC1",
-                        color = "#${resources.getColor(R.color.notificationTintError).toHexString()}",
+                        color = "#${resources.getColor(R.color.backgroundDanger).toHexString()}",
                         icon = R.drawable.ic_warning
                 ),
                 AnnouncementViewData(
                         2,
                         "AC2",
                         "AC2",
-                        color = "#${resources.getColor(R.color.canvasDefaultPrimary).toHexString()}",
+                        color = "#${resources.getColor(R.color.textDarkest).toHexString()}",
                         icon = R.drawable.ic_calendar
                 ),
                 AnnouncementViewData(
                         3,
                         "AC3",
                         "AC3",
-                        color = "#${resources.getColor(R.color.canvasDefaultPrimary).toHexString()}",
+                        color = "#${resources.getColor(R.color.textDarkest).toHexString()}",
                         icon = R.drawable.ic_question_mark
                 ),
                 AnnouncementViewData(
                         4,
                         "AC4",
                         "AC4",
-                        color = "#${resources.getColor(R.color.notificationTintWarning).toHexString()}",
+                        color = "#${resources.getColor(R.color.backgroundWarning).toHexString()}",
                         icon = R.drawable.ic_warning
                 ),
         )

@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:textColor="@color/textLightGray"
+                    android:textColor="@color/textDark"
                     android:textSize="12sp"
                     tools:text="24 grades currently hidden" />
 
@@ -63,7 +63,7 @@
                         android:paddingTop="18dp"
                         android:paddingBottom="18dp"
                         android:text="@string/postPolicyPostTo"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -77,7 +77,7 @@
                         android:gravity="end"
                         android:text="@string/postToEveryoneTitle"
                         android:textSize="16sp"
-                        android:textColor="@color/textLightGray" />
+                        android:textColor="@color/textDark" />
                 </LinearLayout>
 
                 <!--  Include the view holder for our generic toggle for showing sections  -->
@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_alignParentBottom="true"
-            tools:background="@color/defaultActionColor">
+            tools:background="@color/backgroundInfo">
             <TextView
                 android:id="@+id/postGradeButton"
                 android:layout_width="match_parent"
@@ -149,7 +149,7 @@
             android:layout_marginTop="40dp"
             android:layout_gravity="center_horizontal"
             android:textSize="20sp"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textStyle="bold"
             tools:text="@string/postPolicyAllHiddenTitle" />
 
@@ -162,7 +162,7 @@
             android:layout_marginEnd="32dp"
             android:layout_gravity="center_horizontal"
             android:textSize="14sp"
-            android:textColor="@color/textLightGray"
+            android:textColor="@color/textDark"
             tools:text="@string/postPolicyAllHiddenMessage" />
 
         <Space

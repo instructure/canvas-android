@@ -241,7 +241,7 @@ object DiscussionUtils {
 
         val builder = StringBuilder()
         val brandColor = ThemePrefs.brandColor
-        val likeColor = ContextCompat.getColor(context, R.color.discussionLiking)
+        val likeColor = ContextCompat.getColor(context, R.color.textDark)
         val converter = DiscussionEntryHtmlConverter()
         val template = DiscussionHtmlTemplates.getItem(context)
         val likeImage = makeBitmapForWebView(brandColor, getBitmapFromAssets(context, "discussion_liked.png"))
@@ -469,8 +469,8 @@ object DiscussionUtils {
             val avatarBitmap = ProfileUtils.getInitialsAvatarBitMap(
                     context, discussionEntry.author!!.displayName!!,
                     Color.TRANSPARENT,
-                    ContextCompat.getColor(context, R.color.defaultTextDark),
-                    ContextCompat.getColor(context, R.color.profileBorderColor))
+                    ContextCompat.getColor(context, R.color.licorice),
+                    ContextCompat.getColor(context, R.color.borderMedium))
             val outputStream = ByteArrayOutputStream()
             avatarBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
             val byteArray = outputStream.toByteArray()
@@ -483,8 +483,8 @@ object DiscussionUtils {
                 val avatarBitmap = ProfileUtils.getInitialsAvatarBitMap(
                         context, "?",
                         Color.TRANSPARENT,
-                        ContextCompat.getColor(context, R.color.defaultTextDark),
-                        ContextCompat.getColor(context, R.color.profileBorderColor))
+                        ContextCompat.getColor(context, R.color.textDarkest),
+                        ContextCompat.getColor(context, R.color.borderMedium))
                 val outputStream = ByteArrayOutputStream()
                 avatarBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
                 val byteArray = outputStream.toByteArray()

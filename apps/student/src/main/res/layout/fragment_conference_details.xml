@@ -70,7 +70,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/inProgress"
-                        android:textColor="@color/publishedGreen" />
+                        android:textColor="@color/textSuccess" />
 
                     <View
                         android:id="@+id/inProgressIndicatorDivider"
@@ -80,14 +80,14 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="2dp"
-                        android:background="@color/dividerColor" />
+                        android:background="@color/backgroundMedium" />
 
                     <TextView
                         android:id="@+id/status"
                         style="@style/TextFont.Medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/defaultTextGray"
+                        android:textColor="@color/textDark"
                         tools:text="Starts Mar 1 at 3:16pm" />
 
                 </LinearLayout>
@@ -97,7 +97,7 @@
                     android:layout_height="0.5dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@color/divider" />
+                    android:background="@color/backgroundMedium" />
 
                 <TextView
                     style="@style/TextFont.Bold"
@@ -105,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="@string/description"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:textSize="12sp" />
 
                 <TextView
@@ -126,14 +126,14 @@
                         android:layout_height="0.5dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@color/divider" />
+                        android:background="@color/backgroundMedium" />
 
                     <TextView
                         style="@style/TextFont.Bold"
                         android:layout_width="wrap_content"
                         android:layout_height="15dp"
                         android:text="@string/recordings"
-                        android:textColor="@color/defaultTextGray"
+                        android:textColor="@color/textDark"
                         android:textSize="12sp" />
 
                     <LinearLayout
@@ -154,7 +154,7 @@
         android:id="@+id/joinContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/publishedGreen">
+        android:background="@color/backgroundSuccess">
 
         <Button
             android:id="@+id/joinButton"

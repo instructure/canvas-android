@@ -16,7 +16,6 @@
  */
 package com.instructure.student.fragment
 
-import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.BaseAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.LocaleUtils
@@ -73,7 +73,7 @@ class AccountPreferencesFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     private fun setupViews() {
@@ -100,8 +100,8 @@ class AccountPreferencesFragment : ParentFragment() {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view: View = convertView ?: inflater.inflate(R.layout.settings_spinner, parent, false)
-            view.indicator.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_expand, Color.WHITE))
-            view.indicator.setColorFilter(ContextCompat.getColor(requireContext(), R.color.defaultTextGray))
+            view.indicator.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_expand, requireContext().getColor(R.color.white)))
+            view.indicator.setColorFilter(ContextCompat.getColor(requireContext(), R.color.textDark))
             view.title.text = getItem(position).toString()
             return view
         }

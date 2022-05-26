@@ -57,7 +57,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPointsGradeTextAssignmentE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
@@ -121,7 +121,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testLetterGradeTextAssignmentE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
@@ -171,7 +171,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPercentageFileAssignmentWithCommentE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
@@ -253,7 +253,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testMultipleAssignmentsE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
@@ -333,7 +333,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.COMMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
     fun testMediaCommentsE2E() {
         // Seed basic student/teacher/course data
         val data = seedData(students = 1, teachers = 1, courses = 1)

@@ -16,10 +16,16 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_student_embed/utils/design/light_colors.dart';
+
+import 'dark_colors.dart';
 
 class StudentColors {
+
+  static bool darkMode = false;
+
   /// Default Canvas primary color
-  static const defaultPrimary = Color(0xFF34444F);
+  static const defaultPrimary = Color(0xFF2D3B45);
 
   /// Default Canvas accent color
   static const defaultAccent = Color(0xFF0081BD);
@@ -30,16 +36,19 @@ class StudentColors {
   static const defaultPrimaryText = Colors.white;
 
   /// The core 'dark' color used for text, icons, etc on light backgrounds
-  static const licorice = Color(0xFF2D3B45);
+  static get textDarkest => darkMode ? DarkColors.textDarkest : LightColors.textDarkest;
+
+  static get backgroundLightest => darkMode ? DarkColors.backgroundLightest : LightColors.backgroundLightest;
+
+  static get backgroundLightestElevated => darkMode ? DarkColors.backgroundLightestElevated : LightColors.backgroundLightest;
 
   /// The core 'light' color, used for text, icons, etc on dark backgrounds
   static const tiara = Color(0xFFC7CDD1);
 
-  /// A very light color
-  static const porcelain = Color(0xFFF5F5F5);
+  static get backgroundLight => darkMode ? DarkColors.backgroundLight : LightColors.backgroundLight;
 
   /// The core 'faded' color, used for subtitles, inactive icons, etc on either light or dark backgrounds
-  static const ash = Color(0xFF6B7780);
+  static get textDark => darkMode ? DarkColors.textDark : LightColors.textDark;
 
   /// Another dark color, slightly lighter than licorice
   static const oxford = Color(0xFF394B58);

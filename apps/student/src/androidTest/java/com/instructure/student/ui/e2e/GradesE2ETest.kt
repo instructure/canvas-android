@@ -1,14 +1,11 @@
 package com.instructure.student.ui.e2e
 
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.CreateQuizQuestion
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
@@ -35,7 +32,7 @@ class GradesE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GRADES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E)
     fun testGradesE2E() {
         // Seed basic student/teacher/course data
         val data = seedData(students = 1, teachers = 1, courses = 1)

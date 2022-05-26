@@ -87,7 +87,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
             }
             recyclerAdapter?.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

@@ -132,7 +132,7 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                           value: null,
                           child: Text(
                             L10n(context).toDoCourseNone,
-                            style: TextStyle(color: StudentColors.ash),
+                            style: TextStyle(color: StudentColors.textDark),
                           ),
                         ),
                       );
@@ -170,7 +170,7 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     L10n(context).toDoCourseLabel,
-                                    style: it.value == null ? TextStyle(color: StudentColors.ash) : null,
+                                    style: it.value == null ? TextStyle(color: StudentColors.textDark) : null,
                                   ),
                                 );
                               }
@@ -190,7 +190,7 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                                     ),
                                     SizedBox(width: 12),
                                     Text(course.name,
-                                        style: it.value == null ? TextStyle(color: StudentColors.ash) : null),
+                                        style: it.value == null ? TextStyle(color: StudentColors.textDark) : null),
                                   ],
                                 ),
                               );
@@ -235,7 +235,7 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
                         contentPadding: EdgeInsets.all(16),
                         border: InputBorder.none,
                         hintText: L10n(context).toDoDescriptionHint,
-                        hintStyle: TextStyle(color: StudentColors.ash)),
+                        hintStyle: TextStyle(color: StudentColors.textDark)),
                   ),
                 ],
               ),
@@ -255,10 +255,18 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
       initialDate: _date,
       firstDate: DateTime(2000, 1, 1),
       lastDate: _date.add(Duration(days: 365)),
+      builder: (BuildContext buildContext, Widget child) {
+        return _createPickerTheme(buildContext, child);
+      },
     );
 
     if (date != null) {
-      time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(_date));
+      time = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.fromDateTime(_date),
+          builder: (BuildContext buildContext, Widget child) {
+            return _createPickerTheme(buildContext, child);
+          });
     }
 
     if (date != null && time != null) {
@@ -267,6 +275,24 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
         _date = newDate;
       });
     }
+  }
+
+  Theme _createPickerTheme(BuildContext buildContext, Widget child) {
+    return Theme(
+      data: Theme.of(buildContext).copyWith(
+        colorScheme: ColorScheme.light(
+            primary: StudentColors.primaryColor,
+            primaryVariant: StudentColors.primaryColor,
+            onPrimary: Colors.white,
+            surface: StudentColors.backgroundLightest,
+            background: StudentColors.backgroundLightest,
+            onSurface: StudentColors.textDarkest,
+            onSecondary: StudentColors.textDarkest,
+            onBackground: StudentColors.textDarkest),
+        dialogBackgroundColor: StudentColors.backgroundLightestElevated,
+      ),
+      child: child,
+    );
   }
 
   bool _hasUnsavedChanges() {

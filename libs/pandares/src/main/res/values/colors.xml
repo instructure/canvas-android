@@ -17,59 +17,64 @@
   -->
 <resources>
 
-    <!--
-        Color Style Guide
-            *All general use color resources should be in camelCase
-            *All app specific colors should be pre-pended with their app name parent_camelCase
-            *Group relevant colors when possible with a title
+    <!-- InstUI colors - We should use these colors to build standard UI elements -->
+    <color name="ash">#556572</color>
+    <color name="backgroundAlert">#BF32A4</color>
+    <color name="backgroundDanger">#EE0612</color>
+    <color name="backgroundDark">#556572</color>
+    <color name="backgroundDarkest">#2D3B45</color>
+    <color name="backgroundGrouped">#F5F5F5</color>
+    <color name="backgroundGroupedCell">#FFFFFF</color>
+    <color name="backgroundInfo">#008EE2</color>
+    <color name="backgroundLight">#F5F5F5</color>
+    <color name="backgroundLightest">#FFFFFF</color>
+    <color name="backgroundLightestElevated">#FFFFFF</color>
+    <color name="backgroundMedium">#C7CDD1</color>
+    <color name="backgroundSuccess">#00AC18</color>
+    <color name="backgroundWarning">#FC5E13</color>
+    <color name="barney">#BF32A4</color>
+    <color name="borderAlert">#BF32A4</color>
+    <color name="borderDanger">#EE0612</color>
+    <color name="borderDark">#556572</color>
+    <color name="borderDarkest">#2D3B45</color>
+    <color name="borderInfo">#008EE2</color>
+    <color name="borderLight">#F5F5F5</color>
+    <color name="borderLightest">#FFFFFF</color>
+    <color name="borderMedium">#C7CDD1</color>
+    <color name="borderSuccess">#00AC18</color>
+    <color name="borderWarning">#FC5E13</color>
+    <color name="crimson">#EE0612</color>
+    <color name="electric">#008EE2</color>
+    <color name="fire">#FC5E13</color>
+    <color name="licorice">#2D3B45</color>
+    <color name="oxford">#394B58</color> <!-- Only shade of gray that does not have pair in dark mode -->
+    <color name="porcelain">#F5F5F5</color>
+    <color name="shamrock">#00AC18</color>
+    <color name="textAlert">#BF32A4</color>
+    <color name="textDanger">#EE0612</color>
+    <color name="textDark">#556572</color>
+    <color name="textDarkest">#2D3B45</color>
+    <color name="textInfo">#008EE2</color>
+    <color name="textLight">#F5F5F5</color>
+    <color name="textLightest">#FFFFFF</color>
+    <color name="textSuccess">#00AC18</color>
+    <color name="textWarning">#FC5E13</color>
+    <color name="tiara">#C7CDD1</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
-            Notes:
-            -Color duplicates are acceptable assuming they are for different things, we want to be
-            able to change colors without having to add new ones
-    -->
+    <!-- Special one off colors that should be different in light and dark modes but are not in the color palette  -->
+    <color name="studentDocumentSharingColor">#ee0612</color>
+    <color name="uploadFileDialogBackground">#c8ececec</color>
 
-
-    <!-- Student Specific Colors -->
-    <color name="navigationDrawerTextDark">#2D3B45</color>
-    <color name="navigationDrawerTextLight">#73818C</color>
-    <color name="notificationTintInvite">#00AC18</color>
-    <color name="notificationTintError">#EE0612</color>
-    <color name="notificationTintWarning">#FC5E13</color>
-    <color name="bottomBarNavigationColor">#C7CDD1</color>
-    <color name="bottomBarUnselectedItemColor">#2D3B45</color>
-    <color name="electricBlueBadge">#008EE2</color>
-    <color name="lockedDiscussionColor">#73818C</color>
-
-
-    <!-- Teacher Specific Colors -->
-    <color name="teacher_colorPrimary">#394b58</color>
-    <color name="teacher_colorPrimaryDark">#27333d</color>
-    <color name="teacher_colorAccent">#394b58</color>
-    <color name="bottomNavBarBg">#c7cdd1</color>
-    <color name="canvasDefaultTabUnselected">#73818C</color>
-    <color name="inboxFilterGray">#212121</color>
-    <color name="divider">#D1D3D4</color>
-    <color name="messageTextColor">#333333</color>
-    <color name="submissionStatusColorLate">#F68508</color>
-    <color name="submissionStatusColorMissing">#C30016</color>
-    <color name="submissionStatusColorSubmitted">#00AC18</color>
-    <color name="speedGraderTutorialColor">#00AC18</color>
-    <color name="defaultUnselectedDonutGray">#F5F5F5</color>
-    <color name="disabledText">#9D9FA2</color>
-    <color name="publishedGreen">#00ac18</color>
-    <color name="textLightGray">#556572</color>
+    <!-- Transparent colors -->
     <color name="semiTransparentDark">#50000000</color>
-    <color name="progressBarBackground">#F5F5F5</color>
-    <color name="recordButtonStroke">#EBEDEE</color>
-    <color name="recordFloatingViewBackground">#F5F5F5</color>
-    <color name="recordReplayTextColor">#76848D</color>
-    <color name="commentBubbleOutgoing">#178FDF</color>
-    <color name="commentBubbleIncoming">#F5F5F5</color>
+    <color name="transparentWhite">#88FFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="dimLighterGray">#80E0E0E0</color>
+    <color name="translucentBlack">#99000000</color>
 
-
-    <!-- Annotation Colors -->
-    <color name="annotationToolbarBackground">#556572</color>
-    <color name="submenuAnnotationToolbarBackground">#FF485864</color>
+    <!-- Annotation Colors  -->
     <color name="redAnnotation">#EE0612</color>
     <color name="orangeAnnotation">#FC5E13</color>
     <color name="yellowAnnotation">#FCB900</color>
@@ -86,52 +91,14 @@
     <color name="greenHighlightAnnotation">#99EBA4</color>
     <color name="blueHighlightAnnotation">#80D0FF</color>
     <color name="pinkHighlightAnnotation">#FFB9F1</color>
-    <color name="transparentWhite">#88FFFFFF</color>
 
 
-    <!-- Parent Specific Colors -->
-    <color name="parent_colorPrimary">#008EE2</color>
-    <color name="parent_colorPrimaryDark">#0079bf</color>
-    <color name="parent_colorAccent">#4452A6</color>
-    <color name="blueAnnouncement">#018ecf</color>
-    <color name="parentYellow">#F5A623</color>
-    <color name="parentBlue">#0096DB</color>
-    <color name="parentRed">#D0021B</color>
-    <color name="parentBackgroundDarkBlue">#d6001ec2</color>
-    <color name="parentBackgroundLightBlue">#d600E1FF</color>
-    <color name="parentButtonBluePressed">#0055b1</color>
-    <color name="parentButtonBlue">#0068D8</color>
-    <color name="parentButtonBlueTransparent">#990068D8</color>
-    <color name="parentButtonTextDisabled">#abffffff</color>
-    <color name="parentGreen">#48AF49</color>
-    <color name="colorPrimaryAlpha">#ff3f51b5</color>
-    <color name="colorGradientYellow">#CCFFC700</color>
-    <color name="colorGradientRed">#CCFF0000</color>
-    <color name="colorGradientCyan">#CC00E1FF</color>
-    <color name="colorGradientBlue">#CC001EC2</color>
-    <color name="parentAppBackground">#EFEFF1</color>
-    <color name="alertGreen">#00AC18</color>
-    <color name="alertRed">#EE0612</color>
-    <color name="alertOrange">#FC5E13</color>
-
-
-    <!-- Login Colors -->
+    <!-- App theme colors -->
     <color name="login_teacherAppTheme">#ffc100</color>
     <color name="login_parentAppTheme">#008ee2</color>
     <color name="login_studentAppTheme">#ee0612</color>
-    <color name="login_loginFlowBlue">#008ee2</color>
-    <color name="login_helpLinkBlue">#0f78db</color>
-    <color name="login_grayCanvasLogo">#c7cdd1</color>
-    <color name="login_grayText">#556572</color>
-    <color name="login_darkText">#2d3b45</color>
-    <color name="login_mediumText">#78848c</color>
-    <color name="login_dividerColor">#E0E0E0</color>
-    <color name="login_textButton">#73818C</color>
-    <color name="login_masqueradeHighlight">#BE32A3</color>
 
-    <!-- ***SHARED COLORS***-->
-
-    <!-- Course Colors - Primary -->
+    <!-- Course Colors for customization -->
     <color name="colorCottonCandy">#FFF26090</color>
     <color name="colorBarbie">#FFEA1661</color>
     <color name="colorBarneyPurple">#FF903A99</color>
@@ -147,77 +114,8 @@
     <color name="colorTangerine">#FFFA9800</color>
     <color name="colorBloodOrange">#FFF2581B</color>
     <color name="colorSriracha">#FFF2422E</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="glassWhite">#77FFFFFF</color>
-    <color name="whiteNoAlpha">#FFFFFF</color>
-    <color name="yellow">#FFFF00</color>
-    <color name="red">#FF0000</color>
-    <color name="gray">#808080</color>
-    <color name="darkGray">#696969</color>
-    <color name="darkerGray">#333</color>
-    <color name="realBlue">#0000FF</color>
-    <color name="black">#000000</color>
-    <color name="lightGray">#D3D3D3</color>
-    <color name="translucentBlack">#99000000</color>
-    <color name="linkBlue">#5858F8</color>
-    <color name="eventIconGray">#838383</color>
 
-    <!-- Canvas Style Guide Colors -->
-    <color name="canvasRed">#D64027</color>
-    <color name="canvasOrange">#F25622</color>
-    <color name="canvasBlue">#0076A3</color>
-    <color name="canvasBlueRowSelected">#FFE3E3E3</color>
-    <color name="canvasBlueGreyRowSelected">#FFE3E3E3</color>
-    <color name="canvasBlueSelectedTransparent">#AAE3E3E3</color>
-    <color name="canvasBackgroundDark">#1B1B1B</color>
-    <color name="canvasBackgroundMediumDark">#2D2D2D</color>
-    <color name="canvasBackgroundMedium">#FFE3E3E3</color>
-    <color name="canvasBackgroundLight">#FFF9F9F9</color>
-    <color name="canvasBackgroundWhite">#FFFFFF</color>
-    <color name="canvasSectionDivider">#A4A4A4</color>
-    <color name="canvasTextDark">#3B3B3B</color>
-    <color name="canvasTextMedium">#939393</color>
-    <color name="backgroundTabPressed">#FFE3E3E3</color>
-    <color name="submissionBackground">#FFEBEBEB</color>
-    <color name="primaryText">#333333</color>
-    <color name="secondaryText">#777777</color>
-    <color name="dividerColor">#E0E0E0</color>
-    <color name="moduleItemBackground">#FFF9F9F9</color>
-    <color name="expandCollapseArrow">#73818C</color>
-    <color name="navigationTextColor">#202020</color>
-    <color name="defaultPrimary">#333845</color>
-    <color name="defaultPrimaryDark">#333845</color>
-    <color name="defaultAccent">#333845</color>
-    <color name="actionbarGrayLight">#515456</color>
-    <color name="listviewDefault">#00000000</color>
-    <color name="listviewFocused">#00000000</color>
-    <color name="listviewPressed">#FFE3E3E3</color>
-
-    <!-- Calendar -->
-    <color name="calendarEventBar">#9D9E9E</color>
-    <color name="calendarTodayHighlight">#92dedede</color>
-
-    <!-- Sidebar -->
-    <color name="tabletSidebarSelected">#FFE3E3E3</color>
-
-    <!-- Button colors -->
-    <color name="buttonNormal">#DDD</color>
-    <color name="buttonPressed">#CCC</color>
-    <color name="buttonDisabled">#E2E2E2</color>
-
-    <!--Material Dialogs -->
-    <color name="transparent">#00000000</color>
-    <color name="dimLighterGray">#80E0E0E0</color>
-
-    <!--Widgets -->
-    <color name="widgetDarkColor">#212121</color>
-    <color name="widgetLightColor">#FAFAFA</color>
-
-    <!--Discussions-->
-    <color name="discussionLiking">#556572</color>
-    <color name="profileBorderColor">#d8dcdf</color>
-
-    <!--Attachment View-->
+    <!-- Attachment View colors -->
     <color name="attachmentColorDoc">#2ca3de</color>
     <color name="attachmentColorPdf">#f2422e</color>
     <color name="attachmentColorVideo">#f2422e</color>
@@ -228,33 +126,8 @@
     <color name="attachmentColorAudio">#4452a6</color>
     <color name="attachmentColorMisc">#00bcd5</color>
 
-    <!-- Generic Shared Colors -->
-    <color name="messageBackgroundGray">#F5F5F5</color>
-    <color name="error">#FFD50000</color>
-    <color name="defaultActionColor">#008ee2</color>
-    <color name="destructive">#EE0612</color>
-    <color name="unselectedRadioColor">#010101</color>
-    <color name="removeOverrideColor">#EE0612</color>
-    <color name="canvasDefaultPrimary">#34444F</color>
-    <color name="canvasDefaultPrimaryText">#FFFFFF</color>
-    <color name="canvasDefaultAccent">#0081BD</color>
-    <color name="canvasDefaultButton">#0096DB</color>
-    <color name="canvasDefaultButtonText">#FFFFFF</color>
-    <color name="canvasEditTextColor">#C7CDD1</color>
-    <color name="defaultThumbColor">#EBEDEE</color>
-    <color name="defaultTrackColor">#C7CDD1</color>
-    <color name="avatarGray">#556572</color>
-    <color name="defaultTextDark">#2d3b45</color>
-    <color name="defaultTextGray">#556572</color>
-    <color name="mediaOverlayBackground">#AA000000</color>
-
     <!-- Override these colors to change the text colors of the date picker -->
-    <color name="blue">@color/defaultPrimary</color>
-    <color name="darker_blue">@color/defaultPrimaryDark</color>
-
-    <color name="speed_grader_button_text_color">#008EE2</color>
-    <color name="nav_drawer_text_color">#2D3B45</color>
-
-    <color name="k5SeparatorColor">#C6C6C8</color>
+    <color name="blue">@color/textDarkest</color>
+    <color name="darker_blue">@color/textDarkest</color>
 
 </resources>

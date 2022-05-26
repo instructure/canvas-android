@@ -1261,4 +1261,11 @@
     
     <string name="dashboardSwitchToListView">Switch to list view</string>
     <string name="dashboardSwitchToGridView">Switch to grid view</string>
+
+    <string name="selectAppTheme">Select app theme</string>
+    <string name="appThemeSettingsTitle">App Theme</string>
+    <string name="appThemeLight">Light</string>
+    <string name="appThemeDark">Dark</string>
+    <string name="appThemeSystem">System default</string>
+
 </resources>

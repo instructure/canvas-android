@@ -22,13 +22,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/profileSettingsPage">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/defaultPrimary"
+        android:background="@color/textDarkest"
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
@@ -73,8 +74,8 @@
                 android:layout_below="@+id/profileBanner"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-84dp"
-                app:civ_border_color="@color/white"
-                app:civ_circle_background_color="@color/white"
+                app:civ_border_color="@color/borderLightest"
+                app:civ_circle_background_color="@color/backgroundLightest"
                 app:civ_border_width="4dp"
                 app:civ_border_overlay="true"/>
 
@@ -86,7 +87,7 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="24sp"
                 tools:text="Trevor Needham"
                 android:layout_centerHorizontal="true"
@@ -99,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="16sp"
                 tools:text="whois@instructure.com"
                 android:layout_centerHorizontal="true"

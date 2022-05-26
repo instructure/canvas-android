@@ -69,7 +69,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     init {
         toolbar.setupMenu(R.menu.menu_edit_generic) { consumer?.accept(SyllabusEvent.EditClicked) }
         setEditVisibility(false)
-        ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
 
         syllabusTabLayout.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
 
@@ -122,7 +122,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         setEditVisibility(state.canEdit)
         // We need to do this again after changing the edit button to visible to make it the correct color.
-        ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
 
         val showSummary = state.showSummary && state.eventsState != null
         val hasBoth = showSummary && state.syllabus != null

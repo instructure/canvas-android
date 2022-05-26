@@ -197,9 +197,6 @@ class UploadMediaCommentUpdateEvent(updatedComments: MutableMap<String, MutableL
 
 class SubmissionCommentsUpdated(skipId: String? = null) : RationedBusEvent<Boolean>(true, skipId)
 
-class FileFolderDeletedEvent(val deletedFileFolder: FileFolder, skipId: String? = null) : RationedBusEvent<FileFolder>(deletedFileFolder, skipId)
-class FileFolderUpdatedEvent(val updatedFileFolder: FileFolder, skipId: String? = null) : RationedBusEvent<FileFolder>(updatedFileFolder, skipId)
-
 class SectionsUpdatedEvent
 
 class SubmissionFilterChangedEvent(val filterIndex: Int = -1, val canvasContext: ArrayList<CanvasContext>? = null)

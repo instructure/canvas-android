@@ -86,7 +86,7 @@ class RubricEditView @JvmOverloads constructor(
         // Set save button colors
         saveRubricButton.setTextColor(ColorStateList(
                 arrayOf(intArrayOf(-android.R.attr.state_enabled), intArrayOf()),
-                intArrayOf(context.getColorCompat(R.color.defaultTextGray), ThemePrefs.buttonColor)
+                intArrayOf(context.getColorCompat(R.color.textDark), ThemePrefs.buttonColor)
         ))
 
         saveRubricButton.onClickWithRequireNetwork { saveRubricAssessment() }

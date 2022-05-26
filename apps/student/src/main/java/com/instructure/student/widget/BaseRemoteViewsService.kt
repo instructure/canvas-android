@@ -32,7 +32,7 @@ abstract class BaseRemoteViewsService : RemoteViewsService() {
         fun getWidgetTextColor(widgetId: Int, context: Context): Int {
             val widgetBackgroundPref = getWidgetBackgroundPref(widgetId)
             return if (widgetBackgroundPref.equals(WidgetSetupActivity.WIDGET_BACKGROUND_COLOR_LIGHT, ignoreCase = true))
-                ContextCompat.getColor(context, R.color.canvasTextDark) else ContextCompat.getColor(context, R.color.white)
+                ContextCompat.getColor(context, R.color.textDarkest) else ContextCompat.getColor(context, R.color.textLightest)
         }
 
         fun getWidgetBackgroundResourceId(widgetId: Int): Int {

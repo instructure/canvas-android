@@ -43,7 +43,6 @@ import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AllCoursesView
 import kotlinx.android.synthetic.main.fragment_all_courses.*
 import kotlinx.android.synthetic.main.fragment_all_courses.toolbar
-import kotlinx.android.synthetic.main.fragment_courses.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.swipeRefreshLayout
 import org.greenrobot.eventbus.EventBus
@@ -119,7 +118,7 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
         val menuTitleRes = if (TeacherPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
         dashboardLayoutMenuItem.setTitle(menuTitleRes)
 
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     private fun changeDashboardLayout(item: MenuItem) {

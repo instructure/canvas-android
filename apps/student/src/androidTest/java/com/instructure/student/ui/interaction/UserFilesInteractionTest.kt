@@ -86,7 +86,7 @@ class UserFilesInteractionTest : StudentTest() {
     // Should be able to upload a file from the user's device
     // Mocks the result from the expected intent, then uploads it.
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false)
     fun testUpload_deviceFile() {
         goToFilePicker()
 
@@ -116,7 +116,7 @@ class UserFilesInteractionTest : StudentTest() {
     // Should be able to upload a file from the camera
     // Mocks the result from the expected intent, then uploads it.
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false)
     fun testUpload_fileFromCamera() {
 
         goToFilePicker()
@@ -157,7 +157,7 @@ class UserFilesInteractionTest : StudentTest() {
     // Should be able to upload a file from the user's photo gallery
     // Mocks the result from the expected intent, then uploads it.
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false)
     fun testUpload_gallery() {
         goToFilePicker()
 
@@ -187,28 +187,28 @@ class UserFilesInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION, true)
     fun testView_previewAudio() {
         // Should be able to preview an audio file
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION, true)
     fun testView_previewVideo() {
         // Should be able to preview a video file
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION, true)
     fun testView_createDirectory() {
         // Should be able to create a directory and upload a file to that directory
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION, true)
     fun testView_previewImage() {
         // Should be able to preview an image file
     }

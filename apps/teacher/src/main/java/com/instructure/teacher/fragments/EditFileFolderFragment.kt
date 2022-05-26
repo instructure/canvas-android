@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import com.google.android.material.textfield.TextInputLayout
@@ -29,7 +28,6 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.canvasapi2.utils.toApiString
@@ -42,8 +40,8 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.LongNameArrayAdapter
 import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.EditFilePresenterFactory
 import com.instructure.teacher.presenters.EditFileFolderPresenter
@@ -125,7 +123,7 @@ class EditFileFolderFragment : BasePresenterFragment<
     }
 
     override fun fileFolderUpdated(updatedFileFolder: FileFolder) {
-        FileFolderUpdatedEvent(updatedFileFolder).post()
+        FileFolderUpdatedEvent(updatedFileFolder).postSticky()
         requireActivity().onBackPressed()
     }
 
@@ -140,7 +138,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         else toolbar.title = getString(R.string.editFolder)
 
         toolbar.setupMenu(R.menu.menu_save_generic) { saveFileFolder() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
 
 
 

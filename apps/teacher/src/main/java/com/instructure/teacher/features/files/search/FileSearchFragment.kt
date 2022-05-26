@@ -74,7 +74,7 @@ class FileSearchFragment : BaseSyncFragment<
     }
 
     private fun setupViews() {
-        ViewStyler.setStatusBarLight(requireActivity())
+        ViewStyler.themeStatusBar(requireActivity())
 
         // Set up empty state
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nofiles))

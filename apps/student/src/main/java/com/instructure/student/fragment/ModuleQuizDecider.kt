@@ -101,7 +101,7 @@ class ModuleQuizDecider : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = if (this::quiz.isInitialized) quiz.title else getString(R.string.quizzes)
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     private fun obtainQuiz() {

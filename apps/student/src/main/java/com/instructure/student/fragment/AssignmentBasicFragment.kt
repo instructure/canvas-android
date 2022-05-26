@@ -170,7 +170,7 @@ class AssignmentBasicFragment : ParentFragment() {
         toolbar.let {
             it.title = assignment.name ?: ""
             it.setupAsBackButton(this)
-            ViewStyler.themeToolbar(requireActivity(), it, canvasContext)
+            ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
         }
     }
 

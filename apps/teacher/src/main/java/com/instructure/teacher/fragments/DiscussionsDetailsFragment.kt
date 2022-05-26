@@ -184,14 +184,14 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if(!mIsAnnouncements) {
             if (discussionTopicHeader.published) {
                 publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
-                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.publishedGreen))
+                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textSuccess))
                 publishStatusTextView.setText(R.string.published)
-                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.publishedGreen))
+                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textSuccess))
             } else {
                 publishStatusIconView.setImageResource(R.drawable.ic_complete)
-                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.defaultTextGray))
+                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textDark))
                 publishStatusTextView.setText(R.string.not_published)
-                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.defaultTextGray))
+                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textDark))
             }
         } else {
             pointsPublishedLayout.setGone()
@@ -467,7 +467,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mCanvasContext.color, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
         toolbar.setupMenu(R.menu.menu_edit_generic, menuItemCallback)
@@ -475,7 +475,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if(!isTablet) {
             toolbar.subtitle = mCanvasContext.name
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCanvasContext.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
     }
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
@@ -501,7 +501,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(webView: CanvasWebView, addJSSupport: Boolean) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(Color.WHITE)
+        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.javaScriptEnabled = true
         if(addJSSupport) webView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
         webView.settings.useWideViewPort = true
@@ -624,7 +624,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) {
         val likingSum = if(discussionEntry.ratingSum == 0) "" else "(" + discussionEntry.ratingSum + ")"
         val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountText(requireContext(), discussionEntry)
-        val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.discussionLiking))
+        val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.textDark))
         requireActivity().runOnUiThread {
             discussionRepliesWebView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
             discussionRepliesWebView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")

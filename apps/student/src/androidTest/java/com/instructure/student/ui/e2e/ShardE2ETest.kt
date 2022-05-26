@@ -17,7 +17,7 @@ class ShardE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.NONE, TestCategory.E2E, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NONE, TestCategory.E2E, true)
     fun testShardE2E() {
         // TODO: Test against institutions across multiple shards, for courses/assignments/etc... that have cross shard ids
         //  (i.e., 12345~1234 instead of 1234500000000001234)

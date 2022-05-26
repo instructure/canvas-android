@@ -20,7 +20,7 @@
     android:id="@+id/cameraView"
     android:layout_width="match_parent"
     android:layout_height="@dimen/recordingViewHeight"
-    android:background="@color/recordFloatingViewBackground">
+    android:background="@color/backgroundLight">
 
     <ImageView
         android:id="@+id/recordAudioButton"

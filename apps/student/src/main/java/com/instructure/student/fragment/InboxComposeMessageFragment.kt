@@ -15,7 +15,6 @@
  */
 package com.instructure.student.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -95,8 +94,8 @@ class InboxComposeMessageFragment : ParentFragment() {
     override fun applyTheme() {
         ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
         ViewStyler.themeSwitch(requireContext(), sendIndividualSwitch, ThemePrefs.brandColor)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
-        ViewStyler.themeProgressBar(savingProgressBar, Color.BLACK)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        ViewStyler.themeProgressBar(savingProgressBar, requireContext().getColor(R.color.textDarkest))
     }
 
     private fun validateMessage() = when {

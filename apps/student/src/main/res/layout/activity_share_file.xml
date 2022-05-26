@@ -20,4 +20,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/rootView"
-    android:background="@color/login_studentAppTheme"/>
+    android:background="@color/studentDocumentSharingColor"/>

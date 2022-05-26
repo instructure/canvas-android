@@ -129,7 +129,7 @@ class PandaAvatarActivity : ParentActivity() {
     private fun setupViews() {
         mToolbar.setTitle(R.string.pandaAvatar)
         mToolbar.setupAsBackButton { finish() }
-        ViewStyler.themeToolbar(this, mToolbar, ThemePrefs.primaryColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(this, mToolbar, ThemePrefs.primaryColor, getColor(R.color.white))
         mToolbar.elevation = this.DP(2f)
         // Make the head and body all black
         changeHead.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_head_02, Color.BLACK)
@@ -159,7 +159,7 @@ class PandaAvatarActivity : ParentActivity() {
     }
 
     private fun setAsAvatar() {
-        val file = saveImageAsPNG(false, ContextCompat.getColor(this, R.color.canvasBackgroundMedium), false) ?: return
+        val file = saveImageAsPNG(false, ContextCompat.getColor(this, R.color.backgroundMedium), false) ?: return
         val data = Intent()
         data.putExtra(Const.PATH, file.path)
         data.putExtra(Const.SIZE, file.length())

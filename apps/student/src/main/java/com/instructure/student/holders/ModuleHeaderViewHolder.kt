@@ -43,7 +43,7 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         isExpanded = expanded
         expandCollapse.rotation = if (isExpanded) 180f else 0f
         divider.setVisible(!isExpanded)
-        val color = ContextCompat.getColor(context, R.color.canvasTextMedium)
+        val color = ContextCompat.getColor(context, R.color.textDark)
         itemView.setOnClickListener { v ->
             viewHolderHeaderClicked.viewClicked(v, moduleObject)
             val animationType: Int

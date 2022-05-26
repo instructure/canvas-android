@@ -20,7 +20,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
 import android.view.*
@@ -62,7 +61,7 @@ class MasqueradingDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         toolbar.setupAsCloseButton { dismiss() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), true, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
 
         ViewStyler.themeButton(startButton)
         startButton.onClick {

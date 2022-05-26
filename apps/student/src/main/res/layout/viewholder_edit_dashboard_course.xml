@@ -49,7 +49,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:src="@{itemViewModel.favorite ? @drawable/ic_star_filled : @drawable/ic_star_outline}"
-                android:tint="@{itemViewModel.favoriteable ? @color/canvasDefaultAccent : @color/defaultTextDark}"
+                android:tint="@{itemViewModel.favoriteable ? @color/textInfo : @color/textDarkest}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
                 android:text="@{itemViewModel.name}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toTopOf="@+id/termTitle"
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
@@ -75,7 +75,7 @@
                 android:importantForAccessibility="no"
                 android:text="@{itemViewModel.termTitle}"
                 android:textAllCaps="true"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="12sp"
                 android:visibility="@{itemViewModel.termTitle == null ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -91,6 +91,7 @@
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_open_arrow"
                 android:visibility="@{itemViewModel.openable ? View.VISIBLE : View.GONE}"
+                android:tint="@color/textDark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -101,6 +102,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/dividerColor" />
+            android:background="@color/backgroundMedium" />
     </RelativeLayout>
 </layout>

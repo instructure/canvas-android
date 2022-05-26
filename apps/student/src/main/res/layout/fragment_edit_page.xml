@@ -37,8 +37,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <include layout="@layout/view_divider"/>
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -60,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="@string/description"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:focusable="true"/>
 
             <instructure.rceditor.RCETextEditorView

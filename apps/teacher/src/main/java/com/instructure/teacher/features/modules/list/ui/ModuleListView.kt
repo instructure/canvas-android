@@ -73,7 +73,7 @@ class ModuleListView(
         // Toolbar setup
         toolbar.subtitle = course.name
         toolbar.setupBackButton(context)
-        ViewStyler.themeToolbar(context as Activity, toolbar, course)
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, course)
 
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter

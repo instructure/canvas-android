@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~ Copyright (C) 2022 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
   ~     you may not use this file except in compliance with the License.
@@ -16,17 +16,7 @@
   ~
   -->
 
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minWidth="30dp"
-    android:minHeight="150dp"
-    android:background="@android:color/holo_green_dark"
-    android:textSize="32sp"
-    android:textStyle="bold"
-    android:textColor="@android:color/white"
-    tools:text="Animals starting with A"
-    tools:context=".MainActivity"/>
+<resources>
+    <color name="rce_backgroundColor">#2A2A2A</color>
+    <color name="rce_defaultTextColor">#FFFFFF</color>
+</resources>

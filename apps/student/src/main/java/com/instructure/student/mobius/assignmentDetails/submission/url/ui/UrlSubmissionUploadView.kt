@@ -69,6 +69,7 @@ class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mob
     override fun applyTheme() {}
 
     fun showPreviewUrl(url: String) {
+        urlPreviewWebView?.setVisible()
         urlPreviewWebView.loadUrl(url)
     }
 
@@ -84,6 +85,6 @@ class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mob
 
     companion object {
         private const val DELAY = 400L
-        private const val URL_MINIMUM_LENGTH = 0
+        private const val URL_MINIMUM_LENGTH = 3
     }
 }

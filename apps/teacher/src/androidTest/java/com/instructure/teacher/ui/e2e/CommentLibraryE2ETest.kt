@@ -39,9 +39,6 @@ import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
-private const val STEP_TAG = "CommentLibraryE2ETest #STEP# "
-private const val PREPARATION_TAG = "CommentLibraryE2ETest #PREPARATION# "
-
 @HiltAndroidTest
 class CommentLibraryE2ETest : TeacherTest() {
 
@@ -51,7 +48,7 @@ class CommentLibraryE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testCommentLibraryE2E() {
 
         val data = seedData(teachers = 1, students = 1, courses = 2)

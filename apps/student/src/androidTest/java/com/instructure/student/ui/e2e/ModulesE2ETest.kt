@@ -46,7 +46,7 @@ class ModulesE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.E2E, false)
     fun testModulesE2E() {
 
         // Seed basic data

@@ -16,9 +16,7 @@
  */
 package com.instructure.student.ui.e2e
 
-import androidx.test.espresso.Espresso.pressBack
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.SubmissionType
@@ -43,7 +41,7 @@ class SyllabusE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SYLLABUS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYLLABUS, TestCategory.E2E)
     fun testSyllabusE2E() {
 
         // Seed basic data

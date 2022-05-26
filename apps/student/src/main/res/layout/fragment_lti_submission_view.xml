@@ -42,7 +42,7 @@
             android:focusable="true"
             android:importantForAccessibility="yes"
             android:text="@string/commentSubmissionTypeExternalTool"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:gravity="center"
             android:importantForAccessibility="yes"
             android:text="@string/speedGraderExternalToolMessage"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="12sp" />
 
         <Space

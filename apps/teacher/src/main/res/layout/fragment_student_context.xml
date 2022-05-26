@@ -37,7 +37,7 @@
         android:visibility="gone"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
-        tools:background="@color/colorAquaMarine"
+        tools:background="@color/backgroundInfo"
         tools:ignore="UnusedAttribute"
         tools:visibility="visible" />
 
@@ -71,14 +71,14 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginBottom="12dp"
-                    tools:src="@color/defaultTextGray" />
+                    tools:src="@color/textDark" />
 
                 <TextView
                     android:id="@+id/studentNameView"
                     style="@style/TextFont.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="20sp"
                     tools:text="Tommy Hinsman" />
 
@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     tools:text="thinsman@instructure.com" />
 
                 <TextView
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:textSize="12sp"
                     tools:text="Latest activity on January 29 at 4:56 PM" />
 
@@ -112,7 +112,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@color/defaultTextGray" />
+                    android:background="@color/backgroundDark" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -134,7 +134,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="16sp"
                         tools:text="Biology 101" />
 
@@ -145,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:gravity="center"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="12sp"
                         tools:text="Section 1 | Section 2 | Section 3" />
 
@@ -167,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/grades"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:textSize="14sp" />
 
                 <LinearLayout
@@ -214,7 +214,7 @@
                     <LinearLayout
                         android:id="@+id/gradeOverrideContainer"
                         style="@style/StudentContextInfoCell"
-                        tools:backgroundTint="@color/colorAquaMarine">
+                        tools:backgroundTint="@color/backgroundInfo">
 
                         <TextView
                             android:id="@+id/gradeOverride"
@@ -244,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="@string/submissions"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:textSize="14sp" />
 
                 <LinearLayout

@@ -201,7 +201,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
              from external sources. */
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             bottomBar.setVisible(visible)
-            bottomBarDivider.setVisible(visible)
         }
     }
 
@@ -228,7 +227,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
+            finish()
         }
+
+        FlutterComm.updateDarkMode(this)
 
         bottomBar.inflateMenu(navigationBehavior.bottomBarMenu)
 
@@ -389,7 +391,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
             if(ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
                 val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = ContextCompat.getColor(context, R.color.avatarGray)
+                val color = ContextCompat.getColor(context, R.color.textDark)
                 val drawable = TextDrawable.builder()
                         .beginConfig()
                         .height(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
@@ -478,7 +480,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         setupUserDetails(ApiPrefs.user)
 
-        ViewStyler.themeToolbar(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
 
         navigationDrawerItem_startMasquerading.setVisible(!ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true)
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)
@@ -594,7 +596,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun setupBottomNavigation() {
         Logger.d("NavigationActivity:setupBottomNavigation()")
-        bottomBar.applyTheme(ThemePrefs.brandColor, ContextCompat.getColor(this, R.color.bottomBarUnselectedItemColor))
+        bottomBar.applyTheme(ThemePrefs.brandColor, ContextCompat.getColor(this, R.color.textDarkest))
         bottomBar.setOnNavigationItemSelectedListener(bottomBarItemSelectedListener)
         bottomBar.setOnNavigationItemReselectedListener(bottomBarItemReselectedListener)
         updateBottomBarContentDescriptions()
@@ -1048,7 +1050,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                         .inflate(R.layout.unread_count, bottomBar, false)
                 (badge as TextView).text = unreadCountDisplay
 
-                ColorUtils.colorIt(ContextCompat.getColor(context, R.color.electricBlueBadge), badge.background)
+                ColorUtils.colorIt(ContextCompat.getColor(context, R.color.backgroundInfo), badge.background)
                 addView(badge)
             }
         }

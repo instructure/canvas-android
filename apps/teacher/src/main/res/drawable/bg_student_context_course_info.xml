@@ -20,8 +20,8 @@
 
     <stroke
         android:width="0.5dp"
-        android:color="@color/defaultTextGray" />
+        android:color="@color/borderDark" />
 
-    <solid android:color="@color/white" />
+    <solid android:color="@color/backgroundLightest" />
 
 </shape>

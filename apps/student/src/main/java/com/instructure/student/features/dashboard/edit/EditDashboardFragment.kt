@@ -75,7 +75,7 @@ class EditDashboardFragment : Fragment() {
         toolbar.addSearch {
             viewModel.queryItems(it)
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     override fun onStop() {

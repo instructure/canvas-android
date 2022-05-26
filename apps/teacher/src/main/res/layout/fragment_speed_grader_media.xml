@@ -36,7 +36,7 @@
             android:layout_gravity="center"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_audio"
-            android:tint="@color/defaultTextGray"
+            android:tint="@color/textDark"
             android:visibility="gone"/>
 
     </com.google.android.exoplayer2.ui.PlayerView>
@@ -57,7 +57,7 @@
             android:gravity="center"
             android:padding="16dp"
             android:text="@string/errorOccurred"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="16sp"/>
 
         <Button

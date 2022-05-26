@@ -27,14 +27,15 @@ import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.itemviewmodels.*
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import io.mockk.mockkStatic
+import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -66,6 +67,8 @@ class EditDashboardViewModelTest {
 
     @Before
     fun setUp() {
+        mockkStatic("kotlinx.coroutines.AwaitKt")
+
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
     }
@@ -79,9 +82,9 @@ class EditDashboardViewModelTest {
     @Test
     fun `Show error state if fetching courses fails`() {
         //Given
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail()
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Fail(), DataResult.Fail(), DataResult.Fail())
 
         val groups = listOf(createGroup(id = 1L, name = "Group1"))
 
@@ -101,9 +104,10 @@ class EditDashboardViewModelTest {
     fun `Show error state if fetching groups fails`() {
         //Given
         val courses = listOf(Course(id = 1L, name = "Course"))
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
@@ -122,9 +126,9 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current Course"))
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
@@ -149,9 +153,9 @@ class EditDashboardViewModelTest {
     @Test
     fun `Correct headers for groups`() {
         //Given
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         val groups = listOf(Group(id = 1L, name = "Group1"))
 
@@ -179,9 +183,9 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current course"))
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
@@ -213,9 +217,9 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current course", true))
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
@@ -245,9 +249,9 @@ class EditDashboardViewModelTest {
     @Test
     fun `Add group to favorites`() {
         //Given
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         val groups = listOf(createGroup(1L, "Group"))
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
@@ -278,9 +282,9 @@ class EditDashboardViewModelTest {
     @Test
     fun `Remove group from favorites`() {
         //Given
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         val groups = listOf(createGroup(1L, "Group", true))
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
@@ -315,9 +319,9 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Current course 2")
         )
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
@@ -355,9 +359,9 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Current course 2", false)
         )
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
@@ -392,9 +396,9 @@ class EditDashboardViewModelTest {
     @Test
     fun `Add all groups to favorites`() {
         //Given
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         val groups = listOf(
                 createGroup(1L, "Group"),
@@ -432,9 +436,9 @@ class EditDashboardViewModelTest {
     @Test
     fun `Remove all groups from favorites`() {
         //Given
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         val groups = listOf(
                 createGroup(1L, "Group", true),
@@ -479,9 +483,9 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(groups)
@@ -513,9 +517,9 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(groups)
@@ -547,9 +551,9 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(groups)
@@ -573,11 +577,10 @@ class EditDashboardViewModelTest {
         val pastCourse = createCourse(1L, "Past course", false, OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1))
         val futureCourse = createCourse(2L, "Future course", false, OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1))
         val currentCourse = createCourse(3L, "Current course", false)
-        val courses = listOf(pastCourse, futureCourse, currentCourse)
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(listOf(currentCourse)), DataResult.Success(listOf(pastCourse)), DataResult.Success(listOf(futureCourse)))
 
         val groups = listOf(
                 createGroup(4L, "Group", true),
@@ -633,346 +636,238 @@ class EditDashboardViewModelTest {
     }
 
     @Test
-    fun `Sections override course date if allowed`() {
-        val courses = listOf(
-                createCourse(
-                        id = 1L,
-                        name = "Past section course",
-                        isFavorite = false,
-                        sections = listOf(createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString())),
-                        restrictEnrolmentsToCourseDate = false
-                ),
-                createCourse(
-                        id = 2L,
-                        name = "Current course with past section",
-                        isFavorite = false,
-                        sections = listOf(createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString())),
-                        restrictEnrolmentsToCourseDate = true
-                ),
-                createCourse(
-                        id = 3L,
-                        name = "Future section course",
-                        isFavorite = false,
-                        sections = listOf(createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString())),
-                        restrictEnrolmentsToCourseDate = false
-                )
-        )
+    fun `Past courses cannot be favorited`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Past course"))
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(courses), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
         viewModel = EditDashboardViewModel(courseManager, groupManager)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
 
         val data = viewModel.data.value?.items ?: emptyList()
 
-        assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
-        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.current_enrollments, currentHeader.title)
-
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(4, data.size)
         assertTrue(data[3] is EditDashboardCourseItemViewModel)
-        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
-        assertEquals("Current course with past section", currentCourseItemViewModel.name)
 
-        assertTrue(data[4] is EditDashboardEnrollmentItemViewModel)
-        val pastHeader = data[4] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.past_enrollments, pastHeader.title)
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onFavoriteClick()
+        assert(!itemViewModel.isFavorite)
 
-        assertTrue(data[5] is EditDashboardCourseItemViewModel)
-        val pastCourseItemViewModel = data[5] as EditDashboardCourseItemViewModel
-        assertEquals("Past section course", pastCourseItemViewModel.name)
-
-        assertTrue(data[6] is EditDashboardEnrollmentItemViewModel)
-        val futureHeader = data[6] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.future_enrollments, futureHeader.title)
-
-        assertTrue(data[7] is EditDashboardCourseItemViewModel)
-        val futureCourseItemViewModel = data[7] as EditDashboardCourseItemViewModel
-        assertEquals("Future section course", futureCourseItemViewModel.name)
+        val failedEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(failedEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.inactive_courses_cant_be_added_to_dashboard, (failedEvent as EditDashboardItemAction.ShowSnackBar).res)
     }
 
     @Test
-    fun `Terms override course date if allowed`() {
+    fun `Future courses can only be favorited if they are published`() {
         val courses = listOf(
-                createCourse(
-                        id = 1L,
-                        name = "Past term course",
-                        isFavorite = false,
-                        term = createTerm(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 2).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
-                        restrictEnrolmentsToCourseDate = false
-                ),
-                createCourse(
-                        id = 2L,
-                        name = "Current course with past term",
-                        isFavorite = false,
-                        term = createTerm(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 2).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
-                        restrictEnrolmentsToCourseDate = true
-                ),
-                createCourse(
-                        id = 3L,
-                        name = "Future term course",
-                        isFavorite = false,
-                        term = createTerm(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 2).toApiString()),
-                        restrictEnrolmentsToCourseDate = false
-                )
+                createCourse(1L, "Published future course"),
+                createCourse(2L, "Unpublished future course", workflowState = Course.WorkflowState.UNPUBLISHED)
         )
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(courses))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
         viewModel = EditDashboardViewModel(courseManager, groupManager)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
 
         val data = viewModel.data.value?.items ?: emptyList()
 
-        assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
-        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.current_enrollments, currentHeader.title)
-
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(5, data.size)
         assertTrue(data[3] is EditDashboardCourseItemViewModel)
-        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
-        assertEquals("Current course with past term", currentCourseItemViewModel.name)
 
-        assertTrue(data[4] is EditDashboardEnrollmentItemViewModel)
-        val pastHeader = data[4] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.past_enrollments, pastHeader.title)
+        val publishedItem = (data[3] as EditDashboardCourseItemViewModel)
+        publishedItem.onFavoriteClick()
+        assert(publishedItem.isFavorite)
 
-        assertTrue(data[5] is EditDashboardCourseItemViewModel)
-        val pastCourseItemViewModel = data[5] as EditDashboardCourseItemViewModel
-        assertEquals("Past term course", pastCourseItemViewModel.name)
+        val successfulEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(successfulEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.added_to_dashboard, (successfulEvent as EditDashboardItemAction.ShowSnackBar).res)
 
-        assertTrue(data[6] is EditDashboardEnrollmentItemViewModel)
-        val futureHeader = data[6] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.future_enrollments, futureHeader.title)
+        val unpublishedItem = (data[4] as EditDashboardCourseItemViewModel)
+        unpublishedItem.onFavoriteClick()
+        assert(!unpublishedItem.isFavorite)
 
-        assertTrue(data[7] is EditDashboardCourseItemViewModel)
-        val futureCourseItemViewModel = data[7] as EditDashboardCourseItemViewModel
-        assertEquals("Future term course", futureCourseItemViewModel.name)
+        val failedEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(failedEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.inactive_courses_cant_be_added_to_dashboard, (failedEvent as EditDashboardItemAction.ShowSnackBar).res)
     }
 
     @Test
-    fun `Sections override terms`() {
-        val courses = listOf(
-                createCourse(
-                        id = 1L,
-                        name = "Past section current term course",
-                        isFavorite = false,
-                        term = createTerm(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
-                        sections = listOf(createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString())),
-                        restrictEnrolmentsToCourseDate = false
-                ),
-                createCourse(
-                        id = 2L,
-                        name = "Current section current term course",
-                        isFavorite = false,
-                        term = createTerm(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
-                        sections = listOf(createSection(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString())),
-                        restrictEnrolmentsToCourseDate = false
-                ),
-                createCourse(
-                        id = 3L,
-                        name = "Future section past term course",
-                        isFavorite = false,
-                        term = createTerm(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 2).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
-                        sections = listOf(createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString())),
-                        restrictEnrolmentsToCourseDate = false
-                )
-        )
+    fun `Open course`() {
+        val courses = listOf(createCourse(1L, "Current course"))
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
         viewModel = EditDashboardViewModel(courseManager, groupManager)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
 
         val data = viewModel.data.value?.items ?: emptyList()
 
-        assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
-        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.current_enrollments, currentHeader.title)
-
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(4, data.size)
         assertTrue(data[3] is EditDashboardCourseItemViewModel)
-        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
-        assertEquals("Current section current term course", currentCourseItemViewModel.name)
 
-        assertTrue(data[4] is EditDashboardEnrollmentItemViewModel)
-        val pastHeader = data[4] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.past_enrollments, pastHeader.title)
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onClick()
 
-        assertTrue(data[5] is EditDashboardCourseItemViewModel)
-        val pastCourseItemViewModel = data[5] as EditDashboardCourseItemViewModel
-        assertEquals("Past section current term course", pastCourseItemViewModel.name)
-
-        assertTrue(data[6] is EditDashboardEnrollmentItemViewModel)
-        val futureHeader = data[6] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.future_enrollments, futureHeader.title)
-
-        assertTrue(data[7] is EditDashboardCourseItemViewModel)
-        val futureCourseItemViewModel = data[7] as EditDashboardCourseItemViewModel
-        assertEquals("Future section past term course", futureCourseItemViewModel.name)
+        val openEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(openEvent is EditDashboardItemAction.OpenItem)
+        assertEquals(1L, (openEvent as EditDashboardItemAction.OpenItem).canvasContext?.id)
     }
 
     @Test
-    fun `Course with past and current section only shows up in the current`() {
-        val courses = listOf(
-                createCourse(
-                        id = 1L,
-                        name = "Course with past and current enrollment",
-                        isFavorite = false,
-                        term = createTerm(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
-                        sections = listOf(
-                                createSection(endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
-                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
-                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString())
-                        ),
-                        restrictEnrolmentsToCourseDate = false
-                )
-        )
+    fun `Open group`() {
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
+        val groups = listOf(createGroup(1L, "Group"))
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(groups)
         }
+
+        every { groupManager.addGroupToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(3, data.size)
+        assertTrue(data[2] is EditDashboardGroupItemViewModel)
+
+        val itemViewModel = (data[2] as EditDashboardGroupItemViewModel)
+        itemViewModel.onClick()
+
+        val openEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(openEvent is EditDashboardItemAction.OpenItem)
+        assertEquals(1L, (openEvent as EditDashboardItemAction.OpenItem).canvasContext?.id)
+    }
+
+    @Test
+    fun `Unpublished courses cannot be opened`() {
+        val courses = listOf(createCourse(1L, "Unpublished course", workflowState = Course.WorkflowState.UNPUBLISHED))
+
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(courses))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
         viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
 
         val data = viewModel.data.value?.items ?: emptyList()
 
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
         assertEquals(4, data.size)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
 
-        assert(data[2] is EditDashboardEnrollmentItemViewModel)
-        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.current_enrollments, currentHeader.title)
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onClick()
 
-        assert(data[3] is EditDashboardCourseItemViewModel)
-        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
-        assertEquals("Course with past and current enrollment", currentCourseItemViewModel.name)
+        val openEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(openEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.unauthorized, (openEvent as EditDashboardItemAction.ShowSnackBar).res)
     }
 
     @Test
-    fun `Course with current and future section only shows up as current`() {
-        val courses = listOf(
-                createCourse(
-                        id = 1L,
-                        name = "Course with current and future enrollment",
-                        isFavorite = false,
-                        term = createTerm(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
-                        sections = listOf(
-                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
-                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
-                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString(),
-                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 2).toApiString())
-                        ),
-                        restrictEnrolmentsToCourseDate = false
-                )
-        )
+    fun `Deleted courses cannot be opened`() {
+        val courses = listOf(createCourse(1L, "Deleted course", workflowState = Course.WorkflowState.DELETED))
 
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
+        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
+        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
+        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(courses), DataResult.Success(emptyList()))
 
         every { groupManager.getAllGroupsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
         viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
 
         val data = viewModel.data.value?.items ?: emptyList()
 
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
         assertEquals(4, data.size)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
 
-        assert(data[2] is EditDashboardEnrollmentItemViewModel)
-        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.current_enrollments, currentHeader.title)
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onClick()
 
-        assert(data[3] is EditDashboardCourseItemViewModel)
-        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
-        assertEquals("Course with current and future enrollment", currentCourseItemViewModel.name)
-    }
-
-    @Test
-    fun `Course with past and future section only shows up as future`() {
-        val courses = listOf(
-                createCourse(
-                        id = 1L,
-                        name = "Course with past and future enrollment",
-                        isFavorite = false,
-                        term = createTerm(
-                                startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString(),
-                                endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString()),
-                        sections = listOf(
-                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 2).toApiString(),
-                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1).toApiString()),
-                                createSection(startAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1).toApiString(),
-                                        endAt = OffsetDateTime.now().withYear(OffsetDateTime.now().year + 2).toApiString())
-                        ),
-                        restrictEnrolmentsToCourseDate = false
-                )
-        )
-
-        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(courses)
-        }
-
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
-
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
-        viewModel.data.observe(lifecycleOwner, Observer {})
-
-        val data = viewModel.data.value?.items ?: emptyList()
-
-        assertEquals(4, data.size)
-
-        assert(data[2] is EditDashboardEnrollmentItemViewModel)
-        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
-        assertEquals(R.string.future_enrollments, currentHeader.title)
-
-        assert(data[3] is EditDashboardCourseItemViewModel)
-        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
-        assertEquals("Course with past and future enrollment", currentCourseItemViewModel.name)
+        val openEvent = viewModel.events.value?.getContentIfNotHandled()
+        assert(openEvent is EditDashboardItemAction.ShowSnackBar)
+        assertEquals(R.string.unauthorized, (openEvent as EditDashboardItemAction.ShowSnackBar).res)
     }
 
     private fun createCourse(
@@ -981,9 +876,7 @@ class EditDashboardViewModelTest {
             isFavorite: Boolean = false,
             startOffsetDate: OffsetDateTime? = null,
             endOffsetDate: OffsetDateTime? = null,
-            sections: List<Section>? = null,
-            term: Term? = null,
-            restrictEnrolmentsToCourseDate: Boolean = true
+            workflowState: Course.WorkflowState = Course.WorkflowState.AVAILABLE,
     ): Course {
 
         val startDate = startOffsetDate ?: OffsetDateTime.now()
@@ -1001,22 +894,7 @@ class EditDashboardViewModelTest {
                 startAt = DateTimeUtils.toDate(startDate.atZoneSimilarLocal(ZoneId.systemDefault()).toInstant()).toApiString(),
                 isFavorite = isFavorite,
                 enrollments = enrollments,
-                restrictEnrollmentsToCourseDate = restrictEnrolmentsToCourseDate,
-                term = term,
-                sections = sections ?: emptyList())
-    }
-
-    private fun createSection(startAt: String? = null, endAt: String? = null): Section {
-        return Section(
-                startAt = startAt,
-                endAt = endAt)
-    }
-
-    private fun createTerm(startAt: String? = null, endAt: String? = null): Term {
-        return Term(
-                startAt = startAt,
-                endAt = endAt
-        )
+                workflowState = workflowState)
     }
 
     private fun createGroup(id: Long, name: String, isFavorite: Boolean = false, courseId: Long = 0): Group {

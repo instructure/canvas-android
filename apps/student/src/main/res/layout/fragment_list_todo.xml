@@ -20,14 +20,14 @@
     android:id="@+id/todoPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundWhite">
+    android:background="@color/backgroundLightest">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_alignParentTop="true"
-        android:background="@color/defaultPrimary"
+        android:background="@color/textDarkest"
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/clearFilterTextView"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,7 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:text="@string/clearFilter"
-            android:textColor="@color/defaultActionColor"
+            android:textColor="@color/textInfo"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/canvasBackgroundMedium"
+        android:background="@color/backgroundMedium"
         android:elevation="6dp"
         android:minHeight="42dp"
         android:orientation="horizontal"

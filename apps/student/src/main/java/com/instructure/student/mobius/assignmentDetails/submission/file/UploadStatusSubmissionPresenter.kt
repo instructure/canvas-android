@@ -91,13 +91,13 @@ object UploadStatusSubmissionPresenter :
         deletableIfError: Boolean
     ): List<UploadListItemViewState> {
         var icon: Int
-        var color: Int = R.color.defaultActionColor
+        var color: Int = R.color.textInfo
         var canDelete = false
 
         return model.files.mapIndexed { index, file ->
             if (file.errorFlag && failedIcon != null) {
                 icon = failedIcon
-                color = R.color.destructive
+                color = R.color.textDanger
                 canDelete = deletableIfError
             } else {
                 icon = FileUtils.getFileIcon(file.name ?: "", file.contentType ?: "")
