@@ -10,6 +10,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
  * will be the value used before the actual value can be read from the remote config service.
  */
 enum class RemoteConfigParam(val rc_name: String, val safeValueAsString: String) {
+    DISCUSSION_REDESIGN("discussion_redesign", "false"),
     MOBILE_VERIFY_BETA_ENABLED("mobile_verify_beta_enabled", "true"),
     TEST_BOOL("test_bool", "false"),
     TEST_FLOAT("test_float", "0f"),

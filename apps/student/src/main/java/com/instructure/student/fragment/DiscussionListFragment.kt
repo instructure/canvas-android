@@ -60,7 +60,12 @@ import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
 @PageView(url = "{canvasContext}/discussion_topics")
+@AndroidEntryPoint
 open class DiscussionListFragment : ParentFragment(), Bookmarkable {
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
     protected var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private lateinit var recyclerAdapter: DiscussionListRecyclerAdapter
@@ -267,12 +272,12 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         featureFlagsJob = weave {
             if (canvasContext.isCourse) {
                 val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(canvasContext.id, true).await().dataOrNull
-                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false
+                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
             }
 
             if (canvasContext.isGroup) {
                 val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync((canvasContext as Group).courseId, true).await().dataOrNull
-                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false
+                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
             }
         }
     }

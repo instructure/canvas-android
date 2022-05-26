@@ -43,7 +43,8 @@ import java.util.*
 
 class DiscussionListPresenter(
         private val canvasContext: CanvasContext,
-        private val isAnnouncements: Boolean
+        private val isAnnouncements: Boolean,
+        private val isRedesignEnabled: Boolean
 ) : SyncExpandablePresenter<String, DiscussionTopicHeader, DiscussionListView>(
     String::class.java,
     DiscussionTopicHeader::class.java
@@ -67,12 +68,12 @@ class DiscussionListPresenter(
         featureFlagJob = weave {
             if (canvasContext.isCourse) {
                 val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(canvasContext.id, true).await().dataOrNull
-                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false
+                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && isRedesignEnabled
             }
 
             if (canvasContext.isGroup) {
                 val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync((canvasContext as Group).courseId, true).await().dataOrNull
-                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false
+                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && isRedesignEnabled
             }
         }
 

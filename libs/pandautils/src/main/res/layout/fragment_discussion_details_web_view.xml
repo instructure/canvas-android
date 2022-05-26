@@ -41,6 +41,7 @@
                 app:theme="@style/ToolBarStyle" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/discussionSwipeRefreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"

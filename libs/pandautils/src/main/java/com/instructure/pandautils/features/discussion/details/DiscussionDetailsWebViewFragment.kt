@@ -72,6 +72,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 viewModel.setLoading(false)
+                discussionSwipeRefreshLayout.isRefreshing = false
             }
 
             override fun routeInternallyCallback(url: String) {
@@ -83,7 +84,10 @@ class DiscussionDetailsWebViewFragment : Fragment() {
             override fun canRouteInternallyDelegate(url: String): Boolean {
                 return viewModel.data.value?.url?.substringBefore("?") != url.substringBefore("?")
             }
+        }
 
+        discussionSwipeRefreshLayout.setOnRefreshListener {
+            discussionWebView.reload()
         }
     }
 

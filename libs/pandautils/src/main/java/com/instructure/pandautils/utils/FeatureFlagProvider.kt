@@ -37,4 +37,8 @@ class FeatureFlagProvider(
             return apiPrefs.canvasForElementary
         }
     }
+
+    fun getDiscussionRedesignFeatureFlag(): Boolean {
+        return remoteConfigUtils.getBoolean(RemoteConfigParam.DISCUSSION_REDESIGN)
+    }
 }
