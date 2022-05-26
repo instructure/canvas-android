@@ -94,7 +94,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     private fun applyTheme() {
         toolbar.title = discussionTopicHeader.title
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     companion object {
