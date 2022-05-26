@@ -11,4 +11,8 @@ class LightColors {
   static const backgroundLightest = Color(0xFFFFFFFF);
 
   static const backgroundLight = Color(0xFFF5F5F5);
+
+  static const defaultAccent = Color(0xFF0081BD);
+
+  static const defaultButton = Color(0xFF007BC2);
 }
