@@ -91,13 +91,13 @@ object ViewStyler {
         // setting the thumb color
         switch.thumbDrawable.setTintList(ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.backgroundLight)))
+                intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.switchThumbColor)))
         )
 
         // setting the track color
         switch.trackDrawable.setTintList(ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(trackColor, ContextCompat.getColor(context, R.color.backgroundMedium))))
+                intArrayOf(trackColor, ContextCompat.getColor(context, R.color.switchTrackColor))))
     }
 
     fun themeInputTextLayout(textInputLayout: TextInputLayout, @ColorInt color: Int) {
