@@ -49,28 +49,6 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
         get() = _state
     private val _state = MutableLiveData<ViewState>()
 
-    val webViewCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-        override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-
-        }
-
-        override fun onPageStartedCallback(webView: WebView, url: String) {
-
-        }
-
-        override fun onPageFinishedCallback(webView: WebView, url: String) {
-            _state.postValue(ViewState.Success)
-        }
-
-        override fun routeInternallyCallback(url: String) {
-        }
-
-        override fun canRouteInternallyDelegate(url: String): Boolean {
-            return false
-        }
-
-    }
-
     fun loadData(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader) {
         viewModelScope.launch {
             try {
@@ -86,5 +64,9 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
                 _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
             }
         }
+    }
+
+    fun setLoading(loading: Boolean) {
+        if (loading) _state.postValue(ViewState.Loading) else _state.postValue(ViewState.Success)
     }
 }

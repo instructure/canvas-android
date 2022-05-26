@@ -20,20 +20,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.databinding.FragmentDiscussionDetailsWebViewBinding
+import com.instructure.pandautils.route.DiscussionRouteHelper
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_discussion_details_web_view.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DiscussionDetailsWebViewFragment : Fragment() {
+
+    @Inject
+    lateinit var discussionRouteHelper: DiscussionRouteHelper
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader by ParcelableArg(default = DiscussionTopicHeader(), key = DISCUSSION_TOPIC_HEADER)
@@ -54,7 +61,30 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
-        discussionWebView.canvasWebViewClientCallback = viewModel.webViewCallback
+        discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                discussionRouteHelper.openMedia(requireActivity(), url)
+            }
+
+            override fun onPageStartedCallback(webView: WebView, url: String) {
+                viewModel.setLoading(true)
+            }
+
+            override fun onPageFinishedCallback(webView: WebView, url: String) {
+                viewModel.setLoading(false)
+            }
+
+            override fun routeInternallyCallback(url: String) {
+                if (!discussionRouteHelper.canRouteInternally(requireActivity(), url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)) {
+                    discussionRouteHelper.routeInternalWebView(requireContext(), url, url, false, "", canvasContext)
+                }
+            }
+
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                return viewModel.data.value?.url?.substringBefore("?") != url.substringBefore("?")
+            }
+
+        }
     }
 
     private fun applyTheme() {

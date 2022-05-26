@@ -1,5 +1,6 @@
 package com.instructure.interactions.router
 
+import android.app.Activity
 import android.net.Uri
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
