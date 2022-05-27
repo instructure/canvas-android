@@ -67,7 +67,7 @@ class NewMessagePage : BasePage() {
     fun setRecipient(user: CanvasUserApiModel, isGroupRecipient: Boolean = false) {
         addContactsButton.click()
         if(!isGroupRecipient) onView(withText("Students")).click()
-        onView(withText(user.shortName)).click()
+        onView(withId(R.id.title) + withText(user.shortName)).click()
         onView(withText(R.string.done)).click()
     }
 

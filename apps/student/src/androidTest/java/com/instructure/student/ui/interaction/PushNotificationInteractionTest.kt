@@ -45,7 +45,7 @@ class PushNotificationInteractionTest : StudentTest() {
         val data = goToNotifications()
         val assignment = data.assignments.values.first()
 
-        notificationPage.verifyNotificationDisplayed(assignment.name!!)
+        notificationPage.assertNotificationDisplayed(assignment.name!!)
         notificationPage.clickNotification(assignment.name!!)
 
         assignmentDetailsPage.verifyAssignmentDetails(assignment)
