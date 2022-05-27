@@ -69,6 +69,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -247,6 +248,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         setupNavDrawerItems()
 
         checkAppUpdates()
+
+        if (!ThemePrefs.themeSelectionShown) {
+            val themeSelector = ThemeSelectorBottomSheet()
+            themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
+            ThemePrefs.themeSelectionShown = true
+        }
     }
 
     private fun setupNavDrawerItems() {

@@ -23,6 +23,7 @@
         <item name="colorAccent">@color/textDark</item>
         <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
 
         <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>

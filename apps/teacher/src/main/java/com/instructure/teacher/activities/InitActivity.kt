@@ -53,6 +53,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.update.UpdateManager
@@ -155,6 +156,12 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         RatingDialog.showRatingDialog(this, com.instructure.pandautils.utils.AppType.TEACHER)
 
         updateManager.checkForInAppUpdate(this)
+
+        if (!ThemePrefs.themeSelectionShown) {
+            val themeSelector = ThemeSelectorBottomSheet()
+            themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
+            ThemePrefs.themeSelectionShown = true
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
