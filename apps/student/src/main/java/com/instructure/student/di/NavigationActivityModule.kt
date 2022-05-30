@@ -17,6 +17,7 @@
 package com.instructure.student.di
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.navigation.DefaultNavigationBehavior
 import com.instructure.student.navigation.ElementaryNavigationBehavior
 import com.instructure.student.navigation.NavigationBehavior
@@ -42,8 +43,8 @@ class NavigationActivityModule {
     }
 
     @Provides
-    fun providesNavigationBehavior(@Named(CANVAS_FOR_ELEMENTARY) canvasForElementary: Boolean): NavigationBehavior {
-        return if (canvasForElementary) {
+    fun providesNavigationBehavior(@Named(CANVAS_FOR_ELEMENTARY) canvasForElementary: Boolean, apiPrefs: ApiPrefs): NavigationBehavior {
+        return if (canvasForElementary || apiPrefs.showElementaryView) {
             ElementaryNavigationBehavior()
         } else {
             DefaultNavigationBehavior()

@@ -28,10 +28,10 @@ class StudentColors {
   static const defaultPrimary = Color(0xFF2D3B45);
 
   /// Default Canvas accent color
-  static const defaultAccent = Color(0xFF0081BD);
+  static get defaultAccent => darkMode ? DarkColors.defaultAccent : LightColors.defaultAccent;
 
   /// Default Canvas button color
-  static const defaultButton = Color(0xFF007BC2);
+  static get defaultButton => darkMode ? DarkColors.defaultButton : LightColors.defaultButton;
 
   static const defaultPrimaryText = Colors.white;
 

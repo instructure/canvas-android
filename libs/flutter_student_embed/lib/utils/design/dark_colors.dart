@@ -8,9 +8,13 @@ class DarkColors {
 
   static const textDark = Color(0xFFC7CDD1);
 
-  static const backgroundLightest = Color(0xFF121212);
+  static const backgroundLightest = Color(0xFF111213);
 
-  static const backgroundLightestElevated = Color(0xFF232323);
+  static const backgroundLightestElevated = Color(0xFF242526);
 
-  static const backgroundLight = Color(0xFF394B58);
+  static const backgroundLight = Color(0xFF1D1E1F);
+
+  static const defaultAccent = Color(0xFF1283C4);
+
+  static const defaultButton = Color(0xFF127CB9);
 }

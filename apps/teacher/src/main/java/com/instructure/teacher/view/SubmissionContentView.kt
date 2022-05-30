@@ -165,6 +165,13 @@ class SubmissionContentView(
         ViewStyler.themeToolbarLight(context as Activity, speedGraderToolbar)
     }
 
+    override fun removeContentFragment() {
+        val contentFragment = supportFragmentManager.findFragmentById(mContainerId)
+        if (contentFragment != null) {
+            supportFragmentManager.beginTransaction().remove(contentFragment).commitAllowingStateLoss()
+        }
+    }
+
     //region view lifecycle
     init {
         View.inflate(context, R.layout.view_submission_content, this)

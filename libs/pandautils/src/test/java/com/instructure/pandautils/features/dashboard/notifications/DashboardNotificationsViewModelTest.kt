@@ -35,7 +35,6 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.every
@@ -72,7 +71,6 @@ class DashboardNotificationsViewModelTest {
     private val accountNotificationManager: AccountNotificationManager = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardNotificationsViewModel
@@ -119,7 +117,6 @@ class DashboardNotificationsViewModelTest {
                 accountNotificationManager,
                 oauthManager,
                 conferenceDashboardBlacklist,
-                colorKeeper,
                 apiPrefs
         )
 

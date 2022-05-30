@@ -81,7 +81,7 @@ object RouteMatcher : BaseRouteMatcher() {
         //////////////////////////
         routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java, NotificationListFragment::class.java, Arrays.asList(":${RouterParams.RECENT_ACTIVITY}"))) // Recent Activity
-        if (ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+        if (ApiPrefs.showElementaryView) {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), ElementaryCourseFragment::class.java))
         } else {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java))
@@ -95,7 +95,7 @@ object RouteMatcher : BaseRouteMatcher() {
         !  CAUTION: Order matters, these are purposely placed above the pages, quizzes, disscussions, assignments, and files so they are matched if query params exist and routed to Modules
         !!!!!!!!!!!!
         */
-        if (ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+        if (ApiPrefs.showElementaryView) {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ElementaryCourseFragment::class.java, tabId = Tab.MODULES_ID))
         } else {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ModuleListFragment::class.java))
@@ -114,7 +114,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/notifications"), NotificationListFragment::class.java))
 
         // Grades
-        if (ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+        if (ApiPrefs.showElementaryView) {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), ElementaryCourseFragment::class.java, tabId = Tab.GRADES_ID))
         } else {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))

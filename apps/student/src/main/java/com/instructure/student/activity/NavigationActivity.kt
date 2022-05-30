@@ -103,8 +103,10 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 private const val BOTTOM_NAV_SCREEN = "bottomNavScreen"
+private const val BOTTOM_SCREENS_BUNDLE_KEY = "bottomScreens"
 
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
@@ -223,6 +225,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (bottomNavScreensStack.isNotEmpty()) {
+            val bottomScreens = ArrayList(bottomNavScreensStack.toList())
+            outState.putStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY, bottomScreens)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
@@ -249,10 +259,24 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         checkAppUpdates()
 
+        val savedBottomScreens = savedInstanceState?.getStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY)
+        restoreBottomNavState(savedBottomScreens)
+
         if (!ThemePrefs.themeSelectionShown) {
             val themeSelector = ThemeSelectorBottomSheet()
             themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
             ThemePrefs.themeSelectionShown = true
+        }
+    }
+
+    private fun restoreBottomNavState(savedBottomScreens: List<String>?) {
+        if (savedBottomScreens != null && savedBottomScreens.isNotEmpty() && bottomNavScreensStack.isEmpty()) {
+            savedBottomScreens.reversed().forEach { bottomNavScreensStack.push(it) }
+        }
+
+        currentFragment?.let {
+            val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
+            bottomBar.setVisible(visible)
         }
     }
 

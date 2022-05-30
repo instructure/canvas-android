@@ -113,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/backgroundLightest"
+            android:background="@color/backgroundLightestElevated"
             app:itemIconTint="@color/textDarkest"
             app:itemTextColor="@color/textDarkest"
             app:menu="@menu/bottom_navigation_items"/>
