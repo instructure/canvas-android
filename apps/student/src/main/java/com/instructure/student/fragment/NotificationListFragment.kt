@@ -117,6 +117,8 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
 
         cancelButton.text = getString(R.string.cancel)
         cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
+
+        applyTheme()
     }
 
     override fun onDestroyView() {

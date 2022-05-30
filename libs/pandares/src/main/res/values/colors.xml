@@ -63,6 +63,10 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
+    <color name="switchThumbColor">#F5F5F5</color>
+    <color name="switchTrackColor">#C7CDD1</color>
+
     <!-- Special one off colors that should be different in light and dark modes but are not in the color palette  -->
     <color name="studentDocumentSharingColor">#ee0612</color>
     <color name="uploadFileDialogBackground">#c8ececec</color>
