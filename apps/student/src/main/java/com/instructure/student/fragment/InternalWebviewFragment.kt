@@ -65,6 +65,7 @@ open class InternalWebviewFragment : ParentFragment() {
     var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
     var allowRoutingToLogin: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_TO_LOGIN)
     var allowEmbedRouting: Boolean by BooleanArg(default = true, key = ALLOW_EMBED_ROUTING)
+    var forceDark: Boolean by BooleanArg(key = FORCE_DARK)
 
     var hideToolbar: Boolean by BooleanArg(key = Const.HIDDEN_TOOLBAR)
 
@@ -103,6 +104,7 @@ open class InternalWebviewFragment : ParentFragment() {
             originalUserAgentString = canvasWebView.settings.userAgentString
             canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
+            canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = !forceDark)
             webViewLoading?.setVisible(true)
 
             canvasWebView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
@@ -387,6 +389,7 @@ open class InternalWebviewFragment : ParentFragment() {
         const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
         const val ALLOW_ROUTING_TO_LOGIN = "allowRoutingToLogin"
         const val ALLOW_EMBED_ROUTING = "allowEmbedRouting"
+        const val FORCE_DARK = "forceDark"
 
         fun newInstance(route: Route): InternalWebviewFragment {
             return InternalWebviewFragment().withArgs(route.argsWithContext)
@@ -397,7 +400,7 @@ open class InternalWebviewFragment : ParentFragment() {
      * Otherwise the canvasContext won't be saved and will cause issues with the dropdown navigation
      * -dw
      */
-        fun makeRoute(url: String, title: String, authenticate: Boolean, html: String, allowUnsupportedRouting: Boolean = true): Route =
+        fun makeRoute(url: String, title: String, authenticate: Boolean, html: String, allowUnsupportedRouting: Boolean = true, forceDark: Boolean = false): Route =
                 Route(InternalWebviewFragment::class.java, CanvasContext.emptyUserContext(),
                         CanvasContext.emptyUserContext().makeBundle().apply {
                             putString(Const.INTERNAL_URL, url)
@@ -405,6 +408,7 @@ open class InternalWebviewFragment : ParentFragment() {
                             putBoolean(Const.AUTHENTICATE, authenticate)
                             putString(Const.HTML, html)
                             putBoolean(Const.ALLOW_UNSUPPORTED_ROUTING, allowUnsupportedRouting)
+                            putBoolean(FORCE_DARK, forceDark)
                         })
 
         fun makeRoute(canvasContext: CanvasContext, url: String?, title: String?, authenticate: Boolean, html: String): Route =

@@ -132,7 +132,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         webView.settings.setAppCacheEnabled(false)
         webView.settings.domStorageEnabled = true
         webView.settings.userAgentString = Utils.generateUserAgent(this, userAgent())
-        webView.setDarkModeSupport()
+        webView.setDarkModeSupport(webThemeDarkeningOnly = true)
         webView.webViewClient = mWebViewClient
         if (0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
             WebView.setWebContentsDebuggingEnabled(true)

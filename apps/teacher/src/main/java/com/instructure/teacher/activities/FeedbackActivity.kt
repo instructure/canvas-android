@@ -42,7 +42,7 @@ class FeedbackActivity : AppCompatActivity() {
         webView.setWebChromeClient(WebChromeClient())
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(false)
-        webView.setDarkModeSupport()
+        webView.setDarkModeSupport(webThemeDarkeningOnly = true)
         webView.loadUrl(buildUrl())
     }
 
