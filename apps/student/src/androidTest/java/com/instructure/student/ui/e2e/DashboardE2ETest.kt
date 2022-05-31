@@ -46,7 +46,6 @@ class DashboardE2ETest : StudentTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
 
-
         // This will not consistently result in a badge on the email icon on the bottom of the screen.
         // So the check below is disabled. :-(
         // Seed a conversation, to give us an email in our inbox
