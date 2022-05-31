@@ -23,10 +23,6 @@
             type="com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewViewModel" />
     </data>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -53,12 +49,12 @@
                     app:url="@{viewModel.data.url}" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+            <com.instructure.pandautils.views.EmptyView
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:emptyViewState="@{viewModel.state}" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.instructure.pandautils.views.EmptyView
-            android:id="@+id/emptyView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:emptyViewState="@{viewModel.state}" />
-    </FrameLayout>
 </layout>

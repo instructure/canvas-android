@@ -25,13 +25,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentDiscussionDetailsWebViewBinding
-import com.instructure.pandautils.route.DiscussionRouteHelper
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +42,7 @@ import javax.inject.Inject
 class DiscussionDetailsWebViewFragment : Fragment() {
 
     @Inject
-    lateinit var discussionRouteHelper: DiscussionRouteHelper
+    lateinit var webViewRouter: WebViewRouter
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader by ParcelableArg(default = DiscussionTopicHeader(), key = DISCUSSION_TOPIC_HEADER)
@@ -66,7 +65,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         applyTheme()
         discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                discussionRouteHelper.openMedia(requireActivity(), url)
+                webViewRouter.openMedia(url)
             }
 
             override fun onPageStartedCallback(webView: WebView, url: String) {
@@ -79,8 +78,8 @@ class DiscussionDetailsWebViewFragment : Fragment() {
             }
 
             override fun routeInternallyCallback(url: String) {
-                if (!discussionRouteHelper.canRouteInternally(requireActivity(), url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)) {
-                    discussionRouteHelper.routeInternalWebView(requireContext(), url, url, false, "", canvasContext)
+                if (!webViewRouter.canRouteInternally(url, routeIfPossible = true)) {
+                    webViewRouter.routeInternally(url)
                 }
             }
 
