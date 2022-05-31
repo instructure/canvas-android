@@ -18,7 +18,7 @@ package com.instructure.pandautils.navigation
 
 interface WebViewRouter {
 
-    fun canRouteInternally(url: String): Boolean
+    fun canRouteInternally(url: String, routeIfPossible: Boolean = false): Boolean
 
     fun routeInternally(url: String)
 
