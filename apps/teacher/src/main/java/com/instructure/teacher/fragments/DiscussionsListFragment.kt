@@ -39,12 +39,15 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_discussion_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
+@AndroidEntryPoint
 open class DiscussionsListFragment : BaseExpandableSyncFragment<
         String,
         DiscussionTopicHeader,
@@ -52,6 +55,9 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         DiscussionListPresenter,
         RecyclerView.ViewHolder,
         DiscussionListAdapter>(), DiscussionListView {
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     protected var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
@@ -66,7 +72,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun layoutResId(): Int = R.layout.fragment_discussion_list
     override val recyclerView: RecyclerView get() = discussionRecyclerView
 
-    override fun getPresenterFactory() = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements)
+    override fun getPresenterFactory() = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements, featureFlagProvider.getDiscussionRedesignFeatureFlag())
 
     override fun onPresenterPrepared(presenter: DiscussionListPresenter) {
         val emptyTitle = getString(if (mIsAnnouncements) R.string.noAnnouncements else R.string.noDiscussions)
@@ -128,10 +134,10 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun createAdapter(): DiscussionListAdapter {
         return DiscussionListAdapter(requireContext(), presenter, mCourseColor, mIsAnnouncements,
             { discussionTopicHeader ->
-                val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, mIsAnnouncements)
+                val route = presenter.getDetailsRoute(discussionTopicHeader, mIsAnnouncements)
                 RouteMatcher.route(
                     requireContext(),
-                    Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args)
+                    route
                 )
             },
             { group, discussionTopicHeaderOverflow ->

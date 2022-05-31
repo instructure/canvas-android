@@ -21,6 +21,6 @@ import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.viewinterface.DiscussionListView
 import instructure.androidblueprint.PresenterFactory
 
-class DiscussionListPresenterFactory(private var canvasContext: CanvasContext, private var isAnnouncements: Boolean) : PresenterFactory<DiscussionListView, DiscussionListPresenter> {
-    override fun create(): DiscussionListPresenter = DiscussionListPresenter(canvasContext, isAnnouncements)
+class DiscussionListPresenterFactory(private var canvasContext: CanvasContext, private var isAnnouncements: Boolean, private var isRedesignEnabled: Boolean) : PresenterFactory<DiscussionListView, DiscussionListPresenter> {
+    override fun create(): DiscussionListPresenter = DiscussionListPresenter(canvasContext, isAnnouncements, isRedesignEnabled)
 }

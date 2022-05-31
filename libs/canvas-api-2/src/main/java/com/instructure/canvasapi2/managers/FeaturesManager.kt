@@ -35,4 +35,13 @@ object FeaturesManager {
         courseId: Long,
         forceNetwork: Boolean
     ) = apiAsync<List<String>> { getEnabledFeaturesForCourse(courseId, forceNetwork, it) }
+
+    fun getEnvironmentFeatureFlags(forceNetwork: Boolean, callback: StatusCallback<Map<String, Boolean>>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+
+        FeaturesAPI.getEnvironmentFeatureFlags(adapter, callback, params)
+    }
+
+    fun getEnvironmentFeatureFlagsAsync(forceNetwork: Boolean) = apiAsync<Map<String, Boolean>> { getEnvironmentFeatureFlags(forceNetwork, it) }
 }

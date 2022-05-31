@@ -39,6 +39,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
@@ -85,6 +86,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         routes.add(Route(courseOrGroup("/:course_id/discussion_topics"), DiscussionsListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionsListFragment::class.java, DiscussionsDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionsListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/files"), FileListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/files/:file_id/download"), RouteContext.FILE))
@@ -107,6 +109,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         routes.add(Route(courseOrGroup("/:course_id/announcements"), AnnouncementListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionsDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionDetailsWebViewFragment::class.java))
 
     }
 
@@ -194,13 +197,13 @@ object RouteMatcher : BaseRouteMatcher() {
      * @param routeIfPossible
      * @return
      */
-    fun canRouteInternally(activity: Activity?, url: String?, domain: String, routeIfPossible: Boolean): Boolean {
+    fun canRouteInternally(context: Context?, url: String?, domain: String, routeIfPossible: Boolean): Boolean {
         if (url.isNullOrBlank()) return false
 
         val canRoute = getInternalRoute(url, domain) != null
 
-        if (canRoute && activity != null && routeIfPossible) {
-            routeUrl(activity, url)
+        if (canRoute && context != null && routeIfPossible) {
+            routeUrl(context, url)
         }
         return canRoute
     }
@@ -341,6 +344,7 @@ object RouteMatcher : BaseRouteMatcher() {
             AnnouncementListFragment::class.java.isAssignableFrom(cls) -> fragment = AnnouncementListFragment.newInstance(canvasContext!!) // This needs to be above DiscussionsListFragment because it extends it
             DiscussionsListFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionsListFragment.newInstance(canvasContext!!)
             DiscussionsDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getDiscussionDetailsFragment(canvasContext, route)
+            DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionDetailsWebViewFragment.newInstance(route)
             InboxFragment::class.java.isAssignableFrom(cls) -> fragment = InboxFragment()
             AddMessageFragment::class.java.isAssignableFrom(cls) -> fragment = AddMessageFragment.newInstance(route.arguments)
             MessageThreadFragment::class.java.isAssignableFrom(cls) -> fragment = getMessageThreadFragment(route)
