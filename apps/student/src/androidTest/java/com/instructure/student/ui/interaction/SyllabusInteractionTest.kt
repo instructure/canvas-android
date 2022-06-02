@@ -43,7 +43,7 @@ class SyllabusInteractionTest : StudentTest() {
     // Tests that we can display a calendar event from the syllabus/summary,
     // and does some verification of the calendar event.
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SYLLABUS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYLLABUS, TestCategory.INTERACTION, false)
     fun testSyllabus_calendarEvent() {
         val data = goToSyllabus(eventCount = 1, assignmentCount = 0)
 

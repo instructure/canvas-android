@@ -35,7 +35,6 @@ import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
-import java.text.SimpleDateFormat
 import java.util.*
 
 @HiltAndroidTest
@@ -51,7 +50,7 @@ class HomeroomE2ETest : StudentTest() {
     @E2E
     @FlakyE2E("Need to investigate why is it breaking when asserting todo text. Timezone shouldn't be a problem anymore since we run these tests at 8 PM.")
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun homeroomE2ETest() {
 
         // Seed data for K5 sub-account

@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
+            android:background="@color/backgroundLightestElevated"
             app:layout_scrollFlags="scroll|enterAlways"
             android:paddingEnd="16dp"
             android:minHeight="?android:listPreferredItemHeightSmall">
@@ -86,13 +87,14 @@
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/termSpinner"
                 style="@style/TermSpinner"
+                android:background="@color/backgroundLightestElevated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/sortByButton"
                 android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:layout_toStartOf="@id/sortByButton" />
+                android:minHeight="48dp" />
 
         </RelativeLayout>
 

@@ -17,12 +17,11 @@
 package com.instructure.student.mobius.assignmentDetails.submission.file.ui
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.utils.*
@@ -59,7 +58,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
     override fun onDispose() = Unit
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarBottomSheet(context as Activity, false, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(context as Activity, toolbar)
     }
 
     override fun onConnect(output: Consumer<UploadStatusSubmissionEvent>) {

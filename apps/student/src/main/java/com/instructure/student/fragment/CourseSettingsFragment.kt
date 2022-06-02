@@ -41,7 +41,7 @@ class CourseSettingsFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, course)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

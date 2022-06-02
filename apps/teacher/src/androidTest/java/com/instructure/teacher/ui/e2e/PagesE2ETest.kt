@@ -26,7 +26,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testPagesE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -102,7 +102,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testEditPageTitleE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -146,7 +146,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testPublishFrontPageE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -187,7 +187,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testPublishUnpublishedPageE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -224,7 +224,7 @@ class PagesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testUnableToUnpublishFrontPageE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

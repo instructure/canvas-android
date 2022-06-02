@@ -15,13 +15,13 @@
  */
 package com.instructure.pandautils.dialogs
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.FragmentManager
@@ -65,7 +65,7 @@ class AttachmentPickerDialog : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = View.inflate(ContextThemeWrapper(activity, 0), R.layout.dialog_attachment_picker, null)
         mAttachmentRecyclerView = view.findViewById(R.id.attachmentRecyclerView)
-        val dialog = AlertDialog.Builder(activity)
+        val dialog = AlertDialog.Builder(requireActivity())
                 .setCancelable(true)
                 .setTitle(requireActivity().getString(R.string.utils_attachments))
                 .setView(view)

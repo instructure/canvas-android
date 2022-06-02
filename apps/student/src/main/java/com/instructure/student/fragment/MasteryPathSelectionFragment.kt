@@ -133,7 +133,7 @@ class MasteryPathSelectionFragment : ParentFragment() {
         toolbar.let {
             it.title = getString(R.string.chooseAssignmentPath)
             it.setupAsBackButton(this)
-            ViewStyler.themeToolbar(requireActivity(), it, canvasContext)
+            ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
         }
     }
 
@@ -143,7 +143,7 @@ class MasteryPathSelectionFragment : ParentFragment() {
     private fun setupTabLayoutColors() {
         val color = ColorKeeper.getOrGenerateColor(canvasContext)
         tabLayout.setBackgroundColor(color)
-        tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.transparentWhite), Color.WHITE)
+        tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.transparentWhite), requireContext().getColor(R.color.white))
     }
     //endregion
 

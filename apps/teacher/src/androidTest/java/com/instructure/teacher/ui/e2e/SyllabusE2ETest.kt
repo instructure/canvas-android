@@ -24,7 +24,7 @@ class SyllabusE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SYLLABUS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYLLABUS, TestCategory.E2E)
     fun testSyllabusE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

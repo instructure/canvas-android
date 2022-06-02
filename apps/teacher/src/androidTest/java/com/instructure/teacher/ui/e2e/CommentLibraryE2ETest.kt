@@ -46,9 +46,13 @@ class CommentLibraryE2ETest : TeacherTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //Intentionally empty, because we don't check accessibility in E2E tests.
+    }
+
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testCommentLibraryE2E() {
 
         val data = seedData(teachers = 1, students = 1, courses = 2)

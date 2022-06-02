@@ -29,7 +29,7 @@ class ModulesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.E2E)
     fun testModulesE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -113,7 +113,7 @@ class ModulesE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.E2E)
     fun testModulesEmptyE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

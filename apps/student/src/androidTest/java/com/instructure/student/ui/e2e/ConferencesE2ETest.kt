@@ -30,7 +30,7 @@ class ConferencesE2ETest: StudentTest() {
     @Stub
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.CONFERENCES, TestCategory.E2E, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CONFERENCES, TestCategory.E2E, true)
     fun testConferencesE2E() {
 
         // Seed basic student/teacher/course data

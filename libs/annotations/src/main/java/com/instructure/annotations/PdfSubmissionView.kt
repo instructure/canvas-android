@@ -140,6 +140,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     abstract val progressBar: ProgressiveCanvasLoadingView
 
     abstract fun setFragment(fragment: Fragment)
+    abstract fun removeContentFragment()
     abstract fun showNoInternetDialog()
     abstract fun disableViewPager()
     abstract fun enableViewPager()
@@ -157,6 +158,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         unregisterPdfFragmentListeners()
+        removeContentFragment()
+        pdfFragment = null
         createAnnotationJob?.cancel()
         updateAnnotationJob?.cancel()
         deleteAnnotationJob?.cancel()
@@ -241,7 +244,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
         val marginDp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12f, context.resources.displayMetrics)
         val layoutParams = commentsButton.layoutParams as LayoutParams
-        commentsButton.drawable.setTint(Color.WHITE)
         layoutParams.gravity = Gravity.END or Gravity.TOP
         layoutParams.topMargin = marginDp.toInt() + actionBarDp
         layoutParams.rightMargin = marginDp.toInt()

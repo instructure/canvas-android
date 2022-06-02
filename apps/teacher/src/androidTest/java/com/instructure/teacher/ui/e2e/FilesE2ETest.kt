@@ -61,7 +61,7 @@ class FilesE2ETest: TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.FILES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
     fun testFilesE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

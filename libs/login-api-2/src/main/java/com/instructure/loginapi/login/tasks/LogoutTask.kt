@@ -96,7 +96,7 @@ abstract class LogoutTask(
                 // Clear prefs
                 ApiPrefs.clearAllData()
                 FilePrefs.clearPrefs()
-                ThemePrefs.clearPrefs()
+                ThemePrefs.safeClearPrefs()
 
                 // Cookies are cleared in BaseLoginSignInActivity
             }

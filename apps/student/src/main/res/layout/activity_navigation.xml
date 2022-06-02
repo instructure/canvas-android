@@ -45,19 +45,13 @@
 
         </FrameLayout>
 
-        <View
-            android:id="@+id/bottomBarDivider"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/backgroundMedium"
-            android:importantForAccessibility="no"/>
-
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/backgroundLightest"
-            app:elevation="0dp"
+            android:background="@color/backgroundLightestElevated"
+            app:itemIconTint="@color/textDarkest"
+            app:itemTextColor="@color/textDarkest"
             app:labelVisibilityMode="labeled" />
 
     </LinearLayout>

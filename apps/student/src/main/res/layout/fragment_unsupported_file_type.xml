@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="24dp"
-                android:textColor="#2D3B45"
+                android:textColor="@color/textDarkest"
                 android:textSize="20sp"
                 tools:text="sample_file_name.png"
                 android:focusable="true"

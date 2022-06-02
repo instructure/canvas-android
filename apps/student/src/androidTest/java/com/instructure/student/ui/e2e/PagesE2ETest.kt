@@ -39,7 +39,7 @@ class PagesE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E, false)
     fun testPagesE2E() {
 
         // Seed basic data

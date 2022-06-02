@@ -19,7 +19,6 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -175,7 +174,7 @@ class EditPageDetailsFragment : ParentFragment() {
         }
         toolbar.title = page.title
         setupToolbarMenu(toolbar, R.menu.menu_edit_page)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         with(saveMenuButton) {
             setIcon(0)

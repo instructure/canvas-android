@@ -18,7 +18,6 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import com.instructure.canvasapi2.managers.DiscussionManager
@@ -138,7 +137,7 @@ class DiscussionsReplyFragment : ParentFragment() {
         } else {
             toolbar.setMenu(R.menu.menu_discussion_reply_no_attach, menuItemCallback)
         }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
     //endregion

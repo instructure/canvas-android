@@ -120,7 +120,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         setupToolbarMenu(toolbar)
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, course)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

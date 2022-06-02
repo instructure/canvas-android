@@ -28,6 +28,7 @@
     <color name="backgroundInfo">#008EE2</color>
     <color name="backgroundLight">#F5F5F5</color>
     <color name="backgroundLightest">#FFFFFF</color>
+    <color name="backgroundLightestElevated">#FFFFFF</color>
     <color name="backgroundMedium">#C7CDD1</color>
     <color name="backgroundSuccess">#00AC18</color>
     <color name="backgroundWarning">#FC5E13</color>
@@ -60,6 +61,15 @@
     <color name="textWarning">#FC5E13</color>
     <color name="tiara">#C7CDD1</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
+    <color name="switchThumbColor">#F5F5F5</color>
+    <color name="switchTrackColor">#C7CDD1</color>
+
+    <!-- Special one off colors that should be different in light and dark modes but are not in the color palette  -->
+    <color name="studentDocumentSharingColor">#ee0612</color>
+    <color name="uploadFileDialogBackground">#c8ececec</color>
 
     <!-- Transparent colors -->
     <color name="semiTransparentDark">#50000000</color>

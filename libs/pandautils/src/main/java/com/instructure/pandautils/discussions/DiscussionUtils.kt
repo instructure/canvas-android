@@ -469,7 +469,7 @@ object DiscussionUtils {
             val avatarBitmap = ProfileUtils.getInitialsAvatarBitMap(
                     context, discussionEntry.author!!.displayName!!,
                     Color.TRANSPARENT,
-                    ContextCompat.getColor(context, R.color.textDarkest),
+                    ContextCompat.getColor(context, R.color.licorice),
                     ContextCompat.getColor(context, R.color.borderMedium))
             val outputStream = ByteArrayOutputStream()
             avatarBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)

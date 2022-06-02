@@ -5,6 +5,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
@@ -110,6 +111,8 @@ object RouteResolver {
             fragment = DiscussionsListFragment.newInstance(canvasContext!!)
         } else if (DiscussionsDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = getDiscussionDetailsFragment(canvasContext, route)
+        } else if(DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls)) {
+            fragment = DiscussionDetailsWebViewFragment.newInstance(route)
         } else if (InboxFragment::class.java.isAssignableFrom(cls)) {
             fragment = InboxFragment()
         } else if (AddMessageFragment::class.java.isAssignableFrom(cls)) {

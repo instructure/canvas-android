@@ -33,6 +33,7 @@
             android:layout_height="36dp"
             android:layout_marginStart="6dp"
             android:padding="6dp"
+            android:tint="@color/textDarkest"
             app:srcCompat="@drawable/ic_camera"/>
 
         <TextView
@@ -59,6 +60,7 @@
             android:layout_height="36dp"
             android:layout_marginStart="6dp"
             android:padding="6dp"
+            android:tint="@color/textDarkest"
             app:srcCompat="@drawable/ic_image"/>
 
         <TextView

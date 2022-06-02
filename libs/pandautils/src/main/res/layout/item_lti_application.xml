@@ -35,6 +35,7 @@
         android:layout_marginTop="6dp"
         android:layout_marginBottom="@{itemViewModel.marginBottom}"
         android:onClick="@{() -> itemViewModel.onClick.invoke()}"
+        android:background="@color/backgroundLightest"
         app:cardCornerRadius="4dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"

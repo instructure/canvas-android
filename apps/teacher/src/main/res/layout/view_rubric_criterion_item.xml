@@ -102,7 +102,7 @@
             android:contentDescription="@string/edit_criterion_comment"
             android:paddingEnd="0dp"
             android:paddingStart="16dp"
-            android:tint="#73818C"
+            android:tint="@color/textDark"
             app:srcCompat="@drawable/ic_edit"/>
     </LinearLayout>
 

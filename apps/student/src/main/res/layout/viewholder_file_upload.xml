@@ -86,7 +86,7 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/delete"
         android:src="@drawable/ic_close"
-        android:tint="#2D3B45"
+        android:tint="@color/textDarkest"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

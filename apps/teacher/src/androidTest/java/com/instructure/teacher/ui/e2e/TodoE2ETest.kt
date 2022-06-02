@@ -42,7 +42,7 @@ class TodoE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.TODOS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.TODOS, TestCategory.E2E)
     fun testTodoE2E() {
         // Inherited from student todo tests, may check this out later
         // Don't attempt this test on a Friday, Saturday or Sunday.

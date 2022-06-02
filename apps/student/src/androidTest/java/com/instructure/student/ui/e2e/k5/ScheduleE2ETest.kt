@@ -48,7 +48,7 @@ class ScheduleE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun scheduleE2ETest() {
 
         // Seed data for K5 sub-account

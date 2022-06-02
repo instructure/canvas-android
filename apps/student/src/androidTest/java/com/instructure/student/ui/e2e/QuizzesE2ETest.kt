@@ -62,7 +62,7 @@ class QuizzesE2ETest: StudentTest() {
     @E2E
     @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E, true)
     fun testQuizzesE2E() {
 
         // Seed basic data

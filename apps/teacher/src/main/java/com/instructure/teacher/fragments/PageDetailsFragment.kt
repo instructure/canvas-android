@@ -194,7 +194,7 @@ class PageDetailsFragment : BasePresenterFragment<
 
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mCanvasContext.color, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -202,7 +202,7 @@ class PageDetailsFragment : BasePresenterFragment<
         if (!isTablet) {
             toolbar.subtitle = mCanvasContext.name
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCanvasContext.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
     }
 
     private fun openEditPage(page: Page) {

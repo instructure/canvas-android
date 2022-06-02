@@ -173,7 +173,7 @@ class CourseBrowserFragment : BaseSyncFragment<
 
         toolbar.setupBackButton(this)
         toolbar.setupMenu(R.menu.menu_course_browser, menuItemCallback)
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, Color.WHITE)
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, requireContext().getColor(R.color.white))
         ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.color)
 
         collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.color)

@@ -59,7 +59,6 @@ class FileGenerator : AbstractProcessor(){
         val testCounts = HashMap<TestCategory, TestCount>()
         val priorityCounts = HashMap<Priority, TestCount>()
         val featureCounts = HashMap<FeatureCategory, TestCount>()
-        val manualOnly = ArrayList<String>()
 
         annotationWrapperList.forEach { annotationWrapper ->
             val stubbedCount = if(annotationWrapper.annotation.stubbed) 1 else 0
@@ -72,7 +71,6 @@ class FileGenerator : AbstractProcessor(){
             testCounts[annotationWrapper.annotation.testCategory] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
             priorityCounts[annotationWrapper.annotation.priority] = TestCount(priorityCount.stubbed + stubbedCount, priorityCount.written + writtenCount)
             featureCounts[annotationWrapper.annotation.featureCategory] = TestCount(featureCount.stubbed + stubbedCount, featureCount.written + writtenCount)
-            if(annotationWrapper.annotation.manualOnly) manualOnly.add(annotationWrapper.annotatedElement.simpleName.toString())
         }
 
         return CustomFileBuilder(
@@ -80,8 +78,7 @@ class FileGenerator : AbstractProcessor(){
                 totalStubbed,
                 testCounts,
                 priorityCounts,
-                featureCounts,
-                manualOnly
+                featureCounts
         ).getContent()
     }
 

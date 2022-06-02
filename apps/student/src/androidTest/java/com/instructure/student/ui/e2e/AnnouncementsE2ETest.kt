@@ -42,7 +42,7 @@ class AnnouncementsE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.E2E)
     fun testAnnouncementsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")

@@ -129,7 +129,7 @@ class PandaAvatarActivity : ParentActivity() {
     private fun setupViews() {
         mToolbar.setTitle(R.string.pandaAvatar)
         mToolbar.setupAsBackButton { finish() }
-        ViewStyler.themeToolbar(this, mToolbar, ThemePrefs.primaryColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(this, mToolbar, ThemePrefs.primaryColor, getColor(R.color.white))
         mToolbar.elevation = this.DP(2f)
         // Make the head and body all black
         changeHead.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_head_02, Color.BLACK)

@@ -18,13 +18,13 @@
 package com.instructure.student.dialog
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.TermsOfService
@@ -96,7 +96,7 @@ class LegalDialogStyled : AppCompatDialogFragment() {
             dialog?.dismiss()
         }
 
-        return AlertDialog.Builder(context)
+        return AlertDialog.Builder(requireContext())
                 .setTitle(R.string.legal)
                 .setView(view)
                 .create()

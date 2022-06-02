@@ -52,7 +52,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     // Clicking the "Description" button on a rubric criterion item should show a new page with the full description
     // Also checks to see that the rubric criterion is displayed correctly, and responds to clicks correctly
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testRubrics_showCriterionDescription() {
 
         val data = getToCourse()
@@ -97,7 +97,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
     // Should be able to add a comment on a submission
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testComments_addCommentToSubmission() {
 
         val data = getToCourse()
@@ -121,7 +121,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
     // Student can preview an assignment comment attachment
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testComments_previewAttachment() {
 
         val data = getToCourse()
@@ -186,14 +186,14 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testComments_videoCommentPlayback() {
         // After recording a video comment, user should be able to view a replay
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testComments_audioCommentPlayback() {
         // After recording an audio comment, user should be able to hear an audio playback
     }

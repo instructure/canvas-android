@@ -108,18 +108,12 @@
 
         </androidx.percentlayout.widget.PercentRelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_above="@+id/bottomBar"
-            android:background="@color/backgroundMedium"/>
-
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/backgroundLightest"
+            android:background="@color/backgroundLightestElevated"
             app:itemIconTint="@color/textDarkest"
             app:itemTextColor="@color/textDarkest"
             app:menu="@menu/bottom_navigation_items"/>

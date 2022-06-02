@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:foreground="?android:selectableItemBackground"
         android:minHeight="?android:listPreferredItemHeightLarge"
-        app:cardBackgroundColor="@color/backgroundLightest"
+        app:cardBackgroundColor="@color/backgroundLightestElevated"
         app:cardCornerRadius="6dp"
         app:cardElevation="6dp">
 
@@ -53,7 +53,6 @@
                     style="@style/TextFont.Regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#2d3b45"
                     android:textSize="24sp"
                     tools:text="Home" />
 
@@ -62,7 +61,7 @@
                     style="@style/TextFont.Regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#78848C"
+                    android:textColor="@color/textDark"
                     android:textSize="12sp"
                     tools:text="Course Activity Stream" />
 
@@ -72,11 +71,11 @@
                 android:id="@+id/arrow"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_forward_arrow"
-                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:tint="@color/textDark"/>
+                android:layout_centerVertical="true"
+                android:importantForAccessibility="no"
+                android:tint="@color/textDarkest"
+                app:srcCompat="@drawable/ic_forward_arrow" />
 
         </RelativeLayout>
 

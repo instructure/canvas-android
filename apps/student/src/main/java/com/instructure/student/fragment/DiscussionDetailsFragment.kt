@@ -184,7 +184,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             toolbar.setMenu(R.menu.menu_edit_generic, menuItemCallback)
         }
         */
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     //endregion
@@ -364,7 +364,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(webView: CanvasWebView) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(Color.WHITE)
+        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
         webView.settings.allowFileAccess = true

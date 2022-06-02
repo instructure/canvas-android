@@ -68,7 +68,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:importantForAccessibility="yes"
-                android:contentDescription="@{itemViewModel.completed ? @string/a11y_mark_as_done : @string/a11y_mark_as_not_done}"/>
+                android:contentDescription="@{itemViewModel.completed ? @string/a11y_markAsNotDoneWithName(itemViewModel.data.title) : @string/a11y_markAsDoneWithName(itemViewModel.data.title)}"/>
 
             <ImageView
                 android:id="@+id/icon"
@@ -150,6 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{itemViewModel.data.dueDate}"
+                    android:textColor="@color/textDark"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/openArrow"
                     app:layout_constraintTop_toBottomOf="@id/points"
@@ -162,6 +163,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_open_arrow"
                 android:visibility="@{itemViewModel.data.openable ? View.VISIBLE : View.INVISIBLE}"
+                android:tint="@color/textDark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -467,7 +467,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mCanvasContext.color, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
         toolbar.setupMenu(R.menu.menu_edit_generic, menuItemCallback)
@@ -475,7 +475,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if(!isTablet) {
             toolbar.subtitle = mCanvasContext.name
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCanvasContext.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
     }
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
@@ -501,7 +501,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(webView: CanvasWebView, addJSSupport: Boolean) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(Color.WHITE)
+        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.javaScriptEnabled = true
         if(addJSSupport) webView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
         webView.settings.useWideViewPort = true

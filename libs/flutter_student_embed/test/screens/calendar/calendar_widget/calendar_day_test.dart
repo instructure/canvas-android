@@ -60,7 +60,7 @@ void main() {
     await tester.pump();
 
     final textStyle = tester.widget<AnimatedDefaultTextStyle>(find.byType(AnimatedDefaultTextStyle).last).style;
-    expect(textStyle.color, StudentColors.licorice);
+    expect(textStyle.color, StudentColors.textDarkest);
   });
 
   testWidgetsWithAccessibilityChecks('Uses faded text color for weekends', (tester) async {
@@ -72,7 +72,7 @@ void main() {
     await tester.pump();
 
     final textStyle = tester.widget<AnimatedDefaultTextStyle>(find.byType(AnimatedDefaultTextStyle).last).style;
-    expect(textStyle.color, StudentColors.ash);
+    expect(textStyle.color, StudentColors.textDark);
   });
 
   testWidgetsWithAccessibilityChecks('Uses faded text color for week days if month is not selected', (tester) async {
@@ -84,7 +84,7 @@ void main() {
     await tester.pump();
 
     final textStyle = tester.widget<AnimatedDefaultTextStyle>(find.byType(AnimatedDefaultTextStyle).last).style;
-    expect(textStyle.color, StudentColors.ash);
+    expect(textStyle.color, StudentColors.textDark);
   });
 
   testWidgetsWithAccessibilityChecks('Uses no decoration if day is not selected and is not today', (tester) async {

@@ -25,7 +25,7 @@ class TodoE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.TODOS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.TODOS, TestCategory.E2E)
     fun testTodoE2E() {
 
         // Don't attempt this test on a Friday, Saturday or Sunday.

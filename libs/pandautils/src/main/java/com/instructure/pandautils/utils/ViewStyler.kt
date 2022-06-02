@@ -20,21 +20,10 @@ package com.instructure.pandautils.utils
 import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.ColorDrawable
-import android.os.Build
-import androidx.annotation.ColorInt
-import androidx.annotation.DimenRes
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.textfield.TextInputLayout
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.*
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -44,6 +33,15 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.annotation.ColorInt
+import androidx.annotation.DimenRes
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.*
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.R
 
@@ -93,13 +91,13 @@ object ViewStyler {
         // setting the thumb color
         switch.thumbDrawable.setTintList(ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.backgroundLight)))
+                intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.switchThumbColor)))
         )
 
         // setting the track color
         switch.trackDrawable.setTintList(ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(trackColor, ContextCompat.getColor(context, R.color.backgroundMedium))))
+                intArrayOf(trackColor, ContextCompat.getColor(context, R.color.switchTrackColor))))
     }
 
     fun themeInputTextLayout(textInputLayout: TextInputLayout, @ColorInt color: Int) {
@@ -114,46 +112,48 @@ object ViewStyler {
         } catch (e: Exception) { }
     }
 
-    fun themeActionBar(activity: Activity?, actionBar: ActionBar?, @ColorInt backgroundColor: Int) {
-        if (activity != null && actionBar != null) {
-            val colorDrawable = ColorDrawable(backgroundColor)
-            actionBar.setBackgroundDrawable(colorDrawable)
-            setStatusBarDark(activity, backgroundColor)
+    fun themeToolbarColored(activity: Activity, toolbar: Toolbar?, canvasContext: CanvasContext?) {
+        if(toolbar == null || canvasContext == null) return
+        themeToolbar(activity, toolbar, canvasContext.color, activity.getColor(R.color.white))
+        setStatusBarDark(activity, canvasContext.color)
+    }
+
+    fun themeToolbarColored(activity: Activity, toolbar: Toolbar, @ColorInt backgroundColor: Int, @ColorInt contentColor: Int) {
+        themeToolbar(activity, toolbar, backgroundColor, contentColor)
+        setStatusBarDark(activity, backgroundColor)
+    }
+
+    fun themeToolbarLight(activity: Activity, toolbar: Toolbar) {
+        val backgroundColor = activity.getColor(R.color.backgroundLightestElevated)
+        val contentColor = activity.getColor(R.color.textDarkest)
+        themeToolbar(activity, toolbar, backgroundColor, contentColor)
+
+        val isTablet = activity.resources.getBoolean(R.bool.isDeviceTablet)
+        if (!isTablet) {
+            themeStatusBar(activity)
         }
     }
 
-    fun themeToolbar(activity: Activity, toolbar: Toolbar?, canvasContext: CanvasContext?) {
-        if(toolbar == null || canvasContext == null) return
-        themeToolbar(activity, toolbar, canvasContext.color, Color.WHITE, true)
+    private fun darkModeEnabled(activity: Activity): Boolean {
+        val nightModeFlags: Int = activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 
-    fun themeToolbar(activity: Activity, toolbar: Toolbar, @ColorInt backgroundColor: Int, @ColorInt contentColor: Int) {
-        themeToolbar(activity, toolbar, backgroundColor, contentColor, true)
-    }
-
-    fun themeToolbar(activity: Activity, toolbar: Toolbar, @ColorInt backgroundColor: Int, @ColorInt contentColor: Int, darkStatusBar: Boolean) {
+    private fun themeToolbar(activity: Activity, toolbar: Toolbar, @ColorInt backgroundColor: Int, @ColorInt contentColor: Int) {
         toolbar.setBackgroundColor(backgroundColor)
         toolbar.setTitleTextAppearance(activity, R.style.ToolbarStyle)
         toolbar.setSubtitleTextAppearance(activity, R.style.ToolbarStyle_Subtitle)
         colorToolbarIconsAndText(activity, toolbar, contentColor)
-        if(darkStatusBar) {
+    }
+
+    fun themeStatusBar(activity: Activity) {
+        val backgroundColor = activity.getColor(R.color.backgroundLightestElevated)
+
+        // If we have dark mode enabled we will never have a light Toolbar/status bar
+        if(darkModeEnabled(activity)) {
             setStatusBarDark(activity, backgroundColor)
         } else {
             setStatusBarLight(activity)
-        }
-    }
-
-    fun themeToolbarBottomSheet(activity: Activity, isTablet: Boolean, toolbar: Toolbar, @ColorInt contentColor: Int, darkStatusBar: Boolean) {
-        toolbar.setBackgroundColor(Color.WHITE)
-        toolbar.setTitleTextAppearance(activity, R.style.ToolbarStyle)
-        toolbar.setSubtitleTextAppearance(activity, R.style.ToolbarStyle_Subtitle)
-        colorToolbarIconsAndText(activity, toolbar, contentColor)
-        if(!isTablet) {
-            if (darkStatusBar) {
-                setStatusBarDark(activity, Color.WHITE)
-            } else {
-                setStatusBarLight(activity)
-            }
         }
     }
 
@@ -177,13 +177,6 @@ object ViewStyler {
         drawable.mutate().colorFilter = PorterDuffColorFilter(ThemePrefs.buttonColor, PorterDuff.Mode.SRC_ATOP)
         button.background = drawable
         button.setTextColor(ThemePrefs.buttonTextColor)
-    }
-
-    fun themeButton(button: Button, backgroundColor: Int, textColor: Int) {
-        val drawable = button.background
-        drawable.mutate().colorFilter = PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.SRC_ATOP)
-        button.background = drawable
-        button.setTextColor(textColor)
     }
 
     fun setStatusBarDark(activity: Activity, @ColorInt color: Int) {
@@ -266,7 +259,7 @@ fun AlertDialog.Builder.showThemed() {
     dialog.show()
 }
 
-fun BottomNavigationView.applyTheme(@ColorInt selectedColor: Int = ThemePrefs.brandColor, @ColorInt unselectedColor: Int = Color.BLACK) {
+fun BottomNavigationView.applyTheme(@ColorInt selectedColor: Int = ThemePrefs.brandColor, @ColorInt unselectedColor: Int) {
     val colorStateList = ViewStyler.makeColorStateList(unselectedColor, selectedColor)
     this.itemIconTintList = colorStateList
     this.itemTextColor = colorStateList

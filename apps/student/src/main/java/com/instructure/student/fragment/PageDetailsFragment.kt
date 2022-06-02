@@ -280,7 +280,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             it.menu.findItem(R.id.menu_edit).isVisible = false
             checkCanEdit()
 
-            ViewStyler.themeToolbar(requireActivity(), it, canvasContext)
+            ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
         }
     }
 

@@ -38,19 +38,27 @@
     </style>
 
     <!-- Used for stand alone PSPDFKit activity, pdf fragment uses values in CanvasMaterialTheme_Default-->
-    <style name="PSPDFKitTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/backgroundDark</item>
-        <item name="colorAccent">@color/backgroundDark</item>
-        <item name="colorPrimaryDark">@color/backgroundDark</item>
+    <style name="PSPDFKitTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/ash</item>
+        <item name="colorAccent">@color/ash</item>
+        <item name="colorPrimaryDark">@color/ash</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+        <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/PSPDFAnnotationCreationToolbarIconsStyle</item>
+        <item name="pspdf__actionBarIconsStyle">@style/PSPDFKitActionBarIconsStyle</item>
+    </style>
+
+    <style name="PSPDFKitActionBarIconsStyle">
+        <item name="pspdf__iconsColor">@color/white</item>
+        <item name="pspdf__iconsColorActivated">@color/textInfo</item>
     </style>
 
     <style name="ContextualToolbarStyle">
-        <item name="pspdf__backgroundColor">@color/backgroundDark</item>
-        <item name="pspdf__submenuBackgroundColor">@color/backgroundDarkest</item>
+        <item name="pspdf__backgroundColor">@color/ash</item>
+        <item name="pspdf__submenuBackgroundColor">@color/licorice</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">
@@ -76,13 +84,18 @@
     </style>
 
     <style name="StampPickerStyle">
-        <item name="pspdf__titleBackground">@color/backgroundDark</item>
         <item name="pspdf__maxHeight">320dp</item>
         <item name="pspdf__maxWidth">100dp</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
     </style>
 
     <style name="ModalDialogStyle">
-        <item name="pspdf__titleBackground">@color/backgroundDark</item>
+        <item name="pspdf__titleBackground">@color/ash</item>
+    </style>
+
+    <style name="PropertyInspector">
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+        <item name="pspdf__textColor">@color/textDarkest</item>
     </style>
 
     <style name="Theme.Notorious" parent="CanvasMaterialTheme_Default">
@@ -141,7 +154,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="TermSpinner" parent="android:Widget.Holo.Light.Spinner">
+    <style name="TermSpinner" parent="Widget.AppCompat.Spinner.DropDown">
         <item name="android:dropDownSelector">?android:selectableItemBackground</item>
         <item name="android:background">@color/backgroundLightest</item>
         <item name="android:divider">@null</item>

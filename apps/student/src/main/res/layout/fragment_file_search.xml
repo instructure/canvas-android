@@ -31,7 +31,8 @@
             android:layout_height="?android:attr/actionBarSize"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/contentDescription_back"
-            android:src="@drawable/ic_back_arrow"/>
+            android:src="@drawable/ic_back_arrow"
+            android:tint="@color/textDarkest"/>
 
         <EditText
             android:id="@+id/queryInput"
@@ -111,7 +112,7 @@
             android:id="@+id/mediaLoadingView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#CCFFFFFF"
+            android:background="@color/transparentWhite"
             android:clickable="true"
             android:contentDescription="@string/loading"
             android:focusable="true"

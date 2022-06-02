@@ -151,7 +151,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), quizListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), quizListToolbar, mCourseColor, requireContext().getColor(R.color.white))
     }
 
     override fun displayLoadingError() = toast(R.string.errorOccurred)

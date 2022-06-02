@@ -23,10 +23,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.EditText
 import com.instructure.canvasapi2.models.CanvasTheme
-import com.instructure.canvasapi2.utils.BooleanPref
-import com.instructure.canvasapi2.utils.ColorPref
-import com.instructure.canvasapi2.utils.PrefManager
-import com.instructure.canvasapi2.utils.StringPref
+import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.R
 
 object ThemePrefs : PrefManager("CanvasTheme") {
@@ -35,8 +32,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     const val ALPHA_VALUE = 0x32
 
     var brandColor by ColorPref(R.color.backgroundDarkest)
-
-    var fontColor by ColorPref(R.color.textDarkest)
 
     var primaryColor by ColorPref(R.color.textDarkest)
 
@@ -54,6 +49,12 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     var logoUrl by StringPref()
 
     var isThemeApplied by BooleanPref()
+
+    var appTheme by IntPref(defaultValue = 0)
+
+    var themeSelectionShown by BooleanPref()
+
+    override fun keepBaseProps() = listOf(::appTheme, ::themeSelectionShown)
 
     override fun onClearPrefs() {
     }
@@ -110,7 +111,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     fun applyCanvasTheme(theme: CanvasTheme) {
         brandColor = parseColor(theme.brand, brandColor)
-        fontColor = parseColor(theme.fontColorDark, fontColor)
         primaryColor = parseColor(theme.primary, primaryColor)
         primaryTextColor = parseColor(theme.primaryText, primaryTextColor)
         accentColor = parseColor(theme.accent, accentColor)
@@ -122,7 +122,7 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     private fun parseColor(hexColor: String, defaultColor: Int): Int {
         try {
-            return Color.parseColor("#${hexColor.trimMargin("#")}")
+            return ColorUtils.parseColor("#${hexColor.trimMargin("#")}", "")
         } catch (e: IllegalArgumentException) {
             return defaultColor
         }

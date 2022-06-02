@@ -75,7 +75,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
         if(!isTablet) {
             toolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
     }
 
     override fun showMenu(assignment: Assignment) {

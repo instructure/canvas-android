@@ -43,7 +43,7 @@ class CourseSettingsE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.COURSE, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE, TestCategory.E2E)
     fun testCourseSettingsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

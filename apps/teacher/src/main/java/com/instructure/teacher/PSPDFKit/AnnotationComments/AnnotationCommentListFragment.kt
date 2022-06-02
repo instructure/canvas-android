@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.PSPDFKit.AnnotationComments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -100,7 +99,7 @@ class AnnotationCommentListFragment : BaseListFragment<
     fun setupToolbar() {
         toolbar.title = getString(R.string.sg_tab_comments)
         toolbar.setupBackButton(this)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 

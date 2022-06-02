@@ -38,6 +38,7 @@
         android:layout_marginStart="12dp"
         android:visibility="gone"
         tools:visibility="visible"
+        android:textColor="@color/textDarkest"
         style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"/>
 
 </LinearLayout>

@@ -26,6 +26,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -33,16 +34,14 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DiscussionListRecyclerAdapter
@@ -51,15 +50,22 @@ import com.instructure.student.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.course_discussion_topic.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
 @PageView(url = "{canvasContext}/discussion_topics")
+@AndroidEntryPoint
 open class DiscussionListFragment : ParentFragment(), Bookmarkable {
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
     protected var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private lateinit var recyclerAdapter: DiscussionListRecyclerAdapter
@@ -70,6 +76,9 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     private var permissionJob: Job? = null
     private var canPost: Boolean = false
     private var groupsJob: WeaveJob? = null
+    private var featureFlagsJob: WeaveJob? = null
+
+    private var discussionRedesignEnabled = false
 
     protected open val isAnnouncement: Boolean
         get() = false
@@ -78,6 +87,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkForPermission()
+        checkFeatureFlags()
         retainInstance = true
     }
 
@@ -89,12 +99,21 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 // If the discussion/announcement hasn't been published take them back to the publish screen
                 if (model.groupTopicChildren.isNotEmpty()) {
                     groupsJob = tryWeave {
-                        DiscussionDetailsFragment.getDiscussionGroup(model)?.let {
-                            RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(it.first, it.second, groupDiscussion = true))
-                        } ?: RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(canvasContext, model))
+                        if (discussionRedesignEnabled) {
+                            RouteMatcher.route(requireActivity(), DiscussionDetailsWebViewFragment.makeRoute(canvasContext, model))
+                        } else {
+                            DiscussionDetailsFragment.getDiscussionGroup(model)?.let {
+                                RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(it.first, it.second, groupDiscussion = true))
+                            }
+                                    ?: RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(canvasContext, model))
+                        }
                     }.catch {  }
                 } else {
-                    RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(canvasContext, model))
+                    if (discussionRedesignEnabled) {
+                        RouteMatcher.route(requireActivity(), DiscussionDetailsWebViewFragment.makeRoute(canvasContext, model))
+                    } else {
+                        RouteMatcher.route(requireActivity(), DiscussionDetailsFragment.makeRoute(canvasContext, model))
+                    }
                 }
             }
 
@@ -215,6 +234,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     override fun onDestroyView() {
         super.onDestroyView()
         permissionJob?.cancel()
+        featureFlagsJob?.cancel()
         recyclerAdapter.cancel()
     }
     //endregion
@@ -237,7 +257,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             }
             recyclerAdapter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), discussionListToolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext)
     }
 
     override fun title(): String = getString(R.string.discussion)
@@ -247,6 +267,20 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     override fun getSelectedParamName(): String = RouterParams.MESSAGE_ID
 
     //endregion
+
+    private fun checkFeatureFlags() {
+        featureFlagsJob = weave {
+            if (canvasContext.isCourse) {
+                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(canvasContext.id, true).await().dataOrNull
+                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
+            }
+
+            if (canvasContext.isGroup) {
+                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync((canvasContext as Group).courseId, true).await().dataOrNull
+                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
+            }
+        }
+    }
 
     private fun checkForPermission() {
         permissionJob = tryWeave {

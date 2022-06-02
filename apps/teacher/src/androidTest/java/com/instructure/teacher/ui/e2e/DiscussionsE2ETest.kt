@@ -38,7 +38,7 @@ class DiscussionsE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.E2E)
     fun testDiscussionE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -61,7 +61,7 @@ class DiscussionsE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Click on ${discussion.title} discussion and navigate to Discussions Details Page by clicking on 'Edit'.")
         discussionsListPage.clickDiscussion(discussion)
-        discussionsDetatailsPage.openEdit()
+        discussionsDetailsPage.openEdit()
 
         val newTitle = "New Discussion"
         Log.d(STEP_TAG,"Edit the discussions's title to: $newTitle. Click on 'Save'.")
@@ -69,21 +69,21 @@ class DiscussionsE2ETest : TeacherTest() {
         editDiscussionsDetailsPage.clickSave()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the discussion's name has been changed to $newTitle and it is published.")
-        discussionsDetatailsPage.refresh()
-        discussionsDetatailsPage.assertDiscussionTitle(newTitle)
-        discussionsDetatailsPage.assertDiscussionPublished()
+        discussionsDetailsPage.refresh()
+        discussionsDetailsPage.assertDiscussionTitle(newTitle)
+        discussionsDetailsPage.assertDiscussionPublished()
 
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Unpublish the $newTitle discussion and click on 'Save'.")
-        discussionsDetatailsPage.openEdit()
+        discussionsDetailsPage.openEdit()
         editDiscussionsDetailsPage.switchPublished()
         editDiscussionsDetailsPage.clickSave()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the $newTitle discussion has been unpublished.")
-        discussionsDetatailsPage.refresh()
-        discussionsDetatailsPage.assertDiscussionUnpublished()
+        discussionsDetailsPage.refresh()
+        discussionsDetailsPage.assertDiscussionUnpublished()
 
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the $newTitle discussion.")
-        discussionsDetatailsPage.openEdit()
+        discussionsDetailsPage.openEdit()
         editDiscussionsDetailsPage.deleteDiscussion()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that there is no discussion, so the $newTitle discussion has been deleted successfully.")

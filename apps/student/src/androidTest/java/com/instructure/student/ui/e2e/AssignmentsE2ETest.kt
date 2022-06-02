@@ -58,7 +58,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPointsGradeTextAssignmentE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -127,7 +127,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testLetterGradeTextAssignmentE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -181,7 +181,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPercentageFileAssignmentWithCommentE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -272,7 +272,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testMultipleAssignmentsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -359,7 +359,7 @@ class AssignmentsE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.COMMENTS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
     fun testMediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
