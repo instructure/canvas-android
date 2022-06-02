@@ -17,10 +17,8 @@
 package com.instructure.student.ui.interaction
 
 import android.os.SystemClock.sleep
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.mockCanvas.AssignmentGroupType
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
@@ -31,13 +29,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.SubmissionComment
-import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.api.FileUploadsApi
-import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -118,7 +112,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
         sleep(1000) // Allow some time for the submission to propagate
-        assignmentDetailsPage.verifyAssignmentSubmitted()
+        assignmentDetailsPage.assertAssignmentSubmitted()
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")

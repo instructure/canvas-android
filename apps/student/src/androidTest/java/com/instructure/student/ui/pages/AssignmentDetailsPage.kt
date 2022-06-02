@@ -60,7 +60,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(withId(R.id.assignmentName)).assertHasText(assignmentName)
     }
 
-    fun verifyAssignmentSubmitted() {
+    fun assertAssignmentSubmitted() {
         onView(withText(R.string.submissionStatusSuccessTitle)).scrollTo().assertDisplayed()
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()
     }
