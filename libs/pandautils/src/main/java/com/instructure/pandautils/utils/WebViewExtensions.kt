@@ -168,3 +168,23 @@ fun WebView.setDarkModeSupport(webThemeDarkeningOnly: Boolean = false) {
         }
     }
 }
+
+fun WebView.addDarkThemeToHtmlDocument() {
+    val css = """
+                    @media (prefers-color-scheme: dark) {
+                        html {
+                            filter: invert(100%) hue-rotate(180deg);
+                        }
+                        img:not(.ignore-color-scheme), video:not(.ignore-color-scheme), .ignore-color-scheme {
+                            filter: invert(100%) hue-rotate(180deg) !important;
+                        }
+                    }
+                    """
+    val cssString = css.split("\n").joinToString(" ")
+    val js = """
+                    var element = document.createElement('style');
+                    element.innerHTML = '$cssString)';
+                    document.head.appendChild(element);
+                """
+    evaluateJavascript(js, {})
+}
