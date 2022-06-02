@@ -31,9 +31,7 @@ class StudentDashboardRouter(private val activity: FragmentActivity) : Dashboard
                 subject,
                 false,
                 message,
-                allowUnsupportedRouting = false,
-                forceDark = true
-            )
+                allowUnsupportedRouting = false)
         )
     }
 }

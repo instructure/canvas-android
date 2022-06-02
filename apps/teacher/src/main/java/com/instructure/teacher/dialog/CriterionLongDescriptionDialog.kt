@@ -92,7 +92,7 @@ class CriterionLongDescriptionDialog : DialogFragment() {
             setBackgroundResource(android.R.color.transparent)
 
             // Load description
-            webView.loadHtml(mLongDescription, mDescription)
+            webView.loadHtml(mLongDescription, mDescription, R.color.backgroundLightestElevated)
         }
 
         return AlertDialog.Builder(requireContext())

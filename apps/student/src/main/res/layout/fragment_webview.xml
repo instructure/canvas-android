@@ -41,7 +41,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:clipToPadding="false"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"
+        android:background="@color/backgroundLightest" />
 
     <ProgressBar
         android:id="@+id/webViewLoading"

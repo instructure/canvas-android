@@ -65,7 +65,6 @@ open class InternalWebviewFragment : ParentFragment() {
     var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
     var allowRoutingToLogin: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_TO_LOGIN)
     var allowEmbedRouting: Boolean by BooleanArg(default = true, key = ALLOW_EMBED_ROUTING)
-    var forceDark: Boolean by BooleanArg(key = FORCE_DARK)
 
     var hideToolbar: Boolean by BooleanArg(key = Const.HIDDEN_TOOLBAR)
 
@@ -104,7 +103,7 @@ open class InternalWebviewFragment : ParentFragment() {
             originalUserAgentString = canvasWebView.settings.userAgentString
             canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
-            canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = !forceDark)
+            canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
             webViewLoading?.setVisible(true)
 
             canvasWebView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
@@ -325,13 +324,6 @@ open class InternalWebviewFragment : ParentFragment() {
         }
     }
 
-    // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-    fun loadHtml(html: String) {
-        canvasWebView?.loadDataWithBaseURL(ApiPrefs.fullDomain,
-                FileUtils.getAssetsFile(requireContext(), "html_wrapper.html").replace("{\$CONTENT$}", html, ignoreCase = false),
-                "text/html", "UTF-8", null)
-    }
-
     fun loadHtml(data: String, mimeType: String, encoding: String, historyUrl: String?) {
         // BaseURL is set as Referer. Referer needed for some vimeo videos to play
         canvasWebView?.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
@@ -339,7 +331,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
     fun loadUrl(targetUrl: String?) {
         if (!html.isNullOrBlank()) {
-            loadHtml(html!!)
+            canvasWebView?.loadHtml(html!!, title ?: "")
             return
         }
 
@@ -400,7 +392,7 @@ open class InternalWebviewFragment : ParentFragment() {
      * Otherwise the canvasContext won't be saved and will cause issues with the dropdown navigation
      * -dw
      */
-        fun makeRoute(url: String, title: String, authenticate: Boolean, html: String, allowUnsupportedRouting: Boolean = true, forceDark: Boolean = false): Route =
+        fun makeRoute(url: String, title: String, authenticate: Boolean, html: String, allowUnsupportedRouting: Boolean = true): Route =
                 Route(InternalWebviewFragment::class.java, CanvasContext.emptyUserContext(),
                         CanvasContext.emptyUserContext().makeBundle().apply {
                             putString(Const.INTERNAL_URL, url)
@@ -408,7 +400,6 @@ open class InternalWebviewFragment : ParentFragment() {
                             putBoolean(Const.AUTHENTICATE, authenticate)
                             putString(Const.HTML, html)
                             putBoolean(Const.ALLOW_UNSUPPORTED_ROUTING, allowUnsupportedRouting)
-                            putBoolean(FORCE_DARK, forceDark)
                         })
 
         fun makeRoute(canvasContext: CanvasContext, url: String?, title: String?, authenticate: Boolean, html: String): Route =
