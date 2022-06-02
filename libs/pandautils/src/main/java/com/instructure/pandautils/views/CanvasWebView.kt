@@ -165,9 +165,6 @@ class CanvasWebView @JvmOverloads constructor(
             }
         }
         CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
-
-        // The default settings for all CanvasWebView instances that we force dark mode, because most of the time that should be the expected behavior.
-        // If we want to override this behavior in a CanvasWebView we need to call this function with `true` parameter.
     }
 
     @SuppressLint("SetJavaScriptEnabled")

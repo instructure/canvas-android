@@ -381,7 +381,6 @@ open class InternalWebviewFragment : ParentFragment() {
         const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
         const val ALLOW_ROUTING_TO_LOGIN = "allowRoutingToLogin"
         const val ALLOW_EMBED_ROUTING = "allowEmbedRouting"
-        const val FORCE_DARK = "forceDark"
 
         fun newInstance(route: Route): InternalWebviewFragment {
             return InternalWebviewFragment().withArgs(route.argsWithContext)
