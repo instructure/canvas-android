@@ -17,6 +17,7 @@
 package com.instructure.student.ui.renderTests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
@@ -66,12 +67,11 @@ class SyllabusRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @Stub
     fun displaysSyllabus() {
         val model = baseModel.copy()
         loadPageWithModel(model)
 
-        // If the WebView is wrap content we need to add a small delay to the test to be able to detect it after loading the content.
-        Thread.sleep(50)
         syllabusRenderPage.assertDisplaysSyllabus(syllabusDescription, shouldDisplayTabs = false)
     }
 

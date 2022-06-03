@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.renderTests
 
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
@@ -68,6 +69,7 @@ class SyllabusRenderTest : TeacherRenderTest() {
     }
 
     @Test
+    @Stub
     fun displaysSyllabus() {
         val model = baseModel.copy()
         loadPageWithModel(model)
@@ -110,6 +112,7 @@ class SyllabusRenderTest : TeacherRenderTest() {
     }
 
     @Test
+    @Stub
     fun swipingToEventsDisplaysEvents() {
         val model = baseModel.copy(events = DataResult.Success(List(3) { ScheduleItem(title = it.toString()) }))
         loadPageWithModel(model)
