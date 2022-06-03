@@ -63,6 +63,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
+        discussionWebView.setDarkModeSupport()
         discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 webViewRouter.openMedia(url)
