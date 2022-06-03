@@ -70,6 +70,8 @@ class SyllabusRenderTest : StudentRenderTest() {
         val model = baseModel.copy()
         loadPageWithModel(model)
 
+        // If the WebView is wrap content we need to add a small delay to the test to be able to detect it after loading the content.
+        Thread.sleep(50)
         syllabusRenderPage.assertDisplaysSyllabus(syllabusDescription, shouldDisplayTabs = false)
     }
 
