@@ -20,7 +20,7 @@
     android:layout_width="265dp"
     android:layout_height="wrap_content"
     android:minHeight="48dp"
-    android:background="@drawable/bg_comment_attachment">
+    android:background="@drawable/bg_button_rounded_transparent">
 
     <ImageView
         android:id="@+id/iconImageView"

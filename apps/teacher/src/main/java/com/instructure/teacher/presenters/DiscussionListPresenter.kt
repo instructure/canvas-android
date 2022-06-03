@@ -19,14 +19,22 @@ package com.instructure.teacher.presenters
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.DiscussionManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.isGroup
+import com.instructure.teacher.fragments.DiscussionsDetailsFragment
 import com.instructure.teacher.viewinterface.DiscussionListView
 import instructure.androidblueprint.SyncExpandablePresenter
 import kotlinx.coroutines.Job
@@ -34,14 +42,18 @@ import retrofit2.Response
 import java.util.*
 
 class DiscussionListPresenter(
-    private val mCanvasContext: CanvasContext,
-    private val mIsAnnouncements: Boolean
+        private val canvasContext: CanvasContext,
+        private val isAnnouncements: Boolean,
+        private val isRedesignEnabled: Boolean
 ) : SyncExpandablePresenter<String, DiscussionTopicHeader, DiscussionListView>(
     String::class.java,
     DiscussionTopicHeader::class.java
 ) {
 
     private var discussionsListJob: Job? = null
+    private var featureFlagJob: Job? = null
+
+    private var discussionRedesignEnabled: Boolean = false
 
     private var discussions: List<DiscussionTopicHeader> = emptyList()
 
@@ -53,11 +65,23 @@ class DiscussionListPresenter(
         }
 
     override fun loadData(forceNetwork: Boolean) {
+        featureFlagJob = weave {
+            if (canvasContext.isCourse) {
+                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(canvasContext.id, true).await().dataOrNull
+                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && isRedesignEnabled
+            }
+
+            if (canvasContext.isGroup) {
+                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync((canvasContext as Group).courseId, true).await().dataOrNull
+                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && isRedesignEnabled
+            }
+        }
+
         discussionsListJob = tryWeave {
             onRefreshStarted()
             discussions = awaitApi {
-                if (mIsAnnouncements) AnnouncementManager.getAllAnnouncements(mCanvasContext, forceNetwork, it)
-                else DiscussionManager.getAllDiscussionTopicHeaders(mCanvasContext, forceNetwork, it)
+                if (isAnnouncements) AnnouncementManager.getAllAnnouncements(canvasContext, forceNetwork, it)
+                else DiscussionManager.getAllDiscussionTopicHeaders(canvasContext, forceNetwork, it)
             }
             populateData()
         } catch {
@@ -69,7 +93,7 @@ class DiscussionListPresenter(
 
     private fun populateData() {
         val response = discussions.filterWithQuery(searchQuery, DiscussionTopicHeader::title)
-        if (mIsAnnouncements) {
+        if (isAnnouncements) {
             data.addOrUpdateAllItems(ANNOUNCEMENTS, response)
         } else {
             data.addOrUpdateAllItems(PINNED, response.filter { getHeaderType(it) == PINNED })
@@ -82,6 +106,7 @@ class DiscussionListPresenter(
 
     override fun refresh(forceNetwork: Boolean) {
         discussionsListJob?.cancel()
+        featureFlagJob?.cancel()
         onRefreshStarted()
         clearData()
         loadData(true)
@@ -90,6 +115,7 @@ class DiscussionListPresenter(
     override fun onDestroyed() {
         super.onDestroyed()
         discussionsListJob?.cancel()
+        featureFlagJob?.cancel()
     }
 
     private val mDiscussionTopicHeaderPinnedCallback = object : StatusCallback<DiscussionTopicHeader>() {
@@ -129,13 +155,13 @@ class DiscussionListPresenter(
         when(groupFrom) {
             PINNED -> {
                 when(groupTo) {
-                    UNPINNED -> DiscussionManager.unpinDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderUnpinnedCallback)
+                    UNPINNED -> DiscussionManager.unpinDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderUnpinnedCallback)
                     CLOSED_FOR_COMMENTS -> {
                         // When we're pinned we stay in the same spot, but we need to update the Locked status
                         if(discussionTopicHeader.locked) {
-                            DiscussionManager.unlockDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderOpenedForCommentsCallback)
+                            DiscussionManager.unlockDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderOpenedForCommentsCallback)
                         } else {
-                            DiscussionManager.lockDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderClosedForCommentsCallback)
+                            DiscussionManager.lockDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderClosedForCommentsCallback)
                         }
                     }
                     DELETE -> viewCallback?.askToDeleteDiscussionTopicHeader(discussionTopicHeader)
@@ -143,15 +169,15 @@ class DiscussionListPresenter(
             }
             UNPINNED -> {
                 when(groupTo) {
-                    PINNED -> DiscussionManager.pinDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderPinnedCallback)
-                    CLOSED_FOR_COMMENTS -> DiscussionManager.lockDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderClosedForCommentsCallback)
+                    PINNED -> DiscussionManager.pinDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderPinnedCallback)
+                    CLOSED_FOR_COMMENTS -> DiscussionManager.lockDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderClosedForCommentsCallback)
                     DELETE -> viewCallback?.askToDeleteDiscussionTopicHeader(discussionTopicHeader)
                 }
             }
             CLOSED_FOR_COMMENTS -> {
                 when(groupTo) {
-                    PINNED -> DiscussionManager.pinDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderPinnedCallback)
-                    CLOSED_FOR_COMMENTS -> DiscussionManager.unlockDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderOpenedForCommentsCallback)
+                    PINNED -> DiscussionManager.pinDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderPinnedCallback)
+                    CLOSED_FOR_COMMENTS -> DiscussionManager.unlockDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderOpenedForCommentsCallback)
                     DELETE -> viewCallback?.askToDeleteDiscussionTopicHeader(discussionTopicHeader)
                 }
             }
@@ -160,7 +186,7 @@ class DiscussionListPresenter(
     }
 
     fun deleteDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader) {
-        DiscussionManager.deleteDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, object : StatusCallback<Void>() {
+        DiscussionManager.deleteDiscussionTopicHeader(canvasContext, discussionTopicHeader.id, object : StatusCallback<Void>() {
             override fun onResponse(response: Response<Void>, linkHeaders: LinkHeaders, type: ApiType) {
                 viewCallback?.discussionDeletedSuccessfully(discussionTopicHeader)
             }
@@ -179,7 +205,7 @@ class DiscussionListPresenter(
     override fun compare(group: String, item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Int {
         return when {
             PINNED == group -> item1.position.compareTo(item2.position)
-            mIsAnnouncements -> item2.position.compareTo(item1.position) // The api appears to return it in reverse order from how web displays it ¯\_(ツ)_/¯
+            isAnnouncements -> item2.position.compareTo(item1.position) // The api appears to return it in reverse order from how web displays it ¯\_(ツ)_/¯
             else -> item2.lastReplyDate?.compareTo(item1.lastReplyDate ?: Date(0)) ?: -1
         }
     }
@@ -198,5 +224,14 @@ class DiscussionListPresenter(
 
     override fun getUniqueItemId(item: DiscussionTopicHeader): Long {
         return item.id
+    }
+
+    fun getDetailsRoute(discussionTopicHeader: DiscussionTopicHeader, mIsAnnouncements: Boolean): Route {
+        val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, mIsAnnouncements)
+        return if (discussionRedesignEnabled) {
+            Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, args)
+        } else {
+            Route(null, DiscussionsDetailsFragment::class.java, canvasContext, args)
+        }
     }
 }
