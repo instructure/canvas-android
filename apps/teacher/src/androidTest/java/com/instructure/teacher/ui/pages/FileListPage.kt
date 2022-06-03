@@ -80,6 +80,7 @@ class FileListPage : BasePage(R.id.fileListPage) {
         selectItem(itemName)
         openOptionMenuFor("Edit")
         onView(withId(R.id.deleteText)).click()
+        Thread.sleep(3000) //Wait for the Delete pop-up window to be displayed. (We need this because sometimes on Bitrise it's a bit slow)
         onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE"), isDisplayed())).click()
     }
 

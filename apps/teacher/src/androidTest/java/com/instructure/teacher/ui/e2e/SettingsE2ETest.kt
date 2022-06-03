@@ -20,6 +20,7 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.teacher.R
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -76,6 +77,14 @@ class SettingsE2ETest : TeacherTest() {
         editProfileSettingsPage.clickOnSave()
 
         Log.d(STEP_TAG,"Assert that the username has been changed to $newUserName on the Profile Settings Page.")
+        try {
+          Log.d(STEP_TAG,"Check if the user has landed on Settings Page. If yes, navigate back to Profile Settings Page.")
+          //Sometimes in Bitrise it's working different than locally, because in Bitrise sometimes the user has been navigated to Settings Page after saving a new name,
+          settingsPage.assertPageObjects()
+          settingsPage.openProfileSettingsPage()
+        } catch(e: NoMatchingViewException) {
+          Log.d(STEP_TAG,"Did not throw the user back to the Settings Page, so the scenario can be continued.")
+      }
         profileSettingsPage.assertPageObjects()
         profileSettingsPage.assertUserNameIs(newUserName)
 
