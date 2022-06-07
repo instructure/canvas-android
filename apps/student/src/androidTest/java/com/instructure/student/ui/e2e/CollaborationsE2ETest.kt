@@ -1,5 +1,6 @@
 package com.instructure.student.ui.e2e
 
+import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -23,25 +24,30 @@ class CollaborationsE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.COLLABORATIONS, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COLLABORATIONS, TestCategory.E2E)
     fun testCollaborationsE2E() {
 
-        // Seed basic student/teacher/course data
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        // Sign the student in
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        // Navigate to course collaborations
+        Log.d(STEP_TAG,"Navigate to ${course.name} course's Collaborations Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectCollaborations()
 
-        // Verify that various elements of the web page are present
+        Log.d(STEP_TAG,"Verify that various elements of the web page are present.")
         CollaborationsPage.assertCurrentCollaborationsHeaderPresent()
 
         // For some reason, these aren't showing up when run in FTL, though they do

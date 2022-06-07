@@ -48,7 +48,7 @@ class InboxE2ETest : TeacherTest() {
         dashboardPage.openInbox()
         inboxPage.assertInboxEmpty()
 
-        Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API..")
+        Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API.")
         val seedConversation = ConversationsApi.createConversation(
             token = student.token,
             recipients = listOf(teacher.id.toString())

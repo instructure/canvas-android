@@ -36,9 +36,6 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
-private const val STEP_TAG = "BookmarksE2ETest #STEP# "
-private const val PREPARATION_TAG = "BookmarksE2ETest #PREPARATION# "
-
 @HiltAndroidTest
 class BookmarksE2ETest : StudentTest() {
     override fun displaysPageObjects() {

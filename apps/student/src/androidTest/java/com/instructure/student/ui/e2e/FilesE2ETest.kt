@@ -45,17 +45,19 @@ import org.junit.Test
 import java.io.File
 import java.io.FileWriter
 
-// Tests that files (assignment uploads, assignment comment attachments, discussion attachments)
-// are properly displayed
 @HiltAndroidTest
 class FilesE2ETest: StudentTest() {
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
     fun testFilesE2E() {
 
         // Seed basic data
