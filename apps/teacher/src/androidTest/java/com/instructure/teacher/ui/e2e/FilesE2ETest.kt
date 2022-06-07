@@ -46,9 +46,6 @@ import org.junit.Test
 import java.io.File
 import java.io.FileWriter
 
-private const val STEP_TAG = "FilesE2ETest #STEP# "
-private const val PREPARATION_TAG = "FilesE2ETest #PREPARATION# "
-
 @HiltAndroidTest
 class FilesE2ETest: TeacherTest() {
     override fun displaysPageObjects() {

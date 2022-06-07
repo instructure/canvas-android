@@ -572,6 +572,7 @@ class DiscussionsInteractionTest : StudentTest() {
         replyReplyEntry.attachments = mutableListOf(attachment)
 
         discussionDetailsPage.refresh() // To pick up updated discussion reply
+        Thread.sleep(3000) //Need this because somehow sometimes refresh does "double-refresh" and assert is failing below.
         discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
         discussionDetailsPage.assertReplyAttachment(replyReplyEntry)
         discussionDetailsPage.previewAndCheckReplyAttachment(replyReplyEntry,
