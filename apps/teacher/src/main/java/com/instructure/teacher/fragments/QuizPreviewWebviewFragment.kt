@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_PREVIEW
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
@@ -56,6 +57,7 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setShouldLoadUrl(false)
         super.onActivityCreated(savedInstanceState)
+        canvasWebView?.setDarkModeSupport()
 
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) =

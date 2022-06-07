@@ -17,7 +17,6 @@
 package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -362,7 +361,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region WebView And Javascript
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun setupWebView(webView: CanvasWebView) {
+    private fun setupWebView(webView: CanvasWebView, addDarkTheme: Boolean = false) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
         webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.javaScriptEnabled = true
@@ -383,8 +382,20 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 openMedia(canvasContext, url, filename)
             }
 
-            override fun onPageStartedCallback(webView: WebView, url: String) {}
-            override fun onPageFinishedCallback(webView: WebView, url: String) {}
+            override fun onPageStartedCallback(webView: WebView, url: String) {
+                // This executes a JavaScript to add the dark theme.
+                // It won't work exactl when the page starts to load, because the html document is not yet created,
+                // so we add a little delay to make sure the script can modify the document.
+                if (addDarkTheme) {
+                    webView.postDelayed({ webView.addDarkThemeToHtmlDocument() }, 50)
+                }
+            }
+            override fun onPageFinishedCallback(webView: WebView, url: String) {
+                // This is just a fallback if in some cases the document wouldn't be loaded after the delay
+                if (addDarkTheme) {
+                    webView.addDarkThemeToHtmlDocument()
+                }
+            }
         }
 
         webView.addVideoClient(requireActivity())
@@ -398,7 +409,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupRepliesWebView() {
-        setupWebView(discussionRepliesWebView)
+        setupWebView(discussionRepliesWebView, addDarkTheme = true)
         discussionRepliesWebView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
     }
 

@@ -22,6 +22,7 @@ import android.webkit.WebView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_SUBMISSION_VIEW
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
@@ -33,7 +34,7 @@ import kotlinx.android.synthetic.main.fragment_webview.*
 class QuizSubmissionViewFragment : InternalWebviewFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         getCanvasLoading()?.setVisible() // Set visible so we can test it
-
+        canvasWebView?.setDarkModeSupport()
         canvasWebView.setInitialScale(100)
         canvasWebView.setInvisible() // Set invisible so we can test it
         canvasWebView.webChromeClient = object : WebChromeClient() {
