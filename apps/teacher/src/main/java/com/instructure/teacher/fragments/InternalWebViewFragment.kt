@@ -119,6 +119,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
         setupToolbar(courseColor)
 
+        canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
         canvasWebView.settings.loadWithOverviewMode = true
         canvasWebView.settings.displayZoomControls = false
         canvasWebView.settings.setSupportZoom(true)

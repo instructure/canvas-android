@@ -47,6 +47,7 @@ import android.view.MotionEvent
 import android.webkit.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.FileProvider
@@ -164,7 +165,6 @@ class CanvasWebView @JvmOverloads constructor(
             }
         }
         CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
-        setDarkModeSupport()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -482,8 +482,8 @@ class CanvasWebView @JvmOverloads constructor(
      * @param title
      * @return
      */
-    fun loadHtml(html: String, title: String?): String {
-        val result = formatHtml(html, title)
+    fun loadHtml(html: String, title: String?, backgroundColorRes: Int = R.color.backgroundLightest): String {
+        val result = formatHtml(html, title, backgroundColorRes)
         loadDataWithBaseURL(getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
         return result
     }
@@ -491,7 +491,7 @@ class CanvasWebView @JvmOverloads constructor(
     /**
      * Helper function that makes html content somewhat suitable for mobile
      */
-    fun formatHtml(html: String, title: String? = ""): String {
+    fun formatHtml(html: String, title: String? = "", @ColorRes backgroundColorRes: Int = R.color.backgroundLightest): String {
         var formatted = applyWorkAroundForDoubleSlashesAsUrlSource(html)
         formatted = addProtocolToLinks(formatted)
         formatted = checkForMathTags(formatted)
@@ -500,6 +500,14 @@ class CanvasWebView @JvmOverloads constructor(
         return htmlWrapper
             .replace("{\$CONTENT$}", formatted)
             .replace("{\$TITLE$}", title ?: "")
+            .replace("{\$BACKGROUND$}", colorResToHexString(backgroundColorRes))
+            .replace("{\$COLOR$}", colorResToHexString(R.color.textDarkest))
+            .replace("{\$LINK_COLOR$}", colorResToHexString(R.color.textInfo))
+            .replace("{\$VISITED_LINK_COLOR\$}", colorResToHexString(R.color.textAlert))
+    }
+
+    private fun colorResToHexString(@ColorRes colorRes: Int): String {
+        return "#" + Integer.toHexString(context.getColor(colorRes)).substring(2)
     }
 
     /**

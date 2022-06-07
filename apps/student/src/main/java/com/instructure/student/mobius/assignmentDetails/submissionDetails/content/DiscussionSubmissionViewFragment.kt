@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
@@ -57,6 +58,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         progressBar.announceForAccessibility(getString(R.string.loading))
+        discussionSubmissionWebView.setDarkModeSupport()
         discussionSubmissionWebView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)

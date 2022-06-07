@@ -35,7 +35,7 @@
     <com.instructure.pandautils.views.CanvasWebView
         android:id="@+id/canvasWebView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbarStyle="outsideOverlay"
         android:layout_below="@id/toolbar"
         android:layout_marginTop="8dp"

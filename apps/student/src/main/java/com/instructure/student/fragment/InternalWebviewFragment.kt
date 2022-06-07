@@ -103,6 +103,7 @@ open class InternalWebviewFragment : ParentFragment() {
             originalUserAgentString = canvasWebView.settings.userAgentString
             canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
+            canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
             webViewLoading?.setVisible(true)
 
             canvasWebView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
@@ -323,13 +324,6 @@ open class InternalWebviewFragment : ParentFragment() {
         }
     }
 
-    // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-    fun loadHtml(html: String) {
-        canvasWebView?.loadDataWithBaseURL(ApiPrefs.fullDomain,
-                FileUtils.getAssetsFile(requireContext(), "html_wrapper.html").replace("{\$CONTENT$}", html, ignoreCase = false),
-                "text/html", "UTF-8", null)
-    }
-
     fun loadHtml(data: String, mimeType: String, encoding: String, historyUrl: String?) {
         // BaseURL is set as Referer. Referer needed for some vimeo videos to play
         canvasWebView?.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
@@ -337,7 +331,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
     fun loadUrl(targetUrl: String?) {
         if (!html.isNullOrBlank()) {
-            loadHtml(html!!)
+            canvasWebView?.loadHtml(html!!, title ?: "")
             return
         }
 

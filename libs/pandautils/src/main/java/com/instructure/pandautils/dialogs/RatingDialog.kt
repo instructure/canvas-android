@@ -109,9 +109,15 @@ class RatingDialog : DialogFragment() {
         }
 
         val starClickListener = View.OnClickListener { v ->
-            stars.forEach { it.setImageResource(R.drawable.ic_star) }
+            stars.forEach {
+                it.setImageResource(R.drawable.ic_star)
+                it.setColorFilter(requireContext().getColor(R.color.backgroundMedium))
+            }
             val selectionIndex = stars.indexOf(v)
-            stars.take(selectionIndex + 1).forEach { it.setImageResource(R.drawable.ic_star_default_color) }
+            stars.take(selectionIndex + 1).forEach {
+                it.setImageResource(R.drawable.ic_star)
+                it.setColorFilter(requireContext().getColor(R.color.backgroundDark))
+            }
             val isFiveStars = selectionIndex >= 4
             comments.setVisible(!isFiveStars)
             send.setVisible(!isFiveStars)
