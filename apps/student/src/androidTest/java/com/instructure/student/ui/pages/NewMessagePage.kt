@@ -135,7 +135,7 @@ class NewMessagePage : BasePage() {
                 .typeText(messageText)
     }
 
-    fun hitSend() {
+    fun clickSend() {
         Espresso.closeSoftKeyboard()
         sendButton.click()
     }

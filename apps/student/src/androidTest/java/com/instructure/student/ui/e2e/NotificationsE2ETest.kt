@@ -38,6 +38,7 @@ import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class NotificationsE2ETest : StudentTest() {
@@ -58,7 +59,7 @@ class NotificationsE2ETest : StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seed an assignment.")
+        Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course.")
         val testAssignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
@@ -70,7 +71,7 @@ class NotificationsE2ETest : StudentTest() {
             )
         )
 
-        Log.d(PREPARATION_TAG,"Seed a published quiz with some questions")
+        Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course with some questions.")
         val quizQuestions = listOf(
             QuizQuestion(
                 questionText = "What's your favorite color?",
@@ -134,7 +135,7 @@ class NotificationsE2ETest : StudentTest() {
         )
 
         Log.d(STEP_TAG,"Refresh the Notifications Page. Assert that there is a notification about the submission grading appearing.")
-        Thread.sleep(5000) //Let the submission api do it's job
+        sleep(5000) //Let the submission api do it's job
         refresh()
         notificationPage.assertHasGrade(testAssignment.name,"13")
     }

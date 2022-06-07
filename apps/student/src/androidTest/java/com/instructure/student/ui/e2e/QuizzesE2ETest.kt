@@ -42,6 +42,7 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -52,6 +53,10 @@ import org.junit.Test
 class QuizzesE2ETest: StudentTest() {
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
     }
 
     // Fairly basic test of webview-based quizzes.  Seeds/takes a quiz with two multiple-choice
@@ -65,13 +70,13 @@ class QuizzesE2ETest: StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E, true)
     fun testQuizzesE2E() {
 
-        // Seed basic data
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Seed an unpublished quiz
+        Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course.")
         val quizUnpublished = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
                 courseId = course.id,
                 withDescription = true,
@@ -79,7 +84,7 @@ class QuizzesE2ETest: StudentTest() {
                 token = teacher.token
         ))
 
-        // Seed a published quiz with some questions
+        Log.d(PREPARATION_TAG,"Seed another quiz for ${course.name} with some questions.")
         val quizQuestions = listOf(
                 QuizQuestion(
                         questionText = "What's your favorite color?",
@@ -110,25 +115,30 @@ class QuizzesE2ETest: StudentTest() {
 //                        answers = listOf()
 //                )
         )
+
+        Log.d(PREPARATION_TAG,"Publish the previously seeded quiz.")
         val quizPublished = createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
 
-        // Sign in our user and navigate to our course
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
         dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Select ${course.name} course.")
         dashboardPage.selectCourse(course)
 
-        // Verify that quiz info shows up in Quizzes tab
+        Log.d(STEP_TAG,"Navigate to Quizzes Page. Assert that ${quizPublished.title} published quiz is displayed and ${quizUnpublished.title} unpublished quiz has not displayed.")
         courseBrowserPage.selectQuizzes()
         quizListPage.assertQuizDisplayed(quizPublished)
         quizListPage.assertQuizNotDisplayed(quizUnpublished)
 
-        // Verify that the quiz title is displayed, launch quiz
+        Log.d(STEP_TAG,"Select ${quizPublished.title} quiz. Assert that the ${quizPublished.title} quiz title is displayed.")
         quizListPage.selectQuiz(quizPublished)
         canvasWebViewPage.runTextChecks(
                 WebViewTextCheck(locatorType = Locator.ID, locatorValue = "quiz_title", textValue = quizPublished.title)
         )
 
+        // Launch the quiz
         // Pressing the "Take the Quiz" button does not work on an FTL Api 25 device.
         // Not even the logic below, which tries 10 times to press the button!
         // Every time the button is pressed on an FTL device, we get this console message:
@@ -184,14 +194,17 @@ class QuizzesE2ETest: StudentTest() {
         }
 
         // Enter answers to questions.  Right now, only multiple-choice questions are supported.
+        Log.d(STEP_TAG,"Enter answers to the questions:")
         for(question in quizQuestions) {
+            Log.d(STEP_TAG,"Assert that the following question is displayed: ${question.questionText}.")
             quizTakingPage.verifyQuestionDisplayed(question.id!!, question.questionText!!)
             if(question.questionType == "multiple_choice_question") {
+                Log.d(STEP_TAG,"Choosing an answer for the following question: ${question.questionText}.")
                 quizTakingPage.selectAnyAnswer(question.id!!) // Just choose any answer
             }
         }
 
-        // Submit the quiz
+        Log.d(STEP_TAG,"Submit the ${quizPublished.title} quiz.")
         quizTakingPage.submitQuiz()
 
         // Interesting situation here.  If you wait long enough, the web page will update itself,
@@ -201,10 +214,13 @@ class QuizzesE2ETest: StudentTest() {
         //
         // Chosen strategy: pressBack() until you get to the quiz list page,
         // then reload the quiz details to get the latest info.
+        Log.d(STEP_TAG,"Navigate back to Quizzes Page.")
         while(!isElementDisplayed(R.id.quizListPage)) pressBack()
+
+        Log.d(STEP_TAG,"Select ${quizPublished.title} quiz.")
         quizListPage.selectQuiz(quizPublished)
 
-        // Assert that the quiz now has a history.
+        Log.d(STEP_TAG,"Assert (on web) that the ${quizPublished.title} quiz now has a history.")
         onWebView(withId(R.id.canvasWebView))
                 .withElement(findElement(Locator.ID, "quiz-submission-version-table"))
                 .withContextualElement(findElement(Locator.CLASS_NAME, "desc"))
@@ -215,14 +231,14 @@ class QuizzesE2ETest: StudentTest() {
                 .perform(webScrollIntoView())
                 .check(webMatches(getText(),containsString("LATEST")))
 
+        Log.d(STEP_TAG,"Navigate back to Course Browser Page.")
+        ViewUtils.pressBackButton(2)
 
-        pressBack() // Back to get to quiz list page
-        pressBack() // Back to course browser page
-
-        // Go to grades page
+        Log.d(STEP_TAG,"Navigate to Grades Page.")
         courseBrowserPage.selectGrades()
         // For some reason, this quiz is resulting in a 10/10 grade, although with the weights assigned and
         // answers given it should be 5/10.  Let's just make sure that a "10" shows up.
+        Log.d(STEP_TAG,"Assert that the corresponding grade (10) is displayed for ${quizPublished.title} quiz.")
         courseGradesPage.assertGradeDisplayed(withText(quizPublished.title), containsTextCaseInsensitive("10"))
 
     }

@@ -167,6 +167,5 @@ class DiscussionsE2ETest: StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertReplyCount(newTopicName, 1)
 
-
     }
 }
