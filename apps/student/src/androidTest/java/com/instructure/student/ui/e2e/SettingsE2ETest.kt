@@ -63,7 +63,7 @@ class SettingsE2ETest : StudentTest() {
         legalPage.assertPageObjects()
     }
 
-    // The remote config settings page only available on debug builds.
+    //The remote config settings page only available on debug builds.
     @E2E
     @Test
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SETTINGS, TestCategory.E2E)
