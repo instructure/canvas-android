@@ -149,7 +149,7 @@ class FilesE2ETest: TeacherTest() {
         dashboardPage.gotoGlobalFiles()
 
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
-        fileListPage.assertItemDisplayed("unfiled")
+        fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
 
         Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")

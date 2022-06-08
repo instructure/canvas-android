@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.e2e
 
+import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -44,18 +45,22 @@ class ModulesE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.E2E, false)
     fun testModulesE2E() {
 
-        // Seed basic data
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Create some assignments, quizzes, pages, etc...
+        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
         val assignment1 = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 withDescription = true,
@@ -64,6 +69,7 @@ class ModulesE2ETest: StudentTest() {
                 dueAt = 1.days.fromNow.iso8601
         ))
 
+        Log.d(PREPARATION_TAG,"Seeding another assignment for ${course.name} course.")
         val assignment2 = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 withDescription = true,
@@ -72,6 +78,7 @@ class ModulesE2ETest: StudentTest() {
                 dueAt = 2.days.fromNow.iso8601
         ))
 
+        Log.d(PREPARATION_TAG,"Create a PUBLISHED quiz for ${course.name} course.")
         val quiz1 = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
                 courseId = course.id,
                 withDescription = true,
@@ -80,6 +87,7 @@ class ModulesE2ETest: StudentTest() {
                 published = true
         ))
 
+        Log.d(PREPARATION_TAG,"Create a page for ${course.name} course.")
         val page1 = PagesApi.createCoursePage(
                 courseId = course.id,
                 published = true,
@@ -87,23 +95,26 @@ class ModulesE2ETest: StudentTest() {
                 token = teacher.token
         )
 
+        Log.d(PREPARATION_TAG,"Create a discussion topic for ${course.name} course.")
         val discussionTopic1 = DiscussionTopicsApi.createDiscussion(
                 courseId = course.id,
                 token = teacher.token
         )
 
-        // Create a couple of modules.  They start out as unpublished.
+        //Modules start out as unpublished.
+        Log.d(PREPARATION_TAG,"Create a module for ${course.name} course.")
         val module1 = ModulesApi.createModule(
                 courseId = course.id,
                 teacherToken = teacher.token,
                 unlockAt = null)
 
+        Log.d(PREPARATION_TAG,"Create another module for ${course.name} course.")
         val module2 = ModulesApi.createModule(
                 courseId = course.id,
                 teacherToken = teacher.token,
                 unlockAt = null)
 
-        // Associate items with module 1
+        Log.d(PREPARATION_TAG,"Associate ${assignment1.name} assignment with ${module1.name} module.")
         ModulesApi.createModuleItem(
                 courseId = course.id,
                 moduleId = module1.id,
@@ -113,6 +124,7 @@ class ModulesE2ETest: StudentTest() {
                 contentId = assignment1.id.toString()
         )
 
+        Log.d(PREPARATION_TAG,"Associate ${quiz1.title} quiz with ${module1.name} module.")
         ModulesApi.createModuleItem(
                 courseId = course.id,
                 moduleId = module1.id,
@@ -122,7 +134,7 @@ class ModulesE2ETest: StudentTest() {
                 contentId = quiz1.id.toString()
         )
 
-        // Associated items with module 2
+        Log.d(PREPARATION_TAG,"Associate ${assignment2.name} assignment with ${module2.name} module.")
         ModulesApi.createModuleItem(
                 courseId = course.id,
                 moduleId = module2.id,
@@ -132,6 +144,7 @@ class ModulesE2ETest: StudentTest() {
                 contentId = assignment2.id.toString()
         )
 
+        Log.d(PREPARATION_TAG,"Associate ${page1.title} page with ${module2.name} module.")
         ModulesApi.createModuleItem(
                 courseId = course.id,
                 moduleId = module2.id,
@@ -142,6 +155,7 @@ class ModulesE2ETest: StudentTest() {
                 pageUrl = page1.url // Only necessary for Page item
         )
 
+        Log.d(PREPARATION_TAG,"Associate ${discussionTopic1.title} discussion topic with ${module2.name} module.")
         ModulesApi.createModuleItem(
                 courseId = course.id,
                 moduleId = module2.id,
@@ -151,26 +165,36 @@ class ModulesE2ETest: StudentTest() {
                 contentId = discussionTopic1.id.toString()
         )
 
-        // Sign in and navigate to our course
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
         tokenLogin(student)
         dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Assert that ${course.name} course is displayed.")
         dashboardPage.assertDisplaysCourse(course)
+
+        Log.d(STEP_TAG,"Select ${course.name} course.")
         dashboardPage.selectCourse(course)
 
-        // Assert that no modules are present, since none are published
+        Log.d(STEP_TAG,"Assert that there are no modules displayed yet because there are not published. Assert that the 'Modules' Tab is not displayed as well.")
         courseBrowserPage.assertTitleCorrect(course)
         courseBrowserPage.assertTabNotDisplayed("Modules")
+
+        Log.d(STEP_TAG,"Click on 'Home' label and assert that the empty view is displayed on the Modules Page.")
         courseBrowserPage.selectHome()
         modulesPage.assertEmptyView()
-        Espresso.pressBack() // Back to course browser view
 
-        // Let's publish our modules
+        Log.d(STEP_TAG,"Navigate back to Course Browser Page.")
+        Espresso.pressBack()
+
+        Log.d(PREPARATION_TAG,"Publish ${module1.name} module.")
         ModulesApi.updateModule(
                 courseId = course.id,
                 id = module1.id,
                 published = true,
                 teacherToken = teacher.token
         )
+
+        Log.d(PREPARATION_TAG,"Publish ${module2.name} module.")
         ModulesApi.updateModule(
                 courseId = course.id,
                 id = module2.id,
@@ -178,19 +202,20 @@ class ModulesE2ETest: StudentTest() {
                 teacherToken = teacher.token
         )
 
-        // Refresh our screen to get updated tabs
+        Log.d(STEP_TAG,"Refresh the page. Assert that the 'Modules' Tab is displayed.")
         courseBrowserPage.refresh()
-
-        // Now see that the Modules tab is displayed
         courseBrowserPage.assertTabDisplayed("Modules")
 
-        // Go to modules
+        Log.d(STEP_TAG,"Navigate to Modules Page.")
         courseBrowserPage.selectModules()
 
-        // Verify that both modules are displayed, along with their items
+        Log.d(STEP_TAG,"Assert that ${module1.name} module is displayed with the following items: ${assignment1.name} assignment, ${quiz1.title} quiz.")
         modulesPage.assertModuleDisplayed(module1)
         modulesPage.assertModuleItemDisplayed(module1, assignment1.name)
         modulesPage.assertModuleItemDisplayed(module1, quiz1.title)
+
+        Log.d(STEP_TAG,"Assert that ${module2.name} module is displayed with the following items: ${assignment2.name} assignment," +
+                " ${page1.title} page, ${discussionTopic1.title} discussion topic.")
         modulesPage.assertModuleDisplayed(module2)
         modulesPage.assertModuleItemDisplayed(module2, assignment2.name)
         modulesPage.assertModuleItemDisplayed(module2, page1.title)

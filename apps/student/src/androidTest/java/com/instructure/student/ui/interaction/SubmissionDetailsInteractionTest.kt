@@ -112,7 +112,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
         sleep(1000) // Allow some time for the submission to propagate
-        assignmentDetailsPage.verifyAssignmentSubmitted()
+        assignmentDetailsPage.assertAssignmentSubmitted()
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")

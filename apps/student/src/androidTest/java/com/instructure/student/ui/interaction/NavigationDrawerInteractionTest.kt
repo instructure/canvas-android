@@ -118,7 +118,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
         signInStudent()
 
-        dashboardPage.signOut()
+        dashboardPage.logOut()
         loginLandingPage.assertPageObjects()
     }
 

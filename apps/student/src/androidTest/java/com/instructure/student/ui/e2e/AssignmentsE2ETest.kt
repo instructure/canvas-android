@@ -17,6 +17,7 @@
 package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
+import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
@@ -45,7 +46,7 @@ class AssignmentsE2ETest: StudentTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() {
-        //We dont want to see accessibility errors on E2E tests
+        //We don't want to see accessibility errors on E2E tests
     }
 
     @Rule
@@ -59,11 +60,14 @@ class AssignmentsE2ETest: StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPointsGradeTextAssignmentE2E() {
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
         val pointsTextAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
@@ -73,22 +77,21 @@ class AssignmentsE2ETest: StudentTest() {
                 dueAt = 1.days.fromNow.iso8601
         ))
 
-        // Sign in with lone student
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
-
-        // Go into our course
         dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Select course: ${course.name}.")
         dashboardPage.selectCourse(course)
 
-        // Select the assignments tab
+        Log.d(STEP_TAG,"Navigate to course Assignments Page.")
         courseBrowserPage.selectAssignments()
 
-        // Verify that our assignments are present, along with any grade/date info
+        Log.d(STEP_TAG,"Verify that our assignments are present, along with any grade/date info. Click on assignment ${pointsTextAssignment.name}.")
         assignmentListPage.assertHasAssignment(pointsTextAssignment)
-
-        // Let's submit a text assignment
         assignmentListPage.clickAssignment(pointsTextAssignment)
 
+        Log.d(PREPARATION_TAG,"Submit assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
         SubmissionsApi.submitCourseAssignment(
                 submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
                 courseId = course.id,
@@ -97,9 +100,11 @@ class AssignmentsE2ETest: StudentTest() {
                 fileIds = emptyList<Long>().toMutableList()
         )
 
+        Log.d(STEP_TAG,"Refresh the page, and assert that the assignment ${pointsTextAssignment.name} has been submitted successfully.")
         assignmentDetailsPage.refresh()
-        assignmentDetailsPage.verifyAssignmentSubmitted()
+        assignmentDetailsPage.assertAssignmentSubmitted()
 
+        Log.d(PREPARATION_TAG,"Grade submission: ${pointsTextAssignment.name} with 13 points.")
         val textGrade = SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
@@ -109,11 +114,12 @@ class AssignmentsE2ETest: StudentTest() {
                 excused = false
         )
 
+        Log.d(STEP_TAG,"Refresh the page. Assert that the assignment ${pointsTextAssignment.name} has been graded with 13 points.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.verifyAssignmentGraded("13")
-        // Back to assignment list page
-        Espresso.pressBack()
 
+        Log.d(STEP_TAG,"Navigate back to Assignments Page and assert that the assignment ${pointsTextAssignment.name} can be seen there with the corresponding grade.")
+        Espresso.pressBack()
         assignmentListPage.refresh()
         assignmentListPage.assertHasAssignment(pointsTextAssignment, textGrade.grade)
 
@@ -123,12 +129,14 @@ class AssignmentsE2ETest: StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testLetterGradeTextAssignmentE2E() {
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Pre-seed a submission and a grade for the letter grade text assignment
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
         val letterGradeTextAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
@@ -136,6 +144,8 @@ class AssignmentsE2ETest: StudentTest() {
                 teacherToken = teacher.token,
                 pointsPossible = 20.0
         ))
+
+        Log.d(PREPARATION_TAG,"Submit assignment: ${letterGradeTextAssignment.name} for student: ${student.name}.")
         SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
                 assignmentId = letterGradeTextAssignment.id,
                 courseId = course.id,
@@ -146,6 +156,7 @@ class AssignmentsE2ETest: StudentTest() {
                 ))
         ))
 
+        Log.d(PREPARATION_TAG,"Grade submission: ${letterGradeTextAssignment.name} with 13 points.")
         val submissionGrade = SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
@@ -154,17 +165,16 @@ class AssignmentsE2ETest: StudentTest() {
                 postedGrade = "16",
                 excused = false
         )
-        // Sign in with lone student
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
-
-        // Go into our course
         dashboardPage.waitForRender()
-        dashboardPage.selectCourse(course)
 
-        // Select the assignments tab
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
 
-        // Verify that our assignments are present, along with any grade/date info
+        Log.d(STEP_TAG,"Assert that ${letterGradeTextAssignment.name} assignment is displayed with the corresponding grade: ${submissionGrade.grade}.")
         assignmentListPage.assertHasAssignment(letterGradeTextAssignment, submissionGrade.grade)
 
     }
@@ -173,11 +183,14 @@ class AssignmentsE2ETest: StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPercentageFileAssignmentWithCommentE2E() {
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
+        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
         val percentageFileAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
@@ -187,20 +200,23 @@ class AssignmentsE2ETest: StudentTest() {
                 allowedExtensions = listOf("txt", "pdf", "jpg")
         ))
 
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
-
-        // Go into our course
         dashboardPage.waitForRender()
-        dashboardPage.selectCourse(course)
 
-        // Select the assignments tab
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
 
-        // Verify that our assignments are present, along with any grade/date info
+        Log.d(STEP_TAG,"Assert that ${percentageFileAssignment.name} assignment is displayed.")
         assignmentListPage.assertHasAssignment(percentageFileAssignment)
 
-        // Upload a text file for submission
+        Log.d(STEP_TAG,"Select assignment: ${percentageFileAssignment.name}.")
+
+        Log.d(STEP_TAG,"Click on ${percentageFileAssignment.name} assignment.")
         assignmentListPage.clickAssignment(percentageFileAssignment)
+
+        Log.d(PREPARATION_TAG, "Seed a text file.")
         val uploadInfo = uploadTextFile(
                 courseId = course.id,
                 assignmentId = percentageFileAssignment.id,
@@ -208,7 +224,7 @@ class AssignmentsE2ETest: StudentTest() {
                 fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
         )
 
-        // Submit the assignment
+        Log.d(PREPARATION_TAG,"Submit ${percentageFileAssignment.name} assignment for ${student.name} student.")
         SubmissionsApi.submitCourseAssignment(
                 submissionType = SubmissionType.ONLINE_UPLOAD,
                 courseId = course.id,
@@ -217,11 +233,11 @@ class AssignmentsE2ETest: StudentTest() {
                 studentToken = student.token
         )
 
-        // Verify that assignment has been submitted
+        Log.d(STEP_TAG,"Refresh the page. Assert that the ${percentageFileAssignment.name} assignment has been submitted.")
         assignmentDetailsPage.refresh()
-        assignmentDetailsPage.verifyAssignmentSubmitted()
+        assignmentDetailsPage.assertAssignmentSubmitted()
 
-        // Grade the assignment
+        Log.d(PREPARATION_TAG,"Grade ${percentageFileAssignment.name} assignment with 22 percentage.")
         SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
@@ -231,36 +247,41 @@ class AssignmentsE2ETest: StudentTest() {
                 excused = false
         )
 
-        // Verify that the assignment has been graded
+        Log.d(STEP_TAG,"Refresh the page. Assert that the ${percentageFileAssignment.name} assignment has been graded with 22 percentage.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.verifyAssignmentGraded("22")
 
-        // Let's make sure that comments are working
+
+        Log.d(STEP_TAG,"Navigate to submission details Comments Tab.")
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
+
+        Log.d(STEP_TAG,"Assert that ${uploadInfo.fileName} file has been displayed as a comment.")
         submissionDetailsPage.assertCommentDisplayed(
                 uploadInfo.fileName,
                 student)
 
-        // Add a comment, make sure it shows up in the stream
-        submissionDetailsPage.addAndSendComment("My comment!!")
+        val newComment = "My comment!!"
+        Log.d(STEP_TAG,"Add a new comment ($newComment) and send it.")
+        submissionDetailsPage.addAndSendComment(newComment)
         sleep(2000) // Give the comment time to propagate
-        submissionDetailsPage.assertCommentDisplayed(
-                "My comment!!",
-                student
-        )
+
+        Log.d(STEP_TAG,"Assert that $newComment is displayed.")
+        submissionDetailsPage.assertCommentDisplayed(newComment, student)
     }
 
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testMultipleAssignmentsE2E() {
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Pre-seed submissions and grade for letter grade assignment and points text assignment
+        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
         val letterGradeTextAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
@@ -269,6 +290,7 @@ class AssignmentsE2ETest: StudentTest() {
                 pointsPossible = 20.0
         ))
 
+        Log.d(PREPARATION_TAG,"Submit ${letterGradeTextAssignment.name} assignment for ${student.name} student.")
         SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
                 assignmentId = letterGradeTextAssignment.id,
                 courseId = course.id,
@@ -279,6 +301,7 @@ class AssignmentsE2ETest: StudentTest() {
                 ))
         ))
 
+        Log.d(PREPARATION_TAG,"Grade ${letterGradeTextAssignment.name} assignment with 16.")
         SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
@@ -288,6 +311,7 @@ class AssignmentsE2ETest: StudentTest() {
                 excused = false
         )
 
+        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
         val pointsTextAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
@@ -297,6 +321,7 @@ class AssignmentsE2ETest: StudentTest() {
                 dueAt = 1.days.fromNow.iso8601
         ))
 
+        Log.d(PREPARATION_TAG,"Submit ${pointsTextAssignment.name} assignment for ${student.name} student.")
         SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
                 assignmentId = pointsTextAssignment.id,
                 courseId = course.id,
@@ -307,6 +332,7 @@ class AssignmentsE2ETest: StudentTest() {
                 ))
         ))
 
+        Log.d(PREPARATION_TAG,"Grade ${pointsTextAssignment.name} assignment with 13 points.")
         SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
@@ -316,18 +342,18 @@ class AssignmentsE2ETest: StudentTest() {
                 excused = false
         )
 
-        // Sign in with lone student
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
-
-        // Go into our course
         dashboardPage.waitForRender()
-        dashboardPage.selectCourse(course)
 
-        // Select the assignments tab
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
 
-        // Verify that our assignments are present, along with any grade/date info
+        Log.d(STEP_TAG,"Assert that ${pointsTextAssignment.name} assignment is displayed with the corresponding grade: 13.")
         assignmentListPage.assertHasAssignment(pointsTextAssignment,"13")
+
+        Log.d(STEP_TAG,"Assert that ${letterGradeTextAssignment.name} assignment is displayed with the corresponding grade: 16.")
         assignmentListPage.assertHasAssignment(letterGradeTextAssignment, "16")
     }
 
@@ -335,13 +361,14 @@ class AssignmentsE2ETest: StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
     fun testMediaCommentsE2E() {
-        // Seed basic student/teacher/course data
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Seed an assignment and a submission
+        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
         val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
@@ -351,7 +378,8 @@ class AssignmentsE2ETest: StudentTest() {
                 dueAt = 1.days.fromNow.iso8601
         ))
 
-        val submission = SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
+        Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
+        SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
                 assignmentId = assignment.id,
                 courseId = course.id,
                 studentToken = student.token,
@@ -361,20 +389,18 @@ class AssignmentsE2ETest: StudentTest() {
                 ))
         ))
 
-        // Sign in with lone student
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
-
-        // Go into our course
         dashboardPage.waitForRender()
-        dashboardPage.selectCourse(course)
 
-        // Select the assignments tab
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
 
-        // Select our assignment
+        Log.d(STEP_TAG,"Click on ${assignment.name} assignment.")
         assignmentListPage.clickAssignment(assignment)
 
-        // Open the submission details and the comments tab
+        Log.d(STEP_TAG,"Navigate to submission details Comments Tab.")
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
 
@@ -386,9 +412,11 @@ class AssignmentsE2ETest: StudentTest() {
         //sleep(3000) // wait for video comment submission to propagate
         //submissionDetailsPage.assertVideoCommentDisplayed()
 
-        // send audio comment
+        Log.d(STEP_TAG,"Send an audio comment.")
         submissionDetailsPage.addAndSendAudioComment()
-        sleep(3000) // wait for audio comment submission to propagate
+        sleep(3000) // Wait for audio comment submission to propagate
+
+        Log.d(STEP_TAG,"Assert that the audio comment has been displayed.")
         submissionDetailsPage.assertAudioCommentDisplayed()
     }
 }

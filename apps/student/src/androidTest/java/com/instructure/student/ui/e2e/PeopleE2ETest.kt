@@ -24,6 +24,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -39,7 +40,7 @@ class PeopleE2ETest : StudentTest() {
     }
 
     override fun enableAndConfigureAccessibilityChecks() {
-        //Intentionally empty, because we don't check accessibility in E2E tests.
+        //We don't want to see accessibility errors on E2E tests
     }
 
     @E2E
@@ -68,7 +69,6 @@ class PeopleE2ETest : StudentTest() {
         peopleListPage.assertPersonListed(student2)
         peopleListPage.assertPeopleCount(5) //2 for Teachers and Students sections, 1 for teacher user and 2 for student users.
 
-
         Log.d(STEP_TAG,"Collapse student list and assert that the students are not displayed, but the teacher user is displayed.")
         peopleListPage.clickOnStudentsExpandCollapseButton()
         peopleListPage.assertPersonListed(teacher)
@@ -87,16 +87,14 @@ class PeopleE2ETest : StudentTest() {
         newMessagePage.populateMessage(course,student2,"Yo!", "Hello from a fellow student", recipientPopulated = true)
 
         Log.d(STEP_TAG,"Send the message and assert if we are landing on the Person Details Page.")
-        newMessagePage.hitSend()
+        newMessagePage.clickSend()
         personDetailsPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Navigate back to the Dashboard (Course List) Page.")
-        Espresso.pressBack()
-        Espresso.pressBack()
-        Espresso.pressBack()
+        ViewUtils.pressBackButton(3)
 
         Log.d(STEP_TAG,"Sign out with ${student1.name} student.")
-        dashboardPage.signOut()
+        dashboardPage.logOut()
 
         Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId} , password: ${student2.password}")
         tokenLogin(student2)

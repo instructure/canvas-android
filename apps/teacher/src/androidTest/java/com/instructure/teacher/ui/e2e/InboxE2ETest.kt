@@ -36,7 +36,7 @@ class InboxE2ETest : TeacherTest() {
 
         val groupCategory = GroupsApi.createCourseGroupCategory(course.id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
-        Log.d(PREPARATION_TAG, "Create group membership for ${student.name} to the group: ${group.name}.")
+        Log.d(PREPARATION_TAG, "Create group membership for ${student.name} student to the group: ${group.name}.")
         GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
@@ -48,7 +48,7 @@ class InboxE2ETest : TeacherTest() {
         dashboardPage.openInbox()
         inboxPage.assertInboxEmpty()
 
-        Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API..")
+        Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API.")
         val seedConversation = ConversationsApi.createConversation(
             token = student.token,
             recipients = listOf(teacher.id.toString())
@@ -97,6 +97,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.clickAddMessageFAB()
 
         Log.d(STEP_TAG,"Select ${course.name} from course spinner.")
+        //TODO: Extract this message creation process into a function.
         addMessagePage.clickCourseSpinner()
         addMessagePage.selectCourseFromSpinner(course.name)
 
@@ -106,7 +107,6 @@ class InboxE2ETest : TeacherTest() {
         chooseRecipientsPage.clickStudent(student1)
         chooseRecipientsPage.clickStudent(student2)
         chooseRecipientsPage.clickDone()
-
 
         val subject = "Hello there"
         Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject.")

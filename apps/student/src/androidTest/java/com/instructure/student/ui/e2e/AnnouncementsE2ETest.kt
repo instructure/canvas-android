@@ -32,9 +32,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.lang.Thread.sleep
 
-private const val STEP_TAG = "AnnouncementsE2ETest #STEP# "
-private const val PREPARATION_TAG = "AnnouncementsE2ETest #PREPARATION# "
-
 @HiltAndroidTest
 class AnnouncementsE2ETest : StudentTest() {
     override fun displaysPageObjects() = Unit

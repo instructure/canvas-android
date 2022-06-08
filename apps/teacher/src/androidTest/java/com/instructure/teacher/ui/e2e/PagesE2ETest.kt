@@ -91,6 +91,7 @@ class PagesE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Open ${frontPage.title} page. Assert that it is really a front (published) page via web view assertions.")
         pageListPage.openPage(frontPage.title)
         editPageDetailsPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))
+
         Log.d(STEP_TAG,"Navigate back to Pages page.")
         Espresso.pressBack()
 

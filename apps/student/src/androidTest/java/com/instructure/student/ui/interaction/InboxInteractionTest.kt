@@ -46,7 +46,7 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setRecipient(data.teachers.first(), userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
-        newMessagePage.hitSend()
+        newMessagePage.clickSend()
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.assertConversationDisplayed(subject)
     }
@@ -64,7 +64,7 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setRecipients(data.teachers, userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
-        newMessagePage.hitSend()
+        newMessagePage.clickSend()
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.assertConversationDisplayed(subject)
     }
@@ -84,7 +84,7 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.selectAllRecipients(listOf("Teachers", "Students"))
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
-        newMessagePage.hitSend()
+        newMessagePage.clickSend()
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.assertConversationDisplayed(subject)
     }
@@ -103,7 +103,7 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setRecipient(teacher1, userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage(message)
-        newMessagePage.hitSend()
+        newMessagePage.clickSend()
         // Now let's append the attachment after-the-fact, since it is very hard
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
@@ -132,7 +132,7 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setRecipients(data.teachers, userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
-        newMessagePage.hitSend()
+        newMessagePage.clickSend()
         // Now let's append the attachment after-the-fact, since it is very hard
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
@@ -161,7 +161,7 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.selectAllRecipients(listOf("Teachers", "Students"))
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
-        newMessagePage.hitSend()
+        newMessagePage.clickSend()
         // Now let's append the attachment after-the-fact, since it is very hard
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
@@ -303,7 +303,7 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setRecipientGroup(userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
-        newMessagePage.hitSend()
+        newMessagePage.clickSend()
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.assertConversationDisplayed(subject)
     }
@@ -333,7 +333,7 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.setRecipient(teacher1, userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
-        newMessagePage.hitSend()
+        newMessagePage.clickSend()
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.assertConversationDisplayed(subject)
     }
