@@ -94,7 +94,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             Tab.STUDENT_VIEW,
             Tab.SYLLABUS_ID -> true
             else -> {
-                if (attendanceId != 0L && tab.tabId.endsWith(attendanceId.toString())) {
+                if (attendanceId != 0L && tab.tabId.endsWith("_$attendanceId")) {
                     TeacherPrefs.attendanceExternalToolId = tab.tabId
                 }
                 tab.type == Tab.TYPE_EXTERNAL
