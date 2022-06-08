@@ -77,7 +77,7 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertDisplaysGroup(group, data.coursesList[0])
 
         Log.d(STEP_TAG,"Assert that there is an unread e-mail so we have the number '1' on the Inbox bottom-menu icon as a badge.")
-        dashboardPage.assertUnreadEmails(1)  // Not reliable :-(
+        dashboardPage.assertUnreadEmails(1)
     }
 
 }
