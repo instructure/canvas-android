@@ -48,7 +48,7 @@ class EmptyPandaWidget extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 20, fontWeight: FontWeight.normal),
           ),
         if (title != null && subtitle != null) SizedBox(height: 8),
         if (subtitle != null)
