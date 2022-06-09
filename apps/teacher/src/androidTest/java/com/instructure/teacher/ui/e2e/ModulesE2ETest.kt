@@ -3,6 +3,7 @@ package com.instructure.teacher.ui.e2e
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.*
 import com.instructure.dataseeding.model.ModuleItemTypes
 import com.instructure.dataseeding.model.SubmissionType
@@ -20,7 +21,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class ModulesE2ETest : TeacherTest() {
+class   ModulesE2ETest : TeacherTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() {
@@ -36,6 +37,18 @@ class ModulesE2ETest : TeacherTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
+
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+        dashboardPage.assertDisplaysCourse(course)
+
+        Log.d(STEP_TAG,"Open ${course.name} course and navigate to Modules Page.")
+        dashboardPage.openCourse(course.name)
+        courseBrowserPage.openModulesTab()
+
+        Log.d(STEP_TAG,"Assert that empty view is displayed because there is no Module within the course.")
+        modulesPage.assertEmptyView()
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
         val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
@@ -80,16 +93,8 @@ class ModulesE2ETest : TeacherTest() {
                 contentId = quiz.id.toString()
         )
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
-        tokenLogin(teacher)
-        dashboardPage.waitForRender()
-        dashboardPage.assertDisplaysCourse(course)
-
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to 'Modules' Page.")
-        dashboardPage.openCourse(course.name)
-        courseBrowserPage.openModulesTab()
-
-        Log.d(STEP_TAG,"Assert that ${module.name} module is displayed and it is unpublished by default.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that ${module.name} module is displayed and it is unpublished by default.")
+        modulesPage.refresh()
         modulesPage.assertModuleIsPresent(module.name)
         modulesPage.assertModuleIsUnpublished()
 
@@ -111,28 +116,4 @@ class ModulesE2ETest : TeacherTest() {
         modulesPage.assertModuleItemIsPresent(quiz.title)
     }
 
-    @E2E
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.E2E)
-    fun testModulesEmptyE2E() {
-
-        Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
-        tokenLogin(teacher)
-        dashboardPage.waitForRender()
-        dashboardPage.assertDisplaysCourse(course)
-
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to 'Modules' Page.")
-        dashboardPage.openCourse(course.name)
-        courseBrowserPage.openModulesTab()
-
-        Log.d(STEP_TAG,"Assert that empty view is displayed because there is no Module within the course. Navigate back to Course Browser Page and assert it is displayed.")
-        modulesPage.assertEmptyView()
-        Espresso.pressBack()
-        courseBrowserPage.assertCourseBrowserPageDisplayed()
-    }
 }
