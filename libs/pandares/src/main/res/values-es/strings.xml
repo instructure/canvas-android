@@ -1241,4 +1241,18 @@
     <string name="toolbarCommentLibrary">Biblioteca de comentarios</string>
     <string name="commentLibraryNoSuggestions">No hay sugerencias disponibles</string>
     <string name="speedGraderCommentHint">Comentario</string>
+    <string name="a11y_schedule_marked_as_done">%s marcado como realizado</string>
+    <string name="a11y_error_occured">Se ha producido un error; inténtelo de nuevo.</string>
+    <string name="a11y_content_description_accept_invite">Aceptar invitación</string>
+    <string name="a11y_content_description_decline_invite">Rechazar invitación</string>
+    <string name="no_notifications_to_show">No hay notificaciones para mostrar.</string>
+
+    <string name="documentScanningTitle">Escaneo de documentos</string>
+    <string name="filter_name_color">Color</string>
+    <string name="filter_name_grayscale">Escala de grises</string>
+    <string name="filter_name_monochrome">Monocromático</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Su dispositivo no posee ninguna aplicación que le permita abrir este enlace.</string>
+    <string name="anonymousDiscussionNotSupported">Los foros de discusión anónimos no son actualmente compatibles con dispositivos móviles. Abrir en el navegador para ver el foro de discusión.</string>
+    <string name="discussionOpenInBrowser">Abrir en el navegador.</string>
 </resources>

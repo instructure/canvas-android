@@ -57,7 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/importantLinksTitle"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:layout_marginStart="16dp"

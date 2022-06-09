@@ -68,7 +68,7 @@
         android:contentDescription="@string/edit"
         android:padding="11dp"
         android:scaleType="fitCenter"
-        android:tint="@color/canvasTextDark"
+        android:tint="@color/textDarkest"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_edit"
         tools:visibility="visible" />

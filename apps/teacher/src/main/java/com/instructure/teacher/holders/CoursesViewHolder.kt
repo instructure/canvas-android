@@ -41,7 +41,6 @@ class CoursesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         courseCode.text = course.courseCode
 
         val courseColor = ColorKeeper.getOrGenerateColor(course)
-        cardView.setCardBackgroundColor(courseColor)
         titleTextView.setTextColor(courseColor)
 
         courseImageView.setCourseImage(course, courseColor, !TeacherPrefs.hideCourseColorOverlay)

@@ -20,6 +20,8 @@
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.elementary.importantdates.ImportantDatesViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -51,7 +53,7 @@
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="16dp"
                         android:text="@string/important_dates"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -64,6 +66,7 @@
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:paddingBottom="8dp"
+                        android:visibility="@{viewModel.data.itemViewModels.empty ? View.GONE : View.VISIBLE}"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:recyclerViewItemViewModels="@{viewModel.data.itemViewModels}" />
                 </LinearLayout>

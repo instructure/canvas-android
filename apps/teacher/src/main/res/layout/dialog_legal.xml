@@ -25,7 +25,8 @@
     android:orientation="vertical"
     android:paddingBottom="22dp"
     android:paddingStart="24dp"
-    android:paddingTop="18dp">
+    android:paddingTop="18dp"
+    android:id="@+id/legalPage">
 
     <LinearLayout
         android:id="@+id/privacyPolicy"
@@ -50,7 +51,7 @@
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
             android:text="@string/privacyPolicy"
-            android:textColor="@color/defaultPrimary"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -78,7 +79,7 @@
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
             android:text="@string/termsOfUse"
-            android:textColor="@color/defaultPrimary"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -106,7 +107,7 @@
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
             android:text="@string/canvasOnGithub"
-            android:textColor="@color/defaultPrimary"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp" />
 
     </LinearLayout>

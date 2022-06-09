@@ -65,7 +65,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="4dp"
-                android:textColor="@color/white"
+                android:textColor="@color/textLightest"
                 android:textStyle="bold"
                 tools:text="100%"/>
 

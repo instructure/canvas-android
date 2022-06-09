@@ -54,6 +54,7 @@
                 android:buttonTint="@color/schedule_checkbox_color_selector"
                 android:checked="@{itemViewModel.completed}"
                 android:onCheckedChanged="@{(checkbox, checked) -> itemViewModel.markAsDone.invoke(itemViewModel, checked)}"
+                app:accessibleTouchTarget="@{true}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -63,7 +64,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="8dp"
-                android:tint="@color/canvasTextDark"
+                android:tint="@color/textDarkest"
                 app:imageRes="@{itemViewModel.data.type.iconRes}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/checkbox"
@@ -87,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{itemViewModel.data.title}"
-                    android:textColor="@color/canvasTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="17sp"
                     tools:text="Causes of the Revolutionary War I." />
 
@@ -95,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/schedule_marked_as_done"
-                    android:textColorHighlight="@color/textLightGray"
+                    android:textColorHighlight="@color/textDark"
                     android:textSize="12sp"
                     android:visibility="@{itemViewModel.completed ? View.VISIBLE : View.GONE}" />
 
@@ -123,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:text="@{String.valueOf(itemViewModel.data.points)}"
-                    android:textColor="@color/canvasTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     android:visibility="@{itemViewModel.data.points != null ? View.VISIBLE : View.GONE}"
@@ -155,6 +156,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/lightGray" />
+            android:background="@color/backgroundMedium" />
     </LinearLayout>
 </layout>

@@ -60,7 +60,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(withId(R.id.assignmentName)).assertHasText(assignmentName)
     }
 
-    fun verifyAssignmentSubmitted() {
+    fun assertAssignmentSubmitted() {
         onView(withText(R.string.submissionStatusSuccessTitle)).scrollTo().assertDisplayed()
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()
     }
@@ -105,10 +105,11 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun scrollToAssignmentDescription() {
+        Thread.sleep(3000)
         waitForMatcherWithSleeps(withId(R.id.descriptionWebView), waitMs = 30000, sleepMs = 1000).scrollTo()
     }
 
-    fun bookmark(bookmarkName: String) {
+    fun addBookmark(bookmarkName: String) {
         Espresso.onView(
                 allOf(
                         ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),

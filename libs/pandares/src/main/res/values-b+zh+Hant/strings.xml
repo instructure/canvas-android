@@ -1227,4 +1227,18 @@
     <string name="toolbarCommentLibrary">評論檔案庫</string>
     <string name="commentLibraryNoSuggestions">沒有提供建議</string>
     <string name="speedGraderCommentHint">評論</string>
+    <string name="a11y_schedule_marked_as_done">%s 標記為已完成</string>
+    <string name="a11y_error_occured">發生錯誤，請重試。</string>
+    <string name="a11y_content_description_accept_invite">接受邀請</string>
+    <string name="a11y_content_description_decline_invite">拒絕邀請</string>
+    <string name="no_notifications_to_show">沒有要顯示的通知</string>
+
+    <string name="documentScanningTitle">文件掃描</string>
+    <string name="filter_name_color">顏色</string>
+    <string name="filter_name_grayscale">灰階</string>
+    <string name="filter_name_monochrome">單色</string>
+    <string name="filter_name_original">原始</string>
+    <string name="noCompatibleAppInstalled">您的裝置沒有安裝可開啟此連結的任何應用程式。</string>
+    <string name="anonymousDiscussionNotSupported">流動電話目前不支援匿名討論區。在瀏覽器中打開以檢視討論區。</string>
+    <string name="discussionOpenInBrowser">在瀏覽器中打開</string>
 </resources>

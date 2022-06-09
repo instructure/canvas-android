@@ -63,7 +63,7 @@
             android:scaleType="fitCenter"
             android:layout_gravity="center"
             app:srcCompat="@drawable/ic_overflow_white_18dp"
-            android:tint="@color/gray"
+            android:tint="@color/textDark"
             android:importantForAccessibility="no"/>
 
     </FrameLayout>

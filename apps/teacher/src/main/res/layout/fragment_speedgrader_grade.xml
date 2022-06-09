@@ -33,7 +33,7 @@
             android:gravity="center"
             android:padding="32dp"
             android:text="@string/moderatedGradingUnsupported"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="16sp"
             android:visibility="gone" />
 
@@ -76,7 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:focusable="true"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:textSize="14sp"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +105,7 @@
                     android:layout_toStartOf="@id/hiddenIcon"
                     android:contentDescription="@string/customize_grade"
                     android:focusable="true"
-                    android:tint="@color/defaultActionColor"
+                    android:tint="@color/textInfo"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/hiddenIcon"
@@ -137,7 +137,7 @@
                     android:layout_alignParentEnd="true"
                     android:contentDescription="@string/customize_grade"
                     android:focusable="true"
-                    android:tint="@color/defaultActionColor"
+                    android:tint="@color/textInfo"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -236,7 +236,7 @@
             android:layout_width="match_parent"
             android:layout_height=".5dp"
             android:layout_marginTop="8dp"
-            android:background="@color/defaultTrackColor"
+            android:background="@color/backgroundMedium"
             tools:layout_height="1dp" />
 
         <com.instructure.teacher.view.edit_rubric.RubricEditView

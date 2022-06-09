@@ -22,7 +22,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/editProfileSettingsPage">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -58,10 +59,10 @@
                 android:layout_below="@+id/profileBanner"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-84dp"
-                app:civ_border_color="@color/white"
+                app:civ_border_color="@color/borderLightest"
                 app:civ_border_overlay="true"
                 app:civ_border_width="4dp"
-                app:civ_circle_background_color="@color/white" />
+                app:civ_circle_background_color="@color/backgroundLightest" />
 
             <FrameLayout
                 android:id="@+id/profileCameraIconWrapper"
@@ -103,7 +104,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/name"
-                android:textColor="@color/defaultTextGray" />
+                android:textColor="@color/textDark" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/usersName"
@@ -115,7 +116,7 @@
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
                 android:maxLines="2"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 android:textSize="16sp"
                 android:inputType="textCapWords"
                 tools:text="Mountain Man Trevor"/>

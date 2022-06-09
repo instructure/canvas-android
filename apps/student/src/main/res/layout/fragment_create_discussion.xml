@@ -59,7 +59,7 @@
                 android:layout_marginStart="10dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/title"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <TextView
@@ -77,7 +77,7 @@
                     android:minHeight="48dp"
                     android:hint="@string/title"
                     android:maxLines="2"
-                    android:textColorHint="@color/defaultTextGray"
+                    android:textColorHint="@color/textDark"
                     android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -90,7 +90,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/utils_description"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:focusable="true" />
 
             <instructure.rceditor.RCETextEditorView
@@ -123,7 +123,7 @@
                 android:layout_marginTop="20dp"
                 android:importantForAccessibility="yes"
                 android:text="@string/options"
-                android:textColor="@color/defaultTextGray" />
+                android:textColor="@color/textDark" />
 
             <RelativeLayout
                 android:id="@+id/threadedWrapper"
@@ -154,7 +154,7 @@
                     android:maxWidth="48dp"
                     android:minHeight="48dp"
                     android:padding="2dp"
-                    app:backgroundTint="@color/canvasDefaultPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 
@@ -187,7 +187,7 @@
                     android:maxWidth="48dp"
                     android:minHeight="48dp"
                     android:padding="2dp"
-                    app:backgroundTint="@color/canvasDefaultPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 
@@ -216,7 +216,7 @@
                     android:layout_height="18dp"
                     android:layout_marginEnd="11dp"
                     android:importantForAccessibility="no"
-                    android:tint="@color/destructive"
+                    android:tint="@color/textDanger"
                     app:srcCompat="@drawable/ic_trash" />
 
                 <TextView
@@ -226,7 +226,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/deleteImage"
                     android:text="@string/utils_discussionsDelete"
-                    android:textColor="@color/destructive"
+                    android:textColor="@color/textDanger"
                     android:textSize="16sp"
                     android:importantForAccessibility="yes"/>
 

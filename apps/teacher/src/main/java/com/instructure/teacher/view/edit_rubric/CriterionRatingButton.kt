@@ -70,7 +70,7 @@ class CriterionRatingButton @JvmOverloads constructor(
     /** The 'add' icon to draw when [mIsCustom] is true */
     private val mAddDrawable by lazy {
         context.getDrawableCompat(R.drawable.ic_add).apply {
-            setColorFilter(context.getColorCompat(R.color.defaultTextGray), PorterDuff.Mode.SRC_ATOP)
+            setColorFilter(context.getColorCompat(R.color.textDark), PorterDuff.Mode.SRC_ATOP)
             val offset = (height - context.DP(20).toInt()) / 2
             setBounds(offset, offset, width - offset, height - offset)
         }
@@ -120,7 +120,7 @@ class CriterionRatingButton @JvmOverloads constructor(
         if (!isInEditMode) setTextColor(ViewStyler.generateColorStateList(
                 intArrayOf(android.R.attr.state_selected) to Color.WHITE,
                 intArrayOf(android.R.attr.state_pressed) to ThemePrefs.brandColor,
-                intArrayOf() to context.getColorCompat(R.color.defaultTextGray)
+                intArrayOf() to context.getColorCompat(R.color.textDark)
         ))
     }
 
@@ -170,8 +170,8 @@ class CriterionRatingButton @JvmOverloads constructor(
         val pressedState = context.getDrawableCompat(R.drawable.bg_criterion_button_unselected)
         val defaultState = context.getDrawableCompat(R.drawable.bg_criterion_button_unselected)
         if (isInEditMode) {
-            selectedState.setColorFilter(context.getColorCompat(R.color.canvasDefaultPrimary), PorterDuff.Mode.SRC_ATOP)
-            pressedState.setColorFilter(context.getColorCompat(R.color.canvasDefaultPrimary), PorterDuff.Mode.SRC_ATOP)
+            selectedState.setColorFilter(context.getColorCompat(R.color.backgroundDarkest), PorterDuff.Mode.SRC_ATOP)
+            pressedState.setColorFilter(context.getColorCompat(R.color.backgroundDarkest), PorterDuff.Mode.SRC_ATOP)
         } else {
             selectedState.setColorFilter(ThemePrefs.brandColor, PorterDuff.Mode.SRC_ATOP)
             pressedState.setColorFilter(ThemePrefs.brandColor, PorterDuff.Mode.SRC_ATOP)

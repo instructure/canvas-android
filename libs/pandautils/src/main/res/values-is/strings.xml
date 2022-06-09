@@ -50,6 +50,7 @@
     <string name="fromCamera">Myndavél</string>
     <string name="fromGallery">Gallerí</string>
     <string name="fromDevice">Tæki</string>
+    <string name="fromDocumentScanning">Skanni</string>
     <string name="fromOtherApplication">Annað</string>
     <string name="Domain">Lén</string>
     <string name="files">Skrár</string>
@@ -480,7 +481,6 @@
     <string name="a11y_page">Síða</string>
     <string name="a11y_marked_as_done">Merkt sem lokið</string>
     <string name="a11y_not_marked_as_done">Ekki merkt sem lokið</string>
-    <string name="a11y_mark_as_done">Merkja sem lokið</string>
-    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Æi! Villa átti sér stað við að hlaða inn námskeiðsupplýsingum.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s merkt sem ólokið</string>
 </resources>

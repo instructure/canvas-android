@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/zdc_top_bar_height"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white">
+        android:background="@color/bottomBarBackground">
 
         <ImageView
             android:id="@+id/closeButton"
@@ -31,6 +31,7 @@
             android:padding="@dimen/zdc_x_small_padding"
             android:layout_marginStart="@dimen/zdc_medium_padding"
             android:layout_centerVertical="true"
+            android:tint="@color/bottomBarIcons"
             android:src="@drawable/iconclose"/>
 
         <ImageView
@@ -42,6 +43,7 @@
             android:layout_marginStart="@dimen/zdc_xxx_big_padding"
             android:padding="@dimen/zdc_x_small_padding"
             android:src="@drawable/zdc_magic_wand_icon"
+            android:tint="@color/bottomBarIcons"
             android:visibility="visible" />
 
         <ImageView
@@ -53,6 +55,7 @@
             android:padding="@dimen/zdc_xx_small_padding"
             android:layout_toStartOf="@+id/confirmButton"
             android:src="@drawable/zdc_rotation_icon"
+            android:tint="@color/bottomBarIcons"
             android:visibility="visible" />
 
         <ImageView
@@ -63,6 +66,7 @@
             android:padding="@dimen/zdc_xx_small_padding"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/zdc_medium_padding"
+            android:tint="@color/bottomBarIcons"
             android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>

@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/noConnection"
-        android:textColor="@color/defaultTextGray"
+        android:textColor="@color/textDark"
         android:textSize="16sp"
         android:visibility="gone"/>
 

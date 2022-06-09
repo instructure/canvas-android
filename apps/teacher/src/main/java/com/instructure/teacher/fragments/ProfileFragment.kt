@@ -64,7 +64,7 @@ class ProfileFragment : BaseFragment() {
         toolbar.setupMenu(R.menu.menu_settings_edit, menuItemCallback)
         toolbar.setupBackButtonAsBackPressedOnly(this)
         titleTextView.adoptToolbarStyle(toolbar)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         toolbar.requestAccessibilityFocus()
     }
 
@@ -73,7 +73,7 @@ class ProfileFragment : BaseFragment() {
 
         if(ProfileUtils.shouldLoadAltAvatarImage(user?.avatarUrl)) {
             val initials = ProfileUtils.getUserInitials(user?.shortName ?: "")
-            val color = requireContext().getColorCompat(R.color.canvasDefaultTabUnselected)
+            val color = requireContext().getColorCompat(R.color.backgroundDark)
             val drawable = TextDrawable.builder()
                     .beginConfig()
                     .height(requireContext().resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
@@ -83,7 +83,7 @@ class ProfileFragment : BaseFragment() {
                     .textColor(color)
                     .endConfig()
                     .buildRound(initials, Color.WHITE)
-            usersAvatar.borderColor = requireContext().getColorCompat(R.color.canvasDefaultTabUnselected)
+            usersAvatar.borderColor = requireContext().getColorCompat(R.color.borderDark)
             usersAvatar.borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6F, requireContext().resources.displayMetrics).toInt()
             usersAvatar.setImageDrawable(drawable)
         } else {

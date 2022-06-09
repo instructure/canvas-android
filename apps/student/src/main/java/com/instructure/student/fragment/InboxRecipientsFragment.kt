@@ -15,7 +15,6 @@
  */
 package com.instructure.student.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,7 +45,7 @@ class InboxRecipientsFragment : ParentFragment() {
 
     override fun applyTheme() {
         (view?.findViewById<View>(R.id.menu_done) as? TextView)?.setTextColor(ThemePrefs.buttonColor)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     private val adapter: InboxRecipientAdapter by lazy {

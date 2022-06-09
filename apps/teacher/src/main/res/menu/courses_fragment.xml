@@ -16,6 +16,13 @@
   -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_dashboard_cards"
+        android:title="@string/dashboardSwitchToListView"
+        android:icon="@drawable/ic_list_dashboard"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/menu_edit_favorite_courses"
         android:title="@string/edit_favorite_courses"

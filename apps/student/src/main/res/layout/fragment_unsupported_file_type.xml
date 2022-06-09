@@ -48,7 +48,7 @@
                 android:layout_height="64dp"
                 android:importantForAccessibility="no"
                 android:scaleType="fitCenter"
-                android:tint="@color/defaultThumbColor"
+                android:tint="@color/textLight"
                 app:srcCompat="@drawable/ic_canvas_logo_red"/>
 
             <TextView
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="24dp"
-                android:textColor="#2D3B45"
+                android:textColor="@color/textDarkest"
                 android:textSize="20sp"
                 tools:text="sample_file_name.png"
                 android:focusable="true"
@@ -72,7 +72,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="@string/utils_unsupportedFileMessage"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="12sp"
                 android:focusable="true"
                 android:importantForAccessibility="yes"/>

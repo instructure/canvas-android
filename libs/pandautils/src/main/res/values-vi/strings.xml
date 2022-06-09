@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Chọn Nội Dung Phương Tiện</string>
     <string name="takeVideo">Quay Video</string>
     <string name="noCameraOnDevice">Không Có Camera</string>
@@ -49,6 +50,7 @@
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Thư Viện</string>
     <string name="fromDevice">Thiết Bị</string>
+    <string name="fromDocumentScanning">Trình Quét</string>
     <string name="fromOtherApplication">Khác</string>
     <string name="Domain">Tên Miền</string>
     <string name="files">Các Tập Tin</string>
@@ -328,7 +330,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Ngày mở khóa không được sau ngày đến hạn</string>
     <string name="utils_lockBeforeDueDateError">Ngày khóa không được trước ngày đến hạn</string>
     <string name="utils_lockAfterUnlockError">Ngày khóa không được trước ngày mở khóa</string>
@@ -426,7 +427,7 @@
     <string name="searchDiscussionsHint">Tìm Kiếm Thảo Luận</string>
     <string name="searchPagesHint">Tìm Kiếm Trang</string>
     <string name="searchQuizzesHint">Tìm Kiếm Các Câu Hỏi Kiểm Tra</string>
-    <string name="noItemsMatchingQuery">Không có mục khớp \\"%s\\"</string>
+    <string name="noItemsMatchingQuery">Không có mục khớp \"%s\"</string>
 
     <string name="selected">Đã Chọn</string>
 
@@ -480,8 +481,7 @@
     <string name="a11y_page">Trang</string>
     <string name="a11y_marked_as_done">Được đánh dấu là đã xong</string>
     <string name="a11y_not_marked_as_done">Không được đánh dấu là đã xong</string>
-    <string name="a11y_mark_as_done">Đánh dấu là đã xong</string>
-    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Rất tiếc! Đã xảy ra lỗi khi tải thông tin chi tiết khóa học.</string>
 
+    <string name="a11y_schedule_marked_as_not_done">%s không được đánh dấu là đã xong</string>
 </resources>

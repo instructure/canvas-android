@@ -19,8 +19,10 @@ package com.instructure.student.ui.pages
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -30,9 +32,14 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -63,6 +70,10 @@ class PeopleListPage: BasePage(R.id.peopleListPage) {
         onView(matcher).assertDisplayed()
     }
 
+    fun assertPeopleCount(count: Int) {
+        onView(withId(R.id.listView) + withAncestor(R.id.peopleListPage)).check(ViewAssertions.matches(hasChildCount(count)))
+    }
+
     fun assertPersonListed(person: User)
     {
         val matcher = allOf(withText(person.name), withId(R.id.title))
@@ -87,6 +98,15 @@ class PeopleListPage: BasePage(R.id.peopleListPage) {
     private fun scrollToMatch(matcher: Matcher<View>) {
         onView(allOf(withId(R.id.listView), isDisplayed(), withAncestor(R.id.peopleListPage)))
                 .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(matcher)))
+    }
+
+    fun clickOnStudentsExpandCollapseButton() {
+        val matcher = allOf(
+            withId(R.id.expand_collapse),
+            ViewMatchers.isDescendantOfA(
+                allOf(withId(R.id.rootView),
+                    hasDescendant(withText(R.string.students)))))
+        onView(matcher).click()
     }
 
 }

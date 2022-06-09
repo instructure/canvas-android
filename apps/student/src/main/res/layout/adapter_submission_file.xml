@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_pdf"
-            android:tint="@color/canvasDefaultPrimary"/>
+            android:tint="@color/textDarkest"/>
 
         <ImageView
             android:id="@+id/thumbnail"
@@ -56,7 +56,7 @@
         android:layout_marginStart="32dp"
         android:layout_weight="1"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp"
         tools:text="screenshot Jan 1, 2031.jpg"/>
 
@@ -66,6 +66,6 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/selected"
         android:src="@drawable/ic_check_white_24dp"
-        tools:tint="@color/canvasDefaultAccent"/>
+        tools:tint="@color/backgroundInfo"/>
 
 </LinearLayout>

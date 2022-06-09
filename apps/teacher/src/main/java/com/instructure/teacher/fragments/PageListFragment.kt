@@ -158,7 +158,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), pageListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), pageListToolbar, mCourseColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews() {

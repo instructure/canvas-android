@@ -24,7 +24,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
 
 class TeacherPushExternalReceiver : PushExternalReceiver() {
-    override fun getAppColor(): Int = R.color.gray
+    override fun getAppColor(): Int = R.color.login_teacherAppTheme
 
     override fun getAppName(context: Context): String = context.getString(R.string.app_name)
 

@@ -50,6 +50,7 @@
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleri</string>
     <string name="fromDevice">Enhed</string>
+    <string name="fromDocumentScanning">Scanner</string>
     <string name="fromOtherApplication">Anden</string>
     <string name="Domain">Domæne</string>
     <string name="files">Filer</string>
@@ -480,7 +481,6 @@
     <string name="a11y_page">Side</string>
     <string name="a11y_marked_as_done">Markeret som færdig</string>
     <string name="a11y_not_marked_as_done">Ikke markeret som færdig</string>
-    <string name="a11y_mark_as_done">Marker som færdig</string>
-    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Åh ååh! Der opstod en fejl ved forsøg på at indlæse fagdetaljer.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s markeret som ikke færdig</string>
 </resources>

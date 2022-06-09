@@ -48,7 +48,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:src="@{itemViewModel.favorite ? @drawable/ic_star_filled : @drawable/ic_star_outline}"
-                android:tint="@color/canvasDefaultAccent"
+                android:tint="@color/textInfo"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
                 android:text="@{itemViewModel.name}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="17sp"
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
                 app:layout_constraintStart_toEndOf="@id/favoriteButton"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
                 android:text="@{itemViewModel.subtitle}"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="15sp"
                 android:visibility="@{itemViewModel.subtitle == null ? View.GONE : View.VISIBLE}"
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
@@ -87,7 +87,7 @@
                 android:importantForAccessibility="no"
                 android:text="@{itemViewModel.termTitle}"
                 android:textAllCaps="true"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="12sp"
                 android:visibility="@{itemViewModel.termTitle == null ? View.GONE : View.VISIBLE}"
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
@@ -111,6 +111,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/dividerColor" />
+            android:background="@color/backgroundMedium" />
     </RelativeLayout>
 </layout>

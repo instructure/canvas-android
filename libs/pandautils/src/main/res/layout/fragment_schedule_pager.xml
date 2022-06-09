@@ -48,7 +48,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/lightGray"
+                android:background="@color/backgroundMedium"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -64,8 +64,9 @@
                 android:minHeight="48dp"
                 android:onClick="@{() -> viewModel.onPreviousWeekClick()}"
                 android:text="@string/previous_week"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"
+                app:drawableTint="@color/textDarkest"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -83,8 +84,9 @@
                 android:minHeight="48dp"
                 android:onClick="@{() -> viewModel.onNextWeekClick()}"
                 android:text="@string/next_week"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"
+                app:drawableTint="@color/textDarkest"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

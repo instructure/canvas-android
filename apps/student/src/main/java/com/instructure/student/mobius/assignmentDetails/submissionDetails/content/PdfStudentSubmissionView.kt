@@ -176,7 +176,14 @@ class PdfStudentSubmissionView(
 
     @SuppressLint("CommitTransaction")
     override fun setFragment(fragment: Fragment) {
-        if (isAttachedToWindow) supportFragmentManager.beginTransaction().replace(content.id, fragment).commitNowAllowingStateLoss()
+        if (isAttachedToWindow) supportFragmentManager.beginTransaction().replace(R.id.content, fragment).commitNowAllowingStateLoss()
+    }
+
+    override fun removeContentFragment() {
+        val contentFragment = supportFragmentManager.findFragmentById(R.id.content)
+        if (contentFragment != null) {
+            supportFragmentManager.beginTransaction().remove(contentFragment).commitAllowingStateLoss()
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

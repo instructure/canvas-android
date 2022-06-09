@@ -60,10 +60,10 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             || ModuleItem.Type.ChooseAssignmentGroup.toString().equals(moduleItem.type, ignoreCase = true)
         ) {
             title.setTypeface(null, Typeface.ITALIC)
-            title.setTextColor(ContextCompat.getColor(context, R.color.secondaryText))
+            title.setTextColor(ContextCompat.getColor(context, R.color.textDark))
         } else {
             title.setTypeface(null, Typeface.NORMAL)
-            title.setTextColor(ContextCompat.getColor(context, R.color.primaryText))
+            title.setTextColor(ContextCompat.getColor(context, R.color.textDarkest))
         }
 
         // Description
@@ -71,7 +71,7 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val requirement = moduleItem.completionRequirement!!
             val complete = requirement.completed
             description.setVisible()
-            description.setTextColor(ContextCompat.getColor(context, R.color.canvasTextMedium))
+            description.setTextColor(ContextCompat.getColor(context, R.color.textDark))
             val text: String? = when (ModuleObject.State.values().firstOrNull { it.apiString == requirement.type }) {
                 ModuleObject.State.MustSubmit -> {
                     if (complete) description.setTextColor(courseColor)

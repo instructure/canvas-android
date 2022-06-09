@@ -1,5 +1,6 @@
 package com.instructure.student.ui.e2e
 
+import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.Stub
 import com.instructure.panda_annotations.FeatureCategory
@@ -19,6 +20,10 @@ class ConferencesE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     // Fairly basic test that we can create and view a conference with the app.
     // I didn't attempt to actually start the conference because that goes through
     // an external web browser and would be really gross (if not impossible) to
@@ -30,31 +35,28 @@ class ConferencesE2ETest: StudentTest() {
     @Stub
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.CONFERENCES, TestCategory.E2E, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CONFERENCES, TestCategory.E2E, true)
     fun testConferencesE2E() {
 
-        // Seed basic student/teacher/course data
+        Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
-        val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Sign the student in
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        // Navigate to course conferences
+        Log.d(STEP_TAG,"Navigate to ${course.name} course's Conferences Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectConferences()
 
-        // Some values to use/track
         val title = "Awesome Conference!"
         var description = "Awesome! Spectacular! Mind-blowing!"
-
-        // Create a conference
+        Log.d(STEP_TAG,"Create a new conference with $title title and $description description.")
         ConferencesPage.createConference(title, description)
 
-        // Verify that your created conference is now displayed.
+        Log.d(STEP_TAG,"Assert that the previously created conference is displayed with $title title and $description description.")
         ConferencesPage.assertConferenceTitlePresent(title)
         ConferencesPage.assertConferenceDescriptionPresent(description)
     }

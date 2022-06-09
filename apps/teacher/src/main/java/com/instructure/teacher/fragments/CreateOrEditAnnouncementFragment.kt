@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
@@ -155,7 +154,7 @@ class CreateOrEditAnnouncementFragment :
             }
         }
 
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
 
         if (presenter.isEditing) with(mSaveMenuButton) {
@@ -209,7 +208,7 @@ class CreateOrEditAnnouncementFragment :
             )
         }
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        announcementRCEView.setLabel(announcementDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        announcementRCEView.setLabel(announcementDescLabel, R.color.textDarkest, R.color.textDark)
     }
 
     private fun setupDeleteButton() {

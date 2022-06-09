@@ -29,6 +29,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -52,6 +53,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -120,23 +122,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         true
     }
 
-    private val navigationColorStateList: ColorStateList
-        get() {
-            val states = arrayOf(
-                intArrayOf(android.R.attr.state_checked),
-                intArrayOf(-android.R.attr.state_checked),
-                intArrayOf(android.R.attr.state_selected)
-            )
-
-            val colors = intArrayOf(
-                ThemePrefs.brandColor,
-                getColorCompat(R.color.bottomBarUnselectedItemColor),
-                getColorCompat(R.color.bottomBarUnselectedItemColor)
-            )
-
-            return ColorStateList(states, colors)
-        }
-
     private lateinit var checkListener: CompoundButton.OnCheckedChangeListener
 
     private val isDrawerOpen: Boolean
@@ -161,6 +146,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, InitActivity::class.java)
+            finish()
         }
 
         setContentView(R.layout.activity_init)
@@ -175,6 +161,12 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         RatingDialog.showRatingDialog(this, com.instructure.pandautils.utils.AppType.TEACHER)
 
         updateManager.checkForInAppUpdate(this)
+
+        if (!ThemePrefs.themeSelectionShown) {
+            val themeSelector = ThemeSelectorBottomSheet()
+            themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
+            ThemePrefs.themeSelectionShown = true
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -193,9 +185,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     override fun onReadySetGo(presenter: InitActivityPresenter) {
-        val colorStateList = navigationColorStateList
-        bottomBar.itemTextColor = colorStateList
-        bottomBar.itemIconTintList = colorStateList
+        bottomBar.applyTheme(ThemePrefs.brandColor, getColor(R.color.textDarkest))
         bottomBar.setOnNavigationItemSelectedListener(mTabSelectedListener)
         fakeToolbar.setBackgroundColor(ThemePrefs.primaryColor)
         when (selectedTab) {
@@ -303,7 +293,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         setupUserDetails(ApiPrefs.user)
 
-        ViewStyler.themeToolbar(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
 
         navigationDrawerItem_startMasquerading.setVisible(!ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true)
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)
@@ -353,7 +343,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
             if (ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
                 val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = getColorCompat(R.color.avatarGray)
+                val color = getColorCompat(R.color.textDark)
                 val drawable = TextDrawable.builder()
                     .beginConfig()
                     .height(resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
@@ -400,7 +390,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 // No badge, we need to create one
                 val badge = LayoutInflater.from(this).inflate(R.layout.unread_count, bottomBar, false) as TextView
                 badge.text = todoCountDisplay
-                ColorUtils.colorIt(getColorCompat(R.color.defaultActionColor), badge.background)
+                ColorUtils.colorIt(getColorCompat(R.color.textInfo), badge.background)
                 view.addView(badge)
             }
         } else {

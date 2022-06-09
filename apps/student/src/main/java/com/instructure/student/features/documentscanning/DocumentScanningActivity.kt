@@ -23,6 +23,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
 import com.instructure.student.databinding.ActivityDocumentScanningBinding
 import com.zynksoftware.documentscanner.ScanActivity
@@ -96,6 +97,7 @@ class DocumentScanningActivity : ScanActivity() {
             setTitle(R.string.documentScanningTitle)
             navigationIcon = ContextCompat.getDrawable(this@DocumentScanningActivity, R.drawable.ic_back_arrow)
             navigationIcon?.isAutoMirrored = true
+            ViewStyler.themeToolbarLight(this@DocumentScanningActivity, this)
             setNavigationContentDescription(R.string.close)
             setNavigationOnClickListener { onClose() }
         }

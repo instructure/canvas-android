@@ -1227,4 +1227,18 @@
     <string name="toolbarCommentLibrary">コメントライブラリ</string>
     <string name="commentLibraryNoSuggestions">示唆されている利用可能なものなし</string>
     <string name="speedGraderCommentHint">コメント</string>
+    <string name="a11y_schedule_marked_as_done">%sは完了とマーク</string>
+    <string name="a11y_error_occured">エラーが起こりました。再試行してください。</string>
+    <string name="a11y_content_description_accept_invite">招待を受ける</string>
+    <string name="a11y_content_description_decline_invite">招待を辞退する</string>
+    <string name="no_notifications_to_show">表示する通知がありません</string>
+
+    <string name="documentScanningTitle">ドキュメントのスキャン</string>
+    <string name="filter_name_color">カラー</string>
+    <string name="filter_name_grayscale">グレースケール</string>
+    <string name="filter_name_monochrome">モノクロ</string>
+    <string name="filter_name_original">元</string>
+    <string name="noCompatibleAppInstalled">お使いのデバイスには、このリンクを開けるアプリケーションがインストールされていません。</string>
+    <string name="anonymousDiscussionNotSupported">匿名ダイアログは現在モバイルではサポートされていません。ディスカッションを見るには、ブラウザで開いてください。</string>
+    <string name="discussionOpenInBrowser">ブラウザで開く</string>
 </resources>

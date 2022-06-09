@@ -80,24 +80,6 @@ class CourseBrowserPage : BasePage() {
         courseSettingsMenuButton.click()
     }
 
-    /**
-     * Taken from https://stackoverflow.com/questions/37736616/espresso-how-to-find-a-specific-item-in-a-recycler-view-order-is-random
-     *
-     * This allows us to match a specific view with specific text in a specific RecyclerView.Holder
-     */
-    fun withTitle(title: String): Matcher<RecyclerView.ViewHolder> =
-            object: BoundedMatcher<RecyclerView.ViewHolder, CourseBrowserViewHolder>(CourseBrowserViewHolder::class.java) {
-                override fun matchesSafely(item: CourseBrowserViewHolder?): Boolean {
-                    return item?.let {
-                        it.labelText.text.toString().equals(title, true)
-                    } ?: false
-                }
-
-                override fun describeTo(description: Description?) {
-                    description?.appendText("view holder with title: " + title)
-                }
-            }
-
     fun openPagesTab() {
         scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText(R.string.tab_pages).click()
@@ -140,5 +122,9 @@ class CourseBrowserPage : BasePage() {
 
     fun waitForRender() {
         onView(withId(R.id.menu_course_browser_settings)).waitForCheck(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    fun assertCourseTitle(courseTitle: String) {
+        onView(withId(R.id.courseBrowserTitle) + withText(courseTitle)).assertDisplayed()
     }
 }

@@ -21,7 +21,8 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/backgroundLightest"
+    android:foreground="?attr/selectableItemBackground"
     android:minHeight="?android:listPreferredItemHeight">
 
     <FrameLayout
@@ -56,6 +57,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:layout_gravity="center"
+            android:tint="@color/textDarkest"
             app:srcCompat="@drawable/ic_expand"
             android:importantForAccessibility="no"/>
 
@@ -66,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height=".5dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/dividerColor" />
+        android:background="@color/backgroundMedium" />
 
 </RelativeLayout>
 

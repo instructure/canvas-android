@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
@@ -176,7 +175,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         toolbar.setupCloseButton(this)
         toolbar.title = getString(R.string.editQuiz)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveQuiz() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         saveButton?.setTextColor(ThemePrefs.buttonColor)
     }
@@ -309,7 +308,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         setupAccessCodeSwitch()
         setupQuizTypeSpinner()
 
-        ViewStyler.themeInputTextLayout(quizTitleTextInput, requireContext().getColorCompat(R.color.defaultTextGray))
+        ViewStyler.themeInputTextLayout(quizTitleTextInput, requireContext().getColorCompat(R.color.textDark))
         ViewStyler.setToolbarElevation(requireContext(), toolbar, R.dimen.toolbar_elevation_small)
 
         // Description
@@ -342,7 +341,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
 
 
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        descriptionWebView.setLabel(quizDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        descriptionWebView.setLabel(quizDescLabel, R.color.textDarkest, R.color.textDark)
 
         // Dismiss the progress bar
         descriptionProgressBar.setGone()

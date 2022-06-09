@@ -28,13 +28,13 @@
         android:background="?attr/selectableItemBackground"
         android:drawableStart="@drawable/ic_audio"
         android:drawablePadding="18dp"
-        android:drawableTint="@color/defaultTextDark"
+        android:drawableTint="@color/textDarkest"
         android:paddingStart="18dp"
         android:paddingTop="14dp"
         android:paddingEnd="18dp"
         android:paddingBottom="14dp"
         android:text="@string/addAudioComment"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp"/>
 
     <TextView
@@ -45,13 +45,13 @@
         android:background="?attr/selectableItemBackground"
         android:drawableStart="@drawable/ic_video"
         android:drawablePadding="18dp"
-        android:drawableTint="@color/defaultTextDark"
+        android:drawableTint="@color/textDarkest"
         android:paddingStart="18dp"
         android:paddingTop="14dp"
         android:paddingEnd="18dp"
         android:paddingBottom="14dp"
         android:text="@string/addVideoComment"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp"/>
 
     <TextView
@@ -62,13 +62,13 @@
         android:background="?attr/selectableItemBackground"
         android:drawableStart="@drawable/ic_files"
         android:drawablePadding="18dp"
-        android:drawableTint="@color/defaultTextDark"
+        android:drawableTint="@color/textDarkest"
         android:paddingStart="18dp"
         android:paddingTop="14dp"
         android:paddingEnd="18dp"
         android:paddingBottom="14dp"
         android:text="@string/addFile"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp"/>
 
 </LinearLayout>

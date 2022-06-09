@@ -94,7 +94,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             Tab.STUDENT_VIEW,
             Tab.SYLLABUS_ID -> true
             else -> {
-                if (attendanceId != 0L && tab.tabId.endsWith(attendanceId.toString())) {
+                if (attendanceId != 0L && tab.tabId.endsWith("_$attendanceId")) {
                     TeacherPrefs.attendanceExternalToolId = tab.tabId
                 }
                 tab.type == Tab.TYPE_EXTERNAL
@@ -173,7 +173,7 @@ class CourseBrowserFragment : BaseSyncFragment<
 
         toolbar.setupBackButton(this)
         toolbar.setupMenu(R.menu.menu_course_browser, menuItemCallback)
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, Color.WHITE)
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, requireContext().getColor(R.color.white))
         ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.color)
 
         collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.color)

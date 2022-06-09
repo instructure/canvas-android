@@ -44,7 +44,7 @@ class UnknownItemFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = streamItem.getTitle(requireContext())?.toString().validOrNull() ?: getString(R.string.message)
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.unknown_item, container, false)

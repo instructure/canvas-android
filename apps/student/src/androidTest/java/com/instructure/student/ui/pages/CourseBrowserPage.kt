@@ -94,7 +94,7 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
     }
 
     fun selectConferences() {
-        val matcher = withText("Conferences")
+        val matcher = withText("BigBlueButton")
         selectSection(matcher)
     }
 

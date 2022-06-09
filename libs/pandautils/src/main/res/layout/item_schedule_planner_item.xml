@@ -38,7 +38,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/lightGray"
+            android:background="@color/backgroundMedium"
             android:paddingStart="1.5dp"
             android:paddingEnd="1.5dp"
             android:importantForAccessibility="no"/>
@@ -68,14 +68,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:importantForAccessibility="yes"
-                android:contentDescription="@{itemViewModel.completed ? @string/a11y_mark_as_done : @string/a11y_mark_as_not_done}"/>
+                android:contentDescription="@{itemViewModel.completed ? @string/a11y_markAsNotDoneWithName(itemViewModel.data.title) : @string/a11y_markAsDoneWithName(itemViewModel.data.title)}"/>
 
             <ImageView
                 android:id="@+id/icon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="8dp"
-                android:tint="@color/canvasTextDark"
+                android:tint="@color/textDarkest"
                 app:imageRes="@{itemViewModel.data.type.iconRes}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/checkbox"
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{itemViewModel.data.title}"
-                    android:textColor="@color/canvasTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="17sp"
                     tools:text="Causes of the Revolutionary War I."
                     android:importantForAccessibility="no"/>
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/schedule_marked_as_done"
-                    android:textColorHighlight="@color/textLightGray"
+                    android:textColorHighlight="@color/textDark"
                     android:textSize="12sp"
                     android:visibility="@{itemViewModel.completed ? View.VISIBLE : View.GONE}"
                     android:importantForAccessibility="no"/>
@@ -139,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:text="@{String.valueOf(itemViewModel.data.points)}"
-                    android:textColor="@color/canvasTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     android:visibility="@{itemViewModel.data.points != null ? View.VISIBLE : View.GONE}"
@@ -150,6 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{itemViewModel.data.dueDate}"
+                    android:textColor="@color/textDark"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/openArrow"
                     app:layout_constraintTop_toBottomOf="@id/points"
@@ -162,6 +163,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_open_arrow"
                 android:visibility="@{itemViewModel.data.openable ? View.VISIBLE : View.INVISIBLE}"
+                android:tint="@color/textDark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

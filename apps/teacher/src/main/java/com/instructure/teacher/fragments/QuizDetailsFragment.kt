@@ -112,7 +112,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         swipeRefreshLayout.isRefreshing = false
         setupViews(quiz)
         setupListeners(quiz)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
 
         fullDateDetailsButton.setVisible(quiz._assignment != null)
     }
@@ -120,7 +120,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -128,7 +128,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         if (!isTablet) {
             toolbar.subtitle = presenter.mCourse.name
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews(quiz: Quiz) = with(quiz) {
@@ -169,14 +169,14 @@ class QuizDetailsFragment : BasePresenterFragment<
         // Publish status
         if (published) {
             publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
-            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.publishedGreen))
+            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textSuccess))
             publishStatusTextView.setText(R.string.published)
-            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.publishedGreen))
+            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textSuccess))
         } else {
             publishStatusIconView.setImageResource(R.drawable.ic_complete)
-            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.defaultTextGray))
+            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textDark))
             publishStatusTextView.setText(R.string.not_published)
-            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.defaultTextGray))
+            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textDark))
         }
 
         // Lock status

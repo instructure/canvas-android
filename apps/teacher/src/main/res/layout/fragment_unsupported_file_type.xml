@@ -47,7 +47,7 @@
                 android:layout_height="64dp"
                 android:importantForAccessibility="no"
                 android:scaleType="fitCenter"
-                android:tint="@color/defaultThumbColor"
+                android:tint="@color/textLight"
                 app:srcCompat="@drawable/ic_canvas_logo" />
 
             <TextView
@@ -60,7 +60,7 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:importantForAccessibility="yes"
-                android:textColor="#2D3B45"
+                android:textColor="@color/textDarkest"
                 android:textSize="20sp"
                 tools:text="sample_file_name.png" />
 
@@ -74,7 +74,7 @@
                 android:gravity="center"
                 android:importantForAccessibility="yes"
                 android:text="@string/unsupportedFileMessage"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="12sp" />
 
             <Button

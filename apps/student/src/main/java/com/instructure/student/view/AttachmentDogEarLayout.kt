@@ -39,7 +39,7 @@ class AttachmentDogEarLayout @JvmOverloads constructor(
     }
 
     private val dogEarPaint: Paint by lazy {
-        Paint(Paint.ANTI_ALIAS_FLAG).apply { color = ContextCompat.getColor(context, R.color.lightGray) }
+        Paint(Paint.ANTI_ALIAS_FLAG).apply { color = ContextCompat.getColor(context, R.color.backgroundMedium) }
     }
 
     private val dogEarShadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0x33000000 }

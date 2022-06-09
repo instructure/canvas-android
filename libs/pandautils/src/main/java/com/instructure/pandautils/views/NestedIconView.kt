@@ -129,23 +129,4 @@ class NestedIconView @JvmOverloads constructor(
         nestedIcon.contentDescription = contentDescription
     }
 
-    /* Keeping this here for when we move teacher over to this view
-    fun setPublishedStatus(isPublished: Boolean) {
-        //set published drawable
-        when(isPublished) {
-            true ->  {
-                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_complete_solid))
-                mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.publishedGreen))
-                mPublishedStatusIcon.contentDescription = context.getString(R.string.published)
-            }
-            else -> {
-                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_complete))
-                mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.defaultTextGray))
-                mPublishedStatusIcon.contentDescription = context.getString(R.string.not_published)
-            }
-        }
-    }
-    */
-
-
 }

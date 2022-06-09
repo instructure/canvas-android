@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.e2e
 
+import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
@@ -36,49 +37,47 @@ class DashboardE2ETest : StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testDashboardE2E() {
 
-        // Seed data
+        Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 2)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
 
-
-        // This will not consistently result in a badge on the email icon on the bottom of the screen.
-        // So the check below is disabled. :-(
-        // Seed a conversation, to give us an email in our inbox
+        Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API.")
         ConversationsApi.createConversation(
                 token = teacher.token,
                 recipients = listOf(student.id.toString())
         )
 
-        // Seed some group info
+        Log.d(PREPARATION_TAG,"Seed some group info.")
         val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
-        val groupMembership = GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
 
-        // Sanity check
-        assertEquals("course id for group", data.coursesList[0].id, group.courseId)
+        Log.d(PREPARATION_TAG,"Create group membership for ${student.name} student.")
+        GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
 
-        // Sign in with lone student
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
-
-        // Verify that the page rendered and our courses are there
         dashboardPage.waitForRender()
-        dashboardPage.assertPageObjects()
-        dashboardPage.assertDisplaysCourses()
+
         for(course in data.coursesList) {
+            Log.d(STEP_TAG,"Assert that ${course.name} course is displayed.")
             dashboardPage.assertDisplaysCourse(course)
         }
 
-        // Verify that our group is displayed
+        Log.d(STEP_TAG,"Assert that ${group.name} groups is displayed.")
         dashboardPage.assertDisplaysGroup(group, data.coursesList[0])
 
-        // Verify that our email conversation is represented
-        //dashboardPage.assertUnreadEmails(count = 1)  // Not reliable :-(
+        Log.d(STEP_TAG,"Assert that there is an unread e-mail so we have the number '1' on the Inbox bottom-menu icon as a badge.")
+        dashboardPage.assertUnreadEmails(1)
     }
 
 }

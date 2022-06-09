@@ -1258,4 +1258,22 @@
 
     <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
     <string name="discussionOpenInBrowser">Open in browser</string>
+    
+    <string name="dashboardSwitchToListView">Switch to list view</string>
+    <string name="dashboardSwitchToGridView">Switch to grid view</string>
+
+    <string name="selectAppTheme">Select app theme</string>
+    <string name="appThemeSettingsTitle">App Theme</string>
+    <string name="appThemeLight">Light</string>
+    <string name="appThemeDark">Dark</string>
+    <string name="appThemeSystem">Same as device</string>
+
+    <string name="themeSelectorTitle">Canvas is now available in dark theme</string>
+    <string name="themeSelectorDescription">Choose app theme</string>
+    <string name="themeSelectorLightTheme">Light theme</string>
+    <string name="themeSelectorDarkTheme">Dark theme</string>
+    <string name="themeSelectorDeviceTheme">Same as device theme</string>
+    <string name="themeSelectorSave">Save</string>
+    <string name="themeSelectorChangeLater">You can change it later in app settings</string>
+
 </resources>

@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.e2e
 
+import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.RemoteConfigParam
@@ -36,78 +37,80 @@ class SettingsE2ETest : StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    // Basically just verifies that the proper items show up in the settings page,
-    // legal page and help page.  As these are all somewhat dependent on API calls,
-    // they seemed like legitimate targets for an E2E test.
-    @E2E
-    @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.E2E)
-    fun testSettingsE2E() {
-        val data = seedData(students = 1, teachers = 1, courses = 1)
-        val student = data.studentsList[0]
-        tokenLogin(student)
-
-        dashboardPage.waitForRender()
-        dashboardPage.launchSettingsPage()
-
-        settingsPage.assertPageObjects()
-        settingsPage.launchLegalPage()
-
-        legalPage.assertPageObjects()
-        Espresso.pressBack() // Exit legal page
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
     }
 
-    // The remote config settings page (only available on debug builds) used to do some
-    // really bizarre things when reacting to the soft keyboard appearing and disappearing.
-    // This test verifies that no remote config values change in response to the
-    // soft keyboard appearing.
-    //
-    // Marked as P2 because this is not testing user-facing functionality.
     @E2E
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SETTINGS, TestCategory.E2E)
-    fun testRemoteConfigSettingsE2E() {
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testSettingsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
-        tokenLogin(student)
 
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        tokenLogin(student)
         dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Navigate to Settings Page on the left-side menu.")
+        dashboardPage.launchSettingsPage()
+        settingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG,"Click on 'Legal' link to open Legal Page. Assert that Legal Page has opened.")
+        settingsPage.launchLegalPage()
+        legalPage.assertPageObjects()
+    }
+
+    //The remote config settings page only available on debug builds.
+    @E2E
+    @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testRemoteConfigSettingsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Navigate to Settings Page on the left-side menu.")
         dashboardPage.launchSettingsPage()
 
-        // Capture the initial remote config values
+        Log.d(PREPARATION_TAG,"Store the initial values on Remote Config Settings Page.")
         val initialValues = mutableMapOf<String, String?>()
         RemoteConfigParam.values().forEach {param -> initialValues.put(param.rc_name, RemoteConfigUtils.getString(param))}
 
-        // Launch the remote config page
+        Log.d(STEP_TAG,"Navigate to Remote Config Settings Page.")
         settingsPage.launchRemoteConfigParams()
 
-        // Click on each EditText, which brings up the soft keyboard, then dismiss it.
         RemoteConfigParam.values().forEach { param ->
 
-            // Bring up the soft keyboard
+            Log.d(STEP_TAG,"Edit ${param.name} parameter.")
+
+            Log.d(STEP_TAG,"Bring up the soft keyboard.")
             remoteConfigSettingsPage.clickRemoteConfigParamValue(param)
 
-            // and dismiss it
-            Espresso.closeSoftKeyboard()
+            Log.d(STEP_TAG,"Dismiss the soft keyboard.")
+            Espresso.closeSoftKeyboard() //we need to do this to make this test work. TODO: investigate
 
-            // If we don't clear the focus on the EditText, it can cause
-            // funky behavior when we click on the next EditText (like the
-            // "paste | select all" menu popping up).
-            remoteConfigSettingsPage.clearRemoteConfigParamValueFocus(param)
+            Log.d(STEP_TAG,"Clear remote config parameter valu: ${param.name}.")
+            remoteConfigSettingsPage.clearRemoteConfigParamValueFocus(param) //we need to clear it because otherwise it would be flaky.
         }
 
-        // Exit the remote config page
+        Log.d(STEP_TAG,"Navigate back to Settings Page.")
         Espresso.pressBack()
 
-        // Go back in again
+        Log.d(STEP_TAG,"Navigate to Remote Config Settings Page.")
         settingsPage.launchRemoteConfigParams()
 
-        // Verify that all fields have maintained their initial value
+        Log.d(STEP_TAG,"Assert that all fields have maintained their initial value.")
         RemoteConfigParam.values().forEach { param ->
             remoteConfigSettingsPage.verifyRemoteConfigParamValue(param, initialValues.get(param.rc_name)!!)
         }
 
-        // Exit the remote config page
-        Espresso.pressBack()
     }
 }

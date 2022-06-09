@@ -44,7 +44,7 @@
             style="@style/TextFont.Regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             tools:text="Mar 1 at 3:16pm" />
 
         <TextView
@@ -52,14 +52,14 @@
             style="@style/TextFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             tools:text="13 Minutes" />
 
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/recordingProgressBar"
-        android:indeterminateTint="@color/defaultTextGray"
+        android:indeterminateTint="@color/textDark"
         android:layout_width="32dp"
         android:layout_height="32dp" />
 

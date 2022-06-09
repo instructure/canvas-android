@@ -1241,4 +1241,18 @@
     <string name="toolbarCommentLibrary">Bibliotheek met opmerkingen</string>
     <string name="commentLibraryNoSuggestions">Geen suggesties beschikbaar</string>
     <string name="speedGraderCommentHint">Opmerking</string>
+    <string name="a11y_schedule_marked_as_done">%s gemarkeerd als klaar</string>
+    <string name="a11y_error_occured">Er is een fout opgetreden, probeer het nogmaals.</string>
+    <string name="a11y_content_description_accept_invite">Uitnodiging accepteren</string>
+    <string name="a11y_content_description_decline_invite">Uitnodiging weigeren</string>
+    <string name="no_notifications_to_show">Geen meldingen om te tonen</string>
+
+    <string name="documentScanningTitle">Scannen van document</string>
+    <string name="filter_name_color">Kleur</string>
+    <string name="filter_name_grayscale">Grijswaarden</string>
+    <string name="filter_name_monochrome">Zwart-wit</string>
+    <string name="filter_name_original">Origineel</string>
+    <string name="noCompatibleAppInstalled">Er zijn op je apparaat geen applicaties geïnstalleerd die deze link kunnen openen.</string>
+    <string name="anonymousDiscussionNotSupported">Anonieme discussies worden momenteel niet ondersteund op mobiel apparaat. Open in browser om discussie te zien.</string>
+    <string name="discussionOpenInBrowser">Openen in browser</string>
 </resources>

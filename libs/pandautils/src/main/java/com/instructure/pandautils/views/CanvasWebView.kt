@@ -47,6 +47,7 @@ import android.view.MotionEvent
 import android.webkit.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.FileProvider
@@ -256,7 +257,7 @@ class CanvasWebView @JvmOverloads constructor(
             // Title of the link, use a custom view so we can show the entire link in the style we want
             val title = TextView(context)
             title.text = result.extra
-            title.setTextColor(context.resources.getColor(R.color.canvasTextDark))
+            title.setTextColor(context.resources.getColor(R.color.textDarkest))
             val padding = context.DP(8).toInt()
             title.setPadding(padding * 2, padding, padding * 2, 0)
             menu.setHeaderView(title)
@@ -481,8 +482,8 @@ class CanvasWebView @JvmOverloads constructor(
      * @param title
      * @return
      */
-    fun loadHtml(html: String, title: String?): String {
-        val result = formatHtml(html, title)
+    fun loadHtml(html: String, title: String?, backgroundColorRes: Int = R.color.backgroundLightest): String {
+        val result = formatHtml(html, title, backgroundColorRes)
         loadDataWithBaseURL(getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
         return result
     }
@@ -490,15 +491,23 @@ class CanvasWebView @JvmOverloads constructor(
     /**
      * Helper function that makes html content somewhat suitable for mobile
      */
-    fun formatHtml(html: String, title: String? = ""): String {
+    fun formatHtml(html: String, title: String? = "", @ColorRes backgroundColorRes: Int = R.color.backgroundLightest): String {
         var formatted = applyWorkAroundForDoubleSlashesAsUrlSource(html)
         formatted = addProtocolToLinks(formatted)
         formatted = checkForMathTags(formatted)
-        val htmlWrapperFileName = if (ApiPrefs.canvasForElementary) "html_wrapper_k5.html" else "html_wrapper.html"
+        val htmlWrapperFileName = if (ApiPrefs.showElementaryView) "html_wrapper_k5.html" else "html_wrapper.html"
         val htmlWrapper = getAssetsFile(context, htmlWrapperFileName)
         return htmlWrapper
             .replace("{\$CONTENT$}", formatted)
             .replace("{\$TITLE$}", title ?: "")
+            .replace("{\$BACKGROUND$}", colorResToHexString(backgroundColorRes))
+            .replace("{\$COLOR$}", colorResToHexString(R.color.textDarkest))
+            .replace("{\$LINK_COLOR$}", colorResToHexString(R.color.textInfo))
+            .replace("{\$VISITED_LINK_COLOR\$}", colorResToHexString(R.color.textAlert))
+    }
+
+    private fun colorResToHexString(@ColorRes colorRes: Int): String {
+        return "#" + Integer.toHexString(context.getColor(colorRes)).substring(2)
     }
 
     /**
@@ -520,7 +529,7 @@ class CanvasWebView @JvmOverloads constructor(
         // If this html that we're about to load has a math tag and isn't just an image we want to parse it with MathJax.
         // This is the version that web currently uses (the 2.7.1 is the version number) and this is the check that they do to
         // decide if they'll run the MathJax script on the webview
-        if (content.contains("<math") && !content.contains("<img class='equation_image'")) {
+        if ((content.contains("<math") || content.contains(Regex("\\\$\\\$.+\\\$\\\$|\\\\\\(.+\\\\\\)"))) && !content.contains("<img class='equation_image'")) {
             return """<script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         </script>$content"""

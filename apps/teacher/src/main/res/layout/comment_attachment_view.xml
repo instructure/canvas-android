@@ -30,7 +30,7 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:importantForAccessibility="no"
-        android:tint="@color/defaultTextGray"
+        android:tint="@color/textDark"
         tools:background="#CCC"/>
 
     <TextView
@@ -42,7 +42,7 @@
         android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/defaultTextGray"
+        android:textColor="@color/textDark"
         tools:text="name_of_attached_file.jpg"/>
 
 </LinearLayout>

@@ -18,7 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/backgroundLightest"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="2dp"
-        tools:background="@color/teacher_colorPrimary"
+        tools:background="@color/backgroundDarkest"
         tools:ignore="UnusedAttribute">
 
         <ProgressBar
@@ -38,8 +38,6 @@
             android:visibility="gone" />
 
     </androidx.appcompat.widget.Toolbar>
-
-    <include layout="@layout/view_divider" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -66,7 +64,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:background="@android:color/transparent"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <!-- Define speakable text for EditText below. -->
@@ -85,7 +83,7 @@
                     android:minHeight="48dp"
                     android:hint="@string/title"
                     android:maxLines="2"
-                    android:textColorHint="@color/defaultTextGray"
+                    android:textColorHint="@color/textDark"
                     android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -98,7 +96,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/description"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:focusable="true"/>
 
             <RelativeLayout
@@ -137,7 +135,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/quizType"
-                android:textColor="@color/defaultTextGray" />
+                android:textColor="@color/textDark" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/quizTypeFilter"
@@ -175,7 +173,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:padding="2dp"
-                    app:backgroundTint="@color/teacher_colorPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 
@@ -207,7 +205,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:padding="2dp"
-                    app:backgroundTint="@color/teacher_colorPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 
@@ -219,7 +217,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <TextView
@@ -237,7 +235,7 @@
                     android:minHeight="48dp"
                     android:hint="@string/accessCode"
                     android:maxLines="2"
-                    android:textColorHint="@color/defaultTextGray"
+                    android:textColorHint="@color/textDark"
                     android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -267,7 +265,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="11dp"
                     android:importantForAccessibility="no"
-                    android:tint="@color/defaultActionColor"
+                    android:tint="@color/textInfo"
                     app:srcCompat="@drawable/ic_add" />
 
                 <TextView
@@ -278,7 +276,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@id/plus"
                     android:text="@string/add_due_date"
-                    android:textColor="@color/defaultActionColor"
+                    android:textColor="@color/textInfo"
                     android:textSize="16sp" />
 
             </RelativeLayout>

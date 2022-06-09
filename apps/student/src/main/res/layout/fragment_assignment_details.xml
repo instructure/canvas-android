@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@color/backgroundLightest"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintBottom_toTopOf="@+id/submitButton">
 
@@ -80,7 +80,7 @@
                             android:layout_height="32dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_warning"
-                            android:tint="@color/defaultTextGray" />
+                            android:tint="@color/textDark" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -121,7 +121,7 @@
                                 style="@style/TextFont.Medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/defaultTextGray"
+                                android:textColor="@color/textDark"
                                 tools:text="30 pts" />
 
                             <ImageView
@@ -131,7 +131,7 @@
                                 android:layout_marginStart="12dp"
                                 android:importantForAccessibility="no"
                                 tools:src="@drawable/ic_complete_solid"
-                                tools:tint="@color/alertGreen" />
+                                tools:tint="@color/textSuccess" />
 
                             <TextView
                                 android:id="@+id/submissionStatus"
@@ -175,7 +175,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusUploadingTitle"
-                                android:textColor="@color/defaultTextDark"
+                                android:textColor="@color/textDarkest"
                                 android:textSize="20sp" />
 
                             <TextView
@@ -186,7 +186,7 @@
                                 android:layout_marginTop="6dp"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusUploadingSubtitle"
-                                android:textColor="@color/canvasDefaultAccent" />
+                                android:textColor="@color/textInfo" />
 
                         </LinearLayout>
 
@@ -208,7 +208,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusFailedTitle"
-                                android:textColor="@color/defaultTextDark"
+                                android:textColor="@color/textDarkest"
                                 android:textSize="20sp" />
 
                             <TextView
@@ -219,7 +219,7 @@
                                 android:layout_marginTop="6dp"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusFailedSubtitle"
-                                android:textColor="@color/canvasDefaultAccent" />
+                                android:textColor="@color/textInfo" />
 
                         </LinearLayout>
 
@@ -245,7 +245,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/submissionDraftAvailableTitle"
-                                android:textColor="@color/defaultTextDark"
+                                android:textColor="@color/textDarkest"
                                 android:textSize="20sp" />
 
                             <TextView
@@ -256,7 +256,7 @@
                                 android:layout_marginTop="6dp"
                                 android:gravity="center"
                                 android:text="@string/submissionDraftAvailableSubtitle"
-                                android:textColor="@color/canvasDefaultAccent" />
+                                android:textColor="@color/textInfo" />
 
                         </LinearLayout>
 
@@ -276,7 +276,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:text="@string/dueLabel"
-                            android:textColor="@color/defaultTextGray" />
+                            android:textColor="@color/textDark" />
 
                         <TextView
                             android:id="@+id/dueDateTextView"
@@ -284,7 +284,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
-                            android:tint="@color/defaultTextGray"
+                            android:tint="@color/textDark"
                             tools:text="April 1 at 11:59 PM" />
 
                     </LinearLayout>
@@ -305,7 +305,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/submission_types"
-                            android:textColor="@color/defaultTextGray" />
+                            android:textColor="@color/textDark" />
 
                         <TextView
                             android:id="@+id/submissionTypesTextView"
@@ -335,7 +335,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/allowedFileTypes"
-                            android:textColor="@color/defaultTextGray" />
+                            android:textColor="@color/textDark" />
 
                         <TextView
                             android:id="@+id/fileTypesTextView"
@@ -366,7 +366,7 @@
                             android:layout_height="wrap_content"
                             android:paddingBottom="8dp"
                             android:text="@string/attempts"
-                            android:textColor="@color/defaultTextGray" />
+                            android:textColor="@color/textDark" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -381,7 +381,7 @@
                                 android:text="@string/attemptsAllowedLabel"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:tint="@color/defaultTextGray" />
+                                android:tint="@color/textDark" />
 
                             <TextView
                                 android:id="@+id/allowedAttemptsText"
@@ -390,7 +390,7 @@
                                 android:layout_height="wrap_content"
                                 android:paddingStart="4dp"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 tools:text="5" />
 
                         </LinearLayout>
@@ -407,7 +407,7 @@
                                 android:text="@string/attemptsUsedLabel"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:tint="@color/defaultTextGray" />
+                                android:tint="@color/textDark" />
 
                             <TextView
                                 android:id="@+id/usedAttemptsText"
@@ -416,7 +416,7 @@
                                 android:layout_height="wrap_content"
                                 android:paddingStart="4dp"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 tools:text="5" />
 
                         </LinearLayout>
@@ -439,7 +439,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/grade"
-                            android:textColor="@color/defaultTextGray" />
+                            android:textColor="@color/textDark" />
 
                         <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellView
                             android:id="@+id/gradeCell"
@@ -464,7 +464,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:text="@string/locked"
-                            android:textColor="@color/defaultTextGray" />
+                            android:textColor="@color/textDark" />
 
                         <TextView
                             android:id="@+id/lockMessageTextView"
@@ -472,7 +472,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
-                            android:tint="@color/defaultTextGray"
+                            android:tint="@color/textDark"
                             tools:text="April 1 at 11:59 PM" />
 
                     </LinearLayout>
@@ -499,7 +499,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/submissionAndRubric"
-                            android:textColor="@color/canvasDefaultAccent"
+                            android:textColor="@color/textInfo"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -507,7 +507,7 @@
                             android:layout_height="wrap_content"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_forward_arrow"
-                            android:tint="@color/textLightGray" />
+                            android:tint="@color/textDark" />
 
                     </LinearLayout>
 
@@ -559,7 +559,7 @@
                                 android:text="@string/quizQuestionLabel"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:tint="@color/defaultTextGray" />
+                                android:tint="@color/textDark" />
 
                             <TextView
                                 android:id="@+id/questionCountText"
@@ -569,7 +569,7 @@
                                 android:paddingStart="8dp"
                                 android:paddingEnd="8dp"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 tools:text="5" />
 
                         </LinearLayout>
@@ -588,7 +588,7 @@
                                 android:text="@string/timeLimitLabel"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:tint="@color/defaultTextGray" />
+                                android:tint="@color/textDark" />
 
                             <TextView
                                 android:id="@+id/timeLimitText"
@@ -598,7 +598,7 @@
                                 android:paddingStart="8dp"
                                 android:paddingEnd="8dp"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 tools:text="None" />
 
                         </LinearLayout>
@@ -616,7 +616,7 @@
                                 android:text="@string/allowedAttemptsLabel"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:tint="@color/defaultTextGray" />
+                                android:tint="@color/textDark" />
 
                             <TextView
                                 android:id="@+id/allowedQuizAttemptsText"
@@ -626,7 +626,7 @@
                                 android:paddingStart="8dp"
                                 android:paddingEnd="8dp"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 tools:text="Unlimited" />
 
                         </LinearLayout>
@@ -652,7 +652,7 @@
                             android:layout_marginEnd="16dp"
                             android:labelFor="@+id/noDescriptionContainer"
                             android:text="@string/description"
-                            android:textColor="@color/defaultTextGray" />
+                            android:textColor="@color/textDark" />
 
                         <TextView
                             android:id="@+id/noDescriptionContainer"
@@ -665,7 +665,7 @@
                             android:layout_marginBottom="16dp"
                             android:importantForAccessibility="yes"
                             android:text="@string/noAssignmentDescriptionStudent"
-                            android:textColor="@color/defaultTextDark"
+                            android:textColor="@color/textDarkest"
                             android:visibility="gone"
                             tools:visibility="visible" />
 
@@ -712,7 +712,7 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="end"
                                     android:maxLines="2"
-                                    android:textColor="@color/defaultTextGray"
+                                    android:textColor="@color/textDark"
                                     android:textSize="12sp"
                                     tools:text="July 1 at 5:21 PM" />
 
@@ -741,7 +741,8 @@
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:minHeight="48dp"
-                            android:scrollbars="none" />
+                            android:scrollbars="none"
+                            android:background="@color/backgroundLightest" />
 
                     </LinearLayout>
 
@@ -755,7 +756,7 @@
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/canvasDefaultAccent"
+            android:background="@color/backgroundInfo"
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/submitAssignment"
             android:textAllCaps="false"

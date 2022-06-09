@@ -22,8 +22,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.managers.AccountNotificationManager
+import com.instructure.canvasapi2.managers.ConferenceManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.BR
@@ -35,7 +45,6 @@ import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorKeeper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -54,7 +63,6 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val accountNotificationManager: AccountNotificationManager,
     private val oauthManager: OAuthManager,
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist,
-    private val colorKeeper: ColorKeeper,
     private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
@@ -109,9 +117,9 @@ class DashboardNotificationsViewModel @Inject constructor(
         return accountNotifications?.map {
 
             val color = when (it.icon) {
-                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> resources.getColor(R.color.notificationTintError)
-                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> resources.getColor(R.color.notificationTintWarning)
-                else -> colorKeeper.defaultColor
+                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> resources.getColor(R.color.backgroundDanger)
+                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> resources.getColor(R.color.backgroundWarning)
+                else -> resources.getColor(R.color.backgroundInfo)
             }
 
             val icon = when (it.icon) {

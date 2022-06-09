@@ -17,7 +17,15 @@
 package com.instructure.teacher.features.modules.list
 
 import com.instructure.canvasapi2.models.ModuleItem
-import com.instructure.teacher.events.*
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.teacher.events.AssignmentDeletedEvent
+import com.instructure.teacher.events.AssignmentUpdatedEvent
+import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
+import com.instructure.teacher.events.DiscussionUpdatedEvent
+import com.instructure.teacher.events.PageDeletedEvent
+import com.instructure.teacher.events.PageUpdatedEvent
+import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.mobius.common.EventBusSource
 import org.greenrobot.eventbus.Subscribe
 

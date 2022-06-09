@@ -24,8 +24,7 @@ class CustomFileBuilder(
         totalStubbed: Int,
         testCounts: HashMap<TestCategory, TestCount>,
         priorityCounts: HashMap<Priority, TestCount>,
-        featureCounts: HashMap<FeatureCategory, TestCount>,
-        manualOnly: ArrayList<String>) {
+        featureCounts: HashMap<FeatureCategory, TestCount>) {
 
     private val contentTemplate = """
         *** Total Test Counts ***
@@ -38,12 +37,12 @@ class CustomFileBuilder(
         Interaction Test Count = stubbed(${testCounts[TestCategory.INTERACTION]?.stubbed}) / written(${testCounts[TestCategory.INTERACTION]?.written})
         Render Test Count = stubbed(${testCounts[TestCategory.RENDER]?.stubbed}) / written(${testCounts[TestCategory.RENDER]?.written})
 
-
         *** Test Priority ***
-        P0 Test Count = stubbed(${priorityCounts[Priority.P0]?.stubbed}) / written(${priorityCounts[Priority.P0]?.written})
-        P1 Test Count = stubbed(${priorityCounts[Priority.P1]?.stubbed}) / written(${priorityCounts[Priority.P1]?.written})
-        P2 Test Count = stubbed(${priorityCounts[Priority.P2]?.stubbed}) / written(${priorityCounts[Priority.P2]?.written})
-        P3 Test Count = stubbed(${priorityCounts[Priority.P3]?.stubbed}) / written(${priorityCounts[Priority.P3]?.written})
+        MANDATORY Test Count = stubbed(${priorityCounts[Priority.MANDATORY]?.stubbed}) / written(${priorityCounts[Priority.MANDATORY]?.written})
+        IMPORTANT Count = stubbed(${priorityCounts[Priority.IMPORTANT]?.stubbed}) / written(${priorityCounts[Priority.IMPORTANT]?.written})
+        COMMON Test Count = stubbed(${priorityCounts[Priority.COMMON]?.stubbed}) / written(${priorityCounts[Priority.COMMON]?.written})
+        NICE_TO_HAVE Test Count = stubbed(${priorityCounts[Priority.NICE_TO_HAVE]?.stubbed}) / written(${priorityCounts[Priority.NICE_TO_HAVE]?.written})
+        BUG_CASE Test Count = stubbed(${priorityCounts[Priority.BUG_CASE]?.stubbed}) / written(${priorityCounts[Priority.BUG_CASE]?.written})
 
         *** Test Feature Coverage ***
         Assignments = stubbed(${featureCounts[FeatureCategory.ASSIGNMENTS]?.stubbed}) / written(${featureCounts[FeatureCategory.ASSIGNMENTS]?.written})
@@ -72,15 +71,9 @@ class CustomFileBuilder(
         Comments = stubbed(${featureCounts[FeatureCategory.COMMENTS]?.stubbed}) / written(${featureCounts[FeatureCategory.COMMENTS]?.written})
         Bookmarks = stubbed(${featureCounts[FeatureCategory.BOOKMARKS]?.stubbed}) / written(${featureCounts[FeatureCategory.BOOKMARKS]?.written})
         
-        *** Manual Only ***
-        ${manualOnly.forEach { formatManualTest(it) }}
     """.trimIndent()
     fun getContent() : String{
         return contentTemplate
-    }
-
-    private fun formatManualTest(testName: String) : String {
-        return "Test Name: $testName \n"
     }
 
 }

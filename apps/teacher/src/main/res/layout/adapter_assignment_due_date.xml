@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/details_due_for_label"
-            android:textColor="@color/defaultTextGray"/>
+            android:textColor="@color/textDark"/>
 
         <TextView
             android:id="@+id/dueForTextView"
@@ -42,7 +42,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/dividerColor"/>
+        android:background="@color/backgroundMedium"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/details_available_from_label"
-            android:textColor="@color/defaultTextGray"/>
+            android:textColor="@color/textDark"/>
 
         <TextView
             android:id="@+id/availableFromTextView"
@@ -70,7 +70,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/dividerColor"/>
+        android:background="@color/backgroundMedium"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/details_available_to_label"
-            android:textColor="@color/defaultTextGray"/>
+            android:textColor="@color/textDark"/>
 
         <TextView
             android:id="@+id/availableToTextView"
@@ -98,6 +98,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/dividerColor"/>
+        android:background="@color/backgroundMedium"/>
 
 </LinearLayout>

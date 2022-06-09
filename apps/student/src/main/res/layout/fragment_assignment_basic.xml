@@ -20,14 +20,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundWhite"
+    android:background="@color/backgroundLightest"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/defaultPrimary"
+        android:background="@color/textDarkest"
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
@@ -54,7 +54,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="@dimen/med_padding"
             android:layout_marginTop="@dimen/med_padding"
-            android:background="@color/canvasSectionDivider"/>
+            android:background="@color/backgroundMedium"/>
 
     </LinearLayout>
 

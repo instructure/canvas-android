@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/submissionStatusSuccessTitle"
-            android:textColor="@color/alertGreen"
+            android:textColor="@color/textSuccess"
             android:textSize="20sp"/>
 
         <TextView
@@ -49,7 +49,7 @@
             android:layout_marginTop="6dp"
             android:gravity="center"
             android:text="@string/submissionStatusSuccessSubtitle"
-            android:textColor="@color/defaultTextDark"/>
+            android:textColor="@color/textDarkest"/>
 
     </LinearLayout>
 
@@ -78,7 +78,7 @@
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_checkmark"
-                tools:tint="@color/canvasDefaultAccent"
+                tools:tint="@color/textInfo"
                 tools:visibility="visible"/>
 
             <ImageView
@@ -87,7 +87,7 @@
                 android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
-                android:tint="@color/defaultTextGray"
+                android:tint="@color/textDark"
                 app:srcCompat="@drawable/ic_close"
                 tools:visibility="gone"/>
 
@@ -105,7 +105,7 @@
                     android:maxLines="1"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     android:textSize="32sp"
                     android:textStyle="bold"
                     app:autoSizeTextType="uniform"
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/canvasAPI_points"
-                    android:textColor="@color/defaultTextDark"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -136,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 tools:text="89%"/>
@@ -146,7 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 tools:text="Out of 100 pts"/>
 
             <TextView
@@ -154,7 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/canvasDefaultAccent"
+                android:textColor="@color/textInfo"
                 android:textSize="12sp"
                 tools:text="Late Penalty (-2 pts)"/>
 
@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="Final Grade: 89 pts"/>
@@ -201,7 +201,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:gravity="start"
                 tools:text="Low: 1.0" />
 
@@ -211,7 +211,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:gravity="center"
                 tools:text="Mean: 7.2" />
 
@@ -221,7 +221,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:gravity="end"
                 tools:text="High: 9.5" />
 

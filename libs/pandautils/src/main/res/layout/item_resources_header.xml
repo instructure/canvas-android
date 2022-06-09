@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{itemViewModel.data.title}"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"
@@ -46,7 +46,7 @@
             android:id="@+id/headerSeparator"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/k5SeparatorColor"
+            android:background="@color/backgroundMedium"
             android:visibility="@{itemViewModel.data.hasDivider ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintTop_toTopOf="parent" />
 

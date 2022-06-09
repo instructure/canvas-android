@@ -29,7 +29,7 @@
         android:paddingBottom="18dp"
         android:labelFor="@+id/postPolicySectionToggle"
         android:text="@string/postPolicySections"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp"
         android:textStyle="bold" />
 

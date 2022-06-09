@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginTop="20dp"
-        android:background="#d3d6db" />
+        android:background="@color/backgroundMedium" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -45,6 +45,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#d3d6db" />
+        android:background="@color/backgroundMedium" />
 
 </LinearLayout>

@@ -45,7 +45,7 @@ class AnnouncementInteractionTest : StudentTest() {
     // Student enrolled in intended section can see and reply to the announcement
     // (This kind of seems like more of a test of the mocked endpoint, but we'll go with it.)
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncement_replyToSectionSpecificAnnouncement() {
 
         val data = getToCourse(createSections = true)
@@ -83,7 +83,7 @@ class AnnouncementInteractionTest : StudentTest() {
 
     // User can preview an announcement attachment
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncement_previewAttachment() {
 
         val data = getToCourse()
@@ -125,7 +125,7 @@ class AnnouncementInteractionTest : StudentTest() {
 
     // View/reply to an announcement
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncement_reply() {
 
         val data = getToCourse()
@@ -149,7 +149,7 @@ class AnnouncementInteractionTest : StudentTest() {
 
     // Tests that we can create an announcement (as teacher).
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_base() {
         val data = getToAnnouncementList()
 
@@ -161,7 +161,7 @@ class AnnouncementInteractionTest : StudentTest() {
 
     // Tests code around closing / aborting announcement creation
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_abort() {
         val data = getToAnnouncementList()
         val course = data.courses.values.first()
@@ -179,7 +179,7 @@ class AnnouncementInteractionTest : StudentTest() {
 
     // Tests code around creating an announcement with no description
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_missingDescription() {
         getToAnnouncementList()
 
@@ -190,14 +190,14 @@ class AnnouncementInteractionTest : StudentTest() {
 
     // Tests code around creating an announcement with no title
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_missingTitle() {
         getToAnnouncementList()
         discussionListPage.createAnnouncement("", "description")
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testSearchAnnouncement() {
         val data = getToAnnouncementList()
         val course = data.courses.values.first()

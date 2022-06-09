@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="2dp"
-        tools:background="@color/teacher_colorPrimary"
+        tools:background="@color/backgroundDarkest"
         tools:ignore="UnusedAttribute">
 
         <ProgressBar
@@ -61,7 +61,7 @@
                 android:background="@android:color/transparent"
                 android:labelFor="@+id/editDiscussionName"
                 android:contentDescription="@string/title"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <androidx.appcompat.widget.AppCompatEditText
@@ -72,7 +72,7 @@
                     android:minHeight="48dp"
                     android:hint="@string/title"
                     android:maxLines="2"
-                    android:textColorHint="@color/defaultTextGray"
+                    android:textColorHint="@color/textDark"
                     android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -85,7 +85,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/description"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:focusable="true" />
 
             <instructure.rceditor.RCETextEditorView
@@ -127,7 +127,7 @@
                     android:labelFor="@+id/editGradePoints"
                     android:contentDescription="@string/points"
                     android:minHeight="48dp"
-                    android:textColorHint="@color/defaultTextGray"
+                    android:textColorHint="@color/textDark"
                     app:hintTextAppearance="@style/TextInputLabel">
 
                     <androidx.appcompat.widget.AppCompatEditText
@@ -138,7 +138,7 @@
                         android:hint="@string/points"
                         android:inputType="numberDecimal"
                         android:maxLines="1"
-                        android:textColorHint="@color/defaultTextGray"
+                        android:textColorHint="@color/textDark"
                         android:textSize="16sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -153,7 +153,7 @@
                     android:labelFor="@+id/displayGradeAsSpinner"
                     android:minHeight="48dp"
                     android:text="@string/display_grade_as"
-                    android:textColor="@color/defaultTextGray" />
+                    android:textColor="@color/textDark" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/displayGradeAsSpinner"
@@ -176,7 +176,7 @@
                 android:layout_marginTop="20dp"
                 android:importantForAccessibility="yes"
                 android:text="@string/options"
-                android:textColor="@color/defaultTextGray" />
+                android:textColor="@color/textDark" />
 
             <RelativeLayout
                 android:id="@+id/publishWrapper"
@@ -206,7 +206,7 @@
                     android:maxWidth="48dp"
                     android:minHeight="48dp"
                     android:padding="2dp"
-                    app:backgroundTint="@color/teacher_colorPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 
@@ -238,7 +238,7 @@
                     android:maxWidth="48dp"
                     android:minHeight="48dp"
                     android:padding="2dp"
-                    app:backgroundTint="@color/teacher_colorPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 
@@ -270,7 +270,7 @@
                     android:maxWidth="48dp"
                     android:minHeight="48dp"
                     android:padding="2dp"
-                    app:backgroundTint="@color/teacher_colorPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 
@@ -302,7 +302,7 @@
                     android:maxWidth="48dp"
                     android:minHeight="48dp"
                     android:padding="2dp"
-                    app:backgroundTint="@color/teacher_colorPrimary" />
+                    app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
 
@@ -330,7 +330,7 @@
                     android:layout_height="18dp"
                     android:layout_marginEnd="11dp"
                     android:importantForAccessibility="no"
-                    android:tint="@color/defaultActionColor"
+                    android:tint="@color/textInfo"
                     app:srcCompat="@drawable/ic_add" />
 
                 <TextView
@@ -340,7 +340,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/plus"
                     android:text="@string/add_due_date"
-                    android:textColor="@color/defaultActionColor"
+                    android:textColor="@color/textInfo"
                     android:textSize="16sp" />
 
             </RelativeLayout>
@@ -361,7 +361,7 @@
                     android:layout_height="18dp"
                     android:layout_marginEnd="11dp"
                     android:importantForAccessibility="no"
-                    android:tint="@color/destructive"
+                    android:tint="@color/textDanger"
                     app:srcCompat="@drawable/ic_trash" />
 
                 <TextView
@@ -371,7 +371,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/deleteImage"
                     android:text="@string/discussions_delete"
-                    android:textColor="@color/destructive"
+                    android:textColor="@color/textDanger"
                     android:textSize="16sp"
                     android:importantForAccessibility="yes"/>
 

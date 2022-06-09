@@ -35,10 +35,10 @@
             android:id="@+id/commentLibraryToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/backgroundLightest"
             android:elevation="6dp"
             app:theme="@style/ToolBarStyle"
-            app:titleTextColor="@color/black"
+            app:titleTextColor="@color/textDarkest"
             app:title="@string/toolbarCommentLibrary"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -54,7 +54,7 @@
             android:id="@+id/commentFieldDivider"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/divider"
+            android:background="@color/backgroundMedium"
             app:layout_constraintBottom_toTopOf="@id/commentInputContainer" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -63,7 +63,7 @@
             android:layout_height="0dp"
             android:paddingBottom="32dp"
             android:clipToPadding="false"
-            android:background="@color/white"
+            android:background="@color/backgroundLightest"
             android:visibility="@{viewModel.data.empty ? View.GONE : View.VISIBLE}"
             app:recyclerViewItemViewModels="@{viewModel.data.suggestions}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -74,10 +74,10 @@
             android:id="@+id/commentLibraryEmtpyView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/white"
+            android:background="@color/backgroundLightest"
             android:text="@string/commentLibraryNoSuggestions"
             android:gravity="center"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="15sp"
             android:visibility="@{viewModel.data.empty ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/commentLibraryToolbar"

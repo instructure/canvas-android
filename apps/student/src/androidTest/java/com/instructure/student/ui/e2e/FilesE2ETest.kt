@@ -18,9 +18,7 @@ package com.instructure.student.ui.e2e
 
 import android.os.Environment
 import android.util.Log
-import androidx.test.espresso.Espresso.pressBack
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
@@ -38,6 +36,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.ui.utils.uploadTextFile
@@ -46,26 +45,28 @@ import org.junit.Test
 import java.io.File
 import java.io.FileWriter
 
-// Tests that files (assignment uploads, assignment comment attachments, discussion attachments)
-// are properly displayed
 @HiltAndroidTest
 class FilesE2ETest: StudentTest() {
     override fun displaysPageObjects() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.FILES, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
     fun testFilesE2E() {
 
-        // Seed basic data
+        Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Seed a text assignment/file/submission
+        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
         val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 withDescription = false,
@@ -74,6 +75,7 @@ class FilesE2ETest: StudentTest() {
                 teacherToken = teacher.token
         ))
 
+        Log.d(PREPARATION_TAG, "Seed a text file.")
         val submissionUploadInfo = uploadTextFile(
                 assignmentId = assignment.id,
                 courseId = course.id,
@@ -81,7 +83,8 @@ class FilesE2ETest: StudentTest() {
                 fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
         )
 
-        val submission = SubmissionsApi.submitCourseAssignment(
+        Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
+        SubmissionsApi.submitCourseAssignment(
                 submissionType = SubmissionType.ONLINE_UPLOAD,
                 courseId = course.id,
                 assignmentId = assignment.id,
@@ -89,7 +92,7 @@ class FilesE2ETest: StudentTest() {
                 studentToken = student.token
         )
 
-        // Seed a comment attachment upload
+        Log.d(STEP_TAG,"Seed a comment attachment upload.")
         val commentUploadInfo = uploadTextFile(
                 assignmentId = assignment.id,
                 courseId = course.id,
@@ -104,32 +107,30 @@ class FilesE2ETest: StudentTest() {
                 fileIds = mutableListOf(commentUploadInfo.id)
         )
 
-        // Seed a discussion topic; will add a reply with attachment below
+        Log.d(STEP_TAG,"Seed a discussion for ${course.name} course.")
         val discussionTopic = DiscussionTopicsApi.createDiscussion(
                 courseId = course.id,
                 token = student.token
         )
 
-        // At this point, sign in our student.  Login is necessary for the "real" API call
-        // below to work correctly.
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        // Create a discussion attachment file
+        Log.d(STEP_TAG,"Create a discussion attachment file.")
         val discussionAttachmentFile = File(
                 Randomizer.randomTextFileName(Environment.getExternalStorageDirectory().absolutePath))
                 .apply { createNewFile() }
 
-        // Add contents to file
+        Log.d(STEP_TAG,"Add some random content to the ${discussionAttachmentFile.name} file.")
         FileWriter(discussionAttachmentFile, true).apply {
             write(Randomizer.randomTextFileContents())
             flush()
             close()
         }
 
-        // Use a "normal" api (rather than seeding) to create a reply to our
-        // discussion that contains an attachment.
-        val result = tryWeave {
+        Log.d(PREPARATION_TAG,"Use real API (rather than seeding) to create a reply to our discussion that contains an attachment.")
+        tryWeave {
             awaitApiResponse<DiscussionEntry> {
                 DiscussionManager.postToDiscussionTopic(
                         canvasContext = CanvasContext.emptyCourseContext(id = course.id),
@@ -140,58 +141,85 @@ class FilesE2ETest: StudentTest() {
                         callback = it)
             }
         } catch {
-            Log.v("FilesE2E", "Discussion post error: $it")
+            Log.v(PREPARATION_TAG, "Discussion post error: $it")
         }
 
-        //
-        // OK, let's get to testing
-        //
-
-        // Let's make sure that our submitted file and our discussion attachment are displayed
-        // in the main files list.
-        //
-        // The fileListPage is a little different in that it keeps getting used over and over again,
-        // recursively, as we traverse the file tree.
+        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
         dashboardPage.gotoGlobalFiles()
+
+        Log.d(STEP_TAG,"Assert that there is a directory called 'Submissions' is displayed.")
         fileListPage.assertItemDisplayed("Submissions")
+
+        Log.d(STEP_TAG,"Select 'Submissions' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.selectItem("Submissions")
+
+        Log.d(STEP_TAG,"Assert that ${course.name} course is displayed.")
         fileListPage.assertItemDisplayed(course.name)
+
+        Log.d(STEP_TAG,"Select ${course.name} course.")
         fileListPage.selectItem(course.name)
+
+        Log.d(STEP_TAG,"Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.assertItemDisplayed(submissionUploadInfo.fileName)
-        pressBack() // Back to Submissions
-        pressBack() // Back to main file list
+
+        Log.d(STEP_TAG,"Navigate back to File List Page.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
+
+        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
-        pressBack() // Back to main file list
-        pressBack() // Back to dashboard
 
-        // Let's check that our submission file and assignment comment attachment are shown in the assignment details
+        Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG,"Select ${course.name} course.")
         dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG,"Navigate to Assignments Page.")
         courseBrowserPage.selectAssignments()
+
+        Log.d(STEP_TAG,"Click on ${assignment.name} assignment.")
         assignmentListPage.clickAssignment(assignment)
+
+        Log.d(STEP_TAG,"Navigate to Submission Details Page and open Files Tab.")
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openFiles()
+
+        Log.d(STEP_TAG,"Assert that ${submissionUploadInfo.fileName} file has been displayed.")
         submissionDetailsPage.assertFileDisplayed(submissionUploadInfo.fileName)
+
+        Log.d(STEP_TAG,"Open Comments Tab. Assert that ${commentUploadInfo.fileName} file is displayed as a comment by ${student.name} student.")
         submissionDetailsPage.openComments()
-        submissionDetailsPage.assertCommentAttachmentDisplayed(commentUploadInfo.fileName,student)
-        pressBack() // Back to assignment details
-        pressBack() // Back to assignment list
-        pressBack() // Back to course browser page
+        submissionDetailsPage.assertCommentAttachmentDisplayed(commentUploadInfo.fileName, student)
 
-        // I'd like to go into discussions and verify that our reply-with-attachment shows up,
-        // but that info is in a webview and thus would not be easy to verify.
+        Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
+        ViewUtils.pressBackButton(5)
 
-        // Test renaming and deleting the discussion attachment
-        pressBack() // Back to Dashboard
+        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
         dashboardPage.gotoGlobalFiles()
+
+        Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
+
+        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
-        val newFileName = "blah.txt"
+
+        val newFileName = "newTextFileName.txt"
+        Log.d(STEP_TAG,"Rename ${discussionAttachmentFile.name} file to: $newFileName.")
         fileListPage.renameFile(discussionAttachmentFile.name, newFileName)
+
+        Log.d(STEP_TAG,"Assert that the file is displayed with it's new file name: $newFileName.")
         fileListPage.assertItemDisplayed(newFileName)
+
+        Log.d(STEP_TAG,"Delete $newFileName file.")
         fileListPage.deleteFile(newFileName)
+        fileListPage.assertPageObjects()
+
+        Log.d(STEP_TAG,"Assert that empty view is displayed after deletion.")
         fileListPage.assertViewEmpty()
     }
 }
