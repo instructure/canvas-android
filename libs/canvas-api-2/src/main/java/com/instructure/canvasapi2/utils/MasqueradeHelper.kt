@@ -64,7 +64,7 @@ object MasqueradeHelper {
         masqueradingUserId: Long,
         masqueradingDomain: String?,
         startingClass: Class<out ACTIVITY>,
-        masqueradeToken: String = "",
+        masqueradeToken: String = ApiPrefs.accessToken,
         masqueradeClientId: String = ApiPrefs.clientId,
         masqueradeClientSecret: String = ApiPrefs.clientSecret,
         courseId: Long? = null,
