@@ -67,10 +67,8 @@ class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val descriptionText: String? // Set description to assignment description or excused
         if (submission != null && submission.excused) {
             descriptionText = context.getString(R.string.excusedAssignment)
-            description.setTypeface(null, Typeface.BOLD)
         } else {
             descriptionText = BinderUtils.getHtmlAsText(assignment.description ?: "")
-            description.setTypeface(null, Typeface.NORMAL)
         }
 
         description.setTextForVisibility(descriptionText)

@@ -24,7 +24,7 @@
     android:background="@color/backgroundLightest"
     android:foreground="?android:selectableItemBackground"
     android:gravity="start|center_vertical"
-    android:fontFamily="sans-serif"
+    android:fontFamily="@font/lato_font_family"
     android:textSize="18sp"
     android:textColor="@color/textDarkest"
     android:paddingStart="16dp"

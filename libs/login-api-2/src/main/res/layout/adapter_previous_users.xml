@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/lato_font_family"
             android:textStyle="bold"
             tools:text="Peter Piper Piperson"
             android:maxLines="1"
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/textDark"
             android:textSize="16sp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/lato_font_family"
             tools:text="https://school.instructure.com"
             android:maxLines="1"
             android:ellipsize="end"/>

@@ -18,6 +18,7 @@ package com.instructure.pandautils.typeface
 
 import android.content.Context
 import android.graphics.Typeface
+import android.graphics.fonts.FontFamily
 import java.lang.reflect.Field
 import java.lang.reflect.Type
 
@@ -26,27 +27,22 @@ const val MEDIUM_FONT_KEY = "sans-serif-medium"
 
 class TypefaceBehavior(private val context: Context) {
 
-    private val typefaceMap: Map<String, String> = mapOf(
-        REGULAR_FONT_KEY to "fonts/balsamiq_regular.ttf",
-        MEDIUM_FONT_KEY to "fonts/balsamiq_regular.ttf"
-    )
-
-    private var systemDefaults = emptyMap<String, Typeface>()
-
     private var fontOverriden = false
 
-    fun overrideFont() {
+    fun overrideFont(fontPath: String) {
         if (fontOverriden) return
+
+        val typefaceMap: Map<String, String> = mapOf(
+                REGULAR_FONT_KEY to fontPath,
+                MEDIUM_FONT_KEY to fontPath
+        )
 
         try {
             val fontMap = typefaceMap.mapValues { Typeface.createFromAsset(context.assets, it.value) }
             val staticField: Field = Typeface::class.java
                     .getDeclaredField("sSystemFontMap")
             staticField.isAccessible = true
-            val systemMap: MutableMap<String, Typeface> = staticField.get(null) as MutableMap<String, Typeface>
             val updatedSystemMap = mutableMapOf<String, Typeface>()
-            updatedSystemMap.putAll(systemMap)
-            systemDefaults = typefaceMap.mapValues { systemMap[it.key] as Typeface }
             updatedSystemMap.putAll(fontMap)
             staticField.set(null, updatedSystemMap)
             fontOverriden = true
@@ -56,18 +52,6 @@ class TypefaceBehavior(private val context: Context) {
     }
 
     fun resetFonts() {
-        try {
-            val staticField: Field = Typeface::class.java
-                .getDeclaredField("sSystemFontMap")
-            staticField.isAccessible = true
-            val systemMap: MutableMap<String, Typeface> = staticField.get(null) as MutableMap<String, Typeface>
-            val updatedSystemMap = mutableMapOf<String, Typeface>()
-            updatedSystemMap.putAll(systemMap)
-            updatedSystemMap.putAll(systemDefaults)
-            staticField.set(null, updatedSystemMap)
-            fontOverriden = false
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        fontOverriden = false
     }
 }
