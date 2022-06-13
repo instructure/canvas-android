@@ -57,51 +57,51 @@ class SettingsE2ETest : StudentTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to User Settings Page.")
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
         dashboardPage.launchSettingsPage()
         settingsPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Open Profile Settings Page.")
+        Log.d(STEP_TAG, "Open Profile Settings Page.")
         settingsPage.launchProfileSettings()
         profileSettingsPage.assertPageObjects()
 
         val newUserName = "John Doe"
-        Log.d(STEP_TAG,"Edit username to: $newUserName. Click on 'Save' button.")
+        Log.d(STEP_TAG, "Edit username to: $newUserName. Click on 'Save' button.")
         profileSettingsPage.changeUserNameTo(newUserName)
 
-        Log.d(STEP_TAG,"Navigate back to Dashboard Page. Assert that the username has been changed to $newUserName.")
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page. Assert that the username has been changed to $newUserName.")
         ViewUtils.pressBackButton(2)
         dashboardPage.assertUserLoggedIn(newUserName)
 
         val originalSavedPandaAvatarCount = getSavedPandaAvatarCount()
 
-        Log.d(STEP_TAG,"Navigate to Settings Page again and open Panda Avatar Creator.")
+        Log.d(STEP_TAG, "Navigate to Settings Page again and open Panda Avatar Creator.")
         dashboardPage.launchSettingsPage()
         settingsPage.assertPageObjects()
         settingsPage.launchProfileSettings()
         profileSettingsPage.assertPageObjects()
         profileSettingsPage.launchPandaAvatarCreator()
 
-        Log.d(STEP_TAG,"Set panda avatar head.")
+        Log.d(STEP_TAG, "Set panda avatar head.")
         pandaAvatarPage.selectChangeHead()
         pandaAvatarPage.choosePart(R.string.content_description_panda_head_4)
         pandaAvatarPage.clickBackButton()
 
-        Log.d(STEP_TAG,"Set panda avatar body.")
+        Log.d(STEP_TAG, "Set panda avatar body.")
         pandaAvatarPage.selectChangeBody()
         pandaAvatarPage.choosePart(R.string.content_description_panda_body_4)
         pandaAvatarPage.clickBackButton()
 
-        Log.d(STEP_TAG,"Set panda avatar legs.")
+        Log.d(STEP_TAG, "Set panda avatar legs.")
         pandaAvatarPage.selectChangeLegs()
         pandaAvatarPage.choosePart(R.string.content_description_panda_feet_5)
         pandaAvatarPage.clickBackButton()
 
-        Log.d(STEP_TAG,"Click on 'Save as avatar' button.")
+        Log.d(STEP_TAG, "Click on 'Save as avatar' button.")
         pandaAvatarPage.save()
 
         val newSavedPandaAvatarCount = getSavedPandaAvatarCount()
-        Log.d(STEP_TAG,"Assert that saved panda avatar count has increased by one. Old value: $originalSavedPandaAvatarCount, new value: $newSavedPandaAvatarCount.")
+        Log.d(STEP_TAG, "Assert that saved panda avatar count has increased by one. Old value: $originalSavedPandaAvatarCount, new value: $newSavedPandaAvatarCount.")
         Assert.assertTrue(newSavedPandaAvatarCount == originalSavedPandaAvatarCount + 1)
 
     }
