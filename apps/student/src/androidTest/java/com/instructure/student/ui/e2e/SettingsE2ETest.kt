@@ -119,11 +119,11 @@ class SettingsE2ETest : StudentTest() {
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to Settings Page on the left-side menu.")
+        Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
         dashboardPage.launchSettingsPage()
         settingsPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Click on 'Legal' link to open Legal Page. Assert that Legal Page has opened.")
+        Log.d(STEP_TAG, "Click on 'Legal' link to open Legal Page. Assert that Legal Page has opened.")
         settingsPage.launchLegalPage()
         legalPage.assertPageObjects()
     }
@@ -141,15 +141,21 @@ class SettingsE2ETest : StudentTest() {
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to Settings Page on the left-side menu.")
+        Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
         dashboardPage.launchSettingsPage()
         settingsPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Click on 'About' link to open About Page. Assert that About Page has opened.")
+        Log.d(STEP_TAG, "Click on 'About' link to open About Page. Assert that About Page has opened.")
         settingsPage.launchAboutPage()
         aboutPage.assertPageObjects()
+
+        Log.d(STEP_TAG,"Check that domain is equal to: ${student.domain} (student's domain).")
         aboutPage.domainIs(student.domain)
+
+        Log.d(STEP_TAG,"Check that Login ID is equal to: ${student.loginId} (student's Login ID).")
         aboutPage.loginIdIs(student.loginId)
+
+        Log.d(STEP_TAG,"Check that e-mail is equal to: ${student.loginId} (student's Login ID).")
         aboutPage.emailIs(student.loginId)
 
     }
@@ -168,37 +174,37 @@ class SettingsE2ETest : StudentTest() {
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to Settings Page on the left-side menu.")
+        Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
         dashboardPage.launchSettingsPage()
 
         Log.d(PREPARATION_TAG,"Store the initial values on Remote Config Settings Page.")
         val initialValues = mutableMapOf<String, String?>()
         RemoteConfigParam.values().forEach {param -> initialValues.put(param.rc_name, RemoteConfigUtils.getString(param))}
 
-        Log.d(STEP_TAG,"Navigate to Remote Config Settings Page.")
+        Log.d(STEP_TAG, "Navigate to Remote Config Settings Page.")
         settingsPage.launchRemoteConfigParams()
 
         RemoteConfigParam.values().forEach { param ->
 
-            Log.d(STEP_TAG,"Edit ${param.name} parameter.")
+            Log.d(STEP_TAG, "Edit ${param.name} parameter.")
 
-            Log.d(STEP_TAG,"Bring up the soft keyboard.")
+            Log.d(STEP_TAG, "Bring up the soft keyboard.")
             remoteConfigSettingsPage.clickRemoteConfigParamValue(param)
 
-            Log.d(STEP_TAG,"Dismiss the soft keyboard.")
+            Log.d(STEP_TAG, "Dismiss the soft keyboard.")
             Espresso.closeSoftKeyboard() //we need to do this to make this test work. TODO: investigate
 
-            Log.d(STEP_TAG,"Clear remote config parameter valu: ${param.name}.")
+            Log.d(STEP_TAG, "Clear remote config parameter valu: ${param.name}.")
             remoteConfigSettingsPage.clearRemoteConfigParamValueFocus(param) //we need to clear it because otherwise it would be flaky.
         }
 
-        Log.d(STEP_TAG,"Navigate back to Settings Page.")
+        Log.d(STEP_TAG, "Navigate back to Settings Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Navigate to Remote Config Settings Page.")
+        Log.d(STEP_TAG, "Navigate to Remote Config Settings Page.")
         settingsPage.launchRemoteConfigParams()
 
-        Log.d(STEP_TAG,"Assert that all fields have maintained their initial value.")
+        Log.d(STEP_TAG, "Assert that all fields have maintained their initial value.")
         RemoteConfigParam.values().forEach { param ->
             remoteConfigSettingsPage.verifyRemoteConfigParamValue(param, initialValues.get(param.rc_name)!!)
         }
