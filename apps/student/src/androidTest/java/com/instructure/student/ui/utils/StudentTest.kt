@@ -80,6 +80,7 @@ abstract class StudentTest : CanvasTest() {
     val inboxConversationPage = InboxConversationPage()
     val inboxPage = InboxPage()
     val legalPage = LegalPage()
+    val aboutPage = AboutPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
     val loginSignInPage = LoginSignInPage()

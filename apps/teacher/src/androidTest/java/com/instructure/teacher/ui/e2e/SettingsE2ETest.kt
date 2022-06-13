@@ -147,6 +147,7 @@ class SettingsE2ETest : TeacherTest() {
         settingsPage.assertFiveStarRatingDisplayed()
     }
 
+    //The remote config settings page only available on debug builds.
     @E2E
     @Test
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SETTINGS, TestCategory.E2E)

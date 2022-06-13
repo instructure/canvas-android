@@ -23,7 +23,8 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    android:paddingBottom="16dp"
+    android:id="@+id/aboutPage">
 
     <TextView
         style="@style/TextStyle.Primary"
