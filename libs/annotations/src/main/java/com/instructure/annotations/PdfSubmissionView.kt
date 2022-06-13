@@ -731,11 +731,12 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             val grabItem = annotationCreationToolbar.menuItems.find { it.id == R.id.grab_annotation }
             grabItem?.isSelected = true
         }
+
+        currentAnnotationModeTool = controller.activeAnnotationTool
+
         annotationCreationInspectorController?.bindAnnotationCreationController(controller)
         annotationCreationToolbar.bindController(controller)
         annotationToolbarLayout.displayContextualToolbar(annotationCreationToolbar, true)
-
-        currentAnnotationModeTool = controller.activeAnnotationTool
     }
 
     override fun onExitAnnotationCreationMode(p0: AnnotationCreationController) {
