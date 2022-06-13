@@ -25,7 +25,6 @@ class AnnotationCreationGroupingRule(context: Context) : PresetMenuItemGroupingR
         return when {
             capacity >= 8 -> eightItemGrouping
             capacity == 7 -> sevenItemGrouping
-            capacity == 6 -> sixItemGrouping
             //if all else fails, return the smallest grouping we can
             else -> minItemGrouping
         }
@@ -34,22 +33,7 @@ class AnnotationCreationGroupingRule(context: Context) : PresetMenuItemGroupingR
     override fun areGeneratedGroupItemsSelectable(): Boolean = true
 
     private val eightItemGrouping = listOf(
-        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_stamp),
-        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext),
-        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight),
-        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout),
-        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_drawing,
-            intArrayOf(
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen,
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square)),
-        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_eraser),
-        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_picker),
-        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_undo_redo,
-            intArrayOf(
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo,
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo))
-    )
-    private val sevenItemGrouping = listOf(
+        MenuItem(R.id.grab_annotation),
         MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_stamp),
         MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext),
         MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_markup,
@@ -67,7 +51,8 @@ class AnnotationCreationGroupingRule(context: Context) : PresetMenuItemGroupingR
                 com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo,
                 com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo))
     )
-    private val sixItemGrouping = listOf(
+    private val sevenItemGrouping = listOf(
+        MenuItem(R.id.grab_annotation),
         MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_stamp),
         MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_markup,
             intArrayOf(
@@ -86,6 +71,7 @@ class AnnotationCreationGroupingRule(context: Context) : PresetMenuItemGroupingR
                 com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo))
     )
     private val minItemGrouping = listOf(
+        MenuItem(R.id.grab_annotation),
         MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_markup,
             intArrayOf(
                 com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext,
