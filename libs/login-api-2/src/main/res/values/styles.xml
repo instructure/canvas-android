@@ -23,6 +23,7 @@
         <item name="colorPrimaryDark">@color/textLightest</item>
         <item name="colorAccent">@color/backgroundDark</item>
         <item name="android:windowBackground">@color/backgroundLightest</item>
+        <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
     <style name="LoginFlowTheme.NoActionBar">
@@ -30,6 +31,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">#FFFFFF</item>
+        <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
     <style name="LoginFlowTheme.Splash_Student" parent="@style/LoginFlowTheme.NoActionBar">
@@ -44,6 +46,7 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
     <style name="ToolBarStyleDark" parent="ThemeOverlay.AppCompat.DayNight">
@@ -51,6 +54,7 @@
         <item name="android:textColorPrimary">@color/textDarkest</item>
         <item name="android:textColorSecondary">@color/textDarkest</item>
         <item name="actionMenuTextColor">@color/textDarkest</item>
+        <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
     <!--Text Styles-->
@@ -59,20 +63,24 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
     <style name="TextStyle.Primary">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/textDarkest</item>
+        <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
     <style name="TextStyle.Primary.Bold">
         <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
     <style name="TextStyle.Secondary">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/textDark</item>
+        <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
     <!--Button Styles-->
@@ -86,6 +94,7 @@
         <item name="android:paddingStart">32dp</item>
         <item name="android:paddingEnd">32dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/lato_font_family</item>
     </style>
 
 </resources>

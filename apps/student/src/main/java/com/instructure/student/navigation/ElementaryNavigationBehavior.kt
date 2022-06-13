@@ -19,6 +19,7 @@ package com.instructure.student.navigation
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.FontFamily
 import com.instructure.student.R
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
@@ -41,8 +42,8 @@ class ElementaryNavigationBehavior() : NavigationBehavior {
 
     override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.HELP, AccountMenuItem.CHANGE_USER, AccountMenuItem.LOGOUT)
 
-    override val shouldOverrideFont: Boolean
-        get() = true
+    override val fontFamily: FontFamily
+        get() = FontFamily.K5
 
     override val bottomBarMenu: Int = R.menu.bottom_bar_menu_elementary
 
