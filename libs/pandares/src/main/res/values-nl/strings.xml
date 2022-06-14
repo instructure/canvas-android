@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Er zijn op je apparaat geen applicaties geïnstalleerd die deze link kunnen openen.</string>
     <string name="anonymousDiscussionNotSupported">Anonieme discussies worden momenteel niet ondersteund op mobiel apparaat. Open in browser om discussie te zien.</string>
     <string name="discussionOpenInBrowser">Openen in browser</string>
+    <string name="dashboardSwitchToListView">Naar lijstweergave overschakelen</string>
+    <string name="dashboardSwitchToGridView">Naar roosterweergave overschakelen</string>
+    <string name="selectAppTheme">Appthema selecteren</string>
+    <string name="appThemeSettingsTitle">Appthema</string>
+    <string name="appThemeLight">Licht</string>
+    <string name="appThemeDark">Donker</string>
+    <string name="appThemeSystem">Systeemstandaard</string>
+
 </resources>

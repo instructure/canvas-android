@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Laitteessasi ei ole asennettuna sovelluksia, jotka voisivat avata tämän linkin.</string>
     <string name="anonymousDiscussionNotSupported">Nimettömiä keskusteluita ei tällä hetkellä tueta matkapuhelimessa. Avaa selaimessa tarkastellaksesi keskustelua.</string>
     <string name="discussionOpenInBrowser">Avaa selaimessa</string>
+    <string name="dashboardSwitchToListView">Vaihda luettelonäkymään</string>
+    <string name="dashboardSwitchToGridView">Vaihda ruudukkonäkymään</string>
+    <string name="selectAppTheme">Valitse teema</string>
+    <string name="appThemeSettingsTitle">Sovelluksen teema</string>
+    <string name="appThemeLight">Valo</string>
+    <string name="appThemeDark">Tumma</string>
+    <string name="appThemeSystem">Järjestelmän oletus</string>
+
 </resources>

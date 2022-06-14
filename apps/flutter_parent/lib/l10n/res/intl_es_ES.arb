@@ -21,35 +21,35 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "No Students": "No hay alumnos",
+  "No Students": "No hay estudiantes",
   "@No Students": {
     "description": "Text for when an observer has no students they are observing",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to show student selector": "Pulse para ver el selector de alumnos",
+  "Tap to show student selector": "Pulsa para ver el selector de estudiantes",
   "@Tap to show student selector": {
     "description": "Semantics label for the area that will show the student selector when tapped",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to pair with a new student": "Pulse para emparejar con un nuevo alumno",
+  "Tap to pair with a new student": "Pulsa para emparejar con un nuevo estudiante",
   "@Tap to pair with a new student": {
     "description": "Semantics label for the add student button in the student selector",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to select this student": "Pulse para seleccionar este alumno",
+  "Tap to select this student": "Pulsa para seleccionar este estudiante",
   "@Tap to select this student": {
     "description": "Semantics label on individual students in the student switcher",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Manage Students": "Administrar alumnos",
+  "Manage Students": "Administrar estudiantes",
   "@Manage Students": {
     "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
     "type": "text",
@@ -88,7 +88,7 @@
       "version": {}
     }
   },
-  "Are you sure you want to log out?": "¿Está seguro de que desea salir?",
+  "Are you sure you want to log out?": "¿Estás seguro de que quieres salir?",
   "@Are you sure you want to log out?": {
     "description": "Confirmation message displayed when the user tries to log out",
     "type": "text",
@@ -196,14 +196,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student's calendar": "Ha habido un error al cargar el calendario de su alumno",
+  "There was an error loading your student's calendar": "Ha habido un error al cargar el calendario de tu estudiante",
   "@There was an error loading your student's calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Pulse para marcar las asignaturas que desea ver en el calendario como favoritos. Seleccione hasta 10.",
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Pulsa para marcar las asignaturas que quieres ver en el calendario como favoritos. Selecciona hasta 10.",
   "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
@@ -217,7 +217,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You must select at least one calendar to display": "Debe seleccionar al menos un calendario para mostrar",
+  "You must select at least one calendar to display": "Debes seleccionar al menos un calendario para mostrar",
   "@You must select at least one calendar to display": {
     "description": "Error text when trying to de-select all calendars",
     "type": "text",
@@ -259,7 +259,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "domainSearchInputHint": "Introduzca el nombre de la escuela o el distrito...",
+  "domainSearchInputHint": "Introduce el nombre de la escuela o el distrito...",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",
     "type": "text",
@@ -298,7 +298,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "domainSearchHelpBody": "Intente buscar el nombre de la escuela o el distrito al que intenta acceder, como “Smith Private School” o “Smith County Schools”. También puede introducir directamente a un dominio de Canvas, como “smith.instructure.com”.\n\nPara obtener más información sobre cómo encontrar la cuenta de Canvas de su institución, puede visitar {canvasGuides}, ponerse en contacto con {canvasSupport} o con su escuela para recibir asistencia.",
+  "domainSearchHelpBody": "Intenta buscar el nombre de la escuela o el distrito al que intentas acceder, como “Smith Private School” o “Smith County Schools”. También puedes introducir directamente un dominio de Canvas, como “smith.instructure.com”.\n\nPara obtener más información sobre cómo encontrar la cuenta de Canvas de tu institución, puedes visitar {canvasGuides}, ponerte en contacto con {canvasSupport} o con tu escuela para recibir asistencia.",
   "@domainSearchHelpBody": {
     "description": "The body text shown in the help dialog on the domain search screen",
     "type": "text",
@@ -318,14 +318,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "No sabemos qué ha ocurrido, pero no es nada bueno. Póngase en contacto con nosotros si el problema continúa.",
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "No sabemos qué ha ocurrido, pero no es nada bueno. Ponte en contacto con nosotros si el problema continúa.",
   "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
     "description": "Message shown when a crash has occurred",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Contact Support": "Póngase en contacto con el soporte técnico",
+  "Contact Support": "Ponte en contacto con el soporte técnico",
   "@Contact Support": {
     "description": "Label for the button that allows users to contact support after a crash has occurred",
     "type": "text",
@@ -381,7 +381,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your inbox messages.": "Ha habido un error al cargar sus mensajes de la bandeja de entrada.",
+  "There was an error loading your inbox messages.": "Ha habido un error al cargar tus mensajes de la bandeja de entrada.",
   "@There was an error loading your inbox messages.": {
     "type": "text",
     "placeholders_order": [],
@@ -394,14 +394,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Unable to fetch courses. Please check your connection and try again.": "No se han podido obtener las asignaturas. Compruebe su conexión y vuelva a intentarlo.",
+  "Unable to fetch courses. Please check your connection and try again.": "No se han podido obtener las asignaturas. Comprueba tu conexión y vuelve a intentarlo.",
   "@Unable to fetch courses. Please check your connection and try again.": {
     "description": "Message shown when an error occured while loading courses",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Choose a course to message": "Elija una asignatura para enviar un mensaje",
+  "Choose a course to message": "Elige una asignatura para enviar un mensaje",
   "@Choose a course to message": {
     "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
     "type": "text",
@@ -415,7 +415,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You’re all caught up!": "¡Ya está al día!",
+  "You’re all caught up!": "¡Ya estás al día!",
   "@You’re all caught up!": {
     "description": "Subtitle of the message shown when there are no inbox messages",
     "type": "text",
@@ -429,7 +429,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Unable to send message. Check your connection and try again.": "No se puede enviar el mensaje. Compruebe su conexión y vuelva a intentarlo.",
+  "Unable to send message. Check your connection and try again.": "No se puede enviar el mensaje. Comprueba tu conexión y vuelve a intentarlo.",
   "@Unable to send message. Check your connection and try again.": {
     "description": "Message show when there was an error creating or sending a new message",
     "type": "text",
@@ -443,7 +443,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Are you sure you wish to close this page? Your unsent message will be lost.": "¿Está seguro de que desea cerrar esta página? Su mensaje no enviado se perderá.",
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "¿Estás seguro de que quieres cerrar esta página? Tu mensaje no enviado se perderá.",
   "@Are you sure you wish to close this page? Your unsent message will be lost.": {
     "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
     "type": "text",
@@ -478,7 +478,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "No recipients selected": "No ha seleccionado ningún destinatario",
+  "No recipients selected": "No has seleccionado ningún destinatario",
   "@No recipients selected": {
     "description": "Hint displayed when the user has not selected any message recipients",
     "type": "text",
@@ -519,7 +519,7 @@
       }
     }
   },
-  "Failed. Tap for options.": "Ha habido un error. Toque para ver las opciones.",
+  "Failed. Tap for options.": "Ha habido un error. Toca para ver las opciones.",
   "@Failed. Tap for options.": {
     "description": "Short message shown on a message attachment when uploading has failed",
     "type": "text",
@@ -686,14 +686,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "Es posible que las asignaturas de sus alumnos aún no estén publicadas.",
+  "Your student’s courses might not be published yet.": "Es posible que las asignaturas de tus estudiantes aún no estén publicadas.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student’s courses.": "Ha habido un error al cargar las asignaturas de su alumno.",
+  "There was an error loading your student’s courses.": "Ha habido un error al cargar las asignaturas de tu estudiante.",
   "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
@@ -777,7 +777,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Late": "Con atraso",
+  "Late": "Con retraso",
   "@Late": {
     "description": "Label for assignments that have been marked late or submitted late",
     "type": "text",
@@ -1007,7 +1007,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You will be notified about this assignment on…": "Se le notificará acerca de esta actividad el...",
+  "You will be notified about this assignment on…": "Se te notificará acerca de esta actividad el...",
   "@You will be notified about this assignment on…": {
     "description": "Description for when a reminder is set",
     "type": "text",
@@ -1077,7 +1077,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "Para brindarle una mejor experiencia, hemos actualizado el funcionamiento de los recordatorios. Para añadir nuevos recordatorios, vea una actividad o evento del calendario y pulse el botón en la sección \"Recordarme\" (\"Remind Me\").\n\nTenga presente que cualquier recordatorio creado con versiones anteriores de esta aplicación no será compatible con los nuevos cambios, y deberá volver a crearlo.",
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "Para brindarte una mejor experiencia, hemos actualizado el funcionamiento de los recordatorios. Para añadir nuevos recordatorios, consulta una actividad o evento del calendario y pulsa el botón en la sección \"Recordarme\" (\"Remind Me\").\n\nTen presente que cualquier recordatorio creado con versiones anteriores de esta aplicación no será compatible con los nuevos cambios, y deberás volver a crearlo.",
   "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
     "type": "text",
     "placeholders_order": [],
@@ -1090,21 +1090,21 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "We couldn't find any students associated with this account": "No hemos podido encontrar ningún alumno relacionado con esta cuenta",
+  "We couldn't find any students associated with this account": "No hemos podido encontrar ningún estudiante relacionado con esta cuenta",
   "@We couldn't find any students associated with this account": {
     "description": "Subtitle for the screen that shows when the user is not observing any students",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Are you a student or teacher?": "¿Es alumno o profesor?",
+  "Are you a student or teacher?": "¿Es estudiante o profesor?",
   "@Are you a student or teacher?": {
     "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Una de nuestras otras aplicaciones podría ser más adecuada. Toque una para visitar la Play Store.",
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Una de nuestras otras aplicaciones podría ser más adecuada. Toca una para visitar la Play Store.",
   "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
     "description": "Description of options to view other Canvas apps in the Play Store",
     "type": "text",
@@ -1118,7 +1118,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "STUDENT": "ALUMNO",
+  "STUDENT": "ESTUDIANTE",
   "@STUDENT": {
     "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
     "type": "text",
@@ -1433,7 +1433,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student's alerts.": "Ha habido un error al cargar las alertas de sus alumnos.",
+  "There was an error loading your student's alerts.": "Ha habido un error al cargar las alertas de tus estudiantes.",
   "@There was an error loading your student's alerts.": {
     "type": "text",
     "placeholders_order": [],
@@ -1471,7 +1471,7 @@
       }
     }
   },
-  "Select Student Color": "Seleccionar color del alumno",
+  "Select Student Color": "Seleccionar color del estudiante",
   "@Select Student Color": {
     "description": "Title for screen that allows users to assign a color to a specific student",
     "type": "text",
@@ -1520,7 +1520,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "An error occurred while saving your selection. Please try again.": "Ha habido un error al guardar su selección. Inténtelo de nuevo.",
+  "An error occurred while saving your selection. Please try again.": "Ha habido un error al guardar tu selección. Inténtalo de nuevo.",
   "@An error occurred while saving your selection. Please try again.": {
     "type": "text",
     "placeholders_order": [],
@@ -1544,7 +1544,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Student": "Alumno",
+  "Student": "Estudiante",
   "@Student": {
     "description": "Label for the Student enrollment type",
     "type": "text",
@@ -1593,25 +1593,25 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add student with…": "Añadir alumno con...",
+  "Add student with…": "Añadir estudiante con...",
   "@Add student with…": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add Student": "Añadir alumno",
+  "Add Student": "Añadir estudiante",
   "@Add Student": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You are not observing any students.": "No está observando a ningún alumno.",
+  "You are not observing any students.": "No estás observando a ningún estudiante.",
   "@You are not observing any students.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your students.": "Ha habido un error al cargar sus alumnos.",
+  "There was an error loading your students.": "Ha habido un error al cargar tus estudiantes.",
   "@There was an error loading your students.": {
     "type": "text",
     "placeholders_order": [],
@@ -1623,25 +1623,25 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Students can obtain a pairing code through the Canvas website": "Los alumnos pueden obtener un código de emparejamiento a través del sitio web de Canvas",
+  "Students can obtain a pairing code through the Canvas website": "Los estudiantes pueden obtener un código de emparejamiento a través del sitio web de Canvas",
   "@Students can obtain a pairing code through the Canvas website": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Introduzca el código de emparejamiento de alumno que se le ha proporcionado. Si el código de emparejamiento no funciona, es posible que haya caducado",
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Introduce el código de emparejamiento de estudiante que se te ha proporcionado. Si el código de emparejamiento no funciona, es posible que haya caducado",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Your code is incorrect or expired.": "Su código es incorrecto o ha caducado.",
+  "Your code is incorrect or expired.": "Tu código es incorrecto o ha caducado.",
   "@Your code is incorrect or expired.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Something went wrong trying to create your account, please reach out to your school for assistance.": "Algo ha salido mal al intentar crear su cuenta; póngase en contacto con su escuela para obtener asistencia.",
+  "Something went wrong trying to create your account, please reach out to your school for assistance.": "Algo ha salido mal al intentar crear tu cuenta; ponte en contacto con tu escuela para obtener asistencia.",
   "@Something went wrong trying to create your account, please reach out to your school for assistance.": {
     "type": "text",
     "placeholders_order": [],
@@ -1653,13 +1653,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Students can create a QR code using the Canvas Student app on their mobile device": "Los alumnos pueden crear un código QR mediante la aplicación Canvas Student en sus dispositivos móviles",
+  "Students can create a QR code using the Canvas Student app on their mobile device": "Los estudiantes pueden crear un código QR mediante la aplicación Canvas Student en sus dispositivos móviles",
   "@Students can create a QR code using the Canvas Student app on their mobile device": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add new student": "Añadir nuevo alumno",
+  "Add new student": "Añadir nuevo estudiante",
   "@Add new student": {
     "description": "Semantics label for the FAB on the Manage Students Screen",
     "type": "text",
@@ -1733,21 +1733,21 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Please enter full name": "Introduzca el nombre completo",
+  "Please enter full name": "Introduce el nombre completo",
   "@Please enter full name": {
     "description": "Error message for form field",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Please enter an email address": "Introduzca una dirección de correo electrónico",
+  "Please enter an email address": "Introduce una dirección de correo electrónico",
   "@Please enter an email address": {
     "description": "Error message for form field",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Please enter a valid email address": "Introduzca una dirección de correo electrónico válida",
+  "Please enter a valid email address": "Introduce una dirección de correo electrónico válida",
   "@Please enter a valid email address": {
     "description": "Error message for form field",
     "type": "text",
@@ -1768,7 +1768,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "qrCreateAccountTos": "Al tocar en “Crear usuario”, acepta los {termsOfService} y la {privacyPolicy}",
+  "qrCreateAccountTos": "Al tocar en “Crear usuario”, aceptas los {termsOfService} y la {privacyPolicy}",
   "@qrCreateAccountTos": {
     "description": "The text show on the account creation screen",
     "type": "text",
@@ -1801,7 +1801,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Already have an account? ": "¿Ya tiene una cuenta? ",
+  "Already have an account? ": "¿Ya tienes una cuenta? ",
   "@Already have an account? ": {
     "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
     "type": "text",
@@ -1891,21 +1891,21 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You will be notified about this event on…": "Se le notificará acerca de este evento el...",
+  "You will be notified about this event on…": "Se te notificará acerca de este evento el...",
   "@You will be notified about this event on…": {
     "description": "Description for when an event reminder is set",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Share Your Love for the App": "Comparta su amor por la aplicación",
+  "Share Your Love for the App": "Comparte tu amor por la aplicación",
   "@Share Your Love for the App": {
     "description": "Label for option to open the app store",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tell us about your favorite parts of the app": "Díganos cuáles son las partes de la aplicación que le gustan más",
+  "Tell us about your favorite parts of the app": "Dinos cuáles son las partes de la aplicación que más te gustan",
   "@Tell us about your favorite parts of the app": {
     "description": "Description for option to open the app store",
     "type": "text",
@@ -1933,7 +1933,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "The following information will help us better understand your idea:": "La siguiente información nos ayudará a comprender mejor su idea:",
+  "The following information will help us better understand your idea:": "La siguiente información nos ayudará a comprender mejor tu idea:",
   "@The following information will help us better understand your idea:": {
     "description": "The header for the users information that is attached to a feature request",
     "type": "text",
@@ -2051,7 +2051,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "How is this affecting you?": "¿Cómo le afecta esto?",
+  "How is this affecting you?": "¿Cómo te afecta esto?",
   "@How is this affecting you?": {
     "description": "Label used for the dropdown to select how severe the issue is",
     "type": "text",
@@ -2083,7 +2083,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "I can't get things done until I hear back from you.": "No puedo hacer nada hasta que me contesten.",
+  "I can't get things done until I hear back from you.": "No puedo hacer nada hasta que me contestéis.",
   "@I can't get things done until I hear back from you.": {
     "type": "text",
     "placeholders_order": [],
@@ -2155,7 +2155,7 @@
       "userName": {}
     }
   },
-  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Actuar como\" es básicamente iniciar sesión como si fuera este usuario pero sin una contraseña. Podrá realizar cualquier acción como si fuera este usuario y, desde el punto de vista de los demás usuarios, será como si este usuario las hubiera realizado. Sin embargo, los registros de auditoría indican que usted es quien ha realizado las acciones en representación de este usuario.",
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Actuar como\" es básicamente iniciar sesión como si fuera este usuario pero sin una contraseña. Podrás realizar cualquier acción como si fueras este usuario y, desde el punto de vista de los demás usuarios, será como si este usuario las hubiera realizado. Sin embargo, los registros de auditoría indican que tu eres quien ha realizado las acciones en representación de este usuario.",
   "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
     "type": "text",
     "placeholders_order": [],
@@ -2168,7 +2168,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You must enter a valid domain": "Debe introducir un dominio válido",
+  "You must enter a valid domain": "Debes introducir un dominio válido",
   "@You must enter a valid domain": {
     "description": "Message displayed for domain input error",
     "type": "text",
@@ -2182,20 +2182,20 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You must enter a user id": "Debe introducir una identificación de usuario",
+  "You must enter a user id": "Debes introducir una identificación de usuario",
   "@You must enter a user id": {
     "description": "Message displayed for user Id input error",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Ha habido un error al intentar actuar en nombre de este usuario. Revise el dominio y la identificación de usuario y vuelva a intentarlo.",
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Ha habido un error al intentar actuar en nombre de este usuario. Revisa el dominio y la identificación de usuario y vuelve a intentarlo.",
   "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "endMasqueradeMessage": "Dejará de actuar como {userName} y volverá a su cuenta original.",
+  "endMasqueradeMessage": "Dejarás de actuar como {userName} y volverás a tu cuenta original.",
   "@endMasqueradeMessage": {
     "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
     "type": "text",
@@ -2206,7 +2206,7 @@
       "userName": {}
     }
   },
-  "endMasqueradeLogoutMessage": "Dejará de actuar como {userName} y cerrará la sesión.",
+  "endMasqueradeLogoutMessage": "Dejarás de actuar como {userName} y cerrarás la sesión.",
   "@endMasqueradeLogoutMessage": {
     "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
     "type": "text",
@@ -2217,7 +2217,7 @@
       "userName": {}
     }
   },
-  "How are we doing?": "¿Cómo está?",
+  "How are we doing?": "¿Cómo estás?",
   "@How are we doing?": {
     "description": "Title for dialog asking user to rate the app out of 5 stars.",
     "type": "text",
@@ -2269,7 +2269,7 @@
       }
     }
   },
-  "Student Pairing": "Emparejamiento del alumno",
+  "Student Pairing": "Emparejamiento del estudiante",
   "@Student Pairing": {
     "description": "Title for the screen where users can pair to students using a QR code",
     "type": "text",
@@ -2283,7 +2283,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Para continuar, debe abrir la aplicación Canvas Student de su alumno. Vaya a Menú Principal > Configuraciones > Emparejar con Observador y escanee el código QR que aparece allí.",
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Para continuar, debes abrir la aplicación Canvas Student de tu estudiante. Ve a Menú Principal > Configuraciones > Emparejar con Observador y escanea el código QR que aparece allí.",
   "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
     "description": "Message explaining how QR code pairing works",
     "type": "text",
@@ -2304,13 +2304,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "Es posible que el código QR que ha escaneado haya caducado. Actualice el código en el dispositivo del alumno y vuelva a intentarlo.",
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "Es posible que el código QR que has escaneado haya caducado. Actualiza el código en el dispositivo del estudiante y vuelve a intentarlo.",
   "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "A network error occurred when adding this student. Check your connection and try again.": "Ha habido un error de la red al añadir a este alumno. Compruebe su conexión y vuelva a intentarlo.",
+  "A network error occurred when adding this student. Check your connection and try again.": "Ha habido un error de la red al añadir a este estudiante. Comprueba tu conexión y vuelve a intentarlo.",
   "@A network error occurred when adding this student. Check your connection and try again.": {
     "type": "text",
     "placeholders_order": [],
@@ -2330,7 +2330,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "El alumno que está intentando añadir pertenece a una escuela diferente. Inicie sesión o cree una cuenta con esa escuela para escanear el código.",
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "El estudiante que está intentando añadir pertenece a una escuela diferente. Inicia sesión o crea una cuenta con esa escuela para escanear el código.",
   "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
     "type": "text",
     "placeholders_order": [],
@@ -2343,14 +2343,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "This will unpair and remove all enrollments for this student from your account.": "Deshará el emparejamiento y eliminará todas las inscripciones de este alumno en su cuenta.",
+  "This will unpair and remove all enrollments for this student from your account.": "Esto deshará el emparejamiento y eliminará todas las inscripciones de este estudiante en tu cuenta.",
   "@This will unpair and remove all enrollments for this student from your account.": {
     "description": "Confirmation message shown when the user tries to delete a student from their account",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was a problem removing this student from your account. Please check your connection and try again.": "Ha habido un problema al eliminar a este alumno de su cuenta. Compruebe su conexión y vuelva a intentarlo.",
+  "There was a problem removing this student from your account. Please check your connection and try again.": "Ha habido un problema al eliminar a este estudiante de tu cuenta. Comprueba tu conexión y vuelve a intentarlo.",
   "@There was a problem removing this student from your account. Please check your connection and try again.": {
     "type": "text",
     "placeholders_order": [],
@@ -2454,7 +2454,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Interactions on this page are limited by your institution.": "Las interacciones en esta página están limitadas por su institución.",
+  "Interactions on this page are limited by your institution.": "Las interacciones en esta página están limitadas por tu institución.",
   "@Interactions on this page are limited by your institution.": {
     "description": "Message describing how the webview has limited access due to an instution setting",
     "type": "text",
@@ -2549,7 +2549,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "We are currently building this feature for your viewing pleasure.": "Actualmente estamos desarrollando esta funcionalidad para que pueda disfrutarla.",
+  "We are currently building this feature for your viewing pleasure.": "Actualmente estamos desarrollando esta funcionalidad para que puedas disfrutarla.",
   "@We are currently building this feature for your viewing pleasure.": {
     "type": "text",
     "placeholders_order": [],
@@ -2583,7 +2583,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "No podemos mostrar este enlace; es posible que pertenezca a una institución en la que no tiene sesión abierta actualmente.",
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "No podemos mostrar este enlace; es posible que pertenezca a una institución en la que no tienes sesión abierta actualmente.",
   "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
     "description": "Description for error page shown when clicking a link",
     "type": "text",
@@ -2604,7 +2604,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "Encontrará el código QR en el sitio web, en su perfil de la cuenta. Haga clic en “QR para Inicio de sesión móvil” en la lista.",
+  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "Encontrarás el código QR en el sitio web, en tu perfil de la cuenta. Haz clic en “QR para Inicio de sesión móvil” en la lista.",
   "@You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": {
     "description": "Text for qr login tutorial screen",
     "type": "text",
@@ -2618,14 +2618,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Please scan a QR code generated by Canvas": "Escanee un código QR generado por Canvas",
+  "Please scan a QR code generated by Canvas": "Escanea un código QR generado por Canvas",
   "@Please scan a QR code generated by Canvas": {
     "description": "Text for qr login error with incorrect qr code",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error logging in. Please generate another QR Code and try again.": "Ha habido un error al iniciar sesión. Genere otro código QR y vuelva a intentarlo.",
+  "There was an error logging in. Please generate another QR Code and try again.": "Ha habido un error al iniciar sesión. Genera otro código QR y vuelve a intentarlo.",
   "@There was an error logging in. Please generate another QR Code and try again.": {
     "description": "Text for qr login error",
     "type": "text",

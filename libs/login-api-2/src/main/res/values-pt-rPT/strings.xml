@@ -54,7 +54,7 @@
     <string name="password">Palavra passe</string>
     <string name="authenticationRequired">Autenticação necessária</string>
     <string name="invalidEmailPassword">Email ou palavra chave inválida</string>
-    <string name="login">Registar</string>
+    <string name="login">Iniciar sessão</string>
     <string name="logout">Sair</string>
 
     <string name="matchingSchools">Escolas de harmonização</string>

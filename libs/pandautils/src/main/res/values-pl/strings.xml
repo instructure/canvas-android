@@ -497,4 +497,6 @@
     <string name="a11y_not_marked_as_done">Nie oznaczono jako gotowe</string>
     <string name="error_loading_course_details">O, nie! Podczas wczytywania szczegółów kursu wystąpił błąd.</string>
     <string name="a11y_schedule_marked_as_not_done">%s oznaczono jako niegotowe</string>
+    <string name="a11y_markAsDoneWithName">%s Oznacz jako gotowe</string>
+    <string name="a11y_markAsNotDoneWithName">%s Oznacz jako niegotowe</string>
 </resources>

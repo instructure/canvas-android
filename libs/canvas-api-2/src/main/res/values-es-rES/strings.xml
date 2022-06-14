@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -19,7 +19,7 @@
 <resources>
 
     <!--Modules-->
-    <string name="mustComplete">Primero debe completar lo siguiente:</string>
+    <string name="mustComplete">Primero debes completar lo siguiente:</string>
     <string name="unlockedAt">Se desbloqueará a las:</string>
     <string name="goToModules">Ir a contenidos</string>
 
@@ -28,7 +28,7 @@
     <string name="Ends">Finaliza</string>
     <string name="allDayEvent">Evento de todo el día</string>
     <string name="at">a las</string>
-    <string name="to">para</string>
+    <string name="to">hasta</string>
 
     <!--StreamItems-->
     <string name="Message">Mensaje</string>
@@ -36,7 +36,7 @@
     <string name="Deleted">Eliminado</string>
 
     <!-- Assignment Module -->
-    <string name="canvasAPI_online">En línea</string>
+    <string name="canvasAPI_online">Online</string>
     <string name="canvasAPI_onPaper">En papel</string>
     <string name="canvasAPI_discussion">Foro de discusión</string>
     <string name="canvasAPI_quiz">Prueba</string>
@@ -57,20 +57,20 @@
     <string name="canvasAPI_onlineURL">URL de la página web</string>
     <string name="canvasAPI_mediaRecording">Grabación multimedia</string>
     <string name="canvasAPI_attendance">Asistencia</string>
-    <string name="canvasAPI_studentAnnotation">Anotación del alumno</string>
+    <string name="canvasAPI_studentAnnotation">Anotación del estudiante</string>
     <string name="quiz_scoring_policy_highest">Más alta</string>
     <string name="quiz_scoring_policy_average">Promedio</string>
     <string name="quiz_scoring_policy_latest">Más reciente</string>
     <string name="no">No</string>
     <string name="always">Siempre</string>
-    <string name="graded_quiz">Prueba evaluado</string>
+    <string name="graded_quiz">Prueba evaluada</string>
     <string name="practice_quiz">Prueba de práctica</string>
     <string name="graded_survey">Encuesta evaluada</string>
     <string name="ungraded_survey">Encuesta no evaluada</string>
     <string name="andMore">\u0020y %d más</string>
 
     <!-- Enrollment Types -->
-    <string name="enrollmentTypeStudent">Alumno</string>
+    <string name="enrollmentTypeStudent">Estudiante</string>
     <string name="enrollmentTypeTeacher">Profesor</string>
     <string name="enrollmentTypeObserver">Observador</string>
     <string name="enrollmentTypeTeachingAssistant">Profesor auxiliar</string>

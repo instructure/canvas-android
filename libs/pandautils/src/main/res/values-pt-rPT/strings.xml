@@ -177,8 +177,8 @@
     <string name="chooseFileForUploadSubtext">Selecione um ficheiro para carregar ao tocar em uma opção abaixo.</string>
     <string name="noNotifications">Nenhuma notificação</string>
     <string name="noNotificationsSubtext">Não há nada para ser notificado ainda.</string>
-    <string name="noTodos">Bem feito!</string>
-    <string name="noTodosSubtext">Sua lista de tarefas está vazia. Hora de recarregar.</string>
+    <string name="noTodos">Parabéns!</string>
+    <string name="noTodosSubtext">A sua lista de tarefas está vazia. Hora de recarregar.</string>
     <string name="noSyllabus">Não Syllabus</string>
     <string name="noSyllabusSubtext">Um plano de estudos ainda não foi criado.</string>
     <string name="noBookmarks">Nenhum marcador</string>
@@ -483,4 +483,6 @@
     <string name="a11y_not_marked_as_done">Não marcado como terminado</string>
     <string name="error_loading_course_details">Ah não! Ocorreu um erro ao carregar os detalhes da disciplina.</string>
     <string name="a11y_schedule_marked_as_not_done">%s marcado como não feito</string>
+    <string name="a11y_markAsDoneWithName">%s Marcar como feito</string>
+    <string name="a11y_markAsNotDoneWithName">%s Marcar como não feito</string>
 </resources>

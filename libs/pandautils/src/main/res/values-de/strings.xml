@@ -483,4 +483,6 @@
     <string name="a11y_not_marked_as_done">Nicht als fertig markiert</string>
     <string name="error_loading_course_details">Oh je! Fehler beim Laden der Kursdetails</string>
     <string name="a11y_schedule_marked_as_not_done">%s als nicht erledigt markiert</string>
+    <string name="a11y_markAsDoneWithName">%s als erledigt markieren</string>
+    <string name="a11y_markAsNotDoneWithName">%s als nicht erledigt markieren</string>
 </resources>

@@ -483,4 +483,6 @@
     <string name="a11y_not_marked_as_done">Pa make tankou li fini</string>
     <string name="error_loading_course_details">Uh oh! Gen yon erè ki fèt pandan chajman detay kou yo.</string>
     <string name="a11y_schedule_marked_as_not_done">%s make ke li poko fini</string>
+    <string name="a11y_markAsDoneWithName">%s Make kòm fini</string>
+    <string name="a11y_markAsNotDoneWithName">%s Make kòm poko fini</string>
 </resources>

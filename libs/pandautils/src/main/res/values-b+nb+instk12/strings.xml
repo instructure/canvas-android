@@ -484,4 +484,6 @@
     <string name="error_loading_course_details">Oi sann! Det oppsto en feil ved lasting av fagdetaljer.</string>
 
     <string name="a11y_schedule_marked_as_not_done">%s merket som ikke ferdig</string>
+    <string name="a11y_markAsDoneWithName">%s Merk som ferdig</string>
+    <string name="a11y_markAsNotDoneWithName">%s Merket som ikke ferdig</string>
 </resources>
