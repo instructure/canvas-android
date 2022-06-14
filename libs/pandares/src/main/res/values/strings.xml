@@ -1276,4 +1276,6 @@
     <string name="themeSelectorSave">Save</string>
     <string name="themeSelectorChangeLater">You can change it later in app settings</string>
 
+    <string name="grabAnnotationTool">Grab</string>
+
 </resources>
