@@ -45,9 +45,9 @@ class NavigationActivityModule {
     @Provides
     fun providesNavigationBehavior(@Named(CANVAS_FOR_ELEMENTARY) canvasForElementary: Boolean, apiPrefs: ApiPrefs): NavigationBehavior {
         return if (canvasForElementary || apiPrefs.showElementaryView) {
-            ElementaryNavigationBehavior()
+            ElementaryNavigationBehavior(apiPrefs)
         } else {
-            DefaultNavigationBehavior()
+            DefaultNavigationBehavior(apiPrefs)
         }
     }
 
