@@ -1241,4 +1241,12 @@
     <string name="noCompatibleAppInstalled">您的裝置沒有安裝可開啟此連結的任何應用程式。</string>
     <string name="anonymousDiscussionNotSupported">流動電話目前不支援匿名討論區。在瀏覽器中打開以檢視討論區。</string>
     <string name="discussionOpenInBrowser">在瀏覽器中打開</string>
+    <string name="dashboardSwitchToListView">切換至清單視圖</string>
+    <string name="dashboardSwitchToGridView">切換至網格視圖</string>
+    <string name="selectAppTheme">選擇應用程式主題</string>
+    <string name="appThemeSettingsTitle">應用程式主題</string>
+    <string name="appThemeLight">亮色</string>
+    <string name="appThemeDark">暗色</string>
+    <string name="appThemeSystem">系統預設</string>
+
 </resources>
