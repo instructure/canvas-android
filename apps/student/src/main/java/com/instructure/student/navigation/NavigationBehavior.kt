@@ -18,8 +18,11 @@ package com.instructure.student.navigation
 
 import androidx.annotation.MenuRes
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.FontFamily
+import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.student.fragment.InboxFragment
 import com.instructure.student.fragment.ParentFragment
 
 interface NavigationBehavior {
@@ -43,6 +46,14 @@ interface NavigationBehavior {
     fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route
 
     fun createHomeFragment(route: Route): ParentFragment
+
+    fun getInboxBottomBarFragment(apiPrefs: ApiPrefs): Class<out ParentFragment> {
+        return if (apiPrefs.isStudentView) {
+            NothingToSeeHereFragment::class.java
+        } else {
+            InboxFragment::class.java
+        }
+    }
 }
 
 enum class NavigationMenuItem {

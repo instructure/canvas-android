@@ -21,17 +21,20 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.FontFamily
 import com.instructure.student.R
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.CalendarFragment
+import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
 
-class ElementaryNavigationBehavior() : NavigationBehavior {
+class ElementaryNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBehavior {
 
     override val bottomNavBarFragments: List<Class<out ParentFragment>> = listOf(
         ElementaryDashboardFragment::class.java,
         CalendarFragment::class.java,
         ToDoListFragment::class.java,
         NotificationListFragment::class.java,
-        InboxFragment::class.java
+        getInboxBottomBarFragment(apiPrefs)
     )
 
     override val homeFragmentClass: Class<out ParentFragment> = ElementaryDashboardFragment::class.java
