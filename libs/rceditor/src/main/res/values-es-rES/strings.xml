@@ -62,10 +62,10 @@
     <string name="rce_cancel">Cancelar</string>
     <string name="rce_exit">Salir</string>
     <string name="rce_dialog_exit_title">¿Salir de la edición de la actividad?</string>
-    <string name="rce_dialog_exit_message">¿Está seguro de que desea salir? Los datos no guardados se perderán.</string>
+    <string name="rce_dialog_exit_message">¿Estás seguro de que quieres salir? Los datos no guardados se perderán.</string>
     <string name="rce_empty_message">Mensaje</string>
     <string name="rce_empty_description">Añadir descripción</string>
-    <string name="rce_scrollInstructions">Desplácese para ver todas las herramientas de edición</string>
+    <string name="rce_scrollInstructions">Desplázate para ver todas las herramientas de edición</string>
 
     <string name="rce_emptyUrlError">La url no puede estar en blanco</string>
     <string name="rce_httpNotAllowed">Solo se aceptan url https</string>

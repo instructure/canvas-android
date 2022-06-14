@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Seu dispositivo não possui nenhum aplicativo instalado que possa abrir este link.</string>
     <string name="anonymousDiscussionNotSupported">De momento, as discussões anônimas não são suportadas em dispositivos móveis. Abrir no navegador para visualizar a discussão.</string>
     <string name="discussionOpenInBrowser">Abrir no navegador</string>
+    <string name="dashboardSwitchToListView">Mudar para visualização de lista</string>
+    <string name="dashboardSwitchToGridView">Mudar para visualização em grade</string>
+    <string name="selectAppTheme">Selecione o tema do aplicativo</string>
+    <string name="appThemeSettingsTitle">Tema do aplicativo</string>
+    <string name="appThemeLight">Claro</string>
+    <string name="appThemeDark">Escuro</string>
+    <string name="appThemeSystem">Sistema padrão</string>
+
 </resources>

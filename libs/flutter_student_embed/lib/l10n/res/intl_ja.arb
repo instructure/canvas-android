@@ -7,14 +7,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Calendar": "予定表",
+  "Calendar": "カレンダー",
   "@Calendar": {
     "description": "Title of the calendar screen",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Calendars": "予定表",
+  "Calendars": "カレンダー",
   "@Calendars": {
     "description": "Label for button that lets users select which calendars to display",
     "type": "text",
@@ -115,14 +115,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your calendar": "予定表読み込み中にエラーが発生しました",
+  "There was an error loading your calendar": "カレンダー読み込み中にエラーが発生しました",
   "@There was an error loading your calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "タップして予定表に表示したいコースをお気に入りにします。",
+  "Tap to favorite the courses you want to see on the Calendar.": "タップしてカレンダーに表示したいコースをお気に入りにします。",
   "@Tap to favorite the courses you want to see on the Calendar.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
@@ -316,14 +316,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "受講生のコースはまだ公開されていない可能性があります",
+  "Your student’s courses might not be published yet.": "受講者のコースはまだ公開されていない可能性があります",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your your student’s courses.": "受講生のコースのロード中にエラーが発生しました",
+  "There was an error loading your your student’s courses.": "受講者のコースのロード中にエラーが発生しました",
   "@There was an error loading your your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",

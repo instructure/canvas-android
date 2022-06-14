@@ -601,7 +601,7 @@
     <string name="canvasOnGithub">Canvas sur GitHub</string>
 
     <!-- Quiz Strings -->
-    <string name="assignmentQuizzes">Questionnaires de la tâche</string>
+    <string name="assignmentQuizzes">Questionnaires</string>
     <string name="practiceQuizzes">Questionnaires d\'entraînement</string>
     <string name="gradedSurveys">Enquêtes notées</string>
     <string name="surveys">Enquêtes</string>
@@ -1245,10 +1245,22 @@
     <string name="a11y_error_occured">Une erreur s\'est produite, veuillez réessayer.</string>
     <string name="a11y_content_description_accept_invite">Accepter l’invitation</string>
     <string name="a11y_content_description_decline_invite">Refuser l\'invitation</string>
+    <string name="no_notifications_to_show">Aucune notification à afficher</string>
+
     <string name="documentScanningTitle">Numérisation de documents</string>
     <string name="filter_name_color">Couleur</string>
     <string name="filter_name_grayscale">Niveaux de gris</string>
     <string name="filter_name_monochrome">Monochrome</string>
     <string name="filter_name_original">Original</string>
     <string name="noCompatibleAppInstalled">Votre dispositif ne dispose pas des applications qui peuvent ouvrir ce lien.</string>
+    <string name="anonymousDiscussionNotSupported">Les discussions anonymes ne sont pas actuellement prises en charge sur les mobiles. Ouvrir dans le navigateur pour voir la discussion.</string>
+    <string name="discussionOpenInBrowser">Ouvrir dans le navigateur</string>
+    <string name="dashboardSwitchToListView">Basculer vers la vue Liste</string>
+    <string name="dashboardSwitchToGridView">Basculer vers la vue Grille</string>
+    <string name="selectAppTheme">Sélectionnez le thème de l\'application</string>
+    <string name="appThemeSettingsTitle">Thème de l\'application</string>
+    <string name="appThemeLight">Clair</string>
+    <string name="appThemeDark">Foncé</string>
+    <string name="appThemeSystem">Défaut du système</string>
+
 </resources>

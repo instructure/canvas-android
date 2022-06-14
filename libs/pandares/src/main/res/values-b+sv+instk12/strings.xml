@@ -1008,8 +1008,8 @@
     <string name="addChildSubTitle">Ange kopplingskoden du fått för elever.</string>
     <string name="addChildHint">Kopplingskod ...</string>
     <string name="addChildErrorMessage">Det gick inte att koppla. Se till att din kopplingskod är korrekt och att dess tidsgräns inte har överskridits.</string>
-    <string name="gradeComplete">Färdiga</string>
-    <string name="gradeIncomplete">Ej fullständiga</string>
+    <string name="gradeComplete">Fullgjord</string>
+    <string name="gradeIncomplete">Ej fullständig</string>
 
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Publiceringsinställningar</string>
@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Din enhet har inga program som kan öppna den här länken.</string>
     <string name="anonymousDiscussionNotSupported">Anonyma diskussioner stöds för närvarande inte på mobila enheter. Öppna i webbläsare för att visa diskussionen.</string>
     <string name="discussionOpenInBrowser">Öppna i webbläsare</string>
+    <string name="dashboardSwitchToListView">Växla till listvy</string>
+    <string name="dashboardSwitchToGridView">Växla till rutnätsvy</string>
+    <string name="selectAppTheme">Välj apptema</string>
+    <string name="appThemeSettingsTitle">Apptema</string>
+    <string name="appThemeLight">Ljus</string>
+    <string name="appThemeDark">Mörk</string>
+    <string name="appThemeSystem">Systemstandard</string>
+
 </resources>

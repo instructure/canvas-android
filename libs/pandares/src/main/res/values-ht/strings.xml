@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Pa gen okenn nan aplikasyon ki enstale sou aparèy pi a ki ka ouvri lyen sa a.</string>
     <string name="anonymousDiscussionNotSupported">Diskisyon anonim yo pa konpatib ak aparèy mobil yo. Ouvri nan navigatè pou ka wè diskisyon.</string>
     <string name="discussionOpenInBrowser">Ouvri nan navigatè</string>
+    <string name="dashboardSwitchToListView">Chanje a afichaj an lis</string>
+    <string name="dashboardSwitchToGridView">Chanje a afichaj an griy</string>
+    <string name="selectAppTheme">Seleksyone tèm app</string>
+    <string name="appThemeSettingsTitle">Tèm app</string>
+    <string name="appThemeLight">Limyè</string>
+    <string name="appThemeDark">Nwa</string>
+    <string name="appThemeSystem">Sistèm pa defo</string>
+
 </resources>

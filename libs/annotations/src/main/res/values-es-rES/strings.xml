@@ -16,6 +16,7 @@
   -->
 
 <resources>
+
     <string name="inputText">Introducir texto</string>
     <string name="cancel">Cancelar</string>
     <string name="comment">Comentario</string>
@@ -26,13 +27,13 @@
     <string name="annotationErrorOccurred">Ha habido un error inesperado al cargar anotaciones.</string>
     <string name="annotationError">Error de anotación</string>
     <string name="annotationDialogMessage">La anotación se ha eliminado de otra fuente.</string>
-    <string name="errorSendingMessage">El mensaje no ha podido enviarse. Toque para volver a intentarlo.</string>
+    <string name="errorSendingMessage">El mensaje no ha podido enviarse. Toca para volver a intentarlo.</string>
     <string name="addAnnotationComment">Añadir comentario</string>
     <string name="editComment">Editar comentario</string>
     <string name="deleteComment">Eliminar comentario</string>
     <string name="deleteAnnotation">Eliminar anotación</string>
-    <string name="deleteCommentConfirmation">¿Está seguro de que desea eliminar este comentario?</string>
-    <string name="deleteHeadCommentConfirmation">Al eliminar este comentario, se eliminarán todos los comentarios asociados con esta anotación. ¿Seguro de que desea realizar esta acción?</string>
+    <string name="deleteCommentConfirmation">¿Estás seguro de que quieres eliminar este comentario?</string>
+    <string name="deleteHeadCommentConfirmation">Al eliminar este comentario, se eliminarán todos los comentarios asociados con esta anotación. ¿Estás seguro de que quieres realizar esta acción?</string>
     <string name="sendingSimple">Enviando</string>
     <string name="pspdf__annotation_type_stamp">Color de la nota</string>
     <string name="removedComment">Eliminado %1$s por %2$s</string>

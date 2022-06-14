@@ -1180,7 +1180,7 @@
     <string name="dueToday">%1$s forfaller i dag</string>
     <string name="missing">%1$s mangler</string>
     <string name="homeroomEmptyTitle">Velkommen!</string>
-    <string name="homeroomEmptyMessage">Fagne dine vises her.</string>
+    <string name="homeroomEmptyMessage">Fagene dine vises her.</string>
     <string name="homeroomNoSubjects">Du har for øyeblikket ingen fag.</string>
     <string name="settingsElementaryViewSubtitle">Krever omstart av appen</string>
     <string name="gradesSelect">Velg</string>
@@ -1256,4 +1256,12 @@
     <string name="noCompatibleAppInstalled">Enheten din har ikke noen installerte applikasjoner som kan åpne denne lenken.</string>
     <string name="anonymousDiscussionNotSupported">Anonyme diskusjoner støttes for øyeblikket ikke på mobiltelefon. Åpne i nettleser for å se diskusjoner.</string>
     <string name="discussionOpenInBrowser">Åpne i nettleser</string>
+    <string name="dashboardSwitchToListView">Bytt til listevisning</string>
+    <string name="dashboardSwitchToGridView">Bytt til rutenettvisning</string>
+    <string name="selectAppTheme">Velg app-tema</string>
+    <string name="appThemeSettingsTitle">App-tema</string>
+    <string name="appThemeLight">Lys</string>
+    <string name="appThemeDark">Mørk</string>
+    <string name="appThemeSystem">Systemstandard</string>
+
 </resources>
