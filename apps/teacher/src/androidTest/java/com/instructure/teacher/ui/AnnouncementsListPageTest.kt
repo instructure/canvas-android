@@ -16,7 +16,9 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.Stub
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
@@ -24,13 +26,17 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.allOf
 import org.junit.Test
 
 @HiltAndroidTest
@@ -42,11 +48,21 @@ class AnnouncementsListPageTest : TeacherTest() {
         announcementsListPage.assertPageObjects()
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        extraAccessibilitySupressions = allOf(
+            matchesCheckNames(`is`("SpeakableTextPresentViewCheck")),
+            matchesViews(withId(R.id.announcementNameEditText))
+        )
+
+        super.enableAndConfigureAccessibilityChecks()
+    }
+
     @Test
     fun assertHasAnnouncement() {
         val data = getToAnnouncementsListPage()
         val course = data.courses.values.first()
-        val announcement = data.courseDiscussionTopicHeaders[course.id]!!.filter { th -> th.announcement }.first()
+        val announcement =
+            data.courseDiscussionTopicHeaders[course.id]!!.filter { th -> th.announcement }.first()
 
         announcementsListPage.assertHasAnnouncement(announcement)
     }
@@ -67,8 +83,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     }
 
     @Test
-    @Stub
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createNewAnnouncementTest() {
         getToAnnouncementsListPage(announcementCount = 1)
         announcementsListPage.assertAnnouncementCount(2) // header + the one test announcement
@@ -80,8 +95,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     }
 
     @Test
-    @Stub
-    @TestMetaData(Priority.P1, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createAndAbortNewAnnouncementTest() {
         val data = getToAnnouncementsListPage(announcementCount = 1)
         val course = data.courses.values.first()
@@ -98,8 +112,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     }
 
     @Test
-    @Stub
-    @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createNewAnnouncementWithMissingDescriptionTest() {
         getToAnnouncementsListPage(announcementCount = 1)
 
@@ -108,13 +121,12 @@ class AnnouncementsListPageTest : TeacherTest() {
     }
 
     @Test
-    @Stub
-    @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createNewAnnouncementWithMissingTitleTest() {
         getToAnnouncementsListPage(announcementCount = 1)
 
         announcementsListPage.createAnnouncement("", Randomizer.getLoremWords(12))
-        announcementsListPage.assertOnNewAnnouncementPage()
+        announcementsListPage.assertHasAnnouncement(announcementsListPage.getStringFromResource(R.string.no_title))
     }
 
     private fun getToAnnouncementsListPage(announcementCount: Int = 1): MockCanvas {

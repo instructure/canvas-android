@@ -16,7 +16,6 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,7 +48,7 @@ class SubmissionRubricDescriptionFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         toolbar.title = title
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), resources.getBoolean(R.bool.isDeviceTablet), toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
 
         // Show progress bar while loading description
         progressBar.setVisible()

@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.binding
 
+import android.graphics.Bitmap
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -157,6 +158,15 @@ fun bindImageResource(imageView: ImageView, @DrawableRes imageRes: Int) {
     imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
 }
 
+@BindingAdapter("bitmap")
+fun bindBitmap(imageView: ImageView, bitmap: Bitmap?) {
+    bitmap?.let {
+        Glide.with(imageView)
+                .load(it)
+                .into(imageView)
+    }
+}
+
 
 @BindingAdapter("accessibilityClickDescription")
 fun bindAccesibilityDelegate(view: View, clickDescription: String) {
@@ -185,5 +195,12 @@ fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: Strin
 fun bindAccessibleTouchTarget(view: View, accessibleTouchTarget: Boolean?) {
     if (accessibleTouchTarget == true) {
         view.accessibleTouchTarget()
+    }
+}
+
+@BindingAdapter("url")
+fun bindUrl(canvasWebView: CanvasWebView, url: String?) {
+    url?.let {
+        canvasWebView.loadUrl(it)
     }
 }

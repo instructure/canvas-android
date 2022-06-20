@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.interactions.MasterDetailInteractions
+import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_SEARCH
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
@@ -30,6 +32,7 @@ import com.instructure.teacher.holders.FileFolderViewHolder
 import com.instructure.teacher.utils.viewMedia
 import kotlinx.android.synthetic.main.fragment_file_search.*
 
+@ScreenView(SCREEN_VIEW_FILE_SEARCH)
 class FileSearchFragment : BaseSyncFragment<
         FileFolder,
         FileSearchPresenter,
@@ -71,7 +74,7 @@ class FileSearchFragment : BaseSyncFragment<
     }
 
     private fun setupViews() {
-        ViewStyler.setStatusBarLight(requireActivity())
+        ViewStyler.themeStatusBar(requireActivity())
 
         // Set up empty state
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nofiles))

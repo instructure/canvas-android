@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.elementary.schedule
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,13 +25,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_SCHEDULE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentScheduleBinding
 import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 import com.instructure.pandautils.utils.StringArg
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_schedule.*
+import kotlinx.android.synthetic.main.item_schedule_planner_item.*
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_K5_SCHEDULE)
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
 
@@ -80,6 +85,11 @@ class ScheduleFragment : Fragment() {
         recyclerView?.removeOnScrollListener(onScrollListener)
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        viewModel.refresh(false)
+    }
+
     private fun handleAction(action: ScheduleAction) {
         when (action) {
             is ScheduleAction.OpenCourse -> scheduleRouter.openCourse(action.course)
@@ -96,6 +106,9 @@ class ScheduleFragment : Fragment() {
             }
             is ScheduleAction.JumpToToday -> {
                 jumpToToday()
+            }
+            is ScheduleAction.AnnounceForAccessibility -> {
+                checkbox.announceForAccessibility(action.announcement)
             }
         }
     }

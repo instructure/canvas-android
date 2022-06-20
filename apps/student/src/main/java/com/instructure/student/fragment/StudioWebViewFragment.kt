@@ -25,11 +25,12 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.Toast
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_STUDIO_WEB_VIEW
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
@@ -37,6 +38,7 @@ import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.router.RouteMatcher
 import org.apache.commons.text.StringEscapeUtils
 
+@ScreenView(SCREEN_VIEW_STUDIO_WEB_VIEW)
 class StudioWebViewFragment : InternalWebviewFragment() {
     val assignmentId: Long by LongArg(key = Const.ASSIGNMENT_ID)
     val assignmentName: String by StringArg(key = Const.ASSIGNMENT_NAME)
@@ -48,6 +50,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getCanvasWebView()?.setDarkModeSupport()
         getCanvasWebView()?.addJavascriptInterface(JSInterface(), "HtmlViewer")
 
         getCanvasWebView()?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {

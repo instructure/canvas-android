@@ -32,7 +32,7 @@ class CanvasContextDialogAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CanvasContextViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(CanvasContextViewHolder.HOLDER_RES_ID, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(CanvasContextViewHolder.HOLDER_RES_ID, parent, false)
         return CanvasContextViewHolder(itemView)
     }
 

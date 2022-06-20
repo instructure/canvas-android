@@ -87,7 +87,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         val (submittedLabelRes, submittedColorRes, submittedIconRes) = if (assignment.isSubmitted) {
             Triple(
                 if (assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED) R.string.gradedSubmissionLabel else R.string.submitted,
-                R.color.alertGreen,
+                R.color.textSuccess,
                 R.drawable.ic_complete_solid
             )
         } else {
@@ -98,9 +98,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
 
             if (assignment.submission?.missing == true || isMissingFromDueDate) {
                 // Mark it missing if the teacher marked it missing or if it's past due
-                Triple(R.string.missingSubmissionLabel, R.color.submissionStatusColorMissing, R.drawable.ic_no)
+                Triple(R.string.missingSubmissionLabel, R.color.textDanger, R.drawable.ic_no)
             } else {
-                Triple(R.string.notSubmitted, R.color.defaultTextGray, R.drawable.ic_no)
+                Triple(R.string.notSubmitted, R.color.textDark, R.drawable.ic_no)
             }
         }
 
@@ -220,8 +220,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             visibilities.grade = gradeState != GradeCellViewState.Empty
         } else {
             visibilities.grade = gradeState is GradeCellViewState.GradeData
-            visibilities.submissionUploadStatusInProgress = !databaseSubmission.errorFlag
+            visibilities.submissionUploadStatusInProgress = !databaseSubmission.errorFlag && !(databaseSubmission.isDraft ?: false)
             visibilities.submissionUploadStatusFailed = databaseSubmission.errorFlag
+            visibilities.draftSubmissionAvailable = databaseSubmission.isDraft ?: false
         }
 
         val showSubmissionsAndRubric = showSubmissionsAndRubric(assignment)

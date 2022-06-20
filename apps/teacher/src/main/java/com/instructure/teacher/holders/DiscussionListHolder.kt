@@ -85,7 +85,7 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
         val unreadDisplayCount = if (discussionTopicHeader.unreadCount > 99) context.getString(R.string.max_count)
                                  else discussionTopicHeader.unreadCount.toString()
 
-        statusIndicator.setVisible(discussionTopicHeader.status == DiscussionTopicHeader.ReadState.UNREAD)
+        statusIndicator.setVisible(discussionTopicHeader.unreadCount != 0)
 
         readUnreadCounts.text = context.getString(R.string.discussions_unread_replies_blank,
                                 context.getString(R.string.discussions_replies, entryCount.toString()),

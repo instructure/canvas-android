@@ -24,12 +24,15 @@ import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
+import com.instructure.pandautils.analytics.SCREEN_VIEW_TIME_PICKER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.SerializableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.dismissExisting
 import java.util.*
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_TIME_PICKER)
 class TimePickerDialogFragment : AppCompatDialogFragment(), TimePickerDialog.OnTimeSetListener {
 
     var mCallback: (hourOfDay: Int, minute: Int) -> Unit by Delegates.notNull()

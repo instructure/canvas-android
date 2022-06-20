@@ -25,9 +25,5 @@ fun onMainThread(block: () -> Unit) {
 
 val isUiThread: Boolean
     get() {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Looper.getMainLooper().isCurrentThread
-        } else {
-            Thread.currentThread() == Looper.getMainLooper().thread
-        }
+        return Looper.getMainLooper().isCurrentThread
     }

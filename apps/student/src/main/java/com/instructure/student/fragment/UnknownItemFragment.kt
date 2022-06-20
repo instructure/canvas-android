@@ -27,10 +27,13 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_UNKNOWN_ITEM
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import kotlinx.android.synthetic.main.unknown_item.*
 
+@ScreenView(SCREEN_VIEW_UNKNOWN_ITEM)
 class UnknownItemFragment : ParentFragment() {
 
     private var streamItem: StreamItem by ParcelableArg(key = Const.STREAM_ITEM)
@@ -41,7 +44,7 @@ class UnknownItemFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = streamItem.getTitle(requireContext())?.toString().validOrNull() ?: getString(R.string.message)
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.unknown_item, container, false)

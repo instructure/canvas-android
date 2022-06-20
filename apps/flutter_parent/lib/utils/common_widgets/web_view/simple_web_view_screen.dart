@@ -43,7 +43,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
           backgroundColor: Colors.transparent,
           iconTheme: Theme.of(context).iconTheme,
           bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
-          title: Text(widget._title, style: Theme.of(context).textTheme.title),
+          title: Text(widget._title, style: Theme.of(context).textTheme.headline6),
         ),
         body: WebView(
           javascriptMode: JavascriptMode.unrestricted,

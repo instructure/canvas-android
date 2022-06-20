@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Kei te hunahia ngā whakautu a tēnei ākonga no te mea he ingoamuna tēnei whakataunga.</string>
 
-    <string name="studentAnnotationUnsupported">Ākonga Tuhipoka (Kaore e tautokotia)</string>
-    <string name="studentAnnotationUnsupportedDescription">Ākonga Tuhipoka kaore i te tautokotia i tēnei wā i runga i te waea haerere.</string>
-    <string name="unsupportedSubmissionType">Kaore i Tautokotia tēnei Momo Tapaetanga</string>
-    <string name="studentAnnotationUnsupportedMessage">Kaore e taea te whakaatu atu i te tāpaetanga no te mea Ākonga Tuhipoka kaore i te tautokotia i tēnei wā i runga i te waea haerere.</string>
     <string name="schedule_marked_as_done">Kua tohua e koe kua oti.</string>
     <string name="error_saving_assignment_closed_grading_period">Kāore e taea te huri i te rā e tika ana ka tika i roto i te wā kōeke kua katia.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Peke ki tēnei rā</string>
@@ -1225,4 +1221,46 @@
     <string name="a11y_contact_info_click_description">tuku karere</string>
     <string name="somethingWentWrong">I raruraru tētahi mea</string>
     <string name="failedToLoadQuiz">I rahua te uta kairoro</string>
+    <string name="failedToLoadSubmission">I rahua te uta tāpaetanga</string>
+    <string name="studentAnnotationToolbarTitle">Ākonga Tuhipoka</string>
+    <string name="submissionTypeStudentAnnotation">Ākonga Tuhipoka</string>
+    <string name="gradesNoDueDate">Kāore he rā tika</string>
+    <string name="importantDatesNoDueDate">Kāore he rā tika</string>
+    <string name="missingAssignment">Ngaro</string>
+    <string name="dontSave">Kaua e tiaki</string>
+    <string name="textSubmissionExitConfirmationTitle">Tiaki tauira?</string>
+    <string name="textSubmissionExitConfirmationMessage">Kaore ō huringa e tiakitia</string>
+    <string name="submissionDraftAvailableSubtitle">Pātō ki konei ki te haere tonu</string>
+    <string name="submissionDraftAvailableTitle">Kei te wātea te tauira</string>
+    <string name="errorLoadingSubmission">He hapa i puta i te wā o te uta ana i te tāpaetanga</string>
+    <string name="loadFullContent">Pātō ki te kite i te ihirangi katoa</string>
+    <string name="dashboardTabImportantDates">Ngā rā nui</string>
+    <string name="importantDatesEmptyTitle">Kaore ngā rā nui</string>
+    <string name="important_dates">Ngā rā nui</string>
+
+    <string name="toolbarCommentLibrary">Tākupu Whare Pukapuka</string>
+    <string name="commentLibraryNoSuggestions">Kaore he whakaaro kei te wātea</string>
+    <string name="speedGraderCommentHint">Kōrero</string>
+    <string name="a11y_schedule_marked_as_done">%s kua tohua kua oti</string>
+    <string name="a11y_error_occured">I hapa, tēnā koa tamata anō.</string>
+    <string name="a11y_content_description_accept_invite">Whakaae pōhiri</string>
+    <string name="a11y_content_description_decline_invite">Whakakore pōhiri</string>
+    <string name="no_notifications_to_show">Kāo whakamohiotanga ki te whakaatu</string>
+
+    <string name="documentScanningTitle">Tuhinga Matawai ana</string>
+    <string name="filter_name_color">Tae</string>
+    <string name="filter_name_grayscale">Tauinehina</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Taketake</string>
+    <string name="noCompatibleAppInstalled">Karekau he tono i whakauruhia e to taputapu hei whakatuwhera i tenei hononga.</string>
+    <string name="anonymousDiscussionNotSupported">Ingoakore kōrerorero kei tenei wa kaore tautokona i runga pūkoro. Tuwhera i roto pūtirotiro ki te tiro kōrerorero.</string>
+    <string name="discussionOpenInBrowser">Tuwhera i roto i te pūtirotiro</string>
+    <string name="dashboardSwitchToListView">Hurihia ki te rarangi tirohanga</string>
+    <string name="dashboardSwitchToGridView">Huri ki te mātiti tirohanga</string>
+    <string name="selectAppTheme">Tīpakohia taupānga kaupapa</string>
+    <string name="appThemeSettingsTitle">Taupānga Kaupapa</string>
+    <string name="appThemeLight">Marama</string>
+    <string name="appThemeDark">Pōuri</string>
+    <string name="appThemeSystem">Pūnaha taunoa</string>
+
 </resources>

@@ -102,7 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/welcome"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="4dp" />
@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/emptyCourseListMessage"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -153,7 +153,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/noConnection"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:visibility="gone"/>
 
     </FrameLayout>

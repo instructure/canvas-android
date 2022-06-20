@@ -74,11 +74,7 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
                     progressBar.setVisible()
                     progressBar.max = 1000
                     val progress = 1000 * (comment.progress ?: 0.0)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        progressBar.setProgress(progress.toInt(), true)
-                    } else {
-                        progressBar.progress = progress.toInt()
-                    }
+                    progressBar.setProgress(progress.toInt(), true)
                 }
             }
         }
@@ -88,7 +84,7 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
         val popup = PopupMenu(anchor.context, anchor)
         popup.menu.add(0, 0, 0, R.string.retry)
         popup.menu.add(0, 1, 0, R.string.delete).apply {
-            val color = ContextCompat.getColor(anchor.context, R.color.error)
+            val color = ContextCompat.getColor(anchor.context, R.color.textDanger)
             val span = SpannableString(title)
             span.setSpan(ForegroundColorSpan(color), 0, span.length, 0)
             title = span

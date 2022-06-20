@@ -31,28 +31,28 @@ import org.junit.Test
 class AssignmentListInteractionTest : StudentTest() {
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     override fun displaysPageObjects() {
         getToAssignmentsPage(0)
         assignmentListPage.assertPageObjects()
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun displaysNoAssignmentsView() {
         getToAssignmentsPage(0)
         assignmentListPage.assertDisplaysNoAssignmentsView()
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun displaysAssignment() {
         val assignment = getToAssignmentsPage()[0]
         assignmentListPage.assertHasAssignment(assignment)
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun sortAssignmentsByTimeByDefault() {
         val assignment = getToAssignmentsPage()[0]
         assignmentListPage.assertHasAssignment(assignment)
@@ -61,7 +61,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun sortAssignmentsByTypeWhenTypeIsSelectedInTheDialog() {
         val assignment = getToAssignmentsPage()[0]
 

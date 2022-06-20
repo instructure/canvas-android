@@ -20,6 +20,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NLongArg
 import com.instructure.pandautils.utils.ParcelableArg
@@ -28,6 +30,7 @@ import com.instructure.teacher.features.modules.list.*
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
 import com.instructure.teacher.mobius.common.ui.Presenter
 
+@ScreenView(SCREEN_VIEW_MODULE_LIST)
 class ModuleListFragment :
     MobiusFragment<ModuleListModel, ModuleListEvent, ModuleListEffect, ModuleListView, ModuleListViewState>() {
 

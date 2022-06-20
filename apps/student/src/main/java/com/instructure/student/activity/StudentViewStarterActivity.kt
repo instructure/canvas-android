@@ -20,12 +20,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.pandautils.analytics.SCREEN_VIEW_STUDENT_VIEW
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
 import kotlinx.android.synthetic.main.activity_student_view_starter.*
 
 // The sole purpose of this activity is to capture the intent from the Teacher app that signals the Student app
 // to start the Student view
+@ScreenView(SCREEN_VIEW_STUDENT_VIEW)
 class StudentViewStarterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +43,7 @@ class StudentViewStarterActivity : AppCompatActivity() {
         val clientId = extras.getString(Const.CLIENT_ID, ApiPrefs.clientId)
         val clientSecret = extras.getString(Const.CLIENT_SECRET, ApiPrefs.clientSecret)
         val courseId = extras.getLong(Const.COURSE_ID)
+        val isElementary = extras.getBoolean(Const.IS_ELEMENTARY, false)
 
         MasqueradeHelper.startMasquerading(
             masqueradingUserId = -1, // This will be retrieved when we get the test user
@@ -48,7 +52,8 @@ class StudentViewStarterActivity : AppCompatActivity() {
             masqueradeToken = token,
             masqueradeClientId = clientId,
             masqueradeClientSecret = clientSecret,
-            courseId = courseId
+            courseId = courseId,
+            isElementary = isElementary
         )
     }
 }

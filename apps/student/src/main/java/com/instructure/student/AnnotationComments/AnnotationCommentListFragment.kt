@@ -15,7 +15,6 @@
  *
  */    package com.instructure.student.AnnotationComments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +38,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ANNOTATION_COMMENT_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
@@ -47,7 +48,9 @@ import kotlinx.android.synthetic.main.fragment_annotation_comment_list.*
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
+import java.util.Locale
 
+@ScreenView(SCREEN_VIEW_ANNOTATION_COMMENT_LIST)
 class AnnotationCommentListFragment : ParentFragment() {
 
     private var annotations by ParcelableArrayListArg<CanvaDocAnnotation>()
@@ -67,7 +70,7 @@ class AnnotationCommentListFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = title()
         toolbar.setupAsCloseButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -87,10 +90,10 @@ class AnnotationCommentListFragment : ParentFragment() {
             //we want to show a different title for the root comment
             builder.setTitle(R.string.deleteComment)
             builder.setMessage(if(position == 0) R.string.deleteHeadCommentConfirmation else R.string.deleteCommentConfirmation)
-            builder.setPositiveButton(getString(R.string.delete).toUpperCase()) { _, _ ->
+            builder.setPositiveButton(getString(R.string.delete).uppercase(Locale.getDefault())) { _, _ ->
                 deleteComment(annotation, position)
             }
-            builder.setNegativeButton(getString(R.string.cancel).toUpperCase(), null)
+            builder.setNegativeButton(getString(R.string.cancel).uppercase(Locale.getDefault()), null)
             val dialog = builder.create()
             dialog.setOnShowListener {
                 dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
@@ -133,7 +136,7 @@ class AnnotationCommentListFragment : ParentFragment() {
             commentInputContainer.setVisible(false)
         } else {
             sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
-                    intArrayOf(-android.R.attr.state_enabled) to ContextCompat.getColor(requireContext(), R.color.defaultTextGray),
+                    intArrayOf(-android.R.attr.state_enabled) to ContextCompat.getColor(requireContext(), R.color.textDark),
                     intArrayOf() to ThemePrefs.buttonColor
             )
 

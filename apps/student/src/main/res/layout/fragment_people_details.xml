@@ -76,7 +76,7 @@
                         android:layoutDirection="locale"
                         android:textDirection="locale"
                         android:singleLine="true"
-                        android:textColor="@color/canvasTextDark"
+                        android:textColor="@color/textDarkest"
                         android:ellipsize="end"
                         app:autoSizeMinTextSize="12sp"
                         app:autoSizeMaxTextSize="@dimen/primaryProfileText"

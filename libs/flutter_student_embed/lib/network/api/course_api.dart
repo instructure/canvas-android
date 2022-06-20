@@ -20,7 +20,7 @@ class CourseApi {
   Future<List<Course>> getCourses({bool forceRefresh: false}) async {
     final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
-      'include': [
+      'include[]': [
         'term',
         'syllabus_body',
         'total_scores',
@@ -38,23 +38,5 @@ class CourseApi {
     var courses = await fetchList<Course>(dio.get('courses', queryParameters: params), depaginateWith: dio);
     courses.retainWhere((it) => it.accessRestrictedByDate == false);
     return courses;
-  }
-
-  Future<Course> getCourse(String courseId) async {
-    final params = {
-      'include': [
-        'syllabus_body',
-        'term',
-        'permissions',
-        'license',
-        'is_public',
-        'needs_grading_count',
-        'total_scores',
-        'current_grading_period_scores',
-        'course_image',
-        'observed_users',
-      ]
-    };
-    return fetch(canvasDio().get('courses/${courseId}', queryParameters: params));
   }
 }

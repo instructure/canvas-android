@@ -29,8 +29,8 @@ import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.adapter_post_policy_section.view.*
 import kotlinx.android.synthetic.main.fragment_post_grade.*
 import com.instructure.pandautils.utils.applyTheme
-import android.app.AlertDialog
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.post
 import kotlinx.android.synthetic.main.dialog_post_graded_everyone.*

@@ -20,13 +20,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_DASHBOARD
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
 import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
+import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesFragment
 import com.instructure.pandautils.features.elementary.resources.ResourcesFragment
 import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 import com.instructure.pandautils.utils.Const
@@ -39,17 +41,19 @@ import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_course_grid.toolbar
 import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
+@ScreenView(SCREEN_VIEW_ELEMENTARY_DASHBOARD)
 class ElementaryDashboardFragment : ParentFragment() {
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private val schedulePagerFragment = SchedulePagerFragment.newInstance()
+    private val importantDatesFragment = ImportantDatesFragment.newInstance()
 
-    private val fragments = listOf(
+    private val fragments = mutableListOf(
         HomeroomFragment.newInstance(),
         schedulePagerFragment,
         GradesFragment.newInstance(),
-        ResourcesFragment.newInstance()
+        ResourcesFragment.newInstance(),
     )
 
     override fun title(): String = if (isAdded) getString(R.string.dashboard) else ""
@@ -94,6 +98,20 @@ class ElementaryDashboardFragment : ParentFragment() {
                 }
             }
         })
+
+        importantDates?.let {
+            childFragmentManager
+                    .beginTransaction()
+                    .add(R.id.importantDates, importantDatesFragment)
+                    .commit()
+        } ?: addImportantDatesFragment()
+
+        applyTheme()
+    }
+
+    private fun addImportantDatesFragment() {
+        fragments.add(importantDatesFragment)
+        dashboardPager.adapter?.notifyDataSetChanged()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

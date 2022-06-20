@@ -50,6 +50,7 @@
     <string name="fromCamera">الكاميرا</string>
     <string name="fromGallery">المعرض</string>
     <string name="fromDevice">الجهاز</string>
+    <string name="fromDocumentScanning">الماسح الضوئي</string>
     <string name="fromOtherApplication">أخرى</string>
     <string name="Domain">المجال</string>
     <string name="files">الملفات</string>
@@ -504,7 +505,8 @@
     <string name="a11y_page">صفحة</string>
     <string name="a11y_marked_as_done">تم وضع علامة "تم"</string>
     <string name="a11y_not_marked_as_done">لم يتم وضع علامة "تم"</string>
-    <string name="a11y_mark_as_done">وضع علامة "تم"</string>
-    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">عذرًا! حدث خطأ أثناء تحميل تفاصيل المساق.</string>
+    <string name="a11y_schedule_marked_as_not_done">لم يتم وضع علامة تم على %s</string>
+    <string name="a11y_markAsDoneWithName">تم وضع علامة تم على %s</string>
+    <string name="a11y_markAsNotDoneWithName">لم يتم وضع علامة تم على %s</string>
 </resources>

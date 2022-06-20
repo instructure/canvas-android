@@ -42,4 +42,6 @@ data class Section(
     override val type get() = CanvasContext.Type.SECTION
 
     val endDate get() = endAt.toDate()
+
+    val startDate get() = startAt.toDate()
 }

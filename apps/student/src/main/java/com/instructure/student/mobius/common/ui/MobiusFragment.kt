@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.student.BuildConfig
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.mobius.common.*
 import com.spotify.mobius.*
 import com.spotify.mobius.android.MobiusAndroid
@@ -37,7 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT>, VIEW_STATE> : Fragment(), FragmentInteractions {
+abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT>, VIEW_STATE> : ParentFragment(), FragmentInteractions {
     var overrideInitModel: MODEL? = null
 
     var overrideInitViewState: VIEW_STATE? = null

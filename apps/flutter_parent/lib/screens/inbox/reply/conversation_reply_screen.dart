@@ -260,7 +260,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
         textCapitalization: TextCapitalization.sentences,
         minLines: 4,
         maxLines: null,
-        style: Theme.of(context).textTheme.body1,
+        style: Theme.of(context).textTheme.bodyText2,
         decoration: InputDecoration(
           hintText: L10n(context).messageBodyInputHint,
           contentPadding: EdgeInsets.all(16),

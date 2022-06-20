@@ -17,13 +17,10 @@
 package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityManager
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -48,6 +45,8 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
@@ -72,6 +71,7 @@ import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
 
+@ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
 class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     // Weave jobs
@@ -90,6 +90,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private var discussionTitle: String? by NullableStringArg(key = DISCUSSION_TITLE)
     private var discussionEntryId: Long by LongArg(default = 0L, key = DISCUSSION_ENTRY_ID)
     private var isNestedDetail: Boolean by BooleanArg(default = false, key = IS_NESTED_DETAIL)
+    private val groupDiscussion: Boolean by BooleanArg(default = false, key = GROUP_DISCUSSION)
 
     private var scrollPosition: Int = 0
     private var authenticatedSessionURL: String? = null
@@ -182,7 +183,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             toolbar.setMenu(R.menu.menu_edit_generic, menuItemCallback)
         }
         */
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     //endregion
@@ -246,7 +247,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                     discussionRepliesWebView?.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
                 }
             }
-            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+            if (!groupDiscussion) {
+                DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+            }
         } catch {
             Logger.e("Error with DiscussionDetailsFragment:markAsRead() " + it.message)
         }
@@ -286,7 +289,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                             entry.deleted = true
                             updateDiscussionAsDeleted(entry)
                             discussionTopicHeader.decrementDiscussionSubentryCount()
-                            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+                            if (!groupDiscussion) {
+                                DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+                            }
                         }
                     }
                 }
@@ -344,7 +349,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) {
         val likingSum = if (discussionEntry.ratingSum == 0) "" else "(${discussionEntry.ratingSum})"
         val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountText(requireContext(), discussionEntry)
-        val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.discussionLiking))
+        val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.textDark))
         activity?.runOnUiThread {
             discussionRepliesWebView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
             discussionRepliesWebView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
@@ -356,9 +361,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region WebView And Javascript
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun setupWebView(webView: CanvasWebView) {
+    private fun setupWebView(webView: CanvasWebView, addDarkTheme: Boolean = false) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(Color.WHITE)
+        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
         webView.settings.allowFileAccess = true
@@ -377,8 +382,20 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 openMedia(canvasContext, url, filename)
             }
 
-            override fun onPageStartedCallback(webView: WebView, url: String) {}
-            override fun onPageFinishedCallback(webView: WebView, url: String) {}
+            override fun onPageStartedCallback(webView: WebView, url: String) {
+                // This executes a JavaScript to add the dark theme.
+                // It won't work exactl when the page starts to load, because the html document is not yet created,
+                // so we add a little delay to make sure the script can modify the document.
+                if (addDarkTheme) {
+                    webView.postDelayed({ webView.addDarkThemeToHtmlDocument() }, 50)
+                }
+            }
+            override fun onPageFinishedCallback(webView: WebView, url: String) {
+                // This is just a fallback if in some cases the document wouldn't be loaded after the delay
+                if (addDarkTheme) {
+                    webView.addDarkThemeToHtmlDocument()
+                }
+            }
         }
 
         webView.addVideoClient(requireActivity())
@@ -392,7 +409,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupRepliesWebView() {
-        setupWebView(discussionRepliesWebView)
+        setupWebView(discussionRepliesWebView, addDarkTheme = true)
         discussionRepliesWebView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
     }
 
@@ -565,7 +582,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             loadDiscussionTopicHeaderViews(discussionTopicHeader)
             addAccessibilityButton()
 
-            if (forceRefresh || discussionTopic == null) {
+            // We only want to request the full discussion if it is not anonymous. Anonymous discussions are not supported by the API
+            if (forceRefresh || discussionTopic == null && discussionTopicHeader.anonymousState == null) {
                 // forceRefresh is true, fetch the discussion topic
                 discussionTopic = getDiscussionTopic()
 
@@ -577,6 +595,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 discussionProgressBar.setGone()
                 discussionTopicRepliesTitle.setGone()
                 swipeRefreshLayout.isRefreshing = false
+
+                if (discussionTopicHeader.anonymousState != null) {
+                    showAnonymousDiscussionView()
+                }
             } else {
                 val html = inBackground {
                     DiscussionUtils.createDiscussionTopicHtml(
@@ -601,6 +623,18 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             }
         } catch {
             Logger.e("Error loading discussion topic " + it.message)
+        }
+    }
+
+    private fun showAnonymousDiscussionView() {
+        anonymousDiscussionsNotSupported.setVisible()
+        openInBrowser.setVisible(discussionTopicHeader.htmlUrl?.isNotEmpty() == true)
+        replyToDiscussionTopic.setGone()
+        swipeRefreshLayout.isEnabled = false
+        openInBrowser.onClick {
+            discussionTopicHeader.htmlUrl?.let { url ->
+                InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(canvasContext, url, true, true))
+            }
         }
     }
 
@@ -679,7 +713,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
         attachmentIcon.onClick { _ ->
-            discussionTopicHeader.attachments?.let { viewAttachments(it) }
+            viewAttachments(discussionTopicHeader.attachments)
         }
     }
 
@@ -767,7 +801,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
             discussionTopicHeader.incrementDiscussionSubentryCount() // Update subentry count
             discussionTopicHeader.lastReplyDate?.time = Date().time // Update last post time
-            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+            if (!groupDiscussion) {
+                DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+            }
             // needed for when discussions are in modules
             applyTheme()
         }
@@ -802,6 +838,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         const val DISCUSSION_TOPIC = "discussion_topic"
         const val DISCUSSION_ENTRY_ID = "discussion_entry_id"
         const val IS_NESTED_DETAIL = "is_nested_detail"
+        const val GROUP_DISCUSSION = "group_discussion"
 
         private const val JS_CONST_SET_LIKED = "setLiked"
         private const val JS_CONST_SET_UNLIKED = "setUnliked"
@@ -814,11 +851,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             return Route(null, DiscussionDetailsFragment::class.java, canvasContext, bundle)
         }
 
-        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long, title: String? = null): Route {
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long, title: String? = null, groupDiscussion: Boolean = false): Route {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
                 putString(DISCUSSION_TITLE, title)
+                putBoolean(GROUP_DISCUSSION, groupDiscussion)
             }
             return Route(null, DiscussionDetailsFragment::class.java, canvasContext, bundle)
         }

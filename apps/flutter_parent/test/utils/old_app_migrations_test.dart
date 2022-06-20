@@ -19,6 +19,7 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
+import 'package:flutter_test/src/deprecated.dart';
 import 'package:test/test.dart';
 
 import 'canvas_model_utils.dart';

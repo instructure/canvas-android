@@ -99,7 +99,7 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                     submissionGrade.text = context.getString(R.string.submission_status_excused)
                     submissionGrade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
                     submissionGrade.background = null
-                    submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.defaultTextDark))
+                    submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.textDarkest))
                 }
                 submission.isGraded -> {
                     if (submission.postedAt == null) hiddenIcon.setVisible()
@@ -130,10 +130,11 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                     }
                     submissionGrade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
                     submissionGrade.background = null
-                    submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.defaultTextDark))
+                    submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.textDarkest))
                 }
                 else -> {
-                    submissionGrade.text = ViewStyler.applyKerning(context.getString(R.string.needsGrading).toUpperCase(Locale.getDefault()), .5f)
+                    submissionGrade.text = ViewStyler.applyKerning(context.getString(R.string.needsGrading)
+                        .uppercase(Locale.getDefault()), .5f)
                     submissionGrade.contentDescription = context.getString(R.string.needsGrading)
                     submissionGrade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.0f)
                     val submissionGradeDrawable = ContextCompat.getDrawable(context, R.drawable.bg_generic_pill)

@@ -48,7 +48,7 @@ class CalendarDayListTile extends StatelessWidget {
                 SizedBox(height: 16),
                 Text(_getContextName(context, _item), style: textTheme.caption.copyWith(color: contextColor)),
                 SizedBox(height: 2),
-                Text(_item.plannable.title, style: textTheme.subhead),
+                Text(_item.plannable.title, style: textTheme.subtitle1),
                 ..._getDueDate(context, _item),
                 ..._getPointsOrStatus(context, _item),
                 SizedBox(height: 12),

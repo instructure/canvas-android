@@ -288,7 +288,7 @@ class RouterUtilsTest : TestCase() {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/discussion_topics/1234")
         assertNotNull(route)
         assertEquals(DiscussionListFragment::class.java, route!!.primaryClass)
-        assertEquals(DiscussionDetailsFragment::class.java, route.secondaryClass)
+        assertEquals(CourseModuleProgressionFragment::class.java, route.secondaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
@@ -306,7 +306,7 @@ class RouterUtilsTest : TestCase() {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/pages/hello")
         assertNotNull(route)
         assertEquals(PageListFragment::class.java, route!!.primaryClass)
-        assertEquals(PageDetailsFragment::class.java, route.secondaryClass)
+        assertEquals(CourseModuleProgressionFragment::class.java, route.secondaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
@@ -340,7 +340,7 @@ class RouterUtilsTest : TestCase() {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/quizzes/12345")
         assertNotNull(route)
         assertEquals(QuizListFragment::class.java, route!!.primaryClass)
-        assertEquals(BasicQuizViewFragment::class.java, route.secondaryClass)
+        assertEquals(CourseModuleProgressionFragment::class.java, route.secondaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
@@ -368,7 +368,7 @@ class RouterUtilsTest : TestCase() {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/213445213445213445213445213445213445213445213445213445213445213445213445")
         assertNotNull(route)
         assertEquals(AssignmentListFragment::class.java, route!!.primaryClass)
-        assertEquals(AssignmentDetailsFragment::class.java, route.secondaryClass)
+        assertEquals(CourseModuleProgressionFragment::class.java, route.secondaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
@@ -471,7 +471,7 @@ class RouterUtilsTest : TestCase() {
         val queryParams = HashMap<String, String>()
 
 
-        val url = RouteMatcher.generateUrl(canvasContext.type, QuizListFragment::class.java, BasicQuizViewFragment::class.java, replacementParams, queryParams)
+        val url = RouteMatcher.generateUrl(canvasContext.type, QuizListFragment::class.java, CourseModuleProgressionFragment::class.java, replacementParams, queryParams)
         assertEquals("https://mobiledev.instructure.com/courses/123/quizzes/456", url)
     }
 
@@ -485,7 +485,7 @@ class RouterUtilsTest : TestCase() {
 
         val queryParams = HashMap<String, String>()
 
-        val url = RouteMatcher.generateUrl(canvasContext.type, QuizListFragment::class.java, BasicQuizViewFragment::class.java, replacementParams, queryParams)
+        val url = RouteMatcher.generateUrl(canvasContext.type, QuizListFragment::class.java, CourseModuleProgressionFragment::class.java, replacementParams, queryParams)
         assertEquals("https://mobiledev.instructure.com/groups/123/quizzes/456", url)
     }
 }

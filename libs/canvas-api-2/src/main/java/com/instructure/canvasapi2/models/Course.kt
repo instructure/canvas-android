@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.isCreationPending
 import com.instructure.canvasapi2.utils.isNullOrEmpty
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.Parcelize
@@ -169,7 +170,7 @@ data class Course(
                         noFinalGrade(enrollment.finalGrade, enrollment.finalScore))
             }
 
-    fun getCourseGradeForGradingPeriodSpecificEnrollment(enrollment: Enrollment) : CourseGrade {
+    fun getCourseGradeForGradingPeriodSpecificEnrollment(enrollment: Enrollment): CourseGrade {
         return CourseGrade(
                 enrollment.currentPeriodComputedCurrentGrade(),
                 enrollment.currentPeriodComputedCurrentScore(),
@@ -245,6 +246,57 @@ data class Course(
         return isValidEndAt && isValidStartAt
     }
 
+    fun isPastEnrolment(): Boolean {
+        val now = Date()
+        if (accessRestrictedByDate) return false
+        if (workflowState == WorkflowState.COMPLETED) return true
+
+        val overrideSections = sections.filter { it.restrictEnrollmentsToSectionDates }
+
+        return if (overrideSections.isNotEmpty()) {
+            overrideSections.any { section -> section.endDate?.before(now) ?: false }
+        } else if (restrictEnrollmentsToCourseDate) {
+            endDate?.before(now) ?: false
+        } else {
+            term?.endDate?.before(now) ?: false
+        }
+    }
+
+    fun isFutureEnrolment(): Boolean {
+        val now = Date()
+        if (accessRestrictedByDate) return false
+        if (workflowState == WorkflowState.COMPLETED) return false
+
+        if (isCreationPending()) return true
+
+        val overrideSections = sections.filter { it.restrictEnrollmentsToSectionDates }
+
+        return if (overrideSections.isNotEmpty()) {
+            overrideSections.any { section -> section.startDate?.after(now) ?: false }
+        } else if (restrictEnrollmentsToCourseDate) {
+            startDate?.after(now) ?: false
+        } else {
+            term?.startDate?.after(now) ?: false
+        }
+    }
+
+    fun isCurrentEnrolment(): Boolean {
+        val now = Date()
+        if (accessRestrictedByDate) return false
+
+        if (workflowState == WorkflowState.COMPLETED) return false
+
+        val overrideSections = sections.filter { it.restrictEnrollmentsToSectionDates }
+
+        return if (overrideSections.isNotEmpty()) {
+            overrideSections.any { isWithinDates(it.startAt.toDate(), it.endAt.toDate(), now) }
+        } else if (restrictEnrollmentsToCourseDate) {
+            isWithinDates(startAt.toDate(), endAt.toDate(), now)
+        } else {
+            isWithinDates(term?.startDate, term?.endDate, now)
+        }
+    }
+
     /**
      * Get home page label returns the fragment identifier.
      *
@@ -265,29 +317,60 @@ data class Course(
             }
 
     enum class HomePage(val apiString: String) {
-        @SerializedName("feed") HOME_FEED("feed"),
-        @SerializedName("wiki") HOME_WIKI("wiki"),
-        @SerializedName("modules") HOME_MODULES("modules"),
-        @SerializedName("assignments") HOME_ASSIGNMENTS("assignments"),
-        @SerializedName("syllabus") HOME_SYLLABUS("syllabus")
+        @SerializedName("feed")
+        HOME_FEED("feed"),
+
+        @SerializedName("wiki")
+        HOME_WIKI("wiki"),
+
+        @SerializedName("modules")
+        HOME_MODULES("modules"),
+
+        @SerializedName("assignments")
+        HOME_ASSIGNMENTS("assignments"),
+
+        @SerializedName("syllabus")
+        HOME_SYLLABUS("syllabus")
     }
 
     enum class License(val apiString: String, val prettyString: String) {
-        @SerializedName("private") PRIVATE_COPYRIGHTED("private", "Private (Copyrighted)"),
-        @SerializedName("cc_by_nc_nd") CC_ATTRIBUTION_NON_COMMERCIAL_NO_DERIVATIVE("cc_by_nc_nd", "CC Attribution Non-Commercial No Derivatives"),
-        @SerializedName("c_by_nc_sa") CC_ATTRIBUTION_NON_COMMERCIAL_SHARE_ALIKE("c_by_nc_sa", "CC Attribution Non-Commercial Share Alike"),
-        @SerializedName("c_by_nc") CC_ATTRIBUTION_NON_COMMERCIAL("cc_by_nc", "CC Attribution Non-Commercial"),
-        @SerializedName("cc_by_nd") CC_ATTRIBUTION_NO_DERIVATIVE("cc_by_nd", "CC Attribution No Derivatives"),
-        @SerializedName("cc_by_sa") CC_ATTRIBUTION_SHARE_ALIKE("cc_by_sa", "CC Attribution Share Alike"),
-        @SerializedName("cc_by") CC_ATTRIBUTION("cc_by", "CC Attribution"),
-        @SerializedName("public_domain") PUBLIC_DOMAIN("public_domain", "Public Domain")
+        @SerializedName("private")
+        PRIVATE_COPYRIGHTED("private", "Private (Copyrighted)"),
+
+        @SerializedName("cc_by_nc_nd")
+        CC_ATTRIBUTION_NON_COMMERCIAL_NO_DERIVATIVE("cc_by_nc_nd", "CC Attribution Non-Commercial No Derivatives"),
+
+        @SerializedName("c_by_nc_sa")
+        CC_ATTRIBUTION_NON_COMMERCIAL_SHARE_ALIKE("c_by_nc_sa", "CC Attribution Non-Commercial Share Alike"),
+
+        @SerializedName("c_by_nc")
+        CC_ATTRIBUTION_NON_COMMERCIAL("cc_by_nc", "CC Attribution Non-Commercial"),
+
+        @SerializedName("cc_by_nd")
+        CC_ATTRIBUTION_NO_DERIVATIVE("cc_by_nd", "CC Attribution No Derivatives"),
+
+        @SerializedName("cc_by_sa")
+        CC_ATTRIBUTION_SHARE_ALIKE("cc_by_sa", "CC Attribution Share Alike"),
+
+        @SerializedName("cc_by")
+        CC_ATTRIBUTION("cc_by", "CC Attribution"),
+
+        @SerializedName("public_domain")
+        PUBLIC_DOMAIN("public_domain", "Public Domain")
     }
 
     enum class WorkflowState(val apiString: String) {
-        @SerializedName("unpublished") UNPUBLISHED("unpublished"),
-        @SerializedName("available") AVAILABLE("available"),
-        @SerializedName("completed") COMPLETED("completed"),
-        @SerializedName("deleted") DELETED("deleted")
+        @SerializedName("unpublished")
+        UNPUBLISHED("unpublished"),
+
+        @SerializedName("available")
+        AVAILABLE("available"),
+
+        @SerializedName("completed")
+        COMPLETED("completed"),
+
+        @SerializedName("deleted")
+        DELETED("deleted")
 
     }
 }

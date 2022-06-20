@@ -57,7 +57,7 @@ import 'package:flutter_parent/utils/db/user_colors_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
-import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:mockito/mockito.dart';
@@ -66,7 +66,12 @@ import 'package:sqflite/sqflite.dart';
 MockRemoteConfig setupMockRemoteConfig({Map<String, String> valueSettings = null}) {
   final mockRemoteConfig = MockRemoteConfig();
   when(mockRemoteConfig.fetch()).thenAnswer((_) => Future.value());
-  when(mockRemoteConfig.activateFetched()).thenAnswer((_) => Future.value(valueSettings != null));
+  when(mockRemoteConfig.activate())
+      .thenAnswer((_) => Future.value(valueSettings != null));
+  when(mockRemoteConfig.settings).thenAnswer((realInvocation) =>
+      RemoteConfigSettings(
+          fetchTimeout: Duration(milliseconds: 100),
+          minimumFetchInterval: Duration(milliseconds: 100)));
   if (valueSettings != null) {
     valueSettings.forEach((key, value) {
       when(mockRemoteConfig.getString(key)).thenAnswer((_) => value);

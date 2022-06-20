@@ -55,6 +55,9 @@ data class ScheduleItem(
         val isHidden: Boolean = false,
         @SerializedName("assignment_overrides")
         val assignmentOverrides: List<AssignmentOverride?>? = arrayListOf(),
+        @SerializedName("important_dates")
+        val importantDates: Boolean = false,
+        val type: String = "",
 
         // Not API related - Included here so they get parcelized
         var submissionTypes: List<Assignment.SubmissionType> = ArrayList(),
@@ -219,5 +222,6 @@ data class ScheduleItem(
                         itemId = Long.MIN_VALUE.toString()
                 )
 
+        const val TYPE_EVENT = "event"
     }
 }

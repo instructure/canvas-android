@@ -108,9 +108,9 @@ class DioConfig {
   Interceptor _cacheInterceptor() {
     Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
     return InterceptorsWrapper(
-      onRequest: (RequestOptions options) => options.method == 'GET' ? interceptor.onRequest(options) : options,
-      onResponse: (Response response) => response.request.method == 'GET' ? interceptor.onResponse(response) : response,
-      onError: (DioError e) => e, // interceptor falls back to cache on error, a behavior we currently don't want
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) => options.method == 'GET' ? interceptor.onRequest(options, handler) : handler.next(options),
+      onResponse: (Response response, ResponseInterceptorHandler handler) => response.requestOptions.method == 'GET' ? interceptor.onResponse(response, handler) : handler.next(response),
+      onError: (DioError e, ErrorInterceptorHandler handler) => handler.next(e), // interceptor falls back to cache on error, a behavior we currently don't want
     );
   }
 

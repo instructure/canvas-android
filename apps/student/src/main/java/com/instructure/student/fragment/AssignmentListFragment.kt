@@ -17,7 +17,6 @@
 
 package com.instructure.student.fragment
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
@@ -26,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -37,6 +37,8 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
@@ -49,6 +51,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.assignment_list_layout.*
 
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 @PageView(url = "{canvasContext}/assignments")
 class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
@@ -144,7 +147,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     private fun setupSortByButton() {
         sortByButton.onClick {
             val checkedItemIndex = sortOrder.index
-            AlertDialog.Builder(context, R.style.AccentDialogTheme)
+            AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
                 .setTitle(R.string.sortByDialogTitle)
                 .setSingleChoiceItems(R.array.assignmentsSortByOptions, checkedItemIndex, this@AssignmentListFragment::sortOrderSelected)
                 .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
@@ -178,7 +181,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             }
             recyclerAdapter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     private fun setupGradingPeriods(periods: List<GradingPeriod>) {
@@ -224,7 +227,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(
-            view!!,
+            requireView(),
             requireContext(),
             recyclerAdapter,
             R.id.swipeRefreshLayout,

@@ -73,7 +73,7 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         if(discussionTopicHeader.lockedForUser) {
-            discussionIcon.setNestedIcon(R.drawable.ic_lock, ContextCompat.getColor(context, R.color.lockedDiscussionColor))
+            discussionIcon.setNestedIcon(R.drawable.ic_lock, ContextCompat.getColor(context, R.color.textDark))
             discussionIcon.setNestedIconContentDescription(context.getString(R.string.locked))
         } else {
             discussionIcon.hideNestedIcon()

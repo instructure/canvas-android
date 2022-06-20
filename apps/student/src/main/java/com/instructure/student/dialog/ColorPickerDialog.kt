@@ -24,6 +24,8 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COLOR_PICKER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.dismissExisting
@@ -32,6 +34,7 @@ import com.instructure.student.R
 import kotlinx.android.synthetic.main.dialog_color_picker.view.*
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_COLOR_PICKER)
 class ColorPickerDialog : AppCompatDialogFragment() {
 
     init {

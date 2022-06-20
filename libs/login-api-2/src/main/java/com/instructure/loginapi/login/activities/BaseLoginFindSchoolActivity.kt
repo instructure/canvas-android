@@ -53,8 +53,10 @@ import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.Const
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setupAsBackButton
 import kotlinx.android.synthetic.main.activity_find_school.*
 import retrofit2.Response
+import java.util.Locale
 import java.util.regex.Pattern
 
 abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
@@ -117,9 +119,8 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
         mWhatsYourSchoolName = findViewById(R.id.whatsYourSchoolName)
         mLoginFlowLogout = findViewById(R.id.loginFlowLogout)
         toolbar.apply {
-            navigationIcon = ContextCompat.getDrawable(this@BaseLoginFindSchoolActivity, R.drawable.ic_action_arrow_back)
             navigationIcon?.isAutoMirrored = true
-            setNavigationContentDescription(R.string.close)
+            setupAsBackButton { finish() }
             inflateMenu(R.menu.menu_next)
             setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
                 if (item.itemId == R.id.next) {
@@ -133,7 +134,6 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
                 }
                 false
             })
-            setNavigationOnClickListener { finish() }
         }
 
         val a11yManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -148,7 +148,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
         mNextActionButton = findViewById(R.id.next)
         mNextActionButton!!.isEnabled = false
-        mNextActionButton!!.setTextColor(ContextCompat.getColor(this@BaseLoginFindSchoolActivity, R.color.login_grayCanvasLogo))
+        mNextActionButton!!.setTextColor(ContextCompat.getColor(this@BaseLoginFindSchoolActivity, R.color.backgroundMedium))
 
         domainInput.setOnEditorActionListener { _, _, _ ->
             validateDomain(AccountDomain(domainInput!!.text.toString()))
@@ -170,11 +170,11 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
                     if (TextUtils.isEmpty(s.toString())) {
                         mNextActionButton!!.isEnabled = false
                         mNextActionButton!!.setTextColor(ContextCompat.getColor(
-                                this@BaseLoginFindSchoolActivity, R.color.login_grayCanvasLogo))
+                                this@BaseLoginFindSchoolActivity, R.color.backgroundMedium))
                     } else {
                         mNextActionButton!!.isEnabled = true
                         mNextActionButton!!.setTextColor(ContextCompat.getColor(
-                                this@BaseLoginFindSchoolActivity, R.color.login_loginFlowBlue))
+                                this@BaseLoginFindSchoolActivity, R.color.textInfo))
                     }
                 }
             }
@@ -216,7 +216,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
     }
 
     private fun validateDomain(accountDomain: AccountDomain) {
-        var url: String? = accountDomain.domain!!.toLowerCase().replace(" ", "")
+        var url: String? = accountDomain.domain!!.lowercase(Locale.getDefault()).replace(" ", "")
 
         //if the user enters nothing, try to connect to canvas.instructure.com
         if (url!!.trim { it <= ' ' }.isEmpty()) {
@@ -265,7 +265,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
         toolbar!!.addView(view)
 
-        ViewStyler.setStatusBarLight(this)
+        ViewStyler.themeStatusBar(this)
     }
 
     /**

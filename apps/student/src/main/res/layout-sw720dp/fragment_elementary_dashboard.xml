@@ -36,7 +36,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/defaultPrimary"
+            android:background="@color/textDarkest"
             android:elevation="6dp"
             app:layout_constraintTop_toTopOf="parent"
             app:theme="@style/ToolBarStyle">
@@ -58,22 +58,23 @@
             android:id="@+id/dashboardTabLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/backgroundLightest"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:tabContentStart="8dp"
             app:tabIconTint="@color/tab_layout_icon_tint"
             app:tabIndicator="@drawable/tab_bar_indicator"
-            app:tabIndicatorColor="@color/blueAnnotation"
+            app:tabIndicatorColor="@color/textInfo"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabInlineLabel="true"
             app:tabMode="scrollable"
             app:tabPaddingEnd="12dp"
             app:tabPaddingStart="8dp"
-            app:tabSelectedTextColor="@color/blueAnnotation"
+            app:tabSelectedTextColor="@color/textInfo"
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
-            app:tabTextColor="@color/defaultTextDark">
+            app:tabTextColor="@color/textDarkest">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
@@ -105,7 +106,7 @@
             android:id="@+id/tabLayoutDivider"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/dividerColor"
+            android:background="@color/backgroundMedium"
             app:layout_constraintTop_toBottomOf="@id/dashboardTabLayout" />
 
         <com.instructure.pandautils.views.ViewPagerNonSwipeable
@@ -113,9 +114,20 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/importantDates"
+            app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider" />
 
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/importantDates"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/backgroundLight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/dashboardPager"
+            app:layout_constraintTop_toBottomOf="@id/tabLayoutDivider" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

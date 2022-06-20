@@ -47,6 +47,7 @@ import android.view.MotionEvent
 import android.webkit.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.FileProvider
@@ -59,11 +60,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils.getAssetsFile
 import com.instructure.canvasapi2.utils.Logger.e
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.FileUploadUtils.getExternalCacheDir
-import com.instructure.pandautils.utils.Utils
-import com.instructure.pandautils.utils.requestWebPermissions
 import com.instructure.pandautils.video.VideoWebChromeClient
 import java.io.File
 import java.io.UnsupportedEncodingException
@@ -92,6 +90,7 @@ class CanvasWebView @JvmOverloads constructor(
         fun onPageFinishedCallback(webView: WebView, url: String)
         fun routeInternallyCallback(url: String)
         fun canRouteInternallyDelegate(url: String): Boolean
+
     }
 
     interface CanvasEmbeddedWebViewCallback {
@@ -193,6 +192,10 @@ class CanvasWebView @JvmOverloads constructor(
         setWebChromeClient(webChromeClient)
     }
 
+    fun setZoomSettings(enabled: Boolean) {
+        this.settings.builtInZoomControls = enabled
+    }
+
     private fun addJavascriptInterface() {
         if (!addedJavascriptInterface) {
             // Add javascript interface to be called when the video ends (must be done before page load)
@@ -254,7 +257,7 @@ class CanvasWebView @JvmOverloads constructor(
             // Title of the link, use a custom view so we can show the entire link in the style we want
             val title = TextView(context)
             title.text = result.extra
-            title.setTextColor(context.resources.getColor(R.color.canvasTextDark))
+            title.setTextColor(context.resources.getColor(R.color.textDarkest))
             val padding = context.DP(8).toInt()
             title.setPadding(padding * 2, padding, padding * 2, 0)
             menu.setHeaderView(title)
@@ -363,17 +366,6 @@ class CanvasWebView @JvmOverloads constructor(
             // Check if the URL has a scheme that we aren't handling
             val uri = Uri.parse(url)
             if (uri != null && uri.scheme != null && uri.scheme != "http" && uri.scheme != "https") {
-                // Special scheme, send URL to app that can handle it
-                val intent = Intent(Intent.ACTION_VIEW, uri)
-                // Verify that the intent will resolve to an activity
-                if (intent.resolveActivity(context.packageManager) != null) {
-                    if (uri.scheme == "yellowdig") {
-                        // Pop off the LTI page so it doesn't try to reload the yellowdig app when going back to our app
-                        popBackStack()
-                    }
-                    context.startActivity(intent)
-                    return true
-                }
                 if (url.startsWith("intent:")) {
                     try {
                         val appIntent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
@@ -391,6 +383,21 @@ class CanvasWebView @JvmOverloads constructor(
                     } catch (e: URISyntaxException) {
                         //not an intent uri
                     }
+                }
+
+                // Special scheme, send URL to app that can handle it
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                // Verify that the intent will resolve to an activity
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    if (uri.scheme == "yellowdig") {
+                        // Pop off the LTI page so it doesn't try to reload the yellowdig app when going back to our app
+                        popBackStack()
+                    }
+                    context.startActivity(intent)
+                    return true
+                } else {
+                    toast(R.string.noCompatibleAppInstalled, Toast.LENGTH_LONG)
+                    return true
                 }
             }
             // Is the URL something we can link to inside our application?
@@ -475,8 +482,8 @@ class CanvasWebView @JvmOverloads constructor(
      * @param title
      * @return
      */
-    fun loadHtml(html: String, title: String?): String {
-        val result = formatHtml(html, title)
+    fun loadHtml(html: String, title: String?, backgroundColorRes: Int = R.color.backgroundLightest): String {
+        val result = formatHtml(html, title, backgroundColorRes)
         loadDataWithBaseURL(getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
         return result
     }
@@ -484,15 +491,23 @@ class CanvasWebView @JvmOverloads constructor(
     /**
      * Helper function that makes html content somewhat suitable for mobile
      */
-    fun formatHtml(html: String, title: String? = ""): String {
+    fun formatHtml(html: String, title: String? = "", @ColorRes backgroundColorRes: Int = R.color.backgroundLightest): String {
         var formatted = applyWorkAroundForDoubleSlashesAsUrlSource(html)
         formatted = addProtocolToLinks(formatted)
         formatted = checkForMathTags(formatted)
-        val htmlWrapperFileName = if (ApiPrefs.canvasForElementary) "html_wrapper_k5.html" else "html_wrapper.html"
+        val htmlWrapperFileName = if (ApiPrefs.showElementaryView) "html_wrapper_k5.html" else "html_wrapper.html"
         val htmlWrapper = getAssetsFile(context, htmlWrapperFileName)
         return htmlWrapper
             .replace("{\$CONTENT$}", formatted)
             .replace("{\$TITLE$}", title ?: "")
+            .replace("{\$BACKGROUND$}", colorResToHexString(backgroundColorRes))
+            .replace("{\$COLOR$}", colorResToHexString(R.color.textDarkest))
+            .replace("{\$LINK_COLOR$}", colorResToHexString(R.color.textInfo))
+            .replace("{\$VISITED_LINK_COLOR\$}", colorResToHexString(R.color.textAlert))
+    }
+
+    private fun colorResToHexString(@ColorRes colorRes: Int): String {
+        return "#" + Integer.toHexString(context.getColor(colorRes)).substring(2)
     }
 
     /**
@@ -514,7 +529,7 @@ class CanvasWebView @JvmOverloads constructor(
         // If this html that we're about to load has a math tag and isn't just an image we want to parse it with MathJax.
         // This is the version that web currently uses (the 2.7.1 is the version number) and this is the check that they do to
         // decide if they'll run the MathJax script on the webview
-        if (content.contains("<math") && !content.contains("<img class='equation_image'")) {
+        if ((content.contains("<math") || content.contains(Regex("\\\$\\\$.+\\\$\\\$|\\\\\\(.+\\\\\\)"))) && !content.contains("<img class='equation_image'")) {
             return """<script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         </script>$content"""
@@ -538,11 +553,7 @@ class CanvasWebView @JvmOverloads constructor(
         // Remove all html tags and set content description for accessibility
         // call toString on fromHTML because certain Spanned objects can cause this to crash
         val contentDescription = title?.let { "$it $formattedHtml" } ?: formattedHtml
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            this.contentDescription = simplifyHTML(Html.fromHtml(contentDescription, Html.FROM_HTML_MODE_LEGACY))
-        } else {
-            this.contentDescription = simplifyHTML(Html.fromHtml(contentDescription))
-        }
+        this.contentDescription = simplifyHTML(Html.fromHtml(contentDescription, Html.FROM_HTML_MODE_LEGACY))
     }
 
     fun setCanvasWebChromeClientShowFilePickerCallback(callback: VideoPickerCallback?) {

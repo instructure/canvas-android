@@ -20,11 +20,13 @@ import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_TEXT_SUBMISSION_UPLOAD
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.submission.text.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.spotify.mobius.EventSource
 
+@ScreenView(SCREEN_VIEW_TEXT_SUBMISSION_UPLOAD)
 class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, TextSubmissionUploadEvent, TextSubmissionUploadEffect, TextSubmissionUploadView, TextSubmissionUploadViewState>() {
 
     private val course by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
@@ -41,9 +43,15 @@ class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, T
 
     override fun makePresenter() = TextSubmissionUploadPresenter
 
-    override fun makeInitModel() = TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText, isFailure)
+    override fun makeInitModel(): TextSubmissionUploadModel {
+        return TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText, isFailure)
+    }
 
     override fun getExternalEventSources() = listOf(TextSubmissionUploadEventBusSource())
+
+    override fun handleBackPressed(): Boolean {
+        return view.onBackPressed()
+    }
 
     companion object {
 

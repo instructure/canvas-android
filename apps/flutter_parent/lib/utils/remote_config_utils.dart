@@ -54,12 +54,13 @@ class RemoteConfigUtils {
       throw StateError('double-initialization of RemoteConfigUtils');
 
     _remoteConfig = remoteConfig;
+    _remoteConfig.settings.minimumFetchInterval = Duration(hours: 1);
 
     // fetch data from Firebase
     var updated = false;
     try {
-      await _remoteConfig.fetch(expiration: const Duration(hours: 1));
-      updated = await _remoteConfig.activateFetched();
+      await _remoteConfig.fetch();
+      updated = await _remoteConfig.activate();
     } catch (e) {
       // On fetch/activate failure, just make sure that updated is set to false
       updated = false;
@@ -76,7 +77,9 @@ class RemoteConfigUtils {
         String rcPreferencesName = _getSharedPreferencesName(rc);
         print(
             'RemoteConfigUtils.initialize(): fetched $rcParamName=${rcParamValue == null ? 'null' : '\"$rcParamValue\"'}');
-        _prefs.setString(rcPreferencesName, rcParamValue);
+        if (rcParamValue != null) {
+          _prefs.setString(rcPreferencesName, rcParamValue);
+        }
       });
     } else {
       // Otherwise, some log info.  The log info here and above will serve as a substitute for

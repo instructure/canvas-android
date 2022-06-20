@@ -16,6 +16,8 @@
  */
 package com.instructure.teacher.ui
 
+import androidx.test.espresso.matcher.ViewMatchers
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -30,6 +32,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
 import org.junit.Test
 
 @HiltAndroidTest
@@ -40,6 +43,15 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     override fun displaysPageObjects() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.assertPageObjects()
+    }
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        extraAccessibilitySupressions = Matchers.allOf(
+            AccessibilityCheckResultUtils.matchesCheckNames(Matchers.`is`("SpeakableTextPresentCheck")),
+            AccessibilityCheckResultUtils.matchesViews(ViewMatchers.withId(R.id.assignTo))
+        )
+
+        super.enableAndConfigureAccessibilityChecks()
     }
 
     @Test

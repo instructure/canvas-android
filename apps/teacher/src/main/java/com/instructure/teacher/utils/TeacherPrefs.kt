@@ -38,4 +38,7 @@ object TeacherPrefs : PrefManager(BaseAppManager.PREF_FILE_NAME) {
 
     var hideCourseColorOverlay by BooleanPref()
 
+    var commentLibraryEnabled by BooleanPref()
+
+    var listDashboard by BooleanPref()
 }

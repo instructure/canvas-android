@@ -25,10 +25,13 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_SETTINGS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.fragment_course_settings.*
 import kotlinx.android.synthetic.main.fragment_course_settings.view.*
 
+@ScreenView(SCREEN_VIEW_COURSE_SETTINGS)
 class CourseSettingsFragment : ParentFragment() {
 
     var course: Course by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -38,11 +41,11 @@ class CourseSettingsFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, course)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_course_settings, container, false)
+        return inflater.inflate(R.layout.fragment_course_settings, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

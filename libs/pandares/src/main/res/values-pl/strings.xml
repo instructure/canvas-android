@@ -1242,10 +1242,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Odpowiedzi tego uczestnika są ukryte, ponieważ to zadanie jest anonimowe.</string>
 
-    <string name="studentAnnotationUnsupported">Adnotacja uczestnika (nieobsługiwana)</string>
-    <string name="studentAnnotationUnsupportedDescription">Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
-    <string name="unsupportedSubmissionType">Nieobsługiwany typ zgłoszenia</string>
-    <string name="studentAnnotationUnsupportedMessage">Przesyłki nie można wyświetlić, ponieważ Adnotacja uczestnika nie jest obecnie obsługiwana na urządzeniach przenośnych.</string>
     <string name="schedule_marked_as_done">Oznaczono je jako gotowe.</string>
     <string name="error_saving_assignment_closed_grading_period">Nie można zmienić terminu, gdy termin znajduje się w zamkniętym okresie oceniania.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Przejdź do dnia dzisiejszego</string>
@@ -1253,4 +1249,46 @@
     <string name="a11y_contact_info_click_description">wyślij wiadomość</string>
     <string name="somethingWentWrong">Coś poszło nie tak</string>
     <string name="failedToLoadQuiz">Nie udało się wczytać testu</string>
+    <string name="failedToLoadSubmission">Nie udało się załadować przesyłki</string>
+    <string name="studentAnnotationToolbarTitle">Adnotacja uczestnika</string>
+    <string name="submissionTypeStudentAnnotation">Adnotacja uczestnika</string>
+    <string name="gradesNoDueDate">Brak terminu</string>
+    <string name="importantDatesNoDueDate">Brak terminu</string>
+    <string name="missingAssignment">Brak</string>
+    <string name="dontSave">Nie zapisuj</string>
+    <string name="textSubmissionExitConfirmationTitle">Zapisać wersję roboczą?</string>
+    <string name="textSubmissionExitConfirmationMessage">W przeciwnym razie Twoje zmiany nie zostaną zapisane</string>
+    <string name="submissionDraftAvailableSubtitle">Stuknij tutaj, aby kontynuować</string>
+    <string name="submissionDraftAvailableTitle">Dostępna jest wersja robocza</string>
+    <string name="errorLoadingSubmission">Wystąpił błąd podczas wczytywania przesyłki</string>
+    <string name="loadFullContent">Stuknij, aby zobaczyć całą zawartość</string>
+    <string name="dashboardTabImportantDates">Ważne daty</string>
+    <string name="importantDatesEmptyTitle">Brak ważnych dat</string>
+    <string name="important_dates">Ważne daty</string>
+
+    <string name="toolbarCommentLibrary">Biblioteka komentarzy</string>
+    <string name="commentLibraryNoSuggestions">Brak dostępnych propozycji</string>
+    <string name="speedGraderCommentHint">Komentarz</string>
+    <string name="a11y_schedule_marked_as_done">%s oznaczono jako gotowe</string>
+    <string name="a11y_error_occured">Wystąpił błąd, ponów próbę.</string>
+    <string name="a11y_content_description_accept_invite">Zaakceptuj zaproszenie</string>
+    <string name="a11y_content_description_decline_invite">Odrzuć zaproszenie</string>
+    <string name="no_notifications_to_show">Brak powiadomień do wyświetlenia</string>
+
+    <string name="documentScanningTitle">Skanowanie dokumentów</string>
+    <string name="filter_name_color">Kolorowy</string>
+    <string name="filter_name_grayscale">Skala szarości</string>
+    <string name="filter_name_monochrome">Monochromatyczny</string>
+    <string name="filter_name_original">Oryginalny</string>
+    <string name="noCompatibleAppInstalled">Na urządzeniu użytkownika nie zainstalowano aplikacji do otwarcia tego łącza.</string>
+    <string name="anonymousDiscussionNotSupported">Anonimowe dyskusje nie są obecnie obsługiwane na urządzeniach przenośnych. Otwórz w przeglądarce, aby wyświetlić dyskusję.</string>
+    <string name="discussionOpenInBrowser">Otwórz w przeglądarce</string>
+    <string name="dashboardSwitchToListView">Przełącz na widok listy</string>
+    <string name="dashboardSwitchToGridView">Przełącz na widok siatki</string>
+    <string name="selectAppTheme">Wybierz motyw aplikacji</string>
+    <string name="appThemeSettingsTitle">Motyw aplikacji</string>
+    <string name="appThemeLight">Jasny</string>
+    <string name="appThemeDark">Ciemny</string>
+    <string name="appThemeSystem">Domyślne ustawienia systemowe</string>
+
 </resources>

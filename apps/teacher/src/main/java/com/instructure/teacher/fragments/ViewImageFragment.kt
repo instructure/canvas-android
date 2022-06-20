@@ -31,19 +31,22 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_IMAGE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_view_image.*
 import org.greenrobot.eventbus.EventBus
 
+@ScreenView(SCREEN_VIEW_VIEW_IMAGE)
 class ViewImageFragment : Fragment(), ShareableFile {
 
     private var mUri by ParcelableArg(Uri.EMPTY)
@@ -94,12 +97,12 @@ class ViewImageFragment : Fragment(), ShareableFile {
         }
 
         if (isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mToolbarColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()
             }
-            ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         }
     }
@@ -141,7 +144,7 @@ class ViewImageFragment : Fragment(), ShareableFile {
     fun colorBackground(bitmap: Bitmap) {
         // Generate palette asynchronously
         Palette.from(bitmap).generate { palette ->
-            palette?.let { viewImageRootView.setBackgroundColor(it.getDarkMutedColor(Color.WHITE)) }
+            palette?.let { viewImageRootView.setBackgroundColor(it.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest))) }
         }
     }
 

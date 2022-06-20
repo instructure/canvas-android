@@ -40,7 +40,7 @@ class GradingPeriodModal extends StatelessWidget {
         }
         final gradingPeriod = gradingPeriods[index - 1];
         return ListTile(
-          title: Text(gradingPeriod.title, style: Theme.of(context).textTheme.subhead),
+          title: Text(gradingPeriod.title, style: Theme.of(context).textTheme.subtitle1),
           onTap: () => Navigator.of(context).pop(gradingPeriod),
         );
       },

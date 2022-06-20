@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
@@ -39,6 +38,8 @@ import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_DISCUSSION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
@@ -79,6 +80,7 @@ import kotlin.collections.last
 import kotlin.collections.plusAssign
 import kotlin.collections.toList
 
+@ScreenView(SCREEN_VIEW_CREATE_DISCUSSION)
 class CreateDiscussionFragment : BasePresenterFragment<
         CreateDiscussionPresenter,
         CreateDiscussionView>(), CreateDiscussionView, Identity {
@@ -192,7 +194,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         // If we already have something in the edit date groups we already have the full assignment and don't need to get it again.
         mDiscussionTopicHeader?.assignment?.let {
             // Get the full assignment with overrides
-            if (mEditDateGroups.size == 0) presenter?.getFullAssignment(it.id)
+            if (mEditDateGroups.size == 0) presenter.getFullAssignment(it.id)
         }
 
         setupToolbar()
@@ -264,7 +266,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
             }
         }
 
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
 
         sendButton?.setTextColor(ThemePrefs.buttonColor)
@@ -291,7 +293,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         }
 
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        descriptionRCEView.setLabel(discussionDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        descriptionRCEView.setLabel(discussionDescLabel, R.color.textDarkest, R.color.textDark)
 
         if (!mHasLoadedDataForEdit)
             mDiscussionTopicHeader?.let {
@@ -504,7 +506,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
                 .setMessage(R.string.discussions_delete_message)
                 .setPositiveButton(R.string.delete) { _, _ ->
                     if(mDiscussionTopicHeader != null) {
-                        presenter?.deleteDiscussionTopicHeader(mDiscussionTopicHeader!!.id)
+                        presenter.deleteDiscussionTopicHeader(mDiscussionTopicHeader!!.id)
                     }
                 }
                 .setNegativeButton(R.string.cancel) { _, _ -> }
@@ -598,7 +600,11 @@ class CreateDiscussionFragment : BasePresenterFragment<
             }
             postData.message = handleLTIPlaceHolders(placeHolderList, descriptionRCEView.html)
             postData.published = mIsPublished
-            postData.discussionType = if (mAllowThreaded) DiscussionTopicHeader.DiscussionType.THREADED.toString().toLowerCase() else DiscussionTopicHeader.DiscussionType.SIDE_COMMENT.toString().toLowerCase()
+            postData.discussionType = if (mAllowThreaded) {
+                DiscussionTopicHeader.DiscussionType.THREADED.toString().lowercase(Locale.getDefault())
+            } else {
+                DiscussionTopicHeader.DiscussionType.SIDE_COMMENT.toString().lowercase(Locale.getDefault())
+            }
             postData.requireInitialPost = mUsersMustPost
 
             if (presenter.getAssignment() == null) {

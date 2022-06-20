@@ -37,10 +37,6 @@ class EditPageDetailsPage : BasePage() {
         }
     }
 
-    fun navigateBack() {
-        onView(allOf((withParent(R.id.toolbar) + withContentDescription("Navigate up")), isDisplayed())).click()
-    }
-
     fun openEdit() {
         onView(withId(R.id.menu_edit)).click()
     }

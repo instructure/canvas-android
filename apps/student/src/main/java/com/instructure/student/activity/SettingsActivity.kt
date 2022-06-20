@@ -23,10 +23,14 @@ import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import dagger.hilt.android.AndroidEntryPoint
 
+@ScreenView(SCREEN_VIEW_SETTINGS)
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {

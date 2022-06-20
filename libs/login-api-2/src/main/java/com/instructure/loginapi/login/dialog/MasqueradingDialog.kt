@@ -20,7 +20,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
 import android.view.*
@@ -33,6 +32,7 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.loginapi.login.R
 import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.dialog_masquerading.*
+import java.util.Locale
 
 
 class MasqueradingDialog : DialogFragment() {
@@ -61,7 +61,7 @@ class MasqueradingDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         toolbar.setupAsCloseButton { dismiss() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), true, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
 
         ViewStyler.themeButton(startButton)
         startButton.onClick {
@@ -133,7 +133,7 @@ class MasqueradingDialog : DialogFragment() {
     }
 
     private fun sanitizeDomain(domain: String): String {
-        var url = domain.toLowerCase().replace(" ", "").substringAfter("www.")
+        var url = domain.lowercase(Locale.getDefault()).replace(" ", "").substringAfter("www.")
 
         // If there are no periods, append .instructure.com
         if (!url.contains(".") || url.endsWith(".beta")) {

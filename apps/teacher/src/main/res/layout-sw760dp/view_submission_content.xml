@@ -63,7 +63,7 @@
         android:layout_height="?android:actionBarSize"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:theme="@style/ToolBarStyle"
         app:popupTheme="@style/ToolBarPopupStyle">
 
@@ -96,7 +96,7 @@
                     android:maxLines="1"
                     android:paddingStart="8dp"
                     android:singleLine="true"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     tools:ignore="Deprecated,RtlSymmetry"
                     tools:text="This is a Title" />
 
@@ -109,7 +109,7 @@
                     android:maxLines="1"
                     android:paddingStart="8dp"
                     android:singleLine="true"
-                    android:textColor="@color/defaultTextDark"
+                    android:textColor="@color/textDarkest"
                     tools:ignore="Deprecated,RtlSymmetry"
                     tools:text="This is a Subtitle" />
 
@@ -142,7 +142,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/divider" />
+            android:background="@color/backgroundMedium" />
 
         <com.instructure.pandautils.views.ViewPagerNonSwipeable
             android:id="@+id/bottomViewPager"
@@ -164,11 +164,11 @@
             style="@style/Base.Widget.AppCompat.Spinner"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:backgroundTint="@color/defaultTextGray"
+            android:backgroundTint="@color/backgroundDark"
             android:fontFamily="sans-serif-medium"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:visibility="gone"
             tools:ignore="UnusedAttribute"
             tools:text="July 29, 2016 at 4:16 PM"
@@ -177,7 +177,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/dividerColor" />
+            android:background="@color/backgroundMedium" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -203,6 +203,7 @@
                 android:elevation="2dp"
                 android:padding="10dp"
                 android:visibility="gone"
+                android:tint="@color/white"
                 app:srcCompat="@drawable/ic_discussion"
                 tools:visibility="visible" />
 
@@ -217,7 +218,7 @@
                 android:id="@+id/loadingContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/backgroundLightest"
                 android:visibility="gone"
                 tools:visibility="visible">
 
@@ -240,7 +241,7 @@
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_toStartOf="@+id/panelContent"
-        android:background="@color/divider" />
+        android:background="@color/backgroundMedium" />
 
     <com.instructure.pandautils.views.FloatingRecordingView
         android:id="@+id/floatingRecordingView"

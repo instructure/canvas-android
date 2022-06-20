@@ -32,12 +32,15 @@ import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.MasteryPath
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_MASTERY_PATH_SELECTION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import kotlinx.android.synthetic.main.fragment_assignment.*
 import java.lang.ref.WeakReference
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_MASTERY_PATH_SELECTION)
 class MasteryPathSelectionFragment : ParentFragment() {
 
     // Bundle Args
@@ -130,7 +133,7 @@ class MasteryPathSelectionFragment : ParentFragment() {
         toolbar.let {
             it.title = getString(R.string.chooseAssignmentPath)
             it.setupAsBackButton(this)
-            ViewStyler.themeToolbar(requireActivity(), it, canvasContext)
+            ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
         }
     }
 
@@ -140,7 +143,7 @@ class MasteryPathSelectionFragment : ParentFragment() {
     private fun setupTabLayoutColors() {
         val color = ColorKeeper.getOrGenerateColor(canvasContext)
         tabLayout.setBackgroundColor(color)
-        tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.glassWhite), Color.WHITE)
+        tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.transparentWhite), requireContext().getColor(R.color.white))
     }
     //endregion
 

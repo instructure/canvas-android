@@ -180,7 +180,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
           ),
           title: UserName.fromUser(
             widget._student,
-            style: Theme.of(context).textTheme.subhead,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
         ),
         SizedBox(
@@ -195,7 +195,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
               ),
               child: Text(
                 L10n(context).alertMeWhen,
-                style: Theme.of(context).textTheme.subhead.copyWith(color: ParentColors.ash),
+                style: Theme.of(context).textTheme.subtitle1.copyWith(color: ParentColors.ash),
               ),
             )),
         Expanded(
@@ -236,15 +236,15 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
     return ListTile(
       title: Text(
         type.getTitle(context),
-        style: Theme.of(context).textTheme.subhead,
+        style: Theme.of(context).textTheme.subtitle1,
       ),
       trailing: Text(
         value != null ? NumberFormat.percentPattern().format(value / 100) : L10n(context).never,
-        style: Theme.of(context).textTheme.subhead.copyWith(color: StudentColorSet.electric.light),
+        style: Theme.of(context).textTheme.subtitle1.copyWith(color: StudentColorSet.electric.light),
       ),
       onTap: () async {
         AlertThreshold update = await showDialog(
-            context: context, child: AlertThresholdsPercentageDialog(_thresholds, type, widget._student.id));
+            context: context, builder: (context) => AlertThresholdsPercentageDialog(_thresholds, type, widget._student.id));
 
         if (update == null) {
           // User hit cancel - do nothing

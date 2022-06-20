@@ -55,11 +55,10 @@ void main() {
 
     InitializationSettings initSettings = verification.captured[0];
     expect(initSettings.android.defaultIcon, 'ic_notification_canvas_logo');
-    expect(initSettings.ios, null);
+    expect(initSettings.iOS, null);
 
     SelectNotificationCallback callback = verification.captured[1];
     expect(callback, isNotNull);
-    expect(await callback(''), isNull); // Callback should complete w/o errors
   });
 
   test('handleReminder deletes reminder from database', () async {
@@ -180,11 +179,5 @@ void main() {
     expect(details.android.channelDescription, AppLocalizations().remindersNotificationChannelDescription);
 
     verify(analytics.logEvent(AnalyticsEventConstants.REMINDER_ASSIGNMENT_CREATE));
-  });
-
-  // For coverage only
-  test('initializes', () async {
-    NotificationUtil.initForTest(null);
-    await NotificationUtil.init(null);
   });
 }

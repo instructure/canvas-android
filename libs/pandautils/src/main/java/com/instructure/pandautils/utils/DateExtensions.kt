@@ -30,7 +30,7 @@ fun OffsetDateTime.getShortMonthAndDay(): String {
 
 fun OffsetDateTime.getTime(): String {
     val pattern = DateTimeFormatterBuilder().appendPattern("h:mm a").toFormatter()
-    return format(pattern).toLowerCase()
+    return format(pattern).lowercase(Locale.getDefault())
 }
 
 fun Date.isSameDay(date: Date?): Boolean {
@@ -46,7 +46,7 @@ fun Date.isNextDay(date: Date?): Boolean {
     if (date == null) return false
     val calendar = Calendar.getInstance()
     calendar.time = date
-    calendar.roll(Calendar.DAY_OF_YEAR, true)
+    calendar.add(Calendar.DAY_OF_YEAR, 1)
     return calendar.time.isSameDay(this)
 }
 
@@ -54,7 +54,7 @@ fun Date.isPreviousDay(date: Date?): Boolean {
     if (date == null) return false
     val calendar = Calendar.getInstance()
     calendar.time = date
-    calendar.roll(Calendar.DAY_OF_YEAR, false)
+    calendar.add(Calendar.DAY_OF_YEAR, -1)
     return calendar.time.isSameDay(this)
 }
 

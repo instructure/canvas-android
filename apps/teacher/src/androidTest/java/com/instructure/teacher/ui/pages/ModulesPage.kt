@@ -28,10 +28,6 @@ class ModulesPage : BasePage() {
         onView(allOf(withId(R.id.moduleName), withText(moduleTitle))).assertDisplayed()
     }
 
-    fun navigateBack() {
-        onView(withParent(R.id.toolbar) + withContentDescription("Navigate up")).click()
-    }
-
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout), withAncestor(R.id.moduleList))).swipeDown()
     }

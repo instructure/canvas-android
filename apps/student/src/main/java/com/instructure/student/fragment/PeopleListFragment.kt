@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PEOPLE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.PeopleListRecyclerAdapter
@@ -34,6 +36,7 @@ import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_people_list.*
 
+@ScreenView(SCREEN_VIEW_PEOPLE_LIST)
 @PageView(url = "{canvasContext}/users")
 class PeopleListFragment : ParentFragment(), Bookmarkable {
 
@@ -64,7 +67,7 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerAdapter = PeopleListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
-            view!!,
+            view,
             requireContext(),
             recyclerAdapter!!,
             R.id.swipeRefreshLayout,
@@ -77,7 +80,7 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
         setupToolbarMenu(toolbar)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     override val bookmark: Bookmarker

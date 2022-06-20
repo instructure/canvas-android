@@ -65,7 +65,7 @@ class GradeCell extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Text(L10n(context).submissionStatusSuccessTitle,
-              style: Theme.of(context).textTheme.headline.copyWith(color: ParentTheme.of(context).successColor),
+              style: Theme.of(context).textTheme.headline5.copyWith(color: ParentTheme.of(context).successColor),
               key: Key("grade-cell-submit-status")),
           SizedBox(height: 6),
           Text(data.submissionText, textAlign: TextAlign.center),
@@ -139,7 +139,7 @@ class GradeCell extends StatelessWidget {
                 Text(
                   data.grade,
                   key: Key('grade-cell-grade'),
-                  style: Theme.of(context).textTheme.display1,
+                  style: Theme.of(context).textTheme.headline4,
                   semanticsLabel: data.gradeContentDescription,
                 ),
               if (data.outOf.isNotEmpty) Text(data.outOf, key: Key('grade-cell-out-of')),
@@ -155,7 +155,7 @@ class GradeCell extends StatelessWidget {
                   child: Text(
                     data.finalGrade,
                     key: Key('grade-cell-final-grade'),
-                    style: Theme.of(context).textTheme.subhead,
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                 ),
             ],

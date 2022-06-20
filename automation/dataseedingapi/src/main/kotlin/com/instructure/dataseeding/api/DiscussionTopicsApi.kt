@@ -19,7 +19,7 @@ package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.CreateDiscussionTopic
 import com.instructure.dataseeding.model.DiscussionApiModel
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
@@ -33,26 +33,37 @@ object DiscussionTopicsApi {
     }
 
     private fun discussionTopicsService(token: String): DiscussionTopicsService
-            = CanvasRestAdapter.retrofitWithToken(token).create(DiscussionTopicsService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(DiscussionTopicsService::class.java)
 
-    fun createDiscussion(courseId: Long, isAnnouncement: Boolean = false, token: String): DiscussionApiModel {
-        val discussionTopic = Randomizer.randomDiscussion(isAnnouncement)
+    fun createDiscussion(courseId: Long, token: String, isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false): DiscussionApiModel {
+        val discussionTopic = Randomizer.randomDiscussion(isAnnouncement, lockedForUser, locked)
         return discussionTopicsService(token)
                 .createDiscussionTopic(courseId, discussionTopic)
                 .execute()
                 .body()!!
     }
 
-    fun createAnnouncement(courseId: Long, token: String): DiscussionApiModel {
-        val discussion = createDiscussion(courseId,true, token)
+    fun createAnnouncement(courseId: Long, token: String, lockedForUser: Boolean = false, locked: Boolean = false): DiscussionApiModel {
+        val discussion = createDiscussion(courseId, token, true, lockedForUser, locked, )
 
-        // MBL-11670: It appears that the createDiscussion call does not properly set the isAnnouncement field.
-        // So let's do that manually.
-        return DiscussionApiModel(
+        if(!lockedForUser) {
+            return DiscussionApiModel(
                 id = discussion.id,
                 title = discussion.title,
                 message = discussion.message,
-                isAnnouncement = true
+                isAnnouncement = true,
+                lockedForUser = false,
+                locked = false
+            )
+        }
+
+        return DiscussionApiModel(
+            id = discussion.id,
+            title = discussion.title,
+            message = discussion.message,
+            isAnnouncement = true,
+            lockedForUser = false,
+            locked = true
         )
     }
 }

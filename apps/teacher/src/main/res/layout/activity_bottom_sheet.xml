@@ -21,7 +21,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#00000000">
+    android:background="@color/transparent">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/bottom"
@@ -32,7 +32,7 @@
         app:cardUseCompatPadding="true"
         app:cardPreventCornerOverlap="false"
         app:contentPadding="0dp"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="@color/backgroundLightest"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/bottomSheetCardBottomPadding"

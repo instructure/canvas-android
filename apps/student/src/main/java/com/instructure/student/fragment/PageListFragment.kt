@@ -30,6 +30,8 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.PageListRecyclerAdapter
@@ -41,6 +43,7 @@ import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
+@ScreenView(SCREEN_VIEW_PAGE_LIST)
 @PageView(url = "{canvasContext}/pages")
 class PageListFragment : ParentFragment(), Bookmarkable {
 
@@ -145,7 +148,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
             }
             recyclerAdapter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     override fun handleBackPressed() = toolbar.closeSearch()

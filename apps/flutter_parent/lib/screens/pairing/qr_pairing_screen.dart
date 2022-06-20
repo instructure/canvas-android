@@ -90,7 +90,7 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: <Widget>[
-          Text(L10n(context).qrPairingTutorialMessage, style: Theme.of(context).textTheme.subhead),
+          Text(L10n(context).qrPairingTutorialMessage, style: Theme.of(context).textTheme.subtitle1),
           Expanded(
             child: FractionallySizedBox(
               alignment: Alignment.center,

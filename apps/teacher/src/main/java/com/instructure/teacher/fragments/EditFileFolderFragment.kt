@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import com.google.android.material.textfield.TextInputLayout
@@ -29,10 +28,11 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_FILE_FOLDER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -40,8 +40,8 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.LongNameArrayAdapter
 import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.EditFilePresenterFactory
 import com.instructure.teacher.presenters.EditFileFolderPresenter
@@ -50,6 +50,7 @@ import com.instructure.teacher.view.EditFileView
 import kotlinx.android.synthetic.main.fragment_edit_filefolder.*
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_EDIT_FILE_FOLDER)
 class EditFileFolderFragment : BasePresenterFragment<
         EditFileFolderPresenter,
         EditFileView>(), EditFileView {
@@ -122,7 +123,7 @@ class EditFileFolderFragment : BasePresenterFragment<
     }
 
     override fun fileFolderUpdated(updatedFileFolder: FileFolder) {
-        FileFolderUpdatedEvent(updatedFileFolder).post()
+        FileFolderUpdatedEvent(updatedFileFolder).postSticky()
         requireActivity().onBackPressed()
     }
 
@@ -137,7 +138,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         else toolbar.title = getString(R.string.editFolder)
 
         toolbar.setupMenu(R.menu.menu_save_generic) { saveFileFolder() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
 
 
 
@@ -354,7 +355,9 @@ class EditFileFolderFragment : BasePresenterFragment<
 
         // Setup initial value
         val initialPosition =
-                when (presenter.currentFileOrFolder.usageRights?.useJustification?.name?.toLowerCase()) {
+                when (presenter.currentFileOrFolder.usageRights?.useJustification?.name?.lowercase(
+                    Locale.getDefault()
+                )) {
                     "own_copyright" -> spinnerAdapter.getPosition(getString(R.string.holdCopyright))
                     "used_by_permission" -> spinnerAdapter.getPosition(getString(R.string.havePermission))
                     "public_domain" -> spinnerAdapter.getPosition(getString(R.string.publicDomain))
@@ -404,8 +407,8 @@ class EditFileFolderFragment : BasePresenterFragment<
 
         updateFileFolder = updateFileFolder.copy(name = titleEditText.text.toString())
 
-        mAccessStatus.lockAt = lockDate.toApiString() ?: ""
-        mAccessStatus.unlockAt = unlockDate.toApiString() ?: ""
+        mAccessStatus.lockAt = lockDate.toApiString()
+        mAccessStatus.unlockAt = unlockDate.toApiString()
 
         presenter.updateFileFolder(updateFileFolder, mAccessStatus, mUsageType, mLicenseType, copyrightEditText.text.toString())
     }

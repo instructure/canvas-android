@@ -51,6 +51,9 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             // Force non null, we should only have a click if there is a submission ID
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowUploadStatusView(model.databaseSubmission!!)))
         }
+        AssignmentDetailsEvent.ViewDraftSubmissionClicked -> {
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowDraftSubmission(model.databaseSubmission!!)))
+        }
         AssignmentDetailsEvent.PullToRefresh -> {
             Next.next(model.copy(isLoading = true), setOf(AssignmentDetailsEffect.LoadData(model.assignmentId, model.course.id, true)))
         }

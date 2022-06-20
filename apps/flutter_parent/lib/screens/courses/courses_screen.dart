@@ -105,7 +105,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
               children: <Widget>[
                 SizedBox(height: 8),
                 Text(course.name ?? '',
-                    style: Theme.of(context).textTheme.subhead, key: Key("${course.courseCode}_name")),
+                    style: Theme.of(context).textTheme.subtitle1, key: Key("${course.courseCode}_name")),
                 SizedBox(height: 2),
                 Text(course.courseCode ?? '',
                     style: Theme.of(context).textTheme.caption, key: Key("${course.courseCode}_code")),

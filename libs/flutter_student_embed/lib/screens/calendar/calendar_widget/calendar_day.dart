@@ -46,12 +46,12 @@ class CalendarDay extends StatelessWidget {
     final isToday = date.isSameDayAs(DateTime.now());
     final isSelected = date.isSameDayAs(selectedDay);
 
-    TextStyle textStyle = theme.textTheme.headline;
-    if (date.isWeekend() || date.month != selectedDay.month) textStyle = textStyle.copyWith(color: StudentColors.ash);
+    TextStyle textStyle = theme.textTheme.headline5;
+    if (date.isWeekend() || date.month != selectedDay.month) textStyle = textStyle.copyWith(color: StudentColors.textDark);
     BoxDecoration decoration;
 
     if (isToday) {
-      textStyle = Theme.of(context).accentTextTheme.headline;
+      textStyle = Theme.of(context).accentTextTheme.headline5;
       decoration = BoxDecoration(color: theme.accentColor, shape: BoxShape.circle);
     } else if (isSelected) {
       textStyle = textStyle.copyWith(color: Theme.of(context).accentColor);
@@ -133,7 +133,7 @@ class CalendarDay extends StatelessWidget {
                 child: Container(
                   width: 4,
                   height: 4,
-                  decoration: BoxDecoration(color: StudentColors.ash, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: StudentColors.textDark, shape: BoxShape.circle),
                 ),
               );
             },

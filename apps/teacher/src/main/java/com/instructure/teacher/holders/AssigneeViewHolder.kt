@@ -116,7 +116,7 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
 
     private fun setItemAvatar(context: Context, itemName: String, circleImageView: CircleImageView) {
         val initials = ProfileUtils.getUserInitials(itemName)
-        val color = context.getColorCompat(R.color.defaultTextGray)
+        val color = context.getColorCompat(R.color.textDark)
         val drawable = TextDrawable.builder()
                 .beginConfig()
                 .height(context.resources.getDimensionPixelSize(com.instructure.pandautils.R.dimen.avatar_size))

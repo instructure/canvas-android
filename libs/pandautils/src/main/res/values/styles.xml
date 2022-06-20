@@ -17,21 +17,21 @@
   -->
 <resources>
 
-    <style name="ToolBarStyle" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
-        <item name="actionModeBackground">@color/defaultPrimary</item>
+    <style name="ToolBarStyle" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="actionModeBackground">@color/licorice</item>
     </style>
 
-    <style name="ToolBarPopupStyle" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/defaultPrimary</item>
-        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="colorAccent">@color/defaultAccent</item>
-        <item name="actionModeBackground">@color/defaultPrimary</item>
+    <style name="ToolBarPopupStyle" parent="Theme.AppCompat.DayNight">
+        <item name="colorPrimary">@color/textDarkest</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDarkest</item>
+        <item name="actionModeBackground">@color/textDarkest</item>
     </style>
 
-    <style name="CustomViewAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="CustomViewAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:windowBackground">@color/transparent</item>
     </style>
 
@@ -46,7 +46,7 @@
 
     <style name="TextStyle.Primary">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/canvasTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
     </style>
 
     <style name="TextStyle.Grade">
@@ -57,7 +57,7 @@
 
     <style name="TextStyle.NoGrade">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/canvasTextMedium</item>
+        <item name="android:textColor">@color/textDark</item>
         <item name="android:textStyle">normal</item>
     </style>
 
@@ -70,12 +70,12 @@
         <item name="android:gravity">center</item>
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/defaultActionColor</item>
+        <item name="android:textColor">@color/textInfo</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ButtonCanvasTheme" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/button_states</item>
+        <item name="android:background">@color/backgroundMedium</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:minWidth">88dp</item>
         <item name="android:padding">8dp</item>
@@ -109,7 +109,7 @@
     <style name="ButtonStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/canvasDefaultButtonText</item>
+        <item name="android:textColor">@color/textLightest</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:background">@drawable/bg_button_rounded</item>
         <item name="android:layout_marginBottom">12dp</item>
@@ -134,8 +134,8 @@
         <item name="android:layout_marginEnd">10dp</item>
         <item name="android:layout_marginStart">10dp</item>
         <item name="android:layout_marginTop">14dp</item>
-        <item name="android:backgroundTint">@color/white</item>
-        <item name="android:textColor">@color/defaultTextGray</item>
+        <item name="android:backgroundTint">@color/textLightest</item>
+        <item name="android:textColor">@color/textDark</item>
     </style>
 
     <style name="FloatingRecorderSendButtonStyle" parent="ButtonStyle">
@@ -174,7 +174,7 @@
     </style>
 
     <style name="AdapterItemTitleText" parent="TextFont.Medium">
-        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:maxLines">2</item>
@@ -185,7 +185,7 @@
     <style name="AdapterItemDescriptionText" parent="TextFont.Regular">
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textColor">@color/defaultTextGray</item>
+        <item name="android:textColor">@color/textDark</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
     </style>
@@ -200,13 +200,17 @@
     <style name="AdapterListHeader" parent="TextFont.Medium">
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textColor">@color/defaultTextGray</item>
+        <item name="android:textColor">@color/textDark</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
     <style name="roundedImageView" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">4dp</item>
+    </style>
+
+    <style name="SwitchTheme">
+        <item name="colorControlActivated">@color/backgroundInfo</item>
     </style>
 
 </resources>

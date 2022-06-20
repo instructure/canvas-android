@@ -16,6 +16,7 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy
 import com.instructure.canvasapi2.QLCallback
 import com.instructure.canvasapi2.StudentContextCardQuery
 import com.instructure.canvasapi2.enqueueQuery
@@ -37,7 +38,9 @@ object StudentContextManager {
             .build()
 
         callback.enqueueQuery(query) {
-            networkOnly = forceNetwork
+            if (forceNetwork) {
+                cachePolicy = HttpCachePolicy.NETWORK_ONLY
+            }
         }
     }
 

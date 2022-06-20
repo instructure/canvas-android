@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -38,6 +40,7 @@ import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_profile.*
 
+@ScreenView(SCREEN_VIEW_PROFILE)
 class ProfileFragment : BaseFragment() {
 
     override fun layoutResId() = R.layout.fragment_profile
@@ -61,7 +64,7 @@ class ProfileFragment : BaseFragment() {
         toolbar.setupMenu(R.menu.menu_settings_edit, menuItemCallback)
         toolbar.setupBackButtonAsBackPressedOnly(this)
         titleTextView.adoptToolbarStyle(toolbar)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         toolbar.requestAccessibilityFocus()
     }
 
@@ -70,7 +73,7 @@ class ProfileFragment : BaseFragment() {
 
         if(ProfileUtils.shouldLoadAltAvatarImage(user?.avatarUrl)) {
             val initials = ProfileUtils.getUserInitials(user?.shortName ?: "")
-            val color = requireContext().getColorCompat(R.color.canvasDefaultTabUnselected)
+            val color = requireContext().getColorCompat(R.color.backgroundDark)
             val drawable = TextDrawable.builder()
                     .beginConfig()
                     .height(requireContext().resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
@@ -80,7 +83,7 @@ class ProfileFragment : BaseFragment() {
                     .textColor(color)
                     .endConfig()
                     .buildRound(initials, Color.WHITE)
-            usersAvatar.borderColor = requireContext().getColorCompat(R.color.canvasDefaultTabUnselected)
+            usersAvatar.borderColor = requireContext().getColorCompat(R.color.borderDark)
             usersAvatar.borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6F, requireContext().resources.displayMetrics).toInt()
             usersAvatar.setImageDrawable(drawable)
         } else {

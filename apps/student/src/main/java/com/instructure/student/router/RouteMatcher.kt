@@ -37,12 +37,12 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
-import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.*
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
@@ -81,7 +81,7 @@ object RouteMatcher : BaseRouteMatcher() {
         //////////////////////////
         routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java, NotificationListFragment::class.java, Arrays.asList(":${RouterParams.RECENT_ACTIVITY}"))) // Recent Activity
-        if (BuildConfig.IS_DEBUG && ApiPrefs.canvasForElementary && ApiPrefs.elementaryDashboardEnabledOverride) {
+        if (ApiPrefs.showElementaryView) {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), ElementaryCourseFragment::class.java))
         } else {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java))
@@ -95,8 +95,12 @@ object RouteMatcher : BaseRouteMatcher() {
         !  CAUTION: Order matters, these are purposely placed above the pages, quizzes, disscussions, assignments, and files so they are matched if query params exist and routed to Modules
         !!!!!!!!!!!!
         */
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ModuleListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"), ModuleListFragment::class.java)) // Just route to modules list. API does not have a way to fetch a module item without knowing the module id (even though web canvas can do it)
+        if (ApiPrefs.showElementaryView) {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ElementaryCourseFragment::class.java, tabId = Tab.MODULES_ID))
+        } else {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ModuleListFragment::class.java))
+        }
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/:${RouterParams.MODULE_ID}"), ModuleListFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))
@@ -110,7 +114,11 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/notifications"), NotificationListFragment::class.java))
 
         // Grades
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
+        if (ApiPrefs.showElementaryView) {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), ElementaryCourseFragment::class.java, tabId = Tab.GRADES_ID))
+        } else {
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
+        }
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades/:${RouterParams.ASSIGNMENT_ID}"), GradesListFragment::class.java, AssignmentDetailsFragment::class.java))
 
         // People
@@ -122,16 +130,18 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/folder/:${RouterParams.FOLDER_NAME}"), RouteContext.FILE))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}/download"), RouteContext.FILE)) // trigger webview's download listener
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}/preview"), RouteContext.FILE))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"), RouteContext.FILE))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"), RouteContext.FILE, CourseModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/folder(\\/.*)*/:${RouterParams.FILE_ID}"), RouteContext.FILE))
         routes.add(Route("/files/folder(\\/.*)*/:${RouterParams.FILE_ID}", RouteContext.FILE))
 
         // Discussions
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics"), DiscussionListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, DiscussionDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, CourseModuleProgressionFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
 
         // Pages
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages"), PageListFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), PageListFragment::class.java, CourseModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), PageListFragment::class.java, PageDetailsFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/wiki"), PageListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/wiki/:${RouterParams.PAGE_ID}"), PageListFragment::class.java, PageDetailsFragment::class.java))
@@ -140,11 +150,14 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements"), AnnouncementListFragment::class.java))
         // :message_id because it shares with discussions
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), AnnouncementListFragment::class.java, DiscussionDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), AnnouncementListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
         // Announcements from the notifications tab
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), NotificationListFragment::class.java, DiscussionDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), NotificationListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
 
         // Quiz
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes"), QuizListFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"), QuizListFragment::class.java, CourseModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"), QuizListFragment::class.java, BasicQuizViewFragment::class.java))
 
 
@@ -157,6 +170,9 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Assignments
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments"), AssignmentListFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, CourseModuleProgressionFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, CourseModuleProgressionFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarFragment::class.java, CourseModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, AssignmentDetailsFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, AssignmentDetailsFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarFragment::class.java, AssignmentDetailsFragment::class.java))
@@ -219,7 +235,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routeUrl(context, url, ApiPrefs.domain, extras)
     }
 
-    fun routeUrl(context: Context, url: String, domain: String, extras: Bundle? = null) {
+    fun routeUrl(context: Context, url: String, domain: String, extras: Bundle? = null, secondaryClass: Class<out Fragment>? = null) {
         /* Possible activity types we can navigate too: Unknown Link, InitActivity, Master/Detail, Fullscreen, WebView, ViewMedia */
 
         //Find the best route
@@ -244,6 +260,10 @@ object RouteMatcher : BaseRouteMatcher() {
             route.secondaryClass = PeopleListFragment::class.java
         }
 
+        if (secondaryClass != null) {
+            route?.secondaryClass = secondaryClass
+        }
+
         route(context, route)
     }
 
@@ -256,28 +276,41 @@ object RouteMatcher : BaseRouteMatcher() {
                 handleWebViewUrl(context, route.uri.toString())
             }
         } else if (route.routeContext == RouteContext.FILE || route.primaryClass?.isAssignableFrom(FileListFragment::class.java) == true && route.queryParamsHash.containsKey(RouterParams.PREVIEW)) {
-            if (route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD)) {
-                if (route.uri != null) {
-                    openMedia(context as FragmentActivity, route.uri.toString())
-                } else if (route.uri != null) {
-                    openMedia(context as FragmentActivity, route.uri!!.toString())
+            when {
+                route.secondaryClass == CourseModuleProgressionFragment::class.java -> handleFullscreenRoute(context, route)
+                route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD) -> {
+                    if (route.removePreviousScreen) {
+                        val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
+                        fragmentManager?.popBackStackImmediate()
+                    }
+                    if (route.uri != null) {
+                        openMedia(context as FragmentActivity, route.uri.toString())
+                    } else if (route.uri != null) {
+                        openMedia(context as FragmentActivity, route.uri!!.toString())
+                    }
                 }
-            }  else if (route.paramsHash.containsKey(RouterParams.FOLDER_NAME) && !route.queryParamsHash.containsKey(RouterParams.PREVIEW)) {
-                // Preview query params are caught under the same route matcher with the :folder_name param, make sure we're not catching preview urls here as well
-                // Route to the FileListFragment but to the folder - To route we need to modify the route a bit.
-                if (!route.paramsHash.containsKey(RouterParams.COURSE_ID)) {
-                    route.canvasContext = ApiPrefs.user
+                route.paramsHash.containsKey(RouterParams.FOLDER_NAME) && !route.queryParamsHash.containsKey(RouterParams.PREVIEW) -> {
+                    // Preview query params are caught under the same route matcher with the :folder_name param, make sure we're not catching preview urls here as well
+                    // Route to the FileListFragment but to the folder - To route we need to modify the route a bit.
+                    if (!route.paramsHash.containsKey(RouterParams.COURSE_ID)) {
+                        route.canvasContext = ApiPrefs.user
+                    }
+                    route.routeContext = RouteContext.UNKNOWN
+                    route.primaryClass = FileListFragment::class.java
+                    handleFullscreenRoute(context, route)
                 }
-                route.routeContext = RouteContext.UNKNOWN
-                route.primaryClass = FileListFragment::class.java
-                handleFullscreenRoute(context, route)
-            } else {
-                val isGroupRoute = "groups" == route.uri?.pathSegments?.get(0)
-                handleSpecificFile(
+                else -> {
+                    if (route.removePreviousScreen) {
+                        val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
+                        fragmentManager?.popBackStackImmediate()
+                    }
+                    val isGroupRoute = "groups" == route.uri?.pathSegments?.get(0)
+                    handleSpecificFile(
                         context as FragmentActivity,
                         (if (route.queryParamsHash.containsKey(RouterParams.PREVIEW)) route.queryParamsHash[RouterParams.PREVIEW] else route.paramsHash[RouterParams.FILE_ID]) ?: "",
                         route,
                         isGroupRoute)
+                }
             }
         } else if (route.routeContext == RouteContext.MEDIA) {
             handleMediaRoute(context, route)
@@ -394,7 +427,7 @@ object RouteMatcher : BaseRouteMatcher() {
         // If we're trying to open an HTML file, don't download it. It could be referencing other files
         // through a relative URL which we won't be able to access. Instead, just showing the file in
         // a webview will load the file the user is trying to view and will resolve all relative paths
-        if (filename.toLowerCase().endsWith(".htm") || filename.toLowerCase().endsWith(".html")) {
+        if (filename.lowercase(Locale.getDefault()).endsWith(".htm") || filename.lowercase(Locale.getDefault()).endsWith(".html")) {
             RouteUtils.retrieveFileUrl(route, fileId) { fileUrl, context, needsAuth ->
                 InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(context, fileUrl, needsAuth, true))
             }
@@ -487,6 +520,11 @@ object RouteMatcher : BaseRouteMatcher() {
 
     fun getContextIdFromURL(url: String?): String? {
         return getContextIdFromURL(url, routes)
+    }
+
+    fun resetRoutes() {
+        routes.clear()
+        initRoutes()
     }
 }
 

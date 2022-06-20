@@ -21,7 +21,7 @@ class DayOfWeekHeaders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final weekendTheme = Theme.of(context).textTheme.subtitle;
+    final weekendTheme = Theme.of(context).textTheme.subtitle2;
     final weekdayTheme = weekendTheme.copyWith(color: StudentTheme.of(context).onSurfaceColor);
 
     final symbols = DateFormat().dateSymbols;

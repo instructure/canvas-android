@@ -71,7 +71,7 @@ class CourseCardCreator(
                     { events.postValue(Event(HomeroomAction.OpenCourse(course))) },
                     { events.postValue(Event(HomeroomAction.OpenAssignments(course))) },
                     { openAnnouncementDetails(events, course, announcements[index]) },
-                    resources.getColor(R.color.destructive, null)
+                    resources.getColor(R.color.textDanger, null)
                 )
             }
     }

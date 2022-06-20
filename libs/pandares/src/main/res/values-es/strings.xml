@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Las respuestas del estudiante están ocultas porque esta tarea es anónima.</string>
 
-    <string name="studentAnnotationUnsupported">Anotación del estudiante (no admitida)</string>
-    <string name="studentAnnotationUnsupportedDescription">La anotación del estudiante actualmente no se admite en el móvil.</string>
-    <string name="unsupportedSubmissionType">Tipo de entrega no admitida</string>
-    <string name="studentAnnotationUnsupportedMessage">La entrega no se puede mostrar porque la Anotación del estudiante actualmente no se admite en el móvil.</string>
     <string name="schedule_marked_as_done">Lo marcó como terminado.</string>
     <string name="error_saving_assignment_closed_grading_period">No se puede cambiar la fecha de entrega en un período de calificaciones cerrado.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Saltar a hoy</string>
@@ -1225,4 +1221,46 @@
     <string name="a11y_contact_info_click_description">enviar mensaje</string>
     <string name="somethingWentWrong">Se produjo un error.</string>
     <string name="failedToLoadQuiz">No se pudo cargar el examen</string>
+    <string name="failedToLoadSubmission">Error al cargar entrega</string>
+    <string name="studentAnnotationToolbarTitle">Anotación del estudiante</string>
+    <string name="submissionTypeStudentAnnotation">Anotación del estudiante</string>
+    <string name="gradesNoDueDate">No hay fecha de entrega</string>
+    <string name="importantDatesNoDueDate">No hay fecha de entrega</string>
+    <string name="missingAssignment">Faltante</string>
+    <string name="dontSave">No guardar</string>
+    <string name="textSubmissionExitConfirmationTitle">¿Quiere guardar un borrador?</string>
+    <string name="textSubmissionExitConfirmationMessage">De lo contrario, sus cambios no se guardarán</string>
+    <string name="submissionDraftAvailableSubtitle">Haga clic aquí para continuar</string>
+    <string name="submissionDraftAvailableTitle">Borrador disponible</string>
+    <string name="errorLoadingSubmission">Ocurrió un error al cargar la entrega</string>
+    <string name="loadFullContent">Presione aquí para ver el contenido completo</string>
+    <string name="dashboardTabImportantDates">Fechas importantes</string>
+    <string name="importantDatesEmptyTitle">No hay fechas importantes</string>
+    <string name="important_dates">Fechas importantes</string>
+
+    <string name="toolbarCommentLibrary">Biblioteca de comentarios</string>
+    <string name="commentLibraryNoSuggestions">No hay sugerencias disponibles</string>
+    <string name="speedGraderCommentHint">Comentario</string>
+    <string name="a11y_schedule_marked_as_done">%s marcado como realizado</string>
+    <string name="a11y_error_occured">Se ha producido un error; inténtelo de nuevo.</string>
+    <string name="a11y_content_description_accept_invite">Aceptar invitación</string>
+    <string name="a11y_content_description_decline_invite">Rechazar invitación</string>
+    <string name="no_notifications_to_show">No hay notificaciones para mostrar.</string>
+
+    <string name="documentScanningTitle">Escaneo de documentos</string>
+    <string name="filter_name_color">Color</string>
+    <string name="filter_name_grayscale">Escala de grises</string>
+    <string name="filter_name_monochrome">Monocromático</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Su dispositivo no posee ninguna aplicación que le permita abrir este enlace.</string>
+    <string name="anonymousDiscussionNotSupported">Los foros de discusión anónimos no son actualmente compatibles con dispositivos móviles. Abrir en el navegador para ver el foro de discusión.</string>
+    <string name="discussionOpenInBrowser">Abrir en el navegador.</string>
+    <string name="dashboardSwitchToListView">Cambiar a vista de lista</string>
+    <string name="dashboardSwitchToGridView">Cambiar a vista de cuadrícula</string>
+    <string name="selectAppTheme">Elegir tema de la aplicación</string>
+    <string name="appThemeSettingsTitle">Tema de la aplicación</string>
+    <string name="appThemeLight">Claro</string>
+    <string name="appThemeDark">Oscuro</string>
+    <string name="appThemeSystem">Opción predeterminada del sistema</string>
+
 </resources>

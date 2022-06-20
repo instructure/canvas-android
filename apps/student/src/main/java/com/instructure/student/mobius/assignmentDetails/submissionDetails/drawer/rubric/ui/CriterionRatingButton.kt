@@ -66,7 +66,7 @@ class CriterionRatingButton(context: Context, data: RatingData, val tint: Int) :
                 intArrayOf(android.R.attr.state_activated) to Color.WHITE,
                 intArrayOf(android.R.attr.state_selected) to tint,
                 intArrayOf(android.R.attr.state_pressed) to tint,
-                intArrayOf() to ContextCompat.getColor(context, R.color.defaultTextGray)
+                intArrayOf() to ContextCompat.getColor(context, R.color.textDark)
             )
         )
 
@@ -139,7 +139,7 @@ class RatingButtonDrawable(context: Context, val tint: Int) : Drawable() {
         intArrayOf() to AnimState(
             padding = context.DP(2),
             backgroundColor = Color.TRANSPARENT,
-            strokeColor = ContextCompat.getColor(context, R.color.defaultTrackColor)
+            strokeColor = ContextCompat.getColor(context, R.color.backgroundMedium)
         )
     )
 

@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
@@ -27,6 +26,8 @@ import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_REPLY
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
@@ -45,6 +46,7 @@ import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DiscussionsReplyView
 import kotlinx.android.synthetic.main.fragment_discussions_reply.*
 
+@ScreenView(SCREEN_VIEW_DISCUSSIONS_REPLY)
 class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter, DiscussionsReplyView>(), DiscussionsReplyView {
 
     private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
@@ -118,7 +120,7 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
         toolbar.setupCloseButton(this)
         toolbar.setupMenu(R.menu.menu_discussion_reply, menuItemCallback)
 
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 
@@ -153,10 +155,10 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
 
     private fun applyAttachment(file: FileSubmitObject?) {
         if(file != null) {
-            presenter?.setAttachment(file)
+            presenter.setAttachment(file)
             attachments.setAttachment(file.toAttachment()) { action, _ ->
                 if (action == AttachmentView.AttachmentAction.REMOVE) {
-                    presenter?.setAttachment(null)
+                    presenter.setAttachment(null)
                 }
             }
         }

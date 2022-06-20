@@ -16,10 +16,8 @@
  */
 package com.instructure.student.fragment
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -28,6 +26,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.managers.FileFolderManager
@@ -43,6 +42,8 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -58,6 +59,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_FILE_LIST)
 @PageView
 class FileListFragment : ParentFragment(), Bookmarkable {
 
@@ -233,11 +235,11 @@ class FileListFragment : ParentFragment(), Bookmarkable {
     private fun themeToolbar() {
         // We style the toolbar white for user files
         if (canvasContext.type == CanvasContext.Type.USER) {
-            ViewStyler.themeProgressBar(fileLoadingProgressBar, Color.BLACK)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+            ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.textDarkest))
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         } else {
-            ViewStyler.themeProgressBar(fileLoadingProgressBar, Color.WHITE)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+            ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         }
     }
 
@@ -248,7 +250,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
             recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder!!, canvasContext), folder!!, adapterCallback)
         }
 
-        configureRecyclerView(view!!, requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
 
         setupToolbarMenu(toolbar)
 

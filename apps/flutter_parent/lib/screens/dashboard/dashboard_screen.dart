@@ -329,7 +329,7 @@ class DashboardState extends State<DashboardScreen> {
         return Center(
           child: Text(
             L10n(context).noStudents,
-            style: Theme.of(context).primaryTextTheme.title,
+            style: Theme.of(context).primaryTextTheme.headline6,
           ),
         );
     }
@@ -350,7 +350,7 @@ class DashboardState extends State<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUserShortName(selectedStudent, style: Theme.of(context).primaryTextTheme.subhead),
+                  UserName.fromUserShortName(selectedStudent, style: Theme.of(context).primaryTextTheme.subtitle1),
                   SizedBox(width: 6),
                   DropdownArrow(rotate: expand),
                 ],
@@ -726,7 +726,7 @@ class DashboardState extends State<DashboardScreen> {
                 builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
                   return Text(
                     L10n(context).appVersion(snapshot.data?.version),
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   );
                 },
               ),

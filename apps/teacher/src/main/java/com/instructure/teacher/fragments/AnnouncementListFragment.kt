@@ -17,7 +17,10 @@
 package com.instructure.teacher.fragments
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ANNOUNCEMENT_LIST
+import com.instructure.pandautils.analytics.ScreenView
 
+@ScreenView(SCREEN_VIEW_ANNOUNCEMENT_LIST)
 class AnnouncementListFragment : DiscussionsListFragment() {
 
     companion object {

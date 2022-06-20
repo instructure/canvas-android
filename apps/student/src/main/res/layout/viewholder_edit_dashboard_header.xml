@@ -43,7 +43,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="12dp"
                 android:text="@{itemViewModel.title}"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -73,7 +73,7 @@
                     android:layout_marginEnd="4dp"
                     android:importantForAccessibility="no"
                     android:src="@{itemViewModel.hasItemSelected ? @drawable/ic_star_outline : @drawable/ic_star_filled}"
-                    android:tint="@color/canvasDefaultAccent"
+                    android:tint="@color/textInfo"
                     tools:src="@drawable/ic_star_outline" />
 
                 <TextView
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="no"
                     android:text="@{itemViewModel.hasItemSelected ? @string/unselect_all : @string/select_all}"
-                    android:textColor="@color/canvasDefaultAccent"
+                    android:textColor="@color/textInfo"
                     tools:text="Unselect All" />
 
             </LinearLayout>
@@ -91,6 +91,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/dividerColor" />
+            android:background="@color/backgroundMedium" />
     </RelativeLayout>
 </layout>

@@ -18,12 +18,11 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -35,7 +34,7 @@ class ResourcesInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testImportantLinksAndActionItemsShowUpInResourcesScreen() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -49,10 +48,10 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.assertPageObjects()
-        resourcesPage.assertImportantLinksDisplayed(courseWithSyllabus.syllabusBody!!)
+        resourcesPage.assertImportantLinksAndWebContentDisplayed(courseWithSyllabus.syllabusBody!!)
 
         resourcesPage.assertStudentApplicationsHeaderDisplayed()
         resourcesPage.assertLtiToolDisplayed("Google Drive")
@@ -64,31 +63,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testImportantLinksForTwoCourses() {
-        val data = createMockDataWithHomeroomCourse(courseCount = 2)
-
-        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
-        val courseWithSyllabus = homeroomCourse.copy(syllabusBody = "Important links content")
-        data.courses[homeroomCourse.id] = courseWithSyllabus
-
-        val homeroomCourse2 = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, isHomeroom = true)
-        data.addEnrollment(data.teachers[0], homeroomCourse, Enrollment.EnrollmentType.Teacher)
-
-        val courseWithSyllabus2 = homeroomCourse2.copy(syllabusBody = "Important links 2")
-        data.courses[homeroomCourse2.id] = courseWithSyllabus2
-
-        goToResources(data)
-
-        resourcesPage.assertPageObjects()
-
-        // We only assert the course names, because can't differentiate between the two WebViews.
-        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus.name)
-        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus2.name)
-    }
-
-    @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyActionItemsShowIfSyllabusIsEmpty() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -102,7 +77,7 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.assertImportantLinksNotDisplayed()
 
@@ -116,7 +91,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyLtiToolsShowIfNoHomeroomCourse() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
 
@@ -126,7 +101,7 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.assertImportantLinksNotDisplayed()
 
@@ -138,24 +113,11 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
-    fun testEmptyState() {
-        val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
-
-        goToResources(data)
-
-        resourcesPage.assertImportantLinksNotDisplayed()
-        resourcesPage.assertStudentApplicationsNotDisplayed()
-        resourcesPage.assertStaffInfoNotDisplayed()
-        resourcesPage.assertEmptyViewDisplayed()
-    }
-
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testRefresh() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.assertEmptyViewDisplayed()
 
@@ -174,7 +136,7 @@ class ResourcesInteractionTest : StudentTest() {
         resourcesPage.refresh()
 
         resourcesPage.assertPageObjects()
-        resourcesPage.assertImportantLinksDisplayed(courseWithSyllabus.syllabusBody!!)
+        resourcesPage.assertImportantLinksAndWebContentDisplayed(courseWithSyllabus.syllabusBody!!)
 
         resourcesPage.assertStudentApplicationsHeaderDisplayed()
         resourcesPage.assertLtiToolDisplayed("Google Drive")
@@ -186,7 +148,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenLtiToolShowsCourseSelector() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -200,7 +162,7 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
 
         resourcesPage.openLtiApp("Google Drive")
         nonHomeroomCourses.forEach {
@@ -209,7 +171,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenComposeMessageScreen() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -223,7 +185,7 @@ class ResourcesInteractionTest : StudentTest() {
             data.addLTITool("Media Gallery", "http://instructure.com", it, 12345L)
         }
 
-        goToResources(data)
+        goToResourcesTab(data)
         resourcesPage.openComposeMessage(data.teachers[0].shortName!!)
 
         newMessagePage.assertToolbarTitleNewMessage()
@@ -234,16 +196,49 @@ class ResourcesInteractionTest : StudentTest() {
         newMessagePage.assertMessageViewShown()
     }
 
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testImportantLinksForTwoCourses() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 2)
+
+        val homeroomCourse = data.courses.values.first { it.homeroomCourse }
+        val courseWithSyllabus = homeroomCourse.copy(syllabusBody = "Important links content")
+        data.courses[homeroomCourse.id] = courseWithSyllabus
+
+        val homeroomCourse2 = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, isHomeroom = true)
+        data.addEnrollment(data.teachers[0], homeroomCourse, Enrollment.EnrollmentType.Teacher)
+
+        val courseWithSyllabus2 = homeroomCourse2.copy(syllabusBody = "Important links 2")
+        data.courses[homeroomCourse2.id] = courseWithSyllabus2
+
+        goToResourcesTab(data)
+
+        resourcesPage.assertPageObjects()
+
+        // We only assert the course names, because can't differentiate between the two WebViews.
+        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus.name)
+        resourcesPage.assertCourseNameDisplayed(courseWithSyllabus2.name)
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    fun testEmptyState() {
+        val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
+
+        goToResourcesTab(data)
+
+        resourcesPage.assertImportantLinksNotDisplayed()
+        resourcesPage.assertStudentApplicationsNotDisplayed()
+        resourcesPage.assertStaffInfoNotDisplayed()
+        resourcesPage.assertEmptyViewDisplayed()
+    }
+
     private fun createMockDataWithHomeroomCourse(
         courseCount: Int = 0,
         pastCourseCount: Int = 0,
         favoriteCourseCount: Int = 0,
         announcementCount: Int = 0,
         homeroomCourseCount: Int = 1): MockCanvas {
-
-        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
-        Thread.sleep(3000)
-        RemoteConfigPrefs.putString(RemoteConfigParam.K5_DESIGN.rc_name, "true")
 
         return MockCanvas.init(
             studentCount = 1,
@@ -255,11 +250,11 @@ class ResourcesInteractionTest : StudentTest() {
             homeroomCourseCount = homeroomCourseCount)
     }
 
-    private fun goToResources(data: MockCanvas) {
+    private fun goToResourcesTab(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLoginElementary(data.domain, token, student)
         elementaryDashboardPage.waitForRender()
-        elementaryDashboardPage.selectResourcesTab()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
     }
 }

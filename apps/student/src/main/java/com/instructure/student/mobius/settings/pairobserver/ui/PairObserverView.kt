@@ -18,7 +18,6 @@ package com.instructure.student.mobius.settings.pairobserver.ui
 
 import android.app.Activity
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
@@ -45,7 +44,7 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbar(context as Activity, toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(context as Activity, toolbar)
     }
 
     override fun onConnect(output: Consumer<PairObserverEvent>) {

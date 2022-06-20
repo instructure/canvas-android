@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
@@ -30,6 +29,8 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
@@ -55,6 +56,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import kotlin.collections.ArrayList
 
+@ScreenView(SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT)
 class CreateOrEditAnnouncementFragment :
         BasePresenterFragment<CreateOrEditAnnouncementPresenter, CreateOrEditAnnouncementView>(),
         CreateOrEditAnnouncementView,
@@ -135,7 +137,7 @@ class CreateOrEditAnnouncementFragment :
 
     fun setupToolbar() {
         toolbar.setupCloseButton {
-            if(presenter?.announcement?.message == announcementRCEView?.html) {
+            if(presenter.announcement.message == announcementRCEView?.html) {
                 activity?.onBackPressed()
             } else {
                 UnsavedChangesExitDialog.show(requireFragmentManager()) {
@@ -152,7 +154,7 @@ class CreateOrEditAnnouncementFragment :
             }
         }
 
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
 
         if (presenter.isEditing) with(mSaveMenuButton) {
@@ -206,7 +208,7 @@ class CreateOrEditAnnouncementFragment :
             )
         }
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        announcementRCEView.setLabel(announcementDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        announcementRCEView.setLabel(announcementDescLabel, R.color.textDarkest, R.color.textDark)
     }
 
     private fun setupDeleteButton() {

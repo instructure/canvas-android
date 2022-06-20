@@ -45,9 +45,9 @@ void main() {
   final MockPairingUtil pairingUtil = MockPairingUtil();
   final MockUserColorsDb userColorsDb = MockUserColorsDb();
 
-  _setupLocator([_MockManageStudentsInteractor interactor]) {
+  _setupLocator([_MockManageStudentsInteractor interactor]) async {
     final locator = GetIt.instance;
-    locator.reset();
+    await locator.reset();
 
     var thresholdInteractor = _MockAlertThresholdsInteractor();
     when(thresholdInteractor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));

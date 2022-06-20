@@ -44,6 +44,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_EDIT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.MediaUploadUtils.chooseFromGalleryBecausePermissionsAlreadyGranted
@@ -59,6 +61,7 @@ import kotlinx.android.synthetic.main.fragment_profile_edit.*
 import retrofit2.Response
 import java.io.File
 
+@ScreenView(SCREEN_VIEW_PROFILE_EDIT)
 class ProfileEditFragment : BasePresenterFragment<
         ProfileEditFragmentPresenter,
         ProfileEditFragmentView>(), ProfileEditFragmentView, LoaderManager.LoaderCallbacks<AvatarWrapper> {
@@ -87,7 +90,7 @@ class ProfileEditFragment : BasePresenterFragment<
 
         if(ProfileUtils.shouldLoadAltAvatarImage(user?.avatarUrl)) {
             val initials = ProfileUtils.getUserInitials(user?.shortName ?: "")
-            val color = requireContext().getColorCompat(R.color.defaultTextGray)
+            val color = requireContext().getColorCompat(R.color.textDark)
             val drawable = TextDrawable.builder()
                     .beginConfig()
                     .height(requireContext().resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
@@ -97,7 +100,7 @@ class ProfileEditFragment : BasePresenterFragment<
                     .textColor(color)
                     .endConfig()
                     .buildRound(initials, Color.WHITE)
-            usersAvatar.borderColor = requireContext().getColorCompat(R.color.defaultTextGray)
+            usersAvatar.borderColor = requireContext().getColorCompat(R.color.textDark)
             usersAvatar.borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6F, requireContext().resources.displayMetrics).toInt()
             usersAvatar.setImageDrawable(drawable)
         } else {
@@ -130,7 +133,7 @@ class ProfileEditFragment : BasePresenterFragment<
         toolbar.setupCloseButton(this)
         toolbar.title = getString(R.string.editProfile)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveProfile() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         saveButton?.setTextColor(ThemePrefs.buttonColor)
     }
@@ -187,16 +190,16 @@ class ProfileEditFragment : BasePresenterFragment<
             }
 
         } else if (requestCode == RequestCodes.CAMERA_PIC_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (presenter?.capturedImageUri == null) {
-                presenter?.capturedImageUri = Uri.parse(FilePrefs.tempCaptureUri)
+            if (presenter.capturedImageUri == null) {
+                presenter.capturedImageUri = Uri.parse(FilePrefs.tempCaptureUri)
             }
 
-            if (presenter?.capturedImageUri == null) {
+            if (presenter.capturedImageUri == null) {
                 showToast(R.string.errorGettingPhoto)
                 return
             }
 
-            presenter?.capturedImageUri?.let {
+            presenter.capturedImageUri?.let {
                 val cropConfig = AvatarCropConfig(it)
                 startActivityForResult(AvatarCropActivity.createIntent(requireContext(), cropConfig), RequestCodes.CROP_IMAGE)
             }

@@ -92,15 +92,15 @@ class _StudentThemeState extends State<StudentTheme> {
   }
 
   /// Color for text, icons, etc that contrasts sharply with the scaffold (i.e. surface) color
-  Color get onSurfaceColor => StudentColors.licorice;
+  Color get onSurfaceColor => StudentColors.textDarkest;
 
   /// Color similar to the surface color but is slightly darker in light mode and slightly lighter in dark mode.
   /// This should be used elements that should be visually distinguishable from the surface color but must also contrast
   /// sharply with the [onSurfaceColor]. Examples are chip backgrounds, progressbar backgrounds, avatar backgrounds, etc.
-  Color get nearSurfaceColor => StudentColors.porcelain;
+  Color get nearSurfaceColor => StudentColors.backgroundLight;
 
   ThemeData _buildTheme(Color primaryColor, Color accentColor, Color buttonColor, Color primaryTextColor) {
-    var textTheme = _buildTextTheme(onSurfaceColor);
+    var textTheme = _buildTextTheme(onSurfaceColor, StudentColors.textDark);
 
     var primarySwatch = StudentColors.makeSwatch(primaryColor);
 
@@ -116,63 +116,66 @@ class _StudentThemeState extends State<StudentTheme> {
       primarySwatch: primarySwatch,
       accentColor: accentColor,
       textSelectionHandleColor: primarySwatch[300],
-      scaffoldBackgroundColor: Colors.white,
-      canvasColor: Colors.white,
+      scaffoldBackgroundColor: StudentColors.backgroundLightest,
+      canvasColor: StudentColors.backgroundLightest,
       accentColorBrightness: Brightness.dark,
       textTheme: textTheme,
-      primaryTextTheme: _buildTextTheme(primaryTextColor, fadeColor: primaryTextColor.withOpacity(0.7)),
-      accentTextTheme: _buildTextTheme(Colors.white, fadeColor: Colors.white70),
+      primaryTextTheme: _buildTextTheme(primaryTextColor, primaryTextColor.withOpacity(0.7)),
+      accentTextTheme: _buildTextTheme(Colors.white, Colors.white70),
       iconTheme: IconThemeData(color: onSurfaceColor),
       primaryIconTheme: IconThemeData(color: primaryTextColor),
       accentIconTheme: IconThemeData(color: Colors.white),
+      popupMenuTheme: PopupMenuThemeData(color: StudentColors.backgroundLightestElevated),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: buttonColor,
         foregroundColor: Colors.white,
       ),
       dividerColor: StudentColors.tiara,
       buttonColor: buttonColor,
-      hintColor: StudentColors.ash,
+      hintColor: StudentColors.textDark,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, colorScheme: buttonColorScheme),
+      fontFamily: 'Lato',
+      unselectedWidgetColor: StudentColors.textDarkest
     );
   }
 
-  TextTheme _buildTextTheme(Color color, {Color fadeColor = StudentColors.ash}) {
+  TextTheme _buildTextTheme(Color color, Color fadeColor) {
     return TextTheme(
       /// Design-provided styles
 
       // Comments for each text style represent the nomenclature of the designs we have
       // Caption
-      subtitle: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.w500),
+      subtitle2: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.w500),
 
       // Subhead
       overline: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 0),
 
       // Body
-      body1: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.normal),
+      bodyText2: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.normal),
 
       // Subtitle
       caption: TextStyle(color: fadeColor, fontSize: 14, fontWeight: FontWeight.w500),
 
       // Title
-      subhead: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w500),
+      subtitle1: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w500),
 
       // Heading
-      headline: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w500),
+      headline5: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w500),
 
       // Display
-      display1: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.w500),
+      headline4: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.w500),
 
       /// Other/unmapped styles
 
-      title: TextStyle(color: color),
+      headline6: TextStyle(color: color),
 
-      display4: TextStyle(color: fadeColor),
+      headline1: TextStyle(color: fadeColor),
 
-      display3: TextStyle(color: fadeColor),
+      headline2: TextStyle(color: fadeColor),
 
-      display2: TextStyle(color: fadeColor),
+      headline3: TextStyle(color: fadeColor),
 
-      body2: TextStyle(color: color),
+      bodyText1: TextStyle(color: color),
 
       button: TextStyle(color: color),
     );
@@ -219,8 +222,9 @@ class WhiteAppBarTheme extends StatelessWidget {
     var baseTheme = Theme.of(context);
     var theme = StudentTheme.of(context).defaultTheme.copyWith(
           appBarTheme: AppBarTheme(
-            color: baseTheme.scaffoldBackgroundColor,
-            textTheme: baseTheme.textTheme,
+            color: StudentColors.backgroundLightestElevated,
+            toolbarTextStyle: baseTheme.textTheme.bodyText2,
+            titleTextStyle: baseTheme.textTheme.headline6,
             iconTheme: baseTheme.iconTheme,
             elevation: 2,
           ),

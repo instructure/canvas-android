@@ -22,12 +22,16 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class StudentColorPickerInteractor {
   Future<void> save(String studentId, Color newColor) async {
     var contextId = 'user_$studentId';
-    await locator<UserApi>().setUserColor(contextId, newColor);
-    UserColor data = UserColor((b) => b
-      ..userId = ApiPrefs.getUser().id
-      ..userDomain = ApiPrefs.getDomain()
-      ..canvasContext = contextId
-      ..color = newColor);
-    await locator<UserColorsDb>().insertOrUpdate(data);
+    final userColorsResponse = await locator<UserApi>().setUserColor(contextId, newColor);
+    if (userColorsResponse.hexCode != null) {
+      UserColor data = UserColor((b) => b
+        ..userId = ApiPrefs.getUser().id
+        ..userDomain = ApiPrefs.getDomain()
+        ..canvasContext = contextId
+        ..color = newColor);
+      await locator<UserColorsDb>().insertOrUpdate(data);
+    } else {
+      throw Exception('Failed to set user color');
+    }
   }
 }

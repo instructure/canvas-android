@@ -21,6 +21,7 @@ import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.*
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -33,10 +34,14 @@ object GradingPeriodsApi {
 
         @PATCH("grading_period_sets/{gradingPeriodSetId}/grading_periods/batch_update")
         fun createGradingPeriod(@Path("gradingPeriodSetId") gradingPeriodSetId: Long, @Body createGradingPeriod: CreateGradingPeriodWrapper): Call<GradingPeriods>
+
+        @GET("courses/{course_id}/grading_periods")
+        fun getGradingPeriodsOfCourse(@Path("course_id") accountId: Long): Call<GradingPeriods>
+
     }
 
     private val adminGradingPeriodsService: GradingPeriodsService by lazy {
-        CanvasRestAdapter.adminRetrofit.create(GradingPeriodsService::class.java)
+        CanvasNetworkAdapter.adminRetrofit.create(GradingPeriodsService::class.java)
     }
 
     fun createGradingPeriodSet(enrollmentTermId: Long): GradingPeriodSetApiModelWrapper {
@@ -47,6 +52,13 @@ object GradingPeriodsApi {
                 .createGradingPeriodSet(createGradingPeriodSet)
                 .execute()
                 .body()!!
+    }
+
+    fun getGradingPeriodsOfCourse(courseId: Long): GradingPeriods {
+        return adminGradingPeriodsService
+            .getGradingPeriodsOfCourse(courseId)
+            .execute()
+            .body()!!
     }
 
     fun createGradingPeriod(gradingPeriodSetId: Long): GradingPeriods {

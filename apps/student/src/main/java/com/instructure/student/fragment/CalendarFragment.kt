@@ -17,17 +17,19 @@
 
 package com.instructure.student.fragment
 
-import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
@@ -40,6 +42,7 @@ import io.flutter.plugin.common.MethodChannel
 import kotlinx.android.extensions.CacheImplementation
 import kotlinx.android.extensions.ContainerOptions
 
+@ScreenView(SCREEN_VIEW_CALENDAR)
 @PageView(url = "calendar")
 @ContainerOptions(cache = CacheImplementation.NO_CACHE)
 class CalendarFragment : ParentFragment() {
@@ -110,7 +113,7 @@ class CalendarFragment : ParentFragment() {
     }
 
     private fun showDialog(call: MethodCall, result: MethodChannel.Result) {
-        AlertDialog.Builder(activity, R.style.AccentDialogTheme)
+        AlertDialog.Builder(requireActivity(), R.style.AccentDialogTheme)
             .setTitle(call.argument<String>("title"))
             .setMessage(call.argument<String>("message"))
             .setPositiveButton(call.argument<String>("positiveButtonText")) { _, _ -> result.success(true) }

@@ -39,6 +39,8 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
@@ -54,6 +56,7 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
+@ScreenView(SCREEN_VIEW_COURSE_BROWSER)
 @PageView(url = "{canvasContext}")
 class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnOffsetChangedListener  {
 
@@ -155,8 +158,8 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     //region Fragment Interaction Overrides
 
     override fun applyTheme() {
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), noOverlayToolbar, Color.WHITE)
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), overlayToolbar, Color.WHITE)
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), noOverlayToolbar, requireContext().getColor(R.color.white))
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), overlayToolbar, requireContext().getColor(R.color.white))
         ViewStyler.setStatusBarDark(requireActivity(), canvasContext.color)
     }
 

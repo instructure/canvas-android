@@ -34,11 +34,11 @@
     <string name="noNetwork">Nettverk ikke tilgjengelig - prøv igjen senere.</string>
     <string name="uploadMessage">"Opplasting pågår. Sjekk varsler for opplastingsstatus.</string>
     <string name="uploadingFile">Laster opp fil&#8230;</string>
-    <string name="errorUploadingFile">Avvik ved opplasting av filen. Vennligst prøv igjen.</string>
+    <string name="errorUploadingFile">Feil ved opplasting av filen. Prøv på nytt.</string>
     <string name="fileSubmission">Send inn fil(er)</string>
     <string name="uploadFiles">Last opp fil(er)</string>
     <string name="upload">Last opp</string>
-    <string name="errorSendingMessage">Feil ved sending av melding. Vennligst prøv igjen.</string>
+    <string name="errorSendingMessage">Feil ved sending av melding. Prøv på nytt.</string>
 
     <string name="notificationChannelNameFileUploadsName">Varslinger for opplastinger</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-varslinger for pågående opplastinger.</string>
@@ -50,7 +50,8 @@
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleri</string>
     <string name="fromDevice">Enhet</string>
-    <string name="fromOtherApplication">Annen</string>
+    <string name="fromDocumentScanning">Skanner</string>
+    <string name="fromOtherApplication">Annet</string>
     <string name="Domain">Domene</string>
     <string name="files">Filer</string>
     <string name="file">Fil</string>
@@ -59,7 +60,7 @@
     <string name="addItem">Legg til punkt</string>
     <string name="assignment">Oppgave</string>
     <string name="attachedFiles">Vedlagte filer</string>
-    <string name="turnIn">Innlevere</string>
+    <string name="turnIn">Lever</string>
     <string name="course">Emne</string>
     <string name="sending">Sender&#8230;</string>
 
@@ -72,8 +73,8 @@
 
     <!-- Submitting files -->
     <string name="fileQuotaExceeded">Du har nå overskredet fillagringskvoten.</string>
-    <string name="errorSubmittingFiles">En feil oppsto under innlevering av filen. Vennligst prøv igjen.</string>
-    <string name="errorLoadingFiles">Avvik ved lasting av filen. Kontroller internett-tilkoblingen og prøv på nytt.</string>
+    <string name="errorSubmittingFiles">En feil oppsto under innlevering av filen. Prøv på nytt.</string>
+    <string name="errorLoadingFiles">Feil ved lasting av filen. Kontroller internett-tilkoblingen og prøv på nytt.</string>
     <string name="filesUploadedSuccessfully">Vellykket opplasting av filene.</string>
     <string name="filesSubmittedSuccessfully">Vellykket innsending av filene.</string>
     <string name="messageSentSuccessfully">Melding sendt.</string>
@@ -81,12 +82,12 @@
     <string name="shareWithCanvas2">Dette vil åpne appen. Deretter bare velg emnet og oppgaven du ønsker å levere inn filen til.</string>
     <string name="contentDescriptionSocialShare">Del ikon</string>
     <string name="submitAssignment">Lever oppgave</string>
-    <string name="assignmentHeader">Oppgave:</string>
+    <string name="assignmentHeader">Oppgave :</string>
     <string name="submittingAssignment">Sender inn oppgave&#8230;</string>
     <string name="conversations">Samtaler </string>
     <string name="inbox">Innboks </string>
     <string name="divider">Deler</string>
-    <string name="legal">Rettslig</string>
+    <string name="legal">Juss</string>
     <string name="completeHomework">GJØR FERDIG leksene dine</string>
     <string name="takeExam">Ta en eksamen</string>
     <string name="fileIcon">Fil-ikon</string>
@@ -103,11 +104,11 @@
     <!--Errors-->
     <string name="errorOccurred">Det oppsto en uventet feil.</string>
     <string name="serverError">En serverfeil har oppstått.</string>
-    <string name="unauthorized">Du er uautorisert for tilgang til dette. Enten har du ikke tillatelser, eller du har ikke tilgang ennå (som at emnet ikke har startet ennå)</string>
+    <string name="unauthorized">Du er uautorisert for tilgang til dette. Enten har du ikke rettigheter, eller du har ikke tilgang ennå (som at emnet ikke har startet ennå)</string>
     <string name="fileNoLongerExists">Den filen eksisterer ikke lenger.</string>
     <string name="invalidAccessToken">Økten din har utgått. Logg inn på nytt for å starte en ny økt.</string>
     <string name="uploadingFromSourceFailed">Opplasting av en fil fra denne kilden kunne ikke fullføres.</string>
-    <string name="errorGettingPhoto">Det oppstod et avvik ved henting av bildet. Vennligst prøv igjen.</string>
+    <string name="errorGettingPhoto">Det oppsto en feil ved henting av bildet. Prøv på nytt.</string>
     <string name="errorTextMissing">Legg til litt tekst for å sende en melding</string>
 
     <string name="fileUploadNotSupported">Du kan ikke laste opp filer til den valgte oppgaven.</string>
@@ -121,14 +122,14 @@
     <string name="noFilesUploaded">Du har ikke valgt filer.</string>
     <string name="oneOrMoreExtensionNotAllowed">Én eller flere filer har filtype som ikke er tillatt</string>
     <string name="extensionNotAllowed">Den valgte filtypen er ikke tillatt.</string>
-    <string name="allowedExtensions">Tillate utvidelser:&#160;</string>
+    <string name="allowedExtensions">Tillatte utvidelser:&#160;</string>
 
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Kontroller dataforbindelsen din og prøv igjen. </string>
     <string name="noApps">Din enhet har ikke installert programmer som kan håndtere denne filen.</string>
     <string name="noAppsShort">Kan ikke åpne</string>
-    <string name="unexpectedErrorOpeningFile">Det oppstod en uventet feil under forsøket på å åpne filen.</string>
-    <string name="unexpectedErrorDownloadingFile">Det oppstod en uventet feil under forsøket på nedlasting av filen.</string>
+    <string name="unexpectedErrorOpeningFile">Det oppsto en uventet feil under forsøket på å åpne filen.</string>
+    <string name="unexpectedErrorDownloadingFile">Det oppsto en uventet feil under forsøket på nedlasting av filen.</string>
 
     <string name="done">Ferdig</string>
 
@@ -150,9 +151,9 @@
     <string name="nothingSentSubtext">Du har ikke sent noen meldinger.</string>
     <string name="nothingArchived">Ingenting er arkivert</string>
     <string name="nothingArchivedSubtext">Du har ikke arkivert noen meldinger.</string>
-    <string name="noQuizzes">Ingen tester</string>
-    <string name="noQuizzesSubtext">Beklager, det er ingen tester ennå.</string>
-    <string name="noQuizzesTeacher">Det er ingen publiserte tester å vise.</string>
+    <string name="noQuizzes">Ingen quizer</string>
+    <string name="noQuizzesSubtext">Beklager, det er ingen quizer ennå.</string>
+    <string name="noQuizzesTeacher">Det er ingen publiserte quizer å vise.</string>
     <string name="noAnnouncements">Ingen kunngjøringer</string>
     <string name="noAnnouncementsSubtext">Ingen kunngjøringer er gjort ennå.</string>
     <string name="noCourses">Ingen emner</string>
@@ -199,9 +200,9 @@
     <string name="inbox_sent">Sendt</string>
     <string name="inbox_archived">Arkivert</string>
 
-    <string name="forbidden">Svarene er kun synlige for dem som har postet minst ett svar.</string>
+    <string name="forbidden">Svarene er kun synlige for dem som har skrevet minst ett svar.</string>
 
-    <string name="like">Liker</string>
+    <string name="like">Like</string>
     <string name="likes">Liker</string>
     <string name="lockedAssignmentNotModule">Denne oppgaven er låst.</string>
     <string name="deletedEntryNoChildren">Innlegget i den slettede diskusjonen hadde ingen svar.</string>
@@ -266,7 +267,7 @@
     <string name="utils_dueDateHeaderLabel">Forfall</string>
     <string name="utils_dueLabel">Frist:</string>
     <string name="utils_delete">Slett</string>
-    <string name="utils_dueDateAtTime" formatted="false">Frist %1s kl. %2s</string>
+    <string name="utils_dueDateAtTime" formatted="false">Frist %1s klokken %2s</string>
     <string name="utils_noDateFiller">--</string>
     <string name="utils_availabilityLabel">Tilgjengelighet:</string>
     <string name="utils_pinnedIcon">Ikon for festet diskusjon</string>
@@ -278,11 +279,11 @@
     <string name="utils_emptyDiscussions">Det er ingen diskusjoner å vise i denne seksjonen.</string>
     <string name="utils_description">Beskrivelse</string>
     <string name="utils_allowThreadedReplies">Tillat svartråder</string>
-    <string name="utils_usersMustPost">Studenter må poste før de kan se svar</string>
+    <string name="utils_usersMustPost">Studenter må publisere et innlegg før de kan se svar</string>
     <string name="utils_discussionsClosed">Stengt for kommentarer</string>
     <string name="utils_discussionsOpen">Åpen for kommentarer</string>
-    <string name="utils_discussionsPin">Fest</string>
-    <string name="utils_discussionsUnpin">Fjern festing</string>
+    <string name="utils_discussionsPin">Feste</string>
+    <string name="utils_discussionsUnpin">Løsne</string>
     <string name="utils_discussionsOptions">Valg</string>
     <string name="utils_discussionsDeleteTitle">Slette diskusjon?</string>
     <string name="utils_discussionsDelete">Slett diskusjon</string>
@@ -304,11 +305,11 @@
     <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
     <string name="utils_lastPost" formatted="false">Siste innlegg %s</string>
     <string name="utils_postedOnDate">Publisert på %s</string>
-    <string name="utils_discussionPostBeforeRepliesEmptyText">Svarene er kun synlige for dem som har postet minst ett svar.</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Svarene er kun synlige for dem som har skrevet minst ett svar.</string>
     <string name="utils_createAnnouncementDelayPosting">Utsett publisering</string>
-    <string name="utils_postAt">Post i</string>
+    <string name="utils_postAt">Publisert kl.</string>
     <string name="utils_postDate">Innlegg dato</string>
-    <string name="utils_postTime">Tid for posting</string>
+    <string name="utils_postTime">Publiseringstidspunkt</string>
     <string name="utils_editAnnouncementTitle">Rediger kunngjøring</string>
     <string name="utils_createAnnouncementTitle">Ny kunngjøring</string>
     <string name="utils_announcementDetails">Kunngjøringsdetaljer</string>
@@ -329,9 +330,9 @@
     </plurals>
 
     <!-- Assignment Override !-->
-    <string name="utils_unlockAfterDueDateError">Opplåsingsdatoen kan ikke være etter forfallsdato</string>
+    <string name="utils_unlockAfterDueDateError">Publiseringsdatoen kan ikke være etter forfallsdato</string>
     <string name="utils_lockBeforeDueDateError">Låsedato kan ikke være før forfallsdato</string>
-    <string name="utils_lockAfterUnlockError">Låsedato kan ikke være før opplåsingsdato</string>
+    <string name="utils_lockAfterUnlockError">Låsedato kan ikke være før publiseringsdato</string>
     <string name="utils_assigneeBlankError">Stedfortreder kan ikke være tom</string>
     <string name="utils_assignTo">Tildele til</string>
     <string name="utils_availableFrom">Tilgjengelig fra</string>
@@ -358,18 +359,18 @@
     <string name="utils_cancel">Avbryt</string>
 
     <string name="utils_contentDescriptionFiles">Fil-ikon</string>
-    <string name="utils_turn_in">Innlevere</string>
+    <string name="utils_turn_in">Lever</string>
     <string name="utils_upload">Last opp</string>
     <string name="utils_okay">OK</string>
     <string name="utils_loadingFilesIndeterminate">Laster filer&#8230;</string>
     <string name="utils_allowedExtensions">Tillatte utvidelser:&#160;</string>
     <string name="utils_extensionNotAllowed">Den valgte filtypen er ikke tillatt.</string>
-    <string name="utils_errorUploadingFile">Avvik ved opplasting av filen. Vennligst prøv igjen.</string>
+    <string name="utils_errorUploadingFile">Feil ved opplasting av filen. Prøv på nytt.</string>
     <string name="utils_filesUploadedSuccessfully">Vellykket opplasting av filene.</string>
     <string name="utils_uploadingFiles">Laster opp filer&#8230;</string>
     <string name="utils_uploadingFile">Laster opp fil&#8230;</string>
     <string name="utils_noApps">Enheten din har ikke noen installerte applikasjoner som kan håndtere denne filen.</string>
-    <string name="utils_errorGettingPhoto">Det oppstod et avvik ved henting av bildet. Vennligst prøv igjen.</string>
+    <string name="utils_errorGettingPhoto">Det oppsto et feil ved henting av bildet. Prøv på nytt.</string>
     <string name="utils_oneOrMoreExtensionNotAllowed">Én eller flere filer har en ulovlig filtype</string>
     <string name="utils_fileUploadNotSupported">Du kan ikke laste opp filer til den valgte oppgaven.</string>
     <string name="utils_noFilesUploaded">Du har ikke valgt noen filer.</string>
@@ -387,6 +388,7 @@
     <string name="notificationChannelNamePrimary">Generelle Canvas Notifications</string>
     <string name="notificationChannelDescriptionPrimary">Ytterligere konfigurering av varsler kan gjøres inne i seksjonen for Canvas Notification Preferences.</string>
     <plurals name="notificationGroupContent">
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
         <item quantity="other">%d nye varslinger</item>
     </plurals>
 
@@ -416,15 +418,15 @@
     <string name="utils_no_data_connection">Kontroller dataforbindelsen din og prøv igjen.</string>
     <string name="utils_playMedia">Spill av media</string>
     <string name="utils_tryAgain">Prøv igjen</string>
-    <string name="image_uploading">Bilde lastes opp...</string>
-    <string name="image_upload_error">Avvik i opplasting av bilde</string>
-    <string name="retry">Forsøk igjen</string>
+    <string name="image_uploading">Bilde lastes opp&#8230;</string>
+    <string name="image_upload_error">Feil i opplasting av bilde</string>
+    <string name="retry">Prøv igjen</string>
     <string name="search">Søk</string>
     <string name="searchAssignmentsHint">Oppgavesøk</string>
     <string name="searchAnnouncementsHint">Søk kunngjøringer</string>
     <string name="searchDiscussionsHint">Søk diskusjoner</string>
     <string name="searchPagesHint">Søk sider</string>
-    <string name="searchQuizzesHint">Søk tester</string>
+    <string name="searchQuizzesHint">Søk quizer</string>
     <string name="noItemsMatchingQuery">Ingen matchende punkter  \"%s\"</string>
 
     <string name="selected">Valgt</string>
@@ -447,18 +449,17 @@
     <string name="yesterday">I går</string>
     <string name="schedule_calendar_event_due_text">Den %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s til %2$s</string>
-    <string name="schedule_todo_due_text">Å gjøre: %s</string>
+    <string name="schedule_todo_due_text">Gjøremål: %s</string>
     <string name="schedule_due_text">Frist: %s</string>
     <string name="show_missing_items_title">Vis %d manglende elementer</string>
     <string name="hide_missing_items_title">Skjul %d manglende elementer</string>
     <string name="schedule_error_message">Kunne ikke hente timeplanen din</string>
-    <string name="schedule_todo_title">Å gjøre</string>
+    <string name="schedule_todo_title">Gjøremål</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s poeng</item>
         <item quantity="one">%s poeng</item>
         <item quantity="other">%s poeng</item>
     </plurals>
-
     <plurals name="a11y_schedule_points">
         <item quantity="zero">%.1f poeng</item>
         <item quantity="one">%.1f poeng</item>
@@ -475,12 +476,14 @@
     <string name="a11y_calendar_event">Kalenderhendelse</string>
     <string name="a11y_assignment">Oppgave</string>
     <string name="a11y_planner_note">Planleggingsmerknad</string>
-    <string name="a11y_quiz">Test</string>
-    <string name="a11y_todo">Å gjøre</string>
+    <string name="a11y_quiz">Quiz</string>
+    <string name="a11y_todo">Gjøremål</string>
     <string name="a11y_page">Side</string>
     <string name="a11y_marked_as_done">Merket som ferdig</string>
     <string name="a11y_not_marked_as_done">Er ikke merket som ferdig</string>
-    <string name="a11y_mark_as_done">Merk som ferdig</string>
-    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Oi sann! Det oppsto en feil ved lasting av emnedetaljer.</string>
+
+    <string name="a11y_schedule_marked_as_not_done">%s merket som ikke ferdig</string>
+    <string name="a11y_markAsDoneWithName">%s Merk som ferdig</string>
+    <string name="a11y_markAsNotDoneWithName">%s Merket som ikke ferdig</string>
 </resources>

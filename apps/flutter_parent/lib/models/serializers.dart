@@ -74,6 +74,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/models/user_colors.dart';
 
 import 'assignment_override.dart';
+import 'color_change_response.dart';
 import 'course_settings.dart';
 import 'dataseeding/create_assignment_wrapper.dart';
 import 'dataseeding/create_course_info.dart';
@@ -110,6 +111,7 @@ part 'serializers.g.dart';
   CanvasPage,
   CanvasToken,
   CommunicationChannel,
+  ColorChangeResponse,
   Conversation,
   Course,
   CoursePermissions,

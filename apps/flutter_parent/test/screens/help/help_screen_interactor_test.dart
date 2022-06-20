@@ -25,7 +25,7 @@ import '../../utils/test_app.dart';
 void main() {
   test('getObserverCustomHelpLinks calls to HelpLinksApi', () async {
     var api = _MockHelpLinksApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
+    await setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
     when(api.getHelpLinks(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => Future.value(createHelpLinks()));
 
     HelpScreenInteractor().getObserverCustomHelpLinks();
@@ -42,7 +42,7 @@ void main() {
       createHelpLink(availableTo: [AvailableTo.teacher])
     ];
 
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
+    await setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
     when(api.getHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value(createHelpLinks(customLinks: customLinks)));
 
@@ -110,7 +110,7 @@ void main() {
       createHelpLink(availableTo: [AvailableTo.admin]),
     ];
 
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
+    await setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
     when(api.getHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value(createHelpLinks(customLinks: customLinks, defaultLinks: defaultLinks)));
 
@@ -124,7 +124,7 @@ void main() {
       createHelpLink(availableTo: [AvailableTo.observer]),
     ];
 
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
+    await setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
     when(api.getHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value(createHelpLinks(customLinks: [], defaultLinks: defaultLinks)));
 

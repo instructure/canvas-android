@@ -35,7 +35,7 @@ void main() {
     final conversationId = '123';
 
     var api = _MockInboxApi();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => api);
       locator.registerLazySingleton<InboxCountNotifier>(() => _MockInboxNotifier());
     });
@@ -48,7 +48,7 @@ void main() {
     var api = _MockInboxApi();
     var notifier = _MockInboxNotifier();
 
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => api);
       locator.registerLazySingleton<InboxCountNotifier>(() => notifier);
     });
@@ -73,7 +73,7 @@ void main() {
 
   test('addReply calls QuickNav with correct parameters', () async {
     var nav = _MockNav();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => nav);
     });
 
@@ -96,7 +96,7 @@ void main() {
 
   test('viewAttachment calls QuickNav with correct parameters', () async {
     var nav = _MockNav();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => nav);
     });
 

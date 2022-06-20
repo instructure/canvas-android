@@ -30,5 +30,6 @@ data class AssignmentSet(
         @SerializedName("updated_at")
         var updatedAt: String? = null,
         var position: Int = 0,
+        @SerializedName("assignment_set_associations")
         var assignments: Array<MasteryPathAssignment> = emptyArray()
 ) : CanvasModel<AssignmentSet>()

@@ -40,6 +40,7 @@ import com.instructure.espresso.UiControllerSingleton
 import com.instructure.espresso.page.InstructureTestingContract
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
@@ -62,9 +63,14 @@ import java.net.URL
 // InstructureTest wrapper for Canvas code
 abstract class CanvasTest : InstructureTestingContract {
 
+    val STEP_TAG = "${this::class.java.simpleName} #STEP# "
+    val PREPARATION_TAG = "${this::class.java.simpleName} #PREPARATION# "
+
     abstract val activityRule: InstructureActivityTestRule<out Activity>
 
     abstract val isTesting: Boolean
+
+    var extraAccessibilitySupressions: Matcher<in AccessibilityViewCheckResult>? = Matchers.anyOf()
 
     @Rule(order = 1)
     override fun chain(): TestRule {
@@ -187,7 +193,7 @@ abstract class CanvasTest : InstructureTestingContract {
     }
 
     // Enable and configure accessibility checks
-    open protected fun enableAndConfigureAccessibilityChecks() {
+    protected open fun enableAndConfigureAccessibilityChecks() {
         AccessibilityChecker.runChecks() // Enable accessibility checks
 
         Log.v("overflowWidth", "enableAndConfigureAccessibilityChecks() called, validator=${AccessibilityChecker.accessibilityValidator != null}")
@@ -199,6 +205,8 @@ abstract class CanvasTest : InstructureTestingContract {
                 // Suppression (exclusion) rules
                 ?.setSuppressingResultMatcher(
                         Matchers.anyOf(
+                            // Extra supressions that can be adde to individual tests
+                            extraAccessibilitySupressions,
                             // Suppress issues in PsPDFKit, date/time picker, calendar grid
                             isExcludedNamedView( listOf("pspdf", "_picker_", "timePicker", "calendar1")),
 
@@ -315,7 +323,8 @@ abstract class CanvasTest : InstructureTestingContract {
             override fun matches(item: Any): Boolean {
                 when(item) {
                     is AccessibilityViewCheckResult -> {
-                        val result = item.view.width < dim && item.view.height >= dim
+                        if (item.view == null) return false
+                        val result = item.view!!.width < dim && item.view!!.height >= dim
                         //Log.v("overflowWidth", "view=${getResourceName(item.view)}, desc=${item.view.contentDescription}, w=${item.view.width}, h=${item.view.height}, res=$result")
                         return result
                     }
@@ -372,7 +381,8 @@ abstract class CanvasTest : InstructureTestingContract {
                 if(density > 1) return false
                 when(item) {
                     is AccessibilityViewCheckResult -> {
-                        val v = item.view
+                        if (item.view == null) return false
+                        val v = item.view!!
                         val toss =
                                 v.height > 0 // Require some dimension in order to be tossed
                                 && v.width > 0

@@ -8,5 +8,7 @@ data class UserSettings(
     @SerializedName("collapse_global_nav")
     val collapseGlobalNav: Boolean = false,
     @SerializedName("hide_dashcard_color_overlays")
-    val hideDashCardColorOverlays: Boolean = false
+    val hideDashCardColorOverlays: Boolean = false,
+    @SerializedName("comment_library_suggestions_enabled")
+    val commentLibrarySuggestions: Boolean = false
 )

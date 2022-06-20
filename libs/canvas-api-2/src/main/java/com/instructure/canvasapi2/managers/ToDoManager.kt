@@ -80,20 +80,4 @@ object ToDoManager {
 
     fun getCourseTodosAsync(canvasContext: CanvasContext, forceNetwork: Boolean) = apiAsync<List<ToDo>> { getCourseTodos(canvasContext, forceNetwork, it) }
 
-    fun mergeToDoUpcoming(todoList: List<ToDo>?, eventList: List<ToDo>?): List<ToDo> {
-        val todos = todoList ?: emptyList()
-        var events = eventList ?: emptyList()
-
-        // Add all Assignment ids from todos
-        val assignmentIds =
-                HashSet(todos.asSequence().filter { it.assignment != null }.map { it.assignment?.id }.toList())
-
-        // If the set contains any assignment ids from Upcoming, it's a duplicate
-        events = events.filter { it.assignment?.id ?: -1 !in assignmentIds }
-
-        // Return combined list, sorted by date
-        val defaultDate = Date(0)
-        return (todos + events).sortedBy { it.comparisonDate ?: defaultDate }
-    }
-
 }

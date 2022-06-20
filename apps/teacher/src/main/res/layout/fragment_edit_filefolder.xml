@@ -48,7 +48,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/title"
             android:labelFor="@+id/editAssignmentName"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             app:hintTextAppearance="@style/TextInputLabel">
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -59,7 +59,7 @@
                 android:hint="@string/title"
                 android:maxLines="2"
                 android:minHeight="48dp"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 android:textSize="16sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -73,7 +73,7 @@
             android:labelFor="@+id/displayGradeAsSpinner"
             android:paddingStart="4dp"
             android:text="@string/access"
-            android:textColor="@color/defaultTextGray" />
+            android:textColor="@color/textDark" />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/accessSpinner"
@@ -93,7 +93,7 @@
             android:labelFor="@+id/displayGradeAsSpinner"
             android:paddingStart="4dp"
             android:text="@string/restrictedAccess"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatSpinner
@@ -121,7 +121,7 @@
                 style="@style/OverrideViewTextInputLayoutDate"
                 android:contentDescription="@string/available_from"
                 android:labelFor="@+id/unlockDateEditText"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <androidx.appcompat.widget.AppCompatEditText
@@ -137,7 +137,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/dueTime"
                 android:labelFor="@+id/unlockTimeEditText"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <androidx.appcompat.widget.AppCompatEditText
@@ -164,7 +164,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/available_to"
                 android:labelFor="@+id/lockDateEditText"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <androidx.appcompat.widget.AppCompatEditText
@@ -180,7 +180,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/dueTime"
                 android:labelFor="@+id/lockTimeEditText"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <androidx.appcompat.widget.AppCompatEditText
@@ -201,7 +201,7 @@
             android:labelFor="@+id/displayGradeAsSpinner"
             android:paddingStart="4dp"
             android:text="@string/usageRights"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -225,7 +225,7 @@
             android:labelFor="@+id/displayGradeAsSpinner"
             android:paddingStart="4dp"
             android:text="@string/license"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -248,7 +248,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/copyrightHolder"
             android:labelFor="@+id/editAssignmentName"
-            android:textColorHint="@color/defaultTextGray"
+            android:textColorHint="@color/textDark"
             android:visibility="gone"
             app:hintTextAppearance="@style/TextInputLabel"
             tools:visibility="visible">
@@ -261,7 +261,7 @@
                 android:hint="@string/copyrightHolder"
                 android:maxLines="2"
                 android:minHeight="48dp"
-                android:textColorHint="@color/defaultTextGray"
+                android:textColorHint="@color/textDark"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -283,7 +283,7 @@
                 android:layout_height="18dp"
                 android:layout_centerVertical="true"
                 android:importantForAccessibility="no"
-                android:tint="@color/destructive"
+                android:tint="@color/textDanger"
                 app:srcCompat="@drawable/ic_trash" />
 
             <TextView
@@ -296,7 +296,7 @@
                 android:layout_toEndOf="@id/deleteImage"
                 android:importantForAccessibility="yes"
                 android:text="@string/deleteFile"
-                android:textColor="@color/destructive"
+                android:textColor="@color/textDanger"
                 android:textSize="16sp" />
 
         </RelativeLayout>

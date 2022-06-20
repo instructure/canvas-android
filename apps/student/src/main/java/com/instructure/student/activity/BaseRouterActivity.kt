@@ -61,6 +61,8 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         super.onCreate(savedInstanceState)
         Logger.d("BaseRouterActivity: onCreate()")
 
+        RouteMatcher.resetRoutes()
+
         if (savedInstanceState == null) {
             parse(intent)
         }

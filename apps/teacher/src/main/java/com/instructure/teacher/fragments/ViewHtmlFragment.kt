@@ -27,18 +27,21 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_HTML
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
+@ScreenView(SCREEN_VIEW_VIEW_HTML)
 class ViewHtmlFragment : InternalWebViewFragment() {
 
     private val downloadUrl by NullableStringArg(key = DOWNLOAD_URL)
@@ -102,7 +105,7 @@ class ViewHtmlFragment : InternalWebViewFragment() {
         }
 
         if(isTablet && toolbarColor != 0) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar!!, toolbarColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, requireContext().getColor(R.color.white))
         } else {
             super.setupToolbar(courseColor)
         }

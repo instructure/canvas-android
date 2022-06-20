@@ -103,7 +103,7 @@ class RCETextEditorView @JvmOverloads constructor(
 
             val controlsVisible = a.getBoolean(R.styleable.RCETextEditorView_rce_controls_visible, true)
             if (controlsVisible) showEditorToolbar() else hideEditorToolbar()
-            a?.recycle()
+            a.recycle()
         }
 
         val viewColorMap = mapOf(
@@ -168,7 +168,7 @@ class RCETextEditorView @JvmOverloads constructor(
         editor.setOnDecorationChangeListener { state, _ ->
             if (!isToolbarVisible()) showEditorToolbar()
             actionTypeButtonMap.values.forEach {
-                it?.setColorFilter(Color.BLACK)
+                it?.setColorFilter(context.getColor(R.color.rce_defaultTextColor))
                 it?.setBackgroundColor(Color.TRANSPARENT)
             }
             state.split(',').forEach {

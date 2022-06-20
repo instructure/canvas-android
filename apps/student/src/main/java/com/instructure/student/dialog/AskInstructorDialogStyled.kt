@@ -43,11 +43,14 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitPaginated
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASK_INSTRUCTOR
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs.brandColor
 import com.instructure.pandautils.utils.ViewStyler.themeEditText
 import com.instructure.student.R
 import com.instructure.student.dialog.FatalErrorDialogStyled.Companion.newInstance
 
+@ScreenView(SCREEN_VIEW_ASK_INSTRUCTOR)
 class AskInstructorDialogStyled : DialogFragment() {
 
     // Data

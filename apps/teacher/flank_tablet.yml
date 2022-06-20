@@ -9,14 +9,14 @@ gcloud:
   record-video: true
   timeout: 60m
   test-targets:
-    - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
+    - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.StubTablet
   device:
-    - model: Nexus9
-      version: 25
+    - model: Nexus7_clone_16_9
+      version: 26
       locale: en_US
       orientation: landscape
-    - model: Nexus9
-      version: 25
+    - model: Nexus7_clone_16_9
+      version: 26
       locale: en_US
       orientation: portrait
 

@@ -18,7 +18,10 @@ package com.instructure.teacher.activities
 
 import android.net.Uri
 import com.instructure.loginapi.login.activities.LoginWithQRActivity
+import com.instructure.pandautils.analytics.SCREEN_VIEW_LOGIN_WITH_QR
+import com.instructure.pandautils.analytics.ScreenView
 
+@ScreenView(SCREEN_VIEW_LOGIN_WITH_QR)
 class TeacherLoginWithQRActivity : LoginWithQRActivity() {
 
     override fun launchApplicationWithQRLogin(loginUri: Uri) {

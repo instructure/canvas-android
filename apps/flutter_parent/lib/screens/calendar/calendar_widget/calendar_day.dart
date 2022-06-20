@@ -45,12 +45,12 @@ class CalendarDay extends StatelessWidget {
     final isToday = date.isSameDayAs(DateTime.now());
     final isSelected = date.isSameDayAs(selectedDay);
 
-    TextStyle textStyle = theme.textTheme.headline;
+    TextStyle textStyle = theme.textTheme.headline5;
     if (date.isWeekend() || date.month != selectedDay.month) textStyle = textStyle.copyWith(color: ParentColors.ash);
     BoxDecoration decoration = null;
 
     if (isToday) {
-      textStyle = Theme.of(context).accentTextTheme.headline;
+      textStyle = Theme.of(context).accentTextTheme.headline5;
       decoration = BoxDecoration(color: theme.accentColor, shape: BoxShape.circle);
     } else if (isSelected) {
       textStyle = textStyle.copyWith(color: Theme.of(context).accentColor);

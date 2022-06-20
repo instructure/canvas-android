@@ -22,28 +22,27 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.managers.CourseNicknameManager
-import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
@@ -57,21 +56,26 @@ import com.instructure.student.features.dashboard.edit.EditDashboardFragment
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
+import com.instructure.student.util.StudentPrefs
+import kotlinx.android.synthetic.main.course_grid_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.fragment_course_grid.*
-import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.swipeRefreshLayout
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.listView as recyclerView
 
+private const val LIST_SPAN_COUNT = 1
+
+@ScreenView(SCREEN_VIEW_DASHBOARD)
 @PageView
 class DashboardFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private var recyclerAdapter: DashboardRecyclerAdapter? = null
+
+    private var courseColumns: Int = LIST_SPAN_COUNT
+    private var groupColumns: Int = LIST_SPAN_COUNT
 
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -87,34 +91,25 @@ class DashboardFragment : ParentFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         layoutInflater.inflate(R.layout.fragment_course_grid, container, false)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        applyTheme()
+    }
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         recyclerAdapter = DashboardRecyclerAdapter(requireActivity(), object : CourseAdapterToFragmentCallback {
-            override fun onHandleCourseInvitation(course: Course, accepted: Boolean) {
-                swipeRefreshLayout?.isRefreshing = true
-                recyclerAdapter?.refresh()
-            }
-
-            override fun onConferenceSelected(conference: Conference) {
-                launchConference(conference)
-            }
-
-            override fun onDismissConference(conference: Conference) {
-                recyclerAdapter?.removeItem(conference)
-            }
 
             override fun onRefreshFinished() {
                 swipeRefreshLayout?.isRefreshing = false
+                notificationsFragment?.setVisible()
             }
 
             override fun onSeeAllCourses() {
                 RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
-            }
-
-            override fun onRemoveAnnouncement(announcement: AccountNotification, position: Int) {
-                recyclerAdapter?.removeItem(announcement)
             }
 
             override fun onGroupSelected(group: Group) {
@@ -167,8 +162,40 @@ class DashboardFragment : ParentFragment() {
 
     override fun applyTheme() {
         toolbar.title = title()
-        navigation?.attachNavigationDrawer(this, toolbar)
         // Styling done in attachNavigationDrawer
+        navigation?.attachNavigationDrawer(this, toolbar)
+
+        toolbar.setMenu(R.menu.menu_dashboard) { item ->
+            when (item.itemId) {
+                R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+            }
+        }
+
+        val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
+        val menuIconRes = if (StudentPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
+        dashboardLayoutMenuItem.setIcon(menuIconRes)
+
+        val menuTitleRes = if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+        dashboardLayoutMenuItem.setTitle(menuTitleRes)
+    }
+
+    private fun changeDashboardLayout(item: MenuItem) {
+        if (StudentPrefs.listDashboard) {
+            item.setIcon(R.drawable.ic_list_dashboard)
+            item.setTitle(R.string.dashboardSwitchToListView)
+            StudentPrefs.listDashboard = false
+        } else {
+            item.setIcon(R.drawable.ic_grid_dashboard)
+            item.setTitle(R.string.dashboardSwitchToGridView)
+            StudentPrefs.listDashboard = true
+        }
+
+        recyclerView.fadeAnimationWithAction {
+            courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
+            groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
+            (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = courseColumns * groupColumns
+            view?.post { recyclerAdapter?.notifyDataSetChanged() }
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -192,12 +219,11 @@ class DashboardFragment : ParentFragment() {
 
     private fun configureRecyclerView() {
         // Set up GridLayoutManager
-        val courseColumns = resources.getInteger(R.integer.course_card_columns)
-        val groupColumns = resources.getInteger(R.integer.group_card_columns)
-        val totalColumns = courseColumns * groupColumns
+        courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
+        groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
         val layoutManager = GridLayoutManager(
             context,
-            totalColumns,
+            courseColumns * groupColumns,
             RecyclerView.VERTICAL,
             false
         )
@@ -207,7 +233,7 @@ class DashboardFragment : ParentFragment() {
                 return when (DashboardRecyclerAdapter.ItemType.values()[viewType]) {
                     DashboardRecyclerAdapter.ItemType.COURSE -> groupColumns
                     DashboardRecyclerAdapter.ItemType.GROUP -> courseColumns
-                    else -> totalColumns
+                    else -> courseColumns * groupColumns
                 }
             }
         }
@@ -225,6 +251,8 @@ class DashboardFragment : ParentFragment() {
                 swipeRefreshLayout.isRefreshing = false
             } else {
                 recyclerAdapter?.refresh()
+                notificationsFragment?.setGone()
+                (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment?)?.refresh()
             }
         }
 
@@ -270,39 +298,6 @@ class DashboardFragment : ParentFragment() {
     @Subscribe
     fun onCoreDataLoaded(event: CoreDataFinishedLoading) {
         applyTheme()
-    }
-
-    private fun launchConference(conference: Conference) {
-        GlobalScope.launch(Dispatchers.Main) {
-            var url: String = conference.joinUrl
-                ?: "${ApiPrefs.fullDomain}${conference.canvasContext.toAPIString()}/conferences/${conference.id}/join"
-
-            if (url.startsWith(ApiPrefs.fullDomain)) {
-                try {
-                    val authSession = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }
-                    url = authSession.sessionUrl
-                } catch (e: Throwable) {
-                    // Try launching without authenticated URL
-                }
-            }
-
-            val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-                .setToolbarColor(conference.canvasContext.color)
-                .build()
-
-            var intent = CustomTabsIntent.Builder()
-                .setDefaultColorSchemeParams(colorSchemeParams)
-                .setShowTitle(true)
-                .build()
-                .intent
-
-            intent.data = Uri.parse(url)
-
-            // Exclude Instructure apps from chooser options
-            intent = intent.asChooserExcludingInstructure()
-
-            context?.startActivity(intent)
-        }
     }
 
     override fun onDestroy() {

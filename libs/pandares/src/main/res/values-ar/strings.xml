@@ -1269,10 +1269,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">استجابات هذا الطالب مخفية لأن هذه المهمة مجهولة الاسم.</string>
 
-    <string name="studentAnnotationUnsupported">التعليق التوضيحي للطالب (غير مدعوم)</string>
-    <string name="studentAnnotationUnsupportedDescription">التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
-    <string name="unsupportedSubmissionType">نوع إرسال غير مدعوم</string>
-    <string name="studentAnnotationUnsupportedMessage">لا يمكن عرض الإرسال، لأن التعليق التوضيحي للطالب غير مدعوم حاليًا على الأجهزة المحمولة.</string>
     <string name="schedule_marked_as_done">قمت بتمييزه بأنه تم.</string>
     <string name="error_saving_assignment_closed_grading_period">يتعذر تغيير تاريخ استحقاق عند استحقاقه في فترة منح مغلقة لمنح العلامات.</string>
     <string name="a11y_content_description_schedule_jump_to_today">ابدأ اليوم</string>
@@ -1280,4 +1276,46 @@
     <string name="a11y_contact_info_click_description">إرسال رسالة</string>
     <string name="somethingWentWrong">حدث خطأ ما</string>
     <string name="failedToLoadQuiz">فشل تحميل الاختبار</string>
+    <string name="failedToLoadSubmission">فشل تحميل الإرسال</string>
+    <string name="studentAnnotationToolbarTitle">تعليق توضيحي لطالب</string>
+    <string name="submissionTypeStudentAnnotation">تعليق توضيحي لطالب</string>
+    <string name="gradesNoDueDate">بلا تاريخ استحقاق</string>
+    <string name="importantDatesNoDueDate">بلا تاريخ استحقاق</string>
+    <string name="missingAssignment">مفقود</string>
+    <string name="dontSave">عدم الحفظ</string>
+    <string name="textSubmissionExitConfirmationTitle">حفظ المسودة؟</string>
+    <string name="textSubmissionExitConfirmationMessage">وإلا لن يتم حفظ التغييرات</string>
+    <string name="submissionDraftAvailableSubtitle">اضغط هنا للمتابعة</string>
+    <string name="submissionDraftAvailableTitle">المسودة متوفرة</string>
+    <string name="errorLoadingSubmission">حدث خطأ أثناء تحميل الإرسال</string>
+    <string name="loadFullContent">اضغط للاطلاع على المحتوى الكامل</string>
+    <string name="dashboardTabImportantDates">التواريخ الهامة</string>
+    <string name="importantDatesEmptyTitle">لا توجد تواريخ هامة</string>
+    <string name="important_dates">التواريخ الهامة</string>
+
+    <string name="toolbarCommentLibrary">مكتبة التعليقات</string>
+    <string name="commentLibraryNoSuggestions">لا توجد مقترحات متاحة</string>
+    <string name="speedGraderCommentHint">التعليق</string>
+    <string name="a11y_schedule_marked_as_done">تم وضع علامة تم على %s</string>
+    <string name="a11y_error_occured">حدث خطأ، يُرجى إعادة المحاولة.</string>
+    <string name="a11y_content_description_accept_invite">قبول الدعوة</string>
+    <string name="a11y_content_description_decline_invite">رفض الدعوة</string>
+    <string name="no_notifications_to_show">لا توجد إعلامات متاحة للإظهار</string>
+
+    <string name="documentScanningTitle">مسح المستند</string>
+    <string name="filter_name_color">اللون</string>
+    <string name="filter_name_grayscale">التدرج الرمادي</string>
+    <string name="filter_name_monochrome">أحادي اللون</string>
+    <string name="filter_name_original">الأصلي</string>
+    <string name="noCompatibleAppInstalled">لا توجد أي تطبيقات مثبتة على جهازك قادرة على فتح هذا الرابط.</string>
+    <string name="anonymousDiscussionNotSupported">النقاشات المجهولة غير مدعومة حاليًا على الأجهزة المحمولة. الفتح في المستعرض لعرض النقاش.</string>
+    <string name="discussionOpenInBrowser">الفتح في المستعرض</string>
+    <string name="dashboardSwitchToListView">التبديل إلى طريقة عرض القائمة</string>
+    <string name="dashboardSwitchToGridView">التبديل إلى طريقة عرض الشبكة</string>
+    <string name="selectAppTheme">حدد نسق التطبيق</string>
+    <string name="appThemeSettingsTitle">نسق التطبيق</string>
+    <string name="appThemeLight">فاتح</string>
+    <string name="appThemeDark">داكن</string>
+    <string name="appThemeSystem">النظام الافتراضي</string>
+
 </resources>

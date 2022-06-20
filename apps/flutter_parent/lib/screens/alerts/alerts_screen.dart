@@ -156,11 +156,11 @@ class __AlertsListState extends State<_AlertsList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 16),
-                Text(_alertTitle(context, alert), style: textTheme.subtitle.copyWith(color: alertColor)),
+                Text(_alertTitle(context, alert), style: textTheme.subtitle2.copyWith(color: alertColor)),
                 SizedBox(height: 4),
-                Text(alert.title, style: textTheme.subhead),
+                Text(alert.title, style: textTheme.subtitle1),
                 SizedBox(height: 4),
-                Text(_formatDate(context, alert.actionDate), style: textTheme.subtitle),
+                Text(_formatDate(context, alert.actionDate), style: textTheme.subtitle2),
                 SizedBox(height: 12),
               ],
             ),
@@ -203,6 +203,7 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   IconData _alertIcon(Alert alert) {
+    if (alert.lockedForUser) return CanvasIcons.lock;
     if (alert.isAlertInfo() || alert.isAlertPositive()) return CanvasIcons.info;
     if (alert.isAlertNegative()) return CanvasIcons.warning;
 
@@ -244,6 +245,10 @@ class __AlertsListState extends State<_AlertsList> {
         title = l10n.assignmentGradeBelowThreshold(threshold);
         break;
     }
+
+    if (alert.lockedForUser) {
+      title = '$title • ${L10n(context).lockedForUserTitle}';
+    }
     return title;
   }
 
@@ -252,18 +257,25 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   void _routeAlert(Alert alert, int index) async {
-    if (alert.alertType == AlertType.institutionAnnouncement) {
-      locator<QuickNav>().pushRoute(context, PandaRouter.institutionAnnouncementDetails(alert.contextId));
+    if (alert.lockedForUser) {
+      final snackBar = SnackBar(content: Text(L10n(context).lockedForUserError));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      locator<QuickNav>().routeInternally(context, alert.htmlUrl);
+      if (alert.alertType == AlertType.institutionAnnouncement) {
+        locator<QuickNav>().pushRoute(context,
+            PandaRouter.institutionAnnouncementDetails(alert.contextId));
+      } else {
+        locator<QuickNav>().routeInternally(context, alert.htmlUrl);
+      }
+
+      // We're done if the alert was already read, otherwise mark it read
+      if (alert.workflowState == AlertWorkflowState.read) return;
+
+      final readAlert = await widget._interactor.markAlertRead(
+          widget._student.id, alert.id);
+      setState(() => _data.alerts.setRange(index, index + 1, [readAlert]));
+      locator<AlertCountNotifier>().update(widget._student.id);
     }
-
-    // We're done if the alert was already read, otherwise mark it read
-    if (alert.workflowState == AlertWorkflowState.read) return;
-
-    final readAlert = await widget._interactor.markAlertRead(widget._student.id, alert.id);
-    setState(() => _data.alerts.setRange(index, index + 1, [readAlert]));
-    locator<AlertCountNotifier>().update(widget._student.id);
   }
 
   void _dismissAlert(Alert alert) async {

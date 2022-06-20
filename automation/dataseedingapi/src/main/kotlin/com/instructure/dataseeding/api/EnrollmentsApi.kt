@@ -20,14 +20,12 @@ package com.instructure.dataseeding.api
 import com.instructure.dataseeding.model.CreateEnrollmentApiRequestModel
 import com.instructure.dataseeding.model.EnrollmentApiModel
 import com.instructure.dataseeding.model.EnrollmentApiRequestModel
-import com.instructure.dataseeding.model.EnrollmentTypes
 import com.instructure.dataseeding.model.EnrollmentTypes.DESIGNER_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.OBSERVER_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.TA_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
-import com.instructure.dataseeding.util.CanvasRestAdapter
-import com.instructure.dataseeding.util.DataSeedingException
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -44,7 +42,7 @@ object EnrollmentsApi {
     }
 
     private val enrollmentsService: EnrollmentsService by lazy {
-        CanvasRestAdapter.adminRetrofit.create(EnrollmentsService::class.java)
+        CanvasNetworkAdapter.adminRetrofit.create(EnrollmentsService::class.java)
     }
 
     // region Course Enrollments

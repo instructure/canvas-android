@@ -36,6 +36,9 @@ import android.util.TypedValue
 import android.view.*
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -68,6 +71,7 @@ import com.instructure.pandautils.R
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.abc_search_view.view.*
 import kotlinx.coroutines.delay
+import java.util.Locale
 
 /** Convenience extension for setting a click listener */
 @Suppress("NOTHING_TO_INLINE")
@@ -504,7 +508,7 @@ fun View.clearAvatarA11y() {
 @JvmName("setUserAvatarImage")
 fun CircleImageView.setAvatarImage(context: Context, userName: String?) {
     val initials = ProfileUtils.getUserInitials(userName)
-    val color = ContextCompat.getColor(context, R.color.gray)
+    val color = ContextCompat.getColor(context, R.color.textDark)
     val drawable = TextDrawable.builder()
             .beginConfig()
             .height(context.resources.getDimensionPixelSize(com.instructure.pandautils.R.dimen.avatar_size))
@@ -699,7 +703,7 @@ val Attachment.iconRes: Int
         contentType!!.startsWith("image") -> R.drawable.ic_image
         contentType!!.startsWith("video") -> R.drawable.ic_media
         contentType!!.startsWith("audio") -> R.drawable.ic_audio
-        else -> when (filename!!.substringAfterLast('.', "").toLowerCase()) {
+        else -> when (filename!!.substringAfterLast('.', "").lowercase(Locale.getDefault())) {
             "doc", "docx" -> R.drawable.ic_document
             "txt" -> R.drawable.ic_document
             "rtf" -> R.drawable.ic_document
@@ -744,4 +748,27 @@ fun View.accessibleTouchTarget() {
         val parentView = parent as? View
         parentView?.touchDelegate = TouchDelegate(delegateArea, this)
     }
+}
+
+// Starts a fade out/fade in animation for the view and executes the specified action while the view is not showing.
+fun View.fadeAnimationWithAction(action: () -> Unit) {
+    val fadeOutAnim = AlphaAnimation(1.0f, 0.0f)
+    fadeOutAnim.duration = 250
+    fadeOutAnim.interpolator = DecelerateInterpolator()
+    fadeOutAnim.setAnimationListener(object : Animation.AnimationListener {
+        override fun onAnimationStart(animation: Animation?) = Unit
+
+        override fun onAnimationEnd(animation: Animation?) {
+            action()
+
+            val fadeInAnim = AlphaAnimation(0.0f, 1.0f)
+            fadeInAnim.duration = 250
+            fadeInAnim.interpolator = DecelerateInterpolator()
+            startAnimation(fadeInAnim)
+        }
+
+        override fun onAnimationRepeat(animation: Animation?) = Unit
+    })
+
+    startAnimation(fadeOutAnim)
 }

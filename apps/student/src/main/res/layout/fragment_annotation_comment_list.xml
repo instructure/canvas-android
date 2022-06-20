@@ -17,7 +17,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/annotationCommentsListPage"
-    android:background="@color/white"
+    android:background="@color/backgroundLightest"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -43,13 +43,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/white">
+        android:background="@color/backgroundLightest">
 
         <TextView
             android:id="@+id/sendingErrorTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/error"
+            android:background="@color/textDanger"
             android:gravity="center"
             android:padding="4dp"
             android:text="@string/errorSendingMessage"
@@ -70,7 +70,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/send"
             android:src="@drawable/ic_send"
-            android:tint="@color/canvasDefaultButton"/>
+            android:tint="@color/textInfo"/>
 
         <EditText
             android:id="@+id/commentEditText"
@@ -104,6 +104,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_above="@+id/commentInputContainer"
-        android:background="@color/dividerColor"/>
+        android:background="@color/backgroundMedium"/>
 
 </RelativeLayout>

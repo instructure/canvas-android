@@ -16,10 +16,6 @@ import 'package:flutter_parent/utils/db/db_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  // For coverage
-  test('init throws FlutterError in unit test', () async {
-    expect(() => DbUtil.init(), throwsFlutterError);
-  });
 
   test('instance throws StateError if not initialized', () async {
     expect(() => DbUtil.instance, throwsStateError);

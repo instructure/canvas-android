@@ -1,0 +1,904 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">Cài Đặt</string>
+    <string name="tab_week">Tuần</string>
+    <string name="tab_inbox">Hộp Thư Đến</string>
+    <string name="tab_details">Chi Tiết</string>
+    <string name="tab_questions">Câu Hỏi</string>
+    <string name="tab_submissions">Nộp</string>
+    <string name="tab_assignments">Bài Tập</string>
+    <string name="tab_profile">Hồ Sơ</string>
+    <string name="tab_people">Mọi Người</string>
+    <string name="tab_quizzes">Các Câu Hỏi Kiểm Tra</string>
+    <string name="tab_discussions">Thảo Luận</string>
+    <string name="tab_announcements">Thông Báo Chung</string>
+    <string name="tab_attendance">Chuyên Cần</string>
+    <string name="tab_pages">Trang</string>
+    <string name="tab_todo">Việc Cần Làm</string>
+    <string name="content_description_school_logo">Biểu Trưng Trường</string>
+    <string name="search_guides">Tìm kiếm Canvas Guides</string>
+    <string name="canvas_guides">Canvas Guides</string>
+    <string name="search_guides_icon">Biểu Tượng Cho Canvas Guides</string>
+    <string name="search_guides_details">Câu trả lời cho các câu hỏi thường gặp</string>
+    <string name="report_problem">Báo Cáo Vấn Đề</string>
+    <string name="report_problem_icon"> Biểu Tượng Cho Báo Cáo Vấn Đề</string>
+    <string name="report_problem_details">Nếu ứng dụng hoạt động không bình thường, hãy cho chúng tôi biết</string>
+    <string name="request_feature">Yêu Cầu Đặc Tính</string>
+    <string name="request_feature_icon">Biểu Tượng Cho Yêu Cầu Đặc Tính</string>
+    <string name="request_feature_details">Hãy cho chúng tôi biết ý tưởng của bạn để cải thiện ứng dụng</string>
+    <string name="share_your_love">Chia Sẻ Tình Yêu Của Bạn Đối Với Ứng Dụng</string>
+    <string name="share_your_love_details">Hãy cho chúng tôi biết bạn thích phần nào của ứng dụng</string>
+    <string name="masquerade">Hóa Trang</string>
+    <string name="issue_with_teacher_app">Vấn Đề Với Ứng Dụng Giáo Viên [Android]</string>
+    <string name="no_items_to_display_short">Không Có Mục</string>
+    <string name="rate_the_app">Đánh giá ứng dụng</string>
+    <string name="rate_the_app_icon">Biểu tượng cho Đánh giá ứng dụng</string>
+    <string name="teacher_log_out">Đăng Xuất</string>
+    <string name="teacher_switch_user">Chuyển Người Dùng</string>
+    <string name="under_construction">Đang Xây Dựng</string>
+    <string name="toolbar_event">Sự Kiện</string>
+    <string name="location">Địa Điểm:</string>
+    <string name="event_date">Ngày Sự Kiện</string>
+    <string name="course">Khóa Học</string>
+    <string name="profile">Hồ Sơ</string>
+    <string name="share">Chia Sẻ</string>
+    <string name="share_with">Chia Sẻ Với&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Mở ngăn kéo điều hướng</string>
+    <string name="navigation_drawer_close">Đóng ngăn kéo điều hướng</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">(không có tiêu đề)</string>
+    <string name="compose_message">Soạn thảo tin nhắn</string>
+    <string name="newMessage">Tin Nhắn Mới</string>
+    <string name="courses">Khóa Học</string>
+    <string name="compose_message_no_ellipsis">Soạn Thảo Tin Nhắn</string>
+    <string name="send">Gửi</string>
+    <string name="attachment">Tập Tin Đính Kèm</string>
+    <string name="attachments">Tập Tin Đính Kèm</string>
+    <string name="not_available_offline">Không thể sử dụng chức năng khi ngoại tuyến</string>
+    <string name="empty_message">Không được để trống tin nhắn!</string>
+    <string name="message_has_no_recipients">Tin nhắn này hiện không có người nhận.</string>
+    <string name="course_spinner_title">Khóa Học:</string>
+    <string name="reply_to_message">Trả Lời</string>
+    <string name="forward_message">Chuyển Tiếp Tin Nhắn</string>
+    <string name="label_to">Đến</string>
+    <string name="label_course">Khóa Học</string>
+    <string name="label_subject">Tiêu Đề</string>
+
+    <string name="common_send">Gửi</string>
+    <string name="common_edit">Chỉnh Sửa</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">Ý Tưởng Cho Ứng Dụng Giáo Viên [Android]</string>
+    <string name="understand_request">Thông tin sau sẽ giúp chúng tôi hiểu hơn về ý tưởng của bạn:</string>
+    <string name="send_mail">Gửi Email&#8230;</string>
+
+    <string name="color_1">Đỏ</string>
+    <string name="color_2">Hồng Nóng</string>
+    <string name="color_3">Oải Hương</string>
+    <string name="color_4">Tím</string>
+    <string name="color_5">Tía</string>
+    <string name="color_6">Xám Đen</string>
+    <string name="color_7">Xanh Dương</string>
+    <string name="color_8">Xanh Lá Mạ</string>
+    <string name="color_9">Xanh Lục</string>
+    <string name="color_10">Xanh Nõn Chuối</string>
+    <string name="color_11">Vàng</string>
+    <string name="color_12">Vàng Kim</string>
+    <string name="color_13">Cam</string>
+    <string name="color_14">Hồng</string>
+    <string name="color_15">Xám</string>
+
+    <string name="attachment_icon">Biểu Tượng Tập Tin Đính Kèm</string>
+    <string name="star_icon">Biểu Tượng Sao</string>
+    <string name="monologue">Độc Thoại</string>
+
+    <string name="create_announcement_topic_title_hint">Tiêu Đề Đề Tài</string>
+    <string name="post_date">Ngày Đăng</string>
+    <string name="announcement">Thông Báo</string>
+    <string name="create_announcement_title">Thông Báo Mới</string>
+    <string name="create_announcement_no_description">Bắt buộc phải có mô tả</string>
+    <string name="announcementDetails">Thông Tin Chi Tiết Thông Báo</string>
+
+    <string name="no_title">Không Có Tiêu Đề</string>
+    <string name="announcement_create_success">Đã Tạo Thông Báo!</string>
+    <string name="announcement_create_fail">Không thể tạo thông báo. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
+    <string name="create_announcement_delay_posting">Trì Hoãn Đăng</string>
+
+    <string name="discussion">Thảo Luận</string>
+
+    <string name="sunday">Chủ Nhật</string>
+    <string name="monday">Thứ Hai</string>
+    <string name="tuesday">Thứ Ba</string>
+    <string name="wednesday">Thứ Tư</string>
+    <string name="thursday">Thứ Năm</string>
+    <string name="friday">Thứ Sáu</string>
+    <string name="saturday">Thứ Bảy</string>
+
+    <string name="add_attachment">Thêm Tập Tin Đính Kèm</string>
+    <string name="content_description_files">Biểu tượng tập tin</string>
+    <string name="next">Tiếp</string>
+    <string name="upload_to_cnavas">Tải Lên Canvas</string>
+    <string name="upload_my_files">Tập Tin Của Tôi</string>
+    <string name="upload_course_files">Các Tập Tin Khóa Học</string>
+    <string name="upload_to">Tải Lên</string>
+    <string name="message_attachments">Tập Tin Đính Kèm Tin Nhắn</string>
+    <string name="with">với</string>
+    <string name="discussion_attachment">Đính kèm tập tin</string>
+    <string name="select_files_or_photos">Chọn tập tin hoặc ảnh</string>
+    <string name="uploading_files">Đang tải lên tập tin&#8230;</string>
+    <string name="no_attachment">(Không Có Tập Tin Đính Kèm)</string>
+    <string name="creating_announcement">Đang Tạo Thông Báo&#8230;</string>
+
+    <string name="copy_email">Sao chép địa chỉ email</string>
+    <string name="all_grading_periods">Tất Cả Thời Gian Phân Loại Điểm</string>
+    <string name="no_submissions">Không có bài nộp</string>
+    <string name="all_submissions_graded">Tất cả bài nộp đã chấm điểm</string>
+    <string name="icon">biểu tượng</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="one">%d bài nộp cần chấm điểm</item>
+        <item quantity="other">%d bài nộp cần chấm điểm</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="one">Có %d người được giao bài tập không có điểm.</item>
+        <item quantity="other">Có %d người được giao bài tập không có điểm.</item>
+    </plurals>
+
+    <string name="inbox_empty_title">Không có tin nhắn</string>
+    <string name="inbox_empty_starred_title">Không Có Tin Nhắn Được Gắn Dấu Sao</string>
+    <string name="inbox_empty_message">Nhấn vào dấu \\"+\\" để tạo cuộc trò chuyện mới.</string>
+    <string name="inbox_empty_starred_message">Gắn dấu sao bằng cách nhấn vào hình ngôi sao trong tin nhắn.</string>
+
+    <string name="reply">Trả Lời</string>
+    <string name="replyAll">Trả Lời Tất Cả</string>
+    <string name="forward">Chuyển Tiếp</string>
+    <string name="star">Sao</string>
+    <string name="archive">Lưu Trữ</string>
+    <string name="delete">Xóa</string>
+    <string name="message">Tin Nhắn</string>
+    <string name="unarchive">Bỏ Lưu Trữ</string>
+    <string name="message_options">Tùy Chọn Tin Nhắn</string>
+    <string name="markAsUnread">Đánh Dấu Là Chưa Đọc</string>
+    <string name="message_delete_warning">Bạn có chắc chắn muốn xóa bản sao của bạn đối với tin nhắn này không? Không thể hoàn tác thao tác này.</string>
+    <string name="conversation_delete_warning">Bạn có chắc chắn muốn xóa bản sao của bạn đối với cuộc trò chuyện này không? Không thể hoàn tác thao tác này.</string>
+    <string name="error_conversation_generic">Không thể thực hiện thao tác này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
+    <string name="message_archived">Đã lưu trữ tin nhắn</string>
+    <string name="message_unarchived">Đã bỏ lưu trữ tin nhắn</string>
+    <string name="message_deleted">Đã xóa tin nhắn</string>
+    <string name="select_recipients">Chọn Người Nhận</string>
+    <string name="entire_group_selected">Đã chọn toàn bộ nhóm</string>
+    <string name="no_users_in_group">Không có người dùng trong nhóm</string>
+
+    <string name="published">Đã Phát Hành</string>
+    <string name="not_published">Chưa Phát Hành</string>
+    <string name="published_content_description">Dấu kiểm đã công bố</string>
+    <string name="points_with_value">điểm</string>
+    <string name="point_with_value">điểm</string>
+    <string name="no_due_date">Không Có Ngày Đến Hạn</string>
+    <string name="due_date">Ngày Đến Hạn</string>
+
+    <string name="view_replies">Xem Câu Trả Lời</string>
+    <string name="view_discussion">Xem Thảo Luận</string>
+
+    <string name="edit">Chỉnh Sửa</string>
+    <string name="save">Lưu</string>
+    <string name="successfully_updated_assignment">Đã cập nhật bài tập thành công.</string>
+    <string name="successfully_updated_quiz">Đã cập nhật bài kiểm tra thành công.</string>
+    <string name="failure_updating_assignment">Đã xảy ra vấn đề khi cập nhật bài tập. Hãy thử lại.</string>
+    <string name="failure_deleting_assignment">Đã xảy ra vấn đề khi xóa bài tập. Hãy thử lại.</string>
+    <string name="cant_unpublish">Không thể hủy phát hành nếu có bài nộp của sinh viên.</string>
+    <string name="messages">Tin Nhắn</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="one">+ %d Tin Nhắn</item>
+        <item quantity="other">+ %d Tin Nhắn</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="one">%d bài nộp cần chấm điểm</item>
+        <item quantity="other">%d bài nộp cần chấm điểm</item>
+    </plurals>
+
+    <string name="delete_assignment_message">Bạn có chắc chắn muốn xóa bài tập này không?</string>
+
+    <string name="max_count">99+</string>
+    <string name="message_student">Nhắn Tin Sinh Viên</string>
+
+    <string name="message_these_students">Nhắn tin cho các sinh viên này</string>
+    <string name="submission_status_missing">Bị Thiếu</string>
+    <string name="submission_status_late">Trễ</string>
+    <string name="submission_status_submitted">Đã nộp</string>
+    <string name="submission_status_not_submitted">Chưa nộp</string>
+    <string name="submission_status_excused">Đã Xin Phép</string>
+    <string name="last_login_format">Lần đăng nhập gần nhất: %s</string>
+
+    <string name="turnOnAnonymousGrading">Bật Chấm Điểm Ẩn Danh</string>
+    <string name="turnOffAnonymousGrading">Tắt Chấm Điểm Ẩn Danh</string>
+    <string name="anonymousGradingLabel">Chấm Điểm Ẩn Danh</string>
+    <string name="anonymousStudentLabel">Sinh Viên</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">Tính Năng Sẽ Sớm Ra Mắt</string>
+
+    <string-array name="submission_filters">
+        <item>Tất Cả Mục Nộp</item>
+        <item>Bài Nộp Trễ</item>
+        <item>Bài Nộp Bị Thiếu</item>
+        <item>Điểm Cao</item>
+        <item>Điểm Thấp</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>Theo Tên</item>
+        <item>Điểm Từ Cao Xuống Thấp</item>
+        <item>Điểm Từ Thấp Lên Cao</item>
+    </string-array>
+
+    <string name="content_description_course_tab">Tác Vụ Khóa Học</string>
+    <string name="content_description_inbox_tab">Tác Vụ Hộp Thư Đến</string>
+    <string name="content_description_profile_tab">Tác Vụ Hồ Sơ</string>
+    <string name="close">Đóng</string>
+    <string name="no_course_selected">Vui lòng chọn khóa học</string>
+    <string name="discussion_reply_to_entry">Trả Lời Thảo Luận</string>
+    <string name="announcement_reply_to_entry">Trả Lời Thông Báo</string>
+    <string name="error_text_missing">Thêm một số chữ để gửi tin nhắn</string>
+    <string name="error_sending_message">Không thể gửi tin nhắn này. Hãy nhấn để thử lại.</string>
+    <string name="message_sent_successfully">Đã gửi tin nhắn thành công.</string>
+    <string name="error_occurred">Đã xảy ra lỗi không lường trước.</string>
+    <string name="no_assignments_with_file_upload">Khóa học này không có bài tập cho phép tải lên tập tin.</string>
+    <string name="extension_not_allowed">Loại tập tin đã chọn không được phép sử dụng.</string>
+    <string name="allowed_extensions">Phần mở rộng được phép:&#160;</string>
+    <string name="files_uploaded_successfully">Đã tải lên tập tin thành công.</string>
+    <string name="error_uploading_file">Đã xảy ra lỗi khi tải lên tập tin của bạn. Vui lòng thử lại.</string>
+    <string name="uploading_file">Đang tải lên tập tin&#8230;</string>
+    <string name="no_apps">Thiết bị của bạn không có ứng dụng được cài đặt có thể xử lý tập tin này.</string>
+    <string name="turn_in">Nộp</string>
+    <string name="error_getting_photo">Đã xảy ra lỗi lấy ảnh. Vui lòng thử lại.</string>
+    <string name="loading_files_indeterminate">Đang Tải Các Tập Tin&#8230;</string>
+    <string name="no_files_uploaded">Bạn chưa chọn bất kỳ tập tin nào.</string>
+    <string name="file_upload_not_supported">Bạn không thể tải lên tập tin vào bài tập đã chọn.</string>
+    <string name="one_or_more_extension_not_allowed">Một hoặc nhiều tập tin có phần mở rộng tập tin không được phép sử dụng</string>
+
+    <string name="inbox_all">Hộp Thư Đến</string>
+    <string name="inbox_unread">Chưa đọc</string>
+    <string name="inbox_starred">Đã Gắn Dấu Sao</string>
+    <string name="inbox_sent">Đã Gửi</string>
+    <string name="inbox_archived">Được Lưu Trữ</string>
+    <string name="inbox_all_messages">Tất Cả</string>
+    <string name="uploading_file_num" formatted="false">Đang tải lên %d / %d</string>
+    <string name="page_not_found">Không tìm thấy trang.</string>
+    <string name="no_connection">Không Có Kết Nối</string>
+    <string name="unauthorized_access">Bạn không được phép truy cập nội dung này. Bạn không có quyền hoặc được truy cập (ví dụ như khóa học của bạn chưa bắt đầu)</string>
+    <string name="server_error">Đã xảy ra lỗi máy chủ.</string>
+    <string name="error_loading_files">Đã xảy ra lỗi khi tải tập tin của bạn. Vui lòng kiểm tra kết nối internet của bạn rồi thử lại.</string>
+    <string name="files_submitted_successfully">Đã nộp tập tin thành công.</string>
+    <string name="no_data_connection">Vui lòng kiểm tra kết nối dữ liệu của bạn rồi thử lại.</string>
+    <string name="teacher_logout_warning">Bạn có chắc chắn muốn đăng xuất không?</string>
+    <string name="teacher_yes">Có</string>
+    <string name="teacher_no">Không</string>
+    <string name="teacher_sending">Đang Gửi&#8230;</string>
+    <string name="teacher_cancel">Hủy</string>
+    <string name="teacher_okay">Được</string>
+    <string name="teacher_upload">Tải lên</string>
+    <string name="settings">Cài Đặt</string>
+    <string name="edit_courses">Chỉnh Sửa Khóa Học</string>
+    <string name="start_annotating">Bắt Đầu Chú Thích</string>
+    <string name="empty_speedgrader_content">Dạng Xem SpeedGrader Trống, Cần Thiết Kế</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">Cài Đặt Khóa Học</string>
+    <string name="course_name">Tên Khóa Học</string>
+    <string name="set_home_to">Cài đặt \"Trang Chủ\" thành...</string>
+    <string name="course_activity_stream">Luồng Hoạt Động Khóa Học</string>
+    <string name="pages_front_page">Các Trang Trang Đầu</string>
+    <string name="frontPage">Trang Đầu</string>
+    <string name="course_modules">Học Phần Khóa Học</string>
+    <string name="assignments_list">Danh Sách Bài Tập</string>
+    <string name="syllabus">Chương Trình Học</string>
+    <!--End Course Settings-->
+
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">Nhiều Ngày Đến Hạn</string>
+    <string name="everyone">Mọi Người</string>
+    <string name="everyone_else">Mọi người khác</string>
+    <string name="unknown_student">Sinh Viên Không Xác Định</string>
+    <string name="closed">Đã Đóng</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">Đến hạn %1s vào %2s</string>
+    <string name="last_post" formatted="false">Bài đăng gần nhất %s</string>
+    <string name="submission_types">Loại Nộp</string>
+    <string name="full_due_date_details">Thông Tin Chi Tiết Ngày Đến Hạn Đầy Đủ</string>
+    <string name="availability_label">Độ Khả Dụng:</string>
+    <string name="available_to_label">Khả dụng đến:</string>
+    <string name="available_from_label">Khả dụng từ:</string>
+    <string name="due_for_label">Cho:</string>
+    <string name="due_label">Hạn:</string>
+    <string name="details_available_to_label">Khả dụng đến</string>
+    <string name="details_available_from_label">Khả dụng từ</string>
+    <string name="details_due_for_label">Cho</string>
+    <string name="due_date_header_label">Hạn</string>
+    <string name="assignment_details">Chi Tiết Bài Tập</string>
+    <string name="no_content">Không Có Nội Dung</string>
+    <string name="submissions">Nộp</string>
+    <string name="no_assignment_description_filler">Giúp sinh viên của bạn thực hiện bài tập này bằng cách thêm chỉ dẫn.</string>
+    <string name="no_quiz_description_filler">Giúp sinh viên của bạn thực hiện bài kiểm tra này bằng cách thêm chỉ dẫn.</string>
+    <string name="page_title_due_dates">Ngày Đến Hạn</string>
+    <string name="edit_assignment">Chỉnh Sửa Bài Tập</string>
+    <string name="edit_quiz">Chỉnh Sửa Bài Kiểm Tra</string>
+    <string name="title">Tiêu Đề</string>
+    <string name="description">Mô Tả</string>
+    <string name="grade_total">Tổng Điểm</string>
+    <string name="grade">Lớp</string>
+    <string name="enter_grade">Vào Lớp</string>
+    <string name="override">Ghi Đè</string>
+    <string name="calculated_by_rubric">Được tính toán bằng bảng đánh giá theo tiêu chí</string>
+    <string name="customize_grade">Tùy Chỉnh Lớp</string>
+    <string name="out_of_points">Trên Tổng Số %1$s</string>
+    <string name="gpa">GPA</string>
+    <string name="letter_grade">Điểm Bằng Chữ</string>
+    <string name="excuse_student">Cho phép sinh viên</string>
+    <string name="excuseGroup">Cho phép nhóm</string>
+    <string name="complete_grade">Hoàn thành</string>
+    <string name="incomplete_grade">Chưa hoàn thành</string>
+    <string name="not_graded">Chưa Được Chấm Điểm</string>
+    <string name="excused">Đã Xin Phép</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s trên tổng số %2$s</string>
+    <string name="publish">Phát Hành</string>
+    <string name="error_saving_assignment">Đã xảy ra lỗi khi thử lưu bài tập. Hãy thử lại.</string>
+    <string name="error_saving_quiz">Đã xảy ra lỗi khi thử lưu bài kiểm tra. Hãy thử lại.</string>
+    <string name="assignment_name_must_be_set">Phải cài đặt tên bài tập.</string>
+    <string name="announcement_name_must_be_set">Phải cài đặt tiêu đề thông báo.</string>
+    <string name="quiz_title_must_be_set">Phải cài đặt tiêu đề bài kiểm tra.</string>
+    <string name="assignment_points_must_be_set">Phải cài đặt điểm thành phần bài tập.</string>
+    <string name="assignment_points_must_be_a_number">Điểm có thể đạt phải là số</string>
+    <string name="quiz_points_must_be_set">Điểm thành phần bài kiểm tra phải là số</string>
+    <string name="assignee_type_course_sections">Phần Khóa Học</string>
+    <string name="assignee_type_groups">Nhóm</string>
+    <string name="assignee_type_students">Sinh Viên</string>
+    <string name="page_title_add_assignees">Thêm Người Được Giao Bài Tập</string>
+    <string name="assign_to">Giao Cho</string>
+    <string name="available_from">Khả Dụng Từ</string>
+    <string name="available_to">Khả Dụng Đến</string>
+    <string name="unlock_after_due_date_error">Ngày mở khóa không được sau ngày đến hạn</string>
+    <string name="lock_before_due_date_error">Ngày khóa không được trước ngày đến hạn</string>
+    <string name="lock_after_unlock_error">Ngày khóa không được trước ngày mở khóa</string>
+    <string name="assignee_blank_error">Không được để trống Người Được Giao Bài Tập</string>
+    <string name="remove">Gỡ</string>
+    <string name="add_due_date">Thêm Ngày Đến Hạn</string>
+    <string name="full_submission_details">Thông tin chi tiết bài nộp đầy đủ</string>
+    <string name="graded">Đã Chấm Điểm</string>
+    <string name="needsGrading">Cần Chấm Điểm</string>
+    <string name="not_submitted">Chưa Nộp</string>
+    <string name="a11y_viewSubmissionAction">xem thông tin chi tiết bài nộp</string>
+    <string name="content_description_submission_donut_graded" formatted="false">Đã chấm điểm, %s / %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Cần Chấm Điểm, %s / %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Chưa nộp, %s / %s</string>
+    <string name="display_grade_as">Hiển Thị Điểm Dưới Dạng &#8230;</string>
+    <string name="percentage">Phần Trăm</string>
+    <string name="complete_incomplete">Hoàn Thành/Chưa Hoàn Thành</string>
+    <string name="points">Điểm</string>
+    <string name="gpa_scale">Thang GPA</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">Bạn không phải giáo viên?</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">Một trong các ứng dụng khác có thể thích hợp hơn. Nhấn vào một để truy cập Play Store.</string>
+
+    <string name="sg_tab_grade">Lớp</string>
+    <string name="sg_tab_comments">Bình Luận</string>
+    <string name="sg_tab_files">Các Tập Tin</string>
+    <string name="sg_tab_files_w_counter">Các Tập Tin (%d)</string>
+    <string name="filter_submissions">Lọc Bài Nộp</string>
+    <string name="all_submissions">Tất Cả Mục Nộp</string>
+    <string name="submitted_late">Nộp Trễ</string>
+    <string name="havent_submitted_yet">Chưa Nộp</string>
+    <string name="havent_been_graded">Chưa Chấm Điểm</string>
+    <string name="scored_less_than">Đạt Mức Điểm Dưới&#8230;</string>
+    <string name="scored_more_than">Đạt Mức Điểm Trên&#8230;</string>
+    <string name="scored_less_than_value">Đạt Mức Điểm Dưới%s</string>
+    <string name="scored_more_than_value">Đạt Mức Điểm Trên%s</string>
+    <string name="add_comment">Thêm Bình Luận</string>
+    <string name="editComment">Chỉnh Sửa Bình Luận</string>
+    <string name="deleteComment">Xóa Bình Luận</string>
+    <string name="deleteAnnotation">Xóa Chú Thích</string>
+    <string name="deleteCommentConfirmation">Bạn có chắc chắn muốn xóa bình luận này không?</string>
+    <string name="rubric_view_long_description">Xem mô tả dài</string>
+    <string name="rubric">Bảng Đánh Giá Theo Tiêu Chí</string>
+    <string name="enter_custom_value">Nhập giá trị tùy chỉnh</string>
+    <string name="success_saving_rubric_assessment">Đã lưu bài đánh giá bằng bảng đánh giá theo tiêu chí</string>
+    <string name="error_saving_rubric_assessment">Đã xảy ra lỗi khi lưu bài đánh giá bằng bảng đánh giá theo tiêu chí. Vui lòng thử lại.</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s trên tổng số %2$s</string>
+    <string name="criterion_rating_customize_score">Tùy Chỉnh Điểm</string>
+    <string name="edit_criterion_comment">Chỉnh sửa bình luận tiêu chí</string>
+    <string name="sendMessageToHint">Nhắn Tin %s</string>
+    <string name="save_comment">Lưu bình luận</string>
+    <string name="cancel_editing_comment">Hủy chỉnh sửa bình luận</string>
+    <string name="skip">Bỏ Qua</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">Điểm tùy chỉnh %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">"%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="one">trên tổng số %s điểm</item>
+        <item quantity="other">trên tổng số %s điểm thành phần</item>
+    </plurals>
+
+    <string name="tab_courses">Khóa Học</string>
+    <string name="course_options">Tùy Chọn Khóa Học</string>
+    <string name="edit_favorite_courses">Chỉnh Sửa Khóa Học Ưa Thích</string>
+    <string name="feedback_form">Biểu Mẫu Ý Kiến Phản Hồi</string>
+    <string name="see_all">Xem Tất Cả</string>
+    <string name="all_courses">Tất Cả Khóa Học</string>
+    <string name="welcome">Chào mừng!</string>
+    <string name="empty_course_list_message">Thêm một vài khóa học ưa thích của bạn để làm cho mục này thành trang chủ.</string>
+    <string name="add_courses">Thêm Khóa Học</string>
+    <string name="unable_to_add_course_to_favorites">Không thể thêm khóa học này vào menu khóa học vào thời điểm này.</string>
+    <string name="grading_periods_filter">Lọc Thời Gian Phân Loại Điểm</string>
+    <string name="assignments">Bài Tập</string>
+    <string name="clear_filter">Bỏ bộ lọc</string>
+    <string name="due">Đến hạn vào %1$s</string>
+    <string name="updated">Đã cập nhật %1$s</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="one">%s cần chấm điểm</item>
+        <item quantity="other">%s cần chấm điểm</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="one">Cần Chấm Điểm</item>
+        <item quantity="other">Cần Chấm Điểm</item>
+    </plurals>
+    <string name="at">vào</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s điểm</item>
+        <item quantity="other">%s điểm thành phần</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s điểm thành phần</item>
+        <item quantity="other">%s điểm thành phần</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="one">%d người</item>
+        <item quantity="other">%d người</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="one">%d nhóm</item>
+        <item quantity="other">%d nhóm</item>
+    </plurals>
+    <string name="cmp_closed">Đã Đóng</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">ưa thích</string>
+    <string name="content_description_not_favorite">không phải mục ưa thích</string>
+    <string name="edit_nickname">Chỉnh sửa biệt danh</string>
+    <string name="edit_course_color">Chỉnh sửa màu khóa học</string>
+    <string name="edit_course_nickname">Chỉnh Sửa Biệt Danh Khóa Học</string>
+
+    <string name="colorPickerDialogTitle">Màu Khóa Học</string>
+    <string name="colorPickerDialogMessage">Đây là cài đặt màu cá nhân của bạn Chỉ có bạn mới thấy màu này cho khóa học.</string>
+    <string name="colorPickerError">Không thể cài đặt màu khóa học vào thời điểm này.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Hồng</string>
+    <string name="contentDescriptionColorBarbie">Hồng Nóng</string>
+    <string name="contentDescriptionColorBarneyPurple">Tím</string>
+    <string name="contentDescriptionColorEggplant">Tía</string>
+    <string name="contentDescriptionColorUltramarine">Xanh Dương Đậm</string>
+    <string name="contentDescriptionColorOcean11">Xanh Dương</string>
+    <string name="contentDescriptionColorCyan">Xanh Lá Mạ</string>
+    <string name="contentDescriptionColorAquaMarine">Xanh Nước Biển</string>
+    <string name="contentDescriptionColorEmeraldGreen">Xanh Ngọc Lục Bảo</string>
+    <string name="contentDescriptionColorFreshCutLawn">Xanh Lục</string>
+    <string name="contentDescriptionColorChartreuse">Xanh Nõn Chuối</string>
+    <string name="contentDescriptionColorSunFlower">Vàng</string>
+    <string name="contentDescriptionColorTangerine">Cam</string>
+    <string name="contentDescriptionColorBloodOrange">Cam Đậm</string>
+    <string name="contentDescriptionColorSriracha">Đỏ</string>
+    <string name="launch_link_in_external_browser">Mở liên kết trong trình duyệt bên ngoài</string>
+    <string name="contentDescriptionSelectedFile">Tập Tin Đã Chọn</string>
+    <string name="contentDescriptionFileIcon">Biểu Tượng Tập Tin</string>
+    <string name="contentDescriptionExpandPage">Mở Rộng Trang</string>
+    <string name="contentDescriptionCollapsePage">Thu Gọn Trang</string>
+    <string name="noInternetConnectionTitle">Không Có Kết Nối Internet</string>
+    <string name="noInternetConnectionMessage">Thao tác này bắt buộc phải có kết nối internet.</string>
+
+    <string name="emptyDetailsMessage">Nhấn vào một mục trong danh sách để xem thông tin chi tiết</string>
+
+    <string name="assignmentQuizzes">Các Câu Hỏi Kiểm Tra Bài Tập</string>
+    <string name="practiceQuizzes">Các Câu Hỏi Kiểm Tra Luyện Tập</string>
+    <string name="gradedSurveys">Khảo Sát Được Chấm Điểm</string>
+    <string name="surveys">Khảo Sát</string>
+    <string name="editQuiz">Chỉnh Sửa Chi Tiết Bài Kiểm Tra</string>
+    <string name="requireAccessCode">Bắt Buộc Phải Có Mã Truy Cập</string>
+    <string name="accessCode">Mã Truy Cập</string>
+    <string name="mustHaveAccessCode">Nhập mã truy cập hoặc không yêu cầu mã truy cập.</string>
+    <string name="errorSavingQuiz">Đã xảy ra lỗi khi thử lưu bài kiểm tra. Hãy thử lại.</string>
+    <string name="successfullyUpdatedQuiz">Đã cập nhật bài kiểm tra thành công.</string>
+    <string name="quizType">Loại Bài Kiểm Tra</string>
+
+    <string name="practiceQuiz">Bài Kiểm Tra Luyện Tập</string>
+    <string name="gradedQuiz">Bài Kiểm Tra Có Chấm Điểm</string>
+    <string name="gradedSurvey">Khảo Sát Đã Chấm Điểm</string>
+    <string name="ungradedSurvey">Khảo Sát Chưa Chấm Điểm</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">Chưa Lấy</string>
+
+    <string name="quizStatusComplete">Hoàn thành</string>
+    <string name="quizStatusPendingReview">Đang Chờ Ôn Tập</string>
+    <string name="quizStatusInProgress">Đang Diễn Ra</string>
+    <string name="quizStatusNotStarted">Chưa Bắt Đầu</string>
+
+
+    <string name="quiz_settings_label_quiz_type">Loại Bài Kiểm Tra:</string>
+    <string name="quiz_settings_label_assignment_group">Nhóm Bài Tập:</string>
+    <string name="quiz_settings_label_shuffle_answers">Xáo Trộn Câu Trả Lời:</string>
+    <string name="quiz_settings_label_multiple_attempts">Nhiều Lần Làm:</string>
+    <string name="quiz_settings_label_time_limit">Giới Hạn Thời Gian:</string>
+    <string name="quiz_settings_label_score_to_keep">Điểm Sẽ Giữ:</string>
+    <string name="quiz_settings_label_attempts">Lần Làm:</string>
+    <string name="quiz_settings_label_view_responses">Xem Đáp Án:</string>
+    <string name="quiz_settings_label_show_correct_answers">Hiển Thị Các Câu Trả Lời Đúng:</string>
+    <string name="quiz_settings_label_one_question_at_a_time">Từng Câu Hỏi Một:</string>
+    <string name="quiz_settings_label_ip_filter">Bộ Lọc IP:</string>
+    <string name="quiz_settings_label_points">Điểm:</string>
+    <string name="quiz_settings_label_access_code">Mã Truy Cập:</string>
+    <string name="quiz_settings_label_anonymous_submissions">Bài Nộp Ẩn Danh:</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">Khóa Câu Hỏi Sau Khi Trả Lời:</string>
+
+    <string name="quizPreview">Xem Trước Bài Kiểm Tra</string>
+    <string name="preview_quiz">Xem Trước Bài Kiểm Tra</string>
+    <string name="quiz_details">Thông Tin Chi Tiết Bài Kiểm Tra</string>
+    <string name="submission_versions">Phiên bản bài nộp</string>
+    <string name="speedgrader_student_no_submissions">Sinh viên này không có bài nộp cho bài tập này.</string>
+    <string name="speedgrader_group_no_submissions">Nhóm này không có bài nộp cho bài tập này..</string>
+    <string name="speedgrader_unsupported_type">Loại nộp không được hỗ trợ</string>
+    <string name="unlimited">Không Giới Hạn</string>
+    <string name="practice_quiz">Bài Kiểm Tra Luyện Tập</string>
+    <string name="graded_quiz">Bài Kiểm Tra Có Chấm Điểm</string>
+    <string name="graded_survey">Khảo Sát Đã Chấm Điểm</string>
+    <string name="ungraded_survey">Khảo Sát Chưa Chấm Điểm</string>
+    <string name="no_time_limit">Không Giới Hạn Thời Gian</string>
+    <string name="immediately">Ngay Lập Tức</string>
+    <string name="quiz_details_no_points_assigned">Chưa có điểm được phân</string>
+
+    <string name="quiz_details_from_to">Từ %1$s đến %2$s</string>
+    <string name="quiz_details_after">Sau %1$s</string>
+    <string name="quiz_details_until">Đến %1$s</string>
+    <string name="filterPointsMustBeSet">Nhập giá trị.</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="one">%d câu hỏi</item>
+        <item quantity="other">%d câu hỏi</item>
+    </plurals>
+
+    <string name="discussion_details">Thông Tin Chi Tiết Thảo Luận</string>
+    <string name="discussions_pinned">Đã Ghim</string>
+    <string name="discussions_unpinned">Thảo Luận</string>
+    <string name="discussions_closed">Đóng Bình Luận</string>
+    <string name="discussions_open">Mở Bình Luận</string>
+    <string name="discussions_pin">Ghim</string>
+    <string name="discussions_unpin">Bỏ ghim</string>
+    <string name="contentDescriptionDiscussionsOverflow">Tùy chọn khác</string>
+    <string name="discussions_options">Tùy Chọn</string>
+    <string name="discussions_replies" formatted="false">%s Câu Trả Lời</string>
+    <string name="discussions_unread" formatted="false">%s Chưa Đọc</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">Bạn có chắc chắn muốn xóa câu trả lời này không?</string>
+    <string name="discussions_replies_title">Trả lời</string>
+    <string name="discussions_reply">Trả Lời</string>
+    <string name="discussions_edit">Chỉnh Sửa</string>
+    <string name="discussions_forbidden">Câu trả lời chỉ được hiển thị cho những người đã đăng ý nhất một câu trả lời.</string>
+    <string name="discussions_delete">Xóa Thảo Luận</string>
+    <string name="discussions_delete_title">Xóa Thảo Luận?</string>
+    <string name="discussions_delete_message">Thao tác này sẽ xóa toàn bộ cuộc thảo luận và luồng.</string>
+
+    <string name="dataUsageWarningTitle">Cảnh Báo Sử Dụng Dữ Liệu</string>
+    <string name="dataUsageWarningMessage">Thao tác này có thể tiêu dùng một lượng lớn dữ liệu, có khả năng làm phát sinh phí sử dụng quá hạn mức. Bạn có muốn tiếp tục không?</string>
+    <string name="doNotShowMessageAgain">Không hiển thị lại tin nhắn này</string>
+    <string name="playMedia">Phát nội dung phương tiện</string>
+    <string name="submissionIsMediaFile">Bài nộp này là tập tin nội dung phương tiện</string>
+    <string name="tryAgain">Thử lại</string>
+    <string name="couldNotPlayFormat">Định dạng nội dung phương tiện này không được hỗ trợ</string>
+    <string name="openWithAnotherApp">Mở bằng&#8230;</string>
+
+    <string name="speedgraderCommentAddedSubmission">Đã nộp bài tập Nhấn để xem.</string>
+    <string name="speedgraderCommentSubmittedFiles">Tập tin đã nộp:</string>
+    <string name="no_submission_comments">Không có bình luận bài nộp</string>
+    <string name="mediaUploadAudio">Tải Lên Nội Dung Phương Tiện - Âm Thanh</string>
+    <string name="mediaUploadVideo">Tải Lên Nội Dung Phương Tiện - Video</string>
+    <string name="speedgraderCommentQuizAttempt">Lần Làm %d</string>
+    <string name="speedGraderTextSubmission">Nộp Văn Bản</string>
+    <string name="speedGraderExternalToolSubmission">Nộp Bằng Công Cụ Ngoài</string>
+    <string name="speedGraderDiscussionSubmission">Nộp Thảo Luận</string>
+    <string name="speedGraderQuizSubmission">Nộp Bài Kiểm Tra</string>
+    <string name="speedGraderMediaFile">Tập Tin Nội Dung Phương Tiện</string>
+    <string name="submissionTypeAudio">Âm Thanh</string>
+    <string name="submissionTypeVideo">Video</string>
+    <string name="speedGraderUrlSubmission">Nộp URL</string>
+
+    <string name="unsupportedFileMessage">Không thể hiển thị tập tin này. Hãy sử dụng nút bên dưới để mở tập tin bằng ứng dụng khác trên thiết bị của bạn.</string>
+    <string name="speedGraderNoneMessage">Bài tập này không cho phép nộp.</string>
+    <string name="speedGraderOnPaperMessage">Bài tập này chỉ cho phép nộp giấy.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Bài nộp này là URL đến trang bên ngoài. Hãy lưu ý rằng trang này có thể đã thay đổi kể từ thời điểm nộp ban đầu.</string>
+    <string name="speedGraderOpenUrl">Mở URL</string>
+    <string name="annotationError">Lỗi Chú Thích</string>
+    <string name="annotationDialogMessage">Chú thích đã bị xóa từ nguồn khác.</string>
+
+    <string name="selectCourse">Chọn khóa học</string>
+
+    <string name="sendIndividualMessage">Gửi tin nhắn riêng đến từng người nhận</string>
+
+    <string name="filterInbox">Lọc Hộp Thư Đến</string>
+    <string name="selectCanvasContext">Chọn một khóa học hoặc nhóm</string>
+
+    <string name="contentDescription_back">Quay Lại</string>
+
+    <string name="discussion_update_success">Chỉnh sửa thảo luận thành công.</string>
+    <string name="discussion_update_empty">Không được để trống tin nhắn thảo luận.</string>
+    <string name="discussion_update_failure">Không thể chỉnh sửa cuộc thảo luận vào thời điểm này.</string>
+    <string name="discussion_sent_success">Trả lời thảo luận thành công.</string>
+    <string name="discussion_sent_empty">Không được để trống câu trả lời thảo luận.</string>
+    <string name="discussion_sent_failure">Không thể gửi câu trả lời thảo luận vào thời điểm này.</string>
+    <string name="discussion_first_to_respond">Hãy trở thành người đầu tiên phản hồi bằng cách thêm câu trả lời.</string>
+    <string name="addMorePeopleToMessage">Thêm người nhận khác. Không thể gửi tin nhắn chỉ gửi cho bản thân.</string>
+    <string name="tutorialSwipeMessage">Vuốt sang trái hoặc phải để xem các sinh viên khác.</string>
+    <string name="tutorialRubricMessage">Nhấn và giữ số để xem mô tả.</string>
+
+    <string name="viewQuizSubmission">Xem Bài Nộp</string>
+    <string name="gradeQuizSubmission">Nộp Điểm</string>
+    <string name="comment">Bình Luận</string>
+    <string name="messageStudentsWho">Nhắn Tin Sinh Viên&#8230;</string>
+
+    <string name="on">bật</string>
+
+    <string name="createDiscussion">Thảo Luận Mới</string>
+    <string name="options">Tùy Chọn</string>
+    <string name="subscribe">Đăng Ký</string>
+    <string name="allowThreadedReplies">Cho phép trả lời theo luồng</string>
+    <string name="usersMustPost">Người dùng phải đăng rồi mới có thể xem câu trả lời</string>
+    <string name="allowUserComments">Cho phép người dùng bình luận</string>
+    <string name="discussionTitleMustBeSet">Phải cài đặt tiêu đề cuộc thảo luận.</string>
+    <string name="discussionSuccessfullyCreated">Đã tạo thành công cuộc thảo luận.</string>
+    <string name="errorCreatingDiscussion">Đã xảy ra lỗi khi thử tạo cuộc thảo luận này. Hãy thử lại.</string>
+    <string name="editDiscussion">Chỉnh Sửa Thảo Luận</string>
+    <string name="discussionSuccessfullyUpdated">Đã cập nhật thành công cuộc thảo luận.</string>
+    <string name="input_text">Nhập Văn Bản</string>
+    <string name="announcementSuccessfullyCreated">Đã tạo thành công thông báo.</string>
+    <string name="errorSavingAnnouncement">Đã xảy ra lỗi khi lưu thông báo này. Hãy thử lại.</string>
+    <string name="editAnnouncementTitle">Chỉnh Sửa Thông Báo</string>
+    <string name="announcementSuccessfullyUpdated">Đã cập nhật thành công thông báo.</string>
+    <string name="announcementDeleted">Đã xóa thông báo.</string>
+    <string name="postAt">Đăng Vào</string>
+    <string name="errorDeletingAnnouncement">Đã xảy ra lỗi khi thử xóa thông báo này. Hãy thử lại.</string>
+    <string name="deleteAnnouncementDialogTitle">Xóa Thông Báo?</string>
+    <string name="deleteAnnouncementDialogMessage">Bạn có chắc chắn muốn xóa thông báo này không?</string>
+    <string name="deleteAnnouncement">Xóa Thông Báo</string>
+    <string name="annotationErrorOccurred">Đã xảy ra lỗi khi tải chú thích.</string>
+
+    <string name="account">Tài Khoản</string>
+    <string name="changeUser">Thay Đổi Người Dùng</string>
+    <string name="general">Chung</string>
+    <string name="sendFeedback">Gửi Ý Kiến Phản Hồi</string>
+    <string name="rateOnTheAppStore">Đánh giá trên App Store</string>
+    <string name="privacyPolicy">Chính Sách Quyền Riêng Tư</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">Điều Khoản Sử Dụng</string>
+    <string name="searchGuides">Tìm kiếm Canvas Guides</string>
+    <string name="searchGuidesDetails">Tìm câu trả lời cho câu hỏi thườn gặp</string>
+    <string name="reportProblem">Báo Cáo Vấn Đề</string>
+    <string name="reportProblemDetails">Nếu ứng dụng hoạt động không bình thường, hãy cho chúng tôi biết</string>
+    <string name="requestFeature">Yêu Cầu Đặc Tính</string>
+    <string name="requestFeatureDetails">Bạn có ý tưởng để cải thiện ứng dụng?</string>
+    <string name="shareYourLove">Chia Sẻ Tình Yêu Của Bạn Đối Với Ứng Dụng</string>
+    <string name="shareYourLoveDetails">Hãy cho chúng tôi biết bạn thích phần nào của ứng dụng</string>
+    <string name="canvasGuides">Canvas Guides</string>
+    <string name="featureSubject">Ý Tưởng Cho Canvas [Android]</string>
+    <string name="understandRequest">Thông tin sau sẽ giúp chúng tôi hiểu hơn về ý tưởng của bạn:</string>
+    <string name="sendMail">Gửi Email&#8230;</string>
+    <string name="editProfile">Chỉnh Sửa Hồ Sơ</string>
+    <string name="name">Tên</string>
+    <string name="bio">Tiểu Sử</string>
+    <string name="profileEditSuccess">Hồ sơ đã được cập nhật</string>
+    <string name="profileEditFailure">Không thể cập nhật hồ sơ</string>
+    <string name="takePhoto">Chụp ảnh</string>
+    <string name="choosePhotoFromGallery">Chọn ảnh từ Thư Viện</string>
+    <string name="fileNotFound">Không tìm thấy tập tin.</string>
+    <string name="version" formatted="false">Phiên Bản %s</string>
+    <string name="fullVersion">Phiên Bản %s (%d)</string>
+    <string name="tap_to_view_submissions_list">Nhấn để xem danh sách nộp.</string>
+    <string name="assignmentDescriptionContentDescription">Mô Tả Bài Tập</string>
+    <string name="quizDescriptionContentDescription">Mô Tả Bài Kiểm Tra</string>
+    <string name="removeDueDate">Gỡ Bỏ Ngày Đến Hạn</string>
+    <string name="removeDueDateMessage">Thao tác này sẽ xóa ngày đến hạn và toàn bộ người được giao bài tập liên quan</string>
+    <string name="email">Email</string>
+    <string name="fullscreen">toàn màn hình</string>
+    <string name="addNew">Thêm Mới</string>
+    <string name="sendMessage">Gửi Tin Nhắn</string>
+    <string name="addMessage">Thêm Tin Nhắn</string>
+    <string name="messageThisStudent">Nhắn tin cho sinh viên này</string>
+    <string name="scrollInstructions">Cuộn để xem toàn bộ thông tin chi tiết</string>
+    <string name="dueTime">Ngày Đến Hạn</string>
+    <string name="available_from_date">Khả Dụng Từ Ngày</string>
+    <string name="available_from_time">Khả Dụng Từ Thời Điểm</string>
+    <string name="available_to_date">Khả Dụng Đến Ngày</string>
+    <string name="available_to_time">Khả Dụng Đến Thời Điểm</string>
+    <string name="addDescription">Thêm Mô Tả</string>
+    <string name="post_time">Thời Gian Đăng</string>
+    <string name="allPeople">Tất Cả Mọi Người</string>
+    <string name="loading">Đang tải</string>
+    <string name="saving">Đang lưu</string>
+    <string name="sendingSimple">Đang Gửi</string>
+    <string name="uploading">Đang Tải Lên</string>
+    <string name="retry">Thử Lại</string>
+    <string name="error_loading_submission">Đã gặp vấn đề khi tải mục nộp này.</string>
+    <string name="search">Tìm Kiếm</string>
+    <string name="filterPeople">Lọc Mọi Người</string>
+    <string name="loadMore">Tải Thêm</string>
+    <string name="latestStudentActivityAtFormatted">Hoạt động mới nhất trên %1$s vào %2$s.</string>
+    <string name="errorLoadingStudentContextCard">Không thể tải thông tin chi tiết cho người dùng này.</string>
+    <string name="enrollmentTypeStudent">Sinh Viên</string>
+    <string name="enrollmentTypeTeacher">Giáo Viên</string>
+    <string name="enrollmentTypeObserver">Người Quan Sát</string>
+    <string name="enrollmentTypeTeachingAssistant">Trợ Giảng</string>
+    <string name="enrollmentTypeDesigner">Người Thiết Kế</string>
+    <string name="enrollmentTypeUnknown">Không xác định</string>
+    <string name="unableToLoadAttendance">Không thể tải Chuyên Cần này vào thời điểm này.</string>
+    <string name="markRemainingAsPresent">Đánh Dấu Phần Còn Lại Là Có Mặt</string>
+    <string name="markAllAsPresent">Đánh Dấu Tất Cả Là Có Mặt</string>
+    <string name="calendar">Lịch</string>
+    <string name="filterSections">Lọc Phần</string>
+    <string name="addVideoComment">Thêm bình luận video</string>
+    <string name="addAudioComment">Thêm bình luận âm thanh</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d giờ, %2$d phút và %3$d giây</string>
+    <string name="recordingTimerSpeechDivider">%1$s trên tổng số %2$s</string>
+    <string name="replay">Phát Lại</string>
+    <string name="stop">Dừng</string>
+    <string name="startRecordingAudio">Bắt đầu ghi âm</string>
+    <string name="stopRecordingAudio">Dừng ghi âm</string>
+    <string name="startRecordingVideo">Bắt đầu quay video</string>
+    <string name="stopRecordingVideo">Dừng quay video</string>
+    <string name="closeRecordingView">Đóng dạng xem ghi</string>
+    <string name="deleteRecording">Xóa bản ghi</string>
+    <string name="videoCommentReplay">Phát Lại Bình Luận Video</string>
+    <string name="addMediaComment">Thêm bình luận nội dung phương tiện</string>
+    <string name="copyrightHolder">Bên Giữ Bản Quyền</string>
+    <string name="access">Truy Cập</string>
+    <string name="usageRights">Quyền Sử Dụng</string>
+    <string name="deleteFile">Xóa Tập Tin</string>
+    <string name="holdCopyright">Tôi là bên giữ bản quyền</string>
+    <string name="havePermission">Tôi có quyền sử dụng tập tin</string>
+    <string name="publicDomain">Tập Tin Phạm Vi Công Cộng</string>
+    <string name="fairUse">Ngoại Lệ Sử Dụng Công Bằng</string>
+    <string name="creativeCommons">Tập Tin Creative Commons</string>
+    <string name="editFile">Chỉnh Sửa Tập Tin</string>
+    <string name="deleteFolder">Xóa Thư Mục</string>
+    <string name="editFolder">Chỉnh Sửa Thư Mục</string>
+    <string name="deleteFileMessage">Bạn có chắc chắn muốn xóa tập tin này không?</string>
+    <string name="deleteFolderMessage">Bạn có chắc chắn muốn xóa thư mục này không? Toàn bộ nội dung của thư mục cũng sẽ bị xóa.</string>
+    <string name="newFolder">Thư Mục Mới</string>
+    <string name="createAFolder">Tạo Thư Mục</string>
+    <string name="createFolder">Tạo Thư Mục</string>
+    <string name="createAFile">Tạo Tập Tin</string>
+    <string name="createFileFolderFabContentDesc">Hiển Thị Nút Tạo Tập Tin Và Tạo Thư Mục</string>
+    <string name="hideCreateFileFolderFabContentDesc">Ẩn Nút Tạo Tập Tin Và Tạo Thư Mục</string>
+    <string name="unpublish">Chưa Phát Hành</string>
+    <string name="restrictedAccess">Truy Cập Bị Giới Hạn</string>
+    <string name="restricted">Bị Giới Hạn</string>
+    <string name="hidden">Tập tin bị ẩn bên trong sẽ khả dụng bằng liên kết.</string>
+    <string name="studentsWithLink">Chỉ khả dụng đối với sinh viên bằng liên kết. Không khả dụng trong tập tin sinh viên.</string>
+    <string name="scheduleAvailability">Đặt lịch độ khả dụng cho sinh viên</string>
+    <string name="folderCreationError">Đã xảy ra lỗi khi tạo thư mục.</string>
+
+    <string name="setAsFrontPage">Cài đặt làm Trang Đầu</string>
+    <string name="canEdit">Có Quyền Chỉnh Sửa</string>
+    <string name="pageDetails">Thông Tin Chi Tiết Trang</string>
+    <string name="pageSuccessfullyUpdated">Đã cập nhật trang thành công.</string>
+    <string name="pageSuccessfullyCreated">Đã tạo trang thành công.</string>
+    <string name="editPageTitle">Chỉnh Sửa Trang</string>
+    <string name="createPageTitle">Tạo Trang</string>
+    <string name="pageTitleMustBeSet">Phải cài đặt tiêu đề trang.</string>
+    <string name="pageDeleteTitle">Xóa Trang?</string>
+    <string name="pageDelete">Xóa Trang</string>
+    <string name="pageDeleteMessage">Thao tác này sẽ xóa trang. Không thể hoàn tác thao tác này.</string>
+    <string name="errorSavingPage">Đã xảy ra lỗi khi thử lưu trang này. Hãy thử lại.</string>
+    <string name="frontPageUnpublishedError">Trang không được là trang đầu và chưa phát hành.</string>
+
+    <string name="onlyTeachers">Chỉ Giáo Viên</string>
+    <string name="teachersAndStudents">Giáo Viên Và Sinh Viên</string>
+    <string name="anyone">Bất Kỳ Ai</string>
+    <string name="groupMembers">Chỉ Dành Cho Các Thành Viên</string>
+    <string name="license">Giấy Phép</string>
+    <string name="availableFromAfterTo">Ngày kết thúc khả dụng phải sau ngày bắt đầu</string>
+    <string name="errorDeletingFile">Đã xảy ra lỗi khi xóa tập tin này</string>
+    <string name="errorDeletingFolder">Đã xảy ra lỗi khi xóa thư mục này</string>
+    <string name="errorUpdatingFile">Đã xảy ra lỗi khi tải lên tập tin này</string>
+    <string name="errorUpdatingFolder">Đã xảy ra lỗi khi cập nhật thư mục này</string>
+
+    <string name="toDoEmpty">Không còn gì thêm cần làm!\n Hãy tận hưởng thời gian còn lại trong ngày nhé.</string>
+    <string name="toDoNoSubmissions">Không có bài nộp để chấm điểm cho bài tập này.</string>
+    <string name="errorToDoRouteFailed">Đã xảy ra lỗi khi thử xem mục Việc Cần Làm.</string>
+    <string name="errorIsDesigner">Vai trò người thiết kế/ghi danh không xem được</string>
+
+    <string name="sections">Phần</string>
+    <string name="filterBy">Lọc Theo&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">cho %s</string>
+    <string name="filterBySection">Lọc theo phần</string>
+    <string name="filterSubmissionsLowercase">Lọc bài nộp</string>
+    <string name="latePenalty">Hình phạt trễ</string>
+    <string name="finalGrade">Điểm Cuối Cùng</string>
+    <string name="moderatedGradingUnsupported">Chấm điểm có điều tiết hiện không được hỗ trợ trong SpeedGrader trên di động.</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s điểm</item>
+        <item quantity="other">-%s điểm thành phần</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s điểm thành phần</item>
+        <item quantity="other">-%s điểm thành phần</item>
+    </plurals>
+    <string name="todoUnreadCount">Cần làm %d chưa đọc</string>
+    <string name="profileSettings">Cài Đặt Hồ Sơ</string>
+    <string name="downloadingFile">Đang tải xuống tập tin&#8230;</string>
+    <string name="fileDownloadedSuccessfully">Đã tải xuống tập tin thành công.</string>
+    <string name="tapToView">Nhấn để xem</string>
+    <string name="errorDownloadingFile">Đã xảy ra lỗi khi tải xuống tập tin của bạn. Vui lòng thử lại.</string>
+
+    <string name="postTo">Đăng Lên</string>
+    <string name="allSections">Tất Cả Phần</string>
+
+    <string name="gauge">Đo</string>
+    <string name="ltiLaunchFailure">Không thể tải công cụ LTI này vào thời điểm này.</string>
+    <string name="downloading">Đang tải xuống...</string>
+
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Đã cập nhật chương trình học thành công.</string>
+    <string name="errorSavingSyllabus">Đã xảy ra lỗi khi thử lưu chương trình học. Hãy thử lại.</string>
+    <string name="editSyllabusTitle">Chỉnh Sửa Chương Trình Học</string>
+    <string name="editSyllabusContent">Nội Dung</string>
+    <string name="editSyllabusDetails">Chi Tiết</string>
+    <string name="editSyllabusShowCourseSummary">Hiển Thị Tóm Tắt Khóa Học</string>
+    <string name="editSyllabusContentAccessibilityLabel">Nội dung chương trình học</string>
+    <string name="no_grade">Không có lớp</string>
+    <string name="excuse">Xin Phép</string>
+    <string name="speed_grader_overgraded_by">Được chấm điểm nhiều lần bởi %s</string>
+
+</resources>

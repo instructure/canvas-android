@@ -18,7 +18,6 @@ package com.instructure.student.mobius.assignmentDetails.submission.picker.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -61,6 +60,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         sourceCamera.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.CameraClicked) }
         sourceDevice.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.SelectFileClicked) }
         sourceGallery.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.GalleryClicked) }
+        sourceDocumentScanning.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.DocumentScanningClicked) }
     }
 
     override fun onConnect(output: Consumer<PickerSubmissionUploadEvent>) {
@@ -78,7 +78,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
     override fun onDispose() = Unit
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarBottomSheet(context as Activity, false, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(context as Activity, toolbar)
     }
 
     override fun render(state: PickerSubmissionUploadViewState) {

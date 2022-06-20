@@ -35,8 +35,7 @@ class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRo
     }
 
     override fun openCourse(course: Course) {
-        val route = if (BuildConfig.IS_DEBUG) ElementaryCourseFragment.makeRoute(course) else CourseBrowserFragment.makeRoute(course)
-        RouteMatcher.route(activity, route)
+        RouteMatcher.route(activity, ElementaryCourseFragment.makeRoute(course))
     }
 
     override fun openAssignments(course: Course) {

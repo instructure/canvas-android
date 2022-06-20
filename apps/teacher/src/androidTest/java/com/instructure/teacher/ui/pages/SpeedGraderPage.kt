@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.canvasapi2.models.Submission
@@ -29,6 +30,7 @@ import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
+import java.util.Locale
 
 @Suppress("unused")
 class SpeedGraderPage : BasePage() {
@@ -37,11 +39,12 @@ class SpeedGraderPage : BasePage() {
     private val slidingUpPanelLayout by OnViewWithId(R.id.slidingUpPanelLayout,false)
     private val submissionPager by OnViewWithId(R.id.submissionContentPager)
 
-    private val gradeTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_grade).toUpperCase())
-    private val commentsTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_comments).toUpperCase())
+    private val gradeTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_grade).uppercase(Locale.getDefault()))
+    private val commentsTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_comments).uppercase(Locale.getDefault()))
 
     private val submissionDropDown by WaitForViewWithId(R.id.submissionVersionsButton)
     private val submissionVersionDialogTitle by WaitForViewWithText(R.string.submission_versions)
+    private val commentLibraryContainer by OnViewWithId(R.id.commentLibraryFragmentContainer)
 
     fun assertHasSubmissionDropDown() {
         submissionDropDown.assertDisplayed()
@@ -59,7 +62,7 @@ class SpeedGraderPage : BasePage() {
     }
 
     fun selectGradesTab() {
-        val gradesTabText = getStringFromResource(R.string.sg_tab_grade).toUpperCase()
+        val gradesTabText = getStringFromResource(R.string.sg_tab_grade).uppercase(Locale.getDefault())
         onView(allOf((withText(gradesTabText)), isDisplayed())).click()
     }
 
@@ -133,4 +136,7 @@ class SpeedGraderPage : BasePage() {
         waitForViewWithId(R.id.canvasWebView).assertCompletelyDisplayed()
     }
 
+    fun assertCommentLibraryNotVisible() {
+        commentLibraryContainer.check(ViewAssertions.matches(ViewMatchers.hasChildCount(0)))
+    }
 }

@@ -119,7 +119,7 @@ class GradesViewWidgetService : BaseRemoteViewsService(), Serializable {
                 try {
                     // Force network so we always get the latest data for grades
                     setData(CourseManager.getCoursesSynchronous(true).filter
-                    { it.isFavorite && !it.accessRestrictedByDate && !it.isInvited() })
+                    { it.isFavorite && it.isCurrentEnrolment() && !it.isInvited() })
                 } catch (e: Throwable) {
                     Logger.e("Could not load " + this::class.java.simpleName + " widget. " + e.message)
                 }

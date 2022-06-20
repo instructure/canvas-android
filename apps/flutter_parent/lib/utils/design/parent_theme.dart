@@ -263,6 +263,7 @@ class _ParentThemeState extends State<ParentTheme> {
       accentIconTheme: IconThemeData(color: isDarkMode ? Colors.black : Colors.white),
       dividerColor: isHC ? onSurfaceColor : isDarkMode ? ParentColors.oxford : ParentColors.tiara,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
+      fontFamily: 'Lato'
     );
   }
 
@@ -272,37 +273,37 @@ class _ParentThemeState extends State<ParentTheme> {
 
       // Comments for each text style represent the nomenclature of the designs we have
       // Caption
-      subtitle: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.w500),
+      subtitle2: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.w500),
 
       // Subhead
       overline: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 0),
 
       // Body
-      body1: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.normal),
+      bodyText2: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.normal),
 
       // Subtitle
       caption: TextStyle(color: fadeColor, fontSize: 14, fontWeight: FontWeight.w500),
 
       // Title
-      subhead: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w500),
+      subtitle1: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w500),
 
       // Heading
-      headline: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w500),
+      headline5: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w500),
 
       // Display
-      display1: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.w500),
+      headline4: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.w500),
 
       /// Other/unmapped styles
 
-      title: TextStyle(color: color),
+      headline6: TextStyle(color: color),
 
-      display4: TextStyle(color: fadeColor),
+      headline1: TextStyle(color: fadeColor),
 
-      display3: TextStyle(color: fadeColor),
+      headline2: TextStyle(color: fadeColor),
 
-      display2: TextStyle(color: fadeColor),
+      headline3: TextStyle(color: fadeColor),
 
-      body2: TextStyle(color: color),
+      bodyText1: TextStyle(color: color),
 
       button: TextStyle(color: color),
     );
@@ -345,7 +346,8 @@ class DefaultParentTheme extends StatelessWidget {
     final theme = Theme.of(context);
     return AppBarTheme(
       color: theme.scaffoldBackgroundColor,
-      textTheme: theme.textTheme,
+      toolbarTextStyle: theme.textTheme.bodyText2,
+      titleTextStyle: theme.textTheme.headline6,
       iconTheme: theme.iconTheme,
       elevation: 0,
     );

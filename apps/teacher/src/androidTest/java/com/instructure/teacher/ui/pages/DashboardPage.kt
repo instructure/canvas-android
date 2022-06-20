@@ -75,10 +75,6 @@ class DashboardPage : BasePage() {
         onView(withId(R.id.menu_edit_favorite_courses)).click()
     }
 
-    fun navigateBack(toolbarId: Int = R.id.toolbar) {
-        onView(withParent(toolbarId) + withContentDescription("Navigate up")).click()
-    }
-
     fun openCourse(courseName: String) {
         onView(withText(courseName)).click()
     }
@@ -97,5 +93,15 @@ class DashboardPage : BasePage() {
 
     fun openTodo() {
         todoTab.click()
+    }
+
+    fun openUserSettingsPage() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerSettings).click()
+    }
+
+    fun gotoGlobalFiles() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_files).click()
     }
 }

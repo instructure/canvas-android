@@ -27,11 +27,14 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.pandautils.analytics.SCREEN_VIEW_WHAT_IF
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.R
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_WHAT_IF)
 class WhatIfDialogStyled : DialogFragment() {
 
     init {

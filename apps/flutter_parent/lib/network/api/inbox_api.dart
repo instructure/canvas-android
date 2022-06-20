@@ -23,7 +23,7 @@ class InboxApi {
     final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
       'scope': scope,
-      'include': ['participant_avatars'],
+      'include[]': ['participant_avatars'],
     };
     return fetchList(dio.get('conversations', queryParameters: params), depaginateWith: dio);
   }
@@ -47,9 +47,9 @@ class InboxApi {
         'conversations/$conversationId/add_message',
         queryParameters: {
           'body': body,
-          'recipients': recipientIds,
-          'attachment_ids': attachmentIds,
-          'included_messages': includeMessageIds,
+          'recipients[]': recipientIds,
+          'attachment_ids[]': attachmentIds,
+          'included_messages[]': includeMessageIds,
         },
       ),
     );
@@ -61,7 +61,7 @@ class InboxApi {
   Future<List<Recipient>> getRecipients(String courseId, {bool forceRefresh: false}) {
     var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     var params = {
-      'permissions': ['send_messages_all'],
+      'permissions[]': ['send_messages_all'],
       'messageable_only': true,
       'context': 'course_$courseId',
     };
@@ -78,11 +78,11 @@ class InboxApi {
     var dio = canvasDio();
     var params = {
       'group_conversation': 'true',
-      'recipients': recipientIds,
+      'recipients[]': recipientIds,
       'context_code': 'course_$courseId',
       'subject': subject,
       'body': body,
-      'attachment_ids': attachmentIds,
+      'attachment_ids[]': attachmentIds,
     };
     List<Conversation> result = await fetchList(dio.post('conversations', queryParameters: params));
     DioConfig.canvas().clearCache(path: 'conversations');

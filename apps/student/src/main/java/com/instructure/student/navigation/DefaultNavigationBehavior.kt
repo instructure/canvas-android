@@ -19,17 +19,22 @@ package com.instructure.student.navigation
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.FontFamily
 import com.instructure.student.R
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.CalendarFragment
+import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.fragment.ToDoListFragment
 
-class DefaultNavigationBehavior() : NavigationBehavior {
+class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBehavior {
 
     override val bottomNavBarFragments: List<Class<out ParentFragment>> = listOf(
         DashboardFragment::class.java,
         CalendarFragment::class.java,
         ToDoListFragment::class.java,
         NotificationListFragment::class.java,
-        InboxFragment::class.java
+        getInboxBottomBarFragment(apiPrefs)
     )
 
     override val homeFragmentClass: Class<out ParentFragment> = DashboardFragment::class.java
@@ -40,8 +45,8 @@ class DefaultNavigationBehavior() : NavigationBehavior {
 
     override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.HELP, AccountMenuItem.CHANGE_USER, AccountMenuItem.LOGOUT)
 
-    override val shouldOverrideFont: Boolean
-        get() = false
+    override val fontFamily: FontFamily
+        get() = FontFamily.REGULAR
 
     override val bottomBarMenu: Int = R.menu.bottom_bar_menu
 

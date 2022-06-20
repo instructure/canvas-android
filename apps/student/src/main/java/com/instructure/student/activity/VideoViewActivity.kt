@@ -22,74 +22,66 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
+import com.google.android.exoplayer2.source.hls.DefaultHlsDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.TrackSelection
+import com.google.android.exoplayer2.trackselection.ExoTrackSelection
 import com.google.android.exoplayer2.upstream.*
 import com.google.android.exoplayer2.util.Util
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIDEO_VIEW
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.utils.ExoAgent
 import com.instructure.student.R
 import com.instructure.student.util.Const
-import kotlinx.android.synthetic.main.activity_video_view.player_view as simpleExoPlayerView
+import kotlinx.android.synthetic.main.activity_video_view.player_view as playerView
 
-@Suppress("DEPRECATION")
+@ScreenView(SCREEN_VIEW_VIDEO_VIEW)
 class VideoViewActivity : AppCompatActivity() {
 
-    private var player: SimpleExoPlayer? = null
-    private var trackSelector: DefaultTrackSelector? = null
-    private var mediaDataSourceFactory: DataSource.Factory? = null
+    private var player: ExoPlayer? = null
+    private lateinit var trackSelector: DefaultTrackSelector
+    private lateinit var mediaDataSourceFactory: DataSource.Factory
     private var mainHandler: Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_view)
-        simpleExoPlayerView.requestFocus()
+        playerView.requestFocus()
         mediaDataSourceFactory = buildDataSourceFactory(true)
         mainHandler = Handler()
-        val videoTrackSelectionFactory: TrackSelection.Factory = AdaptiveTrackSelection.Factory(BANDWIDTH_METER)
-        trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, DefaultLoadControl())
-        simpleExoPlayerView.player = player
+        val videoTrackSelectionFactory: ExoTrackSelection.Factory = AdaptiveTrackSelection.Factory()
+        trackSelector = DefaultTrackSelector(applicationContext, videoTrackSelectionFactory)
+        player = ExoPlayer.Builder(this)
+            .setTrackSelector(trackSelector)
+            .setLoadControl(DefaultLoadControl())
+            .build()
+        playerView.player = player
         player?.playWhenReady = true
-        player?.prepare(buildMediaSource(Uri.parse(intent?.extras?.getString(Const.URL))))
-    }
-
-    public override fun onPause() {
-        super.onPause()
-        if (Util.SDK_INT <= 23) player?.release()
+        player?.setMediaSource(buildMediaSource(Uri.parse(intent?.extras?.getString(Const.URL))))
+        player?.prepare()
     }
 
     public override fun onStop() {
         super.onStop()
-        if (Util.SDK_INT > 23) player?.release()
+        player?.release()
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
-        return when (val type = Util.inferContentType(uri.lastPathSegment)) {
-            C.TYPE_SS -> SsMediaSource(
-                uri, buildDataSourceFactory(false),
-                DefaultSsChunkSource.Factory(mediaDataSourceFactory), mainHandler, null
-            )
-            C.TYPE_DASH -> DashMediaSource(
-                uri, buildDataSourceFactory(false),
-                DefaultDashChunkSource.Factory(mediaDataSourceFactory), mainHandler, null
-            )
-            C.TYPE_HLS -> HlsMediaSource(uri, mediaDataSourceFactory, mainHandler, null)
-            C.TYPE_OTHER -> ExtractorMediaSource(
-                uri, mediaDataSourceFactory,
-                DefaultExtractorsFactory(), mainHandler, null
-            )
+        val mediaItem = MediaItem.fromUri(uri)
+        return when (val type = Util.inferContentType(uri.lastPathSegment ?: "")) {
+            C.TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(mediaItem)
+            C.TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(mediaItem)
+            C.TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(buildDataSourceFactory(false))).createMediaSource(mediaItem)
+            C.TYPE_OTHER -> ProgressiveMediaSource.Factory(mediaDataSourceFactory, DefaultExtractorsFactory()).createMediaSource(mediaItem)
             else -> throw IllegalStateException("Unsupported type: $type")
         }
     }
@@ -97,17 +89,19 @@ class VideoViewActivity : AppCompatActivity() {
     /**
      * Returns a new DataSource factory.
      *
-     * @param useBandwidthMeter Whether to set [BANDWIDTH_METER] as a listener to the new DataSource factory.
+     * @param useBandwidthMeter Whether to set DefaultBandwidthMeter as a listener to the new DataSource factory.
      * @return A new DataSource factory.
      */
     private fun buildDataSourceFactory(useBandwidthMeter: Boolean): DataSource.Factory {
-        val meter = if (useBandwidthMeter) BANDWIDTH_METER else null
-        return DefaultDataSourceFactory(this, meter, DefaultHttpDataSourceFactory("candroid", meter))
+        val meter = if (useBandwidthMeter) DefaultBandwidthMeter.Builder(this).build() else null
+        val httpDataSourceFactory = DefaultHttpDataSource.Factory()
+            .setUserAgent("candroid")
+            .setTransferListener(meter)
+        return DefaultDataSource.Factory(this, httpDataSourceFactory)
+            .setTransferListener(meter)
     }
 
     companion object {
-        private val BANDWIDTH_METER = DefaultBandwidthMeter()
-
         fun createIntent(context: Context?, url: String?): Intent {
             val bundle = Bundle()
             bundle.putString(Const.URL, url)

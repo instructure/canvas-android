@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Elevens svar er skjult, fordi denne opgave er anonym.</string>
 
-    <string name="studentAnnotationUnsupported">Elevers anmærkninger (ikke understøttet)</string>
-    <string name="studentAnnotationUnsupportedDescription">Elevers anmærkninger understøttes i øjeblikket ikke på mobil.</string>
-    <string name="unsupportedSubmissionType">Ikke-understøttet afleveringsform</string>
-    <string name="studentAnnotationUnsupportedMessage">Aflevering kan ikke vises, fordi elevers anmærkninger i øjeblikket ikke understøttes på mobil.</string>
     <string name="schedule_marked_as_done">Du har markeret det som udført.</string>
     <string name="error_saving_assignment_closed_grading_period">Kan ikke ændre afleveringsdatoen, når den forfalder i en lukket vurderingsperiode</string>
     <string name="a11y_content_description_schedule_jump_to_today">Spring til i dag</string>
@@ -1225,4 +1221,46 @@
     <string name="a11y_contact_info_click_description">send besked</string>
     <string name="somethingWentWrong">Noget gik galt</string>
     <string name="failedToLoadQuiz">Indlæsning af quiz mislykkedes</string>
+    <string name="failedToLoadSubmission">Kunne ikke indlæse aflevering</string>
+    <string name="studentAnnotationToolbarTitle">Elevs anmærkning</string>
+    <string name="submissionTypeStudentAnnotation">Elevs anmærkning</string>
+    <string name="gradesNoDueDate">Ingen afleveringsdato</string>
+    <string name="importantDatesNoDueDate">Ingen afleveringsdato</string>
+    <string name="missingAssignment">Mangler</string>
+    <string name="dontSave">Gem ikke</string>
+    <string name="textSubmissionExitConfirmationTitle">Gem udkast?</string>
+    <string name="textSubmissionExitConfirmationMessage">Ellers gemmes dine ændringer ikke</string>
+    <string name="submissionDraftAvailableSubtitle">Tryk her for at fortsætte</string>
+    <string name="submissionDraftAvailableTitle">Udkast tilgængeligt</string>
+    <string name="errorLoadingSubmission">Der opstod en fejl under indlæsning af aflevering</string>
+    <string name="loadFullContent">Tryk for at se alt indholdet</string>
+    <string name="dashboardTabImportantDates">Vigtige datoer</string>
+    <string name="importantDatesEmptyTitle">Ingen vigtige datoer</string>
+    <string name="important_dates">Vigtige datoer</string>
+
+    <string name="toolbarCommentLibrary">Kommentarbibliotek</string>
+    <string name="commentLibraryNoSuggestions">Ingen forslag til rådighed</string>
+    <string name="speedGraderCommentHint">Kommentar</string>
+    <string name="a11y_schedule_marked_as_done">%s markeret som færdig</string>
+    <string name="a11y_error_occured">Der opstod en fejl, prøv igen.</string>
+    <string name="a11y_content_description_accept_invite">Accepter invitationen</string>
+    <string name="a11y_content_description_decline_invite">Afvis invitationen</string>
+    <string name="no_notifications_to_show">Ingen meddelelser at vise</string>
+
+    <string name="documentScanningTitle">Dokumentscanning</string>
+    <string name="filter_name_color">Farve</string>
+    <string name="filter_name_grayscale">Gråtoner</string>
+    <string name="filter_name_monochrome">Monokrom</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Din enhed har ikke nogen applikationer, der kan åbne dette link.</string>
+    <string name="anonymousDiscussionNotSupported">Anonyme diskussioner understøttes i øjeblikket ikke på mobil. Åbn i browseren for at se diskussionen.</string>
+    <string name="discussionOpenInBrowser">Åbn i browser</string>
+    <string name="dashboardSwitchToListView">Skift til listevisning</string>
+    <string name="dashboardSwitchToGridView">Skift til gittervisning</string>
+    <string name="selectAppTheme">Vælg app-tema</string>
+    <string name="appThemeSettingsTitle">App-tema</string>
+    <string name="appThemeLight">Lys</string>
+    <string name="appThemeDark">Mørk</string>
+    <string name="appThemeSystem">Systemstandard</string>
+
 </resources>

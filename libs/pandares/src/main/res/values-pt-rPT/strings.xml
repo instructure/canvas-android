@@ -37,7 +37,7 @@
     <string name="assignmentDetails">Detalhes da tarefa</string>
     <string name="submission_types">Tipos de submissão</string>
     <string name="noAssignmentDescriptionStudent">Sem conteúdo</string>
-    <string name="dueLabel">Vencimento</string>
+    <string name="dueLabel">Data limite</string>
     <string name="submissionStatusSuccessTitle">Submetido com sucesso!</string>
     <string name="submissionStatusSuccessSubtitle">Seu envio está a aguardar para ser avaliado</string>
     <string name="submissionStatusUploadingTitle">A carregar envio...</string>
@@ -100,7 +100,7 @@
     <string name="noneContentMessage">Esta tarefa não permite envios online</string>
     <string name="onPaperContentMessage">Esta tarefa não permite envios online</string>
     <string name="noOnlineSubmissions">Nenhum envio online</string>
-    <string name="speedGraderExternalToolMessage">Esta atribuição liga a uma ferramenta externa para submissões.</string>
+    <string name="speedGraderExternalToolMessage">Esta tarefa liga a uma ferramenta externa para submissões.</string>
     <string name="openTool">Abrir ferramenta</string>
     <string name="a11y_submissionText">Texto de submissão</string>
 
@@ -118,7 +118,7 @@
 
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Personalizar pontuação</string>
-    <string name="rubricEmptyMessage">Não existe rubrica para esta atribuição</string>
+    <string name="rubricEmptyMessage">Não existe rubrica para esta tarefa</string>
     <string name="rubricViewLongDescription">Ver descrição longa</string>
 
     <!-- Student Submission Comments -->
@@ -186,7 +186,7 @@
     <string name="submissionDetailsDueTodayAt">Devido hoje a %s</string>
     <string name="submissionDetailsDueTomorrowAt">Amanhã a partir de %s</string>
     <string name="submissionDetailsDueYesterdayAt">Devido ontem a %s</string>
-    <string name="submissionDetailsHasNoDueDate">Sua tarefa não tem data de vencimento</string>
+    <string name="submissionDetailsHasNoDueDate">Sua tarefa não tem data limite</string>
     <string name="submissionDetailsDueAt">Termina %1$s a %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
@@ -197,7 +197,7 @@
     <string name="assignments">Tarefas</string>
     <string name="noDescription">Não existe descrição para esta tarefa</string>
     <string name="noAssignmentsInGroup">Não existem Tarefas neste grupo</string>
-    <string name="excusedAssignment">Esta atribuição está esquecida e não será considerada no cálculo total</string>
+    <string name="excusedAssignment">Esta tarefa está esquecida e não será considerada no cálculo total</string>
     <string name="excused">EX</string>
     <string name="sortByDialogTitle">Classificar por</string>
     <string name="sortByDialogTimeOption">Hora</string>
@@ -247,7 +247,7 @@
     <string name="clearFilter">Filtro limpo</string>
     <string name="addMessage">Adicionar mensagem</string>
     <string name="monologue">Monólogo</string>
-    <string name="noItemsToDisplayShort">Sem ítensparaapresentar</string>
+    <string name="noItemsToDisplayShort">Sem itens para apresentar</string>
     <string name="Todo">A Fazer</string>
     <string name="todoFilter">Filtrar Disciplinas</string>
     <string name="filterByEllipsis">Filtrar por&#8230;</string>
@@ -256,12 +256,12 @@
     <string name="eventSuccessfulDeletion">O Evento foi apagado com sucesso</string>
     <string name="timeIconDescription">Ícone Hora</string>
     <string name="toDoTurnIn">Ligar</string>
-    <string name="toDoNoDueDate">Sem data de vencimento</string>
+    <string name="toDoNoDueDate">Sem data limite</string>
 
     <string name="dueAt">Termina a</string>
     <string name="dueAtTime">Previsto %s</string>
-    <string name="toDoDue">Vencimento</string>
-    <string name="due">Vencimento %1$s</string>
+    <string name="toDoDue">Data limite</string>
+    <string name="due">Data limite %1$s</string>
     <plurals name="to_do_needs_grading">
         <item quantity="one">%d precisa de classificação</item>
         <item quantity="other">%d precisa de classificação</item>
@@ -790,13 +790,13 @@
     <string name="notification_pref_dialog_message">Gostaria de ativar notificações de dispositivos? Essas configurações podem ser alteradas posteriormente em Configurações &gt; Notificações &gt; Para todos os dispositivos</string>
     <string name="notification_pref_toast_success">As notificações foram ligadas.</string>
 
-    <string name="notification_desc_due_date">Receba notificações quando uma data de vencimento da atribuição for alterada.</string>
+    <string name="notification_desc_due_date">Receba notificações quando uma data limite da tarefa for alterada.</string>
     <string name="notification_desc_grading_policies">Receba notificações quando as políticas de classificação da disciplina mudarem.</string>
-    <string name="notification_desc_course_content">Receba notificações quando o conteúdo da disciplina mudar em WikiPages, Testes e Atribuições.</string>
+    <string name="notification_desc_course_content">Receba notificações quando o conteúdo da disciplina mudar em WikiPages, Testes e Tarefas.</string>
     <string name="notification_desc_files">Receba notificação quando um novo ficheiro é adicionado a sua disciplina.</string>
     <string name="notification_desc_announcement">Receba notificações quando houver um novo anúncio na sua disciplina.</string>
     <string name="notification_desc_announcement_created_by_you">Receba notificações quando você cria um anúncio e quando alguém responde ao seu anúncio.</string>
-    <string name="notification_desc_grading">Receba notificações quando uma atribuição/apresentação foi classificada/alterada e quando um peso de classificação foi alterado.</string>
+    <string name="notification_desc_grading">Receba notificações quando uma tarefa/apresentação foi classificada/alterada e quando um peso de classificação foi alterado.</string>
     <string name="notification_desc_invitation">Receba notificações para convites para conferências na web, grupos, colaborações, avaliações de pares e lembretes.</string>
     <string name="notification_desc_all_submissions">Instrutor &amp; somente Admin. Receba notificações quando uma tarefa é enviada ou reenviada.</string>
     <string name="notification_desc_late_grading">Instrutor &amp; somente Admin. Receba notificações quando uma tarefa atrasada é enviada.</string>
@@ -930,7 +930,7 @@
     <string name="noFilesSubtextCourse">Não há ficheiros associados a esta disciplina.</string>
     <string name="noFilesSubtextGroup">Não há ficheiros associados a este grupo.</string>
     <string name="fileTypeNotSupported">Tipo de ficheiro não suportado</string>
-    <string name="fileTypeNotSupportedBody">Esta atribuição permite apenas determinados tipos de ficheiros: %s</string>
+    <string name="fileTypeNotSupportedBody">Esta tarefa permite apenas determinados tipos de ficheiros: %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -968,7 +968,7 @@
     <string name="downloadFailed">Transferência falhou</string>
     <string name="downloadSuccessful">Transferência com êxito</string>
 
-    <string name="full_due_date_details">Detalhes completos da data de vencimento</string>
+    <string name="full_due_date_details">Detalhes completos da data limite</string>
     <string name="submissions">Submissões</string>
     <string name="attachment">Anexo</string>
     <string name="contentDescription_back">Retroceder</string>
@@ -1108,7 +1108,7 @@
     <string name="quizNoTimeLimit">Nenhum</string>
     <string name="viewQuiz">Ver teste</string>
     <string name="viewDiscussion">Ver discussão</string>
-    <string name="lockedModule">Esta atribuição é bloqueada pelo módulo \"%1$s\".</string>
+    <string name="lockedModule">Esta tarefa é bloqueada pelo módulo \"%1$s\".</string>
     <string name="chooseMediaFile">Escolha o ficheiro de mídia</string>
     <string name="discussions_unknown_author">Autor desconhecido</string>
     <string name="discussions_unknown_date">Data Desconhecida</string>
@@ -1214,15 +1214,53 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">As respostas deste aluno são ocultas porque esta tarefa é anónima.</string>
 
-    <string name="studentAnnotationUnsupported">Anotação do aluno (Sem suporte)</string>
-    <string name="studentAnnotationUnsupportedDescription">A anotação do aluno não é actualmente suportada em telemóvel.</string>
-    <string name="unsupportedSubmissionType">Tipo de apresentação não suportada</string>
-    <string name="studentAnnotationUnsupportedMessage">A submissão não pode ser exibida, porque a Anotação do aluno não é atualmente suportada em telemóvel.</string>
     <string name="schedule_marked_as_done">Marcou-o como feito.</string>
-    <string name="error_saving_assignment_closed_grading_period">Não é possível alterar a data de vencimento quando vencida em um período de classificação fechado.</string>
+    <string name="error_saving_assignment_closed_grading_period">Não é possível alterar a data limite quando vencida em um período de classificação fechado.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Saltar para hoje</string>
     <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
     <string name="a11y_contact_info_click_description">enviar mensagem</string>
     <string name="somethingWentWrong">Algo deu errado</string>
     <string name="failedToLoadQuiz">Falha no teste de carregamento</string>
+    <string name="failedToLoadSubmission">Falha no carregamento da submissão</string>
+    <string name="studentAnnotationToolbarTitle">Anotação de aluno</string>
+    <string name="submissionTypeStudentAnnotation">Anotação de aluno</string>
+    <string name="gradesNoDueDate">Sem data de limite</string>
+    <string name="importantDatesNoDueDate">Sem data de limite</string>
+    <string name="missingAssignment">Em falta</string>
+    <string name="dontSave">Não guardar</string>
+    <string name="textSubmissionExitConfirmationTitle">Guardar rascunho?</string>
+    <string name="textSubmissionExitConfirmationMessage">As suas alterações não serão guardadas de outra forma</string>
+    <string name="submissionDraftAvailableSubtitle">Toque aqui para continuar</string>
+    <string name="submissionDraftAvailableTitle">Projeto disponível</string>
+    <string name="errorLoadingSubmission">Ocorreu um erro durante a submissão do carregamento</string>
+    <string name="loadFullContent">Toque para ver o conteúdo completo</string>
+    <string name="dashboardTabImportantDates">Datas importantes</string>
+    <string name="importantDatesEmptyTitle">Não há datas importantes</string>
+    <string name="important_dates">Datas importantes</string>
+
+    <string name="toolbarCommentLibrary">Biblioteca de Comentários</string>
+    <string name="commentLibraryNoSuggestions">Não há sugestões disponíveis</string>
+    <string name="speedGraderCommentHint">Comentário</string>
+    <string name="a11y_schedule_marked_as_done">%s marcado como feito</string>
+    <string name="a11y_error_occured">Ocorreu um erro, por favor tente novamente.</string>
+    <string name="a11y_content_description_accept_invite">Aceitar convite</string>
+    <string name="a11y_content_description_decline_invite">Declinar convite</string>
+    <string name="no_notifications_to_show">Nenhuma notificação para mostrar</string>
+
+    <string name="documentScanningTitle">Digitalização de documentos</string>
+    <string name="filter_name_color">Cor</string>
+    <string name="filter_name_grayscale">Escala de cinzentos</string>
+    <string name="filter_name_monochrome">Monocromático</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">O seu dispositivo não tem nenhuma aplicação instalada que possa abrir esta ligação.</string>
+    <string name="anonymousDiscussionNotSupported">No momento, discussões anónimas não são suportadas no telemóvel. Abrir no navegador para ver a discussão.</string>
+    <string name="discussionOpenInBrowser">Abrir no navegador</string>
+    <string name="dashboardSwitchToListView">Mudar para vista de lista</string>
+    <string name="dashboardSwitchToGridView">Mudar para vista de grelha</string>
+    <string name="selectAppTheme">Selecione o tema da aplicação</string>
+    <string name="appThemeSettingsTitle">Tema da App</string>
+    <string name="appThemeLight">Claro</string>
+    <string name="appThemeDark">Escuro</string>
+    <string name="appThemeSystem">Padrão do sistema</string>
+
 </resources>

@@ -198,7 +198,7 @@ class SubmissionDbQueriesTest : Assert() {
             insertTextSubmission()
         }
 
-        db.insertOnlineTextSubmission("Canvas", assignmentName, assignmentId, courseCanvasContext, userId + 1, OffsetDateTime.now())
+        db.insertOnlineTextSubmission("Canvas", assignmentName, assignmentId, courseCanvasContext, userId + 1, OffsetDateTime.now(), false)
 
         var submissions = db.getSubmissionsByAssignmentId(assignmentId, userId).executeAsList()
         var altSubmissions = db.getSubmissionsByAssignmentId(assignmentId, userId + 1).executeAsList()
@@ -215,7 +215,7 @@ class SubmissionDbQueriesTest : Assert() {
     private fun insertTextSubmission(): Triple<String, Long, Submission> {
         val submissionEntry = "Canvas"
 
-        db.insertOnlineTextSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext, userId, OffsetDateTime.now())
+        db.insertOnlineTextSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext, userId, OffsetDateTime.now(), false)
         val submissionId = db.getLastInsert().executeAsOne()
         val submission = db.getSubmissionById(submissionId).executeAsOne()
         return Triple(submissionEntry, submissionId, submission)

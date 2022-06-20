@@ -152,7 +152,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
         children: <Widget>[
           ..._rowTile(
             title: assignment.name,
-            titleStyle: textTheme.display1,
+            titleStyle: textTheme.headline4,
             child: Row(
               children: <Widget>[
                 Text(l10n.assignmentTotalPoints(points),
@@ -179,7 +179,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             ..._rowTile(
               title: l10n.assignmentDueLabel,
               child: Text(_dateFormat(assignment?.dueAt?.toLocal()) ?? l10n.noDueDate,
-                  style: textTheme.subhead, key: Key("assignment_details_due_date")),
+                  style: textTheme.subtitle1, key: Key("assignment_details_due_date")),
             ),
           ],
           GradeCell.forSubmission(context, assignment, submission),
@@ -198,7 +198,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                     reminder?.date == null
                         ? L10n(context).assignmentRemindMeDescription
                         : L10n(context).assignmentRemindMeSet,
-                    style: textTheme.subhead,
+                    style: textTheme.subtitle1,
                   ),
                   subtitle: reminder == null
                       ? null
@@ -206,7 +206,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
                             _dateFormat(reminder?.date?.toLocal()),
-                            style: textTheme.subhead.copyWith(color: ParentTheme.of(context).studentColor),
+                            style: textTheme.subtitle1.copyWith(color: ParentTheme.of(context).studentColor),
                           ),
                         ),
                   onChanged: (checked) => _handleAlarmSwitch(context, assignment, checked, reminder),
@@ -296,7 +296,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
       Divider(),
       ..._rowTile(
         title: L10n(context).assignmentLockLabel,
-        child: Text(message, style: Theme.of(context).textTheme.subhead),
+        child: Text(message, style: Theme.of(context).textTheme.subtitle1),
       ),
     ];
   }

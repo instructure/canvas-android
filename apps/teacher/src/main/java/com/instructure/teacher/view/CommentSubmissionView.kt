@@ -106,7 +106,7 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
         titleView.typeface = Typeface.create("sans-serif-medium", Typeface.ITALIC)
         addView(titleView)
         titleView.text = context.getString(R.string.speedgraderCommentSubmittedFiles)
-        titleView.setTextColor(context.getColorCompat(R.color.defaultTextGray))
+        titleView.setTextColor(context.getColorCompat(R.color.textDark))
     }
 
     private fun setupAttachments() {

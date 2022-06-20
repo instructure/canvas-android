@@ -34,12 +34,15 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.weave.inParallel
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CANVAS_CONTEXT_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.CanvasContextDialogAdapter
 import kotlinx.coroutines.Job
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_CANVAS_CONTEXT_LIST)
 class CanvasContextListDialog : AppCompatDialogFragment() {
 
     init {

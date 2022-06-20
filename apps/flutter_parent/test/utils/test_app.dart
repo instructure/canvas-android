@@ -30,6 +30,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/src/deprecated.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -167,9 +168,9 @@ class _TestAppState extends State<TestApp> {
       };
 }
 
-void setupTestLocator(config(GetIt locator)) {
+void setupTestLocator(config(GetIt locator)) async {
   final locator = GetIt.instance;
-  locator.reset();
+  await locator.reset();
   locator.allowReassignment = true; // Allows reassignment by the config block
 
   // Register things that needed by default

@@ -36,7 +36,7 @@
         android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="@string/rubricEmptyMessage"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="14sp"/>
 
 </LinearLayout>

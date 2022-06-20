@@ -36,7 +36,7 @@
             android:id="@+id/scheduleSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:onRefreshListener="@{() -> viewModel.refresh()}"
+            app:onRefreshListener="@{() -> viewModel.refresh(true)}"
             app:refreshState="@{viewModel.state}">
 
             <androidx.recyclerview.widget.RecyclerView

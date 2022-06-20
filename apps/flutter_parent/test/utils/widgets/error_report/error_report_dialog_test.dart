@@ -104,7 +104,7 @@ void main() {
     final subject = 'Test subject';
     final description = 'Test description';
     final email = 'test@email.com';
-    final error = FlutterErrorDetails(stack: StackTrace.fromString('fake stack'));
+    final error = FlutterErrorDetails(exception: FlutterError(""), stack: StackTrace.fromString('fake stack'));
 
     final interactor = MockErrorReportInteractor();
     setupTestLocator((locator) => locator.registerFactory<ErrorReportInteractor>(() => interactor));

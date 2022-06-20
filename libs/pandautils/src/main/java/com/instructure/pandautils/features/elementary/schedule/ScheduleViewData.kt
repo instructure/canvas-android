@@ -86,13 +86,13 @@ enum class ScheduleItemViewModelType(val viewType: Int) {
 }
 
 sealed class PlannerItemTag(val text: Int, @ColorRes val color: Int) {
-    object Excused: PlannerItemTag(R.string.schedule_tag_excused, R.color.textLightGray)
-    object Graded : PlannerItemTag(R.string.schedule_tag_graded, R.color.textLightGray)
-    data class Replies(val replyCount: Int) : PlannerItemTag(R.plurals.schedule_tag_replies, R.color.textLightGray)
-    object Feedback : PlannerItemTag(R.string.schedule_tag_feedback, R.color.textLightGray)
-    object Late : PlannerItemTag(R.string.schedule_tag_late, R.color.canvasRed)
-    object Redo : PlannerItemTag(R.string.schedule_tag_redo, R.color.canvasRed)
-    object Missing : PlannerItemTag(R.string.schedule_tag_missing, R.color.canvasRed)
+    object Excused: PlannerItemTag(R.string.schedule_tag_excused, R.color.textDark)
+    object Graded : PlannerItemTag(R.string.schedule_tag_graded, R.color.textDark)
+    data class Replies(val replyCount: Int) : PlannerItemTag(R.plurals.schedule_tag_replies, R.color.textDark)
+    object Feedback : PlannerItemTag(R.string.schedule_tag_feedback, R.color.textDark)
+    object Late : PlannerItemTag(R.string.schedule_tag_late, R.color.textDanger)
+    object Redo : PlannerItemTag(R.string.schedule_tag_redo, R.color.textDanger)
+    object Missing : PlannerItemTag(R.string.schedule_tag_missing, R.color.textDanger)
 }
 
 sealed class ScheduleAction {
@@ -101,5 +101,6 @@ sealed class ScheduleAction {
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val scheduleItemId: Long) : ScheduleAction()
     data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String) : ScheduleAction()
     data class OpenDiscussion(val canvasContext: CanvasContext, val id: Long, val title: String) : ScheduleAction()
+    data class AnnounceForAccessibility(val announcement: String): ScheduleAction()
     object JumpToToday : ScheduleAction()
 }

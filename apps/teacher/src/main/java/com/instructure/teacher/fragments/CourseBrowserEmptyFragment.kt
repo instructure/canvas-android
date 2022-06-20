@@ -17,6 +17,8 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Color
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER_EMPTY
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -27,6 +29,7 @@ import com.instructure.teacher.presenters.CourseBrowserEmptyPresenter
 import com.instructure.teacher.viewinterface.CourseBrowserEmptyView
 import kotlinx.android.synthetic.main.fragment_course_browser_empty.*
 
+@ScreenView(SCREEN_VIEW_COURSE_BROWSER_EMPTY)
 class CourseBrowserEmptyFragment: BasePresenterFragment<
         CourseBrowserEmptyPresenter,
         CourseBrowserEmptyView>(), CourseBrowserEmptyView {
@@ -39,7 +42,7 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
 
     private fun setupToolbar(courseColor: Int?) {
         if(courseColor != null) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar, courseColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseColor, requireContext().getColor(R.color.white))
         }
     }
 
@@ -48,9 +51,9 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
     override fun onRefreshStarted() {}
 
     override fun onReadySetGo(presenter: CourseBrowserEmptyPresenter) {
-        textCourseName.text = presenter?.course?.name
-        textCourseTerm.text = presenter?.course?.term?.name
-        setupToolbar(presenter?.course?.color)
+        textCourseName.text = presenter.course.name
+        textCourseTerm.text = presenter.course.term?.name
+        setupToolbar(presenter.course.color)
     }
 
     override fun getPresenterFactory() = CourseBrowserEmptyViewFactory(mCourse)

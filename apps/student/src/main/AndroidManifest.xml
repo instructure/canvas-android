@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:replace="android:maxSdkVersion"
         android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -45,6 +46,8 @@
 
     <uses-feature android:name="android.hardware.camera" android:required="false" tools:replace="required"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" tools:replace="required"/>
+
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
 
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
@@ -115,11 +118,6 @@
             android:name=".activity.CandroidPSPDFActivity"
             android:theme="@style/PSPDFKitTheme"
             android:windowSoftInputMode="adjustNothing" />
-
-        <activity
-            android:name=".activity.NotificationPreferencesActivity"
-            android:theme="@style/CanvasMaterialTheme_Default"
-            android:label="@string/notifications"/>
 
         <activity
             android:name=".activity.SettingsActivity"
@@ -268,6 +266,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".features.documentscanning.DocumentScanningActivity"
+            android:theme="@style/CanvasMaterialTheme_Default"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
         <service
             android:name="com.instructure.pandautils.services.NotoriousUploadService"
             android:exported="false" />
@@ -374,6 +378,7 @@
     </application>
 
     <queries>
+        <package android:name="us.zoom.videomeetings" />
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
@@ -382,6 +387,7 @@
         </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="*/*" />
         </intent>
     </queries>
 </manifest>

@@ -16,16 +16,16 @@
 */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.RatingDialog
+import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.isTablet
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.LegalDialog
@@ -36,6 +36,7 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.ProfileSettingsFragmentView
 import kotlinx.android.synthetic.main.fragment_settings.*
 
+@ScreenView(SCREEN_VIEW_SETTINGS)
 class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter, ProfileSettingsFragmentView>(),
     ProfileSettingsFragmentView {
 
@@ -47,12 +48,27 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         profileButton.onClick { RouteMatcher.route(requireContext(), Route(ProfileFragment::class.java, null)) }
         rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), com.instructure.pandautils.utils.AppType.TEACHER) }
         legalButton.onClick { LegalDialog().show(requireFragmentManager(), LegalDialog.TAG) }
+        notificationPreferenesButton.onClick { RouteMatcher.route(requireContext(), Route(NotificationPreferencesFragment::class.java, null)) }
         if (BuildConfig.DEBUG) {
             featureFlagButton.setVisible()
             featureFlagButton.onClick { RouteMatcher.route(requireContext(), Route(FeatureFlagsFragment::class.java, null)) }
 
             remoteConfigButton.setVisible()
             remoteConfigButton.onClick { RouteMatcher.route(requireContext(), Route(RemoteConfigParamsFragment::class.java, null))}
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpAppThemeSelector()
+    }
+
+    private fun setUpAppThemeSelector() {
+        val initialAppTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
+        appThemeStatus.setText(initialAppTheme.themeNameRes)
+
+        appThemeContainer.onClick {
+            AppThemeSelector.showAppThemeSelectorDialog(requireContext(), appThemeStatus)
         }
     }
 
@@ -65,7 +81,7 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
     fun setupToolbar() {
         toolbar.setupBackButton(this)
         toolbar.title = getString(R.string.settings)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 

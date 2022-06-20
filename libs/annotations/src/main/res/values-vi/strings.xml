@@ -1,0 +1,41 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Nhập Văn Bản</string>
+    <string name="cancel">Hủy</string>
+    <string name="comment">Bình Luận</string>
+    <string name="skip">Bỏ Qua</string>
+    <string name="comments">Bình Luận</string>
+    <string name="error_loading_submission">Đã gặp vấn đề khi tải mục nộp này.</string>
+    <string name="retry">Thử Lại</string>
+    <string name="annotationErrorOccurred">Đã xảy ra lỗi không lường trước khi tải chú thích.</string>
+    <string name="annotationError">Lỗi Chú Thích</string>
+    <string name="annotationDialogMessage">Chú thích đã bị xóa từ nguồn khác.</string>
+    <string name="errorSendingMessage">Không thể gửi tin nhắn này. Hãy nhấn để thử lại.</string>
+    <string name="addAnnotationComment">Thêm Bình Luận</string>
+    <string name="editComment">Chỉnh Sửa Bình Luận</string>
+    <string name="deleteComment">Xóa Bình Luận</string>
+    <string name="deleteAnnotation">Xóa Chú Thích</string>
+    <string name="deleteCommentConfirmation">Bạn có chắc chắn muốn xóa bình luận này không?</string>
+    <string name="deleteHeadCommentConfirmation">Xóa bình luận này sẽ xóa toàn bộ bình luận liên quan trong chú thích này. Bạn có chắc chắn muốn thực hiện không?</string>
+    <string name="sendingSimple">Đang Gửi</string>
+    <string name="pspdf__annotation_type_stamp">Màu Ghi Chú</string>
+    <string name="removedComment">Đã bị gỡ %1$s bởi %2$s</string>
+
+</resources>

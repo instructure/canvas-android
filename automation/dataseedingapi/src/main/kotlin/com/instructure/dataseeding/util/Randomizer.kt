@@ -21,6 +21,7 @@ import com.github.javafaker.Faker
 import com.instructure.dataseeding.model.*
 import java.util.Date
 import java.util.UUID
+import java.util.Locale
 
 object Randomizer {
     private val faker = Faker()
@@ -49,11 +50,13 @@ object Randomizer {
     fun randomImageUrlSmall(): String = faker.internet().image(64, 64, false, null)
 
 
-    fun randomDiscussion(isAnnouncement: Boolean = false): CreateDiscussionTopic =
+    fun randomDiscussion(isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false): CreateDiscussionTopic =
             CreateDiscussionTopic(
                     title = faker.lorem().sentence(),
                     message = faker.lorem().paragraph(),
-                    isAnnouncement = isAnnouncement
+                    isAnnouncement = isAnnouncement,
+                    lockedForUser = lockedForUser,
+                    locked = locked
             )
 
     fun randomConversationSubject(): String = faker.chuckNorris().fact()
@@ -64,7 +67,7 @@ object Randomizer {
     fun randomGradingPeriodSetTitle(): String = "${faker.pokemon().location()} Set"
     fun randomGradingPeriodName(): String = "${faker.pokemon().name()} Grading Period"
 
-    fun randomAssignment(withDescription: Boolean = false, lockAt: String, unlockAt: String, dueAt: String, submissionTypes: List<SubmissionType>, gradingType: GradingType?, groupCategoryId: Long?, pointsPossible: Double?, allowedExtensions: List<String>?): CreateAssignment =
+    fun randomAssignment(withDescription: Boolean = false, lockAt: String, unlockAt: String, dueAt: String, submissionTypes: List<SubmissionType>, gradingType: GradingType?, groupCategoryId: Long?, pointsPossible: Double?, allowedExtensions: List<String>?, importantDate: Boolean?): CreateAssignment =
             CreateAssignment(
                     name = faker.lorem().sentence(),
                     description = if (withDescription) faker.lorem().paragraph() else null,
@@ -72,12 +75,13 @@ object Randomizer {
                     unlockAt = if (unlockAt.isNotBlank()) unlockAt else null,
                     dueAt = if (dueAt.isNotBlank()) dueAt else null,
                     submissionTypes = if (submissionTypes.isEmpty()) null else submissionTypes.map {
-                        if (it.name == "NO_TYPE") "none" else it.name.toLowerCase()
+                        if (it.name == "NO_TYPE") "none" else it.name.lowercase(Locale.getDefault())
                     },
-                    gradingType = if (gradingType != null) gradingType.toString().toLowerCase() else "points",
+                    gradingType = if (gradingType != null) gradingType.toString().lowercase(Locale.getDefault()) else "points",
                     groupCategoryId = groupCategoryId,
                     pointsPossible = pointsPossible,
-                    allowedExtensions = allowedExtensions
+                    allowedExtensions = allowedExtensions,
+                    importantDate = importantDate
             )
 
     fun randomAssignmentOverrideTitle(): String = faker.food().ingredient()
@@ -94,7 +98,7 @@ object Randomizer {
                 }
                 this.submissionType =
                         if (submissionType.name == "NO_TYPE") "none"
-                        else submissionType.name.toLowerCase()
+                        else submissionType.name.lowercase(Locale.getDefault())
             }
 
     fun randomQuiz(withDescription: Boolean, lockAt: String, unlockAt: String, dueAt: String, published: Boolean) =

@@ -35,6 +35,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_CONVERSATION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxConversationAdapter
@@ -51,6 +53,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_INBOX_CONVERSATION)
 @PageView(url = "conversations")
 class InboxConversationFragment : ParentFragment() {
 
@@ -194,7 +197,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     private fun setupViews() {
@@ -204,7 +207,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     private fun initAdapter() {
-        configureRecyclerView(view!!, requireContext(), adapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        configureRecyclerView(requireView(), requireContext(), adapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
         val dividerItemDecoration = DividerItemDecoration(
             listView.context,
             LinearLayoutManager.VERTICAL
@@ -321,6 +324,7 @@ class InboxConversationFragment : ParentFragment() {
             adapter.remove(message)
             if (adapter.size() > 0) {
                 toast(R.string.deleted)
+                onConversationUpdated(false)
             } else {
                 onConversationUpdated(true)
             }

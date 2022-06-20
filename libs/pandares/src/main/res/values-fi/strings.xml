@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Tämän opiskelijan vastaukset on kätketty, koska tehtävä on nimetön.</string>
 
-    <string name="studentAnnotationUnsupported">Opiskelijan huomautusasiakirjat (tukematon)</string>
-    <string name="studentAnnotationUnsupportedDescription">Opiskelijan huomautuksia ei tällä hetkellä tueta matkapuhelimessa.</string>
-    <string name="unsupportedSubmissionType">Lähetystyyppiä ei tueta</string>
-    <string name="studentAnnotationUnsupportedMessage">Lähetystä ei voida näyttää, koska opiskelijan huomautuksia ei tällä hetkellä tueta matkapuhelimessa.</string>
     <string name="schedule_marked_as_done">Olet merkinnyt sen tehdyksi.</string>
     <string name="error_saving_assignment_closed_grading_period">Ei voida vaihtaa määräpäivää, kun määräpäivä on suljetulla arvosanojen antojaksolla</string>
     <string name="a11y_content_description_schedule_jump_to_today">Siirry tähän päivään</string>
@@ -1225,4 +1221,46 @@
     <string name="a11y_contact_info_click_description">viestien lähettäminen</string>
     <string name="somethingWentWrong">Jotakin meni pieleen</string>
     <string name="failedToLoadQuiz">Testin lataus epäonnistui</string>
+    <string name="failedToLoadSubmission">Lähetyksen lataus epäonnistui</string>
+    <string name="studentAnnotationToolbarTitle">Opiskelijan jättämä huomautus</string>
+    <string name="submissionTypeStudentAnnotation">Opiskelijan jättämä huomautus</string>
+    <string name="gradesNoDueDate">Ei määräpäivää</string>
+    <string name="importantDatesNoDueDate">Ei määräpäivää</string>
+    <string name="missingAssignment">Puuttuu</string>
+    <string name="dontSave">Älä tallenna</string>
+    <string name="textSubmissionExitConfirmationTitle">Tallennetaanko luonnos?</string>
+    <string name="textSubmissionExitConfirmationMessage">Muutoksiasi ei muutoin ei tallenneta.</string>
+    <string name="submissionDraftAvailableSubtitle">Jatka napauttamalla tässä</string>
+    <string name="submissionDraftAvailableTitle">Luonnos saatavissa</string>
+    <string name="errorLoadingSubmission">Palautuksen lataamisen yhteydessä tapahtui virhe</string>
+    <string name="loadFullContent">Napauta nähdäksesi koko sisältö</string>
+    <string name="dashboardTabImportantDates">Tärkeitä päivämääriä</string>
+    <string name="importantDatesEmptyTitle">Ei tärkeitä päivämääriä</string>
+    <string name="important_dates">Tärkeitä päivämääriä</string>
+
+    <string name="toolbarCommentLibrary">Huomautuskirjasto</string>
+    <string name="commentLibraryNoSuggestions">Ei ehdotuksia saatavissa</string>
+    <string name="speedGraderCommentHint">Kommentti</string>
+    <string name="a11y_schedule_marked_as_done">%s merkitty tehdyksi</string>
+    <string name="a11y_error_occured">Ilmeni virhe, yritä uudelleen.</string>
+    <string name="a11y_content_description_accept_invite">Hyväksy kutsu</string>
+    <string name="a11y_content_description_decline_invite">Kiellä kutsu</string>
+    <string name="no_notifications_to_show">Ei näytettäviä huomautuksia</string>
+
+    <string name="documentScanningTitle">Asiakirjan skannaus</string>
+    <string name="filter_name_color">Väri</string>
+    <string name="filter_name_grayscale">Harmaasävy</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Alkuperäinen</string>
+    <string name="noCompatibleAppInstalled">Laitteessasi ei ole asennettuna sovelluksia, jotka voisivat avata tämän linkin.</string>
+    <string name="anonymousDiscussionNotSupported">Nimettömiä keskusteluita ei tällä hetkellä tueta matkapuhelimessa. Avaa selaimessa tarkastellaksesi keskustelua.</string>
+    <string name="discussionOpenInBrowser">Avaa selaimessa</string>
+    <string name="dashboardSwitchToListView">Vaihda luettelonäkymään</string>
+    <string name="dashboardSwitchToGridView">Vaihda ruudukkonäkymään</string>
+    <string name="selectAppTheme">Valitse teema</string>
+    <string name="appThemeSettingsTitle">Sovelluksen teema</string>
+    <string name="appThemeLight">Valo</string>
+    <string name="appThemeDark">Tumma</string>
+    <string name="appThemeSystem">Järjestelmän oletus</string>
+
 </resources>

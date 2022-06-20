@@ -70,7 +70,7 @@ class _LegalRow extends StatelessWidget {
         children: <Widget>[
           Icon(icon, color: Theme.of(context).accentColor, size: 20),
           SizedBox(width: 20),
-          Expanded(child: Text(label, style: textTheme.subhead)),
+          Expanded(child: Text(label, style: textTheme.subtitle1)),
         ],
       ),
       onTap: onTap,

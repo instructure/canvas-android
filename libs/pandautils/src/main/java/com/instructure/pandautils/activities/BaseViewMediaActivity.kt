@@ -35,7 +35,7 @@ import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.activity_view_media.*
-import kotlinx.android.synthetic.main.exo_playback_control_view.*
+import kotlinx.android.synthetic.main.exo_player_control_view.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -94,7 +94,7 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
         }
         toolbar.setupAsCloseButton { onBackPressed() }
         ViewStyler.setToolbarElevationSmall(this, toolbar)
-        ViewStyler.themeToolbar(this, toolbar, ContextCompat.getColor(this, R.color.mediaOverlayBackground), Color.WHITE)
+        ViewStyler.themeToolbarColored(this, toolbar, ContextCompat.getColor(this, R.color.translucentBlack), getColor(R.color.white))
     }
 
     override fun onStart() {

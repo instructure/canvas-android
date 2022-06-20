@@ -16,13 +16,11 @@
 package com.instructure.teacher.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.view.accessibility.AccessibilityManager
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -38,6 +36,8 @@ import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.AttachmentPickerDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
@@ -47,6 +47,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
+import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.*
@@ -66,14 +67,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.forEach
-import kotlin.collections.isNotEmpty
-import kotlin.collections.joinToString
-import kotlin.collections.map
-import kotlin.collections.singleOrNull
 
+@ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 class DiscussionsDetailsFragment : BasePresenterFragment<
         DiscussionsDetailsPresenter,
         DiscussionsDetailsView>(), DiscussionsDetailsView, Identity {
@@ -189,14 +184,14 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if(!mIsAnnouncements) {
             if (discussionTopicHeader.published) {
                 publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
-                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.publishedGreen))
+                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textSuccess))
                 publishStatusTextView.setText(R.string.published)
-                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.publishedGreen))
+                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textSuccess))
             } else {
                 publishStatusIconView.setImageResource(R.drawable.ic_complete)
-                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.defaultTextGray))
+                publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textDark))
                 publishStatusTextView.setText(R.string.not_published)
-                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.defaultTextGray))
+                publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textDark))
             }
         } else {
             pointsPublishedLayout.setGone()
@@ -218,7 +213,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         repliesBack.onClick { requireActivity().onBackPressed() }
         attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
         attachmentIcon.onClick {
-            val remoteFiles = presenter?.discussionTopicHeader?.attachments
+            val remoteFiles = presenter.discussionTopicHeader.attachments
             if(remoteFiles != null) {
                 viewAttachments(remoteFiles)
             }
@@ -269,7 +264,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                 if (topLevelReplyPosted) {
                     discussionsScrollView.fullScroll(ScrollView.FOCUS_DOWN)
                 } else {
-                    discussionsScrollView.scrollTo(0, presenter?.scrollPosition)
+                    discussionsScrollView.scrollTo(0, presenter.scrollPosition)
                 }
                 discussionRepliesWebView.setVisible()
             }
@@ -434,7 +429,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     override fun onPause() {
         super.onPause()
-        presenter?.scrollPosition = discussionsScrollView.scrollY
+        presenter.scrollPosition = discussionsScrollView.scrollY
         discussionTopicHeaderWebView.onPause()
         discussionRepliesWebView.onPause()
     }
@@ -466,13 +461,13 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         discussionRepliesWebView.onResume()
 
         setupWebView(discussionTopicHeaderWebView, false)
-        setupWebView(discussionRepliesWebView, true)
+        setupWebView(discussionRepliesWebView, true, addDarkTheme = true)
     }
 
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mCanvasContext.color, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
         toolbar.setupMenu(R.menu.menu_edit_generic, menuItemCallback)
@@ -480,7 +475,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if(!isTablet) {
             toolbar.subtitle = mCanvasContext.name
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCanvasContext.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
     }
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
@@ -504,9 +499,9 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun setupWebView(webView: CanvasWebView, addJSSupport: Boolean) {
+    private fun setupWebView(webView: CanvasWebView, addJSSupport: Boolean, addDarkTheme: Boolean = false) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(Color.WHITE)
+        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.javaScriptEnabled = true
         if(addJSSupport) webView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
         webView.settings.useWideViewPort = true
@@ -517,7 +512,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             override fun routeInternallyCallback(url: String) {
                 if (!RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)) {
                     val bundle = InternalWebViewFragment.makeBundle(url, url, false, "")
-                    RouteMatcher.route(requireContext(), Route(FullscreenInternalWebViewFragment::class.java, presenter?.canvasContext, bundle))
+                    RouteMatcher.route(requireContext(), Route(FullscreenInternalWebViewFragment::class.java,
+                        presenter.canvasContext, bundle))
                 }
             }
             override fun canRouteInternallyDelegate(url: String): Boolean {
@@ -527,8 +523,20 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                 showToast(R.string.downloadingFile)
                 RouteMatcher.openMedia(activity, url)
             }
-            override fun onPageStartedCallback(webView: WebView, url: String) {}
-            override fun onPageFinishedCallback(webView: WebView, url: String) {}
+            override fun onPageStartedCallback(webView: WebView, url: String) {
+                // This executes a JavaScript to add the dark theme.
+                // It won't work exactl when the page starts to load, because the html document is not yet created,
+                // so we add a little delay to make sure the script can modify the document.
+                if (addDarkTheme) {
+                    webView.postDelayed({ webView.addDarkThemeToHtmlDocument() }, 50)
+                }
+            }
+            override fun onPageFinishedCallback(webView: WebView, url: String) {
+                // This is just a fallback if in some cases the document wouldn't be loaded after the delay
+                if (addDarkTheme) {
+                    webView.addDarkThemeToHtmlDocument()
+                }
+            }
         }
 
         webView.addVideoClient(requireActivity())
@@ -571,7 +579,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
         @JavascriptInterface
         fun onLikePressed(id: String) {
-            presenter?.likeDiscussionPressed(id.toLong())
+            presenter.likeDiscussionPressed(id.toLong())
         }
 
         @JavascriptInterface
@@ -582,13 +590,13 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
         @JavascriptInterface
         fun getInViewPort(): String {
-            return presenter?.discussionTopic?.unreadEntries?.joinToString() ?: ""
+            return presenter.discussionTopic.unreadEntries.joinToString()
         }
 
         @JavascriptInterface
         fun inViewPortAndUnread(idList: String) {
             if(idList.isNotEmpty()) {
-                presenter?.markAsRead(idList.split(",").map(String::toLong))
+                presenter.markAsRead(idList.split(",").map(String::toLong))
             }
         }
 
@@ -628,7 +636,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) {
         val likingSum = if(discussionEntry.ratingSum == 0) "" else "(" + discussionEntry.ratingSum + ")"
         val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountText(requireContext(), discussionEntry)
-        val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.discussionLiking))
+        val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.textDark))
         requireActivity().runOnUiThread {
             discussionRepliesWebView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
             discussionRepliesWebView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
@@ -680,7 +688,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.discussions_delete_warning)
             builder.setPositiveButton(android.R.string.yes) { _, _ ->
-                presenter?.deleteDiscussionEntry(id)
+                presenter.deleteDiscussionEntry(id)
             }
             builder.setNegativeButton(android.R.string.no) { _, _ -> }
             val dialog = builder.create()
@@ -710,12 +718,24 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsUnread('$markedAsUnreadId')") }
     }
 
+    override fun showAnonymousDiscussionView() {
+        anonymousDiscussionsNotSupported.setVisible()
+        openInBrowser.setVisible(mDiscussionTopicHeader.htmlUrl?.isNotEmpty() == true)
+        replyToDiscussionTopic.setGone()
+        swipeRefreshLayout.isEnabled = false
+        openInBrowser.onClick {
+            mDiscussionTopicHeader.htmlUrl?.let { url ->
+                requireContext().startActivity(InternalWebViewActivity.createIntent(requireContext(), url, "", true))
+            }
+        }
+    }
+
     /**
      * Checks to see if the webview element is within the viewable bounds of the scrollview.
      */
     private fun isElementInViewPortWithinScrollView(elementHeight: Int, topOffset: Int): Boolean {
         if (discussionsScrollView == null) return false
-        val scrollBounds = Rect().apply{ discussionsScrollView.getDrawingRect(this) }
+        val scrollBounds = Rect().apply { discussionsScrollView.getDrawingRect(this) }
 
         val discussionRepliesHeight = discussionRepliesWebView.height
         val discussionScrollViewContentHeight = discussionsScrollViewContentWrapper.height

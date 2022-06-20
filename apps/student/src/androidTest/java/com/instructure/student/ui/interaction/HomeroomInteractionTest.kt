@@ -16,18 +16,16 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.StubLandscape
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -39,7 +37,7 @@ class HomeroomInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testAnnouncementsAndCoursesShowUpOnHomeroom() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -47,7 +45,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertPageObjects()
 
@@ -64,11 +62,11 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyCoursesShowUpOnHomeroomIfNoHomeroomAnnouncement() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3)
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertPageObjects()
 
@@ -85,7 +83,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyAnnouncementShowsUpOnHomeroomIfNoCourses() {
         val data = createMockDataWithHomeroomCourse()
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -93,7 +91,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         val student = data.students[0]
         homeroomPage.assertWelcomeText(student.shortName!!)
@@ -104,7 +102,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCourse() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -114,7 +112,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertPageObjects()
 
@@ -125,11 +123,11 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testRefreshAfterEnrolledToCourses() {
         val data = createMockDataWithHomeroomCourse()
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertHomeroomContentNotDisplayed()
         homeroomPage.assertCourseItemsCount(0)
@@ -158,7 +156,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenHomeroomCourseAnnouncements() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3, homeroomCourseCount = 2)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -167,7 +165,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         val homeroomAnnouncement = data.addDiscussionTopicToCourse(homeroomCourse, user, isAnnouncement = true)
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertPageObjects()
 
@@ -182,7 +180,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenCourseAnnouncements() {
         val data = createMockDataWithHomeroomCourse(courseCount = 1)
 
@@ -190,7 +188,7 @@ class HomeroomInteractionTest : StudentTest() {
         val courses = data.courses.values.filter { !it.homeroomCourse }
         val courseAnnouncement = data.addDiscussionTopicToCourse(courses[0], user, isAnnouncement = true)
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertPageObjects()
 
@@ -201,7 +199,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowCourseCardWithAnnouncement() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -212,7 +210,7 @@ class HomeroomInteractionTest : StudentTest() {
         val courses = data.courses.values.filter { !it.homeroomCourse }
         val courseAnnouncement = data.addDiscussionTopicToCourse(courses[0], user, isAnnouncement = true)
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertPageObjects()
 
@@ -222,7 +220,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testDueTodayAndMissingAssignments() {
         val data = createMockDataWithHomeroomCourse(courseCount = 1)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -235,7 +233,7 @@ class HomeroomInteractionTest : StudentTest() {
         data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertPageObjects()
 
@@ -246,9 +244,8 @@ class HomeroomInteractionTest : StudentTest() {
         homeroomPage.assertToDoText("2 due today | 2 missing")
     }
 
-    @StubLandscape
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOpenAssignments() {
         val data = createMockDataWithHomeroomCourse(courseCount = 1)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -261,7 +258,7 @@ class HomeroomInteractionTest : StudentTest() {
         val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertPageObjects()
         homeroomPage.openAssignments("2 due today | 2 missing")
@@ -271,11 +268,11 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testEmptyState() {
         val data = createMockDataWithHomeroomCourse()
 
-        goToHomeroomPage(data)
+        goToHomeroomTab(data)
 
         homeroomPage.assertHomeroomContentNotDisplayed()
         homeroomPage.assertCourseItemsCount(0)
@@ -289,10 +286,6 @@ class HomeroomInteractionTest : StudentTest() {
         announcementCount: Int = 0,
         homeroomCourseCount: Int = 1): MockCanvas {
 
-        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
-        Thread.sleep(3000)
-        RemoteConfigPrefs.putString(RemoteConfigParam.K5_DESIGN.rc_name, "true")
-
         val data = MockCanvas.init(
             studentCount = 1,
             courseCount = courseCount,
@@ -301,13 +294,16 @@ class HomeroomInteractionTest : StudentTest() {
             accountNotificationCount = announcementCount,
             homeroomCourseCount = homeroomCourseCount)
 
+        data.elementarySubjectPages = true
+
         return data
     }
 
-    private fun goToHomeroomPage(data: MockCanvas) {
+    private fun goToHomeroomTab(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLoginElementary(data.domain, token, student)
         elementaryDashboardPage.waitForRender()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
     }
 }

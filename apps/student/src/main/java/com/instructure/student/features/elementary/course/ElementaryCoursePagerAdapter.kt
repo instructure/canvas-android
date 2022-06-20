@@ -16,19 +16,91 @@
 
 package com.instructure.student.features.elementary.course
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import com.instructure.student.fragment.InternalWebviewFragment
+import android.content.ContextWrapper
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.webkit.WebView
+import android.widget.ProgressBar
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager.widget.PagerAdapter
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.setDarkModeSupport
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.student.R
+import com.instructure.student.activity.InternalWebViewActivity
+import com.instructure.student.router.RouteMatcher
 
 class ElementaryCoursePagerAdapter(
-    private val fragments: List<InternalWebviewFragment>,
-    fragmentManager: FragmentManager
-) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private val tabs: List<ElementaryCourseTab>,
+) : PagerAdapter() {
 
-    override fun getCount(): Int = fragments.size
+    private fun getReferer(): Map<String, String> = mutableMapOf(Pair("Referer", ApiPrefs.domain))
 
-    override fun getItem(position: Int): Fragment {
-        return fragments[position]
+    override fun getCount(): Int = tabs.size
+
+    override fun isViewFromObject(view: View, any: Any): Boolean = view == any
+
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val inflater = LayoutInflater.from(container.context)
+        val view = inflater.inflate(R.layout.elementary_course_webview, container, false)
+        val webView = view.findViewById<CanvasWebView>(R.id.elementaryWebView)
+        val progressBar = view.findViewById<ProgressBar>(R.id.webViewProgress)
+        container.addView(view)
+
+        progressBar.setVisible()
+        setupViews(webView, progressBar)
+        webView.loadUrl(tabs[position].url, getReferer())
+
+        return view
+    }
+
+    override fun destroyItem(container: ViewGroup, position: Int, item: Any) {
+        container.removeView(item as View)
+    }
+
+    private fun setupViews(webView: CanvasWebView, progressBar: ProgressBar) {
+        val baseContext = (webView.context as ContextWrapper).baseContext
+        val activity = (baseContext as? FragmentActivity)
+        activity?.let { webView.addVideoClient(it) }
+        webView.setDarkModeSupport()
+        webView.setZoomSettings(false)
+        webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                RouteMatcher.openMedia(activity, url)
+            }
+
+            override fun onPageStartedCallback(webView: WebView, url: String) {
+                progressBar.setVisible()
+            }
+            override fun onPageFinishedCallback(webView: WebView, url: String) {
+                progressBar.setGone()
+            }
+
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                return !isUrlSame(webView, url) && RouteMatcher.canRouteInternally(baseContext, url, ApiPrefs.domain, false)
+            }
+
+            override fun routeInternallyCallback(url: String) {
+                RouteMatcher.canRouteInternally(baseContext, url, ApiPrefs.domain, true)
+            }
+        }
+        webView.canvasEmbeddedWebViewCallback =
+            object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
+                    return false
+                }
+
+                override fun launchInternalWebViewFragment(url: String) {
+                    activity?.startActivity(InternalWebViewActivity.createIntent(baseContext, url, "", true))
+                }
+            }
+    }
+
+    private fun isUrlSame(webView: CanvasWebView, url: String): Boolean {
+        val strippedUrl = webView.url?.replace(Regex("&session_token=[^&|^#\\s]+|session_token=[^&\\s]+&?"), "")
+        return strippedUrl?.contains(url) ?: false
     }
 }

@@ -12,9 +12,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:android_intent/android_intent.dart';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter_parent/models/attachment.dart';
-import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/permission_handler.dart';
+import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
 import 'package:path_provider/path_provider.dart';
@@ -45,10 +46,10 @@ class ViewAttachmentInteractor {
 
   Future<bool> checkStoragePermission() async {
     var permissionHandler = locator<PermissionHandler>();
-    PermissionStatus permission = await permissionHandler.checkPermissionStatus(PermissionGroup.storage);
+    PermissionStatus permission = await permissionHandler.checkPermissionStatus(Permission.storage);
     if (permission != PermissionStatus.granted) {
-      var permissions = await permissionHandler.requestPermissions([PermissionGroup.storage]);
-      if (permissions[PermissionGroup.storage] == PermissionStatus.granted) return true;
+      var permission = await permissionHandler.requestPermission(Permission.storage);
+      if (permission == PermissionStatus.granted) return true;
     } else {
       return true;
     }

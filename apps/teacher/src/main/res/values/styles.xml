@@ -16,29 +16,40 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/teacher_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/teacher_colorPrimaryDark</item>
-        <item name="colorAccent">@color/teacher_colorAccent</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="colorPrimary">@color/textDark</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDark</item>
+        <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+        <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
+        <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLight</item>
     </style>
 
     <style name="PSPDFKitTheme" parent="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+        <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+
         <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
         <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
         <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
+        <item name="pspdf__propertyInspectorStyle">@style/PropertyInspector</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLight</item>
+        <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
     </style>
 
     <style name="ContextualToolbarStyle">
-        <item name="pspdf__backgroundColor">@color/annotationToolbarBackground</item>
-        <item name="pspdf__submenuBackgroundColor">@color/submenuAnnotationToolbarBackground</item>
+        <item name="pspdf__backgroundColor">@color/ash</item>
+        <item name="pspdf__submenuBackgroundColor">@color/licorice</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">
@@ -58,7 +69,7 @@
     </style>
 
     <style name="AnnotationNoteHinter">
-        <item name="pspdf__noteHinterColor">@color/blueAnnotation</item>
+        <item name="pspdf__noteHinterColor">@color/textInfo</item>
         <item name="pspdf__noteHinterAlpha">255</item>
         <item name="pspdf__noteHinterIcon">@drawable/ic_annotation_comment_indicator</item>
     </style>
@@ -66,13 +77,24 @@
     <style name="StampPickerStyle">
         <item name="pspdf__maxHeight">320dp</item>
         <item name="pspdf__maxWidth">100dp</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+    </style>
+
+    <style name="PropertyInspector">
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+        <item name="pspdf__textColor">@color/textDarkest</item>
+    </style>
+
+    <style name="ModalDialogStyle">
+        <item name="pspdf__titleBackground">@color/ash</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/teacher_colorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/backgroundDarkest</item>
     </style>
 
     <style name="Widget.ActionButton.Overflow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -80,10 +102,10 @@
         <item name="android:src">@drawable/ic_overflow</item>
     </style>
 
-    <style name="Theme.BottomSheet" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-        <item name="colorPrimary">@color/teacher_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/teacher_colorPrimaryDark</item>
-        <item name="colorAccent">@color/teacher_colorAccent</item>
+    <style name="Theme.BottomSheet" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+        <item name="colorPrimary">@color/textDark</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDark</item>
         <item name="android:background">#00000000</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -91,9 +113,11 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+        <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
     </style>
 
-    <style name="RoundedContextDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="RoundedContextDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTitleStyle">@null</item>
@@ -129,7 +153,7 @@
         <item name="android:editable">false</item>
         <item name="android:text">--</item>
         <item name="android:minWidth">140dp</item>
-        <item name="android:textColorHint">@color/defaultTextGray</item>
+        <item name="android:textColorHint">@color/textDark</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -148,7 +172,7 @@
         <item name="android:layout_marginStart">7dp</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:importantForAccessibility">no</item>
-        <item name="android:tint">@color/login_grayCanvasLogo</item>
+        <item name="android:tint">@color/backgroundMedium</item>
         <item name="android:src">@drawable/ic_canvas_wordmark</item>
     </style>
 
@@ -163,7 +187,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Theme.AppCompat.Light.Translucent">
+    <style name="Theme.AppCompat.DayNight.Translucent">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
@@ -174,9 +198,9 @@
     </style>
 
     <style name="ToolBarStyle" parent="AppTheme">
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="ColorPickerDialogItem">
@@ -205,7 +229,7 @@
         <item name="android:paddingStart">20dp</item>
         <item name="android:paddingEnd">20dp</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:tint">@color/defaultTextDark</item>
+        <item name="android:tint">@color/textDarkest</item>
     </style>
 
     <style name="NavigationDrawerIcon">
@@ -214,8 +238,8 @@
         <item name="android:scaleType">fitCenter</item>
         <item name="android:importantForAccessibility">no</item>
         <item name="android:layout_marginEnd">24dp</item>
-        <item name="android:tint">@color/navigationDrawerTextDark</item>
-        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:tint">@color/textDarkest</item>
+        <item name="android:textColor">@color/textDarkest</item>
     </style>
 
     <style name="StudentContextInfoCell">
@@ -223,7 +247,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:background">@drawable/bg_button_rounded</item>
-        <item name="android:backgroundTint">@color/messageBackgroundGray</item>
+        <item name="android:backgroundTint">@color/backgroundLight</item>
         <item name="android:gravity">center</item>
         <item name="android:orientation">vertical</item>
         <item name="android:paddingStart">8dp</item>
@@ -237,7 +261,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
         <item name="android:textSize">20sp</item>
     </style>
 
@@ -245,7 +269,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:textColor">@color/textDarkest</item>
         <item name="android:textSize">12sp</item>
         <item name="android:layout_marginTop">4dp</item>
     </style>

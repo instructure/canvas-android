@@ -118,12 +118,9 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
         val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
-        scrollRecyclerView(R.id.listView, groupNameMatcher)
-        onView(groupNameMatcher).assertDisplayed()
+        onView(groupNameMatcher).scrollTo().assertDisplayed()
         val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView))
-        scrollRecyclerView(R.id.listView, groupDescriptionMatcher)
-        onView(groupDescriptionMatcher).assertDisplayed()
-
+        onView(groupDescriptionMatcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysAddCourseMessage() {
@@ -133,7 +130,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
-    fun signOut() {
+    fun logOut() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
         onViewWithText(android.R.string.yes).click()
@@ -246,8 +243,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectGroup(group: Group) {
         val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        scrollRecyclerView(R.id.listView, groupNameMatcher)
-        onView(withText(group.name)).click()
+        onView(groupNameMatcher).scrollTo().click()
     }
 
     fun launchSettingsPage() {
@@ -270,11 +266,14 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     // Assumes that a single announcement is showing
-    fun tapAnnouncementAndAssertDisplayed(announcement: AccountNotification) {
-        onView(withId(R.id.tapToView)).assertDisplayed().click()
+    fun assertAnnouncementDetailsDisplayed(announcement: AccountNotification) {
         WaitForViewWithId(R.id.canvasWebView)
         // Include isDisplayed() in the matcher to differentiate from other views with this text
         onView(withText(announcement.subject) + isDisplayed()).assertDisplayed()
+    }
+
+    fun tapAnnouncement() {
+        onView(withId(R.id.tapToView)).assertDisplayed().click()
     }
 
     fun dismissAnnouncement() {
@@ -283,6 +282,36 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun refresh() {
         onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.dashboardPage)).swipeDown()
+    }
+
+    fun assertAnnouncementGoneAndCheckAfterRefresh() {
+        assertAnnouncementsGone()
+        refresh()
+        assertAnnouncementsGone()
+    }
+
+    fun assertInviteShowing(courseName: String) {
+        onView(withText(courseName) + withAncestor(R.id.dashboardNotifications)).assertDisplayed()
+    }
+
+    fun acceptInvite() {
+        onView(withId(R.id.acceptButtonWrapper)).click()
+    }
+
+    fun declineInvite() {
+        onView(withId(R.id.declineButtonWrapper)).click()
+    }
+
+    fun assertInviteAccepted() {
+        onView(withText("Invite accepted!") + withAncestor(R.id.dashboardNotifications)).assertDisplayed()
+    }
+
+    fun assertInviteDeclined() {
+        onView(withText("Invite declined.") + withAncestor(R.id.dashboardNotifications)).assertDisplayed()
+    }
+
+    fun assertInviteGone(courseName: String) {
+        onView(withText(courseName) + withAncestor(R.id.dashboardNotifications)).check(doesNotExist())
     }
 }
 

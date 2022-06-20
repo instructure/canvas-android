@@ -17,11 +17,11 @@
 package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
 import android.app.Activity
-import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -37,6 +37,12 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         inflater,
         parent
     ) {
+
+    private lateinit var confirmationDialog: AlertDialog
+
+    private var initialText: String? = ""
+
+    private var canPressBack = false
 
     init {
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
@@ -60,6 +66,24 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         rce.actionUploadImageCallback = {
             MediaUploadUtils.showPickImageDialog(null, context as Activity)
         }
+
+        confirmationDialog = AlertDialog.Builder(context)
+            .setTitle(R.string.textSubmissionExitConfirmationTitle)
+            .setMessage(R.string.textSubmissionExitConfirmationMessage)
+            .setPositiveButton(R.string.save) {dialog, _ ->
+                canPressBack = true
+                output.accept(TextSubmissionUploadEvent.SaveDraft(rce.html))
+            }
+            .setNegativeButton(R.string.dontSave) {dialog, _ ->
+                canPressBack = true
+                dialog.dismiss()
+                (context as? Activity)?.onBackPressed()
+            }
+            .setNeutralButton(R.string.cancel) { dialog, _ ->
+                canPressBack = false
+                dialog.dismiss()
+            }
+            .create()
     }
 
     override fun render(state: TextSubmissionUploadViewState) {
@@ -71,17 +95,23 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     override fun onDispose() { }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarBottomSheet(context as Activity, false, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(context as Activity, toolbar)
     }
 
     fun setInitialSubmissionText(text: String?) {
+        initialText = text
         rce.setHtml(text ?: "", context.getString(R.string.textEntry), context.getString(R.string.submissionWrite), ThemePrefs.brandColor, ThemePrefs.buttonColor)
         toolbar.menu.findItem(R.id.menuSubmit).isEnabled = !text.isNullOrBlank()
     }
 
     fun onTextSubmitted(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
         SubmissionService.startTextSubmission(context, canvasContext, assignmentId, assignmentName, text)
+        canPressBack = true
+        (context as? Activity)?.onBackPressed()
+    }
 
+    fun saveDraft(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
+        SubmissionService.saveDraft(context, canvasContext, assignmentId, assignmentName, text)
         (context as? Activity)?.onBackPressed()
     }
 
@@ -106,5 +136,14 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
 
     fun showFailedImageMessage() {
         Toast.makeText(context, R.string.errorGettingPhoto, Toast.LENGTH_LONG).show()
+    }
+
+    fun onBackPressed(): Boolean {
+        return if (rce.html.isNotEmpty() && rce.html.isNotBlank() && initialText != rce.html && !canPressBack) {
+            confirmationDialog.show()
+            true
+        } else {
+            false
+        }
     }
 }

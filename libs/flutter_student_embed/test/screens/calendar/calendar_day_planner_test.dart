@@ -39,7 +39,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows loading indicator when loading', (tester) async {
       var api = MockPlannerApi();
       var student = CanvasModelTestUtils.mockUser(name: 'Panda');
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
         locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });
@@ -62,7 +62,7 @@ void main() {
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => Future.value([_createPlannerItem(contextName: 'blank')]));
       var student = CanvasModelTestUtils.mockUser(name: 'Panda');
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
         locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });
@@ -90,7 +90,7 @@ void main() {
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => completer.future);
 
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
         locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });
@@ -124,7 +124,7 @@ void main() {
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => completer.future);
 
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
         locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });
@@ -157,7 +157,7 @@ void main() {
       var api = MockPlannerApi();
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => []);
 
-      setupTestLocator((locator) {
+      await setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
         locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });

@@ -15,7 +15,6 @@
  */
 package com.instructure.student.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +23,8 @@ import android.widget.TextView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_RECIPIENTS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxRecipientAdapter
@@ -33,6 +34,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_INBOX_RECIPIENTS)
 class InboxRecipientsFragment : ParentFragment() {
 
     private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
@@ -43,7 +45,7 @@ class InboxRecipientsFragment : ParentFragment() {
 
     override fun applyTheme() {
         (view?.findViewById<View>(R.id.menu_done) as? TextView)?.setTextColor(ThemePrefs.buttonColor)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     private val adapter: InboxRecipientAdapter by lazy {

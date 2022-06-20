@@ -37,6 +37,7 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.scrollTo
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf

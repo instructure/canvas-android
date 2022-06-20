@@ -29,7 +29,7 @@ import '../../testutils/accessibility_utils.dart';
 import '../../testutils/dummy_widget.dart';
 import '../../testutils/test_app.dart';
 
-void main() {
+void main() async {
   CreateUpdateToDoScreenInteractor interactor = _MockCreateUpdateToDoScreenInteractor();
 
   AppLocalizations l10n = AppLocalizations();
@@ -46,7 +46,7 @@ void main() {
       ..name = 'Course 789'),
   ];
 
-  setupTestLocator((locator) {
+  await setupTestLocator((locator) {
     locator.registerLazySingleton<CreateUpdateToDoScreenInteractor>(() => interactor);
   });
 

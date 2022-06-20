@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_RECIPIENTS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -44,6 +45,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_INBOX_RECIPIENTS)
 class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPresenter, ChooseRecipientsView, RecipientViewHolder, ChooseMessageRecipientRecyclerAdapter>(), ChooseRecipientsView {
 
     private var mRecyclerAdapter: ChooseMessageRecipientRecyclerAdapter? = null
@@ -94,7 +96,7 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(layoutResId(), container, false)
+        val view = inflater.inflate(layoutResId(), container, false)
 
         setupToolbar(view)
         view.findViewById<TextView>(R.id.menuDone).setTextColor(ThemePrefs.buttonColor)
@@ -130,7 +132,7 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
             }
 
             // Apply toolbar theme
-            ViewStyler.themeToolbarBottomSheet(requireActivity(), resources.getBoolean(R.bool.isDeviceTablet), this, Color.BLACK, false)
+            ViewStyler.themeToolbarLight(requireActivity(), this)
         }
     }
 

@@ -20,10 +20,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.pandautils.analytics.SCREEN_VIEW_POST_GRADE_POLICY
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.features.postpolicies.*
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
 
+@ScreenView(SCREEN_VIEW_POST_GRADE_POLICY)
 class PostGradeFragment : MobiusFragment<PostGradeModel, PostGradeEvent, PostGradeEffect, PostGradeView, PostGradeViewState>() {
     private var assignment: Assignment by ParcelableArg(Assignment(), Const.ASSIGNMENT)
     private var isHidingGrades: Boolean by BooleanArg(false, IS_HIDE_GRADE_MODE)

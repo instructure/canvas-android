@@ -20,10 +20,13 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.analytics.SCREEN_VIEW_NO_INTERNET_CONNECTION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 
 import com.instructure.teacher.R
 
+@ScreenView(SCREEN_VIEW_NO_INTERNET_CONNECTION)
 class NoInternetConnectionDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

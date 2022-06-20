@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DUE_DATES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.EmptyView
@@ -42,6 +44,7 @@ import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DueDatesView
 import kotlinx.android.synthetic.main.fragment_assignment_due_dates.*
 
+@ScreenView(SCREEN_VIEW_DUE_DATES)
 class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDatesView, DueDateViewHolder, DueDatesAdapter>(), DueDatesView {
 
     var mAssignment: Assignment by ParcelableArg(key = ASSIGNMENT)
@@ -72,7 +75,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
         if(!isTablet) {
             toolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
     }
 
     override fun showMenu(assignment: Assignment) {

@@ -361,7 +361,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 notification.setProgress(0, 0, true)
                 notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
-                NotoriousUploader.performUpload(comment.mediaPath!!, object : ProgressRequestUpdateListener {
+                NotoriousUploader.performUpload(comment.mediaPath, object : ProgressRequestUpdateListener {
                     override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
                         updateCommentProgress(notification, comment, progressPercent, db)
                         return true
@@ -515,15 +515,10 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     }
 
     private fun detachForegroundNotification() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            stopForeground(Service.STOP_FOREGROUND_DETACH)
-        else
-            stopForeground(false)
+        stopForeground(Service.STOP_FOREGROUND_DETACH)
     }
 
     private fun createNotificationChannel(notificationManager: NotificationManager, channelId: String = CHANNEL_ID) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
         // Prevents recreation of notification channel if it exists.
         if (notificationManager.notificationChannels.any { it.id == channelId }) return
 
@@ -603,6 +598,17 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         private fun getUserId() = ApiPrefs.user!!.id
 
+        private fun insertDraft(assignmentId: Long, context: Context, insertBlock: (StudentDb) -> Unit): Long {
+            val db = Db.getInstance(context)
+            deleteDraftsForAssignment(assignmentId, db)
+            insertBlock(db)
+            return db.submissionQueries.getLastInsert().executeAsOne()
+        }
+
+        private fun deleteDraftsForAssignment(id: Long, db: StudentDb) {
+            db.submissionQueries.deleteDraftById(id, getUserId())
+        }
+
         private fun insertNewSubmission(assignmentId: Long, context: Context, files: List<FileSubmitObject> = emptyList(), insertBlock: (StudentDb) -> Unit): Long {
             val db = Db.getInstance(context)
             deleteSubmissionsForAssignment(assignmentId, db, files)
@@ -647,7 +653,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             text: String
         ) {
             val dbSubmissionId = insertNewSubmission(assignmentId, context) {
-                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
+                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now(), false)
             }
 
             val bundle = Bundle().apply {
@@ -655,6 +661,18 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             }
 
             startService(context, Action.TEXT_ENTRY, bundle)
+        }
+
+        fun saveDraft(
+            context: Context,
+            canvasContext: CanvasContext,
+            assignmentId: Long,
+            assignmentName: String?,
+            text: String
+        ) {
+            insertDraft(assignmentId, context) {
+                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now(), true)
+            }
         }
 
         fun startUrlSubmission(

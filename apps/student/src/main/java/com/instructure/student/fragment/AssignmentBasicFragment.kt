@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_BASIC
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
@@ -39,6 +41,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_BASIC)
 class AssignmentBasicFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -94,13 +97,12 @@ class AssignmentBasicFragment : ParentFragment() {
             override fun launchInternalWebViewFragment(url: String) {
                 // Create and add the InternalWebviewFragment to deal with the link they clicked
                 val route = InternalWebviewFragment.makeRoute(url, "", false, "")
-                InternalWebviewFragment.newInstance(route)?.let {
-                    val ft = requireActivity().supportFragmentManager.beginTransaction()
-                    ft.setCustomAnimations(R.anim.slide_in_from_bottom, android.R.anim.fade_out, R.anim.none, R.anim.slide_out_to_bottom)
-                    ft.add(R.id.fullscreen, it, it.javaClass.name)
-                    ft.addToBackStack(it.javaClass.name)
-                    ft.commitAllowingStateLoss()
-                }
+                val fragment = InternalWebviewFragment.newInstance(route)
+                val ft = requireActivity().supportFragmentManager.beginTransaction()
+                ft.setCustomAnimations(R.anim.slide_in_from_bottom, android.R.anim.fade_out, R.anim.none, R.anim.slide_out_to_bottom)
+                ft.add(R.id.fullscreen, fragment, fragment.javaClass.name)
+                ft.addToBackStack(fragment.javaClass.name)
+                ft.commitAllowingStateLoss()
 
             }
 
@@ -168,7 +170,7 @@ class AssignmentBasicFragment : ParentFragment() {
         toolbar.let {
             it.title = assignment.name ?: ""
             it.setupAsBackButton(this)
-            ViewStyler.themeToolbar(requireActivity(), it, canvasContext)
+            ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
         }
     }
 

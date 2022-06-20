@@ -29,14 +29,18 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.QuizListRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToFragmentCallback
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.quiz_list_layout.*
 
+@ScreenView(SCREEN_VIEW_QUIZ_LIST)
 @PageView(url = "{canvasContext}/quizzes")
 class QuizListFragment : ParentFragment(), Bookmarkable {
 
@@ -83,13 +87,13 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
             }
             recyclerAdapter?.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(
-            view!!,
+            requireView(),
             requireContext(),
             recyclerAdapter!!,
             R.id.swipeRefreshLayout,
@@ -131,7 +135,15 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
         if (navigation != null) {
             /* The quiz list endpoint is currently missing the quiz question types, so we'll route using the quiz url
             which should pull the full quiz details including the question types. */
-            if (!RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain, true)) {
+            if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain, false)) {
+                val route = RouteMatcher.getInternalRoute(quiz.htmlUrl!!, ApiPrefs.domain)
+                val secondaryClass = when (route?.primaryClass) {
+                    QuizListFragment::class.java -> BasicQuizViewFragment::class.java
+                    AssignmentListFragment::class.java -> AssignmentDetailsFragment::class.java
+                    else -> null
+                }
+                RouteMatcher.routeUrl(requireContext(), quiz.htmlUrl!!, ApiPrefs.domain, secondaryClass = secondaryClass)
+            } else {
                 RouteMatcher.route(requireContext(), BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
             }
         }

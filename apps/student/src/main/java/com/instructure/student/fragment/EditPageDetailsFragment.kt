@@ -19,7 +19,6 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -35,6 +34,8 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_PAGE_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.UnsavedChangesExitDialog
@@ -42,6 +43,7 @@ import com.instructure.student.events.PageUpdatedEvent
 import kotlinx.android.synthetic.main.fragment_edit_page.*
 import org.greenrobot.eventbus.EventBus
 
+@ScreenView(SCREEN_VIEW_EDIT_PAGE_DETAILS)
 class EditPageDetailsFragment : ParentFragment() {
 
     private var apiJob: WeaveJob? = null
@@ -120,7 +122,7 @@ class EditPageDetailsFragment : ParentFragment() {
                 ThemePrefs.brandColor, ThemePrefs.buttonColor
         )
         // when the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        pageRCEView.setLabel(pageDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        pageRCEView.setLabel(pageDescLabel, R.color.textDarkest, R.color.textDark)
     }
 
     private fun savePage() {
@@ -172,7 +174,7 @@ class EditPageDetailsFragment : ParentFragment() {
         }
         toolbar.title = page.title
         setupToolbarMenu(toolbar, R.menu.menu_edit_page)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         with(saveMenuButton) {
             setIcon(0)

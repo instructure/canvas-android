@@ -220,7 +220,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
       } else {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-          child: Text(widget.emptyDescription, style: Theme.of(context).textTheme.body1),
+          child: Text(widget.emptyDescription, style: Theme.of(context).textTheme.bodyText2),
         );
       }
     }

@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.apis.InboxApi.Scope
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxAdapter
@@ -42,6 +44,7 @@ import kotlinx.android.synthetic.main.fragment_inbox.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
+@ScreenView(SCREEN_VIEW_INBOX)
 @PageView(url = "conversations")
 class InboxFragment : ParentFragment() {
 
@@ -96,7 +99,7 @@ class InboxFragment : ParentFragment() {
         try {
             onUnreadCountInvalidated = context as OnUnreadCountInvalidated?
         } catch (e: ClassCastException) {
-            throw ClassCastException(context!!.toString() + " must implement OnUnreadCountInvalidated")
+            throw ClassCastException(context.toString() + " must implement OnUnreadCountInvalidated")
         }
 
     }
@@ -238,7 +241,7 @@ class InboxFragment : ParentFragment() {
 
     override fun applyTheme() {
         setupToolbarMenu(toolbar, R.menu.menu_filter_inbox)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
     }
 

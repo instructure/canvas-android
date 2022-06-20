@@ -39,6 +39,7 @@ import com.instructure.student.R
 import com.instructure.student.holders.PeopleHeaderViewHolder
 import com.instructure.student.holders.PeopleViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
+import java.util.Locale
 
 class PeopleListRecyclerAdapter(
         context: Context,
@@ -148,7 +149,7 @@ class PeopleListRecyclerAdapter(
 
     override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<EnrollmentType, User> {
         return object : GroupSortedList.ItemComparatorCallback<EnrollmentType, User> {
-            override fun compare(group: EnrollmentType, o1: User, o2: User) = NaturalOrderComparator.compare(o1.sortableName?.toLowerCase().orEmpty(), o2.sortableName?.toLowerCase().orEmpty())
+            override fun compare(group: EnrollmentType, o1: User, o2: User) = NaturalOrderComparator.compare(o1.sortableName?.lowercase(Locale.getDefault()).orEmpty(), o2.sortableName?.lowercase(Locale.getDefault()).orEmpty())
             override fun areContentsTheSame(oldItem: User, newItem: User) = oldItem.sortableName == newItem.sortableName
             override fun areItemsTheSame(item1: User, item2: User) = item1.id == item2.id
             override fun getUniqueItemId(item: User) = item.id

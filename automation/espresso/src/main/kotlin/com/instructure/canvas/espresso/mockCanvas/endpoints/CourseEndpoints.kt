@@ -38,11 +38,20 @@ object CourseListEndpoint : Endpoint(
         LongId(PathVars::courseId) to CourseEndpoint,
         response = {
             GET {
+                val enrollmentState = request.url.queryParameter("enrollment_state")
                 val user = request.user!!
                 val courses = data.enrollments
                         .values
                         .filter { it.userId == user.id }
                         .map { data.courses[it.courseId]!! }
+                        .filter {
+                            when (enrollmentState) {
+                                "active" -> it.isCurrentEnrolment()
+                                "completed" -> it.isPastEnrolment()
+                                "invited_or_pending" -> it.isFutureEnrolment()
+                                else -> true
+                            }
+                        }
                 request.successPaginatedResponse(courses)
             }
         }
@@ -65,6 +74,7 @@ object CourseEndpoint : Endpoint(
         Segment("files") to CourseFilesEndpoint,
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         Segment("modules") to CourseModuleListEndpoint,
+        Segment("module_item_sequence") to CourseModuleItemSequenceEndpoint,
         Segment("quizzes") to CourseQuizListEndpoint,
         Segment("all_quizzes") to CourseQuizListEndpoint,
         Segment("users") to CourseUsersEndpoint,
@@ -72,7 +82,7 @@ object CourseEndpoint : Endpoint(
         Segment("lti_apps") to CourseLTIAppsEndpoint,
         Segment("grading_periods") to CourseGradingPeriodsEndpoint,
         Segment("sections") to CourseSectionsEndpoint,
-        Segment("enrollments") to CourseEnrollmentsEndpoint,
+        Segment("enrollments") to EnrollmentIndexEndpoint,
         Segment("features") to Endpoint(
                 Segment("enabled") to CourseEnabledFeaturesEndpoint
         ),
@@ -155,17 +165,6 @@ object CourseEnabledFeaturesEndpoint : Endpoint( response = {
     }
 })
 
-/**
- * Endpoint for course enrollments
- */
-object CourseEnrollmentsEndpoint : Endpoint( response = {
-    GET {
-        // TODO: Pay closer attention to query variables (e.g., "include[]=avatar_url", "state[]=active")
-        val courseId = pathVars.courseId
-        val courseEnrollments =  data.enrollments.values.filter {e -> e.courseId == courseId}
-        request.successResponse(courseEnrollments)
-    }
-})
 /**
  * Endpoint for sections
  */
@@ -903,5 +902,13 @@ object CourseSingleUserEndpoint : Endpoint(
             }
         }
 
+    }
+)
+
+object CourseModuleItemSequenceEndpoint : Endpoint(
+    response = {
+        GET {
+            request.successResponse(ModuleItemSequence())
+        }
     }
 )

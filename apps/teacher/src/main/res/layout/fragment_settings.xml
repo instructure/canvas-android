@@ -22,7 +22,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/settingsPage">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -45,6 +46,34 @@
             android:contentDescription="@string/scrollInstructions"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:id="@+id/appThemeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:paddingEnd="12dp"
+                android:paddingStart="16dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/appThemeTitle"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="@string/appThemeSettingsTitle" />
+
+                <TextView
+                    android:id="@+id/appThemeStatus"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textDark"
+                    android:textSize="12sp"
+                    android:text="@string/appThemeLight" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/profileButton"
                 style="@style/TextFont.Medium"
@@ -56,7 +85,21 @@
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
                 android:text="@string/profileSettings"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/notificationPreferenesButton"
+                style="@style/TextFont.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:gravity="center_vertical"
+                android:minHeight="?android:listPreferredItemHeight"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/pushNotifications"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"/>
 
             <TextView
@@ -70,7 +113,7 @@
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
                 android:text="@string/rateOnTheAppStore"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"/>
 
             <TextView
@@ -84,7 +127,7 @@
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
                 android:text="@string/legal"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"/>
 
             <TextView
@@ -97,7 +140,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/featureFlagsTitle"
-                android:textColor="@color/colorOcean11"
+                android:textColor="@color/textInfo"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible"/>
@@ -112,7 +155,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/remoteConfigParamsTitle"
-                android:textColor="@color/colorOcean11"
+                android:textColor="@color/textInfo"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible"/>
@@ -136,7 +179,7 @@
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:importantForAccessibility="no"
-                    android:tint="@color/bottomNavBarBg"
+                    android:tint="@color/backgroundMedium"
                     app:srcCompat="@drawable/ic_canvas_logo"/>
 
                 <TextView
@@ -147,7 +190,7 @@
                     android:layout_marginStart="8dp"
                     android:focusable="true"
                     android:importantForAccessibility="yes"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:textSize="12sp"
                     tools:text="Version 1.4"/>
 

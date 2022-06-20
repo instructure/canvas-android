@@ -25,12 +25,8 @@ import com.instructure.canvasapi2.models.Group
 interface CourseAdapterToFragmentCallback {
     fun onRefreshFinished()
     fun onSeeAllCourses()
-    fun onRemoveAnnouncement(announcement: AccountNotification, position: Int)
     fun onGroupSelected(group: Group)
     fun onCourseSelected(course: Course)
     fun onEditCourseNickname(course: Course)
     fun onPickCourseColor(course: Course)
-    fun onHandleCourseInvitation(course: Course, accepted: Boolean)
-    fun onConferenceSelected(conference: Conference)
-    fun onDismissConference(conference: Conference)
 }

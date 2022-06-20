@@ -137,7 +137,7 @@ abstract class SyncExpandableRecyclerAdapter<
         val groups = groups
         for (group in groups!!) {
             for (model in getItems(group)!!) {
-                if (model!!.id == item.id) {
+                if (model.id == item.id) {
                     addOrUpdateItem(group, item)
                     return
                 }

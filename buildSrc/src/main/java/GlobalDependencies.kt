@@ -3,7 +3,7 @@
 object Versions {
     /* SDK Versions */
     const val COMPILE_SDK = 30
-    const val MIN_SDK = 23
+    const val MIN_SDK = 26
     const val TARGET_SDK = 30
 
     /* Build/tooling */
@@ -13,9 +13,8 @@ object Versions {
 
     /* Testing */
     const val JACOCO = "0.8.7"
-    const val JUNIT = "4.12"
+    const val JUNIT = "4.13.2"
     const val ROBOLECTRIC = "4.3.1"
-    const val ESPRESSO = "3.1.0"
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
@@ -23,16 +22,16 @@ object Versions {
     const val KOTLIN_COROUTINES = "1.5.2"
 
     /* Google, Play Services */
-    const val GOOGLE_SERVICES = "4.3.3"
+    const val GOOGLE_SERVICES = "4.3.10"
     const val FIREBASE_CONFIG = "18.0.0"
-    const val PLAY_CORE = "1.10.0"
+    const val PLAY_CORE = "1.10.3"
     const val PLAY_CORE_KTX = "1.8.1"
 
     /* Others */
     const val APOLLO = "2.5.9"
     const val CRASHLYTICS = "17.2.1"
     const val FIREBASE_ANALYTICS = "17.4.1"
-    const val PSPDFKIT = "6.6.2"
+    const val PSPDFKIT = "8.1.0"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.4.3"
@@ -75,17 +74,19 @@ object Libs {
     const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.1.0"
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
+    const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.4.0"
 
-    /* Google Dependencies */
-    const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics:${Versions.FIREBASE_ANALYTICS}"
-    const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics:${Versions.CRASHLYTICS}"
-    const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging:20.1.7"
-    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:17.0.0"
-    const val PLAY_SERVICES_WEARABLE = "com.google.android.gms:play-services-wearable:16.0.1"
-    const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:16.0.1"
-    const val FIREBASE_CORE = "com.google.firebase:firebase-core:17.2.0"
-    const val FIREBASE_CONFIG = "com.google.firebase:firebase-config:${Versions.FIREBASE_CONFIG}"
-    const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk:17.2.1"
+    /* Firebase */
+    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:29.3.0"
+    const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics"
+    const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
+    const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging"
+    const val FIREBASE_CORE = "com.google.firebase:firebase-core"
+    const val FIREBASE_CONFIG = "com.google.firebase:firebase-config"
+    const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk"
+
+    /* Play Services */
+    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:18.0.1"
     const val PLAY_CORE = "com.google.android.play:core:${Versions.PLAY_CORE}"
     const val PLAY_CORE_KTX = "com.google.android.play:core-ktx:${Versions.PLAY_CORE_KTX}"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
@@ -99,15 +100,14 @@ object Libs {
     /* Testing */
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val ROBOLECTRIC = "org.robolectric:robolectric:${Versions.ROBOLECTRIC}"
-    const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.1.0"
-    const val MOCKK = "io.mockk:mockk:1.10.0"
+    const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.1.3"
+    const val MOCKK = "io.mockk:mockk:1.12.3"
     const val THREETEN_BP = "org.threeten:threetenbp:1.3.8"
     const val UI_AUTOMATOR = "com.android.support.test.uiautomator:uiautomator-v18:2.1.3"
-    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.3.0"
+    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.3.0" // Newer version needs AGP 4.2+
 
     /* Qr Code (zxing) */
-    const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.1.0"
-    const val ZXING = "com.google.zxing:core:3.3.0"
+    const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.3.0"
 
     /* Dependency Inejction */
     const val HILT = "com.google.dagger:hilt-android:${Versions.HILT}"
@@ -123,7 +123,7 @@ object Libs {
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
-    const val EXOPLAYER = "com.github.google.ExoPlayer:exoplayer:r2.9.6"
+    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:2.17.1"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
     const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"
@@ -145,7 +145,7 @@ object Libs {
 
     /* Other */
     const val LOTTIE = "com.airbnb.android:lottie:4.1.0"
-    const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.4.0"
+    const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.3.1"
     const val SQLDELIGHT = "com.squareup.sqldelight:android-driver:1.4.3"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
     const val EVENTBUS = "org.greenrobot:eventbus:3.2.0"

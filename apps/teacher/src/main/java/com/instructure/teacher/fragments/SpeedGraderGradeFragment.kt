@@ -18,6 +18,8 @@ package com.instructure.teacher.fragments
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_GRADE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -35,6 +37,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.DecimalFormat
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER_GRADE)
 class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter, SpeedGraderGradeView>(), SpeedGraderGradeView {
 
     private var mSubmission: Submission? by NullableParcelableArg(default = Submission())
@@ -74,10 +77,10 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
-        val submissionId = presenter?.submission?.id ?: return
+        val submissionId = presenter.submission?.id ?: return
         event.once(javaClass.simpleName + submissionId) {
             if (mAssignment.id == it) {
-                presenter?.refreshSubmission()
+                presenter.refreshSubmission()
             }
         }
     }
@@ -106,10 +109,10 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             if (it.score > presenter.assignment.pointsPossible) {
                 val numberFormatter = DecimalFormat("##.##")
                 gradeText.text = getString(R.string.speed_grader_overgraded_by, numberFormatter.format(it.score - presenter.assignment.pointsPossible))
-                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.alertOrange))
+                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textWarning))
             } else {
                 gradeText.setText(R.string.grade)
-                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textDarkest))
             }
         }
 

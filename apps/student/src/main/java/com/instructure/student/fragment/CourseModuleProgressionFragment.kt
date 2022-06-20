@@ -41,10 +41,14 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_MODULE_PROGRESSION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.instructure.student.util.CourseModulesStore
 import com.instructure.student.util.ModuleProgressionUtility
@@ -55,6 +59,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_COURSE_MODULE_PROGRESSION)
 class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     private var routeModuleProgressionJob: Job? = null
@@ -67,12 +72,14 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var childPos: Int by IntArg(key = CHILD_POSITION)
     private var modules: ArrayList<ModuleObject> by ParcelableArrayListArg(key = MODULE_OBJECTS)
     private var items: ArrayList<ArrayList<ModuleItem>> by SerializableArg(key = MODULE_ITEMS, default = ArrayList())
-    private var moduleItemId: String by StringArg(key = ITEM_ID)
+    private var assetId: String by StringArg(key = ASSET_ID)
+    private var assetType: String by StringArg(key = ASSET_TYPE, default = ModuleItemAsset.MODULE_ITEM.assetType)
+    private var route: Route by ParcelableArg(key = ROUTE)
 
     // Default number will get reset
     private var itemsCount = 3
 
-    private lateinit var adapter: CourseModuleProgressionAdapter
+    private var adapter: CourseModuleProgressionAdapter? = null
 
     // There's a case where we try to get the previous module and the previous module has a paginated list
     // of items.  A task will get those items and populate them in the background, but it throws off the
@@ -103,7 +110,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        loadModuleProgression(moduleItemId, savedInstanceState)
+        loadModuleProgression(savedInstanceState)
     }
 
     override fun onDestroyView() {
@@ -119,7 +126,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     // This function is mostly for the internal web view fragments so we can go back in the webview
     override fun handleBackPressed(): Boolean {
         if (viewPager != null && viewPager.currentItem != -1 && items.isNotEmpty()) {
-            val pFrag = adapter.instantiateItem(viewPager, viewPager.currentItem) as? ParentFragment
+            val pFrag = adapter?.instantiateItem(viewPager, viewPager.currentItem) as? ParentFragment
             if (pFrag != null && pFrag.handleBackPressed()) {
                 return true
             }
@@ -208,7 +215,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun setViewInfo(bundle: Bundle?) {
-
         // Figure out the total size so the adapter knows how many items it will have
         var size = 0
         for (i in items.indices) { size += items[i].size }
@@ -273,7 +279,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             // Reload the sequential module object to update the subsequent items that may now be unlocked
             // The user has viewed the item, and may have completed the contribute/submit requirements for a
             // discussion/assignment.
-            adapter.notifyDataSetChanged()
+            adapter?.notifyDataSetChanged()
             addLockedIconIfNeeded(modules, items, groupPos, childPos)
 
             // Mark the item as viewed
@@ -379,7 +385,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 currentPos += itemsAdded
             }
 
-            adapter.notifyDataSetChanged()
+            adapter?.notifyDataSetChanged()
 
             // When we tap on a module item it will try to load the previous and next_item modules, this can throw off the module item that was already loaded,
             // so load it to the current position
@@ -387,6 +393,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
             //prev_item/next_item buttons may now need to be visible (if we were on a module item that was the last in its group but
             //now we have info about the next_item module, we want the user to be able to navigate there)
+            bottomBarModule.setVisible()
             updateBottomNavBarButtons()
         } catch { }
     }
@@ -706,20 +713,26 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     }
     //endregion
 
-    private fun loadModuleProgression(moduleItemId: String, bundle: Bundle?) {
-        if(moduleItemId.isBlank()) {
+    private fun loadModuleProgression(bundle: Bundle?) {
+        if(assetId.isBlank()) {
+            bottomBarModule.setVisible()
             setViewInfo(bundle)
             setButtonListeners()
             updateBottomNavBarButtons()
             return
         }
 
+        progressBar.setVisible()
         routeModuleProgressionJob = tryWeave {
-            val moduleItemSequence = awaitApi<ModuleItemSequence> { ModuleManager.getModuleItemSequence(canvasContext, ModuleManager.MODULE_ASSET_MODULE_ITEM, moduleItemId, it, true) }
+            val moduleItemSequence = awaitApi<ModuleItemSequence> { ModuleManager.getModuleItemSequence(canvasContext, assetType, assetId, it, true) }
             // Make sure that there is a sequence
-            if (moduleItemSequence.items!!.isNotEmpty()) {
+            val sequenceItems = moduleItemSequence.items ?: emptyArray()
+            if (sequenceItems.isNotEmpty()) {
                 // Get the current module item. we'll use the id of this down below
-                val current = moduleItemSequence.items!!.firstOrNull { it.current!!.id == moduleItemId.toLong() }?.current ?: moduleItemSequence.items!![0].current
+                val current = when {
+                   assetType == ModuleItemAsset.MODULE_ITEM.assetType -> sequenceItems.firstOrNull { it.current!!.id == assetId.toLong() }?.current ?: sequenceItems[0].current
+                   else -> sequenceItems[0].current
+                }
                 val moduleItems = awaitApi<List<ModuleItem>> { ModuleManager.getAllModuleItems(canvasContext, current!!.moduleId, it, true) }
                 val unfilteredItems = ArrayList<ArrayList<ModuleItem>>(1).apply { add(ArrayList(moduleItems)) }
                 modules = ArrayList<ModuleObject>(1).apply { moduleItemSequence.modules!!.firstOrNull { it.id == current?.moduleId }?.let { add(it) } }
@@ -727,23 +740,36 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 groupPos = moduleHelper.newGroupPosition
                 childPos = moduleHelper.newChildPosition
                 items = moduleHelper.strippedModuleItems
+            } else {
+                progressBar.setGone()
+                val moduleItemAsset = ModuleItemAsset.fromAssetType(assetType)
+                if (moduleItemAsset != ModuleItemAsset.MODULE_ITEM) {
+                    val newRoute = route.copy(secondaryClass = moduleItemAsset.routeClass, removePreviousScreen = true)
+                    RouteMatcher.route(requireContext(), newRoute)
+                    return@tryWeave
+                }
             }
 
+            progressBar.setGone()
+            bottomBarModule.setVisible()
             setViewInfo(bundle)
             setButtonListeners()
         } catch {
+            progressBar.setGone()
             Logger.e("Error routing modules: " + it.message)
         }
     }
 
     companion object {
 
-        const val MODULE_ITEMS = "module_item"
-        const val MODULE_OBJECTS = "module_objects"
-        const val MODULE_POSITION = "module_position"
-        const val GROUP_POSITION = "group_position"
-        const val CHILD_POSITION = "child_position"
-        const val ITEM_ID = "item_id"
+        private const val MODULE_ITEMS = "module_item"
+        private const val MODULE_OBJECTS = "module_objects"
+        private const val MODULE_POSITION = "module_position"
+        private const val GROUP_POSITION = "group_position"
+        private const val CHILD_POSITION = "child_position"
+        private const val ASSET_ID = "asset_id"
+        private const val ASSET_TYPE = "asset_type"
+        private const val ROUTE = "route"
 
 
         //we don't want to add subheaders or external tools into the list. subheaders don't do anything and we
@@ -763,11 +789,15 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
         fun newInstance(route: Route): CourseModuleProgressionFragment? {
             val fragment = if (validRoute(route)) CourseModuleProgressionFragment().apply {
-                arguments = route.arguments.apply {
+                arguments = Bundle().apply {
+                    putAll(route.arguments)
                     putSerializable(MODULE_ITEMS, CourseModulesStore.moduleListItems)
                     putParcelableArrayList(MODULE_OBJECTS, CourseModulesStore.moduleObjects)
+                    putParcelable(ROUTE, route)
                 }
-                moduleItemId = route.queryParamsHash[RouterParams.MODULE_ITEM_ID] ?: ""
+                val asset = getAssetTypeAndId(route)
+                assetType = asset.first.assetType
+                assetId = asset.second
             } else null
 
             CourseModulesStore.moduleListItems = null
@@ -776,8 +806,40 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             return fragment
         }
 
+        private fun getAssetTypeAndId(route: Route): Pair<ModuleItemAsset, String> {
+            val queryParams = route.queryParamsHash
+            val params = route.paramsHash
+            if (queryParams.containsKey(RouterParams.MODULE_ITEM_ID)) {
+                return Pair(ModuleItemAsset.MODULE_ITEM, queryParams[RouterParams.MODULE_ITEM_ID] ?: "")
+            }
+
+            ModuleItemAsset.values().forEach {
+                if (params.containsKey(it.assetIdParamName)) {
+                    return Pair(it, params[it.assetIdParamName] ?: "")
+                }
+            }
+
+            return Pair(ModuleItemAsset.MODULE_ITEM, "")
+        }
+
         private fun validRoute(route: Route): Boolean = route.canvasContext != null
             && (CourseModulesStore.moduleObjects != null && CourseModulesStore.moduleListItems != null)
             || route.queryParamsHash.keys.any { it == RouterParams.MODULE_ITEM_ID }
+            || route.paramsHash.keys.any { isModuleItemAsset(it) }
+
+        private fun isModuleItemAsset(paramName: String) = ModuleItemAsset.values().find { it.assetIdParamName == paramName } != null
+    }
+}
+
+enum class ModuleItemAsset(val assetType: String, val assetIdParamName: String, val routeClass: Class<out Fragment>? = null) {
+    MODULE_ITEM("ModuleItem", RouterParams.MODULE_ITEM_ID),
+    PAGE("Page", RouterParams.PAGE_ID, PageDetailsFragment::class.java),
+    QUIZ("Quiz", RouterParams.QUIZ_ID, BasicQuizViewFragment::class.java),
+    DISCUSSION("Discussion", RouterParams.MESSAGE_ID, DiscussionDetailsFragment::class.java),
+    ASSIGNMENT("Assignment", RouterParams.ASSIGNMENT_ID, AssignmentDetailsFragment::class.java),
+    FILE("File", RouterParams.FILE_ID, FileDetailsFragment::class.java);
+
+    companion object {
+        fun fromAssetType(assetType: String): ModuleItemAsset = values().find { it.assetType == assetType } ?: MODULE_ITEM
     }
 }

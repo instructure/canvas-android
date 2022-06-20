@@ -168,4 +168,5 @@ object Const {
     const val INTENT_ACTION_STUDENT_VIEW = "com.instructure.student.STUDENT_VIEW"
     const val CLIENT_ID = "clientId"
     const val CLIENT_SECRET = "clientSecret"
+    const val IS_ELEMENTARY = "isElementary"
 }

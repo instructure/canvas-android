@@ -56,9 +56,6 @@ class ConferenceListRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysLaunchingInBrowserState() {
-        // Skip on API < 24 (known issue with progress bars)
-        if(Build.VERSION.SDK_INT < 24) return
-
         val state = ConferenceListViewState.Loaded(isLaunchingInBrowser = true, itemStates =  emptyList())
         loadPageWithViewState(state, canvasContext)
 

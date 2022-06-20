@@ -31,12 +31,12 @@
     <string name="cancel">Cancel·la</string>
     <string name="help">Ajuda</string>
     <string name="enterURL">Introduïu l\'URL de Canvas:</string>
-    <string name="signIntoCanvasNetwork">Esteu provant d\'iniciar la sessió a Xarxa Canvas?</string>
-    <string name="remove">Elimina</string>
+    <string name="signIntoCanvasNetwork">Esteu provant d\'iniciar la sessió a la xarxa Canvas?</string>
+    <string name="remove">Suprimeix</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
-    <string name="userId">ID d\'usuari</string>
+    <string name="userId">ID d’usuari</string>
     <string name="domain">Domini</string>
-    <string name="actAsUser">Actua com a usuari</string>
+    <string name="actAsUser">Actua com un usuari</string>
     <string name="stopActAsUser">Deixa d\'actuar com a usuari</string>
 
     <!--Multiple User Sign in -->
@@ -50,7 +50,7 @@
     <string name="canvasLoginOff">Canvas_Login: DESACTIVAT</string>
     <string name="siteAdminLogin">Inici de sessió de l\'administrador del lloc web: ACTIVAT</string>
 
-    <string name="username">Nom d\'usuari</string>
+    <string name="username">Nom d’usuari</string>
     <string name="password">Contrasenya</string>
     <string name="authenticationRequired">Cal autenticació</string>
     <string name="invalidEmailPassword">L\'adreça electrònica o la contrasenya no són vàlides</string>
@@ -64,6 +64,7 @@
     <string name="logout_no">No</string>
 
     <!--Smart Login-->
+
     <string name="loginNearYou">A prop vostre</string>
     <string name="loginCanvasNetwork">Xarxa Canvas</string>
     <string name="loginRightBehindYou">Just darrere vostre</string>
@@ -82,7 +83,7 @@
     <string name="errorSeverityNeedHelp">Necessito ajuda, però no és urgent.</string>
     <string name="errorSeveritySomethingsBroken">S\'ha trencat alguna cosa, però puc resoldre-ho per tal d\'acabar de fer allò que necessito.</string>
     <string name="errorSeverityCantGetThingsDone">No puc acabar de fer les coses fins que torni a tenir notícies teves.</string>
-    <string name="errorSeverityExtremelyCritical">EMERGÈNCIA CRÍTICA EXTREMA</string>
+    <string name="errorSeverityExtremelyCritical">EMERGÈNCIA DE CRÍTICA IMPORTÀNCIA!!</string>
 
     <string name="errorReportEmailAddress">Adreça electrònica</string>
     <string name="errorReportUnknown">Desconegut</string>
@@ -101,7 +102,7 @@
     <string name="findMySchool">Cerca la meva escola</string>
     <string name="loginWithQRCode">Codi QR</string>
     <string name="locateQRCode">Localitzeu el codi QR</string>
-    <string name="qrCodeExplanation">Trobareu el codi QR a la web, al perfil del vostre compte. Feu clic a "QR per a inici de sessió mòbil" a la llista.</string>
+    <string name="qrCodeExplanation">Trobareu el codi QR a la web, al perfil del vostre usuari. Feu clic a "QR per a inici de sessió mòbil" a la llista.</string>
     <string name="qrCodeScanningPrompt">Escanegeu un codi QR del Canvas per iniciar la sessió</string>
     <string name="loginWithQRCodeError">S\'ha produït un error en iniciar la sessió. Genereu un altre codi QR i torneu-ho a provar.</string>
     <string name="invalidQRCodeError">Escanegeu un codi QR generat pel Canvas</string>
@@ -117,15 +118,15 @@
     <string name="login_noInternetConnectionMessage">Per dur a terme aquesta acció cal tenir una connexió a Internet.</string>
     <string name="empty_feedback">Per enviar comentaris cal indicar un assumpte i una descripció.</string>
     <string name="versionNum">Número de versió</string>
-    <string name="scrollInstructions">Desplaceu-vos perquè es mostri tota la informació</string>
+    <string name="scrollInstructions">Desplaceu-vos perquè es mostri tota la informació.</string>
 
     <string name="masqueradeErrorUserId">Heu d\'introduir un ID d\'usuari.</string>
     <string name="masqueradeErrorDomain">Heu d\'introduir un domini vàlid.</string>
     <string name="masqueradeError">Error en provar d\'actuar com un usuari.</string>
-    <string name="masqueradeInfo">\"Fer de\" consisteix essencialment a iniciar la sessió com a aquest usuari sense cap contrasenya. Podreu dur a terme accions com si fóssiu aquest usuari i, de cara a altres usuaris, serà com si les realitzés aquest usuari. No obstant això, als registres d\'auditoria s\'enregistrarà que vau ser qui va dur a terme les accions en nom d\'aquest usuari.</string>
+    <string name="masqueradeInfo">\"Fer de\" consisteix essencialment a iniciar la sessió com a aquest usuari sense cap contrasenya. Podreu dur a terme accions com si fóssiu aquest usuari i, de cara a altres usuaris, serà com si les realitzés aquest usuari. Tanmateix, els registres d\'auditoria enregistren que heu sigut vós qui ha dut a terme les accions en nom de l\'altre usuari.</string>
     <string name="masqueradingAs">Esteu fent de %s</string>
     <string name="stopActingAsTitle">Deixa d\'actuar com...</string>
-    <string name="stopActingAsMessage">Deixareu de fer de %s i tornareu al vostre compte.</string>
+    <string name="stopActingAsMessage">Deixareu de fer de %s i tornareu al vostre usuari.</string>
     <string name="weMadeChanges">Hem introduït alguns canvis.</string>
     <string name="whatsNewText">Consulteu les novetats</string>
 </resources>

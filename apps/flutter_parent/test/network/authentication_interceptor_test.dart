@@ -36,6 +36,7 @@ void main() {
   final dio = MockDio();
   final authApi = MockAuthApi();
   final analytics = MockAnalytics();
+  final errorHandler = _MockErrorHandler();
 
   final interceptor = AuthenticationInterceptor(dio);
 
@@ -48,33 +49,37 @@ void main() {
     reset(dio);
     reset(authApi);
     reset(analytics);
+    reset(errorHandler);
   });
 
   test('returns error if response code is not 401', () async {
     await setupPlatformChannels();
-    final error = DioError(request: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 403));
+    final error = DioError(requestOptions: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 403));
 
     // Test the error response
-    expect(await interceptor.onError(error), error);
+    await interceptor.onError(error, errorHandler);
+    verify(errorHandler.next(error));
   });
 
   test('returns error if path is accounts/self', () async {
     await setupPlatformChannels();
-    final error = DioError(request: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 401));
+    final error = DioError(requestOptions: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 401));
 
     // Test the error response
-    expect(await interceptor.onError(error), error);
+    await interceptor.onError(error, errorHandler);
+    verify(errorHandler.next(error));
   });
 
   test('returns error if headers have the retry header', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
     final error = DioError(
-      request: RequestOptions(headers: {'mobile_refresh': 'mobile_refresh'}),
+      requestOptions: RequestOptions(headers: {'mobile_refresh': 'mobile_refresh'}),
       response: Response(statusCode: 401),
     );
 
     // Test the error response
-    expect(await interceptor.onError(error), error);
+    await interceptor.onError(error, errorHandler);
+    verify(errorHandler.next(error));
     verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE, extras: {
       AnalyticsParamConstants.DOMAIN_PARAM: login.domain,
       AnalyticsParamConstants.USER_CONTEXT_ID: 'user_${login.user.id}',
@@ -83,10 +88,11 @@ void main() {
 
   test('returns error if login is null', () async {
     await setupPlatformChannels();
-    final error = DioError(request: RequestOptions(), response: Response(statusCode: 401));
+    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401));
 
     // Test the error response
-    expect(await interceptor.onError(error), error);
+    await interceptor.onError(error, errorHandler);
+    verify(errorHandler.next(error));
     verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET, extras: {
       AnalyticsParamConstants.DOMAIN_PARAM: null,
       AnalyticsParamConstants.USER_CONTEXT_ID: null,
@@ -95,10 +101,11 @@ void main() {
 
   test('returns error if login client id is null', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login.rebuild((b) => b..clientId = null)));
-    final error = DioError(request: RequestOptions(), response: Response(statusCode: 401));
+    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401));
 
     // Test the error response
-    expect(await interceptor.onError(error), error);
+    await interceptor.onError(error, errorHandler);
+    verify(errorHandler.next(error));
     verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET, extras: {
       AnalyticsParamConstants.DOMAIN_PARAM: login.domain,
       AnalyticsParamConstants.USER_CONTEXT_ID: 'user_${login.user.id}',
@@ -107,10 +114,11 @@ void main() {
 
   test('returns error if login client secret is null', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login.rebuild((b) => b..clientSecret = null)));
-    final error = DioError(request: RequestOptions(), response: Response(statusCode: 401));
+    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401));
 
     // Test the error response
-    expect(await interceptor.onError(error), error);
+    await interceptor.onError(error, errorHandler);
+    verify(errorHandler.next(error));
     verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET, extras: {
       AnalyticsParamConstants.DOMAIN_PARAM: login.domain,
       AnalyticsParamConstants.USER_CONTEXT_ID: 'user_${login.user.id}',
@@ -119,12 +127,13 @@ void main() {
 
   test('returns error if the refresh api call failed', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
-    final error = DioError(request: RequestOptions(), response: Response(statusCode: 401));
+    final error = DioError(requestOptions: RequestOptions(), response: Response(statusCode: 401));
 
     when(authApi.refreshToken()).thenAnswer((_) => Future.error('Failed to refresh'));
 
     // Test the error response
-    expect(await interceptor.onError(error), error);
+    await interceptor.onError(error, errorHandler);
+    verify(errorHandler.next(error));
 
     verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID, extras: {
       AnalyticsParamConstants.DOMAIN_PARAM: login.domain,
@@ -138,23 +147,26 @@ void main() {
 
     final tokens = CanvasToken((b) => b..accessToken = 'token');
     final path = 'test/path/stuff';
-    final error = DioError(request: RequestOptions(path: path), response: Response(statusCode: 401));
+    final error = DioError(requestOptions: RequestOptions(path: path), response: Response(statusCode: 401));
     final expectedOptions = RequestOptions(path: path, headers: {
       'Authorization': 'Bearer ${tokens.accessToken}',
       'mobile_refresh': 'mobile_refresh',
     });
-    final expectedAnswer = Response(data: 'data');
+    final expectedAnswer = Response(requestOptions: expectedOptions, data: 'data', statusCode: 200);
 
     when(authApi.refreshToken()).thenAnswer((_) async => tokens);
-    when(dio.request(any, options: anyNamed('options'))).thenAnswer((_) async => expectedAnswer);
+    when(dio.fetch(any)).thenAnswer((_) async => expectedAnswer);
 
     // Do the onError call
-    expect(await interceptor.onError(error), expectedAnswer);
+    await interceptor.onError(error, errorHandler);
+    verify(errorHandler.resolve(expectedAnswer));
 
     verify(authApi.refreshToken()).called(1);
-    final actualOptions = verify(dio.request(path, options: captureAnyNamed('options'))).captured[0] as RequestOptions;
+    final actualOptions = verify(dio.fetch(captureAny)).captured[0] as RequestOptions;
     expect(actualOptions.headers, expectedOptions.headers);
     expect(ApiPrefs.getCurrentLogin().accessToken, tokens.accessToken);
     verifyNever(analytics.logEvent(any, extras: anyNamed('extras')));
   });
 }
+
+class _MockErrorHandler extends Mock implements ErrorInterceptorHandler {}

@@ -115,6 +115,14 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     else -> Unit
                 }
             }
+            is AssignmentDetailsEffect.ShowDraftSubmission -> {
+                view?.showOnlineTextEntryView(
+                    effect.submission.assignmentId,
+                    effect.submission.assignmentName,
+                    effect.submission.submissionEntry,
+                    effect.submission.errorFlag
+                )
+            }
             is AssignmentDetailsEffect.LoadData -> loadData(effect)
             is AssignmentDetailsEffect.ShowCreateSubmissionView -> {
                 when (effect.submissionType) {

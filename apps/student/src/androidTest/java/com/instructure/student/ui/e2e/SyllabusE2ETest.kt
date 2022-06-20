@@ -16,9 +16,8 @@
  */
 package com.instructure.student.ui.e2e
 
-import androidx.test.espresso.Espresso.pressBack
+import android.util.Log
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.SubmissionType
@@ -41,28 +40,33 @@ class SyllabusE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SYLLABUS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYLLABUS, TestCategory.E2E)
     fun testSyllabusE2E() {
 
-        // Seed basic data
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Sign in and navigate to the course.  The course syllabus should be empty
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
         dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Select ${course.name} course.")
         dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG,"Navigate to Syllabus Page. Assert that Empty View is displayed, because there is no syllabus yet.")
         courseBrowserPage.selectSyllabus()
         syllabusPage.assertEmptyView()
 
-
-        // Create/publish our syllabus items
-
-        // Seed an assignment
+        Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course.")
         val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 teacherToken = teacher.token,
@@ -71,7 +75,7 @@ class SyllabusE2ETest: StudentTest() {
                 withDescription = true
         ))
 
-        // Seed a quiz
+        Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course.")
         val quiz = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
                 courseId = course.id,
                 withDescription = true,
@@ -82,7 +86,7 @@ class SyllabusE2ETest: StudentTest() {
 
         // TODO: Seed a generic calendar event
 
-        // Now refresh our syllabus page and verify that our assignment and quiz are showing
+        Log.d(STEP_TAG,"Refresh the page. Assert that all of the items, so ${assignment.name} assignment and ${quiz.title} quiz are displayed.")
         syllabusPage.refresh()
         syllabusPage.assertItemDisplayed(assignment.name)
         syllabusPage.assertItemDisplayed(quiz.title)

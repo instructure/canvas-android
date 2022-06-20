@@ -32,7 +32,7 @@ abstract class BaseRemoteViewsService : RemoteViewsService() {
         fun getWidgetTextColor(widgetId: Int, context: Context): Int {
             val widgetBackgroundPref = getWidgetBackgroundPref(widgetId)
             return if (widgetBackgroundPref.equals(WidgetSetupActivity.WIDGET_BACKGROUND_COLOR_LIGHT, ignoreCase = true))
-                ContextCompat.getColor(context, R.color.canvasTextDark) else ContextCompat.getColor(context, R.color.white)
+                ContextCompat.getColor(context, R.color.textDarkest) else ContextCompat.getColor(context, R.color.textLightest)
         }
 
         fun getWidgetBackgroundResourceId(widgetId: Int): Int {
@@ -48,7 +48,7 @@ abstract class BaseRemoteViewsService : RemoteViewsService() {
         //unless the data is passed as part of a filter. When a filter is applied the intent does not get reused so data can be passed, like the widget id.
         // http://stackoverflow.com/questions/11350287/ongetviewfactory-only-called-once-for-multiple-widgets
         fun getAppWidgetId(intent: Intent): Int {
-            return Integer.valueOf(intent.data!!.schemeSpecificPart)!!
+            return Integer.valueOf(intent.data!!.schemeSpecificPart)
         }
 
         private fun getWidgetBackgroundPref(widgetId: Int): String {

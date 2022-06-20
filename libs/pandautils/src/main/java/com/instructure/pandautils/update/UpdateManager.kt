@@ -112,21 +112,19 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
     }
 
     private fun registerNotificationChannel(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = context.getString(R.string.notificationChannelNameInAppUpdate)
-            val descriptionText = context.getString(R.string.notificationChannelDescriptionInAppUpdate)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            notificationManager.createNotificationChannel(channel)
+        val name = context.getString(R.string.notificationChannelNameInAppUpdate)
+        val descriptionText = context.getString(R.string.notificationChannelDescriptionInAppUpdate)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            description = descriptionText
         }
+        notificationManager.createNotificationChannel(channel)
     }
 
     private fun shouldShowUpdateNotification(appUpdateInfo: AppUpdateInfo): Boolean {
 
         if (updatePrefs.lastUpdateNotificationDate.isBlank() || updatePrefs.lastUpdateNotificationVersionCode != appUpdateInfo.availableVersionCode()) {
-            updatePrefs.lastUpdateNotificationDate = Date().toApiString() ?: ""
+            updatePrefs.lastUpdateNotificationDate = Date().toApiString()
             updatePrefs.lastUpdateNotificationVersionCode = appUpdateInfo.availableVersionCode()
             updatePrefs.lastUpdateNotificationCount = 1
             updatePrefs.hasShownThisStart = true
@@ -145,7 +143,7 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
 
             if (diff >= FLEXIBLE_UPDATE_NOTIFICATION_INTERVAL_DAYS && updatePrefs.lastUpdateNotificationCount <= FLEXIBLE_UPDATE_NOTIFICATION_MAX_COUNT) {
                 updatePrefs.lastUpdateNotificationCount += 1
-                updatePrefs.lastUpdateNotificationDate = Date().toApiString() ?: ""
+                updatePrefs.lastUpdateNotificationDate = Date().toApiString()
                 return true
             }
         }

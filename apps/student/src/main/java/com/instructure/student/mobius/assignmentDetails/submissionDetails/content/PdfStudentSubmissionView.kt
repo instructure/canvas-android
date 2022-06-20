@@ -98,6 +98,12 @@ class PdfStudentSubmissionView(
     }
 
     override fun configureCommentView(commentsButton: ImageView) {
+        // If we are making annotations position the comments button as we would position in the teacher.
+        if (studentAnnotation) {
+            super.configureCommentView(commentsButton)
+            return
+        }
+
         //we want to offset the comment button by the height of the action bar
         val marginDp = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 12f, context.resources.displayMetrics)
         val layoutParams = commentsButton.layoutParams as LayoutParams
@@ -170,7 +176,14 @@ class PdfStudentSubmissionView(
 
     @SuppressLint("CommitTransaction")
     override fun setFragment(fragment: Fragment) {
-        if (isAttachedToWindow) supportFragmentManager.beginTransaction().replace(content.id, fragment).commitNowAllowingStateLoss()
+        if (isAttachedToWindow) supportFragmentManager.beginTransaction().replace(R.id.content, fragment).commitNowAllowingStateLoss()
+    }
+
+    override fun removeContentFragment() {
+        val contentFragment = supportFragmentManager.findFragmentById(R.id.content)
+        if (contentFragment != null) {
+            supportFragmentManager.beginTransaction().remove(contentFragment).commitAllowingStateLoss()
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

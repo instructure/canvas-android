@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2021 - present Instructure, Inc.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/announcement_card_background"
+        android:backgroundTint="@color/borderInfo"
+        android:gravity="center_vertical"
+        android:minHeight="55dp"
+        android:onClick="@{() -> itemViewModel.handleJoin()}"
+        android:orientation="horizontal"
+        tools:layout_margin="16dp">
+
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/announcement_card_icon_background"
+            android:backgroundTint="@color/backgroundInfo">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:importantForAccessibility="no"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/ic_info_solid" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="6dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/conferenceInProgress"
+                android:textColor="@color/textDarkest"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/subtitle"
+                style="@style/TextFont.Regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{itemViewModel.data.subtitle}"
+                android:textColor="@color/textDark"
+                tools:text="Biology 101" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@string/loading"
+            android:indeterminateTint="@color/backgroundDark"
+            android:visibility="@{itemViewModel.joining ? View.VISIBLE : View.GONE}" />
+
+        <ImageButton
+            android:id="@+id/dismissButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/dismiss"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:layout_marginEnd="12dp"
+            android:onClick="@{() -> itemViewModel.handleDismiss()}"
+            android:tint="@color/textDark"
+            android:visibility="@{itemViewModel.joining ? View.GONE : View.VISIBLE}"
+            app:srcCompat="@drawable/ic_close" />
+
+    </LinearLayout>
+</layout>

@@ -30,6 +30,8 @@ import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_MOVE_TO
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.dismissExisting
@@ -39,6 +41,7 @@ import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.utils.getColorCompat
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_DISCUSSION_MOVE_TO)
 class DiscussionsMoveToDialog : DialogFragment() {
 
     init {
@@ -125,16 +128,12 @@ class DiscussionsMoveToDialog : DialogFragment() {
         radioButton.isChecked = isChecked
 
         if(group == DiscussionListPresenter.DELETE) {
-            val destructiveColor =  requireContext().getColorCompat(R.color.destructive)
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(destructiveColor, destructiveColor))
-                radioButton.setTextColor(destructiveColor)
-            }
+            val destructiveColor =  requireContext().getColorCompat(R.color.textDanger)
+            CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(destructiveColor, destructiveColor))
+            radioButton.setTextColor(destructiveColor)
         } else {
-            val unselectedColor = requireContext().getColorCompat(R.color.unselectedRadioColor)
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(unselectedColor, ThemePrefs.brandColor))
-            }
+            val unselectedColor = requireContext().getColorCompat(R.color.textDarkest)
+            CompoundButtonCompat.setButtonTintList(radioButton, ViewStyler.makeColorStateListForRadioGroup(unselectedColor, ThemePrefs.brandColor))
         }
     }
 

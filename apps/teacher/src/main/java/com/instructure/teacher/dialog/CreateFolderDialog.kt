@@ -25,6 +25,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_FOLDER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.dismissExisting
@@ -32,6 +34,7 @@ import com.instructure.teacher.R
 import kotlinx.android.synthetic.main.dialog_create_folder.view.*
 import kotlin.properties.Delegates
 
+@ScreenView(SCREEN_VIEW_CREATE_FOLDER)
 class CreateFolderDialog : AppCompatDialogFragment() {
     init {
         retainInstance = true

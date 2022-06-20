@@ -21,7 +21,6 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -43,6 +42,8 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_SETTINGS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.PandaAvatarActivity
@@ -54,6 +55,7 @@ import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
+@ScreenView(SCREEN_VIEW_PROFILE_SETTINGS)
 @PageView(url = "profile")
 class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<AvatarWrapper> {
 
@@ -82,7 +84,7 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
 
     override fun applyTheme() {
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     private fun setupViews() {

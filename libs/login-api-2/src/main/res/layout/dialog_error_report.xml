@@ -31,7 +31,7 @@
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
         android:text="@string/errorReportAProblem"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="20sp"/>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -52,7 +52,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:labelFor="@+id/subjectEditText"
                 android:text="@string/errorReportSubject"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="14sp"/>
 
             <EditText
@@ -74,7 +74,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:labelFor="@+id/emailAddressEditText"
                 android:text="@string/errorReportEmailAddress"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="14sp"
                 android:visibility="gone"
                 tools:visibility="visible"/>
@@ -102,7 +102,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:labelFor="@+id/descriptionEditText"
                 android:text="@string/errorReportDescription"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="14sp"/>
 
             <EditText
@@ -126,7 +126,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:labelFor="@+id/severitySpinner"
                 android:text="@string/errorReportSeverityText"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="14sp"/>
 
             <FrameLayout

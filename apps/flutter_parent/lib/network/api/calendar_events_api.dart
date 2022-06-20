@@ -31,7 +31,7 @@ class CalendarEventsApi {
       'type': type,
       'start_date': startDate,
       'end_date': endDate,
-      'context_codes': contexts,
+      'context_codes[]': contexts,
     };
     return fetchList(dio.get('calendar_events', queryParameters: params), depaginateWith: dio);
   }
@@ -61,8 +61,8 @@ class CalendarEventsApi {
       'start_date': startDay.toUtc().toIso8601String(),
       'end_date': endDay.toUtc().toIso8601String(),
       'type': type,
-      'context_codes': contexts.toList()..sort(), // Sort for cache consistency
-      'include': ['submission'],
+      'context_codes[]': contexts.toList()..sort(), // Sort for cache consistency
+      'include[]': ['submission'],
     };
   }
 }

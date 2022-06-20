@@ -36,7 +36,7 @@ class TutorialSwipeView @JvmOverloads constructor(
     private val SHADOW_RADIUS = resources.getDimension(R.dimen.speedGraderTutorialShadowRadius)
     private val STROKE_WIDTH = resources.getDimension(R.dimen.speedGraderTutorialStrokeWidth)
 
-    var mColor: Int = context.getColorCompat(R.color.speedGraderTutorialColor)
+    var mColor: Int = context.getColorCompat(R.color.borderSuccess)
 
     var showTrail = true
 

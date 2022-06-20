@@ -153,7 +153,7 @@ class FileDownloadJobIntentService : JobIntentService() {
             updateCallback(0)
 
             val bufferSize = 8L * 1024
-            val sinkBuffer = sink.buffer()
+            val sinkBuffer = sink.buffer
 
             // Perform download.
             read = source.read(sinkBuffer, bufferSize)
@@ -222,23 +222,21 @@ class FileDownloadJobIntentService : JobIntentService() {
         }
 
         fun registerNotificationChannel(context: Context) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-                // Prevents recreation of notification channel if it exists.
-                if (notificationManager.notificationChannels.any { it.id == CHANNEL_ID }) return
+            // Prevents recreation of notification channel if it exists.
+            if (notificationManager.notificationChannels.any { it.id == CHANNEL_ID }) return
 
-                // Create the NotificationChannel, but only on API 26+ because
-                // the NotificationChannel class is new and not in the support library
-                val name = context.getString(R.string.notificationChannelNameFileUploadsName)
-                val description = context.getString(R.string.notificationChannelNameFileUploadsDescription)
-                val importance = NotificationManager.IMPORTANCE_HIGH
-                val channel = NotificationChannel(CHANNEL_ID, name, importance)
-                channel.description = description
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            val name = context.getString(R.string.notificationChannelNameFileUploadsName)
+            val description = context.getString(R.string.notificationChannelNameFileUploadsDescription)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID, name, importance)
+            channel.description = description
 
-                // Register the channel with the system
-                notificationManager.createNotificationChannel(channel)
-            }
+            // Register the channel with the system
+            notificationManager.createNotificationChannel(channel)
         }
     }
 }

@@ -18,12 +18,11 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -35,43 +34,43 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testNavigateToElementaryDashboard() {
         // User should be able to tap and navigate to dashboard page
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.assertPageObjects()
-        elementaryDashboardPage.clickInboxTab()
+        elementaryDashboardPage.clickOnBottomNavigationBarInbox()
         inboxPage.goToDashboard()
         elementaryDashboardPage.assertToolbarTitle()
-        elementaryDashboardPage.assertHomeroomTabVisibleAndSelected()
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testTabsNavigation() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
-        elementaryDashboardPage.assertHomeroomTabVisibleAndSelected()
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
         homeroomPage.assertPageObjects()
 
-        elementaryDashboardPage.selectScheduleTab()
-        elementaryDashboardPage.assertScheduleTabVisibleAndSelected()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
         schedulePage.assertPageObjects()
 
-        elementaryDashboardPage.selectGradesTab()
-        elementaryDashboardPage.assertGradesTabVisibleAndSelected()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.GRADES)
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.GRADES)
         gradesPage.assertPageObjects()
 
-        elementaryDashboardPage.selectResourcesTab()
-        elementaryDashboardPage.assertResourcesTabVisibleAndSelected()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
         resourcesPage.assertPageObjects()
 
-        elementaryDashboardPage.selectHomeroomTab()
-        elementaryDashboardPage.assertHomeroomTabVisibleAndSelected()
+        elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
+        elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
         homeroomPage.assertPageObjects()
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testOnlyElementarySpecificNavigationItemsShownInTheNavigationDrawer() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.openDrawer()
@@ -84,10 +83,6 @@ class ElementaryDashboardInteractionTest : StudentTest() {
         pastCourseCount: Int = 0,
         favoriteCourseCount: Int = 0,
         announcementCount: Int = 0): MockCanvas {
-
-        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
-        Thread.sleep(3000)
-        RemoteConfigPrefs.putString(RemoteConfigParam.K5_DESIGN.rc_name, "true")
 
         val data = MockCanvas.init(
             studentCount = 1,

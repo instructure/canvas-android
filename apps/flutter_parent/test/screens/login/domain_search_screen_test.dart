@@ -37,11 +37,11 @@ void main() {
   final webInteractor = MockWebLoginInteractor();
   final interactor = _MockInteractor();
 
-  setUp(() {
+  setUp(() async {
     reset(analytics);
     reset(webInteractor);
     reset(interactor);
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton(() => QuickNav());
       locator.registerLazySingleton<Analytics>(() => analytics);
 

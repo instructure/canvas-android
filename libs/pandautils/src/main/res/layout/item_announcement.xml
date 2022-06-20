@@ -33,7 +33,7 @@
             android:id="@+id/courseName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:textSize="13sp"
@@ -44,7 +44,7 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:textStyle="bold"
@@ -68,7 +68,7 @@
             android:id="@+id/viewPreviousAnnouncements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultActionColor"
+            android:textColor="@color/textInfo"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="12dp"
@@ -84,6 +84,6 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginBottom="24dp"
-            android:background="@color/k5SeparatorColor" />
+            android:background="@color/backgroundMedium" />
     </LinearLayout>
 </layout>

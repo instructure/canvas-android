@@ -21,6 +21,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_URL_SUBMISSION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.onClick
 import com.instructure.teacher.R
@@ -29,13 +31,14 @@ import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.StringArg
 import kotlinx.android.synthetic.main.fragment_speedgrader_url_submission.*
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER_URL_SUBMISSION)
 class SpeedGraderUrlSubmissionFragment : Fragment() {
 
     private var mUrl by StringArg()
     private var mPreviewUrl by NullableStringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_speedgrader_url_submission, container, false)
+        return inflater.inflate(R.layout.fragment_speedgrader_url_submission, container, false)
     }
 
     override fun onStart() {

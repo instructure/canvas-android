@@ -47,13 +47,13 @@
             android:layout_marginEnd="4dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_warning"
-            android:tint="@color/error"/>
+            android:tint="@color/textDanger"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/submissionCommentErrorMessage"
-            android:textColor="@color/error"
+            android:textColor="@color/textDanger"
             android:textSize="12sp"/>
 
     </LinearLayout>
@@ -73,13 +73,13 @@
             android:layout_height="12dp"
             android:layout_marginEnd="4dp"
             android:importantForAccessibility="no"
-            android:tint="@color/error"/>
+            android:tint="@color/textDanger"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sending"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="12sp"/>
 
         <ProgressBar
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:importantForAccessibility="no"
-            android:progressTint="@color/commentBubbleOutgoing"
+            android:progressTint="@color/backgroundInfo"
             tools:progress="50"/>
 
     </LinearLayout>

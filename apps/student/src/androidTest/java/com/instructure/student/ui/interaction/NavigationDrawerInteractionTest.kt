@@ -22,8 +22,6 @@ import android.os.Build
 import android.util.Log
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
@@ -36,7 +34,6 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.R
@@ -66,7 +63,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
     // Should be able to change the user from the navigation drawer
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
     fun testNavDrawer_changeUser() {
 
         // This test fails on API-28 in FTL due to a "TOO_MANY_REGISTRATIONS" issue on logout.
@@ -110,7 +107,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
     // Should be able to log out from the navigation drawer
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
     fun testNavDrawer_logOut() {
 
         // This test fails on API-28 in FTL due to a "TOO_MANY_REGISTRATIONS" issue on logout.
@@ -121,7 +118,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
         signInStudent()
 
-        dashboardPage.signOut()
+        dashboardPage.logOut()
         loginLandingPage.assertPageObjects()
     }
 
@@ -150,7 +147,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     // Should open a dialog and send a question for the selected course
     // (Checks to see that we can fill out the question and the SEND button exists.)
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_askQuestion() {
 
         signInStudent()
@@ -161,7 +158,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
     // Should open the Canvas guides in a WebView
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_searchCanvasGuides() {
         signInStudent()
 
@@ -173,7 +170,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     // Should send an error report
     // (Checks to see that we can fill out an error report and that the SEND button is displayed.)
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_reportAProblem() {
 
         signInStudent()
@@ -190,7 +187,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     //
     // So this is a watered-down test that just checks whether an email app chooser gets displayed.
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_submitFeatureIdea() {
         signInStudent()
 
@@ -241,7 +238,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
     // Should send an intent to open the listing for Student App in the Play Store
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_shareYourLove() {
         signInStudent()
 

@@ -27,11 +27,14 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_SEARCH
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_file_search.*
 
+@ScreenView(SCREEN_VIEW_FILE_SEARCH)
 class FileSearchFragment : ParentFragment(), FileSearchView {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
@@ -46,7 +49,7 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
     override fun applyTheme() = Unit
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_file_search, container, false)
+        return inflater.inflate(R.layout.fragment_file_search, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,7 +68,7 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
     }
 
     private fun setupViews() {
-        ViewStyler.setStatusBarLight(requireActivity())
+        ViewStyler.themeStatusBar(requireActivity())
 
         // Set up empty state
         emptyPandaView.getEmptyViewImage()?.setImageResource(R.drawable.ic_panda_nofiles)

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2021 - present Instructure, Inc.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<layout>
+
+    <data>
+
+        <import type="com.instructure.pandautils.utils.ColorUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/announcement_card_background"
+        android:minHeight="55dp"
+        android:onClick="@{() -> itemViewModel.open()}"
+        android:orientation="horizontal"
+        app:borderColor="@{ColorUtils.parseColor(itemViewModel.data.color)}"
+        tools:backgroundTint="#00ACEC">
+
+        <FrameLayout
+            android:id="@+id/announcementIconView"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/announcement_card_icon_background"
+            android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.color)}"
+            tools:backgroundTint="#00ACEC">
+
+            <ImageView
+                android:id="@+id/announcementIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:importantForAccessibility="no"
+                android:tint="@color/white"
+                app:imageRes="@{itemViewModel.data.icon}" />
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/buttonContainer"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:id="@+id/dismissImageButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/dismiss"
+                    android:onClick="@{() -> itemViewModel.dismiss()}"
+                    android:padding="12dp"
+                    android:tint="@color/textDark"
+                    android:visibility="@{itemViewModel.inProgress ? View.GONE : View.VISIBLE}"
+                    app:srcCompat="@drawable/ic_close"
+                    tools:visibility="gone" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@string/loading"
+                    android:indeterminateTint="@color/backgroundDark"
+                    android:layout_gravity="center"
+                    android:visibility="@{itemViewModel.inProgress ? View.VISIBLE : View.GONE}" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/announcementTitle"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="6dp"
+                android:layout_toStartOf="@id/buttonContainer"
+                android:ellipsize="end"
+                android:labelFor="@+id/cardView"
+                android:singleLine="true"
+                android:text="@{itemViewModel.data.subject}"
+                android:textColor="@color/textDarkest"
+                android:textSize="18sp"
+                tools:text="Permission Slips!" />
+
+            <TextView
+                android:id="@+id/tapToView"
+                style="@style/TextFont.Regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/announcementTitle"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/tapToViewAnnouncement"
+                android:textColor="@color/textDark"
+                android:textSize="14sp"
+                tools:visibility="gone" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

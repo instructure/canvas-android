@@ -17,7 +17,9 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
+import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.models.DashboardCard
 import java.util.*
 
@@ -29,12 +31,12 @@ object DashboardCardsEndpoint : Endpoint(response = {
         val now = Date()
 
         // Filter out concluded courses
-        val currentCourses = data.courses.values.filter { it.endDate?.before(now) != true }
+        val currentCourses = data.courses.values.filter { it.endDate?.before(now) != true && it.enrollments?.all { it.enrollmentState != EnrollmentAPI.STATE_DELETED } ?: true }
 
         // Only show favorite courses. To match web behavior, if there are no favorites then we show all active courses.
         val favoriteCourses = data.courses.values.filter { it.isFavorite }.ifEmpty { currentCourses }
 
-        val cards = favoriteCourses.map { DashboardCard(it.id) }
+        val cards = favoriteCourses.map { DashboardCard(it.id, data.elementarySubjectPages) }
         request.successPaginatedResponse(cards)
     }
 })

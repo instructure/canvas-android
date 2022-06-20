@@ -81,8 +81,8 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
                     )
                 )
             } else if (criterion.criterionUseRange) {
-                val assessedRating = ratings.first { it.id == assessment!!.ratingId }
-                if (assessment.points != assessedRating.points) {
+                val assessedRating = ratings.firstOrNull { it.id == assessment!!.ratingId }
+                if (assessedRating != null && assessment.points != assessedRating.points) {
                     assessment = assessment.copy(ratingId = customRatingId)
                     ratings = ratings.plus(
                         RubricCriterionRating(
@@ -98,7 +98,7 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
         ratings = ratings.sortedBy { it.points }
 
         // Find the criterion rating that matches the assessment rating (if there are valid points)
-        val assessedRating = if (assessment?.points == null) null else ratings.find { it.id == assessment?.ratingId }
+        val assessedRating = if (assessment?.points == null) null else ratings.find { it.id == assessment.ratingId }
 
         val selectedRatingId = model.selectedRatingMap[criterion.id] ?: assessedRating?.id
 

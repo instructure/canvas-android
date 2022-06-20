@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -30,6 +29,8 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNEE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.EmptyView
@@ -44,6 +45,7 @@ import com.instructure.teacher.viewinterface.AssigneeListView
 import kotlinx.android.synthetic.main.fragment_assignee_list.*
 import java.util.ArrayList
 
+@ScreenView(SCREEN_VIEW_ASSIGNEE_LIST)
 class AssigneeListFragment : BaseExpandableSyncFragment<
         AssigneeCategory,
         CanvasComparable<*>,
@@ -84,8 +86,8 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
     override fun updateSelectedAssignees(assigneeNames: ArrayList<CharSequence>, displayEveryone: Boolean, displayAsEveryoneElse: Boolean) {
         if (displayEveryone) assigneeNames.add(0, getString(if (displayAsEveryoneElse) R.string.everyone_else else R.string.everyone))
         val span = SpannableStringBuilder()
-        val nameColor = requireContext().getColorCompat(R.color.defaultActionColor)
-        val separatorColor = requireContext().getColorCompat(R.color.defaultTextGray)
+        val nameColor = requireContext().getColorCompat(R.color.textInfo)
+        val separatorColor = requireContext().getColorCompat(R.color.textDark)
         for (name in assigneeNames) {
             span.appendColored(name, nameColor)
             if (name !== assigneeNames.last()) span.appendColored(", ", separatorColor)
@@ -121,7 +123,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         toolbar.setupCloseButton(this)
         toolbar.title = getString(R.string.page_title_add_assignees)
         toolbar.setupMenu(R.menu.menu_save_generic) { performSave() }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         saveButton?.setTextColor(ThemePrefs.buttonColor)
     }

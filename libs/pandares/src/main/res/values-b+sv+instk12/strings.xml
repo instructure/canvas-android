@@ -1008,8 +1008,8 @@
     <string name="addChildSubTitle">Ange kopplingskoden du fått för elever.</string>
     <string name="addChildHint">Kopplingskod ...</string>
     <string name="addChildErrorMessage">Det gick inte att koppla. Se till att din kopplingskod är korrekt och att dess tidsgräns inte har överskridits.</string>
-    <string name="gradeComplete">Färdiga</string>
-    <string name="gradeIncomplete">Ej fullständiga</string>
+    <string name="gradeComplete">Fullgjord</string>
+    <string name="gradeIncomplete">Ej fullständig</string>
 
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Publiceringsinställningar</string>
@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Den här elevens svar är dolda eftersom uppgiften är anonym.</string>
 
-    <string name="studentAnnotationUnsupported">Elevnotering (stöds inte)</string>
-    <string name="studentAnnotationUnsupportedDescription">Elevnotering stöds för närvarande inte på mobila enheter.</string>
-    <string name="unsupportedSubmissionType">Inlämningstyp som inte stöds</string>
-    <string name="studentAnnotationUnsupportedMessage">Inlämningen kan inte visas eftersom elevnotering inte stöds på mobila enheter.</string>
     <string name="schedule_marked_as_done">Du har markerat den som färdig.</string>
     <string name="error_saving_assignment_closed_grading_period">Det går inte att ändra inlämningsdatumet när det överskridits i en stängd bedömningsperiod.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Hoppa fram till i dag</string>
@@ -1225,4 +1221,46 @@
     <string name="a11y_contact_info_click_description">skicka meddelande</string>
     <string name="somethingWentWrong">Något gick fel</string>
     <string name="failedToLoadQuiz">Det gick inte att läsa in quizet</string>
+    <string name="failedToLoadSubmission">Det gick inte att läsa in inlämningen</string>
+    <string name="studentAnnotationToolbarTitle">Elevnotering</string>
+    <string name="submissionTypeStudentAnnotation">Elevnotering</string>
+    <string name="gradesNoDueDate">Inget inlämningsdatum</string>
+    <string name="importantDatesNoDueDate">Inget inlämningsdatum</string>
+    <string name="missingAssignment">Saknad</string>
+    <string name="dontSave">Spara inte</string>
+    <string name="textSubmissionExitConfirmationTitle">Spara utkast?</string>
+    <string name="textSubmissionExitConfirmationMessage">Annars sparas inte dina ändringar</string>
+    <string name="submissionDraftAvailableSubtitle">Tryck här för att fortsätta</string>
+    <string name="submissionDraftAvailableTitle">Utkast tillgängligt</string>
+    <string name="errorLoadingSubmission">Ett fel inträffade vid inläsning av inlämningen</string>
+    <string name="loadFullContent">Tryck för att se hela innehållet</string>
+    <string name="dashboardTabImportantDates">Viktiga datum</string>
+    <string name="importantDatesEmptyTitle">Inga viktiga datum</string>
+    <string name="important_dates">Viktiga datum</string>
+
+    <string name="toolbarCommentLibrary">Kommentarbibliotek</string>
+    <string name="commentLibraryNoSuggestions">Inga förslag finns tillgängliga</string>
+    <string name="speedGraderCommentHint">Kommentar</string>
+    <string name="a11y_schedule_marked_as_done">%s har markerats som färdig</string>
+    <string name="a11y_error_occured">Ett fel inträffade. Försök igen senare.</string>
+    <string name="a11y_content_description_accept_invite">Acceptera inbjudan</string>
+    <string name="a11y_content_description_decline_invite">Avvisa inbjudan</string>
+    <string name="no_notifications_to_show">Inga aviseringar att visa</string>
+
+    <string name="documentScanningTitle">Dokumentskanning</string>
+    <string name="filter_name_color">Färg</string>
+    <string name="filter_name_grayscale">Gråskala</string>
+    <string name="filter_name_monochrome">Monokrom</string>
+    <string name="filter_name_original">Ursprunglig</string>
+    <string name="noCompatibleAppInstalled">Din enhet har inga program som kan öppna den här länken.</string>
+    <string name="anonymousDiscussionNotSupported">Anonyma diskussioner stöds för närvarande inte på mobila enheter. Öppna i webbläsare för att visa diskussionen.</string>
+    <string name="discussionOpenInBrowser">Öppna i webbläsare</string>
+    <string name="dashboardSwitchToListView">Växla till listvy</string>
+    <string name="dashboardSwitchToGridView">Växla till rutnätsvy</string>
+    <string name="selectAppTheme">Välj apptema</string>
+    <string name="appThemeSettingsTitle">Apptema</string>
+    <string name="appThemeLight">Ljus</string>
+    <string name="appThemeDark">Mörk</string>
+    <string name="appThemeSystem">Systemstandard</string>
+
 </resources>

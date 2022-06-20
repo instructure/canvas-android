@@ -71,7 +71,8 @@ data class AssignmentDetailsVisibilities (
     var quizDetails: Boolean = false,
     var discussionTopicHeader: Boolean = false,
     var submissionUploadStatusInProgress: Boolean = false,
-    var submissionUploadStatusFailed: Boolean = false
+    var submissionUploadStatusFailed: Boolean = false,
+    var draftSubmissionAvailable: Boolean = false
 )
 
 data class SubmissionTypesVisibilities(

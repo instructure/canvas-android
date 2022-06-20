@@ -27,6 +27,8 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_RUBRIC_COMMENT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.getColorCompat
@@ -34,7 +36,7 @@ import com.instructure.teacher.view.edit_rubric.RubricCommentEditedEvent
 import kotlinx.android.synthetic.main.view_edit_grade_comment.*
 import org.greenrobot.eventbus.EventBus
 
-
+@ScreenView(SCREEN_VIEW_EDIT_RUBRIC_COMMENT)
 class EditRubricCommentDialog : AppCompatDialogFragment() {
 
     var mCriterionId by StringArg()
@@ -69,7 +71,7 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?) = AppCompatDialog(requireContext(), R.style.Theme_AppCompat_Light_Translucent).apply {
+    override fun onCreateDialog(savedInstanceState: Bundle?) = AppCompatDialog(requireContext(), R.style.Theme_AppCompat_DayNight_Translucent).apply {
         setContentView(R.layout.view_edit_grade_comment)
 
         // Send event bus on save, dismiss dialog. Send null if text is blank (i.e. delete comment)
@@ -102,7 +104,7 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
         window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window?.statusBarColor = requireActivity().getColorCompat(com.instructure.pandautils.R.color.dimLighterGray)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
     override fun onDestroyView() {

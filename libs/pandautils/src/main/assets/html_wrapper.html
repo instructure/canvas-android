@@ -22,11 +22,22 @@
         <title>{$TITLE$}</title>
     </head>
     <style>
+        @font-face {
+            font-family: Lato;
+            src: url("file:///android_asset/fonts/lato_regular.ttf")
+        }
+
         html,body {
+            font-family: Lato;
             width: 100%;
             height: auto;
             margin: 0;
             padding: 0;
+        }
+
+        html {
+            background-color: {$BACKGROUND$};
+            color: {$COLOR$};
         }
 
         img {
@@ -66,6 +77,11 @@
 
         a {
             word-wrap: break-word;
+            color: {$LINK_COLOR$}
+        }
+
+        a:visited {
+            color: {$VISITED_LINK_COLOR$}
         }
 
     </style>

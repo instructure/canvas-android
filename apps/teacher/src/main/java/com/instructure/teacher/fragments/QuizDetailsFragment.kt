@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -57,6 +59,7 @@ import java.net.URL
 import java.net.URLDecoder
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
 class QuizDetailsFragment : BasePresenterFragment<
         QuizDetailsPresenter,
         QuizDetailsView>(),
@@ -109,7 +112,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         swipeRefreshLayout.isRefreshing = false
         setupViews(quiz)
         setupListeners(quiz)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
 
         fullDateDetailsButton.setVisible(quiz._assignment != null)
     }
@@ -117,7 +120,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -125,7 +128,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         if (!isTablet) {
             toolbar.subtitle = presenter.mCourse.name
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews(quiz: Quiz) = with(quiz) {
@@ -166,14 +169,14 @@ class QuizDetailsFragment : BasePresenterFragment<
         // Publish status
         if (published) {
             publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
-            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.publishedGreen))
+            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textSuccess))
             publishStatusTextView.setText(R.string.published)
-            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.publishedGreen))
+            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textSuccess))
         } else {
             publishStatusIconView.setImageResource(R.drawable.ic_complete)
-            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.defaultTextGray))
+            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textDark))
             publishStatusTextView.setText(R.string.not_published)
-            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.defaultTextGray))
+            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textDark))
         }
 
         // Lock status

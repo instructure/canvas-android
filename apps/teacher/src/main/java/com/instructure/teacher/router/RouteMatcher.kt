@@ -39,6 +39,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
@@ -51,6 +52,7 @@ import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.fragments.FileListFragment
 import instructure.rceditor.RCEFragment
+import java.util.Locale
 
 object RouteMatcher : BaseRouteMatcher() {
 
@@ -84,6 +86,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         routes.add(Route(courseOrGroup("/:course_id/discussion_topics"), DiscussionsListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionsListFragment::class.java, DiscussionsDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionsListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/files"), FileListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/files/:file_id/download"), RouteContext.FILE))
@@ -106,6 +109,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         routes.add(Route(courseOrGroup("/:course_id/announcements"), AnnouncementListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionsDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionDetailsWebViewFragment::class.java))
 
     }
 
@@ -193,13 +197,13 @@ object RouteMatcher : BaseRouteMatcher() {
      * @param routeIfPossible
      * @return
      */
-    fun canRouteInternally(activity: Activity?, url: String?, domain: String, routeIfPossible: Boolean): Boolean {
+    fun canRouteInternally(context: Context?, url: String?, domain: String, routeIfPossible: Boolean): Boolean {
         if (url.isNullOrBlank()) return false
 
         val canRoute = getInternalRoute(url, domain) != null
 
-        if (canRoute && activity != null && routeIfPossible) {
-            routeUrl(activity, url)
+        if (canRoute && context != null && routeIfPossible) {
+            routeUrl(context, url)
         }
         return canRoute
     }
@@ -340,6 +344,7 @@ object RouteMatcher : BaseRouteMatcher() {
             AnnouncementListFragment::class.java.isAssignableFrom(cls) -> fragment = AnnouncementListFragment.newInstance(canvasContext!!) // This needs to be above DiscussionsListFragment because it extends it
             DiscussionsListFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionsListFragment.newInstance(canvasContext!!)
             DiscussionsDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getDiscussionDetailsFragment(canvasContext, route)
+            DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionDetailsWebViewFragment.newInstance(route)
             InboxFragment::class.java.isAssignableFrom(cls) -> fragment = InboxFragment()
             AddMessageFragment::class.java.isAssignableFrom(cls) -> fragment = AddMessageFragment.newInstance(route.arguments)
             MessageThreadFragment::class.java.isAssignableFrom(cls) -> fragment = getMessageThreadFragment(route)
@@ -472,7 +477,7 @@ object RouteMatcher : BaseRouteMatcher() {
                         } else if (loadedMedia.intent != null) {
                             if (loadedMedia.intent?.type?.contains("pdf") == true && !loadedMedia.isUseOutsideApps) {
                                 // Show pdf with PSPDFkit
-                                val args = ViewPdfFragment.newInstance((loader as OpenMediaAsyncTaskLoader).url!!, 0).nonNullArgs
+                                val args = ViewPdfFragment.newInstance((loader as OpenMediaAsyncTaskLoader).url, 0).nonNullArgs
                                 RouteMatcher.route(activity, Route(ViewPdfFragment::class.java, null, args))
                             } else if (loadedMedia.intent?.type == "video/mp4") {
                                 val bundle = BaseViewMediaActivity.makeBundle(loadedMedia.intent!!.data!!.toString(), null, "video/mp4", loadedMedia.intent!!.dataString, true)
@@ -514,7 +519,7 @@ object RouteMatcher : BaseRouteMatcher() {
         // If we're trying to open an HTML file, don't download it. It could be referencing other files
         // through a relative URL which we won't be able to access. Instead, just showing the file in
         // a webview will load the file the user is trying to view and will resolve all relative paths
-        if (filename.toLowerCase().endsWith(".htm") || filename.toLowerCase().endsWith(".html")) {
+        if (filename.lowercase(Locale.getDefault()).endsWith(".htm") || filename.lowercase(Locale.getDefault()).endsWith(".html")) {
             RouteUtils.retrieveFileUrl(route, fileId) { fileUrl, context, needsAuth ->
                 val bundle = InternalWebViewFragment.makeBundle(url = fileUrl, title = filename, shouldAuthenticate = needsAuth)
                 RouteMatcher.route(activity, Route(FullscreenInternalWebViewFragment::class.java, context, bundle))

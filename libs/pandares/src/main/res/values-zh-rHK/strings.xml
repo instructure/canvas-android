@@ -1200,10 +1200,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">這名學生的回覆已隱藏，因為此作業為匿名狀態。</string>
 
-    <string name="studentAnnotationUnsupported">學生註釋（不支援）</string>
-    <string name="studentAnnotationUnsupportedDescription">流動電話目前不支援學生註釋。</string>
-    <string name="unsupportedSubmissionType">不支援提交項目類型</string>
-    <string name="studentAnnotationUnsupportedMessage">提交項目無法顯示，因為流動電話目前不支援學生註釋。</string>
     <string name="schedule_marked_as_done">您已將其標示為完成。</string>
     <string name="error_saving_assignment_closed_grading_period">無法變更在封閉評分期內到期的到期日。</string>
     <string name="a11y_content_description_schedule_jump_to_today">跳轉到今天</string>
@@ -1211,4 +1207,46 @@
     <string name="a11y_contact_info_click_description">傳送訊息</string>
     <string name="somethingWentWrong">似乎出問題了</string>
     <string name="failedToLoadQuiz">無法載入測驗</string>
+    <string name="failedToLoadSubmission">無法載入提交項目</string>
+    <string name="studentAnnotationToolbarTitle">學生註釋</string>
+    <string name="submissionTypeStudentAnnotation">學生註釋</string>
+    <string name="gradesNoDueDate">無截止日期</string>
+    <string name="importantDatesNoDueDate">無截止日期</string>
+    <string name="missingAssignment">缺少</string>
+    <string name="dontSave">請勿儲存</string>
+    <string name="textSubmissionExitConfirmationTitle">儲存草稿？</string>
+    <string name="textSubmissionExitConfirmationMessage">否則將不會儲存您的變更</string>
+    <string name="submissionDraftAvailableSubtitle">點選此處以繼續</string>
+    <string name="submissionDraftAvailableTitle">可用草稿</string>
+    <string name="errorLoadingSubmission">載入提交項目時發生錯誤</string>
+    <string name="loadFullContent">點選以查看完整內容</string>
+    <string name="dashboardTabImportantDates">重要日期</string>
+    <string name="importantDatesEmptyTitle">沒有重要日期</string>
+    <string name="important_dates">重要日期</string>
+
+    <string name="toolbarCommentLibrary">評論檔案庫</string>
+    <string name="commentLibraryNoSuggestions">沒有提供建議</string>
+    <string name="speedGraderCommentHint">評論</string>
+    <string name="a11y_schedule_marked_as_done">%s 標記為已完成</string>
+    <string name="a11y_error_occured">發生錯誤，請重試。</string>
+    <string name="a11y_content_description_accept_invite">接受邀請</string>
+    <string name="a11y_content_description_decline_invite">拒絕邀請</string>
+    <string name="no_notifications_to_show">沒有要顯示的通知</string>
+
+    <string name="documentScanningTitle">文件掃描</string>
+    <string name="filter_name_color">顏色</string>
+    <string name="filter_name_grayscale">灰階</string>
+    <string name="filter_name_monochrome">單色</string>
+    <string name="filter_name_original">原始</string>
+    <string name="noCompatibleAppInstalled">您的裝置沒有安裝可開啟此連結的任何應用程式。</string>
+    <string name="anonymousDiscussionNotSupported">流動電話目前不支援匿名討論區。在瀏覽器中打開以檢視討論區。</string>
+    <string name="discussionOpenInBrowser">在瀏覽器中打開</string>
+    <string name="dashboardSwitchToListView">切換至清單視圖</string>
+    <string name="dashboardSwitchToGridView">切換至網格視圖</string>
+    <string name="selectAppTheme">選擇應用程式主題</string>
+    <string name="appThemeSettingsTitle">應用程式主題</string>
+    <string name="appThemeLight">亮色</string>
+    <string name="appThemeDark">暗色</string>
+    <string name="appThemeSystem">系統預設</string>
+
 </resources>

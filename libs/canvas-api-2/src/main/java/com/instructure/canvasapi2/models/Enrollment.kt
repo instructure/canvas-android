@@ -32,7 +32,7 @@ data class Enrollment(
         @SerializedName("course_section_id")
         val courseSectionId: Long = 0,
         @SerializedName("enrollment_state")
-        val enrollmentState: String? = null,
+        var enrollmentState: String? = null,
         @SerializedName("user_id")
         val userId: Long = 0,
         val grades: Grades? = null,

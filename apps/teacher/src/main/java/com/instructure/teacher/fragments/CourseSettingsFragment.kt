@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.globalName
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_SETTINGS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -37,6 +39,7 @@ import kotlinx.android.synthetic.main.fragment_course_settings.*
 import kotlinx.android.synthetic.main.view_edit_course_homepage.*
 import kotlinx.android.synthetic.main.view_rename_course.*
 
+@ScreenView(SCREEN_VIEW_COURSE_SETTINGS)
 class CourseSettingsFragment : BasePresenterFragment<
         CourseSettingsFragmentPresenter,
         CourseSettingsFragmentView>(), CourseSettingsFragmentView {
@@ -76,25 +79,24 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     override fun onPresenterPrepared(presenter: CourseSettingsFragmentPresenter) {
         editCourseNameRoot.onClickWithRequireNetwork {
-            presenter?.editCourseNameClicked()
+            presenter.editCourseNameClicked()
         }
 
         editHomeRoot.onClickWithRequireNetwork {
-            presenter?.editCourseHomePageClicked()
+            presenter.editCourseHomePageClicked()
         }
     }
 
     private fun setupToolbar() {
         toolbar.setupBackButton(this)
         toolbar.title = getString(R.string.course_settings)
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, Color.BLACK)
-        ViewStyler.setStatusBarLight(requireActivity())
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         toolbar.setSubtitleTextColor(mCourseColor)
     }
 
     override fun showEditCourseNameDialog() {
         val dialog: EditCourseNameDialog = EditCourseNameDialog.getInstance(requireActivity().supportFragmentManager, mCourse) { newName ->
-            presenter?.editCourseName(newName, mCourse)
+            presenter.editCourseName(newName, mCourse)
         }
 
         dialog.show(requireActivity().supportFragmentManager, EditCourseNameDialog::class.java.simpleName)
@@ -104,7 +106,7 @@ class CourseSettingsFragment : BasePresenterFragment<
         val (keys, values) = mHomePages.toList().unzip()
         val selectedIdx = keys.indexOf(mCourse.homePage?.apiString)
         val dialog = RadioButtonDialog.getInstance(requireActivity().supportFragmentManager, getString(R.string.set_home_to), values as ArrayList<String>, selectedIdx) { idx ->
-                presenter?.editCourseHomePage(keys[idx], mCourse)
+            presenter.editCourseHomePage(keys[idx], mCourse)
         }
 
        dialog.show(requireActivity().supportFragmentManager, RadioButtonDialog::class.java.simpleName)

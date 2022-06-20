@@ -18,7 +18,6 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import com.instructure.canvasapi2.managers.DiscussionManager
@@ -34,6 +33,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_REPLY
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.utils.*
@@ -45,6 +46,7 @@ import kotlinx.coroutines.Job
 import retrofit2.Response
 import java.io.File
 
+@ScreenView(SCREEN_VIEW_DISCUSSIONS_REPLY)
 class DiscussionsReplyFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -135,7 +137,7 @@ class DiscussionsReplyFragment : ParentFragment() {
         } else {
             toolbar.setMenu(R.menu.menu_discussion_reply_no_attach, menuItemCallback)
         }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
     //endregion

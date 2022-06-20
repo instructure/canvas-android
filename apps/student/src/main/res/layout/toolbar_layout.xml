@@ -22,7 +22,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
-    android:background="@color/defaultPrimary"
+    android:background="@color/textDarkest"
     app:theme="@style/ToolBarStyle"
     app:popupTheme="@style/ToolBarPopupStyle"
     android:layout_alignParentTop="true"

@@ -65,6 +65,11 @@ class HtmlContentFormatter(
 
                             newHTML = newHTML.replace(iframe, newIframe)
                         }
+
+                        if (iframe.contains("overflow: scroll")) {
+                            val newIframe = iframeWithLink(srcUrl, iframe, context)
+                            newHTML = newHTML.replace(iframe, newIframe)
+                        }
                     }
                 }
 
@@ -104,6 +109,13 @@ class HtmlContentFormatter(
 
     private suspend fun authenticateLTIUrl(ltiUrl: String): String {
         return awaitApi<AuthenticatedSession> { oAuthManager.getAuthenticatedSession(ltiUrl, it) }.sessionUrl
+    }
+
+    private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): String {
+        val buttonText = context.getString(R.string.loadFullContent)
+        val htmlButton = "</br><p><div class=\"lti_button\" onClick=\"location.href=\'$srcUrl\'\">$buttonText</div></p>"
+
+        return iframe + htmlButton
     }
 
     fun createAuthenticatedLtiUrl(html: String, authenticatedSessionUrl: String?): String {

@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -37,11 +39,15 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_discussion_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
+@AndroidEntryPoint
 open class DiscussionsListFragment : BaseExpandableSyncFragment<
         String,
         DiscussionTopicHeader,
@@ -49,6 +55,9 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         DiscussionListPresenter,
         RecyclerView.ViewHolder,
         DiscussionListAdapter>(), DiscussionListView {
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     protected var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
@@ -63,7 +72,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun layoutResId(): Int = R.layout.fragment_discussion_list
     override val recyclerView: RecyclerView get() = discussionRecyclerView
 
-    override fun getPresenterFactory() = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements)
+    override fun getPresenterFactory() = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements, featureFlagProvider.getDiscussionRedesignFeatureFlag())
 
     override fun onPresenterPrepared(presenter: DiscussionListPresenter) {
         val emptyTitle = getString(if (mIsAnnouncements) R.string.noAnnouncements else R.string.noDiscussions)
@@ -125,10 +134,10 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun createAdapter(): DiscussionListAdapter {
         return DiscussionListAdapter(requireContext(), presenter, mCourseColor, mIsAnnouncements,
             { discussionTopicHeader ->
-                val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, mIsAnnouncements)
+                val route = presenter.getDetailsRoute(discussionTopicHeader, mIsAnnouncements)
                 RouteMatcher.route(
                     requireContext(),
-                    Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args)
+                    route
                 )
             },
             { group, discussionTopicHeaderOverflow ->
@@ -138,7 +147,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
                         group,
                         discussionTopicHeaderOverflow
                     ) { newGroup ->
-                        presenter?.requestMoveDiscussionTopicToGroup(newGroup, group, discussionTopicHeaderOverflow)
+                        presenter.requestMoveDiscussionTopicToGroup(newGroup, group, discussionTopicHeaderOverflow)
                     }
                 }
             })
@@ -195,9 +204,9 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             } else {
                 emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
-            presenter?.searchQuery = query
+            presenter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), discussionListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews() {
@@ -220,7 +229,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         builder.setTitle(R.string.discussions_delete_title)
         builder.setMessage(R.string.discussions_delete_message)
         builder.setPositiveButton(R.string.delete) { _, _ ->
-            presenter?.deleteDiscussionTopicHeader(discussionTopicHeader)
+            presenter.deleteDiscussionTopicHeader(discussionTopicHeader)
         }
         builder.setNegativeButton(R.string.cancel, null)
         builder.showThemed()

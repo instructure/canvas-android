@@ -28,7 +28,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        android:background="@color/publishedGreen"/>
+        android:background="@color/backgroundSuccess"/>
 
     <com.instructure.teacher.view.PublishedStatusIconView
         android:id="@+id/assignmentIcon"
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/due"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             tools:text="Due April 1 at 11:59 PM"/>
 
         <!--suppress AndroidUnknownAttribute -->
@@ -80,7 +80,7 @@
             android:paddingStart="8dp"
             android:paddingTop="2dp"
             android:textSize="11sp"
-            android:textColor="@color/canvasDefaultPrimary"
+            android:textColor="@color/textDarkest"
             tools:text="3 ungraded"/>
 
     </LinearLayout>

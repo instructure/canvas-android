@@ -40,8 +40,7 @@ class NotificationUtil {
 
   static Future<void> init(Completer<void> appCompleter) async {
     var initializationSettings = InitializationSettings(
-      AndroidInitializationSettings('ic_notification_canvas_logo'),
-      null,
+      android: AndroidInitializationSettings('ic_notification_canvas_logo')
     );
 
     if (_plugin == null) {
@@ -105,12 +104,11 @@ class NotificationUtil {
       ..data = json.encode(serialize(reminder)));
 
     final notificationDetails = NotificationDetails(
-      AndroidNotificationDetails(
+      android: AndroidNotificationDetails(
         notificationChannelReminders,
         l10n.remindersNotificationChannelName,
-        l10n.remindersNotificationChannelDescription,
-      ),
-      null,
+        channelDescription: l10n.remindersNotificationChannelDescription
+      )
     );
 
     if (reminder.type == Reminder.TYPE_ASSIGNMENT) {

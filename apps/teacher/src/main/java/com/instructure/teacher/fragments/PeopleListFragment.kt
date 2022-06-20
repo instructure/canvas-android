@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PEOPLE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -46,6 +48,7 @@ import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.recyclerView as peopleRecyclerView
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_PEOPLE_LIST)
 class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleListView, UserViewHolder, PeopleListRecyclerAdapter>(), PeopleListView, SearchView.OnQueryTextListener {
 
     private var mCanvasContextsSelected: ArrayList<CanvasContext>? = null
@@ -112,7 +115,7 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         }
 
         setupTitle(presenter.canvasContextList)
-        ViewStyler.themeToolbar(requireActivity(), peopleListToolbar, ColorKeeper.getOrGenerateColor(canvasContext), Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), peopleListToolbar, ColorKeeper.getOrGenerateColor(canvasContext), requireContext().getColor(R.color.white))
         peopleListToolbar.setupBackButton(this)
     }
 

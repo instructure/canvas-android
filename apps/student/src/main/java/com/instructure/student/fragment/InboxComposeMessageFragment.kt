@@ -15,7 +15,6 @@
  */
 package com.instructure.student.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -34,6 +33,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
@@ -50,9 +51,9 @@ import kotlinx.android.synthetic.main.fragment_inbox_compose_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLEncoder
 import java.util.ArrayList
 
+@ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 class InboxComposeMessageFragment : ParentFragment() {
 
     private val conversation by NullableParcelableArg<Conversation>(key = Const.CONVERSATION)
@@ -93,8 +94,8 @@ class InboxComposeMessageFragment : ParentFragment() {
     override fun applyTheme() {
         ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
         ViewStyler.themeSwitch(requireContext(), sendIndividualSwitch, ThemePrefs.brandColor)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
-        ViewStyler.themeProgressBar(savingProgressBar, Color.BLACK)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        ViewStyler.themeProgressBar(savingProgressBar, requireContext().getColor(R.color.textDarkest))
     }
 
     private fun validateMessage() = when {
@@ -172,7 +173,7 @@ class InboxComposeMessageFragment : ParentFragment() {
 
         var previousCheckState = false
         chips.onRecipientsChanged = { recipients: List<Recipient> ->
-            val entryCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
+            val entryCount = recipients.sumOf { it.userCount.coerceAtLeast(1) }
             if (entryCount >= 100) {
                 if (sendIndividualSwitch.isEnabled) {
                     sendIndividualMessageWrapper.alpha = 0.3f
@@ -355,7 +356,7 @@ class InboxComposeMessageFragment : ParentFragment() {
         // Send message
         if (isNewMessage) {
             val recipients = chips.recipients
-            val recipientCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
+            val recipientCount = recipients.sumOf { it.userCount.coerceAtLeast(1) }
             val isBulk = recipientCount >= 100 || (recipientCount > 1 && sendIndividually)
             val contextId = selectedContext!!.contextId
             val subject = editSubject.text.toString()

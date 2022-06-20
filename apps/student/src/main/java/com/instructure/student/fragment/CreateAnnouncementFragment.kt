@@ -18,7 +18,6 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -34,6 +33,8 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_ANNOUNCEMENT
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -43,6 +44,7 @@ import com.instructure.student.events.post
 import kotlinx.android.synthetic.main.fragment_create_announcement.*
 import kotlinx.coroutines.Job
 
+@ScreenView(SCREEN_VIEW_CREATE_ANNOUNCEMENT)
 class CreateAnnouncementFragment : ParentFragment() {
 
     /* The announcement to be edited. This will be null if we're creating a new announcement */
@@ -147,7 +149,7 @@ class CreateAnnouncementFragment : ParentFragment() {
                 }
             }
         }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, createAnnouncementToolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), createAnnouncementToolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), createAnnouncementToolbar)
         if (isEditing) with(mSaveMenuButton) {
             setIcon(0)
@@ -185,7 +187,7 @@ class CreateAnnouncementFragment : ParentFragment() {
                 ThemePrefs.brandColor, ThemePrefs.buttonColor
         )
         // when the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        announcementRCEView.setLabel(announcementDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        announcementRCEView.setLabel(announcementDescLabel, R.color.textDarkest, R.color.textDark)
     }
 
     private fun enableUsersMustPostSwitch(enabled: Boolean) {

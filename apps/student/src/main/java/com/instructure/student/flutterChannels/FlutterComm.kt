@@ -16,10 +16,10 @@
 
 package com.instructure.student.flutterChannels
 
+import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
-import android.util.Log
-import android.view.Window
 import com.google.gson.Gson
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
@@ -44,6 +44,7 @@ object FlutterComm {
     private const val METHOD_UPDATE_LOGIN_DATA = "updateLoginData"
     private const val METHOD_UPDATE_SHOULD_POP = "updateShouldPop"
     private const val METHOD_UPDATE_THEME_DATA = "updateThemeData"
+    private const val METHOD_UPDATE_DARK_MODE = "updateLightOrDarkMode"
 
     private lateinit var context: Context
     private lateinit var channel: MethodChannel
@@ -110,7 +111,7 @@ object FlutterComm {
         data["buttonColor"] = Integer.toHexString(ThemePrefs.buttonColor)
         data["primaryTextColor"] = Integer.toHexString(ThemePrefs.primaryTextColor)
         data["contextColors"] = ColorKeeper.cachedColors.map {
-            it.key.toLowerCase(Locale.US) to Integer.toHexString(it.value)
+            it.key.lowercase(Locale.US) to Integer.toHexString(it.value)
         }.toMap()
         channel.invokeMethod(METHOD_UPDATE_THEME_DATA, data)
     }
@@ -123,5 +124,14 @@ object FlutterComm {
         val affectedDates = dates.filterNotNull().distinct() // Sanitize
         val isoDates = affectedDates.map { it.toApiString() }
         channel.invokeMethod(METHOD_UPDATE_CALENDAR_DATES, isoDates)
+    }
+
+    fun updateDarkMode(activity: Activity) {
+        val nightModeFlags: Int = activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val darkMode = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+        val data = mutableMapOf<String, Any?>()
+        data["darkMode"] = darkMode
+        channel.invokeMethod(METHOD_UPDATE_DARK_MODE, data)
     }
 }

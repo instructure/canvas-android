@@ -47,15 +47,15 @@ const val TODO_COLOR = "#0081BD"
 
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
-    private val apiPrefs: ApiPrefs,
-    private val resources: Resources,
-    private val plannerManager: PlannerManager,
-    private val courseManager: CourseManager,
-    private val userManager: UserManager,
-    private val calendarEventManager: CalendarEventManager,
-    private val assignmentManager: AssignmentManager,
-    private val missingItemsPrefs: MissingItemsPrefs,
-    private val dateTimeProvider: DateTimeProvider
+        private val apiPrefs: ApiPrefs,
+        private val resources: Resources,
+        private val plannerManager: PlannerManager,
+        private val courseManager: CourseManager,
+        private val userManager: UserManager,
+        private val calendarEventManager: CalendarEventManager,
+        private val assignmentManager: AssignmentManager,
+        private val missingItemsPrefs: MissingItemsPrefs,
+        private val dateTimeProvider: DateTimeProvider
 ) : ViewModel() {
 
     private lateinit var startDate: Date
@@ -89,9 +89,9 @@ class ScheduleViewModel @Inject constructor(
         getData(false)
     }
 
-    fun refresh() {
+    fun refresh(forceNetwork: Boolean = true) {
         _state.postValue(ViewState.Refresh)
-        getData(true)
+        getData(forceNetwork)
     }
 
     private fun jumpToToday() {
@@ -107,32 +107,32 @@ class ScheduleViewModel @Inject constructor(
 
                 val courses = courseManager.getCoursesAsync(forceNetwork).await()
                 coursesMap = courses.dataOrThrow
-                    .associateBy { it.id }
+                        .associateBy { it.id }
 
                 plannerItems = plannerManager.getPlannerItemsAsync(
-                    forceNetwork,
-                    weekStart.toApiString(),
-                    startDate.getNextSaturday().toApiString()
+                        forceNetwork,
+                        weekStart.toApiString(),
+                        startDate.getNextSaturday().toApiString()
                 )
-                    .await()
-                    .dataOrNull
-                    .orEmpty()
+                        .await()
+                        .dataOrNull
+                        .orEmpty()
 
                 missingSubmissions =
-                    userManager.getAllMissingSubmissionsAsync(forceNetwork).await().dataOrNull.orEmpty()
+                        userManager.getAllMissingSubmissionsAsync(forceNetwork).await().dataOrNull.orEmpty()
 
                 calendarEvents = plannerItems.filter { it.plannableType == PlannableType.CALENDAR_EVENT }
-                    .map { calendarEventManager.getCalendarEventAsync(it.plannable.id, forceNetwork) }
-                    .awaitAll()
-                    .map { it.dataOrNull }
-                    .associateBy { it?.id }
-
-                discussions =
-                    plannerItems.filter { (it.plannableType == PlannableType.ANNOUNCEMENT || it.plannableType == PlannableType.DISCUSSION_TOPIC) && it.courseId != null }
-                        .map { assignmentManager.getAssignmentAsync(it.plannable.id, it.courseId!!, forceNetwork) }
+                        .map { calendarEventManager.getCalendarEventAsync(it.plannable.id, forceNetwork) }
                         .awaitAll()
                         .map { it.dataOrNull }
                         .associateBy { it?.id }
+
+                discussions =
+                        plannerItems.filter { (it.plannableType == PlannableType.ANNOUNCEMENT || it.plannableType == PlannableType.DISCUSSION_TOPIC) && it.courseId != null }
+                                .map { assignmentManager.getAssignmentAsync(it.plannable.id, it.courseId!!, forceNetwork) }
+                                .awaitAll()
+                                .map { it.dataOrNull }
+                                .associateBy { it?.id }
 
                 val itemViewModels = mutableListOf<ScheduleDayGroupItemViewModel>()
                 for (i in 0..6) {
@@ -176,39 +176,39 @@ class ScheduleViewModel @Inject constructor(
     private fun createMissingItems(): ScheduleMissingItemsGroupItemViewModel {
         val missingItems = missingSubmissions.map { assignment ->
             ScheduleMissingItemViewModel(
-                data = ScheduleMissingItemData(
-                    title = assignment.name,
-                    dueString = assignment.dueDate?.let {
-                        resources.getString(
-                            R.string.schedule_due_text,
-                            simpleDateFormat.format(it)
-                        )
-                    },
-                    points = getPointsText(assignment.pointsPossible),
-                    type = if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
-                    courseName = coursesMap[assignment.courseId]?.name,
-                    courseColor = getCourseColor(coursesMap[assignment.courseId]),
-                    contentDescription = createMissingItemContentDescription(assignment)
-                ),
-                open = {
-                    val course = coursesMap[assignment.courseId]
-                    if (course != null) {
-                        if (assignment.discussionTopicHeader != null) {
-                            _events.postValue(
-                                Event(
-                                    ScheduleAction.OpenDiscussion(
-                                        course,
-                                        assignment.discussionTopicHeader!!.id,
-                                        assignment.discussionTopicHeader!!.title
-                                            ?: ""
-                                    )
+                    data = ScheduleMissingItemData(
+                            title = assignment.name,
+                            dueString = assignment.dueDate?.let {
+                                resources.getString(
+                                        R.string.schedule_due_text,
+                                        simpleDateFormat.format(it)
                                 )
-                            )
-                        } else {
-                            _events.postValue(Event(ScheduleAction.OpenAssignment(course, assignment.id)))
+                            },
+                            points = getPointsText(assignment.pointsPossible),
+                            type = if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
+                            courseName = coursesMap[assignment.courseId]?.name,
+                            courseColor = getCourseColor(coursesMap[assignment.courseId]),
+                            contentDescription = createMissingItemContentDescription(assignment)
+                    ),
+                    open = {
+                        val course = coursesMap[assignment.courseId]
+                        if (course != null) {
+                            if (assignment.discussionTopicHeader != null) {
+                                _events.postValue(
+                                        Event(
+                                                ScheduleAction.OpenDiscussion(
+                                                        course,
+                                                        assignment.discussionTopicHeader!!.id,
+                                                        assignment.discussionTopicHeader!!.title
+                                                                ?: ""
+                                                )
+                                        )
+                                )
+                            } else {
+                                _events.postValue(Event(ScheduleAction.OpenAssignment(course, assignment.id)))
+                            }
                         }
                     }
-                }
             )
         }
         return ScheduleMissingItemsGroupItemViewModel(missingItemsPrefs = missingItemsPrefs, items = missingItems)
@@ -219,8 +219,8 @@ class ScheduleViewModel @Inject constructor(
         val pointsContentDescription = resources.getQuantityString(R.plurals.a11y_schedule_points, assignment.pointsPossible.toInt(), assignment.pointsPossible)
         val dueContentDescription = assignment.dueDate?.let {
             resources.getString(
-                R.string.schedule_due_text,
-                simpleDateFormat.format(it)
+                    R.string.schedule_due_text,
+                    simpleDateFormat.format(it)
             )
         }
         val courseContentDescription = resources.getString(R.string.a11y_schedule_course_header_content_description, coursesMap[assignment.courseId]?.name)
@@ -230,10 +230,10 @@ class ScheduleViewModel @Inject constructor(
 
     private fun createDayHeader(date: Date, items: List<ItemViewModel>): ScheduleDayGroupItemViewModel {
         return ScheduleDayGroupItemViewModel(
-            getTitleForDate(date),
-            SimpleDateFormat("MMMM dd", Locale.getDefault()).format(date),
-            !dateTimeProvider.getCalendar().time.isSameDay(date),
-            items
+                getTitleForDate(date),
+                SimpleDateFormat("MMMM dd", Locale.getDefault()).format(date),
+                !dateTimeProvider.getCalendar().time.isSameDay(date),
+                items
         )
     }
 
@@ -247,38 +247,38 @@ class ScheduleViewModel @Inject constructor(
 
     private fun createCourseItems(date: Date): List<ItemViewModel> {
         val coursePlannerMap = plannerItems
-            .filter {
-                date.isSameDay(it.plannableDate)
-            }
-            .groupBy { coursesMap[it.courseId ?: it.plannable.courseId] }
+                .filter {
+                    date.isSameDay(it.plannableDate)
+                }
+                .groupBy { coursesMap[it.courseId ?: it.plannable.courseId] }
 
 
         val courseViewModels = coursePlannerMap.entries
-            .sortedBy { it.key?.name }
-            .map { entry ->
-                val scheduleViewData = ScheduleCourseViewData(
-                    entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
-                    entry.key != null,
-                    getCourseColor(entry.key),
-                    entry.key?.imageUrl ?: "",
-                    entry.value.map {
-                        createPlannerItemViewModel(it)
-                    }
-                )
-                ScheduleCourseItemViewModel(
-                    scheduleViewData
-                ) {
-                    entry.key?.let { course ->
-                        _events.postValue(Event(ScheduleAction.OpenCourse(course)))
+                .sortedBy { it.key?.name }
+                .map { entry ->
+                    val scheduleViewData = ScheduleCourseViewData(
+                            entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
+                            entry.key != null && !entry.key!!.homeroomCourse,
+                            getCourseColor(entry.key),
+                            entry.key?.imageUrl ?: "",
+                            entry.value.map {
+                                createPlannerItemViewModel(it)
+                            }
+                    )
+                    ScheduleCourseItemViewModel(
+                            scheduleViewData
+                    ) {
+                        entry.key?.let { course ->
+                            _events.postValue(Event(ScheduleAction.OpenCourse(course)))
+                        }
                     }
                 }
-            }
 
         return if (courseViewModels.isEmpty()) {
             listOf(
-                ScheduleEmptyItemViewModel(
-                    ScheduleEmptyViewData(resources.getString(R.string.nothing_planned_yet))
-                )
+                    ScheduleEmptyItemViewModel(
+                            ScheduleEmptyViewData(resources.getString(R.string.nothing_planned_yet))
+                    )
             )
         } else {
             courseViewModels
@@ -323,35 +323,35 @@ class ScheduleViewModel @Inject constructor(
 
         return chips.map {
             SchedulePlannerItemTagItemViewModel(
-                SchedulePlannerItemTag(
-                    if (it is PlannerItemTag.Replies) resources.getQuantityString(it.text, it.replyCount, it.replyCount)
-                    else resources.getString(it.text),
-                    resources.getColor(it.color)
-                )
+                    SchedulePlannerItemTag(
+                            if (it is PlannerItemTag.Replies) resources.getQuantityString(it.text, it.replyCount, it.replyCount)
+                            else resources.getString(it.text),
+                            resources.getColor(it.color)
+                    )
             )
         }
     }
 
     private fun createPlannerItemViewModel(plannerItem: PlannerItem): SchedulePlannerItemViewModel {
         return SchedulePlannerItemViewModel(
-            SchedulePlannerItemData(
-                plannerItem.plannable.title,
-                getTypeForPlannerItem(plannerItem),
-                getPointsText(plannerItem.plannable.pointsPossible),
-                getDueText(plannerItem),
-                isPlannableOpenable(plannerItem),
-                createContentDescription(plannerItem),
-                createChips(plannerItem)
-            ),
-            plannerItem.plannerOverride?.markedComplete ?: false || plannerItem.submissionState?.submitted ?: false,
-            { scheduleItemViewModel, markedAsDone ->
-                updatePlannerOverride(
-                    plannerItem,
-                    scheduleItemViewModel,
-                    markedAsDone
-                )
-            },
-            { openPlannable(plannerItem) }
+                SchedulePlannerItemData(
+                        plannerItem.plannable.title,
+                        getTypeForPlannerItem(plannerItem),
+                        getPointsText(plannerItem.plannable.pointsPossible),
+                        getDueText(plannerItem),
+                        isPlannableOpenable(plannerItem),
+                        createContentDescription(plannerItem),
+                        createChips(plannerItem)
+                ),
+                plannerItem.plannerOverride?.markedComplete ?: false || plannerItem.submissionState?.submitted ?: false,
+                { scheduleItemViewModel, markedAsDone ->
+                    updatePlannerOverride(
+                            plannerItem,
+                            scheduleItemViewModel,
+                            markedAsDone
+                    )
+                },
+                { openPlannable(plannerItem) }
         )
     }
 
@@ -359,9 +359,9 @@ class ScheduleViewModel @Inject constructor(
         val typeContentDescription = createTypeContentDescription(plannerItem.plannableType)
         val dateContentDescription = getDueText(plannerItem)
         val markedAsDoneContentDescription =
-            if (plannerItem.plannerOverride?.markedComplete == true || plannerItem.submissionState?.submitted == true) resources.getString(R.string.a11y_marked_as_done) else resources.getString(
-                R.string.a11y_not_marked_as_done
-            )
+                if (plannerItem.plannerOverride?.markedComplete == true || plannerItem.submissionState?.submitted == true) resources.getString(R.string.a11y_marked_as_done) else resources.getString(
+                        R.string.a11y_not_marked_as_done
+                )
 
         return "$typeContentDescription ${plannerItem.plannable.title} $dateContentDescription $markedAsDoneContentDescription"
     }
@@ -380,9 +380,9 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun updatePlannerOverride(
-        plannerItem: PlannerItem,
-        itemViewModel: SchedulePlannerItemViewModel,
-        markedAsDone: Boolean
+            plannerItem: PlannerItem,
+            itemViewModel: SchedulePlannerItemViewModel,
+            markedAsDone: Boolean
     ) {
         if (itemViewModel.completed == markedAsDone) return
 
@@ -390,21 +390,27 @@ class ScheduleViewModel @Inject constructor(
             itemViewModel.apply {
                 completed = markedAsDone
                 notifyChange()
+
+                announceForA11y(
+                        if (markedAsDone) resources.getString(R.string.a11y_schedule_marked_as_done, plannerItem.plannable.title)
+                        else resources.getString(R.string.a11y_schedule_marked_as_not_done, plannerItem.plannable.title)
+                )
             }
+
             try {
                 if (plannerItem.plannerOverride == null) {
                     val plannerOverride = PlannerOverride(
-                        plannableType = plannerItem.plannableType,
-                        plannableId = plannerItem.plannable.id,
-                        markedComplete = markedAsDone
+                            plannableType = plannerItem.plannableType,
+                            plannableId = plannerItem.plannable.id,
+                            markedComplete = markedAsDone
                     )
                     val createdOverride =
-                        plannerManager.createPlannerOverrideAsync(true, plannerOverride).await().dataOrThrow
+                            plannerManager.createPlannerOverrideAsync(true, plannerOverride).await().dataOrThrow
                     plannerItem.plannerOverride = createdOverride
                 } else {
                     val updatedOverride =
-                        plannerManager.updatePlannerOverrideAsync(true, markedAsDone, plannerItem.plannerOverride?.id!!)
-                            .await().dataOrThrow
+                            plannerManager.updatePlannerOverrideAsync(true, markedAsDone, plannerItem.plannerOverride?.id!!)
+                                    .await().dataOrThrow
                     plannerItem.plannerOverride = updatedOverride
                 }
             } catch (e: Exception) {
@@ -413,48 +419,54 @@ class ScheduleViewModel @Inject constructor(
                     completed = !markedAsDone
                     notifyChange()
                 }
+
+                announceForA11y(resources.getString(R.string.a11y_error_occured))
             }
         }
 
     }
 
+    private fun announceForA11y(announcement: String) {
+        _events.postValue(Event(ScheduleAction.AnnounceForAccessibility(announcement)))
+    }
+
     private fun openPlannable(plannerItem: PlannerItem) {
         when (plannerItem.plannableType) {
             PlannableType.ASSIGNMENT -> _events.postValue(
-                Event(
-                    ScheduleAction.OpenAssignment(
-                        plannerItem.canvasContext,
-                        plannerItem.plannable.id
+                    Event(
+                            ScheduleAction.OpenAssignment(
+                                    plannerItem.canvasContext,
+                                    plannerItem.plannable.id
+                            )
                     )
-                )
             )
             PlannableType.CALENDAR_EVENT -> _events.postValue(
-                Event(
-                    ScheduleAction.OpenCalendarEvent(
-                        plannerItem.canvasContext,
-                        plannerItem.plannable.id
+                    Event(
+                            ScheduleAction.OpenCalendarEvent(
+                                    plannerItem.canvasContext,
+                                    plannerItem.plannable.id
+                            )
                     )
-                )
             )
             PlannableType.DISCUSSION_TOPIC -> _events.postValue(
-                Event(
-                    ScheduleAction.OpenDiscussion(
-                        plannerItem.canvasContext,
-                        plannerItem.plannable.id,
-                        plannerItem.plannable.title
+                    Event(
+                            ScheduleAction.OpenDiscussion(
+                                    plannerItem.canvasContext,
+                                    plannerItem.plannable.id,
+                                    plannerItem.plannable.title
+                            )
                     )
-                )
             )
             PlannableType.QUIZ -> {
                 if (plannerItem.plannable.assignmentId != null) {
                     // This is a quiz assignment, go to the assignment page
                     _events.postValue(
-                        Event(
-                            ScheduleAction.OpenAssignment(
-                                plannerItem.canvasContext,
-                                plannerItem.plannable.id
+                            Event(
+                                    ScheduleAction.OpenAssignment(
+                                            plannerItem.canvasContext,
+                                            plannerItem.plannable.id
+                                    )
                             )
-                        )
                     )
                 } else {
                     var htmlUrl = plannerItem.htmlUrl.orEmpty()
@@ -463,13 +475,13 @@ class ScheduleViewModel @Inject constructor(
                 }
             }
             PlannableType.ANNOUNCEMENT -> _events.postValue(
-                Event(
-                    ScheduleAction.OpenDiscussion(
-                        plannerItem.canvasContext,
-                        plannerItem.plannable.id,
-                        plannerItem.plannable.title
+                    Event(
+                            ScheduleAction.OpenDiscussion(
+                                    plannerItem.canvasContext,
+                                    plannerItem.plannable.id,
+                                    plannerItem.plannable.title
+                            )
                     )
-                )
             )
             else -> Unit
         }
@@ -507,8 +519,8 @@ class ScheduleViewModel @Inject constructor(
             PlannableType.ANNOUNCEMENT -> simpleDateFormat.format(plannerItem.plannableDate)
             PlannableType.CALENDAR_EVENT -> getCalendarEventDueText(plannerItem)
             PlannableType.PLANNER_NOTE -> resources.getString(
-                R.string.schedule_todo_due_text,
-                simpleDateFormat.format(plannerItem.plannable.todoDate.toDate() ?: plannerItem.plannableDate)
+                    R.string.schedule_todo_due_text,
+                    simpleDateFormat.format(plannerItem.plannable.todoDate.toDate() ?: plannerItem.plannableDate)
             )
             else -> resources.getString(R.string.schedule_due_text, simpleDateFormat.format(plannerItem.plannableDate))
         }
@@ -527,8 +539,8 @@ class ScheduleViewModel @Inject constructor(
         }
 
         return resources.getString(
-            R.string.schedule_calendar_event_due_text,
-            simpleDateFormat.format(plannerItem.plannableDate)
+                R.string.schedule_calendar_event_due_text,
+                simpleDateFormat.format(plannerItem.plannableDate)
         )
     }
 

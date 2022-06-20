@@ -24,6 +24,7 @@ sealed class TextSubmissionUploadEvent {
     data class TextChanged(val text: String) : TextSubmissionUploadEvent()
     data class SubmitClicked(val text: String) : TextSubmissionUploadEvent()
     data class ImageAdded(val uri: Uri) : TextSubmissionUploadEvent()
+    data class SaveDraft(val text: String): TextSubmissionUploadEvent()
     object CameraImageTaken : TextSubmissionUploadEvent()
     object ImageFailed : TextSubmissionUploadEvent()
 }
@@ -32,6 +33,7 @@ sealed class TextSubmissionUploadEffect {
     data class SubmitText(val text: String, val canvasContext: CanvasContext, val assignmentId: Long, val assignmentName: String?) : TextSubmissionUploadEffect()
     data class InitializeText(val text: String) : TextSubmissionUploadEffect()
     data class AddImage(val uri: Uri, val canvasContext: CanvasContext) : TextSubmissionUploadEffect()
+    data class SaveDraft(val text: String, val canvasContext: CanvasContext, val assignmentId: Long, val assignmentName: String?) : TextSubmissionUploadEffect()
     object ProcessCameraImage : TextSubmissionUploadEffect()
     object ShowFailedImageMessage : TextSubmissionUploadEffect()
 }

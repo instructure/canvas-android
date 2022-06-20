@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,12 +29,14 @@ import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_UNSUPPORTED_FILE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
@@ -44,6 +45,7 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
+@ScreenView(SCREEN_VIEW_VIEW_UNSUPPORTED_FILE)
 class ViewUnsupportedFileFragment : Fragment() {
 
     private var downloadFileJob: Job? = null
@@ -99,12 +101,12 @@ class ViewUnsupportedFileFragment : Fragment() {
         }
 
         if (isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mToolbarColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()
             }
-            ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         }
     }

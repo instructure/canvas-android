@@ -18,6 +18,7 @@ package com.instructure.student.util
 
 import android.os.Build
 import android.webkit.WebView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
@@ -29,7 +30,9 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.typeface.TypefaceBehavior
+import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.flutterChannels.FlutterComm
@@ -38,6 +41,7 @@ import com.instructure.student.tasks.StudentLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
+import com.zynksoftware.documentscanner.ui.DocumentScanner
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn
@@ -62,6 +66,9 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
         }
         super.onCreate()
 
+        val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
+        AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
+
         // Call it superstition, but I don't trust BuildConfig flags to be set correctly
         // in library builds.  IS_TESTING, for example, does not percolate down to libraries
         // correctly.  So I'm reading/setting these user properties here instead of canvasapi2/AppManager.
@@ -73,13 +80,15 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
 
         initPSPDFKit()
 
+        initDocumentScanning()
+
         if (BuildConfig.DEBUG) {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
         } else {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
         }
 
-        ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.defaultPrimary)
+        ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.textDarkest)
 
         // There appears to be a bug when the user is installing/updating the android webview stuff.
         // http://code.google.com/p/android/issues/detail?id=175124
@@ -207,6 +216,10 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
         } catch (e: InvalidPSPDFKitLicenseException) {
             Logger.e("Invalid or Trial PSPDFKIT License!")
         }
+    }
+
+    private fun initDocumentScanning() {
+        DocumentScanner.init(this)
     }
 
     override fun performLogoutOnAuthError() = Unit

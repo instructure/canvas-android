@@ -68,7 +68,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
               SizedBox(height: 16.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(L10n(context).calendarTapToFavoriteDesc, style: Theme.of(context).textTheme.body1),
+                child: Text(L10n(context).calendarTapToFavoriteDesc, style: Theme.of(context).textTheme.bodyText2),
               ),
               SizedBox(height: 24.0),
               Expanded(child: _body())
@@ -214,7 +214,7 @@ class LabeledCheckbox extends StatelessWidget {
               },
             ),
             SizedBox(width: 21.0),
-            Expanded(child: Text(label, style: Theme.of(context).textTheme.subhead)),
+            Expanded(child: Text(label, style: Theme.of(context).textTheme.subtitle1)),
           ],
         ),
       ),

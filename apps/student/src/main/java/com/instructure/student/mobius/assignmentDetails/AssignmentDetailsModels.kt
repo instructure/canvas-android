@@ -27,6 +27,7 @@ sealed class AssignmentDetailsEvent {
     object SubmitAssignmentClicked : AssignmentDetailsEvent()
     object ViewSubmissionClicked : AssignmentDetailsEvent()
     object ViewUploadStatusClicked : AssignmentDetailsEvent()
+    object ViewDraftSubmissionClicked : AssignmentDetailsEvent()
     object AudioRecordingClicked : AssignmentDetailsEvent()
     object VideoRecordingClicked : AssignmentDetailsEvent()
     object ChooseMediaClicked : AssignmentDetailsEvent()
@@ -73,6 +74,7 @@ sealed class AssignmentDetailsEffect {
     data class ShowDiscussionAttachment(val discussionAttachment: Attachment, val course: Course) : AssignmentDetailsEffect()
     data class ShowSubmissionView(val assignmentId: Long, val course: Course, val isObserver: Boolean = false) : AssignmentDetailsEffect()
     data class ShowUploadStatusView(val submission: Submission) : AssignmentDetailsEffect()
+    data class ShowDraftSubmission(val submission: Submission) : AssignmentDetailsEffect()
     data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment, val ltiTool: LTITool? = null) : AssignmentDetailsEffect()
     data class LoadData(val assignmentId: Long, val courseId: Long, val forceNetwork: Boolean) : AssignmentDetailsEffect()
     data class RouteInternally(

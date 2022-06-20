@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.PSPDFKit.AnnotationComments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -34,6 +33,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.setupBackButton
 import kotlinx.android.synthetic.main.fragment_annotation_comment_list.*
+import java.util.Locale
 
 class AnnotationCommentListFragment : BaseListFragment<
         CanvaDocAnnotation,
@@ -61,10 +61,10 @@ class AnnotationCommentListFragment : BaseListFragment<
             //we want to show a different title for the head annotation
             builder.setTitle(if(position == 0) R.string.deleteAnnotation else R.string.deleteComment)
             builder.setMessage(if(position == 0) R.string.deleteHeadCommentConfirmation else R.string.deleteCommentConfirmation)
-            builder.setPositiveButton(getString(R.string.delete).toUpperCase()) { _, _ ->
+            builder.setPositiveButton(getString(R.string.delete).uppercase(Locale.getDefault())) { _, _ ->
                 presenter.deleteComment(annotation, position)
             }
-            builder.setNegativeButton(getString(R.string.cancel).toUpperCase(), null)
+            builder.setNegativeButton(getString(R.string.cancel).uppercase(Locale.getDefault()), null)
             val dialog = builder.create()
             dialog.setOnShowListener {
                 dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
@@ -99,7 +99,7 @@ class AnnotationCommentListFragment : BaseListFragment<
     fun setupToolbar() {
         toolbar.title = getString(R.string.sg_tab_comments)
         toolbar.setupBackButton(this)
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 
@@ -110,7 +110,7 @@ class AnnotationCommentListFragment : BaseListFragment<
         } else {
             commentInputContainer.setVisible(true)
             sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
-                    intArrayOf(-android.R.attr.state_enabled) to requireContext().getColorCompat(R.color.defaultTextGray),
+                    intArrayOf(-android.R.attr.state_enabled) to requireContext().getColorCompat(R.color.textDark),
                     intArrayOf() to ThemePrefs.buttonColor
             )
 

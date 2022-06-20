@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -56,6 +58,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 class AssignmentDetailsFragment : BasePresenterFragment<
         AssignmentDetailsPresenter,
         AssignmentDetailsView>(), AssignmentDetailsView, Identity {
@@ -97,7 +100,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         swipeRefreshLayout.isRefreshing = false
         setupViews(assignment)
         setupListeners(assignment)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
     }
 
     override fun getPresenterFactory() = AssignmentDetailPresenterFactory(mAssignment)
@@ -107,7 +110,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -115,7 +118,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         if(!isTablet) {
             toolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbar(requireActivity(), toolbar, mCourse.color, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews(assignment: Assignment) {
@@ -163,14 +166,14 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private fun configurePublishStatus(assignment: Assignment) = with(assignment) {
         if (published) {
             publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
-            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.publishedGreen))
+            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textSuccess))
             publishStatusTextView.setText(R.string.published)
-            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.publishedGreen))
+            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textSuccess))
         } else {
             publishStatusIconView.setImageResource(R.drawable.ic_complete)
-            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.defaultTextGray))
+            publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textDark))
             publishStatusTextView.setText(R.string.not_published)
-            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.defaultTextGray))
+            publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.textDark))
         }
     }
 
@@ -229,7 +232,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
                 }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
-                    val args = LtiLaunchFragment.makeBundle(mCourse, ltiUrl!!, assignment.name!!, true)
+                    val args = LtiLaunchFragment.makeBundle(mCourse, ltiUrl, assignment.name!!, true)
                     RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
                 }
             }

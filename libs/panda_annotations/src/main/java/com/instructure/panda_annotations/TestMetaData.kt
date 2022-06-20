@@ -20,22 +20,30 @@ package com.instructure.panda_annotations
 @Retention(AnnotationRetention.SOURCE)
 @MustBeDocumented
 annotation class TestMetaData(
-        val priority: Priority,
-        val featureCategory: FeatureCategory,
-        val testCategory: TestCategory,
-        val stubbed: Boolean = false,
-        val secondaryFeature: FeatureCategory = FeatureCategory.NONE,
-        val manualOnly: Boolean = false
+    val priority: Priority,
+    val featureCategory: FeatureCategory,
+    val testCategory: TestCategory,
+    val stubbed: Boolean = false,
+    val secondaryFeature: SecondaryFeatureCategory = SecondaryFeatureCategory.NONE
 )
 
 enum class Priority {
-    P0, P1, P2, P3
+    MANDATORY, IMPORTANT, COMMON, NICE_TO_HAVE, BUG_CASE
 }
 
 enum class FeatureCategory {
     ASSIGNMENTS, SUBMISSIONS, LOGIN, COURSE, DASHBOARD, GROUPS, SETTINGS, PAGES, DISCUSSIONS, MODULES,
     INBOX, GRADES, FILES, EVENTS, PEOPLE, CONFERENCES, COLLABORATIONS, SYLLABUS, TODOS, QUIZZES, NOTIFICATIONS,
-    ANNOTATIONS, ANNOUNCEMENTS, COMMENTS, BOOKMARKS, NONE, K5_DASHBOARD
+    ANNOTATIONS, ANNOUNCEMENTS, COMMENTS, BOOKMARKS, NONE, K5_DASHBOARD, SPEED_GRADER
+}
+
+enum class SecondaryFeatureCategory {
+    NONE, LOGIN_K5,
+    SUBMISSIONS_TEXT_ENTRY, SUBMISSIONS_ANNOTATIONS, SUBMISSIONS_ONLINE_URL,
+    ASSIGNMENT_COMMENTS, ASSIGNMENT_QUIZZES, ASSIGNMENT_DISCUSSIONS,
+    GROUPS_DASHBOARD, GROUPS_FILES, GROUPS_ANNOUNCEMENTS, GROUPS_DISCUSSIONS, GROUPS_PAGES, GROUPS_PEOPLE,
+    EVENTS_DISCUSSIONS, EVENTS_QUIZZES, EVENTS_ASSIGNMENTS, EVENTS_NOTIFICATIONS,
+    MODULES_ASSIGNMENTS, MODULES_DISCUSSIONS, MODULES_FILES, MODULES_PAGES, MODULES_QUIZZES
 }
 
 enum class TestCategory {

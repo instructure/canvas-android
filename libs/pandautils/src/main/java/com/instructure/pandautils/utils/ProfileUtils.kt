@@ -40,6 +40,7 @@ import com.instructure.pandautils.R
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import java.util.Locale
 
 
 object ProfileUtils {
@@ -57,7 +58,7 @@ object ProfileUtils {
 
     fun getUserInitials(username: String?): String {
         val name: String = username.takeUnless { it.isNullOrBlank() } ?: return "?"
-        val initials = name.trim().split(Regex("\\s+")).map { it.toUpperCase()[0] }
+        val initials = name.trim().split(Regex("\\s+")).map { it.uppercase(Locale.getDefault())[0] }
         return if (initials.size == 2) {
             initials.joinToString("")
         } else {
@@ -126,7 +127,7 @@ object ProfileUtils {
 
     private fun createAvatarDrawable(context: Context, userName: String): Drawable {
         val initials = getUserInitials(userName)
-        val color = ContextCompat.getColor(context, R.color.gray)
+        val color = ContextCompat.getColor(context, R.color.textDark)
         return TextDrawable.builder()
             .beginConfig()
             .height(context.resources.getDimensionPixelSize(R.dimen.avatar_size))

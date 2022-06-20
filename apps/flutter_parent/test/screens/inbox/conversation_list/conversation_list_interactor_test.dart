@@ -30,7 +30,7 @@ import '../../../utils/test_app.dart';
 import '../../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  test('getConversations calls api for normal scope and sent scope', () {
+  test('getConversations calls api for normal scope and sent scope', () async {
     var inboxApi = _MockInboxApi();
 
     when(inboxApi.getConversations(
@@ -38,7 +38,7 @@ void main() {
       forceRefresh: anyNamed('forceRefresh'),
     )).thenAnswer((_) => Future.value([]));
 
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => inboxApi);
     });
 
@@ -51,7 +51,7 @@ void main() {
   test('getConversations merges scopes and removes duplicates from sent scope', () async {
     var inboxApi = _MockInboxApi();
 
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => inboxApi);
     });
 
@@ -97,7 +97,7 @@ void main() {
   test('getConversations orders items by date (descending)', () async {
     var inboxApi = _MockInboxApi();
 
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => inboxApi);
     });
 
@@ -145,7 +145,7 @@ void main() {
   test('getConversations produces error when API fails', () async {
     var inboxApi = _MockInboxApi();
 
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxApi>(() => inboxApi);
     });
 
@@ -163,16 +163,16 @@ void main() {
     }
   });
 
-  test('getCoursesForCompose calls CourseApi', () {
+  test('getCoursesForCompose calls CourseApi', () async {
     var api = _MockCourseApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<CourseApi>(() => api));
+    await setupTestLocator((locator) => locator.registerLazySingleton<CourseApi>(() => api));
     ConversationListInteractor().getCoursesForCompose();
     verify(api.getObserveeCourses()).called(1);
   });
 
-  test('getStudentEnrollments calls EnrollmentsApi', () {
+  test('getStudentEnrollments calls EnrollmentsApi', () async {
     var api = MockEnrollmentsApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<EnrollmentsApi>(() => api));
+    await setupTestLocator((locator) => locator.registerLazySingleton<EnrollmentsApi>(() => api));
     ConversationListInteractor().getStudentEnrollments();
     verify(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh'))).called(1);
   });

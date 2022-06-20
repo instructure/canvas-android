@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -53,6 +55,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LIST)
 class AssignmentSubmissionListFragment : BaseSyncFragment<
         GradeableStudentSubmission,
         AssignmentSubmissionListPresenter,
@@ -147,7 +150,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         swipeRefreshLayout.isRefreshing = false
 
         // Theme the toolbar again since visibilities may have changed
-        ViewStyler.themeToolbar(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
 
         updateStatuses() // Muted is now also set by not being in the new gradebook
     }
@@ -172,7 +175,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             assignmentSubmissionListToolbar.title = getString(R.string.submissions)
             assignmentSubmissionListToolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbar(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
         ViewStyler.themeFAB(addMessage, ThemePrefs.buttonColor)
     }
 
@@ -197,7 +200,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     private fun updateFilterTitle() {
         clearFilterTextView.setVisible()
-        when (presenter?.getFilter()) {
+        when (presenter.getFilter()) {
             SubmissionListFilter.ALL -> {
                 filterTitle.setText(R.string.all_submissions)
                 clearFilterTextView.setGone()
@@ -220,7 +223,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             }
         }
 
-        filterTitle.text = filterTitle.text.toString().plus(presenter?.getSectionFilterText())
+        filterTitle.text = filterTitle.text.toString().plus(presenter.getSectionFilterText())
     }
 
     private fun setFilter(filterIndex: Int = -1, canvasContexts: ArrayList<CanvasContext>? = null) {
@@ -256,13 +259,13 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             }
             SubmissionListFilter.BELOW_VALUE.ordinal -> {
                 FilterSubmissionByPointsDialog.getInstance(requireFragmentManager(), getString(R.string.scored_less_than), mAssignment.pointsPossible) { points ->
-                    presenter?.setFilter(SubmissionListFilter.BELOW_VALUE, points)
+                    presenter.setFilter(SubmissionListFilter.BELOW_VALUE, points)
                     updateFilterTitle()
                 }.show(requireActivity().supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
             }
             SubmissionListFilter.ABOVE_VALUE.ordinal -> {
                 FilterSubmissionByPointsDialog.getInstance(requireFragmentManager(), getString(R.string.scored_more_than), mAssignment.pointsPossible) { points ->
-                    presenter?.setFilter(SubmissionListFilter.ABOVE_VALUE, points)
+                    presenter.setFilter(SubmissionListFilter.ABOVE_VALUE, points)
                     updateFilterTitle()
                 }.show(requireActivity().supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
             }

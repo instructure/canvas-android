@@ -21,7 +21,7 @@ import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:package_info/package_info.dart';
 
 import '../url_launcher.dart';

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -1215,10 +1215,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">This student\'s responses are hidden because this assignment is anonymous.</string>
 
-    <string name="studentAnnotationUnsupported">Student Annotation (Unsupported)</string>
-    <string name="studentAnnotationUnsupportedDescription">Student Annotation is currently not supported on mobile.</string>
-    <string name="unsupportedSubmissionType">Unsupported Submission Type</string>
-    <string name="studentAnnotationUnsupportedMessage">Submission cannot be displayed, because Student Annotation is currently not supported on mobile.</string>
     <string name="schedule_marked_as_done">You\'ve marked it as done.</string>
     <string name="error_saving_assignment_closed_grading_period">Cannot change the due date when due in a closed grading period.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Jump to Today</string>
@@ -1227,4 +1223,49 @@
 
     <string name="somethingWentWrong">Something went wrong</string>
     <string name="failedToLoadQuiz">Failed to load quiz</string>
+    <string name="failedToLoadSubmission">Failed to load submission</string>
+    <string name="studentAnnotationToolbarTitle">Student Annotation</string>
+    <string name="submissionTypeStudentAnnotation">Student Annotation</string>
+    <string name="gradesNoDueDate">No due date</string>
+    <string name="importantDatesNoDueDate">No due date</string>
+    <string name="missingAssignment">Missing</string>
+    <string name="dontSave">Don\'t save</string>
+    <string name="textSubmissionExitConfirmationTitle">Save draft?</string>
+    <string name="textSubmissionExitConfirmationMessage">Your changes will not be saved otherwise</string>
+    <string name="submissionDraftAvailableSubtitle">Tap here to continue</string>
+    <string name="submissionDraftAvailableTitle">Draft Available</string>
+    <string name="errorLoadingSubmission">An error occurred while loading submission</string>
+    <string name="loadFullContent">Tap to see full content</string>
+    <string name="dashboardTabImportantDates">Important Dates</string>
+    <string name="importantDatesEmptyTitle">No important dates</string>
+    <string name="important_dates">Important Dates</string>
+
+    <string name="toolbarCommentLibrary">Comment Library</string>
+    <string name="commentLibraryNoSuggestions">No suggestions available</string>
+    <string name="speedGraderCommentHint">Comment</string>
+    <string name="a11y_schedule_marked_as_done">%s marked as done</string>
+    <string name="a11y_error_occured">Error occured, please try again.</string>
+    <string name="a11y_content_description_accept_invite">Accept invite</string>
+    <string name="a11y_content_description_decline_invite">Decline invite</string>
+    <string name="no_notifications_to_show">No notifications to show</string>
+
+    <string name="documentScanningTitle">Document Scanning</string>
+    <string name="filter_name_color">Color</string>
+    <string name="filter_name_grayscale">Grayscale</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Your device does not have any applications installed that can open this link.</string>
+
+    <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
+    <string name="discussionOpenInBrowser">Open in browser</string>
+    
+    <string name="dashboardSwitchToListView">Switch to list view</string>
+    <string name="dashboardSwitchToGridView">Switch to grid view</string>
+
+    <string name="selectAppTheme">Select app theme</string>
+    <string name="appThemeSettingsTitle">App Theme</string>
+    <string name="appThemeLight">Light</string>
+    <string name="appThemeDark">Dark</string>
+    <string name="appThemeSystem">System default</string>
+
 </resources>

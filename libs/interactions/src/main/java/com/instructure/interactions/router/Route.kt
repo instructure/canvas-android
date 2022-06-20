@@ -62,7 +62,9 @@ data class Route(
         /* The URL of the path before the params have been replaced. */
         var routePath: String? = null,
         /* A tab id see the Tabs api for a definition. Not required for most routes. */
-        var tabId: String? = null
+        var tabId: String? = null,
+        /* If true removes the previous screen from the backstack when routing to this route. */
+        var removePreviousScreen: Boolean = false
 ) : Parcelable {
 
     //All constructors should eventually set the [Route.routePath]
@@ -93,6 +95,11 @@ data class Route(
 
     constructor(routePath: String?, routeContext: RouteContext) : this(routePath) {
         this.routeContext = routeContext
+    }
+
+    constructor(routePath: String?, routeContext: RouteContext, secondaryClass: Class<out Fragment>?) : this(routePath) {
+        this.routeContext = routeContext
+        this.secondaryClass = secondaryClass
     }
 
     constructor(routePath: String?, primaryClass: Class<out Fragment>?) : this(routePath) {

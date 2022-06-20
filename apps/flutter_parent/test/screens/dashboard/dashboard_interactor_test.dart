@@ -31,9 +31,9 @@ import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  test('getStudents calls getObserveeEnrollments from EnrollmentsApi', () {
+  test('getStudents calls getObserveeEnrollments from EnrollmentsApi', () async {
     var api = MockEnrollmentsApi();
-    setupTestLocator((l) => l.registerLazySingleton<EnrollmentsApi>(() => api));
+    await setupTestLocator((l) => l.registerLazySingleton<EnrollmentsApi>(() => api));
     when(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value(<Enrollment>[]));
 
@@ -50,7 +50,7 @@ void main() {
       return b..permissions = UserPermission((p) => p..limitParentAppWebAccess = true).toBuilder();
     });
 
-    setupTestLocator((l) => l.registerLazySingleton<UserApi>(() => api));
+    await setupTestLocator((l) => l.registerLazySingleton<UserApi>(() => api));
     when(api.getSelf()).thenAnswer((_) => Future.value(updatedUser));
     when(api.getSelfPermissions()).thenAnswer((_) => Future.value(permittedUser.permissions));
 
@@ -71,7 +71,7 @@ void main() {
     final initialUser = CanvasModelTestUtils.mockUser();
     final updatedUser = CanvasModelTestUtils.mockUser(name: 'Inst Panda');
 
-    setupTestLocator((l) => l.registerLazySingleton<UserApi>(() => api));
+    await setupTestLocator((l) => l.registerLazySingleton<UserApi>(() => api));
     when(api.getSelf()).thenAnswer((_) => Future.value(updatedUser));
     when(api.getSelfPermissions()).thenAnswer((_) => Future.error('No permissions for this user'));
 
@@ -128,9 +128,9 @@ void main() {
     expect(result, expectedSortedList);
   });
 
-  test('Returns InboxCountNotifier from locator', () {
+  test('Returns InboxCountNotifier from locator', () async {
     var notifier = InboxCountNotifier();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<InboxCountNotifier>(() => notifier);
     });
 
@@ -138,9 +138,9 @@ void main() {
     expect(interactor.getInboxCountNotifier(), notifier);
   });
 
-  test('shouldShowOldReminderMessage calls OldAppMigration.hasOldReminders', () {
+  test('shouldShowOldReminderMessage calls OldAppMigration.hasOldReminders', () async {
     var migration = _MockMigration();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<OldAppMigration>(() => migration);
     });
 

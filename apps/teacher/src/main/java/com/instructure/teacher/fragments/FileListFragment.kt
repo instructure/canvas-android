@@ -17,7 +17,6 @@
 package com.instructure.teacher.fragments
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -31,6 +30,8 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.models.EditableFile
@@ -39,8 +40,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.FileListAdapter
 import com.instructure.teacher.dialog.CreateFolderDialog
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.factory.FileListPresenterFactory
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.holders.FileFolderViewHolder
@@ -56,6 +57,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_FILE_LIST)
 class FileListFragment : BaseSyncFragment<
         FileFolder,
         FileListPresenter,
@@ -80,9 +82,6 @@ class FileListFragment : BaseSyncFragment<
                 override fun onAnimationStart(animation: Animation?) = Unit
                 override fun onAnimationRepeat(animation: Animation?) = Unit
                 override fun onAnimationEnd(animation: Animation?) {
-                    /* A11y traversal order for the FABs is specified in the XML layout file, but is only supported
-                    in API 22+. If API level is less than that we need to manually request focus on the first FAB. */
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) addFolderFab.requestAccessibilityFocus(0)
                     addFab.contentDescription = getString(R.string.hideCreateFileFolderFabContentDesc)
                 }
             })
@@ -285,8 +284,8 @@ class FileListFragment : BaseSyncFragment<
 
         if (mCanvasContext.isUser) {
             // User's files, no CanvasContext
-            ViewStyler.themeToolbar(requireActivity(), fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-        } else ViewStyler.themeToolbar(requireActivity(), fileListToolbar, courseColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        } else ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, courseColor, requireContext().getColor(R.color.white))
     }
 
     private fun animateFabs() = if (fabOpen) {

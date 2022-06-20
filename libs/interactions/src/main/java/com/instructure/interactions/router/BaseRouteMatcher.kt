@@ -3,8 +3,6 @@ package com.instructure.interactions.router
 import android.net.Uri
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
-import java.util.ArrayList
-import java.util.HashMap
 
 open class BaseRouteMatcher {
 
@@ -44,7 +42,7 @@ open class BaseRouteMatcher {
 
         return routes.find { it.apply(urlValidator.url) }?.takeUnless {
             RouteContext.INTERNAL == it.routeContext || RouteContext.DO_NOT_ROUTE == it.routeContext
-        }
+        }?.copy()
     }
 
     /**

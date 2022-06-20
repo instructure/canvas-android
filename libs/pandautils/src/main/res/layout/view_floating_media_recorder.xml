@@ -26,7 +26,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:background="@color/black"
+            android:background="@color/licorice"
             android:layout_width="match_parent"
             android:layout_height="48dp">
 
@@ -92,7 +92,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/error"
                 android:src="@drawable/ic_warning"
-                android:tint="@color/error" />
+                android:tint="@color/textDanger" />
 
             <TextView
                 android:layout_width="match_parent"

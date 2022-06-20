@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Repons elèv sa a kache paske devwa sa a anonim.</string>
 
-    <string name="studentAnnotationUnsupported">Nòt Elèv (Pa sipòte)</string>
-    <string name="studentAnnotationUnsupportedDescription">Nòt Elèv yo pa disponib sou mobil.</string>
-    <string name="unsupportedSubmissionType">Tip Soumisyon Pa Sipòte</string>
-    <string name="studentAnnotationUnsupportedMessage">Soumisyon an pa kapab afiche paske Nòt Elèv yo pa disponib sou mobil.</string>
     <string name="schedule_marked_as_done">Ou te make li konplè.</string>
     <string name="error_saving_assignment_closed_grading_period">Li pa posib pou chanje delè a lè li tonbe nan yon peryòd klasman ki fèmen.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Ale nan Jodi a</string>
@@ -1225,4 +1221,46 @@
     <string name="a11y_contact_info_click_description">voye mesaj</string>
     <string name="somethingWentWrong">Gen yon bagay ki pase mal</string>
     <string name="failedToLoadQuiz">Chajman quiz echwe</string>
+    <string name="failedToLoadSubmission">Echèk chajman soumisyon</string>
+    <string name="studentAnnotationToolbarTitle">Nòt Elèv</string>
+    <string name="submissionTypeStudentAnnotation">Nòt Elèv</string>
+    <string name="gradesNoDueDate">San delè</string>
+    <string name="importantDatesNoDueDate">San delè</string>
+    <string name="missingAssignment">Manke</string>
+    <string name="dontSave">Pa anrejistre</string>
+    <string name="textSubmissionExitConfirmationTitle">Anrejistre bouyon?</string>
+    <string name="textSubmissionExitConfirmationMessage">Nan ka kontrè, chanjman ou yo pa p anrejistre</string>
+    <string name="submissionDraftAvailableSubtitle">Tape la pou kontinye</string>
+    <string name="submissionDraftAvailableTitle">Bouyon Disponib</string>
+    <string name="errorLoadingSubmission">Yon erè fèt pandan chajman soumisyon an</string>
+    <string name="loadFullContent">Tape pou wè tout kontni an</string>
+    <string name="dashboardTabImportantDates">Dat Enpòtan</string>
+    <string name="importantDatesEmptyTitle">Pa gen Dat Enpòtan</string>
+    <string name="important_dates">Dat Enpòtan</string>
+
+    <string name="toolbarCommentLibrary">Bibliyotèk Kòmantè</string>
+    <string name="commentLibraryNoSuggestions">pa gen sijesyon disponib</string>
+    <string name="speedGraderCommentHint">Kòmantè</string>
+    <string name="a11y_schedule_marked_as_done">%s make ke li fini</string>
+    <string name="a11y_error_occured">Gen yon erè, tanpri eseye ankò.</string>
+    <string name="a11y_content_description_accept_invite">Aksepte envitasyon</string>
+    <string name="a11y_content_description_decline_invite">Refize envitasyon</string>
+    <string name="no_notifications_to_show">Pa gen notifikasyon pou afiche</string>
+
+    <string name="documentScanningTitle">Eskanaj Dokiman</string>
+    <string name="filter_name_color">Koulè</string>
+    <string name="filter_name_grayscale">Nivo Gri</string>
+    <string name="filter_name_monochrome">Monokwòm</string>
+    <string name="filter_name_original">Orijinal</string>
+    <string name="noCompatibleAppInstalled">Pa gen okenn nan aplikasyon ki enstale sou aparèy pi a ki ka ouvri lyen sa a.</string>
+    <string name="anonymousDiscussionNotSupported">Diskisyon anonim yo pa konpatib ak aparèy mobil yo. Ouvri nan navigatè pou ka wè diskisyon.</string>
+    <string name="discussionOpenInBrowser">Ouvri nan navigatè</string>
+    <string name="dashboardSwitchToListView">Chanje a afichaj an lis</string>
+    <string name="dashboardSwitchToGridView">Chanje a afichaj an griy</string>
+    <string name="selectAppTheme">Seleksyone tèm app</string>
+    <string name="appThemeSettingsTitle">Tèm app</string>
+    <string name="appThemeLight">Limyè</string>
+    <string name="appThemeDark">Nwa</string>
+    <string name="appThemeSystem">Sistèm pa defo</string>
+
 </resources>

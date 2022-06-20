@@ -60,6 +60,14 @@ object CalendarEventAPI {
                 @Query("calendar_event[end_at]") endDate: String,
                 @Query(value = "calendar_event[location_name]", encoded = true) locationName: String,
                 @Body body: String): Call<ScheduleItem>
+
+        @GET("calendar_events/")
+        fun getImportantDates(
+                @Query("start_date") startDate: String?,
+                @Query("end_date") endDate: String?,
+                @Query("type") type: String,
+                @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>,
+                @Query("important_dates") importantDates: Boolean = true): Call<List<ScheduleItem>>
     }
 
     enum class CalendarEventType(val apiName: String) {
@@ -87,6 +95,23 @@ object CalendarEventAPI {
         if (StatusCallback.isFirstPage(callback.linkHeaders)) {
             callback.addCall(adapter.build(CalendarEventInterface::class.java, params)
                     .getCalendarEvents(allEvents, type.apiName, startDate, endDate, canvasContexts)).enqueue(callback)
+        } else if (callback.linkHeaders != null && StatusCallback.moreCallsExist(callback.linkHeaders)) {
+            callback.addCall(adapter.build(CalendarEventInterface::class.java, params)
+                    .next(callback.linkHeaders!!.nextUrl!!)).enqueue(callback)
+        }
+    }
+
+    fun getImportantDates(
+            startDate: String?,
+            endDate: String?,
+            type: CalendarEventType,
+            canvasContexts: List<String>,
+            adapter: RestBuilder,
+            callback: StatusCallback<List<ScheduleItem>>,
+            params: RestParams) {
+        if (StatusCallback.isFirstPage(callback.linkHeaders)) {
+            callback.addCall(adapter.build(CalendarEventInterface::class.java, params)
+                    .getImportantDates(startDate, endDate, type.apiName, canvasContexts)).enqueue(callback)
         } else if (callback.linkHeaders != null && StatusCallback.moreCallsExist(callback.linkHeaders)) {
             callback.addCall(adapter.build(CalendarEventInterface::class.java, params)
                     .next(callback.linkHeaders!!.nextUrl!!)).enqueue(callback)

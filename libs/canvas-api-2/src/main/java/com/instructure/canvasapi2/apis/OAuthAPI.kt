@@ -47,6 +47,9 @@ object OAuthAPI {
         @GET("/login/session_token")
         fun getAuthenticatedSession(@Query("return_to") targetUrl: String): Call<AuthenticatedSession>
 
+        @GET("/api/v1/login/session_token")
+        fun getAuthenticatedSessionMasquerading(@Query("return_to") targetUrl: String, @Query("as_user_id") userId: Long): Call<AuthenticatedSession>
+
         @FormUrlEncoded
         @POST("/login/oauth2/token")
         fun refreshAccessToken(
@@ -72,6 +75,10 @@ object OAuthAPI {
 
     fun getAuthenticatedSession(targetUrl: String, params: RestParams, adapter: RestBuilder, callback: StatusCallback<AuthenticatedSession>) {
         callback.addCall(adapter.build(OAuthInterface::class.java, params).getAuthenticatedSession(targetUrl)).enqueue(callback)
+    }
+
+    fun getAuthenticatedSessionMasquerading(targetUrl: String, userId: Long, params: RestParams, adapter: RestBuilder, callback: StatusCallback<AuthenticatedSession>) {
+        callback.addCall(adapter.build(OAuthInterface::class.java, params).getAuthenticatedSessionMasquerading(targetUrl, userId)).enqueue(callback)
     }
 
     fun getAuthenticatedSessionSynchronous(targetUrl: String, params: RestParams, adapter: RestBuilder): String? {

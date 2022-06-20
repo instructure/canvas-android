@@ -45,28 +45,26 @@ object ShortcutUtils {
     @TargetApi(Build.VERSION_CODES.O)
     fun generateShortcut(context: Context, bookmark: Bookmark): Boolean {
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val shortcutManager = context.getSystemService(ShortcutManager::class.java)
-            if(shortcutManager?.isRequestPinShortcutSupported == true) {
-                val launchIntent = Intent(context, LoginActivity::class.java)
-                launchIntent.action = "com.android.launcher.action.INSTALL_SHORTCUT"
-                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                launchIntent.putExtra(Const.BOOKMARK, bookmark.name)
-                launchIntent.putExtra(Const.URL, bookmark.url)
+        val shortcutManager = context.getSystemService(ShortcutManager::class.java)
+        if(shortcutManager?.isRequestPinShortcutSupported == true) {
+            val launchIntent = Intent(context, LoginActivity::class.java)
+            launchIntent.action = "com.android.launcher.action.INSTALL_SHORTCUT"
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            launchIntent.putExtra(Const.BOOKMARK, bookmark.name)
+            launchIntent.putExtra(Const.URL, bookmark.url)
 
-                val color = ColorKeeper.getOrGenerateColor(RouteMatcher.getContextIdFromURL(bookmark.url) ?: "")
+            val color = ColorKeeper.getOrGenerateColor(RouteMatcher.getContextIdFromURL(bookmark.url) ?: "")
 
-                val pinShortcutInfo = ShortcutInfo.Builder(context, bookmark.url)
-                        .setShortLabel(bookmark.name!!)
-                        .setIntent(launchIntent)
-                        .setIcon(Icon.createWithBitmap(generateLayeredBitmap(context, color)))
-                        .build()
+            val pinShortcutInfo = ShortcutInfo.Builder(context, bookmark.url)
+                    .setShortLabel(bookmark.name!!)
+                    .setIntent(launchIntent)
+                    .setIcon(Icon.createWithBitmap(generateLayeredBitmap(context, color)))
+                    .build()
 
-                val successIntent = shortcutManager.createShortcutResultIntent(pinShortcutInfo)
-                val pendingIntent = PendingIntent.getBroadcast(context, 0, successIntent, 0)
-                shortcutManager.requestPinShortcut(pinShortcutInfo, pendingIntent.intentSender)
-                return true
-            }
+            val successIntent = shortcutManager.createShortcutResultIntent(pinShortcutInfo)
+            val pendingIntent = PendingIntent.getBroadcast(context, 0, successIntent, 0)
+            shortcutManager.requestPinShortcut(pinShortcutInfo, pendingIntent.intentSender)
+            return true
         }
 
         return false

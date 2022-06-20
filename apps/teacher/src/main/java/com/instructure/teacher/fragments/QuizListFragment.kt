@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -42,6 +44,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_QUIZ_LIST)
 class QuizListFragment : BaseExpandableSyncFragment<
         String,
         Quiz, QuizListView,
@@ -110,8 +113,12 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     override fun createAdapter(): QuizListAdapter {
         return QuizListAdapter(requireContext(), presenter, mCourseColor) { quiz ->
-            val args = QuizDetailsFragment.makeBundle(quiz)
-            RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
+            if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl, ApiPrefs.domain, false)) {
+                RouteMatcher.routeUrl(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain)
+            } else {
+                val args = QuizDetailsFragment.makeBundle(quiz)
+                RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
+            }
         }
     }
 
@@ -146,9 +153,9 @@ class QuizListFragment : BaseExpandableSyncFragment<
             } else {
                 emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
-            presenter?.searchQuery = query
+            presenter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), quizListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), quizListToolbar, mCourseColor, requireContext().getColor(R.color.white))
     }
 
     override fun displayLoadingError() = toast(R.string.errorOccurred)

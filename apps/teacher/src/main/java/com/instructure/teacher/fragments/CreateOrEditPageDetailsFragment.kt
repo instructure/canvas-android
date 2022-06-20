@@ -19,7 +19,6 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
@@ -33,6 +32,8 @@ import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_PAGE_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -47,6 +48,7 @@ import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.CreateOrEditPageView
 import kotlinx.android.synthetic.main.fragment_create_or_edit_page.*
 
+@ScreenView(SCREEN_VIEW_CREATE_OR_EDIT_PAGE_DETAILS)
 class CreateOrEditPageDetailsFragment :
         BasePresenterFragment<CreateOrEditPagePresenter, CreateOrEditPageView>(),
         CreateOrEditPageView,
@@ -90,7 +92,7 @@ class CreateOrEditPageDetailsFragment :
                 R.id.menuSavePage -> withRequireNetwork { savePage() }
             }
         }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         with(mSaveMenuButton) {
             setIcon(0)
@@ -175,14 +177,14 @@ class CreateOrEditPageDetailsFragment :
             )
         }
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        pageRCEView.setLabel(pageDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        pageRCEView.setLabel(pageDescLabel, R.color.textDarkest, R.color.textDark)
     }
 
     private fun setupFrontPageSwitch() {
         frontPageSwitch.applyTheme()
         frontPageSwitch.isChecked = presenter.page.frontPage
         frontPageSwitch.setOnCheckedChangeListener { _, isChecked ->
-            presenter?.page?.frontPage = isChecked
+            presenter.page.frontPage = isChecked
         }
     }
 
@@ -234,7 +236,7 @@ class CreateOrEditPageDetailsFragment :
         publishSwitch.applyTheme()
         publishSwitch.isChecked = presenter.page.published
 
-        publishSwitch.setOnCheckedChangeListener { _, isChecked -> presenter?.page?.published = isChecked }
+        publishSwitch.setOnCheckedChangeListener { _, isChecked -> presenter.page.published = isChecked }
     }
 
     private fun setupDelete() {
@@ -245,7 +247,7 @@ class CreateOrEditPageDetailsFragment :
                     .setMessage(R.string.pageDeleteMessage)
                     .setPositiveButton(R.string.delete) { _, _ ->
                         if(mPage != null) {
-                            presenter?.deletePage(mPage!!.url!!)
+                            presenter.deletePage(mPage!!.url!!)
                         }
                     }
                     .setNegativeButton(R.string.cancel) { _, _ -> }
@@ -255,7 +257,7 @@ class CreateOrEditPageDetailsFragment :
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter?.page?.body = pageRCEView.html
+        presenter.page.body = pageRCEView.html
     }
 
     private fun savePage() {

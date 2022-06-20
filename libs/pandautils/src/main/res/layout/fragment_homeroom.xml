@@ -29,15 +29,14 @@
     </data>
 
     <FrameLayout
+        android:id="@+id/homeroomPage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/homeroomPage">
+        android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/homeroomSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:onRefreshListener="@{() -> viewModel.refresh()}"
             app:refreshState="@{viewModel.state}">
 
             <androidx.core.widget.NestedScrollView
@@ -46,73 +45,88 @@
                 android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/homeroomContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingTop="16dp"
-                    android:visibility="@{viewModel.data.empty ? View.GONE : View.VISIBLE}">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/welcomeText"
+                    <androidx.fragment.app.FragmentContainerView
+                        android:id="@+id/notificationsFragment"
+                        android:name="com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{viewModel.data.greetingMessage}"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:textColor="@color/defaultTextDark"
-                        android:textSize="34sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="16dp"
-                        tools:text="Welcome, Student" />
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:tag="notifications_fragment" />
 
                     <LinearLayout
-                        android:id="@+id/announcementsContainer"
+                        android:id="@+id/homeroomContent"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
-                        app:itemViewModels="@{viewModel.data.announcements}"
-                        app:onItemsAdded="@{() -> viewModel.onAnnouncementViewsReady()}"
-                        app:shouldUpdate="@{viewModel.shouldUpdateAnnouncements}"/>
+                        android:paddingTop="16dp"
+                        android:visibility="@{viewModel.data.empty ? View.GONE : View.VISIBLE}">
 
-                    <TextView
-                        android:id="@+id/mySubjectsTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:text="@string/homeroomMySubjects"
-                        android:textColor="@color/defaultTextDark"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/welcomeText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:text="@{viewModel.data.greetingMessage}"
+                            android:textColor="@color/textDarkest"
+                            android:textSize="34sp"
+                            android:textStyle="bold"
+                            tools:text="Welcome, Student" />
 
-                    <TextView
-                        android:id="@+id/noSubjectsText"
-                        style="@style/TextFont.Regular"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:textColor="@color/defaultTextGray"
-                        android:textSize="@dimen/message_text_size"
-                        android:text="@string/homeroomNoSubjects"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:visibility="@{viewModel.data.courseCards.empty ? View.VISIBLE : View.GONE}"/>
+                        <LinearLayout
+                            android:id="@+id/announcementsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:itemViewModels="@{viewModel.data.announcements}"
+                            app:onItemsAdded="@{() -> viewModel.onAnnouncementViewsReady()}"
+                            app:shouldUpdate="@{viewModel.shouldUpdateAnnouncements}" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/coursesRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:paddingStart="@dimen/homeroomCardSpacing"
-                        android:paddingEnd="@dimen/homeroomCardSpacing"
-                        android:paddingBottom="@dimen/homeroomCardSpacing"
-                        android:visibility="@{viewModel.data.courseCards.empty ? View.GONE : View.VISIBLE}"
-                        app:recyclerViewItemViewModels="@{viewModel.data.courseCards}"
-                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                        app:spanCount="2"/>
+                        <TextView
+                            android:id="@+id/mySubjectsTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/homeroomMySubjects"
+                            android:textColor="@color/textDarkest"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
+                        <TextView
+                            android:id="@+id/noSubjectsText"
+                            style="@style/TextFont.Regular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/homeroomNoSubjects"
+                            android:textColor="@color/textDark"
+                            android:textSize="@dimen/message_text_size"
+                            android:visibility="@{viewModel.data.courseCards.empty ? View.VISIBLE : View.GONE}" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/coursesRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            android:paddingStart="@dimen/homeroomCardSpacing"
+                            android:paddingEnd="@dimen/homeroomCardSpacing"
+                            android:paddingBottom="@dimen/homeroomCardSpacing"
+                            android:visibility="@{viewModel.data.courseCards.empty ? View.GONE : View.VISIBLE}"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:recyclerViewItemViewModels="@{viewModel.data.courseCards}"
+                            app:spanCount="2" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
             </androidx.core.widget.NestedScrollView>

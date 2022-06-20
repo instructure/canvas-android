@@ -58,11 +58,11 @@ class PostPolicyFragment : Fragment() {
         postPolicyToolbar.subtitle = assignment.name
         postPolicyToolbar.setupBackButtonAsBackPressedOnly(this)
 
-        ViewStyler.themeToolbar(requireActivity(), postPolicyToolbar, Color.WHITE, Color.BLACK)
+        ViewStyler.themeToolbarLight(requireActivity(), postPolicyToolbar)
 
         val courseColor = ColorKeeper.getOrGenerateColor(course)
         postPolicyTabLayout.setSelectedTabIndicatorColor(courseColor)
-        postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.gray), courseColor)
+        postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.textDark), courseColor)
     }
 
     companion object {

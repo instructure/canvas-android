@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C)  - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/commentLibraryRoot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/commentLibraryToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/backgroundLightest"
+            android:elevation="6dp"
+            app:theme="@style/ToolBarStyle"
+            app:titleTextColor="@color/textDarkest"
+            app:title="@string/toolbarCommentLibrary"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <include
+            layout="@layout/speed_grader_comment_input_view"
+            android:id="@+id/commentInputContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <View
+            android:id="@+id/commentFieldDivider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/backgroundMedium"
+            app:layout_constraintBottom_toTopOf="@id/commentInputContainer" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/commentLibraryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingBottom="32dp"
+            android:clipToPadding="false"
+            android:background="@color/backgroundLightest"
+            android:visibility="@{viewModel.data.empty ? View.GONE : View.VISIBLE}"
+            app:recyclerViewItemViewModels="@{viewModel.data.suggestions}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/commentLibraryToolbar"
+            app:layout_constraintBottom_toTopOf="@id/commentFieldDivider" />
+
+        <TextView
+            android:id="@+id/commentLibraryEmtpyView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/backgroundLightest"
+            android:text="@string/commentLibraryNoSuggestions"
+            android:gravity="center"
+            android:textColor="@color/textDarkest"
+            android:textSize="15sp"
+            android:visibility="@{viewModel.data.empty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/commentLibraryToolbar"
+            app:layout_constraintBottom_toTopOf="@id/commentFieldDivider" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

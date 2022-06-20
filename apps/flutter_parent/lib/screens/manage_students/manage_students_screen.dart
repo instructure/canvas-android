@@ -108,7 +108,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
           key: ValueKey('studentTextHero${students[index].id}'),
           child: UserName.fromUserShortName(
             students[index],
-            style: Theme.of(context).textTheme.subhead,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
         ),
         onTap: () async {

@@ -38,6 +38,8 @@ allprojects {
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion 28
@@ -86,10 +88,10 @@ dependencies {
     //
     // https://maven.google.com/com/android/support/test/espresso/espresso-core/3.0.0/espresso-core-3.0.0.pom
 
-    def runnerVersion = "1.1.1"
-    def rulesVersion = "1.1.1"
-    def espressoVersion = "3.1.1"
-    def junitVersion = "4.13.1"
+    def runnerVersion = "1.4.0"
+    def rulesVersion = "1.4.0"
+    def espressoVersion = "3.4.0"
+    def junitVersion = "4.13.2"
 
     // Update exclusions based on ./gradlew :app:androidDependencies
     implementation("androidx.test:runner:$runnerVersion") {
@@ -152,6 +154,12 @@ dependencies {
     implementation 'com.github.javafaker:javafaker:0.18'
     /* Mock web server */
     implementation("com.squareup.okhttp3:mockwebserver:${Versions.OKHTTP}")
+
+    /* DI */
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
+    implementation Libs.HILT_TESTING
+    kapt Libs.HILT_TESTING_COMPILER
 
 }
 

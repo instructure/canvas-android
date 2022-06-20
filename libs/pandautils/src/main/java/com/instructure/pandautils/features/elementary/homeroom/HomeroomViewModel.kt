@@ -21,11 +21,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.AnnouncementManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
@@ -39,6 +36,7 @@ import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import java.util.*
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -60,7 +58,7 @@ class HomeroomViewModel @Inject constructor(
 
     val data: LiveData<HomeroomViewData>
         get() = _data
-    private val _data = MutableLiveData<HomeroomViewData>(HomeroomViewData("", emptyList(), emptyList()))
+    private val _data = MutableLiveData(HomeroomViewData("", emptyList(), emptyList()))
 
     val events: LiveData<Event<HomeroomAction>>
         get() = _events
@@ -114,7 +112,13 @@ class HomeroomViewModel @Inject constructor(
                 _data.postValue(viewData)
 
                 if (viewData.isEmpty()) {
-                    _state.postValue(ViewState.Empty(R.string.homeroomEmptyTitle, R.string.homeroomEmptyMessage, R.drawable.ic_panda_super))
+                    _state.postValue(
+                        ViewState.Empty(
+                            R.string.homeroomEmptyTitle,
+                            R.string.homeroomEmptyMessage,
+                            R.drawable.ic_panda_super
+                        )
+                    )
                 } else {
                     _state.postValue(ViewState.Success)
                 }
@@ -129,7 +133,11 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean, updateAssignments: Boolean = false): List<CourseCardItemViewModel> {
+    private suspend fun createCourseCards(
+        dashboardCourses: List<Course>,
+        forceNetwork: Boolean,
+        updateAssignments: Boolean = false
+    ): List<CourseCardItemViewModel> {
         return courseCardCreator.createCourseCards(dashboardCourses, forceNetwork, updateAssignments, _events)
     }
 
@@ -141,16 +149,29 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementItemViewModel> {
+    private suspend fun createAnnouncements(
+        homeroomCourses: List<Course>,
+        announcementsData: List<DataResult<List<DiscussionTopicHeader>>>
+    ): List<AnnouncementItemViewModel> {
         return homeroomCourses
-            .mapIndexed { index, course -> createAnnouncementViewModel(course, announcementsData[index].dataOrNull?.firstOrNull()) }
+            .mapIndexed { index, course ->
+                createAnnouncementViewModel(
+                    course,
+                    announcementsData[index].dataOrNull?.firstOrNull()
+                )
+            }
             .filterNotNull()
     }
 
-    private suspend fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementItemViewModel? {
+    private suspend fun createAnnouncementViewModel(
+        course: Course,
+        announcement: DiscussionTopicHeader?
+    ): AnnouncementItemViewModel? {
         return if (announcement != null) {
-            val htmlWithIframes = htmlContentFormatter.formatHtmlWithIframes(announcement.message
-                ?: "")
+            val htmlWithIframes = htmlContentFormatter.formatHtmlWithIframes(
+                announcement.message
+                    ?: ""
+            )
             AnnouncementItemViewModel(
                 AnnouncementViewData(course.name, announcement.title ?: "", htmlWithIframes),
                 { _events.postValue(Event(HomeroomAction.OpenAnnouncements(course))) },
@@ -174,7 +195,8 @@ class HomeroomViewModel @Inject constructor(
                 }
 
                 // Get an authenticated session so the user doesn't have to log in
-                val authenticatedSessionURL = oAuthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
+                val authenticatedSessionURL =
+                    oAuthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
                 val newUrl = htmlContentFormatter.createAuthenticatedLtiUrl(html, authenticatedSessionURL)
 
                 _events.postValue(Event(HomeroomAction.LtiButtonPressed(newUrl)))
@@ -203,10 +225,13 @@ class HomeroomViewModel @Inject constructor(
                 val viewData = _data.value
 
                 shouldUpdateAnnouncements = false
-                _data.postValue(HomeroomViewData(
-                    viewData?.greetingMessage ?: "",
-                    viewData?.announcements ?: emptyList(),
-                    courseViewModels))
+                _data.postValue(
+                    HomeroomViewData(
+                        viewData?.greetingMessage ?: "",
+                        viewData?.announcements ?: emptyList(),
+                        courseViewModels
+                    )
+                )
 
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {

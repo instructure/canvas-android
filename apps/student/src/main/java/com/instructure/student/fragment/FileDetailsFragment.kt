@@ -17,7 +17,6 @@
 
 package com.instructure.student.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
@@ -39,6 +38,8 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.events.ModuleUpdatedEvent
@@ -49,6 +50,7 @@ import kotlinx.android.synthetic.main.fragment_file_details.*
 import okhttp3.ResponseBody
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_FILE_DETAILS)
 @PageView(url = "{canvasContext}/files/{fileId}")
 class FileDetailsFragment : ParentFragment() {
 
@@ -100,7 +102,7 @@ class FileDetailsFragment : ParentFragment() {
     override fun applyTheme() {
         setupToolbarMenu(toolbar)
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         ViewStyler.themeButton(openButton)
         ViewStyler.themeButton(downloadButton)
     }
@@ -185,8 +187,7 @@ class FileDetailsFragment : ParentFragment() {
                         lockedMessage += DateHelper.createPrefixedDateTimeString(activity, getString(R.string.unlockedAt) + "<br>&#8226; ", it.lockInfo!!.unlockDate)
                     }
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) fileName.text = StringUtilities.simplifyHTML(Html.fromHtml(lockedMessage, Html.FROM_HTML_MODE_LEGACY))
-                    else fileName.text = StringUtilities.simplifyHTML(Html.fromHtml(lockedMessage))
+                    fileName.text = StringUtilities.simplifyHTML(Html.fromHtml(lockedMessage, Html.FROM_HTML_MODE_LEGACY))
                 } else {
                     setupTextViews()
                     setupClickListeners()

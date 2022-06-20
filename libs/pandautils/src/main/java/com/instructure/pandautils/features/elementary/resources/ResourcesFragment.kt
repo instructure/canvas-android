@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.elementary.resources
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
@@ -24,11 +23,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_RESOURCES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentResourcesBinding
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
@@ -41,6 +43,7 @@ import kotlinx.android.synthetic.main.fragment_resources.*
 import kotlinx.android.synthetic.main.item_important_links.view.*
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_K5_RESOURCES)
 @AndroidEntryPoint
 class ResourcesFragment : Fragment() {
 
@@ -81,7 +84,7 @@ class ResourcesFragment : Fragment() {
             .map { it.contextName }
             .toTypedArray()
 
-        AlertDialog.Builder(context, R.style.AccentDialogTheme)
+        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
             .setTitle(R.string.chooseACourse)
             .setItems(dialogEntries) { dialog, which -> openSelectedLti(dialog, which, ltiTools) }
             .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
@@ -105,7 +108,7 @@ class ResourcesFragment : Fragment() {
 
     private fun setupWebView(webView: CanvasWebView) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(Color.WHITE)
+        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
         webView.settings.allowFileAccess = true
         webView.settings.loadWithOverviewMode = true
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {

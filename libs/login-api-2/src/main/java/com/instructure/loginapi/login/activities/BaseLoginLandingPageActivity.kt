@@ -178,9 +178,9 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                         ApiPrefs.domain = user.domain
                         ApiPrefs.clientId = user.clientId.orEmpty()
                         ApiPrefs.clientSecret = user.clientSecret.orEmpty()
-                        user.accessToken?.let {
+                        user.accessToken?.let { accessToken ->
                             ApiPrefs.refreshToken = user.refreshToken
-                            ApiPrefs.accessToken = user.accessToken
+                            ApiPrefs.accessToken = accessToken
                         }
 
                         ApiPrefs.token = user.token
@@ -243,7 +243,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     private fun applyTheme() {
         // Colors
         val color = themeColor()
-        val buttonColor = ContextCompat.getColor(this, R.color.login_loginFlowBlue)
+        val buttonColor = ContextCompat.getColor(this, R.color.textInfo)
 
         // Button
         val wrapDrawable = DrawableCompat.wrap(findMySchool.background)
@@ -257,7 +257,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         appDescriptionType?.setTextColor(color)
         appDescriptionType?.setText(appTypeName())
 
-        ViewStyler.setStatusBarLight(this)
+        ViewStyler.themeStatusBar(this)
     }
 
     private fun setupGesture() {

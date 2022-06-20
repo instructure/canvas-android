@@ -1214,10 +1214,6 @@
 
     <string name="speedGraderAnonymousSubmissionMessage">Les réponses de cet élève sont masquées car ce travail est anonyme.</string>
 
-    <string name="studentAnnotationUnsupported">Annotation de l\'élève (non prise en charge)</string>
-    <string name="studentAnnotationUnsupportedDescription">L\'annotation des élèves n\'est actuellement pas prise en charge sur les téléphones mobiles.</string>
-    <string name="unsupportedSubmissionType">Type de soumission non pris en charge</string>
-    <string name="studentAnnotationUnsupportedMessage">La soumission ne peut pas être affichée, car l\'annotation de l\'élève n\'est actuellement pas prise en charge sur les téléphones mobiles.</string>
     <string name="schedule_marked_as_done">Vous avez tout indiqué comme terminé.</string>
     <string name="error_saving_assignment_closed_grading_period">Impossible de changer la date d\'échéance lorsque l’échéance se trouve dans une période fermée à la notation.</string>
     <string name="a11y_content_description_schedule_jump_to_today">Aller à Aujourd’hui</string>
@@ -1225,4 +1221,46 @@
     <string name="a11y_contact_info_click_description">envoyer le message</string>
     <string name="somethingWentWrong">Un problème est survenu.</string>
     <string name="failedToLoadQuiz">Impossible de charger le questionnaire</string>
+    <string name="failedToLoadSubmission">Impossible de charger la soumission</string>
+    <string name="studentAnnotationToolbarTitle">Annotation d\'élève</string>
+    <string name="submissionTypeStudentAnnotation">Annotation d\'élève</string>
+    <string name="gradesNoDueDate">Pas de date d’échéance</string>
+    <string name="importantDatesNoDueDate">Pas de date d’échéance</string>
+    <string name="missingAssignment">Manquant</string>
+    <string name="dontSave">Ne pas enregistrer</string>
+    <string name="textSubmissionExitConfirmationTitle">Enregistrer le brouillon ?</string>
+    <string name="textSubmissionExitConfirmationMessage">Sinon, vos modifications ne seront pas enregistrées</string>
+    <string name="submissionDraftAvailableSubtitle">Appuyez ici pour continuer</string>
+    <string name="submissionDraftAvailableTitle">Brouillon disponible</string>
+    <string name="errorLoadingSubmission">Une erreur est survenue pendant le chargement des cours</string>
+    <string name="loadFullContent">Appuyez pour voir le contenu entier.</string>
+    <string name="dashboardTabImportantDates">Dates importantes</string>
+    <string name="importantDatesEmptyTitle">Aucune date importante</string>
+    <string name="important_dates">Dates importantes</string>
+
+    <string name="toolbarCommentLibrary">Bibliothèque de Commentaires</string>
+    <string name="commentLibraryNoSuggestions">Aucune suggestion disponible</string>
+    <string name="speedGraderCommentHint">Commenter</string>
+    <string name="a11y_schedule_marked_as_done">%s est marqué comme terminé</string>
+    <string name="a11y_error_occured">Une erreur est survenue, veuillez réessayer.</string>
+    <string name="a11y_content_description_accept_invite">Accepter l’invitation</string>
+    <string name="a11y_content_description_decline_invite">Décliner l’invitation</string>
+    <string name="no_notifications_to_show">Aucune notification à afficher</string>
+
+    <string name="documentScanningTitle">Analyse de document</string>
+    <string name="filter_name_color">Couleur</string>
+    <string name="filter_name_grayscale">Nuances de gris</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Vos appareils ne doivent avoir aucune application capable d\'ouvrir ce lien d’installée.</string>
+    <string name="anonymousDiscussionNotSupported">Les discussions anonymes ne sont pas prises en charge sur l\'application mobile pour le moment. Ouvrez la page dans un navigateur pour voir la discussion.</string>
+    <string name="discussionOpenInBrowser">Ouvrir dans un navigateur</string>
+    <string name="dashboardSwitchToListView">Passer en vue liste</string>
+    <string name="dashboardSwitchToGridView">Passer en vue grille.</string>
+    <string name="selectAppTheme">Sélectionner un thème d\'application</string>
+    <string name="appThemeSettingsTitle">Thème d\'application</string>
+    <string name="appThemeLight">Clair</string>
+    <string name="appThemeDark">Foncé</string>
+    <string name="appThemeSystem">Valeur par défaut du système</string>
+
 </resources>

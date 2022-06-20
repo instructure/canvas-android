@@ -29,17 +29,16 @@ class FeatureFlagProvider(
 
     suspend fun getCanvasForElementaryFlag(): Boolean {
         try {
-            val k5enabled = remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
-            return if (k5enabled) {
-                val userResult = userManager.getSelfAsync(false).await()
-                val canvasForElementary = userResult.dataOrThrow.k5User
-                apiPrefs.canvasForElementary = canvasForElementary
-                canvasForElementary && apiPrefs.elementaryDashboardEnabledOverride
-            } else {
-                false
-            }
+            val userResult = userManager.getSelfAsync(false).await()
+            val canvasForElementary = userResult.dataOrThrow.k5User
+            apiPrefs.canvasForElementary = canvasForElementary
+            return canvasForElementary && apiPrefs.elementaryDashboardEnabledOverride
         } catch (e: Exception) {
             return apiPrefs.canvasForElementary
         }
+    }
+
+    fun getDiscussionRedesignFeatureFlag(): Boolean {
+        return remoteConfigUtils.getBoolean(RemoteConfigParam.DISCUSSION_REDESIGN)
     }
 }

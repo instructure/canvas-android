@@ -34,6 +34,15 @@ class RecyclerViewItemCountAssertion(private val expectedCount: Int) : ViewAsser
     }
 }
 
+class RecyclerViewItemCountGreaterThanAssertion(private val expectedCount: Int) : ViewAssertion {
+    override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        val itemCount = (view as? RecyclerView)?.adapter?.itemCount
+            ?: throw ClassCastException("View of type ${view.javaClass.simpleName} must be a RecyclerView")
+        ViewMatchers.assertThat(itemCount, Matchers.greaterThan(expectedCount))
+    }
+}
+
 class ViewPagerItemCountAssertion(private val expectedCount: Int) : ViewAssertion {
     override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
         noViewFoundException?.let { throw it }

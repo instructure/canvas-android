@@ -16,8 +16,11 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
@@ -71,6 +74,11 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
 
                         newHTML = newHTML.replace(iframe, newIframe)
                     }
+
+                    if (iframe.contains("overflow: scroll")) {
+                        val newIframe = iframeWithLink(srcUrl, iframe, context)
+                        newHTML = newHTML.replace(iframe, newIframe)
+                    }
                 }
             }
 
@@ -96,7 +104,7 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
     }
 }
 
-suspend fun externalToolIframe(srcUrl: String, iframe: String, context: Context): String {
+private suspend fun externalToolIframe(srcUrl: String, iframe: String, context: Context): String {
     // We need to authenticate the src url and replace it within the iframe
     val ltiUrl = URLEncoder.encode(srcUrl, "UTF-8")
 
@@ -111,6 +119,13 @@ suspend fun externalToolIframe(srcUrl: String, iframe: String, context: Context)
 
     // Now we add the launch button along with the new iframe with the updated URL
     return newIframe + htmlButton
+}
+
+private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): String {
+    val buttonText = context.getString(R.string.loadFullContent)
+    val htmlButton = "</br><p><div class=\"lti_button\" onClick=\"location.href=\'$srcUrl\'\">$buttonText</div></p>"
+
+    return iframe + htmlButton
 }
 
 fun handleLTIPlaceHolders(placeHolderList: ArrayList<Placeholder>, html: String): String {
@@ -136,4 +151,40 @@ class JsExternalToolInterface(val callback: (ltiUrl: String) -> Unit) {
     fun onLtiToolButtonPressed(ltiUrl: String) {
         callback(ltiUrl)
     }
+}
+
+fun WebView.setDarkModeSupport(webThemeDarkeningOnly: Boolean = false) {
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+            WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_ON)
+            if (webThemeDarkeningOnly) {
+                WebSettingsCompat.setForceDarkStrategy(settings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY)
+            } else {
+                WebSettingsCompat.setForceDarkStrategy(settings, WebSettingsCompat.DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING)
+            }
+        } else {
+            WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_OFF)
+        }
+    }
+}
+
+fun WebView.addDarkThemeToHtmlDocument() {
+    val css = """
+                    @media (prefers-color-scheme: dark) {
+                        html {
+                            filter: invert(100%) hue-rotate(180deg);
+                        }
+                        img:not(.ignore-color-scheme), video:not(.ignore-color-scheme), .ignore-color-scheme {
+                            filter: invert(100%) hue-rotate(180deg) !important;
+                        }
+                    }
+                    """
+    val cssString = css.split("\n").joinToString(" ")
+    val js = """
+                    var element = document.createElement('style');
+                    element.innerHTML = '$cssString)';
+                    document.head.appendChild(element);
+                """
+    evaluateJavascript(js, {})
 }

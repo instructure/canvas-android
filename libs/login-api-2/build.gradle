@@ -115,8 +115,7 @@ dependencies {
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
 
-    implementation(Libs.JOURNEY_ZXING) { transitive = false }
-    implementation Libs.ZXING
+    implementation Libs.JOURNEY_ZXING
 
     implementation Libs.FRAGMENT_KTX
     implementation Libs.HILT

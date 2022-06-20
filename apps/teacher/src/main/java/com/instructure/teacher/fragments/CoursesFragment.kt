@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -36,6 +38,7 @@ import com.instructure.teacher.factory.CoursesPresenterFactory
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.CoursesPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.CoursesView
 import kotlinx.android.synthetic.main.fragment_courses.*
@@ -43,6 +46,9 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+private const val LIST_SPAN_COUNT = 1
+
+@ScreenView(SCREEN_VIEW_DASHBOARD)
 class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
 
     private lateinit var mGridLayoutManager: GridLayoutManager
@@ -83,9 +89,9 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     override fun onCreateView(view: View) {
-        val spanSize = requireContext().resources.getInteger(R.integer.course_list_span_count)
-        mGridLayoutManager = GridLayoutManager(requireContext(), spanSize)
-        mDecorator = VerticalGridSpacingDecoration(requireContext(), mGridLayoutManager, true, headerSpacingResId = R.dimen.course_header_spacing)
+        val spanCount = if (TeacherPrefs.listDashboard) LIST_SPAN_COUNT else requireContext().resources.getInteger(R.integer.course_list_span_count)
+        mGridLayoutManager = GridLayoutManager(requireContext(), spanCount)
+        mDecorator = VerticalGridSpacingDecoration(requireContext(), mGridLayoutManager)
     }
 
     override fun onPresenterPrepared(presenter: CoursesPresenter) {}
@@ -130,13 +136,20 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     private fun setupHeader() {
-        courseLabel.setTextColor(ThemePrefs.fontColor)
         seeAllTextView.setTextColor(ThemePrefs.buttonColor)
         seeAllTextView.setOnClickListener { mCourseListCallback?.onShowAllCoursesList() }
     }
 
     private fun setupToolbar() {
         toolbar.setupMenu(R.menu.courses_fragment, menuItemCallback)
+
+        val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
+        val menuIconRes = if (TeacherPrefs.listDashboard) R.drawable.ic_grid_dashboard else R.drawable.ic_list_dashboard
+        dashboardLayoutMenuItem.setIcon(menuIconRes)
+
+        val menuTitleRes = if (TeacherPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
+        dashboardLayoutMenuItem.setTitle(menuTitleRes)
+
         (activity as? InitActivity)?.attachNavigationDrawer(toolbar)
         toolbar.requestAccessibilityFocus()
     }
@@ -144,6 +157,28 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.menu_edit_favorite_courses -> editFavorites()
+            R.id.menu_dashboard_cards -> changeDashboardLayout(item)
+        }
+    }
+
+    private fun changeDashboardLayout(item: MenuItem) {
+        if (TeacherPrefs.listDashboard) {
+            item.setIcon(R.drawable.ic_list_dashboard)
+            item.setTitle(R.string.dashboardSwitchToListView)
+            TeacherPrefs.listDashboard = false
+        } else {
+            item.setIcon(R.drawable.ic_grid_dashboard)
+            item.setTitle(R.string.dashboardSwitchToGridView)
+            TeacherPrefs.listDashboard = true
+        }
+
+        recyclerView.fadeAnimationWithAction {
+            if (TeacherPrefs.listDashboard) {
+                mGridLayoutManager.spanCount = LIST_SPAN_COUNT
+            } else {
+                mGridLayoutManager.spanCount = requireContext().resources.getInteger(R.integer.course_list_span_count)
+            }
+            view?.post { adapter.notifyDataSetChanged() }
         }
     }
 
@@ -186,7 +221,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(sticky = true)
     fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
-        adapter?.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
     @Suppress("unused")

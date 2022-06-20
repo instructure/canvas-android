@@ -29,8 +29,6 @@ import java.util.*
 class DefaultAppShortcutManager : AppShortcutManager {
 
     override fun make(context: Context) {
-        if (Build.VERSION.SDK_INT < 25) return
-
         val manager = context.getSystemService(ShortcutManager::class.java)
 
         val bookmarksIntent = Intent(context, LoginActivity::class.java)

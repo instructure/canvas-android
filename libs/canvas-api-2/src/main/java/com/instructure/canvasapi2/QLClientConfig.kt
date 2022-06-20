@@ -49,8 +49,7 @@ class QLClientConfig {
         }
         .build()
 
-    /** Whether this request should ignore any cached data and only read from the network. Default is false. */
-    var networkOnly: Boolean = false
+    var cachePolicy: HttpCachePolicy.Policy = cacheFirstPolicy
 
     /** Whether the request should be made without the authentication header. Default it false. */
     @Suppress("MemberVisibilityCanBePrivate")
@@ -65,7 +64,7 @@ class QLClientConfig {
             .addCustomTypeAdapter(CustomType.URL, stringAdapter)
             .addCustomTypeAdapter(CustomType.ID, stringAdapter)
             .httpCache(cache)
-            .defaultHttpCachePolicy(if (networkOnly) HttpCachePolicy.NETWORK_ONLY else cacheFirstPolicy)
+            .defaultHttpCachePolicy(cachePolicy)
 
 
         /* The default httpClient has a request interceptor which automatically adds the authentication header, but

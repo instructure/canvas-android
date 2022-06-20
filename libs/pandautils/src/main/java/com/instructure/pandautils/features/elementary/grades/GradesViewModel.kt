@@ -124,14 +124,15 @@ class GradesViewModel @Inject constructor(
         return courses
             .map {
                 val enrollment = it.enrollments?.first()
+                val grades = it.getCourseGrade(false)
                 GradeRowItemViewModel(resources,
                     GradeRowViewData(
                         it.id,
                         it.name,
                         getCourseColor(it),
                         it.imageUrl ?: "",
-                        if (it.hideFinalGrades) 0.0 else enrollment?.computedCurrentScore,
-                        createGradeText(enrollment?.computedCurrentScore, enrollment?.computedCurrentGrade, it.hideFinalGrades, enrollment?.currentGradingPeriodId ?: 0L != 0L))
+                        if (it.hideFinalGrades) 0.0 else grades?.currentScore,
+                        createGradeText(grades?.currentScore, grades?.currentGrade, it.hideFinalGrades, enrollment?.currentGradingPeriodId ?: 0L != 0L))
                 ) { gradeRowClicked(it) }
             }
     }

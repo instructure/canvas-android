@@ -32,6 +32,8 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.ModuleListRecyclerAdapter
@@ -48,6 +50,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_MODULE_LIST)
 @PageView(url = "modules")
 class ModuleListFragment : ParentFragment(), Bookmarkable {
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -118,7 +121,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
         setupToolbarMenu(toolbar)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     //endregion
@@ -178,7 +181,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 }
             }
         })
-        configureRecyclerView(view!!, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        configureRecyclerView(requireView(), requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
     }
 
     fun notifyOfItemChanged(`object`: ModuleObject?, item: ModuleItem?) {

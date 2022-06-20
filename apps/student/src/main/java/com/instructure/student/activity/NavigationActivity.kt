@@ -68,6 +68,8 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -101,8 +103,10 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 private const val BOTTOM_NAV_SCREEN = "bottomNavScreen"
+private const val BOTTOM_SCREENS_BUNDLE_KEY = "bottomScreens"
 
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
@@ -200,7 +204,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
              from external sources. */
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             bottomBar.setVisible(visible)
-            bottomBarDivider.setVisible(visible)
         }
     }
 
@@ -222,12 +225,23 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (bottomNavScreensStack.isNotEmpty()) {
+            val bottomScreens = ArrayList(bottomNavScreensStack.toList())
+            outState.putStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY, bottomScreens)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
+            finish()
         }
+
+        FlutterComm.updateDarkMode(this)
 
         bottomBar.inflateMenu(navigationBehavior.bottomBarMenu)
 
@@ -244,6 +258,26 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         setupNavDrawerItems()
 
         checkAppUpdates()
+
+        val savedBottomScreens = savedInstanceState?.getStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY)
+        restoreBottomNavState(savedBottomScreens)
+
+        if (!ThemePrefs.themeSelectionShown) {
+            val themeSelector = ThemeSelectorBottomSheet()
+            themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
+            ThemePrefs.themeSelectionShown = true
+        }
+    }
+
+    private fun restoreBottomNavState(savedBottomScreens: List<String>?) {
+        if (savedBottomScreens != null && savedBottomScreens.isNotEmpty() && bottomNavScreensStack.isEmpty()) {
+            savedBottomScreens.reversed().forEach { bottomNavScreensStack.push(it) }
+        }
+
+        currentFragment?.let {
+            val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
+            bottomBar.setVisible(visible)
+        }
     }
 
     private fun setupNavDrawerItems() {
@@ -388,7 +422,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
             if(ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
                 val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = ContextCompat.getColor(context, R.color.avatarGray)
+                val color = ContextCompat.getColor(context, R.color.textDark)
                 val drawable = TextDrawable.builder()
                         .beginConfig()
                         .height(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
@@ -477,7 +511,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         setupUserDetails(ApiPrefs.user)
 
-        ViewStyler.themeToolbar(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
 
         navigationDrawerItem_startMasquerading.setVisible(!ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true)
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)
@@ -533,9 +567,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun overrideFont() {
         super.overrideFont()
-        if (navigationBehavior.shouldOverrideFont) {
-            typefaceBehavior.overrideFont()
-        }
+        typefaceBehavior.overrideFont(navigationBehavior.fontFamily.fontPath)
     }
 
     //endregion
@@ -593,7 +625,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun setupBottomNavigation() {
         Logger.d("NavigationActivity:setupBottomNavigation()")
-        bottomBar.applyTheme(ThemePrefs.brandColor, ContextCompat.getColor(this, R.color.bottomBarUnselectedItemColor))
+        bottomBar.applyTheme(ThemePrefs.brandColor, ContextCompat.getColor(this, R.color.textDarkest))
         bottomBar.setOnNavigationItemSelectedListener(bottomBarItemSelectedListener)
         bottomBar.setOnNavigationItemReselectedListener(bottomBarItemReselectedListener)
         updateBottomBarContentDescriptions()
@@ -688,7 +720,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 val contextId = Route.extractCourseId(route)
                 if (contextId != 0L) {
                     when {
-                        RouteContext.FILE == route.routeContext -> {
+                        RouteContext.FILE == route.routeContext && route.secondaryClass != CourseModuleProgressionFragment::class.java -> {
                             if (route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD)) {
                                 if(route.uri != null) openMedia(CanvasContext.getGenericContext(CanvasContext.Type.COURSE, contextId, ""), route.uri.toString())
                             }
@@ -717,8 +749,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }
                         }
                         RouteContext.NOTIFICATION_PREFERENCES == route.routeContext -> {
-                            Analytics.trackAppFlow(this@NavigationActivity, NotificationPreferencesActivity::class.java)
-                            startActivity(Intent(this@NavigationActivity, NotificationPreferencesActivity::class.java))
+                            Analytics.trackAppFlow(this@NavigationActivity, NotificationPreferencesFragment::class.java)
+                            RouteMatcher.route(this@NavigationActivity, Route(NotificationPreferencesFragment::class.java, null))
                         }
                         else -> {
                             //fetch the CanvasContext
@@ -763,7 +795,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
                 selectBottomNavFragment(fragment::class.java)
             } else {
-                addFullScreenFragment(fragment)
+                addFullScreenFragment(fragment, route.removePreviousScreen)
             }
         }
     }
@@ -785,14 +817,19 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         bottomNavScreensStack.push(fragmentClass.name)
     }
 
-    private fun addFullScreenFragment(fragment: Fragment?) {
+    private fun addFullScreenFragment(fragment: Fragment?, removePreviousFragment: Boolean = false) {
         if (fragment == null) {
             Logger.e("NavigationActivity:addFullScreenFragment() - Could not route null Fragment.")
             return
         }
 
         val ft = supportFragmentManager.beginTransaction()
-        ft.setCustomAnimations(R.anim.fade_in_quick, R.anim.fade_out_quick)
+        if (removePreviousFragment) {
+            supportFragmentManager.popBackStackImmediate()
+        } else {
+            ft.setCustomAnimations(R.anim.fade_in_quick, R.anim.fade_out_quick)
+        }
+
         currentFragment?.let { ft.hide(it) }
         ft.add(R.id.fullscreen, fragment, fragment::class.java.name)
         ft.addToBackStack(fragment::class.java.name)
@@ -1042,7 +1079,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                         .inflate(R.layout.unread_count, bottomBar, false)
                 (badge as TextView).text = unreadCountDisplay
 
-                ColorUtils.colorIt(ContextCompat.getColor(context, R.color.electricBlueBadge), badge.background)
+                ColorUtils.colorIt(ContextCompat.getColor(context, R.color.backgroundInfo), badge.background)
                 addView(badge)
             }
         }

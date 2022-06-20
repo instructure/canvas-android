@@ -26,12 +26,15 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
 import com.instructure.teacher.R
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.teacher.view.ExternalToolContent
 import kotlinx.android.synthetic.main.fragment_speed_grader_lti_submission.*
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION)
 class SpeedGraderLtiSubmissionFragment : Fragment() {
 
     private var mUrl by StringArg()

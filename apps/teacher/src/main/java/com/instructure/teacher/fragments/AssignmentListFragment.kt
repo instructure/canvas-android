@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.BuildConfig
@@ -49,6 +51,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 class AssignmentListFragment : BaseExpandableSyncFragment<
         AssignmentGroup,
         Assignment, AssignmentListView,
@@ -170,7 +173,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         //setup toolbar icon to access this menu
         assignmentListToolbar.setupMenu(R.menu.menu_assignment_list, menuItemCallback)
         addSearch()
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), assignmentListToolbar, Color.WHITE)
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), assignmentListToolbar, requireContext().getColor(R.color.white))
 
         //setup popup menu
         val menuItemView = rootView.findViewById<View>(R.id.menu_grading_periods_filter)
@@ -200,7 +203,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
             } else {
                 emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
-            presenter?.searchQuery = query
+            presenter.searchQuery = query
         }
     }
 
@@ -211,7 +214,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         assignmentListToolbar.subtitle = mCanvasContext.name
         assignmentListToolbar.setupBackButton(this)
 
-        ViewStyler.themeToolbar(requireActivity(), assignmentListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, mCourseColor, requireContext().getColor(R.color.white))
     }
 
     override fun adjustGradingPeriodHeader(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) {

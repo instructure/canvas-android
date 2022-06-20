@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,11 +23,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
 import com.instructure.teacher.presenters.ViewPdfFragmentPresenter
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_PDF
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.router.RouteMatcher
@@ -41,6 +42,7 @@ import instructure.androidblueprint.PresenterFragment
 import kotlinx.android.synthetic.main.fragment_view_pdf.*
 import org.greenrobot.eventbus.EventBus
 
+@ScreenView(SCREEN_VIEW_VIEW_PDF)
 class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragmentView>(), ViewPdfFragmentView {
 
     private var mUrl by StringArg()
@@ -99,13 +101,13 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
         }
 
         if(isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mToolbarColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()
             }
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         }
     }
 

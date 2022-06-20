@@ -25,7 +25,6 @@ import androidx.annotation.RequiresApi
  * Only works on Android N and above. On pre-N devices this intent is returned unmodified.
  */
 fun Intent.asChooserExcludingInstructure(title: String? = null): Intent {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return this
     val excludeComponents = arrayOf(
         // Student
         ComponentName("com.instructure.candroid", "com.instructure.student.activity.InterwebsToApplication"),

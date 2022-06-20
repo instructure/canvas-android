@@ -30,7 +30,7 @@ import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.*
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasRestAdapter
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.interactions.router.Route
 import com.instructure.student.R
@@ -67,6 +67,7 @@ fun StudentTest.seedDataForK5(
     homeroomCourses: Int = 0,
     announcements: Int = 0,
     discussions: Int = 0,
+    syllabusBody: String? = null,
     gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
 
     val request = SeedApi.SeedDataRequest (
@@ -80,7 +81,8 @@ fun StudentTest.seedDataForK5(
         accountId = SUB_ACCOUNT_ID, //K5 Sub Account accountId on mobileqa.beta domain
         gradingPeriods = gradingPeriods,
         discussions = discussions,
-        announcements = announcements
+        announcements = announcements,
+        syllabusBody = syllabusBody
     )
     return SeedApi.seedDataForSubAccount(request)
 }
@@ -94,7 +96,9 @@ fun StudentTest.seedData(
     favoriteCourses: Int = 0,
     homeroomCourses: Int = 0,
     announcements: Int = 0,
+    locked: Boolean = false,
     discussions: Int = 0,
+    syllabusBody: String? = null,
     gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
 
     val request = SeedApi.SeedDataRequest (
@@ -107,7 +111,9 @@ fun StudentTest.seedData(
             homeroomCourses = homeroomCourses,
             gradingPeriods = gradingPeriods,
             discussions = discussions,
-            announcements = announcements
+            announcements = announcements,
+            locked = locked,
+            syllabusBody = syllabusBody
     )
     return SeedApi.seedData(request)
 }
@@ -197,7 +203,7 @@ fun StudentTest.tokenLoginElementary(user: CanvasUserApiModel) {
 }
 
 fun StudentTest.routeTo(route: String) {
-    val url = "canvas-student://${CanvasRestAdapter.canvasDomain}/$route"
+    val url = "canvas-student://${CanvasNetworkAdapter.canvasDomain}/$route"
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     if (context !is Activity) {

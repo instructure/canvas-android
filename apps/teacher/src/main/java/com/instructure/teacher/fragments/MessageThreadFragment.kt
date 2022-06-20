@@ -31,6 +31,8 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_MESSAGE_THREAD
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -61,6 +63,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_MESSAGE_THREAD)
 class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, MessageThreadView, MessageHolder, MessageAdapter>(), MessageThreadView, Identity {
 
     private var conversationScope: String? = null
@@ -241,7 +244,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     private fun initToolbar() {
         toolbar.setTitle(R.string.message)
 
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
 
         if (activity is InitActivity && resources.getBoolean(R.bool.isDeviceTablet)) {
             // Don't have an arrow because going back will close the app

@@ -24,6 +24,6 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:textSize="18sp"
-    android:textColor="#808080"
+    android:textColor="@color/textDark"
     android:text="@string/selectCourse"
     android:paddingStart="18dp"/>

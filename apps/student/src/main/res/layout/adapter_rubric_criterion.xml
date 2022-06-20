@@ -55,7 +55,7 @@
             android:minHeight="48dp"
             android:paddingTop="14dp"
             android:text="@string/description"
-            android:textColor="@color/defaultActionColor"/>
+            android:textColor="@color/textInfo"/>
 
         <com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.CriterionRatingLayout
             android:id="@+id/ratingLayout"
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:focusable="true"
                 android:importantForAccessibility="yes"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 tools:text="Rating Title" />
 
             <TextView
@@ -96,7 +96,7 @@
                 android:layout_marginTop="2dp"
                 android:focusable="true"
                 android:importantForAccessibility="yes"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="12sp"
                 tools:text="@tools:sample/lorem" />
 
@@ -106,7 +106,7 @@
             android:id="@+id/commentContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:ctv_color="@color/commentBubbleIncoming">
+            app:ctv_color="@color/textLight">
 
             <TextView
                 android:id="@+id/comment"
@@ -116,7 +116,7 @@
                 android:paddingTop="8dp"
                 android:paddingEnd="12dp"
                 android:paddingBottom="8dp"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 tools:text="This is a sample comment"/>
 
         </com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionCommentBubble>
@@ -126,7 +126,7 @@
             android:layout_height="0.5dp"
             android:layout_gravity="bottom"
             android:layout_marginTop="16dp"
-            android:background="@color/divider"/>
+            android:background="@color/backgroundMedium"/>
 
     </LinearLayout>
 </FrameLayout>

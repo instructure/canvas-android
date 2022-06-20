@@ -18,7 +18,6 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -34,6 +33,8 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.NetworkUtils
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_DISCUSSION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.models.DueDateGroup
@@ -45,14 +46,13 @@ import com.instructure.student.events.post
 import com.instructure.student.view.AssignmentOverrideView
 import kotlinx.android.synthetic.main.fragment_create_discussion.*
 import kotlinx.coroutines.Job
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_CREATE_DISCUSSION)
 class CreateDiscussionFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -165,7 +165,7 @@ class CreateDiscussionFragment : ParentFragment() {
             //R.id.menuAddAttachment -> if (discussionTopicHeader == null) addAttachment() BLOCKED COMMS 868
             }
         }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, createDiscussionToolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), createDiscussionToolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), createDiscussionToolbar)
         sendButton?.setTextColor(ThemePrefs.buttonColor)
         saveButton?.setTextColor(ThemePrefs.buttonColor)
@@ -189,7 +189,7 @@ class CreateDiscussionFragment : ParentFragment() {
         descriptionRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
 
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        descriptionRCEView.setLabel(discussionDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        descriptionRCEView.setLabel(discussionDescLabel, R.color.textDarkest, R.color.textDark)
 
         if (!hasLoadedDataForEdit) discussionTopicHeader?.let {
             editDiscussionName.setText(it.title)
@@ -284,7 +284,11 @@ class CreateDiscussionFragment : ParentFragment() {
                 postData.title = editDiscussionName.text?.toString() ?: getString(R.string.utils_noTitle)
             }
             postData.message = descriptionRCEView.html
-            postData.discussionType = if (allowThreaded) DiscussionTopicHeader.DiscussionType.THREADED.toString().toLowerCase() else DiscussionTopicHeader.DiscussionType.SIDE_COMMENT.toString().toLowerCase()
+            postData.discussionType = if (allowThreaded) {
+                DiscussionTopicHeader.DiscussionType.THREADED.toString().lowercase(Locale.getDefault())
+            } else {
+                DiscussionTopicHeader.DiscussionType.SIDE_COMMENT.toString().lowercase(Locale.getDefault())
+            }
             postData.requireInitialPost = usersMustPost
 
             editDiscussion((discussionTopicHeader as DiscussionTopicHeader).id, postData)

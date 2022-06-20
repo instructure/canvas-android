@@ -16,20 +16,23 @@
  */
 package com.instructure.pandautils.features.elementary.grades
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_GRADES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentGradesBinding
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_K5_GRADES)
 @AndroidEntryPoint
 class GradesFragment : Fragment() {
 
@@ -66,7 +69,7 @@ class GradesFragment : Fragment() {
             .map { it.name }
             .toTypedArray()
 
-        AlertDialog.Builder(context, R.style.AccentDialogTheme)
+        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
             .setTitle(R.string.selectGradingPeriod)
             .setSingleChoiceItems(gradingPeriodNames, action.selectedGradingPeriodIndex) { dialog, which -> sortOrderSelected(dialog, which, action.gradingPeriods) }
             .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }

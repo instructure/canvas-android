@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.canvasapi2.utils.weave.awaitApi
 
 object EnrollmentManager {
 
@@ -78,6 +79,9 @@ object EnrollmentManager {
         EnrollmentAPI.getSelfEnrollments(types, states, adapter, params, depaginatedCallback)
     }
 
+    fun getSelfEnrollmentsAsync(types: List<String>?, states: List<String>?, forceNetwork: Boolean) =
+        apiAsync<List<Enrollment>> { getSelfEnrollments(types, states, forceNetwork, it) }
+
     fun getObserveeEnrollments(forceNetwork: Boolean, callback: StatusCallback<List<Enrollment>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -90,15 +94,18 @@ object EnrollmentManager {
         EnrollmentAPI.getObserveeEnrollments(adapter, params, depaginatedCallback)
     }
 
-    fun getObserveeEnrollmentsAsync(forceNetwork: Boolean)
-            = apiAsync<List<Enrollment>> { getObserveeEnrollments(forceNetwork, it) }
+    fun getObserveeEnrollmentsAsync(forceNetwork: Boolean) =
+        apiAsync<List<Enrollment>> { getObserveeEnrollments(forceNetwork, it) }
 
 
-    fun handleInvite(courseId: Long, enrollmentId: Long, acceptInvite: Boolean, callback: StatusCallback<Void>) {
+    fun handleInvite(courseId: Long, enrollmentId: Long, acceptInvite: Boolean, callback: StatusCallback<Unit>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         EnrollmentAPI.handleInvite(courseId, enrollmentId, acceptInvite, adapter, params, callback)
     }
+
+    fun handleInviteAsync(courseId: Long, enrollmentId: Long, acceptInvite: Boolean) =
+        apiAsync<Unit> { handleInvite(courseId, enrollmentId, acceptInvite, it) }
 
     fun getEnrollmentsForGradingPeriodAsync(
         gradingPeriodId: Long,

@@ -101,7 +101,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                       children: <Widget>[
                         _authorText(context, widget.conversation, widget.message, author),
                         SizedBox(height: 2),
-                        Text(date, key: Key('message-date'), style: Theme.of(context).textTheme.subtitle),
+                        Text(date, key: Key('message-date'), style: Theme.of(context).textTheme.subtitle2),
                       ],
                     ),
                   ),
@@ -137,7 +137,7 @@ class _MessageWidgetState extends State<MessageWidget> {
               Expanded(
                   child: Text(user.name,
                       key: ValueKey('participant_id_${user.id}'),
-                      style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 14)))
+                      style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 14)))
             ],
           );
         },

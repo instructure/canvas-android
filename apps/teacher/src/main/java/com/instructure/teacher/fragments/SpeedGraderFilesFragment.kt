@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_FILES
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AttachmentAdapter
@@ -35,6 +37,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER_FILES)
 class SpeedGraderFilesFragment : BaseSyncFragment<
         Attachment,
         SpeedGraderFilesPresenter,
@@ -67,7 +70,7 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
 
     override fun createAdapter(): AttachmentAdapter {
         return AttachmentAdapter(requireContext(), presenter) {
-            EventBus.getDefault().post(SubmissionFileSelectedEvent(presenter?.getSubmission()?.id ?: -1, it))
+            EventBus.getDefault().post(SubmissionFileSelectedEvent(presenter.getSubmission()?.id ?: -1, it))
         }
     }
 
@@ -90,8 +93,8 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSubmissionSelected(event: SubmissionSelectedEvent) {
-        if (event.submission?.id == presenter?.getSubmission()?.id) {
-            presenter?.setSubmission(event.submission)
+        if (event.submission?.id == presenter.getSubmission()?.id) {
+            presenter.setSubmission(event.submission)
             adapter.setSelectedPosition(0)
         }
     }

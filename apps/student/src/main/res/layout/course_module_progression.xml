@@ -29,6 +29,16 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/markDoneWrapper" />
 
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/viewPager"
+        android:layout_alignBottom="@id/viewPager"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/moduleNotFound"
         style="@style/TextStyle.Primary"
@@ -36,25 +46,26 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/markDoneWrapper"
         android:gravity="center"
-        android:visibility="gone"
-        android:textColor="@color/secondaryText"
         android:text="@string/moduleItemNotFound"
-        tools:visibility="visible"/>
+        android:textColor="@color/textDark"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_above="@+id/markDoneWrapper"
-        android:background="@color/dividerColor" />
+        android:background="@color/backgroundMedium" />
 
     <RelativeLayout
         android:id="@+id/markDoneWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomBarModule"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:clickable="true"
-        android:visibility="visible">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <LinearLayout
             android:id="@+id/markDoneButton"
@@ -75,7 +86,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="4dp"
                 android:text="@string/markDone"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="15sp" />
 
             <CheckBox
@@ -96,16 +107,17 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:clickable="true"
+        android:visibility="gone"
         tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/prev_item"
             android:layout_toStartOf="@+id/next_item"
+            android:layout_toEndOf="@+id/prev_item"
             android:gravity="center"
             tools:ignore="UseCompoundDrawables">
 
@@ -129,7 +141,7 @@
                 android:maxLines="2"
                 android:scaleType="centerInside"
                 android:singleLine="false"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="14sp"
                 tools:text="Hello Papa, Hello Mama" />
 
@@ -142,7 +154,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_chevron_left"
-            android:contentDescription="@string/previous"/>
+            android:contentDescription="@string/previous" />
 
         <Button
             android:id="@+id/next_item"
@@ -151,7 +163,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_chevron_right"
-            android:contentDescription="@string/next"/>
+            android:contentDescription="@string/next" />
 
     </RelativeLayout>
 

@@ -34,12 +34,15 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_QUIZ_DECIDER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_module_quiz_decider.*
 
+@ScreenView(SCREEN_VIEW_MODULE_QUIZ_DECIDER)
 class ModuleQuizDecider : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -98,7 +101,7 @@ class ModuleQuizDecider : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = if (this::quiz.isInitialized) quiz.title else getString(R.string.quizzes)
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     private fun obtainQuiz() {

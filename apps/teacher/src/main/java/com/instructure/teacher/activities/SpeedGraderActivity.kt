@@ -25,6 +25,8 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.View
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
@@ -39,6 +41,8 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BasePresenterActivity
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesContinueDialog
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
@@ -47,6 +51,9 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.SubmissionContentAdapter
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
+import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryAction
+import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryFragment
+import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel
 import com.instructure.teacher.presenters.SpeedGraderPresenter
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.isTalkbackEnabled
@@ -56,6 +63,7 @@ import com.instructure.teacher.view.TabSelectedEvent
 import com.instructure.teacher.view.VideoPermissionGrantedEvent
 import com.instructure.teacher.viewinterface.SpeedGraderView
 import com.pspdfkit.preferences.PSPDFKitPreferences
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_speedgrader.*
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
@@ -63,6 +71,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
+@ScreenView(SCREEN_VIEW_SPEED_GRADER)
+@AndroidEntryPoint
 class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGraderView>(), SpeedGraderView {
 
     /* These should be passed to the presenter factory and should not be directly referenced otherwise */
@@ -80,10 +90,14 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     // Used for keeping track of the page that is asking for media permissions from SubmissionContentView
     private var assigneeId: Long = -1L
 
+    private val viewModel: CommentLibraryViewModel by viewModels()
+
     // Used in the SubmissionViewFragments in the ViewPager to handle issues with sliding panel
     var isCurrentlyAnnotating = false
 
     private lateinit var adapter: SubmissionContentAdapter
+
+    var hasCommentLibrarySuggestions = false
 
     override fun unBundle(extras: Bundle) = Unit
 
@@ -113,6 +127,22 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         }
 
         setContentView(R.layout.activity_speedgrader)
+
+        viewModel.events.observe(this, { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
+
+        viewModel.data.observe(this, { data ->
+            hasCommentLibrarySuggestions = !data.isEmpty()
+        })
+    }
+
+    private fun handleAction(action: CommentLibraryAction) {
+        if (action is CommentLibraryAction.CommentLibraryClosed) {
+            closeCommentLibrary()
+        }
     }
 
     override fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>) {
@@ -124,7 +154,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         adapter = SubmissionContentAdapter(assignmentWithAnonymousGrading, presenter!!.course, submissions)
         submissionContentPager.offscreenPageLimit = 1
         submissionContentPager.pageMargin = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics))
-        submissionContentPager.setPageMarginDrawable(R.color.dividerColor)
+        submissionContentPager.setPageMarginDrawable(R.color.backgroundMedium)
         submissionContentPager.adapter = adapter
         submissionContentPager.setCurrentItem(initialSelection, false)
         submissionContentPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -268,6 +298,43 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         }
     }
 
+    fun openCommentLibrary(submissionId: Long) {
+        viewModel.currentSubmissionId = submissionId
+        if (!isCommentLibraryOpen() && hasCommentLibrarySuggestions) {
+            submissionContentPager.isCommentLibraryOpen = true
+
+            val commentLibraryFragment = CommentLibraryFragment.newInstance(submissionId)
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.add(R.id.commentLibraryFragmentContainer, commentLibraryFragment, commentLibraryFragment::class.java.name)
+            fragmentTransaction.addToBackStack(commentLibraryFragment::class.java.name)
+            fragmentTransaction.commitAllowingStateLoss()
+
+            submissionContentPager.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+        }
+    }
+
+    fun closeCommentLibrary() {
+        if (isCommentLibraryOpen()) {
+            submissionContentPager.isCommentLibraryOpen = false
+            supportFragmentManager.popBackStackImmediate()
+
+            submissionContentPager.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+        }
+    }
+
+    override fun onBackPressed() {
+        if (isCommentLibraryOpen()) {
+            closeCommentLibrary()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    private fun isCommentLibraryOpen(): Boolean {
+        val fragment = supportFragmentManager.findFragmentByTag(CommentLibraryFragment::class.java.name)
+        return fragment != null
+    }
+
     companion object {
 
         private const val TUTORIAL_DELAY = 400L
@@ -314,7 +381,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 if(!anonymousGradingOn) {
                     // We need to sort the submissions so they appear in the same order as the submissions list
                     putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions.sortedBy {
-                        (it.assignee as? StudentAssignee)?.student?.sortableName?.toLowerCase()
+                        (it.assignee as? StudentAssignee)?.student?.sortableName?.lowercase(Locale.getDefault())
                     }))
                 } else {
                     putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions))
@@ -322,9 +389,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
                 putInt(Const.SELECTED_ITEM, selectedIdx)
 
-                if (anonymousGrading != null) {
-                    putBoolean(Const.ANONYMOUS_GRADING, anonymousGrading)
-                }
+                putBoolean(Const.ANONYMOUS_GRADING, anonymousGradingOn)
             }
         }
 

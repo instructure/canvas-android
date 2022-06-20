@@ -17,7 +17,6 @@
 package com.instructure.student.mobius.assignmentDetails.ui
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -28,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.*
@@ -89,6 +89,7 @@ class AssignmentDetailsView(
 
         submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
+        draftAvailableSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
         submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
@@ -107,12 +108,13 @@ class AssignmentDetailsView(
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
     }
 
     override fun onConnect(output: Consumer<AssignmentDetailsEvent>) {
         submissionStatusFailed.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionStatusUploading.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
+        draftAvailableContainer.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         submitButton.onClick {
@@ -182,6 +184,7 @@ class AssignmentDetailsView(
             submitButton.importantForAccessibility = if (visibilities.submitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
             submitButton.setVisible(visibilities.submitButton)
             submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
+            draftAvailableContainer.setVisible(visibilities.draftSubmissionAvailable)
             submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
             submissionStatusFailed.setVisible(visibilities.submissionUploadStatusFailed)
             descriptionContainer.setVisible(visibilities.description || visibilities.noDescriptionLabel)

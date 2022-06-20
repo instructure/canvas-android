@@ -220,7 +220,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('tapping assignment plannable emits correct channel call', (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'assignment', contextName: 'Tap me');
 
-      setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
+      await setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem, itemClickCallHandler),
@@ -243,7 +243,7 @@ void main() {
         plannable: _createPlannable(assignmentId: '123'),
       );
 
-      setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
+      await setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem, itemClickCallHandler),
@@ -270,7 +270,7 @@ void main() {
         htmlUrl: '/courses/1/quizzes/1',
       );
 
-      setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
+      await setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem, itemClickCallHandler),
@@ -291,7 +291,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('tapping discussion plannable emits correct channel call', (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'discussion_topic', contextName: 'Tap me');
 
-      setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
+      await setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem, itemClickCallHandler),

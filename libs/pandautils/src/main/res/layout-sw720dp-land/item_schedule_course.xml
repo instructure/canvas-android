@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2022 - present Instructure, Inc.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleCourseItemViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="com.instructure.pandautils.utils.ColorUtils" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:borderColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/titleLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:clickable="@{itemViewModel.data.openable}"
+            android:contentDescription="@{@string/a11y_schedule_course_header_content_description(itemViewModel.data.courseName)}"
+            android:importantForAccessibility="yes"
+            android:minHeight="80dp"
+            android:onClick="@{() -> itemViewModel.onHeaderClick.invoke()}"
+            app:layout_constraintEnd_toStartOf="@+id/plannerItems">
+
+            <TextView
+                android:id="@+id/scheduleCourseHeaderText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:importantForAccessibility="no"
+                android:lineSpacingExtra="2sp"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@{itemViewModel.data.courseName}"
+                android:textAllCaps="true"
+                android:textColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="History of the American Revolution" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="1.5dp"
+                android:layout_marginBottom="1.5dp"
+                android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{itemViewModel.data.imageUrl}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseName"
+                app:overlayColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}" />
+
+        <LinearLayout
+            android:id="@+id/plannerItems"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="3"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            app:itemViewModels="@{itemViewModel.data.plannerItems}" />
+    </LinearLayout>
+</layout>

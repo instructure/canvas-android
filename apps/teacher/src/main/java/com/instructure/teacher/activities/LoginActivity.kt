@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
+import com.instructure.pandautils.analytics.SCREEN_VIEW_LOGIN
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -38,6 +40,7 @@ import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.getColorCompat
 import dagger.hilt.android.AndroidEntryPoint
 
+@ScreenView(SCREEN_VIEW_LOGIN)
 @AndroidEntryPoint
 class LoginActivity : BaseLoginInitActivity() {
 

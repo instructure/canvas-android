@@ -38,6 +38,8 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.PrefManager
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PANDA_AVATAR
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.util.PandaDrawables
@@ -51,6 +53,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.toolbar as mToolbar
 
 private object PandaAvatarPrefs : PrefManager(Const.NAME)
 
+@ScreenView(SCREEN_VIEW_PANDA_AVATAR)
 class PandaAvatarActivity : ParentActivity() {
 
     private enum class BodyPart { HEAD, BODY, LEGS }
@@ -126,10 +129,8 @@ class PandaAvatarActivity : ParentActivity() {
     private fun setupViews() {
         mToolbar.setTitle(R.string.pandaAvatar)
         mToolbar.setupAsBackButton { finish() }
-        ViewStyler.themeToolbar(this, mToolbar, ThemePrefs.primaryColor, Color.WHITE)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mToolbar.elevation = this.DP(2f)
-        }
+        ViewStyler.themeToolbarColored(this, mToolbar, ThemePrefs.primaryColor, getColor(R.color.white))
+        mToolbar.elevation = this.DP(2f)
         // Make the head and body all black
         changeHead.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_head_02, Color.BLACK)
         changeBody.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_body_11, Color.BLACK)
@@ -158,7 +159,7 @@ class PandaAvatarActivity : ParentActivity() {
     }
 
     private fun setAsAvatar() {
-        val file = saveImageAsPNG(false, ContextCompat.getColor(this, R.color.canvasBackgroundMedium), false) ?: return
+        val file = saveImageAsPNG(false, ContextCompat.getColor(this, R.color.backgroundMedium), false) ?: return
         val data = Intent()
         data.putExtra(Const.PATH, file.path)
         data.putExtra(Const.SIZE, file.length())

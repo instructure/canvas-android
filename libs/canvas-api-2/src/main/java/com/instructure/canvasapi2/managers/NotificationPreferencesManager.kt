@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.NotificationPreferenceResponse
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object NotificationPreferencesManager {
 
@@ -43,6 +44,12 @@ object NotificationPreferencesManager {
         )
     }
 
+    fun getNotificationPreferencesAsync(
+            userId: Long,
+            commChannelId: Long,
+            forceNetwork: Boolean
+    ) = apiAsync<NotificationPreferenceResponse> { getNotificationPreferences(userId, commChannelId, forceNetwork, it) }
+
     fun updatePreferenceCategory(
         categoryName: String,
         channelId: Long,
@@ -60,5 +67,11 @@ object NotificationPreferencesManager {
             callback
         )
     }
+
+    fun updatePreferenceCategoryAsync(
+            categoryName: String,
+            channelId: Long,
+            frequency: String
+    ) = apiAsync<NotificationPreferenceResponse> { updatePreferenceCategory(categoryName, channelId, frequency, it) }
 
 }

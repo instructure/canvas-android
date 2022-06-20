@@ -17,13 +17,21 @@
 package com.instructure.student.features.elementary.course
 
 import android.graphics.drawable.Drawable
+import com.instructure.canvasapi2.models.CanvasContext
 
 data class ElementaryCourseViewData(
     val tabs: List<ElementaryCourseTab>
 )
 
 data class ElementaryCourseTab(
+    val tabId: String,
     val icon: Drawable?,
     val text: String?,
     val url: String
 )
+
+sealed class ElementaryCourseAction {
+    object RedirectToCourseBrowserPage : ElementaryCourseAction()
+    object RedirectToGrades : ElementaryCourseAction()
+    object RedirectToModules : ElementaryCourseAction()
+}

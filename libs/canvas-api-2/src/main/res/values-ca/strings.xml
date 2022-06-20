@@ -21,11 +21,11 @@
     <!--Modules-->
     <string name="mustComplete">Primer heu de completar:</string>
     <string name="unlockedAt">Es desbloquejarà a:</string>
-    <string name="goToModules">Aneu a Mòduls</string>
+    <string name="goToModules">Aneu a Continguts</string>
 
     <!--Events-->
     <string name="Starts">Comença</string>
-    <string name="Ends">Acaba</string>
+    <string name="Ends">Finalitza</string>
     <string name="allDayEvent">Esdeveniment de tot el dia</string>
     <string name="at">a</string>
     <string name="to">per a</string>
@@ -38,21 +38,21 @@
     <!-- Assignment Module -->
     <string name="canvasAPI_online">En línia</string>
     <string name="canvasAPI_onPaper">En paper</string>
-    <string name="canvasAPI_discussion">Debat</string>
-    <string name="canvasAPI_quiz">Qüestionari</string>
+    <string name="canvasAPI_discussion">Fòrum</string>
+    <string name="canvasAPI_quiz">Prova</string>
     <string name="canvasAPI_externalTool">Eina externa</string>
-    <string name="canvasAPI_none">No hi ha cap entrega</string>
+    <string name="canvasAPI_none">Cap entrega</string>
 
     <string name="canvasAPI_passFail">Aprovat Suspès</string>
     <string name="canvasAPI_percent">Percentatge</string>
-    <string name="canvasAPI_letterGrade">Qualificació amb lletra</string>
+    <string name="canvasAPI_letterGrade">Nota amb lletra</string>
     <string name="canvasAPI_points">Punts</string>
     <string name="canvasAPI_gpaScale">Escala GPA</string>
-    <string name="canvasAPI_notGraded">Sense qualificació</string>
+    <string name="canvasAPI_notGraded">Sense nota</string>
 
-    <string name="canvasAPI_onlineQuiz">Qüestionari</string>
+    <string name="canvasAPI_onlineQuiz">Prova</string>
     <string name="canvasAPI_discussionTopic">Tema de debat</string>
-    <string name="canvasAPI_onlineUpload">Càrrega de fitxer</string>
+    <string name="canvasAPI_onlineUpload">Penjada de fitxer</string>
     <string name="canvasAPI_onlineTextEntry">Entrada de text</string>
     <string name="canvasAPI_onlineURL">URL del lloc web</string>
     <string name="canvasAPI_mediaRecording">Enregistrament multimèdia</string>
@@ -63,17 +63,17 @@
     <string name="quiz_scoring_policy_latest">El més recent</string>
     <string name="no">No</string>
     <string name="always">Sempre</string>
-    <string name="graded_quiz">Qüestionari qualificat</string>
-    <string name="practice_quiz">Qüestionari sobre pràctiques</string>
+    <string name="graded_quiz">Prova qualificada</string>
+    <string name="practice_quiz">Prova sobre pràctiques</string>
     <string name="graded_survey">Estudi qualificat</string>
-    <string name="ungraded_survey">Estudi sense qualificació</string>
+    <string name="ungraded_survey">Estudi sense nota</string>
     <string name="andMore"> i %d més</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Estudiant</string>
     <string name="enrollmentTypeTeacher">Professor</string>
     <string name="enrollmentTypeObserver">Observador</string>
-    <string name="enrollmentTypeTeachingAssistant">TA</string>
+    <string name="enrollmentTypeTeachingAssistant">Auxiliar de professor</string>
     <string name="enrollmentTypeDesigner">Dissenyador</string>
     <string name="enrollmentTypeUnknown">Desconegut</string>
 

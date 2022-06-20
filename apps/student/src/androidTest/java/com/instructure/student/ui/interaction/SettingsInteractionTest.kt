@@ -20,7 +20,6 @@ import android.app.Instrumentation
 import android.content.Intent
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
@@ -54,7 +53,7 @@ class SettingsInteractionTest : StudentTest() {
 
     // Should launch an intent to go to our canvas-android github page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testLegal_showCanvasOnGithub() {
         setUpAndSignIn()
 
@@ -75,7 +74,7 @@ class SettingsInteractionTest : StudentTest() {
 
     // Should display terms of use in a WebView
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testLegal_showTermsOfUse() {
         setUpAndSignIn()
 
@@ -87,8 +86,7 @@ class SettingsInteractionTest : StudentTest() {
 
     // Should display the privacy policy in a WebView
     @Test
-    @Stub  //need to consider how to fix this, it is breaking sometimes on low res mode
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testLegal_showPrivacyPolicy() {
         setUpAndSignIn()
 
@@ -103,7 +101,7 @@ class SettingsInteractionTest : StudentTest() {
     // Should open a page and have a pairing code that can be refreshed
     // (Checks to see that we can refresh and get a new code)
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testPairObserver_refreshCode() {
         setUpAndSignIn()
 

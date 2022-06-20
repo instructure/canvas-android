@@ -39,6 +39,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
@@ -53,6 +55,7 @@ import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
 
+@ScreenView(SCREEN_VIEW_PAGE_DETAILS)
 @PageView
 class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
@@ -260,7 +263,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             context += "."
 
             // We want it to be lowercase.
-            context = context.toLowerCase(Locale.getDefault())
+            context = context.lowercase(Locale.getDefault())
 
             loadHtml(resources.getString(R.string.noPagesInContext) + " " + context, "text/html", "utf-8", null)
         } else {
@@ -277,7 +280,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             it.menu.findItem(R.id.menu_edit).isVisible = false
             checkCanEdit()
 
-            ViewStyler.themeToolbar(requireActivity(), it, canvasContext)
+            ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
         }
     }
 

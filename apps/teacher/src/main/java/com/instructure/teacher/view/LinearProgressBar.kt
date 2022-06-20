@@ -77,7 +77,7 @@ class LinearProgressBar @JvmOverloads constructor(
 
 
     init {
-        setBackgroundColor(context.getColorCompat(R.color.progressBarBackground))
+        setBackgroundColor(context.getColorCompat(R.color.backgroundLight))
         attrs?.obtainFor(this, R.styleable.LinearProgressBar) { a, idx ->
             when (idx) {
                 R.styleable.LinearProgressBar_lbp_color -> barColor = a.getColor(idx, barColor)

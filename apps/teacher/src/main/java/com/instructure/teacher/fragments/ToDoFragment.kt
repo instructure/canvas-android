@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.requestAccessibilityFocus
@@ -47,6 +49,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@ScreenView(SCREEN_VIEW_TO_DO)
 class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHolder, ToDoAdapter>(), ToDoView {
     private var mNeedToForceNetwork = false
 
@@ -137,7 +140,8 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
             showToast(R.string.toDoNoSubmissions)
             return
         }
-        val bundle = SpeedGraderActivity.makeBundle(course.id, assignment.id, submissions, 0)
+        val anonymousGrading = assignment.anonymousGrading || assignment.anonymousSubmissions
+        val bundle = SpeedGraderActivity.makeBundle(course.id, assignment.id, submissions, 0, anonymousGrading)
         RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
     }
 

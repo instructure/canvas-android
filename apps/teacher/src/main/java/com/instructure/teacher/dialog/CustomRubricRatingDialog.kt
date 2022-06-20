@@ -29,12 +29,15 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CUSTOM_RUBRIC_RATING
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.view.edit_rubric.RatingSelectedEvent
 import org.greenrobot.eventbus.EventBus
+import java.util.Locale
 
-
+@ScreenView(SCREEN_VIEW_CUSTOM_RUBRIC_RATING)
 class CustomRubricRatingDialog : AppCompatDialogFragment() {
 
     var mCriterionId by StringArg()
@@ -81,8 +84,8 @@ class CustomRubricRatingDialog : AppCompatDialogFragment() {
                 .setCancelable(true)
                 .setTitle(getString(R.string.criterion_rating_customize_score))
                 .setView(container)
-                .setPositiveButton(getString(android.R.string.ok).toUpperCase(), onSave)
-                .setNegativeButton(getString(android.R.string.cancel).toUpperCase(), null)
+                .setPositiveButton(getString(android.R.string.ok).uppercase(Locale.getDefault()), onSave)
+                .setNegativeButton(getString(android.R.string.cancel).uppercase(Locale.getDefault()), null)
                 .create()
                 .apply {
                     window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)

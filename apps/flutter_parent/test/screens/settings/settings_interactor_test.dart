@@ -32,9 +32,9 @@ void main() {
     expect(SettingsInteractor().isDebugMode(), isTrue);
   });
 
-  test('routeToThemeViewer call through to navigator', () {
+  test('routeToThemeViewer call through to navigator', () async {
     var nav = _MockNav();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => nav);
     });
 
@@ -45,9 +45,9 @@ void main() {
     expect(screen, isA<ThemeViewerScreen>());
   });
 
-  test('routeToRemoteConfig call through to navigator', () {
+  test('routeToRemoteConfig call through to navigator', () async {
     var nav = _MockNav();
-    setupTestLocator((locator) {
+    await setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => nav);
     });
 
@@ -62,7 +62,7 @@ void main() {
     await setupPlatformChannels();
     final analytics = _MockAnalytics();
 
-    setupTestLocator((locator) => locator.registerLazySingleton<Analytics>(() => analytics));
+    await setupTestLocator((locator) => locator.registerLazySingleton<Analytics>(() => analytics));
 
     await tester.pumpWidget(TestApp(Container()));
     await tester.pumpAndSettle();
@@ -84,7 +84,7 @@ void main() {
     await setupPlatformChannels();
     final analytics = _MockAnalytics();
 
-    setupTestLocator((locator) => locator.registerLazySingleton<Analytics>(() => analytics));
+    await setupTestLocator((locator) => locator.registerLazySingleton<Analytics>(() => analytics));
 
     await tester.pumpWidget(TestApp(Container()));
     await tester.pumpAndSettle();

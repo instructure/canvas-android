@@ -32,12 +32,15 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_RATING
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.withArgs
 import kotlinx.android.synthetic.main.dialog_rating.view.*
 
+@ScreenView(SCREEN_VIEW_RATING)
 class RatingDialog : DialogFragment() {
 
     object Prefs : PrefManager("rating_dialog") {
@@ -106,9 +109,15 @@ class RatingDialog : DialogFragment() {
         }
 
         val starClickListener = View.OnClickListener { v ->
-            stars.forEach { it.setImageResource(R.drawable.ic_star) }
+            stars.forEach {
+                it.setImageResource(R.drawable.ic_star)
+                it.setColorFilter(requireContext().getColor(R.color.backgroundMedium))
+            }
             val selectionIndex = stars.indexOf(v)
-            stars.take(selectionIndex + 1).forEach { it.setImageResource(R.drawable.ic_star_default_color) }
+            stars.take(selectionIndex + 1).forEach {
+                it.setImageResource(R.drawable.ic_star)
+                it.setColorFilter(requireContext().getColor(R.color.backgroundDark))
+            }
             val isFiveStars = selectionIndex >= 4
             comments.setVisible(!isFiveStars)
             send.setVisible(!isFiveStars)

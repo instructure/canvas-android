@@ -19,8 +19,10 @@
 package com.instructure.canvas.espresso.mockCanvas
 
 import android.util.Log
+import com.github.javafaker.Bool
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
+import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocCoordinate
@@ -226,6 +228,8 @@ class MockCanvas {
     /** Map of courseId to the courses latest announcement */
     val latestAnnouncements = mutableMapOf<Long, DiscussionTopicHeader>()
 
+    val commentLibraryItems = mutableMapOf<Long, List<String>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -251,6 +255,9 @@ class MockCanvas {
                 .filter { it.role == Enrollment.EnrollmentType.Observer }
                 .distinctBy { it.userId }
                 .map { users[it.userId]!! }
+
+    /** Sets whether dashboard_cards returns true or false for isK5Subject field. */
+    var elementarySubjectPages: Boolean = false
 
     /** Returns the current auth token for the specified user. Returns null if no such token exists. */
     fun tokenFor(user: User): String? {
@@ -330,6 +337,7 @@ class MockCanvas {
  */
 fun MockCanvas.Companion.init(
     courseCount: Int = 0,
+    invitedCourseCount: Int = 0,
     pastCourseCount: Int = 0,
     favoriteCourseCount: Int = 0,
     studentCount: Int = 0,
@@ -380,7 +388,7 @@ fun MockCanvas.Companion.init(
     }
 
     // Add enrollments
-    data.courses.values.forEach { course ->
+    data.courses.values.forEachIndexed { index, course ->
         // Enroll teachers
         teacherUsers.forEach { data.addEnrollment(it, course, Enrollment.EnrollmentType.Teacher) }
 
@@ -389,6 +397,7 @@ fun MockCanvas.Companion.init(
             data.addEnrollment(
                     user = it,
                     course = course,
+                    enrollmentState = if (index < invitedCourseCount) EnrollmentAPI.STATE_INVITED else EnrollmentAPI.STATE_ACTIVE,
                     type = Enrollment.EnrollmentType.Student,
                     courseSectionId = if(course.sections.count() > 0) course.sections.get(0).id else 0
             )
@@ -539,7 +548,7 @@ fun MockCanvas.addUserPermissions(userId: Long, canUpdateName: Boolean, canUpdat
     user?.permissions = CanvasContextPermission(canUpdateAvatar = canUpdateAvatar, canUpdateName = canUpdateName)
 }
 
-fun MockCanvas.addCourseCalendarEvent(courseId: Long, date: String, title: String, description: String) : ScheduleItem {
+fun MockCanvas.addCourseCalendarEvent(courseId: Long, date: String, title: String, description: String, isImportantDate: Boolean = false) : ScheduleItem {
     val newScheduleItem = ScheduleItem(
             itemId = newItemId().toString(),
             title = title,
@@ -548,7 +557,32 @@ fun MockCanvas.addCourseCalendarEvent(courseId: Long, date: String, title: Strin
             isAllDay = true,
             allDayAt = date,
             startAt = date,
-            contextCode = "course_$courseId"
+            contextCode = "course_$courseId",
+            importantDates = isImportantDate
+    )
+
+    var calendarEventList = courseCalendarEvents[courseId]
+    if(calendarEventList == null) {
+        calendarEventList = mutableListOf<ScheduleItem>()
+        courseCalendarEvents[courseId] = calendarEventList
+    }
+    calendarEventList.add(newScheduleItem)
+
+    return newScheduleItem
+}
+
+fun MockCanvas.addAssignmentCalendarEvent(courseId: Long, date: String, title: String, description: String, isImportantDate: Boolean = false, assignment: Assignment): ScheduleItem {
+    val newScheduleItem = ScheduleItem(
+            itemId = newItemId().toString(),
+            title = title,
+            description = description,
+            itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+            isAllDay = true,
+            allDayAt = date,
+            startAt = date,
+            contextCode = "course_$courseId",
+            importantDates = isImportantDate,
+            assignment = assignment
     )
 
     var calendarEventList = courseCalendarEvents[courseId]
@@ -1011,14 +1045,15 @@ fun MockCanvas.addEnrollment(
     observedUser: User? = null,
     courseSectionId: Long = 0,
     currentScore: Double = 88.1,
-    currentGrade: String = "B+"
+    currentGrade: String = "B+",
+    enrollmentState: String = EnrollmentAPI.STATE_ACTIVE
 ): Enrollment {
     val enrollment = Enrollment(
         id = enrollments.size + 1L,
         role = type,
         type = type,
         courseId = course.id,
-        enrollmentState = "active",
+        enrollmentState = enrollmentState,
         userId = user.id,
         observedUser = observedUser,
         grades = Grades(currentScore = currentScore, currentGrade = currentGrade),
@@ -1930,7 +1965,7 @@ fun MockCanvas.addSubmissionStreamItem(
     val item = StreamItem(
             id = newItemId(),
             course_id = course.id,
-            assignment_id = assignment.id ?: -1,
+            assignment_id = assignment.id,
             title = assignment.name,
             message = message,
             assignment = assignment,

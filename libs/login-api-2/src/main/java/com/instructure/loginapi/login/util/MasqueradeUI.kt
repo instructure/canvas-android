@@ -67,15 +67,7 @@ private fun Window.showMasqueradeNotification(startingClass: Class<Activity>? = 
         // Add border
         val borderDrawable = ContextCompat.getDrawable(context, R.drawable.masquerade_outline)
         @Suppress("CascadeIf")
-        if (Build.VERSION.SDK_INT >= 23) {
-            rootView.foreground = borderDrawable
-        } else if (rootView is FrameLayout) {
-            rootView.foreground = borderDrawable
-        } else {
-            val borderView = View(context)
-            borderView.background = borderDrawable
-            (rootView as? ViewGroup)?.addView(borderView)
-        }
+        rootView.foreground = borderDrawable
 
         // Add notification view
         rootView.findViewById<View>(android.R.id.content).lastAncestorOrNull<LinearLayout>()?.let {

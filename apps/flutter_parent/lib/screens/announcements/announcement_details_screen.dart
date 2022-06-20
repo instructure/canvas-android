@@ -96,7 +96,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
       children: <Widget>[
         Text(
           announcementViewState.announcementTitle,
-          style: Theme.of(context).textTheme.display1,
+          style: Theme.of(context).textTheme.headline4,
         ),
         SizedBox(height: 4),
         Text(

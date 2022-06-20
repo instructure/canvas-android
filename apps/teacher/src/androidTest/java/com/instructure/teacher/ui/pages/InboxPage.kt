@@ -27,7 +27,11 @@ class InboxPage: BasePage() {
     }
 
     fun assertHasConversation() {
-        inboxRecyclerView.check(RecyclerViewItemCountAssertion(1))
+        assertConversationCountIsGreaterThan(0)
+    }
+
+    fun assertConversationCountIsGreaterThan(count: Int) {
+        inboxRecyclerView.check(RecyclerViewItemCountGreaterThanAssertion(count))
     }
 
     fun clickConversation(conversation: ConversationApiModel) {

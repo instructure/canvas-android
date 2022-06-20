@@ -99,7 +99,7 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
             children: <Widget>[
               Text(
                 widget.toDo.plannable.title,
-                style: Theme.of(context).textTheme.display1,
+                style: Theme.of(context).textTheme.headline4,
               ),
               if (widget.toDo.contextName != null)
                 Padding(
@@ -117,7 +117,7 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
               SizedBox(height: 8),
               Text(
                 widget.toDo.plannable.toDoDate.l10nFormat(L10n(context).dateAtTime),
-                style: Theme.of(context).textTheme.subhead,
+                style: Theme.of(context).textTheme.subtitle1,
               ),
               Divider(height: 32),
               Text(
@@ -137,7 +137,7 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
                   child: Center(
                     child: Text(
                       L10n(context).noToDoDescription,
-                      style: Theme.of(context).textTheme.caption.copyWith(color: StudentColors.licorice),
+                      style: Theme.of(context).textTheme.caption.copyWith(color: StudentColors.textDarkest),
                     ),
                   ),
                 ),
