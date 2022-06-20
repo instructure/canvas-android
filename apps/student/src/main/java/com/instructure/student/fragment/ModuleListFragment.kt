@@ -121,7 +121,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
         setupToolbarMenu(toolbar)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     //endregion

@@ -38,11 +38,20 @@ object CourseListEndpoint : Endpoint(
         LongId(PathVars::courseId) to CourseEndpoint,
         response = {
             GET {
+                val enrollmentState = request.url.queryParameter("enrollment_state")
                 val user = request.user!!
                 val courses = data.enrollments
                         .values
                         .filter { it.userId == user.id }
                         .map { data.courses[it.courseId]!! }
+                        .filter {
+                            when (enrollmentState) {
+                                "active" -> it.isCurrentEnrolment()
+                                "completed" -> it.isPastEnrolment()
+                                "invited_or_pending" -> it.isFutureEnrolment()
+                                else -> true
+                            }
+                        }
                 request.successPaginatedResponse(courses)
             }
         }

@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{itemViewModel.data.description}"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="12sp"
                 android:visibility="@{itemViewModel.data.description != null ? View.VISIBLE : View.GONE, default = gone}"
                 tools:text="Instructor &amp; Admin only. Get notified about course enrollments, reports generated, content exported, migration reports, new account users, and new student groups."

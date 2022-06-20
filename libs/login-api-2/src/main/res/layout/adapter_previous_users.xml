@@ -31,7 +31,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentStart="true"
-        app:civ_circle_background_color="@color/login_dividerColor"
+        app:civ_circle_background_color="@color/backgroundMedium"
         android:layout_centerVertical="true"/>
 
     <LinearLayout
@@ -48,9 +48,9 @@
             android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#2d3b45"
+            android:textColor="@color/textDarkest"
             android:textSize="16sp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/lato_font_family"
             android:textStyle="bold"
             tools:text="Peter Piper Piperson"
             android:maxLines="1"
@@ -60,9 +60,9 @@
             android:id="@+id/schoolDomain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/login_grayText"
+            android:textColor="@color/textDark"
             android:textSize="16sp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/lato_font_family"
             tools:text="https://school.instructure.com"
             android:maxLines="1"
             android:ellipsize="end"/>
@@ -76,7 +76,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:padding="8dp"
-        android:tint="@color/defaultTextGray"
+        android:tint="@color/textDark"
         app:srcCompat="@drawable/ic_close"
         android:contentDescription="@string/contentDescription_removePreviousUser"
         android:background="?android:selectableItemBackground"/>

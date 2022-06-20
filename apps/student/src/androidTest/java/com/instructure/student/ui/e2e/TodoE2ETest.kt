@@ -1,5 +1,6 @@
 package com.instructure.student.ui.e2e
 
+import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.util.days
@@ -23,9 +24,13 @@ class TodoE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.TODOS, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.TODOS, TestCategory.E2E)
     fun testTodoE2E() {
 
         // Don't attempt this test on a Friday, Saturday or Sunday.
@@ -36,20 +41,22 @@ class TodoE2ETest: StudentTest() {
             return
         }
 
-        // Seed data
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Seed an assignment due tomorrow, for todo tab
+        Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course.")
         val seededAssignments = seedAssignments(
                 courseId = course.id,
                 teacherToken = teacher.token,
                 dueAt = 1.days.fromNow.iso8601
         )
 
-        // Seed a quiz due tomorrow, for todo tab
+        val testAssignment = seededAssignments[0]
+
+        Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course with tomorrow due date.")
         val quiz = QuizzesApi.createQuiz(
                 QuizzesApi.CreateQuizRequest(
                         courseId = course.id,
@@ -57,21 +64,19 @@ class TodoE2ETest: StudentTest() {
                         published = true,
                         token = teacher.token,
                         dueAt = 1.days.fromNow.iso8601)
-
         )
 
-        // Sign in with lone student
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
-
-        // Navigate to ToDo tab
         dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Navigate to 'To Do' page via bottom-menu.")
         dashboardPage.clickTodoTab()
-        //todoPage.waitForRender()
 
-        // Verify that your assignment shows up
-        todoPage.assertAssignmentDisplayed(seededAssignments[0])
+        Log.d(STEP_TAG,"Assert that ${testAssignment.name} assignment is displayed.")
+        todoPage.assertAssignmentDisplayed(testAssignment)
 
-        // Verify that your quiz shows up
+        Log.d(STEP_TAG,"Assert that ${quiz.title} quiz is displayed.")
         todoPage.assertQuizDisplayed(quiz)
     }
 }

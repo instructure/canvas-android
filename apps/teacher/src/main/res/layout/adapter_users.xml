@@ -59,7 +59,7 @@
         android:layout_marginStart="16dp"
         android:maxLines="1"
         android:textSize="14sp"
-        android:textColor="@color/defaultTextGray"
+        android:textColor="@color/textDark"
         tools:text="Student Role" />
     </LinearLayout>
 

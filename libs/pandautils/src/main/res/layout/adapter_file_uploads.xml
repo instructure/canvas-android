@@ -40,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/utils_contentDescriptionFiles"
                 android:padding="4dp"
-                android:tint="@color/defaultTextDark"
+                android:tint="@color/textDarkest"
                 app:srcCompat="@drawable/ic_attachment" />
 
             <ProgressBar
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp"
                 tools:text="attachment_name_which_is_really_long.docx" />
 
@@ -77,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 android:textSize="14sp"
                 tools:text="123.4 KB" />
         </LinearLayout>
@@ -91,7 +91,7 @@
             android:contentDescription="@string/utils_removeAttachment"
             android:padding="10dp"
             app:srcCompat="@drawable/ic_close"
-            android:tint="@color/defaultTextDark" />
+            android:tint="@color/textDarkest" />
 
     </RelativeLayout>
 

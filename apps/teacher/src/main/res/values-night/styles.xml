@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2018 - present Instructure, Inc.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2022 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -15,6 +14,15 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <solid android:color="@android:color/white"/>
-</shape>
+<resources>
+
+    <style name="ContextualToolbarStyle">
+        <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
+        <item name="pspdf__submenuBackgroundColor">@color/backgroundLightest</item>
+    </style>
+
+    <style name="ModalDialogStyle">
+        <item name="pspdf__titleBackground">@color/backgroundLightestElevated</item>
+    </style>
+
+</resources>

@@ -17,7 +17,6 @@
 package com.instructure.teacher.fragments
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -41,8 +40,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.FileListAdapter
 import com.instructure.teacher.dialog.CreateFolderDialog
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.factory.FileListPresenterFactory
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.holders.FileFolderViewHolder
@@ -285,8 +284,8 @@ class FileListFragment : BaseSyncFragment<
 
         if (mCanvasContext.isUser) {
             // User's files, no CanvasContext
-            ViewStyler.themeToolbar(requireActivity(), fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-        } else ViewStyler.themeToolbar(requireActivity(), fileListToolbar, courseColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        } else ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, courseColor, requireContext().getColor(R.color.white))
     }
 
     private fun animateFabs() = if (fabOpen) {

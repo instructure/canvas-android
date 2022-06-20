@@ -124,7 +124,7 @@ class ToDoListFragment : ParentFragment() {
 
     override fun applyTheme() {
         setupToolbarMenu(toolbar)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

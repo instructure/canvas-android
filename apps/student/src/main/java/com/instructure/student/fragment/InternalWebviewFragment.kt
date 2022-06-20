@@ -43,7 +43,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
-import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.FileDownloadJobIntentService
 import kotlinx.android.synthetic.main.fragment_webview.*
@@ -104,6 +103,7 @@ open class InternalWebviewFragment : ParentFragment() {
             originalUserAgentString = canvasWebView.settings.userAgentString
             canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
+            canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
             webViewLoading?.setVisible(true)
 
             canvasWebView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
@@ -255,7 +255,7 @@ open class InternalWebviewFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     override fun title(): String = title ?: canvasContext.name ?: ""
@@ -324,13 +324,6 @@ open class InternalWebviewFragment : ParentFragment() {
         }
     }
 
-    // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-    fun loadHtml(html: String) {
-        canvasWebView?.loadDataWithBaseURL(ApiPrefs.fullDomain,
-                FileUtils.getAssetsFile(requireContext(), "html_wrapper.html").replace("{\$CONTENT$}", html, ignoreCase = false),
-                "text/html", "UTF-8", null)
-    }
-
     fun loadHtml(data: String, mimeType: String, encoding: String, historyUrl: String?) {
         // BaseURL is set as Referer. Referer needed for some vimeo videos to play
         canvasWebView?.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
@@ -338,7 +331,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
     fun loadUrl(targetUrl: String?) {
         if (!html.isNullOrBlank()) {
-            loadHtml(html!!)
+            canvasWebView?.loadHtml(html!!, title ?: "")
             return
         }
 

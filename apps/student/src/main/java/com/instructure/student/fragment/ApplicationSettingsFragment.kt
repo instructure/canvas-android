@@ -17,7 +17,6 @@
 package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -59,7 +58,7 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     override fun applyTheme() {
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     @SuppressLint("SetTextI18n")
@@ -121,6 +120,8 @@ class ApplicationSettingsFragment : ParentFragment() {
             }
         }
 
+        setUpAppThemeSelector()
+
         if (BuildConfig.DEBUG) {
             featureFlags.setVisible()
             featureFlags.onClick {
@@ -136,5 +137,14 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     private fun addFragment(fragment: Fragment) {
         (activity as? SettingsActivity)?.addFragment(fragment)
+    }
+
+    private fun setUpAppThemeSelector() {
+        val initialAppTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
+        appThemeStatus.setText(initialAppTheme.themeNameRes)
+
+        appThemeContainer.onClick {
+            AppThemeSelector.showAppThemeSelectorDialog(requireContext(), appThemeStatus)
+        }
     }
 }

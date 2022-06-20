@@ -28,7 +28,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        android:background="@color/publishedGreen"/>
+        android:background="@color/backgroundSuccess"/>
 
     <View
         android:id="@+id/restrictedBar"
@@ -37,7 +37,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
         android:visibility="gone"
-        android:background="@color/canvasOrange"/>
+        android:background="@color/backgroundWarning"/>
 
     <com.instructure.teacher.view.FileFolderPublishedStatusIconView
         android:id="@+id/fileIconOrImage"
@@ -72,7 +72,7 @@
             style="@style/TextFont.Regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             tools:text="234 KB"/>
 
     </LinearLayout>

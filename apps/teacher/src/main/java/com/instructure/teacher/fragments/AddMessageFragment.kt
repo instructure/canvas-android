@@ -16,7 +16,6 @@
 
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -304,7 +303,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             }
         }
 
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), resources.getBoolean(R.bool.isDeviceTablet), toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         toolbar.setupCloseButton { handleExit() }
     }
 
@@ -374,7 +373,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         toolbar.menu.findItem(R.id.menu_send).isVisible = false
         toolbar.menu.findItem(R.id.menu_attachment).isVisible = false
 
-        ViewStyler.themeProgressBar(savingProgressBar, Color.BLACK)
+        ViewStyler.themeProgressBar(savingProgressBar, requireContext().getColor(R.color.textDarkest))
         savingProgressBar.announceForAccessibility(getString(R.string.sendingSimple))
         savingProgressBar.setVisible()
 

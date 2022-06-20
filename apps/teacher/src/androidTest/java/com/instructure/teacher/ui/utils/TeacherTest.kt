@@ -59,7 +59,12 @@ abstract class TeacherTest : CanvasTest() {
     val courseSettingsPage = CourseSettingsPage()
     val coursesListPage = CoursesListPage()
     val dashboardPage = DashboardPage()
-    val discussionsDetatailsPage = DiscussionsDetailsPage()
+    val settingsPage = SettingsPage()
+    val legalPage = LegalPage()
+    val remoteConfigSettingsPage = RemoteConfigSettingsPage()
+    val profileSettingsPage = ProfileSettingsPage()
+    val editProfileSettingsPage = EditProfileSettingsPage()
+    val discussionsDetailsPage = DiscussionsDetailsPage()
     val discussionsListPage = DiscussionsListPage()
     val editAnnouncementPage = EditAnnouncementPage()
     val editAssignmentDetailsPage = EditAssignmentDetailsPage()
@@ -90,6 +95,7 @@ abstract class TeacherTest : CanvasTest() {
     val syllabusPage = SyllabusPage()
     val todoPage = TodoPage()
     val webViewLoginPage = WebViewLoginPage()
+    val fileListPage = FileListPage()
 
 }
 

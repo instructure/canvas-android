@@ -19,7 +19,6 @@ package com.instructure.student.mobius.conferences.conference_details.ui
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.net.Uri
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +47,7 @@ class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutIn
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
     }
 
     override fun onConnect(output: Consumer<ConferenceDetailsEvent>) {

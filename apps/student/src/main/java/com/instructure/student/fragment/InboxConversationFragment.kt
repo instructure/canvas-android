@@ -197,7 +197,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     private fun setupViews() {

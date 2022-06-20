@@ -137,7 +137,7 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
                   child: Center(
                     child: Text(
                       L10n(context).noToDoDescription,
-                      style: Theme.of(context).textTheme.caption.copyWith(color: StudentColors.licorice),
+                      style: Theme.of(context).textTheme.caption.copyWith(color: StudentColors.textDarkest),
                     ),
                   ),
                 ),

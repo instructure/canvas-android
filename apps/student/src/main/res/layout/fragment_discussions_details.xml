@@ -20,7 +20,7 @@
     android:id="@+id/discussionDetailsPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/backgroundLightest"
     android:orientation="vertical">
 
     <LinearLayout
@@ -48,7 +48,7 @@
             android:minWidth="48dp"
             android:minHeight="48dp"
             android:text="@string/open_alternate_view"
-            android:textColor="@color/defaultActionColor"
+            android:textColor="@color/textInfo"
             android:textSize="16sp"
             android:visibility="gone" />
 
@@ -66,7 +66,7 @@
                     android:id="@+id/discussionsScrollViewContentWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="@color/backgroundLightest"
                     android:orientation="vertical">
 
                     <TextView
@@ -92,7 +92,7 @@
                         android:layout_marginEnd="16dp"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:textColor="@color/defaultTextGray"
+                        android:textColor="@color/textDark"
                         tools:text="Afternoon Section" />
 
                     <TextView
@@ -103,7 +103,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
-                        android:textColor="@color/defaultTextGray"
+                        android:textColor="@color/textDark"
                         android:visibility="gone"
                         tools:text="30 pts"
                         tools:visibility="visible" />
@@ -138,7 +138,7 @@
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 android:importantForAccessibility="no"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 app:srcCompat="@drawable/ic_calendar" />
 
                             <TextView
@@ -147,7 +147,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"
                                 android:text="@string/utils_dueDateHeaderLabel"
-                                android:textColor="@color/defaultTextGray" />
+                                android:textColor="@color/textDark" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -165,7 +165,7 @@
                                 android:importantForAccessibility="no"
                                 android:text="@string/utils_dueLabel"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray" />
+                                android:tint="@color/textDark" />
 
                             <TextView
                                 android:id="@+id/dueDateTextView"
@@ -174,7 +174,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 tools:text="April 1 at 11:59 PM" />
                         </LinearLayout>
 
@@ -297,7 +297,7 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:maxLines="2"
-                                android:textColor="@color/defaultTextGray"
+                                android:textColor="@color/textDark"
                                 android:textSize="12sp"
                                 tools:text="Aug 1 at 8:30 AM" />
 
@@ -342,7 +342,7 @@
                         android:id="@+id/repliesDivider"
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="@color/lightGray" />
+                        android:background="@color/backgroundMedium" />
 
                     <TextView
                         android:id="@+id/anonymousDiscussionsNotSupported"
@@ -364,7 +364,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:padding="16dp"
-                        android:textColor="@color/defaultActionColor"
+                        android:textColor="@color/textInfo"
                         android:visibility="gone"
                         android:text="@string/openInBrowser" />
 

@@ -21,13 +21,13 @@
     android:id="@+id/activityRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundWhite">
+    android:background="@color/backgroundLightest">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/defaultPrimary"
+        android:background="@color/textDarkest"
         android:elevation="6dp"
         app:theme="@style/ToolBarStyle"
         tools:ignore="UnusedAttribute" />
@@ -35,7 +35,7 @@
     <com.instructure.pandautils.views.CanvasWebView
         android:id="@+id/canvasWebView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbarStyle="outsideOverlay"
         android:layout_below="@id/toolbar"
         android:layout_marginTop="8dp"

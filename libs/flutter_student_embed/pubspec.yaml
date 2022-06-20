@@ -86,6 +86,9 @@ flutter:
     - family:  CanvasIconsSolid
       fonts:
         - asset: assets/fonts/CanvasIconsSolid.ttf
+    - family:  Lato
+      fonts:
+        - asset: assets/fonts/lato_regular.ttf
 
 
   # This section identifies your Flutter project as a module meant for

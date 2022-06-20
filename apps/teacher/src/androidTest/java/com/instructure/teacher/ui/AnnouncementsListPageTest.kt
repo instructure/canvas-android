@@ -83,7 +83,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createNewAnnouncementTest() {
         getToAnnouncementsListPage(announcementCount = 1)
         announcementsListPage.assertAnnouncementCount(2) // header + the one test announcement
@@ -95,7 +95,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createAndAbortNewAnnouncementTest() {
         val data = getToAnnouncementsListPage(announcementCount = 1)
         val course = data.courses.values.first()
@@ -112,7 +112,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createNewAnnouncementWithMissingDescriptionTest() {
         getToAnnouncementsListPage(announcementCount = 1)
 
@@ -121,7 +121,7 @@ class AnnouncementsListPageTest : TeacherTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun createNewAnnouncementWithMissingTitleTest() {
         getToAnnouncementsListPage(announcementCount = 1)
 

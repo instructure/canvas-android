@@ -17,14 +17,13 @@
 
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
-import com.instructure.espresso.click
 import com.instructure.espresso.page.*
+import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
 class StudentContextPage : BasePage(R.id.studentContextPage) {
@@ -40,9 +39,8 @@ class StudentContextPage : BasePage(R.id.studentContextPage) {
     fun assertDisplaysStudentInfo(student: CanvasUserApiModel) {
         waitForView(withParent(R.id.toolbar) + withText(student.shortName)).assertDisplayed()
         studentName.assertHasText(student.shortName)
-        // MBL-14665: Seeding an email address for a user apparently no longer works.
-        // We'll need to fix that before we can un-comment this code.
-        //studentEmail.assertHasText(student.loginId)
+        studentEmail.assertHasText(student.loginId)
+        onView(withId(R.id.gradeItems)).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysCourseInfo(course: CourseApiModel) {

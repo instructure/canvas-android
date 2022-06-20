@@ -22,13 +22,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/backgroundLightest">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/white"
+        android:background="@color/backgroundLightestElevated"
         android:elevation="6dp"
         app:theme="@style/ToolBarStyleDark"
         tools:ignore="UnusedAttribute" />
@@ -49,10 +49,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/lato_font_family"
                 android:importantForAccessibility="yes"
                 android:text="@string/qrCodeExplanation"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textDarkest"
                 android:textSize="16sp" />
 
             <androidx.constraintlayout.widget.Guideline

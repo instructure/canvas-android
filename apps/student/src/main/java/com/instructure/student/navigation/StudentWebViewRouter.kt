@@ -23,8 +23,8 @@ import com.instructure.student.router.RouteMatcher
 
 class StudentWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
 
-    override fun canRouteInternally(url: String): Boolean {
-        return RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = false, allowUnsupported = false)
+    override fun canRouteInternally(url: String, routeIfPossible: Boolean): Boolean {
+        return RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = routeIfPossible, allowUnsupported = false)
     }
 
     override fun routeInternally(url: String) {

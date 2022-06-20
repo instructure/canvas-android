@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/speedGraderUrlSubmissionDisclaimer"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="12sp"
             android:focusable="true"
             android:importantForAccessibility="yes"/>
@@ -51,7 +51,7 @@
             android:paddingTop="24dp"
             android:textSize="16sp"
             tools:text="https://www.google.com"
-            tools:textColor="@color/canvasDefaultButton"/>
+            tools:textColor="@color/textInfo"/>
 
         <ImageView
             android:id="@+id/urlPreviewImageView"

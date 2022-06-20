@@ -255,10 +255,10 @@ class AssignmentsTest {
             )
 
             val assignments = AssignmentsApi.seedAssignments(request, assignmentCount)
-            if( assignments.assignmentList.size > 0 ) {
-                assertThat(assignments.assignmentList[0], instanceOf(AssignmentApiModel::class.java))
+            if(assignments.isNotEmpty()) {
+                assertThat(assignments[0], instanceOf(AssignmentApiModel::class.java))
             }
-            assertEquals(assignmentCount, assignments.assignmentList.size)
+            assertEquals(assignmentCount, assignments.size)
         }
     }
 
@@ -284,10 +284,10 @@ class AssignmentsTest {
                     submissionSeedsList = listOf(submissionSeed)
             )
             val submissions = SubmissionsApi.seedAssignmentSubmission( request )
-            if( submissions.submissionList.size > 0) {
-                assertThat(submissions.submissionList[0], instanceOf(SubmissionApiModel::class.java))
+            if(submissions.isNotEmpty()) {
+                assertThat(submissions[0], instanceOf(SubmissionApiModel::class.java))
             }
-            assertEquals(submissionCount, submissions.submissionList.size)
+            assertEquals(submissionCount, submissions.size)
         }
     }
 }

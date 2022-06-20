@@ -81,10 +81,10 @@ abstract class LoginWithQRActivity : AppCompatActivity() {
 
             // Configure a11y for toolbar
             setNavigationContentDescription(R.string.close)
-            ViewStyler.setStatusBarLight(this@LoginWithQRActivity)
+            ViewStyler.themeStatusBar(this@LoginWithQRActivity)
         }
 
         val nextText: TextView = findViewById(R.id.next)
-        nextText.setTextColor(ContextCompat.getColor(this@LoginWithQRActivity, R.color.login_loginFlowBlue))
+        nextText.setTextColor(ContextCompat.getColor(this@LoginWithQRActivity, R.color.textInfo))
     }
 }

@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Does gan eich dyfais ddim rhaglen wedi’i gosod a all agor y ddolen hon.</string>
     <string name="anonymousDiscussionNotSupported">Does dim modd delio â thrafodaethau dienw ar ddyfeisiau symudol ar hyn o bryd. Agor mewn porwr i weld trafodaeth.</string>
     <string name="discussionOpenInBrowser">Agor mewn porwr</string>
+    <string name="dashboardSwitchToListView">Newid i wedd rhestr</string>
+    <string name="dashboardSwitchToGridView">Newid i wedd grid</string>
+    <string name="selectAppTheme">Dewis thema ap</string>
+    <string name="appThemeSettingsTitle">Thema Ap</string>
+    <string name="appThemeLight">Golau</string>
+    <string name="appThemeDark">Tywyll</string>
+    <string name="appThemeSystem">Rhagosodiad system</string>
+
 </resources>

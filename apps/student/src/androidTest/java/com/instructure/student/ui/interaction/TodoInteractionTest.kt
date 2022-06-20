@@ -45,7 +45,7 @@ class TodoInteractionTest : StudentTest() {
 
     // Todo items should be clickable
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.TODOS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.TODOS, TestCategory.INTERACTION, false)
     fun testClick_todoItemClickable() {
 
         val data = goToTodos()
@@ -63,7 +63,7 @@ class TodoInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.TODOS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.TODOS, TestCategory.INTERACTION, false)
     fun testFilters() {
         val data = goToTodos(courseCount = 2, favoriteCourseCount = 1)
         val favoriteCourse = data.courses.values.first {course -> course.isFavorite}

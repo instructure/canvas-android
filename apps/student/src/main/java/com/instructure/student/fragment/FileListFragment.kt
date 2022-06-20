@@ -16,10 +16,8 @@
  */
 package com.instructure.student.fragment
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -28,6 +26,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.managers.FileFolderManager
@@ -236,11 +235,11 @@ class FileListFragment : ParentFragment(), Bookmarkable {
     private fun themeToolbar() {
         // We style the toolbar white for user files
         if (canvasContext.type == CanvasContext.Type.USER) {
-            ViewStyler.themeProgressBar(fileLoadingProgressBar, Color.BLACK)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+            ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.textDarkest))
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         } else {
-            ViewStyler.themeProgressBar(fileLoadingProgressBar, Color.WHITE)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+            ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         }
     }
 

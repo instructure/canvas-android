@@ -41,7 +41,7 @@
             android:minWidth="48dp"
             android:paddingTop="12dp"
             android:text="@string/add_comment"
-            android:textColor="@color/canvasDefaultButton"/>
+            android:textColor="@color/textInfo"/>
 
         <TextView
             android:id="@+id/criterionActionSeparator"
@@ -52,7 +52,7 @@
             android:layout_marginTop="12dp"
             android:importantForAccessibility="no"
             android:text="@string/utils_dotWithSpaces"
-            android:textColor="@color/defaultTextGray"/>
+            android:textColor="@color/textDark"/>
 
         <TextView
             android:id="@+id/viewLongDescriptionButton"
@@ -63,7 +63,7 @@
             android:minWidth="48dp"
             android:paddingTop="12dp"
             android:text="@string/rubric_view_long_description"
-            android:textColor="@color/canvasDefaultButton"/>
+            android:textColor="@color/textInfo"/>
 
     </LinearLayout>
 
@@ -86,8 +86,8 @@
             android:paddingEnd="12dp"
             android:paddingStart="12dp"
             android:paddingTop="8dp"
-            android:textColor="@color/defaultTextDark"
-            app:bubbleColor="@color/defaultUnselectedDonutGray"
+            android:textColor="@color/textDarkest"
+            app:bubbleColor="@color/backgroundLight"
             tools:text="Could've done better on this one."
             android:focusable="true"
             android:importantForAccessibility="yes"/>
@@ -102,7 +102,7 @@
             android:contentDescription="@string/edit_criterion_comment"
             android:paddingEnd="0dp"
             android:paddingStart="16dp"
-            android:tint="#73818C"
+            android:tint="@color/textDark"
             app:srcCompat="@drawable/ic_edit"/>
     </LinearLayout>
 

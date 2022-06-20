@@ -19,18 +19,22 @@ package com.instructure.student.navigation
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.FontFamily
 import com.instructure.student.R
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.CalendarFragment
+import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
 
-class ElementaryNavigationBehavior() : NavigationBehavior {
+class ElementaryNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBehavior {
 
     override val bottomNavBarFragments: List<Class<out ParentFragment>> = listOf(
         ElementaryDashboardFragment::class.java,
         CalendarFragment::class.java,
         ToDoListFragment::class.java,
         NotificationListFragment::class.java,
-        InboxFragment::class.java
+        getInboxBottomBarFragment(apiPrefs)
     )
 
     override val homeFragmentClass: Class<out ParentFragment> = ElementaryDashboardFragment::class.java
@@ -41,8 +45,8 @@ class ElementaryNavigationBehavior() : NavigationBehavior {
 
     override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.HELP, AccountMenuItem.CHANGE_USER, AccountMenuItem.LOGOUT)
 
-    override val shouldOverrideFont: Boolean
-        get() = true
+    override val fontFamily: FontFamily
+        get() = FontFamily.K5
 
     override val bottomBarMenu: Int = R.menu.bottom_bar_menu_elementary
 

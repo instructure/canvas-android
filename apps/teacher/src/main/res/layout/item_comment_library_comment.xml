@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="15sp"
             android:text="@{Highlighter.createHighlightedText(itemViewModel.commentItemData)}"
             android:foreground="?attr/selectableItemBackground"
@@ -45,7 +45,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/dividerColor"
+            android:background="@color/backgroundMedium"
             android:layout_marginStart="16dp" />
 
     </LinearLayout>

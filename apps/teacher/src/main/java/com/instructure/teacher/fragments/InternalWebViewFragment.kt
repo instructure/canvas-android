@@ -17,7 +17,6 @@
 package com.instructure.teacher.fragments
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -120,6 +119,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
         setupToolbar(courseColor)
 
+        canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
         canvasWebView.settings.loadWithOverviewMode = true
         canvasWebView.settings.displayZoomControls = false
         canvasWebView.settings.setSupportZoom(true)
@@ -165,13 +165,13 @@ open class InternalWebViewFragment : BaseFragment() {
         if(darkToolbar) {
             if (courseColor != -1) {
                 // Use course colors for toolbar
-                ViewStyler.themeToolbar(requireActivity(), toolbar!!, courseColor, Color.WHITE)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.white))
             } else {
                 // Use institution colors for toolbar
-                ViewStyler.themeToolbar(requireActivity(), toolbar!!, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
             }
         } else {
-            ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar!!, Color.BLACK, false)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar!!)
         }
     }
 

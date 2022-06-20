@@ -120,7 +120,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         setupToolbarMenu(toolbar)
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, course)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -131,7 +131,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     private fun configureViews(rootView: View) {
         val appBarLayout = rootView.findViewById<AppBarLayout>(R.id.appbar)
 
-        val lockDrawable = ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_lock, ContextCompat.getColor(requireContext(), R.color.canvasTextDark))
+        val lockDrawable = ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_lock, ContextCompat.getColor(requireContext(), R.color.textDarkest))
         lockedGradeImage.setImageDrawable(lockDrawable)
 
         setupListeners()

@@ -23,7 +23,7 @@
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
+        android:background="@color/backgroundLightest"
         android:fillViewport="true"
         android:fitsSystemWindows="false"
         android:scrollbars="none"
@@ -56,7 +56,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:importantForAccessibility="no"
-                    app:civ_circle_background_color="@color/avatarGray" />
+                    app:civ_circle_background_color="@color/backgroundDark" />
 
             </RelativeLayout>
 
@@ -69,7 +69,7 @@
                 android:textStyle="bold"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:textColor="@color/navigationDrawerTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="20sp"
                 tools:text="Allen Thomas" />
 
@@ -83,14 +83,14 @@
                 android:maxLines="1"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:textColor="@color/navigationDrawerTextLight"
+                android:textColor="@color/textDark"
                 tools:text="allen-thomas187@gmail.com" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="20dp"
-                android:background="@color/dividerColor" />
+                android:background="@color/backgroundMedium" />
 
             <!--Navigation Items-->
 
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/files"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/bookmarks"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/studio"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -166,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/gauge"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -186,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/settings"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -195,7 +195,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="20dp"
-                android:background="@color/dividerColor" />
+                android:background="@color/backgroundMedium" />
 
             <TextView
                 android:id="@+id/optionsMenuTitle"
@@ -209,7 +209,7 @@
                 android:textSize="11sp"
                 android:text="@string/options"
                 android:textAllCaps="true"
-                android:textColor="@color/textLightGray" />
+                android:textColor="@color/textDark" />
 
             <LinearLayout
                 android:id="@+id/navigationDrawerItem_showGrades"
@@ -228,7 +228,7 @@
                     android:labelFor="@+id/navigationDrawerShowGradesSwitch"
                     android:text="@string/showGrades"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/navigationDrawerShowGradesSwitch"
@@ -249,7 +249,7 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
                     android:padding="1dp"
-                    android:tint="@color/defaultTextDark"
+                    android:tint="@color/textDarkest"
                     app:srcCompat="@drawable/ic_courses" />
 
                 <TextView
@@ -258,7 +258,7 @@
                     android:layout_weight="1"
                     android:labelFor="@+id/navigationDrawerColorOverlaySwitch"
                     android:text="@string/colorOverlay"
-                    android:textColor="@color/nav_drawer_text_color"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -275,7 +275,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="20dp"
-                android:background="@color/dividerColor" />
+                android:background="@color/backgroundMedium" />
 
             <LinearLayout
                 android:id="@+id/navigationDrawerItem_help"
@@ -291,7 +291,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/help"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -309,7 +309,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/changeUser"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -327,7 +327,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/logout"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -352,7 +352,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/actAsUser"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -372,7 +372,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/stopMasquerading"
                     android:textSize="16sp"
-                    android:textColor="@color/nav_drawer_text_color"/>
+                    android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
 
@@ -384,7 +384,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="12dp"
-                android:textColor="@color/navigationDrawerTextLight"
+                android:textColor="@color/textDark"
                 tools:text="v. 1.2.3" />
 
         </LinearLayout>

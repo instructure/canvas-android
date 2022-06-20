@@ -32,8 +32,8 @@
         android:id="@+id/assigneesWithoutGradesTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:textColor="@color/login_mediumText"
+        android:textColor="@color/textDark"
+        android:fontFamily="@font/lato_font_family"
         android:textSize="16sp"
         android:text="@string/accountDomainFooter"/>
 
@@ -41,8 +41,8 @@
         android:id="@+id/helpLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:textColor="@color/login_helpLinkBlue"
+        android:textColor="@color/textInfo"
+        android:fontFamily="@font/lato_font_family"
         android:textSize="16sp"
         android:text="@string/accountDomainFooterLink"/>
 

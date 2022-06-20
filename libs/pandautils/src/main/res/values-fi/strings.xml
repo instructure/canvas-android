@@ -481,8 +481,8 @@
     <string name="a11y_page">Sivu</string>
     <string name="a11y_marked_as_done">Merkitty tehdyksi</string>
     <string name="a11y_not_marked_as_done">Ei ole merkitty valmiiksi</string>
-    <string name="a11y_mark_as_done">Merkitse valmiiksi</string>
-    <string name="a11y_mark_as_not_done">mark_as_not_done</string>
     <string name="error_loading_course_details">Voi ei! Kurssin tietoja ladattaessa ilmeni virhe.</string>
     <string name="a11y_schedule_marked_as_not_done">%s merkitty ei valmiiksi</string>
+    <string name="a11y_markAsDoneWithName">%s Merkitse valmiiksi</string>
+    <string name="a11y_markAsNotDoneWithName">%s Merkitse ei valmiiksi</string>
 </resources>

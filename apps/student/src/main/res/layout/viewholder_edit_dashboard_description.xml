@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="@{itemViewModel.description}"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="17sp"
         tools:text="Select courses for Dashboard or navigate to course details." />
 </layout>

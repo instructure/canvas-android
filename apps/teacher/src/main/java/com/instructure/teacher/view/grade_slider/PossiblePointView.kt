@@ -44,7 +44,7 @@ class PossiblePointView @JvmOverloads constructor(
     }
 
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = context.getColorCompat(R.color.white)
+        color = context.getColorCompat(R.color.textLightest)
         strokeWidth = 4.toPx.toFloat()
     }
 

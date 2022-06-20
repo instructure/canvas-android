@@ -22,7 +22,7 @@
 
     <!-- background color -->
     <solid
-        android:color="#c8ececec" >
+        android:color="@color/uploadFileDialogBackground" >
     </solid>
 
     <padding

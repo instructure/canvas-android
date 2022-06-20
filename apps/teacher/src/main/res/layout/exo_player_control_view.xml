@@ -29,7 +29,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/mediaOverlayBackground"
+        android:background="@color/translucentBlack"
         tools:ignore="UnusedAttribute"/>
 
     <LinearLayout
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/mediaOverlayBackground"
+        android:background="@color/translucentBlack"
         android:orientation="vertical">
 
         <LinearLayout
@@ -88,7 +88,7 @@
                 android:includeFontPadding="false"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
-                android:textColor="#FFBEBEBE"
+                android:textColor="@color/tiara"
                 android:textSize="14sp"
                 android:textStyle="bold"/>
 
@@ -105,7 +105,7 @@
                 android:includeFontPadding="false"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
-                android:textColor="#FFBEBEBE"
+                android:textColor="@color/tiara"
                 android:textSize="14sp"
                 android:textStyle="bold"/>
 

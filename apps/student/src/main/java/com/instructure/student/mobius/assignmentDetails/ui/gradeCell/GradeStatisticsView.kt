@@ -25,7 +25,7 @@ class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context,
         strokeCap = Paint.Cap.ROUND
         isAntiAlias = true
         strokeWidth = context.DP(2)
-        color = ContextCompat.getColor(context, R.color.defaultTrackColor)
+        color = ContextCompat.getColor(context, R.color.backgroundMedium)
     }
 
     private val darkLinePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -33,7 +33,7 @@ class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context,
         strokeCap = Paint.Cap.ROUND
         isAntiAlias = true
         strokeWidth = context.DP(3)
-        color = ContextCompat.getColor(context, R.color.gray)
+        color = ContextCompat.getColor(context, R.color.textDark)
     }
 
     private val meanLinePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -41,11 +41,11 @@ class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context,
         strokeCap = Paint.Cap.ROUND
         isAntiAlias = true
         strokeWidth = context.DP(3)
-        color = ContextCompat.getColor(context, R.color.darkerGray)
+        color = ContextCompat.getColor(context, R.color.textDarkest)
     }
 
     private val circlePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = ContextCompat.getColor(context, R.color.canvasDefaultAccent)
+        color = ContextCompat.getColor(context, R.color.backgroundInfo)
         style = Paint.Style.FILL
     }
 

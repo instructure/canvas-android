@@ -37,6 +37,7 @@ class NativeComm {
   static const methodUpdateLoginData = 'updateLoginData';
   static const methodUpdateShouldPop = 'updateShouldPop';
   static const methodUpdateThemeData = 'updateThemeData';
+  static const methodUpdateDarkMode = 'updateLightOrDarkMode';
 
   static const channel = const MethodChannel(channelName);
 
@@ -71,6 +72,9 @@ class NativeComm {
         break;
       case methodUpdateCalendarDates:
         _updateCalendarDates(methodCall.arguments);
+        break;
+      case methodUpdateDarkMode:
+        _updateDarkMode(methodCall.arguments);
         break;
       default:
         throw 'Channel method not implemented: ${methodCall.method}';
@@ -132,6 +136,15 @@ class NativeComm {
 
   static void setStatusBarColor(Color color) {
     channel.invokeMethod(methodSetStatusBarColor, color.value.toRadixString(16));
+  }
+
+  static void _updateDarkMode(dynamic data) {
+    try {
+      bool darkMode = data['darkMode'];
+      StudentColors.darkMode = darkMode;
+    } catch (e) {
+      print('Error updating dark mode!');
+    }
   }
 }
 

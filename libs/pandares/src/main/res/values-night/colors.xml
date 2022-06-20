@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+
+    <!-- InstUI colors - We should use these colors to build standard UI elements -->
+    <color name="ash">#556572</color>
+    <color name="backgroundAlert">#C340AA</color>
+    <color name="backgroundDanger">#E4263C</color>
+    <color name="backgroundDark">#C7CDD1</color>
+    <color name="backgroundDarkest">#FFFFFF</color>
+    <color name="backgroundGrouped">#111213</color>
+    <color name="backgroundGroupedCell">#242526</color>
+    <color name="backgroundInfo">#127CB9</color>
+    <color name="backgroundLight">#1D1E1F</color>
+    <color name="backgroundLightest">#111213</color>
+    <color name="backgroundLightestElevated">#242526</color>
+    <color name="backgroundMedium">#394B58</color>
+    <color name="backgroundSuccess">#0D884D</color>
+    <color name="backgroundWarning">#E25C1D</color>
+    <color name="barney">#C340AA</color>
+    <color name="borderAlert">#C340AA</color>
+    <color name="borderDanger">#E4263C</color>
+    <color name="borderDark">#C7CDD1</color>
+    <color name="borderDarkest">#FFFFFF</color>
+    <color name="borderInfo">#127CB9</color>
+    <color name="borderLight">#1D1E1F</color>
+    <color name="borderLightest">#111213</color>
+    <color name="borderMedium">#394B58</color>
+    <color name="borderSuccess">#0D884D</color>
+    <color name="borderWarning">#E25C1D</color>
+    <color name="crimson">#E4263C</color>
+    <color name="electric">#127CB9</color>
+    <color name="fire">#E25C1D</color>
+    <color name="licorice">#2D3B45</color>
+    <color name="oxford">#394B58</color>
+    <color name="porcelain">#F5F5F5</color>
+    <color name="shamrock">#0D884D</color>
+    <color name="textAlert">#C74BAF</color>
+    <color name="textDanger">#E73A4E</color>
+    <color name="textDark">#C7CDD1</color>
+    <color name="textDarkest">#FFFFFF</color>
+    <color name="textInfo">#1283C4</color>
+    <color name="textLight">#394B58</color>
+    <color name="textLightest">#121212</color>
+    <color name="textSuccess">#1A8E56</color>
+    <color name="textWarning">#E36327</color>
+    <color name="tiara">#C7CDD1</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
+    <color name="switchThumbColor">#777D81</color>
+    <color name="switchTrackColor">#9FA5A9</color>
+
+    <!-- Special one off colors that should be different in two modes but are not in the color palette  -->
+    <color name="studentDocumentSharingColor">#780612</color>
+    <color name="uploadFileDialogBackground">#00FFFFFF</color>
+
+    <!-- Course Colors for customization -->
+    <color name="colorCottonCandy">#FFF26090</color>
+    <color name="colorBarbie">#FFEA1661</color>
+    <color name="colorBarneyPurple">#FF903A99</color>
+    <color name="colorEggplant">#FF65469F</color>
+    <color name="colorUltramarine">#FF4452A6</color>
+    <color name="colorOcean11">#FF1482C8</color>
+    <color name="colorCyan">#FF2CA3DE</color>
+    <color name="colorAquaMarine">#FF00BCD5</color>
+    <color name="colorEmeraldGreen">#FF009788</color>
+    <color name="colorFreshCutLawn">#FF3FA142</color>
+    <color name="colorChartreuse">#FF89C540</color>
+    <color name="colorSunFlower">#FFFFC100</color>
+    <color name="colorTangerine">#FFFA9800</color>
+    <color name="colorBloodOrange">#FFF2581B</color>
+    <color name="colorSriracha">#FFF2422E</color>
+
+    <!-- Override these colors to change the text colors of the date picker -->
+    <color name="blue">@color/textDarkest</color>
+    <color name="darker_blue">@color/textDarkest</color>
+
+</resources>

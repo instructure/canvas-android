@@ -33,25 +33,14 @@ class RCETextEditor @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.webViewStyle
 ) : RichEditor(context, attrs, defStyleAttr) {
 
+    init {
+        setEditorBackgroundColor(context.getColor(R.color.rce_backgroundColor))
+        setEditorFontColor(context.getColor(R.color.rce_defaultTextColor))
+    }
+
     fun applyHtml(contents: String, title: String = "") {
         super.setHtml(formatHTML(contents, title))
         loadCSS("rce_style.css")
-    }
-
-    private fun checkForMathTags(content: String) {
-        // If this html that we're about to load has a math tag and isn't just an image we want to parse it with MathJax.
-        // This is the version that web currently uses (the 2.7.1 is the version number) and this is the check that they do to
-        // decide if they'll run the MathJax script on the webview
-        if (content.contains("<math") && !content.contains("<img class='equation_image'")) {
-            val jsCSSImport = "(function() {" +
-                    "    var head  = document.getElementsByTagName(\"head\")[0];" +
-                    "    var script  = document.createElement(\"script\");" +
-                    "    script.type= 'text/javascript';" +
-                    "    script.src= \"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML\";" +
-                    "    head.appendChild(script);" +
-                    "}) ();"
-            exec("javascript:$jsCSSImport")
-        }
     }
 
     private fun formatHTML(html: String, title: String): String {
@@ -60,7 +49,6 @@ class RCETextEditor @JvmOverloads constructor(
             WebView.setWebContentsDebuggingEnabled(true)
         }
         contents = applyWorkAroundForDoubleSlashesAsUrlSource(contents)
-        checkForMathTags(contents)
 
         // Note: loading with a base url for the referrer does not work.
         setupAccessibilityContentDescription(contents, title)

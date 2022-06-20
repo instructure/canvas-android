@@ -168,7 +168,7 @@ class RCETextEditorView @JvmOverloads constructor(
         editor.setOnDecorationChangeListener { state, _ ->
             if (!isToolbarVisible()) showEditorToolbar()
             actionTypeButtonMap.values.forEach {
-                it?.setColorFilter(Color.BLACK)
+                it?.setColorFilter(context.getColor(R.color.rce_defaultTextColor))
                 it?.setBackgroundColor(Color.TRANSPARENT)
             }
             state.split(',').forEach {

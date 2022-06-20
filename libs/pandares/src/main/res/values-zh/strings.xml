@@ -1241,4 +1241,12 @@
     <string name="noCompatibleAppInstalled">您的设备没有安装任何可以打开此链接的应用程序。</string>
     <string name="anonymousDiscussionNotSupported">匿名讨论目前在移动设备上不受支持。在浏览器中打开以查看讨论。</string>
     <string name="discussionOpenInBrowser">在浏览器中打开</string>
+    <string name="dashboardSwitchToListView">切换到列表视图</string>
+    <string name="dashboardSwitchToGridView">切换到网格视图</string>
+    <string name="selectAppTheme">选择应用主题</string>
+    <string name="appThemeSettingsTitle">应用主题</string>
+    <string name="appThemeLight">浅色的、轻的</string>
+    <string name="appThemeDark">深色的、黑的</string>
+    <string name="appThemeSystem">系统默认</string>
+
 </resources>

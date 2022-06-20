@@ -13,7 +13,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_student_embed/utils/design/student_colors.dart';
 
 mixin ColoredStatusBar on Widget {
-  Color getStatusBarColor() => Colors.white;
+  Color getStatusBarColor() => StudentColors.backgroundLightestElevated;
 }

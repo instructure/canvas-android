@@ -32,6 +32,7 @@
         android:layout_height="24dp"
         android:layout_centerVertical="true"
         android:importantForAccessibility="no"
+        android:tint="@color/textDarkest"
         app:srcCompat="@drawable/ic_course_name"/>
 
     <RelativeLayout

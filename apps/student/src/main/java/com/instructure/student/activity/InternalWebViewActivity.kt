@@ -18,14 +18,13 @@ package com.instructure.student.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CanvasContext.Companion.emptyCourseContext
 import com.instructure.pandautils.activities.BaseActionBarActivity
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ViewStyler.themeToolbar
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
@@ -36,7 +35,7 @@ import com.instructure.student.fragment.InternalWebviewFragment.Companion.newIns
 class InternalWebViewActivity : BaseActionBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbar?.let { themeToolbar(this, it, Color.WHITE, Color.BLACK, false) }
+        toolbar?.let { ViewStyler.themeToolbarLight(this, it) }
         if (savedInstanceState == null) {
             val bundle = intent.getBundleExtra(Const.EXTRAS)
             bundle?.getString(Const.ACTION_BAR_TITLE)?.let { toolbar?.title = it }

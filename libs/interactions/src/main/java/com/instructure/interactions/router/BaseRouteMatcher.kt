@@ -3,8 +3,6 @@ package com.instructure.interactions.router
 import android.net.Uri
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
-import java.util.ArrayList
-import java.util.HashMap
 
 open class BaseRouteMatcher {
 

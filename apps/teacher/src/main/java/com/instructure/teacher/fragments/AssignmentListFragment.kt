@@ -173,7 +173,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         //setup toolbar icon to access this menu
         assignmentListToolbar.setupMenu(R.menu.menu_assignment_list, menuItemCallback)
         addSearch()
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), assignmentListToolbar, Color.WHITE)
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), assignmentListToolbar, requireContext().getColor(R.color.white))
 
         //setup popup menu
         val menuItemView = rootView.findViewById<View>(R.id.menu_grading_periods_filter)
@@ -214,7 +214,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         assignmentListToolbar.subtitle = mCanvasContext.name
         assignmentListToolbar.setupBackButton(this)
 
-        ViewStyler.themeToolbar(requireActivity(), assignmentListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, mCourseColor, requireContext().getColor(R.color.white))
     }
 
     override fun adjustGradingPeriodHeader(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) {

@@ -43,7 +43,7 @@ class InboxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         message.setVisible(message.text.isNotBlank())
 
         if (conversation.hasAttachments() || conversation.hasMedia()) {
-            attachment.setImageDrawable(ColorUtils.colorIt(ContextCompat.getColor(context, R.color.canvasTextMedium), attachment.drawable))
+            attachment.setImageDrawable(ColorUtils.colorIt(ContextCompat.getColor(context, R.color.textDark), attachment.drawable))
             attachment.setVisible()
         } else {
             attachment.setGone()

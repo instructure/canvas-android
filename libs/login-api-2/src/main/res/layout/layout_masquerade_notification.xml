@@ -22,7 +22,7 @@
     android:layout_height="wrap_content"
     android:paddingStart="16dp"
     android:paddingEnd="6dp"
-    android:background="@color/login_masqueradeHighlight">
+    android:background="@color/backgroundAlert">
 
     <TextView
         android:id="@+id/masqueradeLabel"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:textColor="#FFF"
+        android:textColor="@color/white"
         tools:text="You are acting as Stephen Futrell"/>
 
     <ImageView

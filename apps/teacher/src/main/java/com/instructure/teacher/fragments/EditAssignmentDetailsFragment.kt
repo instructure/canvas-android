@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
@@ -181,7 +180,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         toolbar.setupCloseButton(this)
         toolbar.title = getString(R.string.edit_assignment)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveAssignment() }
-        ViewStyler.themeToolbarBottomSheet(requireActivity(), isTablet, toolbar, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         saveButton?.setTextColor(ThemePrefs.buttonColor)
     }
@@ -277,8 +276,8 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         }
         setupDisplayGradeAs()
 
-        ViewStyler.themeInputTextLayout(assignmentNameTextInput, requireContext().getColorCompat(R.color.defaultTextGray))
-        ViewStyler.themeInputTextLayout(gradeTotalTextInput, requireContext().getColorCompat(R.color.defaultTextGray))
+        ViewStyler.themeInputTextLayout(assignmentNameTextInput, requireContext().getColorCompat(R.color.textDark))
+        ViewStyler.themeInputTextLayout(gradeTotalTextInput, requireContext().getColorCompat(R.color.textDark))
         ViewStyler.setToolbarElevation(requireContext(), toolbar, R.dimen.toolbar_elevation_small)
 
         // Description
@@ -397,7 +396,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                     ThemePrefs.brandColor, ThemePrefs.buttonColor)
         }
         // when the RCE editor has focus we want the label to be darker so it matches the title's functionality
-        descriptionEditor.setLabel(assignmentDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+        descriptionEditor.setLabel(assignmentDescLabel, R.color.textDarkest, R.color.textDark)
 
         // Take down progress bar
         descriptionProgressBar.setGone()

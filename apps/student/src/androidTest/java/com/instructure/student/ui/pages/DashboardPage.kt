@@ -130,7 +130,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
-    fun signOut() {
+    fun logOut() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
         onViewWithText(android.R.string.yes).click()

@@ -30,6 +30,7 @@ import com.instructure.interactions.router.RouteContext.FILE
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_QUIZ_WEB_VIEW
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
@@ -64,6 +65,7 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
         setShouldLoadUrl(false)
         canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)
+        canvasWebView?.setDarkModeSupport()
 
         val originalCallback = canvasWebView.canvasWebViewClientCallback!!
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by originalCallback {

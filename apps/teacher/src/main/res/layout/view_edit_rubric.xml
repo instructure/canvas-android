@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="@string/error_saving_rubric_assessment"
-            android:textColor="@color/error"
+            android:textColor="@color/textDanger"
             android:textSize="12sp"
             android:visibility="gone"/>
 
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:focusable="true"
                     android:importantForAccessibility="yes"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     tools:text="5.0 out of 20.0"/>
 
             </LinearLayout>
@@ -70,7 +70,7 @@
                 android:minHeight="48dp"
                 android:text="@string/save"
                 android:textAllCaps="true"
-                android:textColor="@color/canvasDefaultButton"
+                android:textColor="@color/textInfo"
                 android:textSize="16sp"
                 tools:ignore="RelativeOverlap"/>
 

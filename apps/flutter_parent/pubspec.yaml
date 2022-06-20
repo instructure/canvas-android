@@ -141,6 +141,9 @@ flutter:
     - family:  CanvasIconsSolid
       fonts:
         - asset: assets/fonts/CanvasIconsSolid.ttf
+    - family:  Lato
+      fonts:
+        - asset: assets/fonts/lato_regular.ttf
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

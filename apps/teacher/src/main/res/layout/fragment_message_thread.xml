@@ -43,7 +43,7 @@
             android:layout_toStartOf="@+id/starred"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="18sp"
             tools:text="This is a subject Line Demo that is really long" />
 
@@ -66,12 +66,12 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/header"
-        android:background="@color/messageBackgroundGray">
+        android:background="@color/backgroundLight">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/canvasEditTextColor" />
+            android:background="@color/backgroundMedium" />
 
         <include
             layout="@layout/recycler_swipe_refresh_layout"

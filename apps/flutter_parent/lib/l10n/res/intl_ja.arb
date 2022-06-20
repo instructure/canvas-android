@@ -7,7 +7,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "calendarLabel": "予定表",
+  "calendarLabel": "カレンダー",
   "@calendarLabel": {
     "description": "The label for the Calendar tab",
     "type": "text",
@@ -21,35 +21,35 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "No Students": "受講生はいません",
+  "No Students": "受講者はいません",
   "@No Students": {
     "description": "Text for when an observer has no students they are observing",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to show student selector": "タップして受講生セレクタを表示します",
+  "Tap to show student selector": "タップして受講者セレクタを表示します",
   "@Tap to show student selector": {
     "description": "Semantics label for the area that will show the student selector when tapped",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to pair with a new student": "タップして新しい受講生とペアにします",
+  "Tap to pair with a new student": "タップして新しい受講者とペアにします",
   "@Tap to pair with a new student": {
     "description": "Semantics label for the add student button in the student selector",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to select this student": "タップしてこの受講生を選択します",
+  "Tap to select this student": "タップしてこの受講者を選択します",
   "@Tap to select this student": {
     "description": "Semantics label on individual students in the student switcher",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Manage Students": "受講生を管理する",
+  "Manage Students": "受講者を管理する",
   "@Manage Students": {
     "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
     "type": "text",
@@ -95,7 +95,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Calendars": "予定表",
+  "Calendars": "カレンダー",
   "@Calendars": {
     "description": "Label for button that lets users select which calendars to display",
     "type": "text",
@@ -196,14 +196,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student's calendar": "受講生の予定表のロード中にエラーが発生しました",
+  "There was an error loading your student's calendar": "受講者のカレンダーのロード中にエラーが発生しました",
   "@There was an error loading your student's calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "タップして予定表に表示したいコースをお気に入りにします。10まで選んでください。",
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "タップしてカレンダーに表示したいコースをお気に入りにします。10まで選んでください。",
   "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
@@ -686,21 +686,21 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "受講生のコースはまだ公開されていない可能性があります",
+  "Your student’s courses might not be published yet.": "受講者のコースはまだ公開されていない可能性があります",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student’s courses.": "受講生のコースを読み込み中にエラーが発生しました。",
+  "There was an error loading your student’s courses.": "受講者のコースを読み込み中にエラーが発生しました。",
   "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "No Grade": "成績はありません",
+  "No Grade": "評定はありません",
   "@No Grade": {
     "description": "Message shown when there is currently no grade available for a course",
     "type": "text",
@@ -714,7 +714,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Grades": "成績",
+  "Grades": "評定",
   "@Grades": {
     "description": "Label for the \"Grades\" tab in course details",
     "type": "text",
@@ -749,7 +749,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Total Grade": "合計成績",
+  "Total Grade": "合計評定",
   "@Total Grade": {
     "description": "Label for the total grade in the course",
     "type": "text",
@@ -833,7 +833,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "This course does not have any assignments or calendar events yet.": "このコースには、まだ課題または予定表イベントがありません。",
+  "This course does not have any assignments or calendar events yet.": "このコースには、まだ課題またはカレンダーイベントがありません。",
   "@This course does not have any assignments or calendar events yet.": {
     "description": "Message displayed when there are no items in the course summary",
     "type": "text",
@@ -866,7 +866,7 @@
       "pointsPossible": {}
     }
   },
-  "gradesSubjectMessage": "Re：{studentName}、成績",
+  "gradesSubjectMessage": "Re：{studentName}、評定",
   "@gradesSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a student's grades",
     "type": "text",
@@ -968,7 +968,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Grade": "成績",
+  "Grade": "評定",
   "@Grade": {
     "description": "Label for the section that displays an assignment's grade",
     "type": "text",
@@ -1063,7 +1063,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Notifications for reminders about assignments and calendar events": "課題と予定表イベントに関するリマインダの通知",
+  "Notifications for reminders about assignments and calendar events": "課題とカレンダーイベントに関するリマインダの通知",
   "@Notifications for reminders about assignments and calendar events": {
     "description": "Description of the system notification channel for assignment and event reminders",
     "type": "text",
@@ -1090,14 +1090,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "We couldn't find any students associated with this account": "このアカウントに関連付けられている受講生を見つけることができませんでした",
+  "We couldn't find any students associated with this account": "このアカウントに関連付けられている受講者を見つけることができませんでした",
   "@We couldn't find any students associated with this account": {
     "description": "Subtitle for the screen that shows when the user is not observing any students",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Are you a student or teacher?": "受講生と講師のどちらですか？",
+  "Are you a student or teacher?": "受講者と教員のどちらですか？",
   "@Are you a student or teacher?": {
     "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
     "type": "text",
@@ -1118,28 +1118,28 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "STUDENT": "受講生",
+  "STUDENT": "受講者",
   "@STUDENT": {
     "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "TEACHER": "講師",
+  "TEACHER": "教員",
   "@TEACHER": {
     "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Canvas Student": "Canvas 受講生",
+  "Canvas Student": "Canvas 受講者",
   "@Canvas Student": {
     "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Canvas Teacher": "Canvas 講師",
+  "Canvas Teacher": "Canvas 教員",
   "@Canvas Teacher": {
     "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
     "type": "text",
@@ -1185,7 +1185,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "assignmentGradeAboveThreshold": "{threshold} 点を超える課題成績",
+  "assignmentGradeAboveThreshold": "{threshold} 点を超える課題評定",
   "@assignmentGradeAboveThreshold": {
     "description": "Title for alerts when an assignment grade is above the threshold value",
     "type": "text",
@@ -1196,7 +1196,7 @@
       "threshold": {}
     }
   },
-  "assignmentGradeBelowThreshold": "{threshold} 点未満の課題成績",
+  "assignmentGradeBelowThreshold": "{threshold} 点未満の課題評定",
   "@assignmentGradeBelowThreshold": {
     "description": "Title for alerts when an assignment grade is below the threshold value",
     "type": "text",
@@ -1207,7 +1207,7 @@
       "threshold": {}
     }
   },
-  "courseGradeAboveThreshold": "{threshold} 点を超えるコース成績",
+  "courseGradeAboveThreshold": "{threshold} 点を超えるコース評定",
   "@courseGradeAboveThreshold": {
     "description": "Title for alerts when a course grade is above the threshold value",
     "type": "text",
@@ -1218,7 +1218,7 @@
       "threshold": {}
     }
   },
-  "courseGradeBelowThreshold": "{threshold} 点未満のコース成績",
+  "courseGradeBelowThreshold": "{threshold} 点未満のコース評定",
   "@courseGradeBelowThreshold": {
     "description": "Title for alerts when a course grade is below the threshold value",
     "type": "text",
@@ -1350,7 +1350,7 @@
       "pointsLost": {}
     }
   },
-  "finalGrade": "最終成績：{grade}",
+  "finalGrade": "最終評定：{grade}",
   "@finalGrade": {
     "description": "Text that displays the final grade of an assignment",
     "type": "text",
@@ -1374,14 +1374,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Course grade below": "を超えるコース成績",
+  "Course grade below": "を超えるコース評定",
   "@Course grade below": {
     "description": "Label describing the threshold for when the course grade is below a certain percentage",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Course grade above": "未満のコース成績",
+  "Course grade above": "未満のコース評定",
   "@Course grade above": {
     "description": "Label describing the threshold for when the course grade is above a certain percentage",
     "type": "text",
@@ -1394,14 +1394,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Assignment grade below": "を超える課題成績",
+  "Assignment grade below": "を超える課題評定",
   "@Assignment grade below": {
     "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Assignment grade above": "未満の課題成績",
+  "Assignment grade above": "未満の課題評定",
   "@Assignment grade above": {
     "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
     "type": "text",
@@ -1427,13 +1427,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Grade percentage": "成績パーセンテージ",
+  "Grade percentage": "評定パーセンテージ",
   "@Grade percentage": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your student's alerts.": "受講生のアラートのロード中にエラーが発生しました",
+  "There was an error loading your student's alerts.": "受講者のアラートのロード中にエラーが発生しました",
   "@There was an error loading your student's alerts.": {
     "type": "text",
     "placeholders_order": [],
@@ -1471,7 +1471,7 @@
       }
     }
   },
-  "Select Student Color": "受講生の色を選択する",
+  "Select Student Color": "受講者の色を選択する",
   "@Select Student Color": {
     "description": "Title for screen that allows users to assign a color to a specific student",
     "type": "text",
@@ -1537,7 +1537,7 @@
       "studentName": {}
     }
   },
-  "Teacher": "教師",
+  "Teacher": "教員",
   "@Teacher": {
     "description": "Label for the Teacher enrollment type",
     "type": "text",
@@ -1593,25 +1593,25 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add student with…": "次を使って受講生を追加します…",
+  "Add student with…": "次を使って受講者を追加します…",
   "@Add student with…": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add Student": "受講生を追加",
+  "Add Student": "受講者を追加",
   "@Add Student": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You are not observing any students.": "どの受講生もオブザーブしていません。",
+  "You are not observing any students.": "どの受講者もオブザーブしていません。",
   "@You are not observing any students.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was an error loading your students.": "受講生のロード中にエラーが発生しました。",
+  "There was an error loading your students.": "受講者のロード中にエラーが発生しました。",
   "@There was an error loading your students.": {
     "type": "text",
     "placeholders_order": [],
@@ -1623,13 +1623,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Students can obtain a pairing code through the Canvas website": "受講生はCanvas Webサイトからペアリングコードを取得できます",
+  "Students can obtain a pairing code through the Canvas website": "受講者はCanvas Webサイトからペアリングコードを取得できます",
   "@Students can obtain a pairing code through the Canvas website": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "提供されている受講生ペアリングコードを入力してください。ペアリングコードが機能しない場合は、有効期限が切れているかもしれません",
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "提供されている受講者ペアリングコードを入力してください。ペアリングコードが機能しない場合は、有効期限が切れているかもしれません",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
     "placeholders_order": [],
@@ -1653,13 +1653,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Students can create a QR code using the Canvas Student app on their mobile device": "受講生はモバイルデバイスのCanvas Studentアプリを使用してQRコードを作成できます",
+  "Students can create a QR code using the Canvas Student app on their mobile device": "受講者はモバイルデバイスのCanvas Studentアプリを使用してQRコードを作成できます",
   "@Students can create a QR code using the Canvas Student app on their mobile device": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Add new student": "新しい受講生を追加する",
+  "Add new student": "新しい受講者を追加する",
   "@Add new student": {
     "description": "Semantics label for the FAB on the Manage Students Screen",
     "type": "text",
@@ -2269,21 +2269,21 @@
       }
     }
   },
-  "Student Pairing": "受講生のペアリング",
+  "Student Pairing": "受講者のペアリング",
   "@Student Pairing": {
     "description": "Title for the screen where users can pair to students using a QR code",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Open Canvas Student": "Open Canvas受講生",
+  "Open Canvas Student": "Open Canvas受講者",
   "@Open Canvas Student": {
     "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "続行するには、受講生のCanvas Studentアプリを開く必要があります。メインメニュー > [設定] > [オブザーバーとのペアリング]に移動し、そこに表示されるQRコードをスキャンしてください。",
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "続行するには、受講者のCanvas Studentアプリを開く必要があります。メインメニュー > [設定] > [オブザーバーとのペアリング]に移動し、そこに表示されるQRコードをスキャンしてください。",
   "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
     "description": "Message explaining how QR code pairing works",
     "type": "text",
@@ -2304,13 +2304,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "スキャンしたQRコードの有効期限が切れている可能性があります。受講生のデバイスでコードを更新して、もう一度やり直してください。",
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "スキャンしたQRコードの有効期限が切れている可能性があります。受講者のデバイスでコードを更新して、もう一度やり直してください。",
   "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "A network error occurred when adding this student. Check your connection and try again.": "この受講生を追加中にネットワークエラーが発生しました。接続をチェックして、もう一度やり直してください。",
+  "A network error occurred when adding this student. Check your connection and try again.": "この受講者を追加中にネットワークエラーが発生しました。接続をチェックして、もう一度やり直してください。",
   "@A network error occurred when adding this student. Check your connection and try again.": {
     "type": "text",
     "placeholders_order": [],
@@ -2330,7 +2330,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "追加しようとしている受講生は、別の学校に所属しています。このコードをスキャンするには、その学校にログインするかアカウントを作成してください。",
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "追加しようとしている受講者は、別の学校に所属しています。このコードをスキャンするには、その学校にログインするかアカウントを作成してください。",
   "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
     "type": "text",
     "placeholders_order": [],
@@ -2343,14 +2343,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "This will unpair and remove all enrollments for this student from your account.": "これにより、この受講生の登録がすべて解除され、アカウントから削除されます。",
+  "This will unpair and remove all enrollments for this student from your account.": "これにより、この受講者の登録がすべて解除され、アカウントから削除されます。",
   "@This will unpair and remove all enrollments for this student from your account.": {
     "description": "Confirmation message shown when the user tries to delete a student from their account",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "There was a problem removing this student from your account. Please check your connection and try again.": "この受講生をアカウントから削除する際に問題が発生しました。接続を確認して、もう一度お試しください。",
+  "There was a problem removing this student from your account. Please check your connection and try again.": "この受講者をアカウントから削除する際に問題が発生しました。接続を確認して、もう一度お試しください。",
   "@There was a problem removing this student from your account. Please check your connection and try again.": {
     "type": "text",
     "placeholders_order": [],

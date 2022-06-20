@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Din enhed har ikke nogen applikationer, der kan åbne dette link.</string>
     <string name="anonymousDiscussionNotSupported">Anonyme diskussioner understøttes i øjeblikket ikke på mobil. Åbn i browseren for at se diskussionen.</string>
     <string name="discussionOpenInBrowser">Åbn i browser</string>
+    <string name="dashboardSwitchToListView">Skift til listevisning</string>
+    <string name="dashboardSwitchToGridView">Skift til gittervisning</string>
+    <string name="selectAppTheme">Vælg app-tema</string>
+    <string name="appThemeSettingsTitle">App-tema</string>
+    <string name="appThemeLight">Lys</string>
+    <string name="appThemeDark">Mørk</string>
+    <string name="appThemeSystem">Systemstandard</string>
+
 </resources>

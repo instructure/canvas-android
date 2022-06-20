@@ -90,8 +90,7 @@ class CourseSettingsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButton(this)
         toolbar.title = getString(R.string.course_settings)
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, Color.BLACK)
-        ViewStyler.setStatusBarLight(requireActivity())
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         toolbar.setSubtitleTextColor(mCourseColor)
     }
 

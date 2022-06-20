@@ -17,6 +17,7 @@
 package com.instructure.student.ui.renderTests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
@@ -66,6 +67,7 @@ class SyllabusRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @Stub
     fun displaysSyllabus() {
         val model = baseModel.copy()
         loadPageWithModel(model)
