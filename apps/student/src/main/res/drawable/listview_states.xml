@@ -19,12 +19,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- pressed -->
     <item android:state_pressed="true"
-        android:drawable="@color/listviewPressed"/>
+        android:drawable="@color/backgroundMedium"/>
 
     <!-- focused -->
     <item android:state_focused="true"
-        android:drawable="@color/listviewFocused"/>
+        android:drawable="@color/transparent"/>
 
     <!-- default -->
-    <item android:drawable="@color/listviewDefault"/>
+    <item android:drawable="@color/transparent"/>
 </selector>

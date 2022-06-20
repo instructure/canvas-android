@@ -247,7 +247,7 @@
     <string name="clearFilter">Filtro limpo</string>
     <string name="addMessage">Adicionar mensagem</string>
     <string name="monologue">Monólogo</string>
-    <string name="noItemsToDisplayShort">Sem ítensparaapresentar</string>
+    <string name="noItemsToDisplayShort">Sem itens para apresentar</string>
     <string name="Todo">A Fazer</string>
     <string name="todoFilter">Filtrar Disciplinas</string>
     <string name="filterByEllipsis">Filtrar por&#8230;</string>
@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">O seu dispositivo não tem nenhuma aplicação instalada que possa abrir esta ligação.</string>
     <string name="anonymousDiscussionNotSupported">No momento, discussões anónimas não são suportadas no telemóvel. Abrir no navegador para ver a discussão.</string>
     <string name="discussionOpenInBrowser">Abrir no navegador</string>
+    <string name="dashboardSwitchToListView">Mudar para vista de lista</string>
+    <string name="dashboardSwitchToGridView">Mudar para vista de grelha</string>
+    <string name="selectAppTheme">Selecione o tema da aplicação</string>
+    <string name="appThemeSettingsTitle">Tema da App</string>
+    <string name="appThemeLight">Claro</string>
+    <string name="appThemeDark">Escuro</string>
+    <string name="appThemeSystem">Padrão do sistema</string>
+
 </resources>

@@ -38,7 +38,7 @@ class PlannerManager(private val plannerApi: PlannerAPI) {
             endDate: String? = null
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
 
         plannerApi.getPlannerItems(adapter, callback, params, startDate, endDate)
     }

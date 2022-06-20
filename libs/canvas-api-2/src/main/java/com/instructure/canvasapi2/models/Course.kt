@@ -251,14 +251,14 @@ data class Course(
         if (accessRestrictedByDate) return false
         if (workflowState == WorkflowState.COMPLETED) return true
 
-        return if (restrictEnrollmentsToCourseDate) {
+        val overrideSections = sections.filter { it.restrictEnrollmentsToSectionDates }
+
+        return if (overrideSections.isNotEmpty()) {
+            overrideSections.any { section -> section.endDate?.before(now) ?: false }
+        } else if (restrictEnrollmentsToCourseDate) {
             endDate?.before(now) ?: false
         } else {
-            return if (sections.isEmpty()) {
-                term?.endDate?.before(now) ?: false
-            } else {
-                sections.any { section -> section.endDate?.before(now) ?: false }
-            }
+            term?.endDate?.before(now) ?: false
         }
     }
 
@@ -269,14 +269,14 @@ data class Course(
 
         if (isCreationPending()) return true
 
-        return if (restrictEnrollmentsToCourseDate) {
+        val overrideSections = sections.filter { it.restrictEnrollmentsToSectionDates }
+
+        return if (overrideSections.isNotEmpty()) {
+            overrideSections.any { section -> section.startDate?.after(now) ?: false }
+        } else if (restrictEnrollmentsToCourseDate) {
             startDate?.after(now) ?: false
         } else {
-            return if (sections.isEmpty()) {
-                term?.startDate?.after(now) ?: false
-            } else {
-                sections.any { section -> section.startDate?.after(now) ?: false }
-            }
+            term?.startDate?.after(now) ?: false
         }
     }
 
@@ -286,14 +286,14 @@ data class Course(
 
         if (workflowState == WorkflowState.COMPLETED) return false
 
-        return if (restrictEnrollmentsToCourseDate) {
+        val overrideSections = sections.filter { it.restrictEnrollmentsToSectionDates }
+
+        return if (overrideSections.isNotEmpty()) {
+            overrideSections.any { isWithinDates(it.startAt.toDate(), it.endAt.toDate(), now) }
+        } else if (restrictEnrollmentsToCourseDate) {
             isWithinDates(startAt.toDate(), endAt.toDate(), now)
         } else {
-            if (sections.isEmpty()) {
-                isWithinDates(term?.startDate, term?.endDate, now)
-            } else {
-                sections.any { section -> isWithinDates(section.startAt.toDate(), section.endAt.toDate(), now) }
-            }
+            isWithinDates(term?.startDate, term?.endDate, now)
         }
     }
 

@@ -21,7 +21,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:background="@color/backgroundLightest"
+    android:foreground="?attr/selectableItemBackground"
     android:minHeight="?android:listPreferredItemHeight">
 
     <LinearLayout
@@ -52,7 +53,7 @@
             <TextView
                 android:id="@+id/title"
                 style="@style/AdapterItemTitleText"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -67,6 +68,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:scaleType="fitCenter"
+            android:tint="@color/textDarkest"
             app:srcCompat="@drawable/ic_expand"
             android:importantForAccessibility="no"/>
 
@@ -76,7 +78,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height=".5dp"
-        android:background="@color/dividerColor"
+        android:background="@color/backgroundMedium"
         android:layout_gravity="bottom"/>
 
 </FrameLayout>

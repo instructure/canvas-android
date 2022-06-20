@@ -24,7 +24,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/defaultPrimary"
+        android:background="@color/textDarkest"
         android:elevation="6dp"
         app:theme="@style/ToolBarStyle"
         app:title="@string/tab_inbox"
@@ -52,7 +52,7 @@
             android:maxLines="1"
             android:paddingTop="16dp"
             android:text="@string/all_courses"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"
             tools:text="All Courses" />
 
@@ -72,7 +72,7 @@
             android:paddingStart="12dp"
             android:paddingTop="24dp"
             android:text="@string/clear_filter"
-            android:textColor="@color/defaultActionColor"
+            android:textColor="@color/textInfo"
             android:visibility="gone"
             tools:text="Clear filter"
             tools:visibility="visible" />
@@ -114,7 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
-                    android:textColor="@color/inboxFilterGray"
+                    android:textColor="@color/textDarkest"
                     android:textSize="18sp"
                     tools:text="Inbox" />
 

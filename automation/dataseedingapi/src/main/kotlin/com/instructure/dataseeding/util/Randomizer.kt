@@ -50,11 +50,13 @@ object Randomizer {
     fun randomImageUrlSmall(): String = faker.internet().image(64, 64, false, null)
 
 
-    fun randomDiscussion(isAnnouncement: Boolean = false): CreateDiscussionTopic =
+    fun randomDiscussion(isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false): CreateDiscussionTopic =
             CreateDiscussionTopic(
                     title = faker.lorem().sentence(),
                     message = faker.lorem().paragraph(),
-                    isAnnouncement = isAnnouncement
+                    isAnnouncement = isAnnouncement,
+                    lockedForUser = lockedForUser,
+                    locked = locked
             )
 
     fun randomConversationSubject(): String = faker.chuckNorris().fact()

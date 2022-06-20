@@ -20,12 +20,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@color/backgroundLightest">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/canvasEditTextColor"/>
+        android:background="@color/backgroundMedium"/>
 
     <ImageView
         android:id="@+id/messageOptions"
@@ -39,7 +39,7 @@
         android:contentDescription="@string/messageOptions"
         android:focusable="true"
         android:padding="14dp"
-        android:tint="@color/darkGray"
+        android:tint="@color/textDark"
         app:srcCompat="@drawable/ic_overflow_white_18dp"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -61,7 +61,7 @@
         android:layout_marginStart="12dp"
         android:layout_toEndOf="@+id/authorAvatar"
         android:layout_toStartOf="@+id/messageOptions"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="14sp"
         tools:text="@tools:sample/full_names"/>
 
@@ -73,7 +73,7 @@
         android:layout_alignStart="@+id/authorName"
         android:layout_below="@+id/authorName"
         android:layout_toEndOf="@+id/authorAvatar"
-        android:textColor="@color/defaultTextGray"
+        android:textColor="@color/textDark"
         android:textSize="12sp"
         tools:text="Mar 18, 2015, 9:03 AM"/>
 
@@ -85,7 +85,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:background="@color/canvasEditTextColor"/>
+        android:background="@color/backgroundMedium"/>
 
     <TextView
         android:id="@+id/messageBody"
@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/headerDivider"
         android:layout_margin="16dp"
-        android:textColor="@color/defaultTextDark"
+        android:textColor="@color/textDarkest"
         android:textSize="16sp"
         android:autoLink="web"
         tools:text="This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. Only for show. He who searches for meaning here will be sorely disappointed."/>
@@ -133,6 +133,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/canvasEditTextColor"/>
+        android:background="@color/backgroundMedium"/>
 
 </RelativeLayout>

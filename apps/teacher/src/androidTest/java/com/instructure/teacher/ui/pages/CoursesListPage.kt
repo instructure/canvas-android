@@ -17,6 +17,7 @@
 
 package com.instructure.teacher.ui.pages
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -28,8 +29,14 @@ import com.instructure.dataseeding.model.FavoriteApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.callOnClick
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.WaitForToolbarTitle
+import org.hamcrest.CoreMatchers
+import org.hamcrest.Matcher
 
 @Suppress("unused")
 class CoursesListPage : BasePage() {
@@ -65,6 +72,19 @@ class CoursesListPage : BasePage() {
         coursesRecyclerView.check(RecyclerViewItemCountAssertion(mCourses.size))
 
         for (course in mCourses) onView(withText(course.name)).assertDisplayed()
+    }
+
+    fun assertDisplaysCourse(courseName: String) {
+        val matcher = CoreMatchers.allOf(
+            withText(courseName),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        scrollAndAssertDisplayed(matcher)
+    }
+
+    private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
+        onView(matcher).assertDisplayed()
     }
 
     fun openAllCoursesList() {

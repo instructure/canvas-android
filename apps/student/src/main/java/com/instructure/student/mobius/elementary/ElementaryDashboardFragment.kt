@@ -105,6 +105,8 @@ class ElementaryDashboardFragment : ParentFragment() {
                     .add(R.id.importantDates, importantDatesFragment)
                     .commit()
         } ?: addImportantDatesFragment()
+
+        applyTheme()
     }
 
     private fun addImportantDatesFragment() {

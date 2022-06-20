@@ -19,7 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/backgroundLightest"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -41,7 +41,7 @@
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:text="@string/open_alternate_view"
-        android:textColor="@color/defaultActionColor"
+        android:textColor="@color/textInfo"
         android:textSize="16sp"
         android:visibility="gone" />
 
@@ -59,7 +59,7 @@
                 android:id="@+id/discussionsScrollViewContentWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/backgroundLightest"
                 android:orientation="vertical">
 
                 <TextView
@@ -81,7 +81,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/defaultTextGray"
+                    android:textColor="@color/textDark"
                     android:visibility="gone"
                     tools:text="Section 1"
                     tools:visibility="visible"/>
@@ -103,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
-                        android:textColor="@color/defaultTextGray"
+                        android:textColor="@color/textDark"
                         android:visibility="gone"
                         tools:visibility="visible"
                         tools:text="30 pts"/>
@@ -145,7 +145,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginEnd="16dp"
                         android:contentDescription="@string/full_due_date_details"
-                        android:tint="@color/defaultTextGray"
+                        android:tint="@color/textDark"
                         app:srcCompat="@drawable/ic_forward_arrow"/>
 
                     <LinearLayout
@@ -166,7 +166,7 @@
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 android:importantForAccessibility="no"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 app:srcCompat="@drawable/ic_calendarclock"/>
 
                             <TextView
@@ -175,7 +175,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"
                                 android:text="@string/due_date_header_label"
-                                android:textColor="@color/defaultTextGray"/>
+                                android:textColor="@color/textDark"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -193,7 +193,7 @@
                                 android:importantForAccessibility="no"
                                 android:text="@string/due_label"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"/>
+                                android:tint="@color/textDark"/>
 
                             <TextView
                                 android:id="@+id/dueDateTextView"
@@ -202,7 +202,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
+                                android:tint="@color/textDark"
                                 tools:text="April 1 at 11:59 PM"/>
                         </LinearLayout>
 
@@ -341,7 +341,7 @@
                         android:layout_height="wrap_content"
                         android:importantForAccessibility="yes"
                         android:text="@string/submissions"
-                        android:textColor="@color/defaultTextGray"/>
+                        android:textColor="@color/textDark"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -397,7 +397,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:textColor="@color/defaultTextGray"
+                            android:textColor="@color/textDark"
                             android:textSize="12sp"
                             tools:text="Aug 1 at 8:30 AM"/>
 
@@ -438,7 +438,7 @@
                     android:id="@+id/repliesDivider"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/divider"/>
+                    android:background="@color/backgroundMedium"/>
 
                 <TextView
                     android:id="@+id/anonymousDiscussionsNotSupported"
@@ -460,7 +460,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="16dp"
-                    android:textColor="@color/defaultActionColor"
+                    android:textColor="@color/textInfo"
                     android:visibility="gone"
                     android:text="@string/openInBrowser" />
 
@@ -483,7 +483,7 @@
                         android:contentDescription="@string/contentDescription_back"
                         android:padding="8dp"
                         android:scaleType="centerInside"
-                        android:tint="@color/defaultTextDark"
+                        android:tint="@color/textDarkest"
                         app:srcCompat="@drawable/ic_back_arrow"/>
 
                     <TextView

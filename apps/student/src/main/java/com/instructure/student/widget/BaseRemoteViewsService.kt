@@ -32,12 +32,18 @@ abstract class BaseRemoteViewsService : RemoteViewsService() {
         fun getWidgetTextColor(widgetId: Int, context: Context): Int {
             val widgetBackgroundPref = getWidgetBackgroundPref(widgetId)
             return if (widgetBackgroundPref.equals(WidgetSetupActivity.WIDGET_BACKGROUND_COLOR_LIGHT, ignoreCase = true))
-                ContextCompat.getColor(context, R.color.canvasTextDark) else ContextCompat.getColor(context, R.color.white)
+                ContextCompat.getColor(context, R.color.licorice) else ContextCompat.getColor(context, R.color.white)
         }
 
         fun getWidgetBackgroundResourceId(widgetId: Int): Int {
             val widgetBackgroundPref = getWidgetBackgroundPref(widgetId)
             return if (widgetBackgroundPref.equals(WidgetSetupActivity.WIDGET_BACKGROUND_COLOR_LIGHT, ignoreCase = true)) R.drawable.widget_light_bg else R.drawable.widget_dark_bg
+        }
+
+        fun getWidgetSecondaryTextColor(widgetId: Int, context: Context): Int {
+            val widgetBackgroundPref = getWidgetBackgroundPref(widgetId)
+            return if (widgetBackgroundPref.equals(WidgetSetupActivity.WIDGET_BACKGROUND_COLOR_LIGHT, ignoreCase = true))
+                ContextCompat.getColor(context, R.color.ash) else ContextCompat.getColor(context, R.color.tiara)
         }
 
         fun shouldHideDetails(appWidgetId: Int): Boolean {

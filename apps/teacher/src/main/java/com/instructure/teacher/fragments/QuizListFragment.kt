@@ -113,8 +113,12 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     override fun createAdapter(): QuizListAdapter {
         return QuizListAdapter(requireContext(), presenter, mCourseColor) { quiz ->
-            val args = QuizDetailsFragment.makeBundle(quiz)
-            RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
+            if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl, ApiPrefs.domain, false)) {
+                RouteMatcher.routeUrl(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain)
+            } else {
+                val args = QuizDetailsFragment.makeBundle(quiz)
+                RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
+            }
         }
     }
 
@@ -151,7 +155,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbar(requireActivity(), quizListToolbar, mCourseColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), quizListToolbar, mCourseColor, requireContext().getColor(R.color.white))
     }
 
     override fun displayLoadingError() = toast(R.string.errorOccurred)

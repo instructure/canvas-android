@@ -1283,4 +1283,12 @@
     <string name="noCompatibleAppInstalled">Na urządzeniu użytkownika nie zainstalowano aplikacji do otwarcia tego łącza.</string>
     <string name="anonymousDiscussionNotSupported">Anonimowe dyskusje nie są obecnie obsługiwane na urządzeniach przenośnych. Otwórz w przeglądarce, aby wyświetlić dyskusję.</string>
     <string name="discussionOpenInBrowser">Otwórz w przeglądarce</string>
+    <string name="dashboardSwitchToListView">Przełącz na widok listy</string>
+    <string name="dashboardSwitchToGridView">Przełącz na widok siatki</string>
+    <string name="selectAppTheme">Wybierz motyw aplikacji</string>
+    <string name="appThemeSettingsTitle">Motyw aplikacji</string>
+    <string name="appThemeLight">Jasny</string>
+    <string name="appThemeDark">Ciemny</string>
+    <string name="appThemeSystem">Domyślne ustawienia systemowe</string>
+
 </resources>

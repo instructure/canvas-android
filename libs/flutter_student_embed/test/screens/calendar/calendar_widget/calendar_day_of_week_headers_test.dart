@@ -62,13 +62,13 @@ void main() {
     // Week days should use dark text
     weekdays.forEach((day) {
       final textColor = tester.widget<Text>(day).style.color;
-      expect(textColor, StudentColors.licorice);
+      expect(textColor, StudentColors.textDarkest);
     });
 
     // weekends should use faded text
     weekends.forEach((day) {
       final textColor = tester.widget<Text>(day).style.color;
-      expect(textColor, StudentColors.ash);
+      expect(textColor, StudentColors.textDark);
     });
   });
 
@@ -114,13 +114,13 @@ void main() {
     // Week days should use dark text
     weekdays.forEach((day) {
       final textColor = tester.widget<Text>(day).style.color;
-      expect(textColor, StudentColors.licorice);
+      expect(textColor, StudentColors.textDarkest);
     });
 
     // weekends should use faded text
     weekends.forEach((day) {
       final textColor = tester.widget<Text>(day).style.color;
-      expect(textColor, StudentColors.ash);
+      expect(textColor, StudentColors.textDark);
     });
   });
 
@@ -165,13 +165,13 @@ void main() {
     // Week days should use dark text
     weekdays.forEach((day) {
       final textColor = tester.widget<Text>(day).style.color;
-      expect(textColor, StudentColors.licorice);
+      expect(textColor, StudentColors.textDarkest);
     });
 
     // weekends should use faded text
     weekends.forEach((day) {
       final textColor = tester.widget<Text>(day).style.color;
-      expect(textColor, StudentColors.ash);
+      expect(textColor, StudentColors.textDark);
     });
   });
 }

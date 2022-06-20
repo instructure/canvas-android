@@ -54,7 +54,7 @@
                     android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
                     app:imageUrl="@{itemViewModel.data.imageUrl}"
                     app:overlayColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
-                    tools:background="@color/canvasDefaultAccent"/>
+                    tools:background="@color/backgroundInfo"/>
 
                 <TextView
                     android:id="@+id/courseNameText"
@@ -81,7 +81,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
-                    tools:background="@color/canvasDefaultAccent" />
+                    tools:background="@color/backgroundInfo" />
 
                 <LinearLayout
                     android:id="@+id/todoLayout"
@@ -102,7 +102,7 @@
                         android:src="@drawable/ic_homeroom_todo"
                         android:tint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
                         android:importantForAccessibility="no"
-                        tools:tint="@color/canvasDefaultAccent" />
+                        tools:tint="@color/textInfo" />
 
                     <TextView
                         android:id="@+id/todoText"
@@ -112,7 +112,7 @@
                         android:layout_marginTop="6dp"
                         android:layout_marginEnd="8dp"
                         android:text="@{itemViewModel.assignmentsInfo}"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="13sp"
                         tools:text="Nothing due today" />
 
@@ -124,7 +124,7 @@
                     android:layout_height="0.5dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@color/dividerColor"
+                    android:background="@color/backgroundMedium"
                     android:visibility="@{itemViewModel.data.announcementText.empty ? View.GONE : View.VISIBLE}" />
 
                 <LinearLayout
@@ -146,7 +146,7 @@
                         android:src="@drawable/ic_homeroom_announcement"
                         android:tint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
                         android:importantForAccessibility="no"
-                        tools:tint="@color/canvasDefaultAccent" />
+                        tools:tint="@color/textInfo" />
 
                     <TextView
                         android:id="@+id/announcementText"
@@ -159,7 +159,7 @@
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:text="@{itemViewModel.data.announcementText}"
-                        android:textColor="@color/defaultTextDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="13sp"
                         tools:text="Remember! Addition quiz this Month" />
 

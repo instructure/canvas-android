@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,8 +23,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
-import com.instructure.teacher.events.FileFolderDeletedEvent
-import com.instructure.teacher.events.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
 import com.instructure.teacher.presenters.ViewPdfFragmentPresenter
 import com.instructure.interactions.router.Route
@@ -102,13 +101,13 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
         }
 
         if(isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbar(requireActivity(), toolbar, mToolbarColor, Color.WHITE)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()
             }
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
-            ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         }
     }
 

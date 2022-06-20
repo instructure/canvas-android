@@ -133,9 +133,14 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var airwolfDomain by StringPref("", "airwolf_domain")
 
+    // Flag that comes from the API whether the user is an elementary user
     var canvasForElementary by BooleanPref()
 
+    // Switch that lets the user manually override and turn off the elementary view in the settings
     var elementaryDashboardEnabledOverride by BooleanPref(true)
+
+    val showElementaryView
+        get() = canvasForElementary && elementaryDashboardEnabledOverride
 
     /**
      * clearAllData is required for logout.

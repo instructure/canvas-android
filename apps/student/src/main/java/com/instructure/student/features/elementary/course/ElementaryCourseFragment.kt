@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_COURSE
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.features.elementary.grades.GradesFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.databinding.FragmentElementaryCourseBinding
 import com.instructure.student.fragment.CourseBrowserFragment
@@ -108,7 +107,7 @@ class ElementaryCourseFragment : Fragment() {
     private fun applyTheme() {
         toolbar.title = canvasContext.name
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
     private fun handleAction(action: ElementaryCourseAction) {

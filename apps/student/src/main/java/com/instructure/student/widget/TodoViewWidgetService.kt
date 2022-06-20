@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.utils.ColorKeeper
@@ -72,7 +73,7 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
             if (streamItem.canvasContext != null && streamItem.canvasContext!!.type != CanvasContext.Type.USER) {
                 row.setInt(R.id.icon, "setColorFilter", ColorKeeper.getOrGenerateColor(streamItem.canvasContext))
             } else {
-                row.setInt(R.id.icon, "setColorFilter", R.color.canvasRed)
+                row.setInt(R.id.icon, "setColorFilter", R.color.textDanger)
             }
 
             val appWidgetId = BaseRemoteViewsService.getAppWidgetId(intent)
@@ -86,6 +87,7 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
                     val formattedDueDate = DateHelper.getDateTimeString(ContextKeeper.appContext, streamItem.dueDate)
                     row.setTextViewText(R.id.message, formattedDueDate)
                     row.setViewVisibility(R.id.message, View.VISIBLE)
+                    row.setTextColor(R.id.message, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setViewVisibility(R.id.message, View.GONE)
                 }
@@ -94,6 +96,7 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
                 if (!TextUtils.isEmpty(message)) {
                     row.setTextViewText(R.id.message, message)
                     row.setViewVisibility(R.id.message, View.VISIBLE)
+                    row.setTextColor(R.id.message, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setViewVisibility(R.id.message, View.GONE)
                 }
@@ -103,6 +106,7 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
                     val formattedDueDate = DateHelper.getDateTimeString(ContextKeeper.appContext, streamItem.dueDate)
                     row.setTextViewText(R.id.course_and_date, formattedDueDate)
                     row.setViewVisibility(R.id.course_and_date, View.VISIBLE)
+                    row.setTextColor(R.id.course_and_date, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setViewVisibility(R.id.course_and_date, View.GONE)
                 }
@@ -160,14 +164,15 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
                             .filter { it.isFavorite && !it.accessRestrictedByDate && !it.isInvited() }
                     val groups = GroupManager.getFavoriteGroupsSynchronous(true)
                     val todos = ToDoManager.getTodosSynchronous(ApiPrefs.user!!, true)
-                    val events = CalendarEventManager.getUpcomingEventsSynchronous(true)
+                    val scheduleItems = CalendarEventManager.getUpcomingEventsSynchronous(true)
 
                     val courseMap = CourseManager.createCourseMap(courses)
                     val groupMap = GroupManager.createGroupMap(groups)
 
-                    val upcomingTodos = ArrayList<ToDo>(100)
-                    events.forEach { upcomingTodos.add(ToDo.toDoWithScheduleItem(it)) }
-                    val dataStream = ToDoManager.mergeToDoUpcoming(todos, upcomingTodos)
+                    val eventTodos = scheduleItems
+                        .filter { it.type == ScheduleItem.TYPE_EVENT }
+                        .map { ToDo.toDoWithScheduleItem(it) }
+                    val dataStream = mergeToDosWithEvents(todos, eventTodos)
                     dataStream.forEach { ToDo.setContextInfo(it, courseMap, groupMap) }
 
                     setData(dataStream.filter { it.canvasContext != null })
@@ -175,6 +180,15 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
                     Logger.e("Could not load " + this::class.java.simpleName + " widget. " + e.message)
                 }
             }
+        }
+
+        private fun mergeToDosWithEvents(todoList: List<ToDo>?, eventList: List<ToDo>?): List<ToDo> {
+            val todos = todoList ?: emptyList()
+            val events = eventList ?: emptyList()
+
+            // Return combined list, sorted by date
+            val defaultDate = Date(0)
+            return (todos + events).sortedBy { it.comparisonDate ?: defaultDate }
         }
     }
 

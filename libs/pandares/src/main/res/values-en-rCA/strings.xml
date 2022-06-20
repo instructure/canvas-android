@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -1258,4 +1258,14 @@
 
     <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
     <string name="discussionOpenInBrowser">Open in browser</string>
+    
+    <string name="dashboardSwitchToListView">Switch to list view</string>
+    <string name="dashboardSwitchToGridView">Switch to grid view</string>
+
+    <string name="selectAppTheme">Select app theme</string>
+    <string name="appThemeSettingsTitle">App Theme</string>
+    <string name="appThemeLight">Light</string>
+    <string name="appThemeDark">Dark</string>
+    <string name="appThemeSystem">System default</string>
+
 </resources>

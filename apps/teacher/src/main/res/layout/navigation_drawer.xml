@@ -23,7 +23,7 @@
         android:layout_width="@dimen/navigationDrawerWidth"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
+        android:background="@color/backgroundLightest"
         android:fillViewport="true"
         android:fitsSystemWindows="false"
         android:scrollbars="none"
@@ -54,7 +54,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:importantForAccessibility="no"
-                    app:civ_circle_background_color="@color/avatarGray" />
+                    app:civ_circle_background_color="@color/backgroundDark" />
 
             </RelativeLayout>
 
@@ -66,7 +66,7 @@
                 android:maxLines="2"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:textColor="@color/defaultTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 tools:text="Allen Thomas" />
@@ -81,7 +81,7 @@
                 android:maxLines="1"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 tools:text="allen-thomas187@gmail.com" />
 
             <!--Navigation Items-->
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="24dp"
-                android:background="@color/dividerColor" />
+                android:background="@color/backgroundMedium" />
 
 
             <LinearLayout
@@ -106,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/files"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -126,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/studio"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -146,7 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/gauge"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -174,7 +174,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:background="@color/dividerColor" />
+                android:background="@color/backgroundMedium" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -203,7 +203,7 @@
                     android:layout_weight="1"
                     android:labelFor="@id/navigationDrawerColorOverlaySwitch"
                     android:text="@string/colorOverlay"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -218,7 +218,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:background="@color/dividerColor" />
+                android:background="@color/backgroundMedium" />
 
             <LinearLayout
                 android:id="@+id/navigationDrawerItem_help"
@@ -233,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/help"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -251,7 +251,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/changeUser"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -269,7 +269,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/logout"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -294,7 +294,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/actAsUser"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -314,7 +314,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/stopActAsUser"
-                    android:textColor="@color/navigationTextColor"
+                    android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -327,7 +327,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="12dp"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 tools:text="v. 1.2.3" />
 
         </LinearLayout>

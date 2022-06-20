@@ -32,7 +32,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="4dp"
-            tools:src="@color/defaultTextGray"/>
+            tools:src="@color/textDark"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/defaultTextGray"
+                android:textColor="@color/textDark"
                 tools:text="March 24 at 4:16 PM"/>
         </LinearLayout>
 
@@ -70,9 +70,9 @@
         android:paddingEnd="12dp"
         android:paddingStart="12dp"
         android:paddingTop="8dp"
-        android:textColor="#FFF"
+        android:textColor="@color/white"
         android:layout_marginTop="4dp"
-        app:bubbleColor="@color/canvasDefaultButton"
+        app:bubbleColor="@color/backgroundInfo"
         app:targetAvatarId="@+id/avatarView"
         tools:text="The due date has passed. Are you planning on submitting it?"/>
 

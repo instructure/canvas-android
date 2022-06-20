@@ -131,6 +131,8 @@ class InboxFragment : ParentFragment() {
                 }
             }
         })
+
+        applyTheme()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -241,7 +243,7 @@ class InboxFragment : ParentFragment() {
 
     override fun applyTheme() {
         setupToolbarMenu(toolbar, R.menu.menu_filter_inbox)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
     }
 

@@ -25,7 +25,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/defaultPrimary"
+        android:background="@color/textDarkest"
         android:elevation="6dp"
         app:title="@string/tab_courses"
         app:popupTheme="@style/ToolBarPopupStyle"
@@ -51,7 +51,7 @@
             android:layout_marginBottom="5dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_star_filled"
-            android:tint="@color/defaultTextGray"/>
+            android:tint="@color/textDark"/>
 
         <TextView
             android:id="@+id/courseLabel"
@@ -62,7 +62,7 @@
             android:importantForAccessibility="no"
             android:layout_marginStart="36dp"
             android:text="@string/tab_courses"
-            android:textColor="@color/defaultTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="20sp"/>
 
         <TextView
@@ -73,7 +73,7 @@
             android:layout_gravity="bottom|end"
             android:paddingEnd="16dp"
             android:text="@string/see_all"
-            android:textColor="@color/defaultActionColor"
+            android:textColor="@color/textInfo"
             android:paddingBottom="2dp"
             android:paddingStart="16dp"
             android:paddingTop="27dp"

@@ -22,14 +22,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/backgroundLightest">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/white"
-        android:elevation="0dp"
+        android:background="@color/backgroundLightestElevated"
+        android:elevation="6dp"
         app:theme="@style/ToolBarStyleDark"
         tools:ignore="UnusedAttribute"/>
 
@@ -38,8 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="22sp"
-        android:textColor="@android:color/black"
-        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/textDarkest"
+        android:fontFamily="@font/lato_font_family"
         android:text="@string/whatsYourSchoolName"
         android:layout_marginTop="12dp"
         android:layout_marginStart="16dp"
@@ -50,7 +50,7 @@
         android:id="@+id/topDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/login_dividerColor"
+        android:background="@color/backgroundMedium"
         android:layout_marginTop="12dp"/>
 
     <EditText
@@ -74,7 +74,7 @@
         android:id="@+id/bottomDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/login_dividerColor"/>
+        android:background="@color/backgroundMedium"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/findSchoolRecyclerView"
@@ -92,8 +92,8 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="@string/logout"
-        android:textColor="@color/login_grayText"
-        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/textDark"
+        android:fontFamily="@font/lato_font_family"
         android:background="?android:selectableItemBackground"
         android:visibility="gone"
         tools:visibility="visible"/>

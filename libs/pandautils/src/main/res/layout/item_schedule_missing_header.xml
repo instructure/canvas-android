@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="8dp"
-            android:background="@color/lightGray"
+            android:background="@color/backgroundMedium"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@{itemViewModel.collapsed ? @string/show_missing_items_title(itemViewModel.items.size()) : @string/hide_missing_items_title(itemViewModel.items.size()) }"
-                android:textColor="@color/canvasDefaultAccent"
+                android:textColor="@color/textInfo"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/downArrow"

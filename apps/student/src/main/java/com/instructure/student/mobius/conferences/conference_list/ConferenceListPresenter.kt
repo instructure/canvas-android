@@ -104,16 +104,16 @@ object ConferenceListPresenter : Presenter<ConferenceListModel, ConferenceListVi
                 val date = DateHelper.dayMonthDateFormat.format(item.endedAt)
                 val time = DateHelper.getFormattedTime(context, item.endedAt)
                 label = context.getString(R.string.conferenceConcludedDateAtTime, date, time)
-                labelTint = ContextCompat.getColor(context, R.color.defaultTextGray)
+                labelTint = ContextCompat.getColor(context, R.color.textDark)
             }
             item.startedAt != null -> {
                 isJoinable = true
                 label = context.getString(R.string.inProgress)
-                labelTint = ContextCompat.getColor(context, R.color.publishedGreen)
+                labelTint = ContextCompat.getColor(context, R.color.textSuccess)
             }
             else -> {
                 label = context.getString(R.string.notStarted)
-                labelTint = ContextCompat.getColor(context, R.color.defaultTextGray)
+                labelTint = ContextCompat.getColor(context, R.color.textDark)
             }
         }
 

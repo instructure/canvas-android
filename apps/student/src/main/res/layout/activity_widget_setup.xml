@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/widgetStyle"
-                android:textColor="@color/black"
+                android:textColor="@color/textDarkest"
                 android:textSize="22sp" />
 
             <LinearLayout
@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/widgetLightColor"
+                    app:cardBackgroundColor="@color/white"
                     app:cardElevation="8dp"
                     app:cardUseCompatPadding="true"
                     app:contentPadding="8dp">
@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/light"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/licorice" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/widgetDarkColor"
+                    app:cardBackgroundColor="@color/licorice"
                     app:cardElevation="8dp"
                     app:cardUseCompatPadding="true"
                     app:contentPadding="8dp">
@@ -83,7 +83,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/dark"
-                        android:textColor="@color/widgetLightColor" />
+                        android:textColor="@color/white" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/widgetMinimumStyle"
-                app:backgroundTint="@color/widgetDarkColor" />
+                app:backgroundTint="@color/backgroundDarkest" />
 
         </LinearLayout>
 

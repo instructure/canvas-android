@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Tækið er ekki með uppsett forrit sem getur opnað þessa skrá.</string>
     <string name="anonymousDiscussionNotSupported">Nafnlausar umræður eru ekki studdar í fartækjum eins og er. Opna í vafra til að skoða umræðu.</string>
     <string name="discussionOpenInBrowser">Opna í vafra</string>
+    <string name="dashboardSwitchToListView">Skipta yfir í listayfirlit</string>
+    <string name="dashboardSwitchToGridView">Skipta yfir í töfluyfirlit</string>
+    <string name="selectAppTheme">Velja þema smáforrits</string>
+    <string name="appThemeSettingsTitle">Þema smáforrits</string>
+    <string name="appThemeLight">Ljóst</string>
+    <string name="appThemeDark">Dökkt</string>
+    <string name="appThemeSystem">Sjálfgildi kerfis</string>
+
 </resources>

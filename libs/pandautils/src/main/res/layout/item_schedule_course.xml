@@ -60,6 +60,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:drawableTint="@color/textDark"
             tools:drawableEnd="@drawable/ic_open_arrow"
             tools:text="History of the American Revolution" />
 

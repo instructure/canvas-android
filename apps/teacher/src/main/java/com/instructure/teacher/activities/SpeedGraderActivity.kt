@@ -154,7 +154,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         adapter = SubmissionContentAdapter(assignmentWithAnonymousGrading, presenter!!.course, submissions)
         submissionContentPager.offscreenPageLimit = 1
         submissionContentPager.pageMargin = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics))
-        submissionContentPager.setPageMarginDrawable(R.color.dividerColor)
+        submissionContentPager.setPageMarginDrawable(R.color.backgroundMedium)
         submissionContentPager.adapter = adapter
         submissionContentPager.setCurrentItem(initialSelection, false)
         submissionContentPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {

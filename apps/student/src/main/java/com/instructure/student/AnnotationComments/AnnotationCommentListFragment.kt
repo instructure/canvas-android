@@ -15,7 +15,6 @@
  *
  */    package com.instructure.student.AnnotationComments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -71,7 +70,7 @@ class AnnotationCommentListFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = title()
         toolbar.setupAsCloseButton(this)
-        ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -137,7 +136,7 @@ class AnnotationCommentListFragment : ParentFragment() {
             commentInputContainer.setVisible(false)
         } else {
             sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
-                    intArrayOf(-android.R.attr.state_enabled) to ContextCompat.getColor(requireContext(), R.color.defaultTextGray),
+                    intArrayOf(-android.R.attr.state_enabled) to ContextCompat.getColor(requireContext(), R.color.textDark),
                     intArrayOf() to ThemePrefs.buttonColor
             )
 

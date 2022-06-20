@@ -92,15 +92,15 @@ class _StudentThemeState extends State<StudentTheme> {
   }
 
   /// Color for text, icons, etc that contrasts sharply with the scaffold (i.e. surface) color
-  Color get onSurfaceColor => StudentColors.licorice;
+  Color get onSurfaceColor => StudentColors.textDarkest;
 
   /// Color similar to the surface color but is slightly darker in light mode and slightly lighter in dark mode.
   /// This should be used elements that should be visually distinguishable from the surface color but must also contrast
   /// sharply with the [onSurfaceColor]. Examples are chip backgrounds, progressbar backgrounds, avatar backgrounds, etc.
-  Color get nearSurfaceColor => StudentColors.porcelain;
+  Color get nearSurfaceColor => StudentColors.backgroundLight;
 
   ThemeData _buildTheme(Color primaryColor, Color accentColor, Color buttonColor, Color primaryTextColor) {
-    var textTheme = _buildTextTheme(onSurfaceColor);
+    var textTheme = _buildTextTheme(onSurfaceColor, StudentColors.textDark);
 
     var primarySwatch = StudentColors.makeSwatch(primaryColor);
 
@@ -116,27 +116,30 @@ class _StudentThemeState extends State<StudentTheme> {
       primarySwatch: primarySwatch,
       accentColor: accentColor,
       textSelectionHandleColor: primarySwatch[300],
-      scaffoldBackgroundColor: Colors.white,
-      canvasColor: Colors.white,
+      scaffoldBackgroundColor: StudentColors.backgroundLightest,
+      canvasColor: StudentColors.backgroundLightest,
       accentColorBrightness: Brightness.dark,
       textTheme: textTheme,
-      primaryTextTheme: _buildTextTheme(primaryTextColor, fadeColor: primaryTextColor.withOpacity(0.7)),
-      accentTextTheme: _buildTextTheme(Colors.white, fadeColor: Colors.white70),
+      primaryTextTheme: _buildTextTheme(primaryTextColor, primaryTextColor.withOpacity(0.7)),
+      accentTextTheme: _buildTextTheme(Colors.white, Colors.white70),
       iconTheme: IconThemeData(color: onSurfaceColor),
       primaryIconTheme: IconThemeData(color: primaryTextColor),
       accentIconTheme: IconThemeData(color: Colors.white),
+      popupMenuTheme: PopupMenuThemeData(color: StudentColors.backgroundLightestElevated),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: buttonColor,
         foregroundColor: Colors.white,
       ),
       dividerColor: StudentColors.tiara,
       buttonColor: buttonColor,
-      hintColor: StudentColors.ash,
+      hintColor: StudentColors.textDark,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, colorScheme: buttonColorScheme),
+      fontFamily: 'Lato',
+      unselectedWidgetColor: StudentColors.textDarkest
     );
   }
 
-  TextTheme _buildTextTheme(Color color, {Color fadeColor = StudentColors.ash}) {
+  TextTheme _buildTextTheme(Color color, Color fadeColor) {
     return TextTheme(
       /// Design-provided styles
 
@@ -219,7 +222,7 @@ class WhiteAppBarTheme extends StatelessWidget {
     var baseTheme = Theme.of(context);
     var theme = StudentTheme.of(context).defaultTheme.copyWith(
           appBarTheme: AppBarTheme(
-            color: baseTheme.scaffoldBackgroundColor,
+            color: StudentColors.backgroundLightestElevated,
             toolbarTextStyle: baseTheme.textTheme.bodyText2,
             titleTextStyle: baseTheme.textTheme.headline6,
             iconTheme: baseTheme.iconTheme,

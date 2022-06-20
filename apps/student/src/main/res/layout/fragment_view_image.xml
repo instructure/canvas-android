@@ -57,7 +57,7 @@
             android:layout_height="48dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_warning"
-            android:tint="@color/defaultTextGray"/>
+            android:tint="@color/textDark"/>
 
         <TextView
             android:id="@+id/errorTextView"
@@ -69,7 +69,7 @@
             android:paddingEnd="32dp"
             android:paddingStart="32dp"
             android:text="@string/utils_couldNotPlayFormat"
-            android:textColor="@color/defaultTextGray"
+            android:textColor="@color/textDark"
             android:textSize="16sp"/>
 
         <Button

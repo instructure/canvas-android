@@ -21,10 +21,10 @@
     android:shape="rectangle">
     <!-- background color -->
     <solid
-        android:color="@color/white" >
+        android:color="@color/backgroundLightest" >
     </solid>
     <stroke
-        android:color="@color/divider"
+        android:color="@color/borderMedium"
         android:width="2dp"/>
 
     <padding

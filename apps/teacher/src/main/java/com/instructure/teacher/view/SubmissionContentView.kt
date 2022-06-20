@@ -34,6 +34,7 @@ import android.widget.ImageView
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -161,7 +162,14 @@ class SubmissionContentView(
         //if we can share the content with another app, show the share icon
         speedGraderToolbar.menu.findItem(R.id.menu_share)?.isVisible = fragment is ShareableFile || fragment is PdfFragment
 
-        ViewStyler.colorToolbarIconsAndText(context as Activity, speedGraderToolbar, Color.BLACK)
+        ViewStyler.themeToolbarLight(context as Activity, speedGraderToolbar)
+    }
+
+    override fun removeContentFragment() {
+        val contentFragment = supportFragmentManager.findFragmentById(mContainerId)
+        if (contentFragment != null) {
+            supportFragmentManager.beginTransaction().remove(contentFragment).commitAllowingStateLoss()
+        }
     }
 
     //region view lifecycle
@@ -461,8 +469,7 @@ class SubmissionContentView(
         }
 
         speedGraderToolbar.setupMenu(R.menu.menu_share_file, menuItemCallback)
-        ViewStyler.colorToolbarIconsAndText(context as Activity, speedGraderToolbar, Color.BLACK)
-        ViewStyler.setStatusBarLight(context as Activity)
+        ViewStyler.themeToolbarLight(context as Activity, speedGraderToolbar)
         ViewStyler.setToolbarElevationSmall(context, speedGraderToolbar)
 
         when {
@@ -531,6 +538,8 @@ class SubmissionContentView(
             // Unregister listeners for the existing fragment
             unregisterPdfFragmentListeners()
         }
+
+        topDivider?.setVisible(!(content is PdfContent))
 
         when (content) {
             is PdfContent -> {
@@ -701,7 +710,7 @@ class SubmissionContentView(
 
         bottomTabLayout.setupWithViewPager(mBottomViewPager)
         bottomTabLayout.setSelectedTabIndicatorColor(course.color)
-        bottomTabLayout.setTabTextColors(Color.BLACK, course.color)
+        bottomTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.textDarkest), course.color)
         bottomTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {

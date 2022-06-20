@@ -58,7 +58,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:importantForAccessibility="no"
-            android:tint="@color/canvasTextDark"
+            android:tint="@color/textDarkest"
             app:imageRes="@{itemViewModel.data.type.iconRes}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/warning"
@@ -74,7 +74,7 @@
             android:layout_marginEnd="8dp"
             android:importantForAccessibility="no"
             android:text="@{itemViewModel.data.title}"
-            android:textColor="@color/canvasTextDark"
+            android:textColor="@color/textDarkest"
             android:textSize="17sp"
             app:layout_constraintBottom_toTopOf="@+id/courseName"
             app:layout_constraintEnd_toStartOf="@+id/detailsLayout"
@@ -96,7 +96,7 @@
             app:layout_constraintStart_toStartOf="@id/title"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="Math"
-            tools:textColor="@color/colorBloodOrange" />
+            tools:textColor="@color/textWarning" />
 
         <LinearLayout
             android:id="@+id/detailsLayout"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="@{String.valueOf(itemViewModel.data.points)}"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:visibility="@{itemViewModel.data.points != null ? View.VISIBLE : View.GONE}"
@@ -137,6 +137,7 @@
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_open_arrow"
+            android:tint="@color/textDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -144,7 +145,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:background="@color/lightGray"
+            android:background="@color/backgroundMedium"
             android:importantForAccessibility="no"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/typeIcon"

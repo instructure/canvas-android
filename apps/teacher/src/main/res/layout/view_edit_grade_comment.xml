@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_above="@+id/commentEditText"
-        android:background="@color/dividerColor"/>
+        android:background="@color/backgroundMedium"/>
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/commentEditText"
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/saveCommentButton"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:inputType="textCapSentences|textMultiLine"
         android:minHeight="50dp"
         android:paddingBottom="4dp"
@@ -59,11 +59,11 @@
         android:layout_alignBottom="@+id/commentEditText"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/commentEditText"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:contentDescription="@string/save_comment"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         app:srcCompat="@drawable/ic_checkmark"
-        tools:tint="@color/defaultActionColor"/>
+        tools:tint="@color/textInfo"/>
 
 </RelativeLayout>

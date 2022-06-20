@@ -74,7 +74,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="16dp"
                             android:text="@{viewModel.data.greetingMessage}"
-                            android:textColor="@color/defaultTextDark"
+                            android:textColor="@color/textDarkest"
                             android:textSize="34sp"
                             android:textStyle="bold"
                             tools:text="Welcome, Student" />
@@ -96,7 +96,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="8dp"
                             android:text="@string/homeroomMySubjects"
-                            android:textColor="@color/defaultTextDark"
+                            android:textColor="@color/textDarkest"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -109,7 +109,7 @@
                             android:layout_marginBottom="16dp"
                             android:gravity="center_horizontal"
                             android:text="@string/homeroomNoSubjects"
-                            android:textColor="@color/defaultTextGray"
+                            android:textColor="@color/textDark"
                             android:textSize="@dimen/message_text_size"
                             android:visibility="@{viewModel.data.courseCards.empty ? View.VISIBLE : View.GONE}" />
 

@@ -19,10 +19,10 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="CanvasMaterialTheme_Default" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/defaultPrimary</item>
-        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="colorAccent">@color/defaultAccent</item>
+    <style name="CanvasMaterialTheme_Default" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/textDarkest</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDarkest</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/triangle_bg</item>
@@ -36,10 +36,10 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="CanvasMaterialTheme_DefaultNoTransparency" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/defaultPrimary</item>
-        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="colorAccent">@color/defaultAccent</item>
+    <style name="CanvasMaterialTheme_DefaultNoTransparency" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/textDarkest</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDarkest</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -59,19 +59,28 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
-    <style name="CanvasDialogTheme_Default" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/defaultPrimary</item>
-        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="colorAccent">@color/defaultAccent</item>
-        <item name="android:colorPrimary">@color/defaultPrimary</item>
-        <item name="android:colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="android:colorAccent">@color/defaultAccent</item>
+    <style name="CanvasDialogTheme_Default" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="colorPrimary">@color/textDarkest</item>
+        <item name="colorPrimaryDark">@color/textDarkest</item>
+        <item name="colorAccent">@color/textDarkest</item>
+        <item name="background">@color/backgroundLightestElevated</item>
+        <item name="android:colorPrimary">@color/textDarkest</item>
+        <item name="android:colorPrimaryDark">@color/textDarkest</item>
+        <item name="android:colorAccent">@color/textDarkest</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@color/backgroundLightestElevated</item>
     </style>
 
     <style name="AccentDialogTheme" parent="CanvasDialogTheme_Default">
-        <item name="colorAccent">@color/defaultActionColor</item>
-        <item name="android:colorAccent">@color/defaultActionColor</item>
+        <item name="colorAccent">@color/textInfo</item>
+        <item name="android:colorAccent">@color/textInfo</item>
     </style>
 
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet</item>
+    </style>
 </resources>

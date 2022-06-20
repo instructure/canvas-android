@@ -32,21 +32,21 @@ class DiscussionSubmissionViewRenderTest : StudentRenderTest() {
     private val linkUrl = "https://www.google.com"
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysProgressBarPriorToLoading() {
         loadPageWithUrl(linkUrl)
         page.assertDisplaysProgressBar()
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun showsWebViewAndHidesProgressBarAfterLoading() {
         loadPageWithUrl(linkUrl)
         page.assertDisplaysLoadedPage()
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun linkOpensWebView() {
         loadPageWithUrl(linkUrl)
         page.assertUrlMatches(linkUrl)

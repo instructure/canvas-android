@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Na vaši napravi ni nameščene nobene aplikacije, ki bi lahko odprla to povezavo.</string>
     <string name="anonymousDiscussionNotSupported">Anonimne razprave v mobilnem prikazu trenutno niso podprte. Za ogled razprave jo odprite v brskalniku.</string>
     <string name="discussionOpenInBrowser">Odpri v brskalniku</string>
+    <string name="dashboardSwitchToListView">Preklopi na pogled seznama</string>
+    <string name="dashboardSwitchToGridView">Preklopi na pogled mreže</string>
+    <string name="selectAppTheme">Izberite temo aplikacije</string>
+    <string name="appThemeSettingsTitle">Tema aplikacije</string>
+    <string name="appThemeLight">Svetlo</string>
+    <string name="appThemeDark">Temno</string>
+    <string name="appThemeSystem">Sistemsko privzeta nastavitev</string>
+
 </resources>

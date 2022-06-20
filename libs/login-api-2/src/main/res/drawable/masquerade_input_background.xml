@@ -19,6 +19,6 @@
     <solid android:color="@color/transparent"/>
     <stroke
         android:width="0.5dp"
-        android:color="@color/login_grayText"/>
+        android:color="@color/borderDark"/>
     <corners android:radius="4dp"/>
 </shape>

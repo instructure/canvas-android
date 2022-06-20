@@ -21,7 +21,6 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.text.Html
 import android.view.View
 import android.widget.RemoteViews
@@ -82,13 +81,14 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
                 row.setInt(R.id.icon, "setColorFilter", color)
             } else {
                 val color = if(streamItem.canvasContext != null) ColorKeeper.getOrGenerateColor(streamItem.canvasContext)
-                            else ContextCompat.getColor(applicationContext, R.color.canvasRed)
+                            else ContextCompat.getColor(applicationContext, R.color.textDanger)
                 row.setInt(R.id.icon, "setColorFilter", color)
             }
 
             if (!BaseRemoteViewsService.shouldHideDetails(appWidgetId)) {
                 if (streamItem.getMessage(ContextKeeper.appContext) != null) {
                     row.setTextViewText(R.id.message, StringUtilities.simplifyHTML(Html.fromHtml(streamItem.getMessage(ContextKeeper.appContext), Html.FROM_HTML_MODE_LEGACY)))
+                    row.setTextColor(R.id.message, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setTextViewText(R.id.message, "")
                     row.setViewVisibility(R.id.message, View.GONE)
@@ -101,6 +101,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
             }
             courseAndDate += DateHelper.getDateTimeString(ContextKeeper.appContext, streamItem.updatedDate)
             row.setTextViewText(R.id.course_and_date, courseAndDate)
+            row.setTextColor(R.id.course_and_date, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
 
             row.setOnClickFillInIntent(R.id.widget_root, createIntent(streamItem))
 

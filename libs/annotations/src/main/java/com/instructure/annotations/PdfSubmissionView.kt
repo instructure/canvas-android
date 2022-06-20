@@ -20,7 +20,6 @@ import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.os.Handler
-import android.os.Looper
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -140,6 +139,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     abstract val progressBar: ProgressiveCanvasLoadingView
 
     abstract fun setFragment(fragment: Fragment)
+    abstract fun removeContentFragment()
     abstract fun showNoInternetDialog()
     abstract fun disableViewPager()
     abstract fun enableViewPager()
@@ -157,17 +157,16 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         unregisterPdfFragmentListeners()
+        removeContentFragment()
+        pdfFragment = null
         createAnnotationJob?.cancel()
         updateAnnotationJob?.cancel()
         deleteAnnotationJob?.cancel()
         annotationsJob?.cancel()
         pdfContentJob?.cancel()
         fileJob?.cancel()
-        exitHandler.removeCallbacks(enterCreationMode)
     }
 
-    //private val exitHandler: Handler = Handler(Looper.getMainLooper())
-    //    private val enterCreationMode = Runnable { pdfFragment?.enterAnnotationCreationMode() }
     protected fun unregisterPdfFragmentListeners() {
         pdfFragment?.removeOnAnnotationCreationModeChangeListener(this)
         pdfFragment?.removeOnAnnotationEditingModeChangeListener(this)
@@ -192,6 +191,10 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 toolbar.layoutParams = ToolbarCoordinatorLayout.LayoutParams(
                         ToolbarCoordinatorLayout.LayoutParams.Position.TOP, EnumSet.of(ToolbarCoordinatorLayout.LayoutParams.Position.TOP)
                 )
+
+                if (toolbar is AnnotationCreationToolbar) {
+                    setUpGrabAnnotationTool(toolbar)
+                }
             }
         })
 
@@ -231,6 +234,49 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         configureCommentView(commentsButton)
     }
 
+    private fun setUpGrabAnnotationTool(toolbar: AnnotationCreationToolbar) {
+        val menuItems = toolbar.menuItems
+
+        val grabItem = ContextualToolbarMenuItem.createSingleItem(
+            context,
+            R.id.grab_annotation,
+            context.getDrawable(R.drawable.ic_grab)!!,
+            context.getString(R.string.grabAnnotationTool),
+            context.getColor(R.color.white),
+            context.getColor(R.color.white),
+            ContextualToolbarMenuItem.Position.START,
+            true
+        )
+
+        if (currentAnnotationModeTool == null || currentAnnotationModeTool == AnnotationTool.NONE) {
+            Handler().post { grabItem.isSelected = true }
+        }
+
+        menuItems.add(grabItem)
+        toolbar.setMenuItems(menuItems)
+
+        toolbar.setOnMenuItemClickListener(
+            ContextualToolbar.OnMenuItemClickListener { contextualToolbar, menuItem ->
+                return@OnMenuItemClickListener (
+                    if (menuItem.id == R.id.grab_annotation) {
+                        if (!menuItem.isSelected) {
+                            contextualToolbar.menuItems.forEach { it.isSelected = false }
+                            pdfFragment?.exitCurrentlyActiveMode()
+                            pdfFragment?.enterAnnotationCreationMode(AnnotationTool.NONE)
+                            menuItem.isSelected = true
+                        }
+                        true
+                    } else {
+                        if (menuItem.isSelected) {
+                            val grab = contextualToolbar.menuItems.find { it.id == R.id.grab_annotation }
+                            Handler().postDelayed ({ grab?.isSelected = true }, 50)
+                        }
+                        false
+                    })
+            }
+        )
+    }
+
     open fun configureCommentView(commentsButton: ImageView) {
         //we want to offset the comment button by the height of the action bar
         val typedValue = TypedValue()
@@ -241,7 +287,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
         val marginDp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12f, context.resources.displayMetrics)
         val layoutParams = commentsButton.layoutParams as LayoutParams
-        commentsButton.drawable.setTint(Color.WHITE)
         layoutParams.gravity = Gravity.END or Gravity.TOP
         layoutParams.topMargin = marginDp.toInt() + actionBarDp
         layoutParams.rightMargin = marginDp.toInt()
@@ -431,7 +476,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         fileJob?.cancel()
         fileJob = tryWeave {
             progressBar.isIndeterminate = true
-            progressBar.setColor(ContextCompat.getColor(this@PdfSubmissionView.context, R.color.defaultTextGray))
+            progressBar.setColor(ContextCompat.getColor(this@PdfSubmissionView.context, R.color.textDark))
             val teacherYellow = ContextCompat.getColor(this@PdfSubmissionView.context, progressColor)
 
             val jitterThreshold = 300L
@@ -676,30 +721,25 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     //region annotation listeners
-
-    private val exitHandler: Handler = Handler(Looper.getMainLooper())
-    private val enterCreationMode = Runnable {
-        if (pdfFragment?.isAdded == true) {
-            pdfFragment?.enterAnnotationCreationMode()
-        }
-    }
-
     override fun onEnterAnnotationCreationMode(controller: AnnotationCreationController) {
-        exitHandler.removeCallbacks(enterCreationMode)
-
         // We never want to show annotation toolbars if the user doesn't have permission to write
         if (docSession.annotationMetadata?.canWrite() != true) return
         //we only want to disable the viewpager if they are actively annotating
-        if (controller.activeAnnotationTool != AnnotationTool.NONE) disableViewPager()
+        if (controller.activeAnnotationTool != AnnotationTool.NONE) {
+            disableViewPager()
+        } else {
+            val grabItem = annotationCreationToolbar.menuItems.find { it.id == R.id.grab_annotation }
+            grabItem?.isSelected = true
+        }
+
+        currentAnnotationModeTool = controller.activeAnnotationTool
+
         annotationCreationInspectorController?.bindAnnotationCreationController(controller)
         annotationCreationToolbar.bindController(controller)
         annotationToolbarLayout.displayContextualToolbar(annotationCreationToolbar, true)
-
-        currentAnnotationModeTool = controller.activeAnnotationTool
     }
 
     override fun onExitAnnotationCreationMode(p0: AnnotationCreationController) {
-        exitHandler.post(enterCreationMode)
 
         enableViewPager()
         annotationToolbarLayout.removeContextualToolbar(true)
@@ -710,7 +750,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     override fun onEnterAnnotationEditingMode(controller: AnnotationEditingController) {
-        exitHandler.removeCallbacks(enterCreationMode)
 
         // We never want to show annotation toolbars if the user doesn't have permission to write
         if (docSession.annotationMetadata?.canWrite() == false) return
@@ -723,7 +762,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     override fun onExitAnnotationEditingMode(controller: AnnotationEditingController) {
-        exitHandler.post(enterCreationMode)
 
         enableViewPager()
         annotationToolbarLayout.removeContextualToolbar(true)

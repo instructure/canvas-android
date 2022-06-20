@@ -15,7 +15,6 @@
  */
 package com.instructure.student.ui.renderTests
 
-import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -46,28 +45,28 @@ class UploadStatusSubmissionRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysSuccessState() {
         loadPageWithModel(baseModel)
         uploadStatusSubmissionViewRenderPage.assertSuccessVisible()
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysLoadingState() {
         loadPageWithModel(baseModel.copy(isLoading = true))
         uploadStatusSubmissionViewRenderPage.assertLoadingVisible()
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysFailedState() {
         loadPageWithModel(baseModel.copy(isFailed = true))
         uploadStatusSubmissionViewRenderPage.assertFailedVisible()
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.SUBMISSIONS)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysInProgressState() {
         loadPageWithModel(baseModel.copy(files = listOf(
             FileSubmission(0, 0, null, null, null, null, null, null, false)

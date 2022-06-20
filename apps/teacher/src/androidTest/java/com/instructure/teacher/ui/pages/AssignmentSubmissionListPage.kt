@@ -16,17 +16,31 @@
 package com.instructure.teacher.ui.pages
 
 
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import com.instructure.canvas.espresso.refresh
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.WaitForViewWithText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 
@@ -162,5 +176,30 @@ class AssignmentSubmissionListPage : BasePage() {
 
     fun clickFilterDialogOk() {
         waitForViewWithText(android.R.string.ok).click()
+    }
+
+    fun assertFileDisplayed(fileName: String) {
+        val matcher =
+            Matchers.allOf(ViewMatchers.withId(R.id.fileNameText), ViewMatchers.withText(fileName))
+        Espresso.onView(matcher).assertDisplayed()
+    }
+
+    fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
+        val commentMatcher = Matchers.allOf(
+            ViewMatchers.withId(R.id.commentHolder),
+            ViewMatchers.hasDescendant(
+                Matchers.allOf(
+                    ViewMatchers.withText(displayName),
+                    ViewMatchers.withId(R.id.userNameTextView)
+                )
+            ),
+            ViewMatchers.hasDescendant(
+                Matchers.allOf(
+                    ViewMatchers.withText(fileName),
+                    ViewMatchers.withId(R.id.attachmentNameTextView)
+                )
+            )
+        )
+        onView(commentMatcher).assertDisplayed()
     }
 }

@@ -35,7 +35,6 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.every
@@ -72,7 +71,6 @@ class DashboardNotificationsViewModelTest {
     private val accountNotificationManager: AccountNotificationManager = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardNotificationsViewModel
@@ -119,7 +117,6 @@ class DashboardNotificationsViewModelTest {
                 accountNotificationManager,
                 oauthManager,
                 conferenceDashboardBlacklist,
-                colorKeeper,
                 apiPrefs
         )
 
@@ -128,8 +125,8 @@ class DashboardNotificationsViewModelTest {
     }
 
     private fun setupResources() {
-        every { resources.getColor(R.color.notificationTintError) } returns Color.parseColor("#EE0612")
-        every { resources.getColor(R.color.notificationTintWarning) } returns Color.parseColor("#FC5E13")
+        every { resources.getColor(R.color.backgroundDanger) } returns Color.parseColor("#EE0612")
+        every { resources.getColor(R.color.backgroundWarning) } returns Color.parseColor("#FC5E13")
         every { resources.getString(R.string.courseInviteTitle) } returns "You have been invited"
         every { resources.getString(R.string.errorOccurred) } returns "An unexpected error occurred."
     }
@@ -149,28 +146,28 @@ class DashboardNotificationsViewModelTest {
                         1,
                         "AC1",
                         "AC1",
-                        color = "#${resources.getColor(R.color.notificationTintError).toHexString()}",
+                        color = "#${resources.getColor(R.color.backgroundDanger).toHexString()}",
                         icon = R.drawable.ic_warning
                 ),
                 AnnouncementViewData(
                         2,
                         "AC2",
                         "AC2",
-                        color = "#${resources.getColor(R.color.canvasDefaultPrimary).toHexString()}",
+                        color = "#${resources.getColor(R.color.textDarkest).toHexString()}",
                         icon = R.drawable.ic_calendar
                 ),
                 AnnouncementViewData(
                         3,
                         "AC3",
                         "AC3",
-                        color = "#${resources.getColor(R.color.canvasDefaultPrimary).toHexString()}",
+                        color = "#${resources.getColor(R.color.textDarkest).toHexString()}",
                         icon = R.drawable.ic_question_mark
                 ),
                 AnnouncementViewData(
                         4,
                         "AC4",
                         "AC4",
-                        color = "#${resources.getColor(R.color.notificationTintWarning).toHexString()}",
+                        color = "#${resources.getColor(R.color.backgroundWarning).toHexString()}",
                         icon = R.drawable.ic_warning
                 ),
         )

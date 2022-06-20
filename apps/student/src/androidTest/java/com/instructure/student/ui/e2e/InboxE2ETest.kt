@@ -17,6 +17,7 @@
 package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
+import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
@@ -36,12 +37,16 @@ class InboxE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We don't want to see accessibility errors on E2E tests
+    }
+
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxE2E() {
 
-        // Seed basic data
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 2, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -51,61 +56,72 @@ class InboxE2ETest: StudentTest() {
         // Create a group and put both students in it
         val groupCategory = GroupsApi.createCourseGroupCategory(course.id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
+        Log.d(PREPARATION_TAG, "Create group membership for ${student1.name} and ${student2.name} students to the group: ${group.name}.")
         GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
         GroupsApi.createGroupMembership(group.id, student2.id, teacher.token)
 
-        // Seed an email from the teacher to the students
+        Log.d(PREPARATION_TAG,"Seed an email from the teacher to ${student1.name} and ${student2.name} students.")
         val seededConversation = ConversationsApi.createConversation(
                 token = teacher.token,
                 recipients = listOf(student1.id.toString(), student2.id.toString())
         ).get(0)
 
-        // Sign in with student1
+        Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId} , password: ${student1.password}")
         tokenLogin(student1)
-
-        // Make sure that the seeded conversation shows up
         dashboardPage.waitForRender()
-        dashboardPage.clickInboxTab()
 
-        inboxPage.assertPageObjects()
+        Log.d(STEP_TAG,"Open Inbox Page. Assert that the previously seeded conversation is displayed.")
+        dashboardPage.clickInboxTab()
+        inboxPage.assertPageObjects() //TODO: Refactor to assert to the empty view just like in teacher would be better. AFTER THAT, seed the conversation.
         inboxPage.assertConversationDisplayed(seededConversation)
 
-        // Compose and send an email to the other student
+        Log.d(STEP_TAG,"Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
 
+        val newMessageSubject = "Hey There"
+        val newMessage = "Just checking in"
+        Log.d(STEP_TAG,"Create a new message with subject: $newMessageSubject, and message: $newMessage")
         newMessagePage.populateMessage(
                 course,
                 student2,
-                "Hey There",
-                "Just checking in"
+                newMessageSubject,
+                newMessage
         )
-        newMessagePage.hitSend()
 
-        // Compose and send an email to a group
+        Log.d(STEP_TAG,"Click on 'Send' button.")
+        newMessagePage.clickSend()
+
+        Log.d(STEP_TAG,"Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
 
+        val newGroupMessageSubject = "Group Message"
+        val newGroupMessage = "Testing Group ${group.name}"
+        Log.d(STEP_TAG,"Create a new message with subject: $newGroupMessageSubject, and message: $newGroupMessage")
         newMessagePage.populateGroupMessage(
                 group,
                 student2,
-                "Group Message",
-                "Testing Group ${group.name}"
+                newGroupMessageSubject,
+                newGroupMessage
         )
-        newMessagePage.hitSend()
+
+        Log.d(STEP_TAG,"Click on 'Send' button.")
+        newMessagePage.clickSend()
 
         sleep(3000) // Allow time for messages to propagate
 
-        // Now sign out and sign back in as student2
+        Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
         inboxPage.goToDashboard()
-
         dashboardPage.waitForRender()
-        dashboardPage.signOut()
 
+        Log.d(STEP_TAG,"Log out with ${student1.name} student.")
+        dashboardPage.logOut()
+
+        Log.d(STEP_TAG,"Login with user: ${student2.name}, login id: ${student2.loginId} , password: ${student2.password}")
         tokenLogin(student2)
-
-        // Navigate to the inbox and verify that the expected messages are there
         dashboardPage.waitForRender()
-        dashboardPage.clickInboxTab()
 
+        Log.d(STEP_TAG,"Open Inbox Page. Assert that both, the previously seeded 'normal' conversation and the group conversation are displayed.")
+        dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(seededConversation)
         inboxPage.assertConversationDisplayed("Hey There")
         inboxPage.assertConversationDisplayed("Group Message")

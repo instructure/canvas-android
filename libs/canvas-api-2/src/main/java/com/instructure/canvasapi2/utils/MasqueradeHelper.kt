@@ -64,7 +64,7 @@ object MasqueradeHelper {
         masqueradingUserId: Long,
         masqueradingDomain: String?,
         startingClass: Class<out ACTIVITY>,
-        masqueradeToken: String = "",
+        masqueradeToken: String = ApiPrefs.accessToken,
         masqueradeClientId: String = ApiPrefs.clientId,
         masqueradeClientSecret: String = ApiPrefs.clientSecret,
         courseId: Long? = null,
@@ -144,7 +144,7 @@ object MasqueradeHelper {
                 // No-op
             } finally {
                 // Delays process rebirth long enough for all the shared preferences to be saved and caches to be cleared.
-                delay(1000)
+                delay(500)
                 ProcessPhoenix.triggerRebirth(ContextKeeper.appContext, startupIntent)
             }
         }

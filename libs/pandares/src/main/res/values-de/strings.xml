@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">Auf dem Gerät sind keine Anwendungen installiert, die diesen Link öffnen können.</string>
     <string name="anonymousDiscussionNotSupported">Anonyme Diskussionen werden derzeit auf Mobilgeräten nicht unterstützt. Im Browser öffnen, um die Diskussion anzuzeigen.</string>
     <string name="discussionOpenInBrowser">Im Browser öffnen</string>
+    <string name="dashboardSwitchToListView">Zur Listenansicht wechseln</string>
+    <string name="dashboardSwitchToGridView">Zur Rasteransicht wechseln</string>
+    <string name="selectAppTheme">App-Design auswählen</string>
+    <string name="appThemeSettingsTitle">App-Design</string>
+    <string name="appThemeLight">Hell</string>
+    <string name="appThemeDark">Dunkel</string>
+    <string name="appThemeSystem">Systemstandard</string>
+
 </resources>

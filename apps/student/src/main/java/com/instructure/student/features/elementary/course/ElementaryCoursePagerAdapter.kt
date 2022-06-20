@@ -25,6 +25,7 @@ import android.widget.ProgressBar
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager.widget.PagerAdapter
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.setDarkModeSupport
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
@@ -64,6 +65,7 @@ class ElementaryCoursePagerAdapter(
         val baseContext = (webView.context as ContextWrapper).baseContext
         val activity = (baseContext as? FragmentActivity)
         activity?.let { webView.addVideoClient(it) }
+        webView.setDarkModeSupport()
         webView.setZoomSettings(false)
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {

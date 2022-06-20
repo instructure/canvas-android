@@ -31,6 +31,9 @@ object FeaturesAPI {
     internal interface FeaturesInterface {
         @GET("courses/{courseId}/features/enabled")
         fun getEnabledFeaturesForCourse(@Path("courseId") contextId: Long): Call<List<String>>
+
+        @GET("features/environment")
+        fun getEnvironmentFeatureFlags(): Call<Map<String, Boolean>>
     }
 
     fun getEnabledFeaturesForCourse(adapter: RestBuilder, courseId: Long, callback: StatusCallback<List<String>>, params: RestParams) {
@@ -39,5 +42,9 @@ object FeaturesAPI {
         }
 
         callback.addCall(adapter.build(FeaturesInterface::class.java, params).getEnabledFeaturesForCourse(courseId)).enqueue(callback)
+    }
+
+    fun getEnvironmentFeatureFlags(adapter: RestBuilder, callback: StatusCallback<Map<String, Boolean>>, params: RestParams) {
+        callback.addCall(adapter.build(FeaturesInterface::class.java, params).getEnvironmentFeatureFlags())
     }
 }

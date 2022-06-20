@@ -84,7 +84,7 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
         val popup = PopupMenu(anchor.context, anchor)
         popup.menu.add(0, 0, 0, R.string.retry)
         popup.menu.add(0, 1, 0, R.string.delete).apply {
-            val color = ContextCompat.getColor(anchor.context, R.color.error)
+            val color = ContextCompat.getColor(anchor.context, R.color.textDanger)
             val span = SpannableString(title)
             span.setSpan(ForegroundColorSpan(color), 0, span.length, 0)
             title = span

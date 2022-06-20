@@ -28,7 +28,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:lines="1"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse" />
 
     <!-- Subtitle -->
@@ -39,7 +39,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:lines="1"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Inverse"/>
 
 </com.instructure.teacher.view.CourseBrowserHeaderView>

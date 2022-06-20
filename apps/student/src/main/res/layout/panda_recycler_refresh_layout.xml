@@ -20,21 +20,13 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <androidx.core.widget.NestedScrollView
+        <com.instructure.pandarecycler.PandaRecyclerView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.instructure.pandarecycler.PandaRecyclerView
-                android:id="@+id/listView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:cacheColorHint="@android:color/transparent"
-                android:nestedScrollingEnabled="false" />
-
-        </androidx.core.widget.NestedScrollView>
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@android:color/transparent" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -80,7 +80,7 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share_file)
-        ViewStyler.setStatusBarDark(this, ContextCompat.getColor(this, R.color.login_studentAppTheme))
+        ViewStyler.setStatusBarDark(this, ContextCompat.getColor(this, R.color.studentDocumentSharingColor))
         if (checkLoggedIn()) {
             revealBackground()
             Analytics.trackAppFlow(this)

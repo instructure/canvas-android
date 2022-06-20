@@ -47,7 +47,7 @@
         android:layout_above="@+id/markDoneWrapper"
         android:gravity="center"
         android:text="@string/moduleItemNotFound"
-        android:textColor="@color/secondaryText"
+        android:textColor="@color/textDark"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -55,14 +55,14 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_above="@+id/markDoneWrapper"
-        android:background="@color/dividerColor" />
+        android:background="@color/backgroundMedium" />
 
     <RelativeLayout
         android:id="@+id/markDoneWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomBarModule"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:clickable="true"
         android:visibility="gone"
         tools:visibility="visible">
@@ -86,7 +86,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="4dp"
                 android:text="@string/markDone"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="15sp" />
 
             <CheckBox
@@ -107,7 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:background="@color/backgroundLightest"
         android:clickable="true"
         android:visibility="gone"
         tools:visibility="visible">
@@ -141,7 +141,7 @@
                 android:maxLines="2"
                 android:scaleType="centerInside"
                 android:singleLine="false"
-                android:textColor="@color/canvasTextDark"
+                android:textColor="@color/textDarkest"
                 android:textSize="14sp"
                 tools:text="Hello Papa, Hello Mama" />
 

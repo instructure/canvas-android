@@ -30,8 +30,8 @@
     <string name="confirm">Confirmar</string>
     <string name="cancel">Cancelar</string>
     <string name="help">Ayuda</string>
-    <string name="enterURL">Introduzca su URL de Canvas:</string>
-    <string name="signIntoCanvasNetwork">¿Está intentando acceder a Canvas Network?</string>
+    <string name="enterURL">Introduce tu URL de Canvas:</string>
+    <string name="signIntoCanvasNetwork">¿Estás intentando acceder a Canvas Network?</string>
     <string name="remove">Eliminar</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="userId">Identificación de usuario</string>
@@ -41,7 +41,7 @@
 
     <!--Multiple User Sign in -->
     <string name="removeUser">¿Eliminar este usuario?</string>
-    <string name="removedForever">Tendrá que iniciar sesión en este usuario de nuevo para acceder a su contenido.</string>
+    <string name="removedForever">Tendrás que iniciar sesión en este usuario de nuevo para acceder a su contenido.</string>
 
     <!--Content Descriptions-->
     <string name="canvasLogo">Logotipo de Canvas</string>
@@ -53,36 +53,36 @@
     <string name="username">Nombre de usuario</string>
     <string name="password">Contraseña</string>
     <string name="authenticationRequired">Se requiere autentificación</string>
-    <string name="invalidEmailPassword">Correo electrónico o contraseña no válidos</string>
+    <string name="invalidEmailPassword">Correo electrónico o contraseña incorrectos</string>
     <string name="login">Iniciar sesión</string>
     <string name="logout">Cerrar sesión</string>
-    <string name="matchingSchools">Escuelas que coinciden con sus criterios.</string>
+    <string name="matchingSchools">Escuelas que coinciden con tus criterios.</string>
 
     <!--Logout Warning Dialog-->
-    <string name="logout_warning">¿Está seguro de que desea salir?</string>
+    <string name="logout_warning">¿Estás seguro de que quieres salir?</string>
     <string name="logout_yes">Sí</string>
     <string name="logout_no">No</string>
 
     <!--Smart Login-->
 
-    <string name="loginNearYou">Cerca de usted</string>
+    <string name="loginNearYou">Cerca de ti</string>
     <string name="loginCanvasNetwork">Canvas Network</string>
-    <string name="loginRightBehindYou">Apoyando su aprendizaje</string>
-    <string name="loginCanvasHelp">¿No ve su escuela? Introduzca la URL de la escuela o pulse aquí para obtener ayuda.</string>
-    <string name="loginCanvasHelpWithUser">Introduzca la URL de la escuela o pulse aquí para obtener ayuda.</string>
-    <string name="loginHint">Encuentre su escuela o distrito</string>
+    <string name="loginRightBehindYou">Apoyando tu aprendizaje</string>
+    <string name="loginCanvasHelp">¿No ves tu escuela? Introduce la URL de la escuela o pulsa aquí para obtener ayuda.</string>
+    <string name="loginCanvasHelpWithUser">Introduce la URL de la escuela o pulsa aquí para obtener ayuda.</string>
+    <string name="loginHint">Encuentra tu escuela o distrito</string>
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Informar sobre un problema</string>
-    <string name="errorReportSubject">Asunto</string>
+    <string name="errorReportSubject">Tema</string>
     <string name="errorReportDescription">Descripción</string>
     <string name="errorReportSend">Enviar</string>
-    <string name="errorReportThankyou">Gracias por informar sobre el problema a nuestro equipo de soporte.  Recibirá la verificación y actualizaciones por correo electrónico.</string>
-    <string name="errorReportSeverityText">¿Cómo le afecta esto?</string>
+    <string name="errorReportThankyou">Gracias por informar sobre el problema a nuestro equipo de soporte.  Recibirás la verificación y actualizaciones por correo electrónico.</string>
+    <string name="errorReportSeverityText">¿Cómo te afecta esto?</string>
     <string name="errorSeverityCasualQuestion">Solo una pregunta, comentario, idea o sugerencia informal...</string>
-    <string name="errorSeverityNeedHelp">Necesito algo de ayuda, pero no es urgente</string>
+    <string name="errorSeverityNeedHelp">Necesito algo de ayuda, pero no es urgente.</string>
     <string name="errorSeveritySomethingsBroken">Algo no funciona pero puedo trabajar sin ello para terminar lo que necesito.</string>
-    <string name="errorSeverityCantGetThingsDone">No puedo hacer nada hasta que me conteste</string>
+    <string name="errorSeverityCantGetThingsDone">No puedo hacer nada hasta que me contestéis.</string>
     <string name="errorSeverityExtremelyCritical">EMERGENCIA CRÍTICA</string>
 
     <string name="errorReportEmailAddress">Dirección de correo electrónico</string>
@@ -93,7 +93,7 @@
     <string name="oneMile">1 milla (1,6 km)</string>
     <string name="miles">millas</string>
     <string name="kilometers">km</string>
-
+F
     <!-- String for submitting tickets -->
     <string name="device">Dispositivo</string>
     <string name="osVersion">Versión del sistema operativo</string>
@@ -102,31 +102,31 @@
     <string name="findMySchool">Encontrar mi escuela</string>
     <string name="loginWithQRCode">Código QR</string>
     <string name="locateQRCode">Ubicar código QR</string>
-    <string name="qrCodeExplanation">Encontrará el código QR en el sitio web, en su perfil de la cuenta. Haga clic en “QR para Inicio de sesión móvil” en la lista.</string>
-    <string name="qrCodeScanningPrompt">Escanee un código QR de Canvas para iniciar sesión</string>
-    <string name="loginWithQRCodeError">Ha habido un error al iniciar sesión. Genere otro código QR y vuelva a intentarlo.</string>
-    <string name="invalidQRCodeError">Escanee un código QR generado por Canvas</string>
+    <string name="qrCodeExplanation">Encontrarás el código QR en el sitio web, en tu perfil de la cuenta. Haz clic en “QR para Inicio de sesión móvil” en la lista.</string>
+    <string name="qrCodeScanningPrompt">Escanea un código QR de Canvas para iniciar sesión</string>
+    <string name="loginWithQRCodeError">Ha habido un error al iniciar sesión. Genera otro código QR y vuelve a intentarlo.</string>
+    <string name="invalidQRCodeError">Escanea un código QR generado por Canvas</string>
     <string name="qrCodeScreenshotContentDescription">Captura de pantalla en la que se muestra la ubicación de la generación del código QR en el navegador</string>
-    <string name="whatsYourSchoolName">¿Cómo se llama su escuela?</string>
+    <string name="whatsYourSchoolName">¿Cómo se llama tu escuela?</string>
     <string name="next">Siguiente</string>
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Eliminar usuario anterior</string>
-    <string name="accountDomainFooter">¿No puede encontrar su escuela? Intente escribir la URL completa de la escuela.</string>
-    <string name="accountDomainFooterLink">Toque aquí para obtener ayuda.</string>
+    <string name="accountDomainFooter">¿No puedes encontrar tu escuela? Intenta escribir la URL completa de la escuela.</string>
+    <string name="accountDomainFooterLink">Toca aquí para obtener ayuda.</string>
 
     <string name="login_noInternetConnectionTitle">No hay conexión a Internet</string>
     <string name="login_noInternetConnectionMessage">Esta acción requiere conexión a Internet.</string>
     <string name="empty_feedback">Es necesario un tema y una descripción para enviar comentarios.</string>
     <string name="versionNum">Número de versión</string>
-    <string name="scrollInstructions">Desplácese para ver todos los detalles</string>
+    <string name="scrollInstructions">Desplázate para ver todos los detalles</string>
 
-    <string name="masqueradeErrorUserId">Debe introducir una identificación de usuario.</string>
-    <string name="masqueradeErrorDomain">Debe introducir un dominio válido.</string>
+    <string name="masqueradeErrorUserId">Debes introducir una identificación de usuario.</string>
+    <string name="masqueradeErrorDomain">Debes introducir un dominio válido.</string>
     <string name="masqueradeError">Ha habido un error al intentar actuar como usuario.</string>
-    <string name="masqueradeInfo">\"Actuar como\" es básicamente iniciar sesión como si fuera este usuario pero sin una contraseña. Podrá realizar cualquier acción como si fuera este usuario y, desde el punto de vista de los demás usuarios, será como si este usuario las hubiera realizado. Sin embargo, los registros de auditoría indican que usted es quien ha realizado las acciones en representación de este usuario.</string>
-    <string name="masqueradingAs">Está actuando como %s</string>
+    <string name="masqueradeInfo">\\"Actuar como\\" es básicamente iniciar sesión como si fueras este usuario pero sin una contraseña. Podrás realizar cualquier acción como si fueras este usuario y, desde el punto de vista de los demás usuarios, será como si este usuario las hubiera realizado. Sin embargo, los registros de auditoría indican que tú eres quien ha realizado las acciones en representación de este usuario.</string>
+    <string name="masqueradingAs">Estás actuando como %s</string>
     <string name="stopActingAsTitle">Dejar de actuar como&#8230;</string>
-    <string name="stopActingAsMessage">Dejará de actuar como %s y volverá a su cuenta.</string>
+    <string name="stopActingAsMessage">Dejarás de actuar como %s y volverás a tu cuenta.</string>
     <string name="weMadeChanges">Hemos realizado algunos cambios.</string>
     <string name="whatsNewText">Ver las novedades</string>
 </resources>

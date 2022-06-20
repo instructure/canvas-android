@@ -31,7 +31,8 @@
             android:layout_height="?android:attr/actionBarSize"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/contentDescription_back"
-            android:src="@drawable/ic_back_arrow"/>
+            android:src="@drawable/ic_back_arrow"
+            android:tint="@color/textDarkest"/>
 
         <EditText
             android:id="@+id/queryInput"
@@ -53,7 +54,7 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/clearFilter"
             android:src="@drawable/ic_close"
-            android:tint="@color/black"
+            android:tint="@color/textDarkest"
             android:visibility="gone"
             tools:visibility="visible"/>
 
@@ -69,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_gravity="center_vertical"
-            android:background="@color/dividerColor"/>
+            android:background="@color/backgroundMedium"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -77,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="12dp"
             android:indeterminate="true"
-            android:indeterminateTint="@color/darkGray"
+            android:indeterminateTint="@color/textDark"
             android:visibility="invisible"
             tools:visibility="visible"/>
 
@@ -111,7 +112,7 @@
             android:id="@+id/mediaLoadingView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#CCFFFFFF"
+            android:background="@color/transparentWhite"
             android:clickable="true"
             android:contentDescription="@string/loading"
             android:focusable="true"

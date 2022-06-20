@@ -80,7 +80,7 @@ class ViewHtmlFragment : InternalWebviewFragment() {
             toolbar?.title = it.file.displayName
         }
 
-        ViewStyler.themeToolbar(requireActivity(), toolbar!!, mToolbarColor, Color.WHITE)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, mToolbarColor, requireContext().getColor(R.color.white))
     }
 
     override fun onDestroy() {
