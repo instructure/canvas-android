@@ -196,7 +196,7 @@ class FilesE2ETest: StudentTest() {
         submissionDetailsPage.assertCommentAttachmentDisplayed(commentUploadInfo.fileName, student)
 
         Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
-        ViewUtils.pressBackButton(5)
+        ViewUtils.pressBackButton(4)
 
         Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
         dashboardPage.gotoGlobalFiles()
@@ -217,7 +217,6 @@ class FilesE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Delete $newFileName file.")
         fileListPage.deleteFile(newFileName)
-        fileListPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Assert that empty view is displayed after deletion.")
         fileListPage.assertViewEmpty()
