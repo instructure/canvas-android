@@ -88,7 +88,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         super.onCreate(savedInstanceState)
         checkForPermission()
         checkFeatureFlags()
-        retainInstance = true
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -235,6 +234,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         super.onDestroyView()
         permissionJob?.cancel()
         featureFlagsJob?.cancel()
+        groupsJob?.cancel()
         recyclerAdapter.cancel()
     }
     //endregion
