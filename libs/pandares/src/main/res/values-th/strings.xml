@@ -1255,4 +1255,12 @@
     <string name="noCompatibleAppInstalled">อุปกรณ์ของคุณไม่มีแอพพลิเคชั่นที่ติดตั้งไว้ที่สามารถเปิดลิงค์นี้</string>
     <string name="anonymousDiscussionNotSupported">การพูดคุยแบบไม่เปิดเผยตัวปัจจุบันไม่รองรับสำหรับอุปกรณ์พกพา เปิดเบราเซอร์เพื่อดูการพูดคุย</string>
     <string name="discussionOpenInBrowser">เปิดในเบราเซอร์</string>
+    <string name="dashboardSwitchToListView">สลับไปมุมมองแสดงรายการ</string>
+    <string name="dashboardSwitchToGridView">สลับไปมุมมองแบบตาราง</string>
+    <string name="selectAppTheme">เลือกธีมของแอพ</string>
+    <string name="appThemeSettingsTitle">ธีมของแอพ</string>
+    <string name="appThemeLight">สว่าง</string>
+    <string name="appThemeDark">มืด</string>
+    <string name="appThemeSystem">ค่าเริ่มต้นระบบ</string>
+
 </resources>

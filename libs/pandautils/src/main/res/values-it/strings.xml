@@ -483,4 +483,6 @@
     <string name="a11y_not_marked_as_done">Non contrassegnato come fatto</string>
     <string name="error_loading_course_details">Spiacenti. Si è verificato un errore durante il caricamento dei dettagli del corso.</string>
     <string name="a11y_schedule_marked_as_not_done">%s contrassegnato come non fatto</string>
+    <string name="a11y_markAsDoneWithName">%s Contrassegna come fatto</string>
+    <string name="a11y_markAsNotDoneWithName">%s Contrassegna come non fatto</string>
 </resources>

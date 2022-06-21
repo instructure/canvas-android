@@ -39,7 +39,7 @@
     <string name="canvasAPI_online">オンライン</string>
     <string name="canvasAPI_onPaper">書類上</string>
     <string name="canvasAPI_discussion">ディスカッション</string>
-    <string name="canvasAPI_quiz">クイズ</string>
+    <string name="canvasAPI_quiz">小テスト</string>
     <string name="canvasAPI_externalTool">外部ツール</string>
     <string name="canvasAPI_none">提出なし</string>
     <string name="canvasAPI_passFail">合格不合格</string>
@@ -49,28 +49,28 @@
     <string name="canvasAPI_gpaScale">GPAスケール</string>
     <string name="canvasAPI_notGraded">採点されていません</string>
 
-    <string name="canvasAPI_onlineQuiz">クイズ</string>
+    <string name="canvasAPI_onlineQuiz">小テスト</string>
     <string name="canvasAPI_discussionTopic">ディスカッションのトピック</string>
     <string name="canvasAPI_onlineUpload">ファイルのアップロード</string>
     <string name="canvasAPI_onlineTextEntry">テキストエントリ</string>
     <string name="canvasAPI_onlineURL">ウェブサイト URL</string>
     <string name="canvasAPI_mediaRecording">メディアレコーディング</string>
     <string name="canvasAPI_attendance">出席状況</string>
-    <string name="canvasAPI_studentAnnotation">受講生の注釈</string>
+    <string name="canvasAPI_studentAnnotation">受講者の注釈</string>
     <string name="quiz_scoring_policy_highest">最高</string>
     <string name="quiz_scoring_policy_average">平均</string>
     <string name="quiz_scoring_policy_latest">最新</string>
     <string name="no">いいえ</string>
     <string name="always">常に</string>
-    <string name="graded_quiz">採点済みのクイズ</string>
-    <string name="practice_quiz">練習クイズ</string>
+    <string name="graded_quiz">採点済みの小テスト</string>
+    <string name="practice_quiz">練習小テスト</string>
     <string name="graded_survey">採点済みのサーベイ</string>
     <string name="ungraded_survey">未採点のサーベイ</string>
     <string name="andMore">\u0020そしてさらに%d</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">受講者</string>
-    <string name="enrollmentTypeTeacher">講師</string>
+    <string name="enrollmentTypeTeacher">教員</string>
     <string name="enrollmentTypeObserver">オブザーバー</string>
     <string name="enrollmentTypeTeachingAssistant">TA</string>
     <string name="enrollmentTypeDesigner">設計者</string>

@@ -534,7 +534,7 @@
 
     <string name="emptyDetailsMessage">Tapoter sur un élément dans la liste pour afficher les détails</string>
 
-    <string name="assignmentQuizzes">Questionnaires de la tâche</string>
+    <string name="assignmentQuizzes">Questionnaires</string>
     <string name="practiceQuizzes">Questionnaires d\'entraînement</string>
     <string name="gradedSurveys">Enquêtes notées</string>
     <string name="surveys">Enquêtes</string>

@@ -1283,4 +1283,12 @@
     <string name="noCompatibleAppInstalled">На вашем устройстве не установлено приложение, с помощью которого можно открыть эту ссылку.</string>
     <string name="anonymousDiscussionNotSupported">В настоящее время функция дискуссии не поддерживаются на мобильных устройствах. Открыть в браузере для просмотра дискуссии.</string>
     <string name="discussionOpenInBrowser">Открыть в браузере</string>
+    <string name="dashboardSwitchToListView">Переключиться на представление в виде списка</string>
+    <string name="dashboardSwitchToGridView">Переключиться на представление в виде таблицы</string>
+    <string name="selectAppTheme">Выбрать тему приложения</string>
+    <string name="appThemeSettingsTitle">Тема приложения</string>
+    <string name="appThemeLight">Светлая</string>
+    <string name="appThemeDark">Темная</string>
+    <string name="appThemeSystem">Системная настройка по умолчанию</string>
+
 </resources>

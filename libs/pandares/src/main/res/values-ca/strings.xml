@@ -1256,4 +1256,12 @@
     <string name="noCompatibleAppInstalled">El dispositiu no té cap aplicació instal·lada per obrir aquest enllaç.</string>
     <string name="anonymousDiscussionNotSupported">En aquest moment, no s’admeten fòrums anònims als dispositius mòbils. Obriu-lo al navegador per veure el fòrum.</string>
     <string name="discussionOpenInBrowser">Obre\'l al navegador</string>
+    <string name="dashboardSwitchToListView">Canvia a la visualització de llista</string>
+    <string name="dashboardSwitchToGridView">Canvia a la visualització de quadrícula</string>
+    <string name="selectAppTheme">Seleccioneu el tema de l’aplicació</string>
+    <string name="appThemeSettingsTitle">Tema de l’aplicació</string>
+    <string name="appThemeLight">Clar</string>
+    <string name="appThemeDark">Fosc</string>
+    <string name="appThemeSystem">Valor predeterminat del sistema</string>
+
 </resources>
