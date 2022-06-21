@@ -135,7 +135,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
      * @return The parsed color, or [defaultColor] if the string could not be parsed
      */
     private fun parseColor(hexColor: String): Int = try {
-        ColorUtils.parseColor("#${hexColor.trimMargin("#")}", "")
+        ColorUtils.parseColor("#${hexColor.trimMargin("#")}", defaultColor = defaultColor)
     } catch (e: IllegalArgumentException) {
         defaultColor
     }
