@@ -16,7 +16,6 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
@@ -135,9 +134,19 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
      * @return The parsed color, or [defaultColor] if the string could not be parsed
      */
     private fun parseColor(hexColor: String): Int = try {
-        ColorUtils.parseColor("#${hexColor.trimMargin("#")}", defaultColor = defaultColor)
+        val trimmedColorCode = getTrimmedColorCode(hexColor)
+        ColorUtils.parseColor(trimmedColorCode, defaultColor = defaultColor)
     } catch (e: IllegalArgumentException) {
         defaultColor
+    }
+
+    // There might be cases where the color code from the response contains whitespaces.
+    private fun getTrimmedColorCode(colorCode: String): String {
+        return if (colorCode.contains("#")) {
+            "#${colorCode.trimMargin("#")}"
+        } else {
+            colorCode
+        }
     }
 
     /**
