@@ -20,6 +20,7 @@ import android.os.Environment
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.KnownBug
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
@@ -58,6 +59,7 @@ class FilesE2ETest: TeacherTest() {
 
     @E2E
     @Test
+    @KnownBug
     @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
     fun testFilesE2E() {
 
@@ -204,6 +206,7 @@ class FilesE2ETest: TeacherTest() {
 
         Log.d(STEP_TAG,"Delete $newFileName file.")
         fileListPage.deleteFile(newFileName)
+        //TODO bug: https://instructure.atlassian.net/browse/MBL-16108
         fileListPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Assert that empty view is displayed after deletion.")
