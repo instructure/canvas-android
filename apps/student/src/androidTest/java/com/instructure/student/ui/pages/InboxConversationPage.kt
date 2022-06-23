@@ -36,6 +36,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
@@ -119,8 +120,8 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
 
     fun assertMessageDisplayed(message: String) {
         val itemMatcher = CoreMatchers.allOf(
-                ViewMatchers.hasSibling(withId(R.id.attachmentContainer)),
-                ViewMatchers.hasSibling(withId(R.id.headerDivider)),
+                hasSibling(withId(R.id.attachmentContainer)),
+                hasSibling(withId(R.id.headerDivider)),
                 withId(R.id.messageBody),
                 withText(message)
         )
@@ -137,8 +138,8 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun refresh() {
-        Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.swipeRefreshLayout), ViewMatchers.isDisplayingAtLeast(10)))
-                .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(10)))
+        onView(allOf(ViewMatchers.withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(10)))
+                .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(10)))
     }
 
     fun toggleStarred() {
