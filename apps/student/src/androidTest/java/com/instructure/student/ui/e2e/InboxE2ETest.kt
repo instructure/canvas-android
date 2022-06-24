@@ -18,7 +18,11 @@ package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
 import android.util.Log
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.refresh
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.panda_annotations.FeatureCategory
@@ -53,26 +57,30 @@ class InboxE2ETest: StudentTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        // Create a group and put both students in it
         val groupCategory = GroupsApi.createCourseGroupCategory(course.id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
         Log.d(PREPARATION_TAG, "Create group membership for ${student1.name} and ${student2.name} students to the group: ${group.name}.")
         GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
         GroupsApi.createGroupMembership(group.id, student2.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Seed an email from the teacher to ${student1.name} and ${student2.name} students.")
-        val seededConversation = ConversationsApi.createConversation(
-                token = teacher.token,
-                recipients = listOf(student1.id.toString(), student2.id.toString())
-        ).get(0)
-
         Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId} , password: ${student1.password}")
         tokenLogin(student1)
         dashboardPage.waitForRender()
+        dashboardPage.assertDisplaysCourse(course)
 
         Log.d(STEP_TAG,"Open Inbox Page. Assert that the previously seeded conversation is displayed.")
         dashboardPage.clickInboxTab()
-        inboxPage.assertPageObjects() //TODO: Refactor to assert to the empty view just like in teacher would be better. AFTER THAT, seed the conversation.
+        inboxPage.assertInboxEmpty()
+
+        Log.d(PREPARATION_TAG,"Seed an email from the teacher to ${student1.name} and ${student2.name} students.")
+        val seededConversation = ConversationsApi.createConversation(
+            token = teacher.token,
+            recipients = listOf(student1.id.toString(), student2.id.toString())
+        )[0]
+
+        Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
+        refresh()
+        inboxPage.assertHasConversation()
         inboxPage.assertConversationDisplayed(seededConversation)
 
         Log.d(STEP_TAG,"Click on 'New Message' button.")
@@ -123,7 +131,58 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Open Inbox Page. Assert that both, the previously seeded 'normal' conversation and the group conversation are displayed.")
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(seededConversation)
-        inboxPage.assertConversationDisplayed("Hey There")
+        inboxPage.assertConversationDisplayed(newMessageSubject)
         inboxPage.assertConversationDisplayed("Group Message")
+
+        Log.d(STEP_TAG,"Select $newGroupMessageSubject conversation.")
+        inboxPage.selectConversation(newMessageSubject)
+        val newReplyMessage = "This is a quite new reply message."
+        Log.d(STEP_TAG,"Reply to $newGroupMessageSubject conversation with '$newReplyMessage' message. Assert that the reply is displayed.")
+        inboxConversationPage.replyToMessage(newReplyMessage)
+
+        Log.d(STEP_TAG,"Delete $newReplyMessage reply and assert is has been deleted.")
+        inboxConversationPage.deleteMessage(newReplyMessage)
+        inboxConversationPage.assertMessageNotDisplayed(newReplyMessage)
+
+        Log.d(STEP_TAG,"Delete the whole '$newGroupMessageSubject' subject and assert that it has been removed from the conversation list on the Inbox Page.")
+        inboxConversationPage.deleteConversation() //After deletion we will be navigated back to Inbox Page
+        inboxPage.assertConversationNotDisplayed(newMessageSubject)
+        inboxPage.assertConversationDisplayed(seededConversation)
+        inboxPage.assertConversationDisplayed("Group Message")
+
+        Log.d(STEP_TAG,"Select ${seededConversation.subject} conversation. Assert that is has not been starred already.")
+        inboxPage.selectConversation(seededConversation)
+        inboxConversationPage.assertNotStarred()
+
+        Log.d(STEP_TAG,"Toggle Starred to mark ${seededConversation.subject} conversation as favourite. Assert that it has became starred.")
+        inboxConversationPage.toggleStarred()
+        inboxConversationPage.assertStarred()
+
+        Log.d(STEP_TAG,"Navigate back to Inbox Page and  assert that the conversation itself is starred as well.")
+        Espresso.pressBack() // To main inbox page
+        inboxPage.assertConversationStarred(seededConversation.subject)
+
+        Log.d(STEP_TAG,"Select ${seededConversation.subject} conversation. Mark as Unread by clicking on the 'More Options' menu, 'Mark as Unread' menu point.")
+        inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
+        inboxPage.selectConversation(seededConversation)
+        inboxConversationPage.markUnread() //After select 'Mark as Unread', we will be navigated back to Inbox Page
+
+        Log.d(STEP_TAG,"Assert that ${seededConversation.subject} conversation has been marked as unread.")
+        inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
+
+        Log.d(STEP_TAG,"Select ${seededConversation.subject} conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
+        inboxPage.selectConversation(seededConversation)
+        inboxConversationPage.archive() //After select 'Archive', we will be navigated back to Inbox Page
+
+        Log.d(STEP_TAG,"Assert that ${seededConversation.subject} conversation has removed from 'All' tab.") //TODO: Discuss this logic if it's ok if we don't show Archived messages on 'All' tab...
+        inboxPage.assertConversationNotDisplayed(seededConversation)
+
+        Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
+        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+
+        Log.d(STEP_TAG,"Assert that ${seededConversation.subject} conversation is displayed by the 'Archived' filter, and other conversations are not displayed.")
+        inboxPage.assertConversationDisplayed(seededConversation)
+        inboxPage.assertConversationNotDisplayed("Group Message")
+
     }
 }

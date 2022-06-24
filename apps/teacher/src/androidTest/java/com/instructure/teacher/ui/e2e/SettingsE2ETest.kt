@@ -96,7 +96,6 @@ class SettingsE2ETest : TeacherTest() {
         editProfileSettingsPage.editUserName("Unsaved userName")
         ViewUtils.pressBackButton(2)
         sleep(3000) //Give some time to "realize" we are on Profile Settings Page.
-        profileSettingsPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Assert that the username value remained $newUserName.")
         profileSettingsPage.assertUserNameIs(newUserName)

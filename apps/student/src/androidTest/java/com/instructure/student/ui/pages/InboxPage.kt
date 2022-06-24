@@ -35,10 +35,13 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
+import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
@@ -49,6 +52,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
     private val createMessageButton by OnViewWithId(R.id.addMessage)
     private val scopeButton by OnViewWithId(R.id.filterButton)
     private val filterButton by OnViewWithId(R.id.inboxFilter)
+    private val inboxRecyclerView by WaitForViewWithId(R.id.inboxRecyclerView)
 
     fun assertConversationDisplayed(conversation: ConversationApiModel) {
         assertConversationDisplayed(conversation.subject)
@@ -58,6 +62,10 @@ class InboxPage : BasePage(R.id.inboxPage) {
         val matcher = withText(subject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).assertDisplayed()
+    }
+
+    fun assertConversationNotDisplayed(conversation: ConversationApiModel) {
+        assertConversationNotDisplayed(conversation.subject)
     }
 
     fun assertConversationNotDisplayed(subject: String) {
@@ -72,10 +80,14 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(matcher).assertDisplayed()
     }
 
-    fun selectConversation(conversation: ConversationApiModel) {
-        val matcher = withText(conversation.subject)
+    fun selectConversation(subject: String) {
+        val matcher = withText(subject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).click()
+    }
+
+    fun selectConversation(conversation: ConversationApiModel) {
+        selectConversation(conversation.subject)
     }
 
     fun selectConversation(conversation: Conversation) {
@@ -110,13 +122,15 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(withId(R.id.bottomNavigationHome)).click()
     }
 
-    fun assertConversationStarred(conversation: Conversation) {
+    fun assertConversationStarred(subject: String) {
         val matcher = allOf(
-                withId(R.id.star),
-                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                ViewMatchers.withParent(ViewMatchers.withParent(withChild(
-                        allOf(withId(R.id.message), withText(conversation.lastMessage))
-                ))))
+            withId(R.id.star),
+            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            hasSibling(withId(R.id.userName)),
+            hasSibling(withId(R.id.date)),
+            ViewMatchers.withParent(ViewMatchers.withParent(withChild(
+                allOf(withId(R.id.subjectView), withText(subject))))
+            ))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).assertDisplayed()
@@ -127,7 +141,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
         val matcher = allOf(
                 withId(R.id.unreadMark),
                 withEffectiveVisibility(visibility),
-                ViewMatchers.withParent(ViewMatchers.hasSibling(withChild(
+                ViewMatchers.withParent(hasSibling(withChild(
                         allOf(withId(R.id.message), withText(conversation.lastMessage))
                 ))))
 
@@ -141,5 +155,34 @@ class InboxPage : BasePage(R.id.inboxPage) {
         }
 
     }
+    fun assertUnreadMarkerVisibility(subject: String, visibility: ViewMatchers.Visibility) {
+        val matcher = allOf(
+            withId(R.id.unreadMark),
+            withEffectiveVisibility(visibility),
+            hasSibling(allOf(withId(R.id.avatar))),
+            ViewMatchers.withParent(hasSibling(withChild(
+                allOf(withId(R.id.subjectView), withText(subject))))
+            )
+        )
+        if(visibility == ViewMatchers.Visibility.VISIBLE) {
+            waitForMatcherWithRefreshes(matcher) // May need to refresh before the unread mark shows up
+            scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+            onView(matcher).assertDisplayed()
+        }
+        else if(visibility == ViewMatchers.Visibility.GONE) {
+            onView(matcher).check(matches(not(isDisplayed())))
+        }
+    }
 
+        fun assertInboxEmpty() {
+        onView(withId(R.id.emptyInboxView)).assertDisplayed()
+    }
+
+    fun assertHasConversation() {
+        assertConversationCountIsGreaterThan(0)
+    }
+
+    fun assertConversationCountIsGreaterThan(count: Int) {
+        inboxRecyclerView.check(RecyclerViewItemCountGreaterThanAssertion(count))
+    }
 }
