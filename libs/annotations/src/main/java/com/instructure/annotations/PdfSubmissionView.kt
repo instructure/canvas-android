@@ -461,14 +461,15 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     private fun handlePageRotation(pdfDocument: PdfDocument, rotationMap: HashMap<String, Int>) {
+        // Removing the listener prevents an infinite loop with onDocumentLoaded, which is triggered
+        // by the calls to setRotationOffset()
+        pdfFragment?.removeDocumentListener(documentListener)
+
         rotationMap.forEach { pageRotation ->
             pageRotation.key.toIntOrNull()?.let { pageIndex ->
                 pdfDocument.setRotationOffset(calculateRotationOffset(pdfDocument.getPageRotation(pageIndex), pageRotation.value), pageIndex)
             }
         }
-        // Removing the listener prevents an infinite loop with onDocumentLoaded, which is triggered
-        // by the calls to setRotationOffset()
-        pdfFragment?.removeDocumentListener(documentListener)
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
