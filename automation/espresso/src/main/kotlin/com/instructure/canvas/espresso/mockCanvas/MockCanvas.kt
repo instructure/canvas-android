@@ -1356,52 +1356,9 @@ fun MockCanvas.addDiscussionTopicToCourse(
         groupId: Long? = null,
         assignment: Assignment? = null
 ) : DiscussionTopicHeader {
-
-    var topicHeader = prePopulatedTopicHeader
-    if(topicHeader == null) {
-        topicHeader = DiscussionTopicHeader(
-                title = topicTitle,
-                discussionType = "side_comment",
-                message = topicDescription
-        )
-    }
-
-    topicHeader.author = DiscussionParticipant(id = user.id, displayName = user.name)
-    topicHeader.published = true
-    topicHeader.allowRating = allowRating
-    topicHeader.onlyGradersCanRate = onlyGradersCanRate
-    topicHeader.permissions = DiscussionTopicPermission(attach = allowAttachments, reply = allowReplies)
-    topicHeader.id = newItemId()
-    topicHeader.postedDate = Calendar.getInstance().time
-    if(attachment != null) {
-        topicHeader.attachments = mutableListOf<RemoteFile>(attachment)
-    }
-    topicHeader.announcement = isAnnouncement
-    topicHeader.sections = sections
-    topicHeader.assignment = assignment
-    topicHeader.assignmentId = assignment?.id ?: 0L
-
-    var topicHeaderList = if(groupId != null) groupDiscussionTopicHeaders[groupId] else courseDiscussionTopicHeaders[course.id]
-    if(topicHeaderList == null) {
-        topicHeaderList = mutableListOf<DiscussionTopicHeader>()
-        if(groupId != null) {
-            groupDiscussionTopicHeaders[groupId] = topicHeaderList
-        }
-        else {
-            courseDiscussionTopicHeaders[course.id] = topicHeaderList
-        }
-    }
-
-    topicHeaderList.add(topicHeader)
-
-    val topic = DiscussionTopic(
-            participants = mutableListOf<DiscussionParticipant>(
-                    DiscussionParticipant(id = user.id, displayName = user.name)
-            )
-    )
-    discussionTopics[topicHeader.id] = topic
-
-    return topicHeader
+    return addDiscussionTopicToCourse(course.id,user,prePopulatedTopicHeader,topicTitle,topicDescription,
+        allowRating,onlyGradersCanRate,allowReplies,allowAttachments,attachment,
+        isAnnouncement,sections,groupId,assignment)
 }
 
 fun MockCanvas.addDiscussionTopicToCourse(
