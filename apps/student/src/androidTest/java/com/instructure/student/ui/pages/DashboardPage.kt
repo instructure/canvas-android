@@ -238,7 +238,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectCourse(course: Course) {
         assertDisplaysCourse(course)
-        onView(withText(course.originalName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
+        onView(withId(R.id.titleTextView) + withText(course.originalName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
     }
 
     fun selectGroup(group: Group) {

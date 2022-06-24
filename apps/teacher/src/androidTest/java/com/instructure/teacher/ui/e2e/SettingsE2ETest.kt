@@ -37,6 +37,7 @@ import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class SettingsE2ETest : TeacherTest() {
@@ -94,6 +95,7 @@ class SettingsE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Edit username to 'Unsaved userName' but DO NOT CLICK ON SAVE. Navigate back to Profile Settings Page without saving.")
         editProfileSettingsPage.editUserName("Unsaved userName")
         ViewUtils.pressBackButton(2)
+        sleep(3000) //Give some time to "realize" we are on Profile Settings Page.
         profileSettingsPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Assert that the username value remained $newUserName.")

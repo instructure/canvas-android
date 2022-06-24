@@ -15,16 +15,26 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas.Companion.data
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
+import com.instructure.canvas.espresso.mockCanvas.addFolderToCourse
+import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
+import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.models.User
+import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -41,6 +51,10 @@ class AnnouncementInteractionTest : StudentTest() {
 
     private lateinit var course: Course
     private lateinit var user: User
+
+    private lateinit var group : Group
+    private lateinit var discussion : DiscussionTopicHeader
+    private lateinit var announcement : DiscussionTopicHeader
 
     // Student enrolled in intended section can see and reply to the announcement
     // (This kind of seems like more of a test of the mocked endpoint, but we'll go with it.)
@@ -159,7 +173,7 @@ class AnnouncementInteractionTest : StudentTest() {
         discussionListPage.createAnnouncement("Announcement Topic", "Awesome announcement topic")
     }
 
-    // Tests code around closing / aborting announcement creation
+    // Tests code around closing / aborting announcement creation (as a teacher)
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_abort() {
@@ -177,7 +191,7 @@ class AnnouncementInteractionTest : StudentTest() {
         discussionListPage.assertAnnouncementCount(2) // header + the one test announcement
     }
 
-    // Tests code around creating an announcement with no description
+    // Tests code around creating an announcement with no description (as a teacher)
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_missingDescription() {
@@ -188,12 +202,21 @@ class AnnouncementInteractionTest : StudentTest() {
         discussionListPage.assertOnNewAnnouncementPage()
     }
 
-    // Tests code around creating an announcement with no title
+    // Tests code around creating an announcement with no title (as a teacher)
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncementCreate_missingTitle() {
         getToAnnouncementList()
         discussionListPage.createAnnouncement("", "description")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    fun testGroupAnnouncementCreateAsStudent() {
+        getToGroup()
+
+        courseBrowserPage.selectAnnouncements()
+        discussionListPage.createAnnouncement("Student created Group Announcement", "Cool group announcement", true)
     }
 
     @Test
@@ -225,17 +248,8 @@ class AnnouncementInteractionTest : StudentTest() {
             courseCount: Int = 1,
             createSections: Boolean = false
     ): MockCanvas {
-        val data = MockCanvas.init(
-                studentCount = studentCount,
-                courseCount = courseCount,
-                favoriteCourseCount = courseCount,
-                createSections = createSections)
 
-        course = data.courses.values.first()
-        user = data.students[0]
-
-        val announcementsTab = Tab(position = 2, label = "Announcements", visibility = "public", tabId = Tab.ANNOUNCEMENTS_ID)
-        data.courseTabs[course.id]!! += announcementsTab
+        val data = initData(studentCount,courseCount,createSections)
 
         val token = data.tokenFor(user)!!
         tokenLogin(data.domain, token, user)
@@ -243,6 +257,73 @@ class AnnouncementInteractionTest : StudentTest() {
 
         dashboardPage.selectCourse(course)
 
+        return data
+    }
+
+    private fun getToGroup(
+        studentCount: Int = 1,
+        courseCount: Int = 1,
+        createSections: Boolean = false
+    ): MockCanvas {
+
+        val data = initData(studentCount,courseCount,createSections)
+
+        val token = data.tokenFor(user)!!
+        tokenLogin(data.domain, token, user)
+        dashboardPage.waitForRender()
+
+        dashboardPage.selectGroup(group)
+
+        return data
+    }
+
+    private fun initData( studentCount: Int = 1,
+                          courseCount: Int = 1,
+                          createSections: Boolean = false): MockCanvas {
+        val data = MockCanvas.init(
+            studentCount = studentCount,
+            courseCount = courseCount,
+            favoriteCourseCount = courseCount,
+            createSections = createSections)
+
+        course = data.courses.values.first()
+        user = data.students[0]
+
+        // Add a group
+        val user = data.users.values.first()
+        group = data.addGroupToCourse(
+            course = course,
+            members = listOf(user),
+            isFavorite = true
+        )
+
+        // Add a discussion
+        discussion = data.addDiscussionTopicToCourse(
+            course = course,
+            user = user,
+            groupId = group.id
+        )
+
+        // Add an announcement
+        announcement = data.addDiscussionTopicToCourse(
+            course = course,
+            user = user,
+            groupId = group.id,
+            isAnnouncement = true
+        )
+
+        val announcementsTab = Tab(position = 2, label = "Announcements", visibility = "public", tabId = Tab.ANNOUNCEMENTS_ID)
+        data.courseTabs[course.id]!! += announcementsTab
+
+        data.groupTabs[group.id] = mutableListOf(
+            Tab(position = 0, label = "Discussions", tabId = Tab.DISCUSSIONS_ID, visibility = "public"),
+            Tab(position = 1, label = "Announcements", tabId = Tab.ANNOUNCEMENTS_ID, visibility = "public"),
+        )
+
+        MockCanvas.data.addCoursePermissions(
+            course.id,
+            CanvasContextPermission(canCreateAnnouncement = true)
+        )
         return data
     }
 

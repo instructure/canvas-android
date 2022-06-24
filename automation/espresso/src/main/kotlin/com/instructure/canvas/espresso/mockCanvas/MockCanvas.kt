@@ -1404,6 +1404,70 @@ fun MockCanvas.addDiscussionTopicToCourse(
     return topicHeader
 }
 
+fun MockCanvas.addDiscussionTopicToCourse(
+    courseId: Long,
+    user: User,
+    prePopulatedTopicHeader: DiscussionTopicHeader? = null,
+    topicTitle: String = Randomizer.randomConversationSubject(),
+    topicDescription: String = Randomizer.randomPageTitle(),
+    allowRating: Boolean = true,
+    onlyGradersCanRate: Boolean = false,
+    allowReplies: Boolean = true,
+    allowAttachments: Boolean = true,
+    attachment: RemoteFile? = null,
+    isAnnouncement: Boolean = false,
+    sections: List<Section> = listOf(),
+    groupId: Long? = null,
+    assignment: Assignment? = null
+) : DiscussionTopicHeader {
+
+    var topicHeader = prePopulatedTopicHeader
+    if(topicHeader == null) {
+        topicHeader = DiscussionTopicHeader(
+            title = topicTitle,
+            discussionType = "side_comment",
+            message = topicDescription
+        )
+    }
+
+    topicHeader.author = DiscussionParticipant(id = user.id, displayName = user.name)
+    topicHeader.published = true
+    topicHeader.allowRating = allowRating
+    topicHeader.onlyGradersCanRate = onlyGradersCanRate
+    topicHeader.permissions = DiscussionTopicPermission(attach = allowAttachments, reply = allowReplies)
+    topicHeader.id = newItemId()
+    topicHeader.postedDate = Calendar.getInstance().time
+    if(attachment != null) {
+        topicHeader.attachments = mutableListOf<RemoteFile>(attachment)
+    }
+    topicHeader.announcement = isAnnouncement
+    topicHeader.sections = sections
+    topicHeader.assignment = assignment
+    topicHeader.assignmentId = assignment?.id ?: 0L
+
+    var topicHeaderList = if(groupId != null) groupDiscussionTopicHeaders[groupId] else courseDiscussionTopicHeaders[courseId]
+    if(topicHeaderList == null) {
+        topicHeaderList = mutableListOf<DiscussionTopicHeader>()
+        if(groupId != null) {
+            groupDiscussionTopicHeaders[groupId] = topicHeaderList
+        }
+        else {
+            courseDiscussionTopicHeaders[courseId] = topicHeaderList
+        }
+    }
+
+    topicHeaderList.add(topicHeader)
+
+    val topic = DiscussionTopic(
+        participants = mutableListOf<DiscussionParticipant>(
+            DiscussionParticipant(id = user.id, displayName = user.name)
+        )
+    )
+    discussionTopics[topicHeader.id] = topic
+
+    return topicHeader
+}
+
 /** Adds a reply to a discussion. */
 fun MockCanvas.addReplyToDiscussion(
         topicHeader: DiscussionTopicHeader,
@@ -1770,6 +1834,8 @@ fun MockCanvas.addGroupToCourse(
             courseId = course.id,
             isFavorite = isFavorite
     )
+
+    result.permissions = CanvasContextPermission(canCreateAnnouncement = true)
 
     groups[result.id] = result
 

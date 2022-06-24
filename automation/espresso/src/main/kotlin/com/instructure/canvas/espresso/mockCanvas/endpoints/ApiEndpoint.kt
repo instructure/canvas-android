@@ -17,7 +17,9 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import android.util.Log
+import com.google.gson.Gson
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.*
@@ -217,6 +219,30 @@ object GroupsEndpoint : Endpoint (
                                 else {
                                     request.unauthorizedResponse()
                                 }
+                            }
+                            POST {
+                                val jsonObject = grabJsonFromMultiPartBody(request.body!!)
+                                var newHeader = Gson().fromJson(jsonObject, DiscussionTopicHeader::class.java)
+                                var group = data.groups.values.find { it.id == pathVars.groupId }
+                                var courseId = group!!.courseId
+                                var user = request.user!!
+
+                                newHeader = data.addDiscussionTopicToCourse(
+                                    courseId = courseId,
+                                    groupId = group!!.id,
+                                    user = user,
+                                    prePopulatedTopicHeader = newHeader,
+                                    topicTitle = newHeader.title!!,
+                                    topicDescription = newHeader.message!!,
+                                    allowRating = data.discussionRatingsEnabled,
+                                    allowReplies = data.discussionRepliesEnabled,
+                                    allowAttachments = data.discussionAttachmentsEnabled,
+                                    isAnnouncement = newHeader.announcement
+                                )
+                                Log.d("<--", "new discussion topic request body: $jsonObject")
+                                Log.d("<--", "new header: $newHeader")
+
+                                request.successResponse(newHeader)
                             }
                         }
                 ),
