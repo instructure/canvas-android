@@ -15,26 +15,19 @@
  */
 package com.instructure.student.ui.interaction
 
-import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas.Companion.data
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
-import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
-import com.instructure.canvas.espresso.mockCanvas.addFolderToCourse
 import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
-import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.models.User
-import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
