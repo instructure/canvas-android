@@ -58,7 +58,7 @@ class SettingsInteractionTest : StudentTest() {
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
-        settingsPage.launchLegalPage()
+        settingsPage.openLegalPage()
 
         Intents.init()
         try {
@@ -79,7 +79,7 @@ class SettingsInteractionTest : StudentTest() {
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
-        settingsPage.launchLegalPage()
+        settingsPage.openLegalPage()
         legalPage.openTermsOfUse()
         legalPage.assertTermsOfUseDisplayed()
     }
@@ -91,7 +91,7 @@ class SettingsInteractionTest : StudentTest() {
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
-        settingsPage.launchLegalPage()
+        settingsPage.openLegalPage()
         legalPage.openPrivacyPolicy()
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
         canvasWebViewPage.checkWebViewURL("https://www.instructure.com/canvas/privacy")
@@ -107,7 +107,7 @@ class SettingsInteractionTest : StudentTest() {
 
         ApiPrefs.canGeneratePairingCode = true
         dashboardPage.launchSettingsPage()
-        settingsPage.launchPairObserverPage()
+        settingsPage.openPairObserverPage()
 
         pairObserverPage.hasCode("1")
         pairObserverPage.refresh()

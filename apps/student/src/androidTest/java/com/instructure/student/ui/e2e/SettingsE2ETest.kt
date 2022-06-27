@@ -26,6 +26,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.utils.AppTheme
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -62,7 +63,7 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Open Profile Settings Page.")
-        settingsPage.launchProfileSettings()
+        settingsPage.openProfileSettings()
         profileSettingsPage.assertPageObjects()
 
         val newUserName = "John Doe"
@@ -78,7 +79,7 @@ class SettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Navigate to Settings Page again and open Panda Avatar Creator.")
         dashboardPage.launchSettingsPage()
         settingsPage.assertPageObjects()
-        settingsPage.launchProfileSettings()
+        settingsPage.openProfileSettings()
         profileSettingsPage.assertPageObjects()
         profileSettingsPage.launchPandaAvatarCreator()
 
@@ -108,6 +109,55 @@ class SettingsE2ETest : StudentTest() {
 
     @E2E
     @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testDarkModeE2E() {
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
+        dashboardPage.launchSettingsPage()
+        settingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings.")
+        settingsPage.openAppThemeSettings()
+
+        Log.d(STEP_TAG,"Select ${AppTheme.DARK} App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
+        settingsPage.selectAppTheme(AppTheme.DARK)
+        settingsPage.assertAppThemeTitleTextColor("#FFFFFFFF") //Currently, this color is used in the Dark mode for the AppTheme Title text.
+        settingsPage.assertAppThemeStatusTextColor("#FFC7CDD1") //Currently, this color is used in the Dark mode for the AppTheme Status text.
+
+        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Dark mode).")
+        Espresso.pressBack()
+        dashboardPage.assertCourseLabelTextColor("#FFFFFFFF")
+
+        Log.d(STEP_TAG,"Select ${course.name} course and assert on the Course Browser Page that the tabs has the proper text color (which is used in Dark mode).")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.assertTabLabelTextColor("Announcements","#FFFFFFFF")
+        courseBrowserPage.assertTabLabelTextColor("Grades","#FFFFFFFF")
+
+        Log.d(STEP_TAG,"Navigate to Settins Page and open App Theme Settings again.")
+        Espresso.pressBack()
+        dashboardPage.launchSettingsPage()
+        settingsPage.openAppThemeSettings()
+
+        Log.d(STEP_TAG,"Select ${AppTheme.LIGHT} App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
+        settingsPage.selectAppTheme(AppTheme.LIGHT)
+        settingsPage.assertAppThemeTitleTextColor("#FF2D3B45") //Currently, this color is used in the Light mode for the AppTheme Title texts.
+        settingsPage.assertAppThemeStatusTextColor("#FF556572") //Currently, this color is used in the Light mode for the AppTheme Status text.
+
+        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Light mode).")
+        Espresso.pressBack()
+        dashboardPage.assertCourseLabelTextColor("#FF2D3B45")
+    }
+
+    @E2E
+    @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testLegalPageE2E() {
 
@@ -124,7 +174,7 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'Legal' link to open Legal Page. Assert that Legal Page has opened.")
-        settingsPage.launchLegalPage()
+        settingsPage.openLegalPage()
         legalPage.assertPageObjects()
     }
 
@@ -146,7 +196,7 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'About' link to open About Page. Assert that About Page has opened.")
-        settingsPage.launchAboutPage()
+        settingsPage.openAboutPage()
         aboutPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Check that domain is equal to: ${student.domain} (student's domain).")
@@ -182,7 +232,7 @@ class SettingsE2ETest : StudentTest() {
         RemoteConfigParam.values().forEach {param -> initialValues.put(param.rc_name, RemoteConfigUtils.getString(param))}
 
         Log.d(STEP_TAG, "Navigate to Remote Config Settings Page.")
-        settingsPage.launchRemoteConfigParams()
+        settingsPage.openRemoteConfigParams()
 
         RemoteConfigParam.values().forEach { param ->
 
@@ -202,7 +252,7 @@ class SettingsE2ETest : StudentTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Navigate to Remote Config Settings Page.")
-        settingsPage.launchRemoteConfigParams()
+        settingsPage.openRemoteConfigParams()
 
         Log.d(STEP_TAG, "Assert that all fields have maintained their initial value.")
         RemoteConfigParam.values().forEach { param ->
