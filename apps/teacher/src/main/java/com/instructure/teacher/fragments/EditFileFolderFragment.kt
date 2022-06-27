@@ -118,7 +118,7 @@ class EditFileFolderFragment : BasePresenterFragment<
     override fun onRefreshStarted() = Unit
 
     override fun folderDeleted(deletedFileFolder: FileFolder) {
-        FileFolderDeletedEvent(deletedFileFolder).post()
+        FileFolderDeletedEvent(deletedFileFolder).postSticky()
         requireActivity().onBackPressed()
     }
 

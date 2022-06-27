@@ -220,6 +220,10 @@ class FileListFragment : BaseSyncFragment<
     }
     override fun folderCreationError() = toast(R.string.folderCreationError)
 
+    override fun folderCreationSuccess() {
+        checkIfEmpty()
+    }
+
     private fun setupViews() {
         ViewStyler.themeFAB(addFab, ThemePrefs.buttonColor)
         ViewStyler.themeFAB(addFileFab, ThemePrefs.buttonColor)
