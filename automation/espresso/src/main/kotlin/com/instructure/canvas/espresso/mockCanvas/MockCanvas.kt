@@ -19,11 +19,66 @@
 package com.instructure.canvas.espresso.mockCanvas
 
 import android.util.Log
-import com.github.javafaker.Bool
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.models.AnnotationMetadata
+import com.instructure.canvasapi2.models.AnnotationUrls
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentDueDate
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.models.Bookmark
+import com.instructure.canvasapi2.models.CanvasColor
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.CanvasTheme
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionParticipant
+import com.instructure.canvasapi2.models.DiscussionTopic
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.DiscussionTopicPermission
+import com.instructure.canvasapi2.models.DocSession
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.Grades
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.LockInfo
+import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.Plannable
+import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizAnswer
+import com.instructure.canvasapi2.models.QuizQuestion
+import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.models.QuizSubmissionAnswer
+import com.instructure.canvasapi2.models.QuizSubmissionQuestion
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.Section
+import com.instructure.canvasapi2.models.StreamItem
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.Term
+import com.instructure.canvasapi2.models.TermsOfService
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocCoordinate
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocInkList
@@ -1356,27 +1411,6 @@ fun MockCanvas.addDiscussionTopicToCourse(
         groupId: Long? = null,
         assignment: Assignment? = null
 ) : DiscussionTopicHeader {
-    return addDiscussionTopicToCourse(course.id,user,prePopulatedTopicHeader,topicTitle,topicDescription,
-        allowRating,onlyGradersCanRate,allowReplies,allowAttachments,attachment,
-        isAnnouncement,sections,groupId,assignment)
-}
-
-fun MockCanvas.addDiscussionTopicToCourse(
-    courseId: Long,
-    user: User,
-    prePopulatedTopicHeader: DiscussionTopicHeader? = null,
-    topicTitle: String = Randomizer.randomConversationSubject(),
-    topicDescription: String = Randomizer.randomPageTitle(),
-    allowRating: Boolean = true,
-    onlyGradersCanRate: Boolean = false,
-    allowReplies: Boolean = true,
-    allowAttachments: Boolean = true,
-    attachment: RemoteFile? = null,
-    isAnnouncement: Boolean = false,
-    sections: List<Section> = listOf(),
-    groupId: Long? = null,
-    assignment: Assignment? = null
-) : DiscussionTopicHeader {
 
     var topicHeader = prePopulatedTopicHeader
     if(topicHeader == null) {
@@ -1395,28 +1429,28 @@ fun MockCanvas.addDiscussionTopicToCourse(
     topicHeader.id = newItemId()
     topicHeader.postedDate = Calendar.getInstance().time
     if(attachment != null) {
-        topicHeader.attachments = mutableListOf<RemoteFile>(attachment)
+        topicHeader.attachments = mutableListOf(attachment)
     }
     topicHeader.announcement = isAnnouncement
     topicHeader.sections = sections
     topicHeader.assignment = assignment
     topicHeader.assignmentId = assignment?.id ?: 0L
 
-    var topicHeaderList = if(groupId != null) groupDiscussionTopicHeaders[groupId] else courseDiscussionTopicHeaders[courseId]
+    var topicHeaderList = if(groupId != null) groupDiscussionTopicHeaders[groupId] else courseDiscussionTopicHeaders[course.id]
     if(topicHeaderList == null) {
-        topicHeaderList = mutableListOf<DiscussionTopicHeader>()
+        topicHeaderList = mutableListOf()
         if(groupId != null) {
             groupDiscussionTopicHeaders[groupId] = topicHeaderList
         }
         else {
-            courseDiscussionTopicHeaders[courseId] = topicHeaderList
+            courseDiscussionTopicHeaders[course.id] = topicHeaderList
         }
     }
 
     topicHeaderList.add(topicHeader)
 
     val topic = DiscussionTopic(
-        participants = mutableListOf<DiscussionParticipant>(
+        participants = mutableListOf(
             DiscussionParticipant(id = user.id, displayName = user.name)
         )
     )
