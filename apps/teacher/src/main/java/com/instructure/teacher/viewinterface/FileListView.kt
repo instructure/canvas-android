@@ -21,4 +21,5 @@ import instructure.androidblueprint.SyncManager
 
 interface FileListView : SyncManager<FileFolder> {
     fun folderCreationError()
+    fun folderCreationSuccess()
 }
