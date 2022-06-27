@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -193,6 +194,8 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         }
         emptyCoursesView.setLoading()
         coursesHeaderWrapper.setGone()
+        notificationsFragment?.setGone()
+        (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment?)?.refresh()
     }
 
     override fun onRefreshFinished() {
@@ -202,6 +205,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         } else {
             coursesHeaderWrapper.setVisible()
         }
+        notificationsFragment?.setVisible()
     }
 
     override fun checkIfEmpty() {
