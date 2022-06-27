@@ -122,9 +122,19 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     private fun parseColor(hexColor: String, defaultColor: Int): Int {
         try {
-            return ColorUtils.parseColor("#${hexColor.trimMargin("#")}", "")
+            val trimmedColorCode = getTrimmedColorCode(hexColor)
+            return ColorUtils.parseColor(trimmedColorCode, defaultColor = defaultColor)
         } catch (e: IllegalArgumentException) {
             return defaultColor
+        }
+    }
+
+    // There might be cases where the color codes from the response contain whitespaces.
+    private fun getTrimmedColorCode(colorCode: String): String {
+        return if (colorCode.contains("#")) {
+            "#${colorCode.trimMargin("#")}"
+        } else {
+            colorCode
         }
     }
 
