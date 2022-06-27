@@ -21,22 +21,8 @@ import com.google.gson.Gson
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.LongId
-import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
-import com.instructure.canvas.espresso.mockCanvas.utils.Segment
-import com.instructure.canvas.espresso.mockCanvas.utils.StringId
-import com.instructure.canvas.espresso.mockCanvas.utils.getJsonFromRequestBody
-import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
-import com.instructure.canvas.espresso.mockCanvas.utils.successRedirectWithHeader
-import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.user
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.PlannerOverride
-import com.instructure.canvasapi2.models.QuizSubmissionQuestion
-import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvas.espresso.mockCanvas.utils.*
+import com.instructure.canvasapi2.models.*
 import okio.Buffer
 
 /**
