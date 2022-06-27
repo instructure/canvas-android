@@ -261,6 +261,7 @@ open class InternalWebViewFragment : BaseFragment() {
         fun newInstance(args: Bundle) = InternalWebViewFragment().apply {
             url = args.getString(URL)!!
             title = args.getString(TITLE)!!
+            html = args.getString(HTML) ?: ""
             darkToolbar = args.getBoolean(DARK_TOOLBAR)
         }
 
