@@ -16,19 +16,20 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:camerakit="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cameraView"
     android:layout_width="match_parent"
     android:layout_height="@dimen/recordingViewHeight">
 
-    <com.wonderkiln.camerakit.CameraView
+    <com.otaliastudios.cameraview.CameraView
         android:id="@+id/camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        camerakit:ckFacing="front"
-        camerakit:ckPinchToZoom="false" />
+        android:keepScreenOn="true"
+        app:cameraFacing="front"
+        app:cameraMode="video"/>
 
     <ImageView
         android:id="@+id/startRecordingButton"

@@ -154,7 +154,7 @@ object Libs {
     const val PAPERDB = "io.github.pilgr:paperdb:2.7.1"
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.6"
-    const val WONDERKILN_CAMERA_KIT = "com.github.CameraKit:camerakit-android:v0.13.4"
+    const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 }
 
 object Plugins {
