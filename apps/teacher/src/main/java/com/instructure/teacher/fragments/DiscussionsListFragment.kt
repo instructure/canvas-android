@@ -16,14 +16,15 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -39,15 +40,12 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_discussion_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
-@AndroidEntryPoint
 open class DiscussionsListFragment : BaseExpandableSyncFragment<
         String,
         DiscussionTopicHeader,
@@ -56,8 +54,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         RecyclerView.ViewHolder,
         DiscussionListAdapter>(), DiscussionListView {
 
-    @Inject
-    lateinit var featureFlagProvider: FeatureFlagProvider
+    val featureFlagProvider: FeatureFlagProvider = FeatureFlagProvider(UserManager, RemoteConfigUtils, ApiPrefs)
 
     protected var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
