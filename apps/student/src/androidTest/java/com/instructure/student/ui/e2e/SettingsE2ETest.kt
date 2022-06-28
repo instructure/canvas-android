@@ -52,10 +52,10 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
-        val teacher = data.teachersList[0]
+        val student = data.studentsList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
-        tokenLogin(teacher)
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        tokenLogin(student)
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
@@ -113,11 +113,11 @@ class SettingsE2ETest : StudentTest() {
     fun testDarkModeE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
-        val teacher = data.teachersList[0]
+        val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
-        tokenLogin(teacher)
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        tokenLogin(student)
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
@@ -138,7 +138,7 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Select ${course.name} course and assert on the Course Browser Page that the tabs has the proper text color (which is used in Dark mode).")
         dashboardPage.selectCourse(course)
-        courseBrowserPage.assertTabLabelTextColor("Announcements","#FFFFFFFF")
+        courseBrowserPage.assertTabLabelTextColor("Discussions","#FFFFFFFF")
         courseBrowserPage.assertTabLabelTextColor("Grades","#FFFFFFFF")
 
         Log.d(STEP_TAG,"Navigate to Settins Page and open App Theme Settings again.")
