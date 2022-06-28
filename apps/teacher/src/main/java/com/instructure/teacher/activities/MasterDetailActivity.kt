@@ -42,9 +42,11 @@ import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_master_detail.*
 import retrofit2.Response
 
+@AndroidEntryPoint
 class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
 
     private var mRoute: Route? = null
