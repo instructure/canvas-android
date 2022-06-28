@@ -189,7 +189,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
     fun loadUrl(targetUrl: String) {
         if (html.isNotEmpty()) {
-            loadHtml(html)
+            canvasWebView?.loadHtml(html, title)
             return
         }
 
