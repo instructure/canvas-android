@@ -134,7 +134,7 @@ class DashboardFragment : ParentFragment() {
                             course.name = response.nickname!!
                             course.originalName = response.name
                         }
-                        recyclerAdapter?.addOrUpdateItem(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, course)
+                        recyclerAdapter?.notifyDataSetChanged()
                     } catch {
                         toast(R.string.courseNicknameError)
                     }
