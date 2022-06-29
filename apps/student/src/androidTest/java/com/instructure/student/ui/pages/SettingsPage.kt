@@ -21,7 +21,6 @@ import com.instructure.espresso.TextViewColorAssertion
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.espresso.scrollTo
-import com.instructure.pandautils.utils.AppTheme
 import com.instructure.student.R
 
 class SettingsPage : BasePage(R.id.settingsFragment) {
@@ -62,13 +61,9 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
         appThemeTitle.scrollTo().click()
     }
 
-    fun selectAppTheme(appTheme: AppTheme)
+    fun selectAppTheme(appTheme: String)
     {
-        when (appTheme) {
-            AppTheme.LIGHT -> onView(withText(R.string.appThemeLight) + withParent(R.id.select_dialog_listview)).click()
-            AppTheme.DARK -> onView(withText(R.string.appThemeDark) + withParent(R.id.select_dialog_listview)).click()
-            AppTheme.SYSTEM -> onView(withText(R.string.appThemeSystem) + withParent(R.id.select_dialog_listview)).click()
-        }
+            onView(withText(appTheme) + withParent(R.id.select_dialog_listview)).click()
     }
 
     fun assertAppThemeTitleTextColor(expectedTextColor: String) {

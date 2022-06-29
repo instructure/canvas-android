@@ -27,7 +27,6 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.pandautils.utils.AppTheme
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
@@ -118,8 +117,8 @@ class SettingsE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings.")
         settingsPage.openAppThemeSettings()
 
-        Log.d(STEP_TAG,"Select ${AppTheme.DARK} App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
-        settingsPage.selectAppTheme(AppTheme.DARK)
+        Log.d(STEP_TAG,"Select Dark App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
+        settingsPage.selectAppTheme("Dark")
         settingsPage.assertAppThemeTitleTextColor("#FFFFFFFF") //Currently, this color is used in the Dark mode for the AppTheme Title text.
         settingsPage.assertAppThemeStatusTextColor("#FFC7CDD1") //Currently, this color is used in the Dark mode for the AppTheme Status text.
 
@@ -137,8 +136,8 @@ class SettingsE2ETest : TeacherTest() {
         dashboardPage.openUserSettingsPage()
         settingsPage.openAppThemeSettings()
 
-        Log.d(STEP_TAG,"Select ${AppTheme.LIGHT} App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
-        settingsPage.selectAppTheme(AppTheme.LIGHT)
+        Log.d(STEP_TAG,"Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
+        settingsPage.selectAppTheme("Light")
         settingsPage.assertAppThemeTitleTextColor("#FF2D3B45") //Currently, this color is used in the Light mode for the AppTheme Title texts.
         settingsPage.assertAppThemeStatusTextColor("#FF556572") //Currently, this color is used in the Light mode for the AppTheme Status text.
 
