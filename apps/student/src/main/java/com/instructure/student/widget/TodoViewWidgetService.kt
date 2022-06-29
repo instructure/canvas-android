@@ -87,6 +87,7 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
                     val formattedDueDate = DateHelper.getDateTimeString(ContextKeeper.appContext, streamItem.dueDate)
                     row.setTextViewText(R.id.message, formattedDueDate)
                     row.setViewVisibility(R.id.message, View.VISIBLE)
+                    row.setTextColor(R.id.message, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setViewVisibility(R.id.message, View.GONE)
                 }
@@ -95,6 +96,7 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
                 if (!TextUtils.isEmpty(message)) {
                     row.setTextViewText(R.id.message, message)
                     row.setViewVisibility(R.id.message, View.VISIBLE)
+                    row.setTextColor(R.id.message, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setViewVisibility(R.id.message, View.GONE)
                 }
@@ -104,6 +106,7 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
                     val formattedDueDate = DateHelper.getDateTimeString(ContextKeeper.appContext, streamItem.dueDate)
                     row.setTextViewText(R.id.course_and_date, formattedDueDate)
                     row.setViewVisibility(R.id.course_and_date, View.VISIBLE)
+                    row.setTextColor(R.id.course_and_date, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setViewVisibility(R.id.course_and_date, View.GONE)
                 }

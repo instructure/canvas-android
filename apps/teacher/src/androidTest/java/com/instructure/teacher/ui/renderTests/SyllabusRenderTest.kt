@@ -102,6 +102,7 @@ class SyllabusRenderTest : TeacherRenderTest() {
     }
 
     @Test
+    @Stub
     fun tappingEventsDisplaysEvents() {
         val model = baseModel.copy(events = DataResult.Success(List(3) { ScheduleItem(title = it.toString()) }))
         loadPageWithModel(model)
