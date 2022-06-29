@@ -103,6 +103,8 @@ object AnalyticsEventConstants {
 
     const val WHAT_IF_GRADES = "what_if_grades_used"
 
+    const val CHANGED_C4E_MODE = "c4e_changed"
+
     /* QR Code Login */
     const val QR_CODE_LOGIN_CLICKED = "qr_code_login_clicked"
     const val QR_CODE_LOGIN_SUCCESS = "qr_code_login_success"
@@ -133,4 +135,7 @@ object AnalyticsParamConstants {
     const val CANVAS_CONTEXT_ID = FirebaseAnalytics.Param.GROUP_ID
     const val ASSIGNMENT_ID = FirebaseAnalytics.Param.ITEM_ID
     const val SCREEN_OF_ORIGIN = FirebaseAnalytics.Param.ORIGIN
+
+    //custom
+    const val MANUAL_C4E_STATE = "manual_c4e_state"
 }
