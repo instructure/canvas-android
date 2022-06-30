@@ -18,12 +18,7 @@ package com.instructure.teacher.ui.e2e
 
 import android.util.Log
 import androidx.test.espresso.Espresso
-import com.instructure.teacher.R
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -100,6 +95,55 @@ class SettingsE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that the username value remained $newUserName.")
         profileSettingsPage.assertUserNameIs(newUserName)
 
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testDarkModeE2E() {
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
+        dashboardPage.openUserSettingsPage()
+        settingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings.")
+        settingsPage.openAppThemeSettings()
+
+        Log.d(STEP_TAG,"Select Dark App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
+        settingsPage.selectAppTheme("Dark")
+        settingsPage.assertAppThemeTitleTextColor("#FFFFFFFF") //Currently, this color is used in the Dark mode for the AppTheme Title text.
+        settingsPage.assertAppThemeStatusTextColor("#FFC7CDD1") //Currently, this color is used in the Dark mode for the AppTheme Status text.
+
+        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Dark mode).")
+        Espresso.pressBack()
+        dashboardPage.assertCourseLabelTextColor("#FFFFFFFF")
+
+        Log.d(STEP_TAG,"Select ${course.name} course and assert on the Course Browser Page that the tabs has the proper text color (which is used in Dark mode).")
+        dashboardPage.openCourse(course.name)
+        courseBrowserPage.assertTabLabelTextColor("Announcements","#FFFFFFFF")
+        courseBrowserPage.assertTabLabelTextColor("Assignments","#FFFFFFFF")
+
+        Log.d(STEP_TAG,"Navigate to Settins Page and open App Theme Settings again.")
+        Espresso.pressBack()
+        dashboardPage.openUserSettingsPage()
+        settingsPage.openAppThemeSettings()
+
+        Log.d(STEP_TAG,"Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
+        settingsPage.selectAppTheme("Light")
+        settingsPage.assertAppThemeTitleTextColor("#FF2D3B45") //Currently, this color is used in the Light mode for the AppTheme Title texts.
+        settingsPage.assertAppThemeStatusTextColor("#FF556572") //Currently, this color is used in the Light mode for the AppTheme Status text.
+
+        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Light mode).")
+        Espresso.pressBack()
+        dashboardPage.assertCourseLabelTextColor("#FF2D3B45")
     }
 
     @E2E
