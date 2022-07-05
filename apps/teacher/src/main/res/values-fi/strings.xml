@@ -872,7 +872,6 @@
         <item quantity="one">-%s piste</item>
         <item quantity="other">-%s pistettä</item>
     </plurals>
-    <string name="todoUnreadCount">Tehtävä %d lukematon</string>
     <string name="profileSettings">Profiiliasetukset</string>
     <string name="downloadingFile">Tiedostoa ladataan&#8230;</string>
     <string name="fileDownloadedSuccessfully">Tiedoston lataus onnistui.</string>

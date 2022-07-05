@@ -875,7 +875,6 @@
         <item quantity="one">-%s điểm thành phần</item>
         <item quantity="other">-%s điểm thành phần</item>
     </plurals>
-    <string name="todoUnreadCount">Cần làm %d chưa đọc</string>
     <string name="profileSettings">Cài Đặt Hồ Sơ</string>
     <string name="downloadingFile">Đang tải xuống tập tin&#8230;</string>
     <string name="fileDownloadedSuccessfully">Đã tải xuống tập tin thành công.</string>

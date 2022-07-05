@@ -900,7 +900,6 @@
         <item quantity="many">-%s pkt</item>
         <item quantity="other">-%s pkt</item>
     </plurals>
-    <string name="todoUnreadCount">Lista zadań – nieprzeczytane %d</string>
     <string name="profileSettings">Ustawienia profilu</string>
     <string name="downloadingFile">Pobieranie pliku&#8230;</string>
     <string name="fileDownloadedSuccessfully">Pobrano plik.</string>

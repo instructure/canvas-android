@@ -873,7 +873,6 @@
         <item quantity="one">-%s punktur</item>
         <item quantity="other">-%s punktar</item>
     </plurals>
-    <string name="todoUnreadCount">Verkefnalisti %d ólesin</string>
     <string name="profileSettings">Uppsetningarstillingar</string>
     <string name="downloadingFile">Sæki skrá&#8230;</string>
     <string name="fileDownloadedSuccessfully">Skrá var sótt.</string>
