@@ -17,17 +17,8 @@ package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
-import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
-import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -163,7 +154,9 @@ class AnnouncementInteractionTest : StudentTest() {
         val course = data.courses.values.first()
         val announcement = data.courseDiscussionTopicHeaders[course.id]!!.first()
         discussionListPage.assertTopicDisplayed(announcement.title!!)
-        discussionListPage.createAnnouncement("Announcement Topic", "Awesome announcement topic")
+        val newAnnouncementName = "Announcement Topic"
+        discussionListPage.createAnnouncement(newAnnouncementName, "Awesome announcement topic")
+        discussionListPage.assertAnnouncementCreated(newAnnouncementName)
     }
 
     // Tests code around closing / aborting announcement creation (as a teacher)
@@ -190,9 +183,8 @@ class AnnouncementInteractionTest : StudentTest() {
     fun testAnnouncementCreate_missingDescription() {
         getToAnnouncementList()
 
-        discussionListPage.createAnnouncement("title", "", verify = false)
-        // easier than looking for the "A description is required" toast message
-        discussionListPage.assertOnNewAnnouncementPage()
+        discussionListPage.createAnnouncement("title", "")
+        discussionListPage.assertOnNewAnnouncementPage() // easier than looking for the "A description is required" toast message
     }
 
     // Tests code around creating an announcement with no title (as a teacher)
@@ -201,6 +193,7 @@ class AnnouncementInteractionTest : StudentTest() {
     fun testAnnouncementCreate_missingTitle() {
         getToAnnouncementList()
         discussionListPage.createAnnouncement("", "description")
+        discussionListPage.assertAnnouncementCreated("")
     }
 
     @Test
@@ -209,7 +202,9 @@ class AnnouncementInteractionTest : StudentTest() {
         getToGroup()
 
         courseBrowserPage.selectAnnouncements()
-        discussionListPage.createAnnouncement("Student created Group Announcement", "Cool group announcement", true)
+        val newAnnouncementName = "Student created Group Announcement"
+        discussionListPage.createAnnouncement(newAnnouncementName, "Cool group announcement")
+        discussionListPage.assertAnnouncementCreated(newAnnouncementName)
     }
 
     @Test
@@ -222,6 +217,7 @@ class AnnouncementInteractionTest : StudentTest() {
         val existingAnnouncementName = announcement.title
 
         discussionListPage.createAnnouncement(testAnnouncementName, "description")
+        discussionListPage.assertAnnouncementCreated(testAnnouncementName)
 
         discussionListPage.clickOnSearchButton()
         discussionListPage.typeToSearchBar(testAnnouncementName)
