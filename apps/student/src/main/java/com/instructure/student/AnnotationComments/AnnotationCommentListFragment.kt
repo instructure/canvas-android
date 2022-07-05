@@ -58,6 +58,7 @@ class AnnotationCommentListFragment : ParentFragment() {
     private var docSession by ParcelableArg<DocSession>()
     private var apiValues by ParcelableArg<ApiValues>()
     private var headAnnotationId by StringArg()
+    private var canComment by BooleanArg(true, CAN_COMMENT)
 
     private var recyclerAdapter: AnnotationCommentListRecyclerAdapter? = null
 
@@ -132,7 +133,7 @@ class AnnotationCommentListFragment : ParentFragment() {
 
     private fun setupCommentInput() {
         // We want users with read permission to still be able to create and respond to comments.
-        if(docSession.annotationMetadata?.canRead() == false) {
+        if(docSession.annotationMetadata?.canRead() == false || !canComment) {
             commentInputContainer.setVisible(false)
         } else {
             sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
@@ -233,11 +234,12 @@ class AnnotationCommentListFragment : ParentFragment() {
         private const val DOC_SESSION = "docSession"
         private const val API_VALUES = "apiValues"
         private const val HEAD_ANNOTATION_ID = "headAnnotationId"
+        private const val CAN_COMMENT = "canComment"
 
         fun newInstance(bundle: Bundle) = AnnotationCommentListFragment().apply { arguments = bundle }
 
-        fun makeRoute(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long): Route {
-            val args = makeBundle(annotations, headAnnotationId, docSession, apiValues, assigneeId)
+        fun makeRoute(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long, canComment: Boolean): Route {
+            val args = makeBundle(annotations, headAnnotationId, docSession, apiValues, assigneeId, canComment)
 
             return Route(null, AnnotationCommentListFragment::class.java, null, args)
         }
@@ -255,13 +257,14 @@ class AnnotationCommentListFragment : ParentFragment() {
             return AnnotationCommentListFragment().withArgs(route.arguments)
         }
 
-        fun makeBundle(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long): Bundle {
+        fun makeBundle(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long, canComment: Boolean): Bundle {
             val args = Bundle()
             args.putParcelableArrayList(ANNOTATIONS, annotations)
             args.putLong(ASSIGNEE_ID, assigneeId)
             args.putParcelable(DOC_SESSION, docSession)
             args.putParcelable(API_VALUES, apiValues)
             args.putString(HEAD_ANNOTATION_ID, headAnnotationId)
+            args.putBoolean(CAN_COMMENT, canComment)
             return args
         }
     }

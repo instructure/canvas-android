@@ -61,8 +61,9 @@ import java.util.ArrayList
 class PdfStudentSubmissionView(
         context: Context,
         private val pdfUrl: String,
-        private val studentAnnotation: Boolean = false
-) : PdfSubmissionView(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+        private val studentAnnotationSubmit: Boolean = false,
+        private val studentAnnotationView: Boolean = false
+) : PdfSubmissionView(context, studentAnnotationView), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private var initJob: Job? = null
     private var deleteJob: Job? = null
@@ -85,7 +86,7 @@ class PdfStudentSubmissionView(
     override fun setIsCurrentlyAnnotating(boolean: Boolean) {}
 
     override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues) {
-        if (isAttachedToWindow) RouteMatcher.route(context, AnnotationCommentListFragment.makeRoute(commentList, headAnnotationId, docSession, apiValues, ApiPrefs.user!!.id))
+        if (isAttachedToWindow) RouteMatcher.route(context, AnnotationCommentListFragment.makeRoute(commentList, headAnnotationId, docSession, apiValues, ApiPrefs.user!!.id, !studentAnnotationView))
     }
 
     override fun showFileError() {
@@ -99,7 +100,7 @@ class PdfStudentSubmissionView(
 
     override fun configureCommentView(commentsButton: ImageView) {
         // If we are making annotations position the comments button as we would position in the teacher.
-        if (studentAnnotation) {
+        if (studentAnnotationSubmit) {
             super.configureCommentView(commentsButton)
             return
         }
@@ -151,7 +152,7 @@ class PdfStudentSubmissionView(
     override fun attachDocListener() {
         // We need to add this flag, because we want to show the toolbar in the student annotation, but hide when
         // we open an already submitted file submission with a teacher's annotations.
-        if (!studentAnnotation) {
+        if (!studentAnnotationSubmit) {
             // Modify the session data permissions to make sure students can't annotate already submitted assignments
             if (docSession.annotationMetadata?.canWrite() == true) {
                 docSession.annotationMetadata?.permissions = "read"
