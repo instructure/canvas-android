@@ -20,33 +20,21 @@ import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
-import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.isElementDisplayed
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
-import com.instructure.canvas.espresso.withCustomConstraints
-import com.instructure.canvas.espresso.withElementRepeat
+import com.instructure.canvas.espresso.*
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertGone
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.withText
-import com.instructure.espresso.scrollTo
+import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
@@ -112,7 +100,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun sendReply(replyMessage: String) {
         clickReply()
-        onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
+        waitForViewWithId(R.id.rce_webView).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
 
         sleep(3000) // wait out the toast message

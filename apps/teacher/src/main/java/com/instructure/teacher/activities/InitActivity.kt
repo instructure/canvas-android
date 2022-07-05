@@ -293,8 +293,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         setupUserDetails(ApiPrefs.user)
 
-        ViewStyler.themeToolbarColored(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-
         navigationDrawerItem_startMasquerading.setVisible(!ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true)
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)
     }
