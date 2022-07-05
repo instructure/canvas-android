@@ -40,6 +40,7 @@ import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.CoursesPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.TeacherPrefs
+import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.CoursesView
 import kotlinx.android.synthetic.main.fragment_courses.*
@@ -151,7 +152,15 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         val menuTitleRes = if (TeacherPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
         dashboardLayoutMenuItem.setTitle(menuTitleRes)
 
-        (activity as? InitActivity)?.attachNavigationDrawer(toolbar)
+        val activity = requireActivity()
+        if (activity is InitActivity) {
+            activity.attachNavigationDrawer(toolbar)
+        } else {
+            toolbar.setupAsBackButton(this)
+        }
+
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+
         toolbar.requestAccessibilityFocus()
     }
 
