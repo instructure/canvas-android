@@ -27,6 +27,7 @@ import android.view.View
 import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -369,36 +370,21 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
 
     override fun updateTodoCount(todoCount: Int) {
-        // Add a badge to the to do item on the bottom bar
-        val view = bottomBar?.children?.getOrNull(0)?.children?.getOrNull(1) as? BottomNavigationItemView ?: return
+        updateBottomBarBadge(R.id.tab_todo, todoCount)
+    }
 
-        if (todoCount > 0) {
-            // Update content description
-            if (bottomBar.menu.size() > 1) {
-                val title = String.format(Locale.getDefault(), getString(R.string.todoUnreadCount), todoCount)
-                MenuItemCompat.setContentDescription(bottomBar.menu.getItem(1), if (selectedTab == TODO_TAB) "${getString(R.string.selected)} $title" else title)
-            }
+    override fun updateInboxUnreadCount(unreadCount: Int) {
+        updateBottomBarBadge(R.id.tab_inbox, unreadCount)
+    }
 
-            val todoCountDisplay = if (todoCount > 99) getString(R.string.max_count) else todoCount.toString()
-
-            // First child is the imageView that we use for the bottom bar, second is a layout for the label
-            (view.getChildAt(2) as? TextView)?.let {
-                it.text = todoCountDisplay
-            } ?: run {
-                // No badge, we need to create one
-                val badge = LayoutInflater.from(this).inflate(R.layout.unread_count, bottomBar, false) as TextView
-                badge.text = todoCountDisplay
-                ColorUtils.colorIt(getColorCompat(R.color.textInfo), badge.background)
-                view.addView(badge)
-            }
+    private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int) {
+        if (count > 0) {
+            bottomBar.getOrCreateBadge(menuItemId).number = count
+            bottomBar.getOrCreateBadge(menuItemId).backgroundColor = getColor(R.color.backgroundInfo)
+            bottomBar.getOrCreateBadge(menuItemId).badgeTextColor = getColor(R.color.white)
         } else {
             // Don't set the badge or display it, remove any badge
-            (view.getChildAt(2) as? TextView)?.let { view.removeView(it) }
-
-            // Update content description
-            if (bottomBar.menu.size() > 1) {
-                MenuItemCompat.setContentDescription(bottomBar.menu.getItem(1), if (selectedTab == TODO_TAB) "${getString(R.string.selected)} ${getString(R.string.tab_todo)}" else getString(R.string.tab_todo))
-            }
+            bottomBar.removeBadge(menuItemId)
         }
     }
 

@@ -22,4 +22,5 @@ interface InitActivityView {
     fun updateTodoCount(todoCount: Int)
     fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?)
     fun updateColorOverlaySwitch(isChecked: Boolean, isFailed: Boolean)
+    fun updateInboxUnreadCount(unreadCount: Int)
 }
