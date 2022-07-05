@@ -218,10 +218,13 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         var grade: String? = ""
         if (presenter.submission != null) {
             var gradeInput = presenter.submission?.grade
-            if(gradeInput?.isNullOrEmpty() == false && gradeInput.last().toString() == "%") {
-                gradeInput = gradeInput.dropLast(1)
-            }
-            grade = gradeInput
+            if(gradeInput?.last()?.toString() == "%") {
+                if(!gradeInput?.isNullOrEmpty()) {
+                    gradeInput = gradeInput.dropLast(1)
+                    grade = gradeInput
+                } else grade = "0"
+            } else grade = gradeInput
+
         }
 
         val dialog = CustomizeGradeDialog.getInstance(requireActivity().supportFragmentManager,
