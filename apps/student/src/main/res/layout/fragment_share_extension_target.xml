@@ -98,6 +98,7 @@
                 android:drawableEnd="@null"
                 android:gravity="center_vertical"
                 android:minHeight="45dp"
+                android:onClick="@{() -> viewModel.filesTargetSelected()}"
                 android:text="@string/uploadMyFiles"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -122,6 +123,7 @@
                     android:drawableEnd="@null"
                     android:gravity="center_vertical"
                     android:minHeight="45dp"
+                    android:onClick="@{() -> viewModel.assignmentTargetSelected()}"
                     android:text="@string/submitAssignment"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -136,11 +138,11 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:minHeight="45dp"
+                    android:onItemSelected="@{(parent, view, position, id) -> viewModel.onCourseSelected(position)}"
                     android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/newAssignmentCheckBox"
-                    app:layoutRes="@{@layout/bindable_canvas_context_spinner_adapter_item}"
                     app:itemViewModels="@{viewModel.data.courses}"
-                    android:onItemSelected="@{(parent, view, position, id) -> viewModel.onCourseSelected(position)}"/>
+                    app:layoutRes="@{@layout/bindable_canvas_context_spinner_adapter_item}"
+                    app:layout_constraintTop_toBottomOf="@id/newAssignmentCheckBox" />
 
                 <Spinner
                     android:id="@+id/newAssignmentSpinner"
@@ -151,10 +153,11 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:minHeight="45dp"
+                    android:onItemSelected="@{(parent, view, position, id) -> viewModel.onAssignmentSelected(position)}"
                     android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/newStudentCourseSpinner"
+                    app:itemViewModels="@{viewModel.data.assignments}"
                     app:layoutRes="@{@layout/bindable_assignment_spinner_item}"
-                    app:itemViewModels="@{viewModel.data.assignments}"/>
+                    app:layout_constraintTop_toBottomOf="@id/newStudentCourseSpinner" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
