@@ -164,6 +164,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun assertUnreadEmails(count: Int) {
         onView(allOf(withParent(R.id.bottomNavigationInbox), withId(R.id.badge), withText(count.toString()))).assertDisplayed()
+        onView(withId(R.id.bottomBar)).check(NotificationBadgeAssertion(R.id.bottomNavigationInbox, count))
     }
 
     fun clickCalendarTab() {
