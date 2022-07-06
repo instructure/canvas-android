@@ -1277,4 +1277,8 @@
 
     <string name="grabAnnotationTool">Grab</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s unread message</item>
+        <item quantity="other">%s unread messages</item>
+    </plurals>
 </resources>

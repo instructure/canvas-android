@@ -28,6 +28,7 @@ import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
+import androidx.annotation.PluralsRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -374,14 +375,17 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     override fun updateInboxUnreadCount(unreadCount: Int) {
-        updateBottomBarBadge(R.id.tab_inbox, unreadCount)
+        updateBottomBarBadge(R.id.tab_inbox, unreadCount, R.plurals.a11y_inboxUnreadCount)
     }
 
-    private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int) {
+    private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) {
         if (count > 0) {
             bottomBar.getOrCreateBadge(menuItemId).number = count
             bottomBar.getOrCreateBadge(menuItemId).backgroundColor = getColor(R.color.backgroundInfo)
             bottomBar.getOrCreateBadge(menuItemId).badgeTextColor = getColor(R.color.white)
+            if (quantityContentDescription != null) {
+                bottomBar.getOrCreateBadge(menuItemId).setContentDescriptionQuantityStringsResource(quantityContentDescription)
+            }
         } else {
             // Don't set the badge or display it, remove any badge
             bottomBar.removeBadge(menuItemId)

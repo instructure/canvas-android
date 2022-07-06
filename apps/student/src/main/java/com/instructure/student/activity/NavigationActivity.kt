@@ -35,6 +35,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
+import androidx.annotation.PluralsRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -1039,14 +1040,17 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun canBookmark(): Boolean = navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.BOOKMARKS)
 
     override fun updateUnreadCount(unreadCount: Int) {
-        updateBottomBarBadge(R.id.bottomNavigationInbox, unreadCount)
+        updateBottomBarBadge(R.id.bottomNavigationInbox, unreadCount, R.plurals.a11y_inboxUnreadCount)
     }
 
-    private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int) {
+    private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) {
         if (count > 0) {
             bottomBar.getOrCreateBadge(menuItemId).number = count
             bottomBar.getOrCreateBadge(menuItemId).backgroundColor = getColor(R.color.backgroundInfo)
             bottomBar.getOrCreateBadge(menuItemId).badgeTextColor = getColor(R.color.white)
+            if (quantityContentDescription != null) {
+                bottomBar.getOrCreateBadge(menuItemId).setContentDescriptionQuantityStringsResource(quantityContentDescription)
+            }
         } else {
             // Don't set the badge or display it, remove any badge
             bottomBar.removeBadge(menuItemId)
