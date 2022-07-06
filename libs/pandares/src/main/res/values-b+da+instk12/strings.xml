@@ -958,7 +958,6 @@
     <string name="latePenalty">Straf for sen aflevering (-%s)</string>
     <string name="finalGrade">Endelig vurdering</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Åbner i webvisning</string>
