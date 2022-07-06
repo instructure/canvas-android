@@ -39,7 +39,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StorageQuotaExceededError
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -47,7 +46,7 @@ import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.ShareFileDestinationDialog
-import com.instructure.student.features.shareextension.ShareExtensionTargetFragment
+import com.instructure.student.features.shareextension.target.ShareExtensionTargetFragment
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AnimationHelpers
 import dagger.hilt.android.AndroidEntryPoint

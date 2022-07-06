@@ -21,7 +21,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.student.features.shareextension.ShareExtensionTargetViewModel" />
+            type="com.instructure.student.features.shareextension.target.ShareExtensionTargetViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -137,7 +137,10 @@
                     android:layout_marginRight="8dp"
                     android:minHeight="45dp"
                     android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/newAssignmentCheckBox" />
+                    app:layout_constraintTop_toBottomOf="@id/newAssignmentCheckBox"
+                    app:layoutRes="@{@layout/bindable_canvas_context_spinner_adapter_item}"
+                    app:itemViewModels="@{viewModel.data.courses}"
+                    android:onItemSelected="@{(parent, view, position, id) -> viewModel.onCourseSelected(position)}"/>
 
                 <Spinner
                     android:id="@+id/newAssignmentSpinner"
@@ -149,7 +152,9 @@
                     android:layout_marginRight="8dp"
                     android:minHeight="45dp"
                     android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/newStudentCourseSpinner" />
+                    app:layout_constraintTop_toBottomOf="@id/newStudentCourseSpinner"
+                    app:layoutRes="@{@layout/bindable_assignment_spinner_item}"
+                    app:itemViewModels="@{viewModel.data.assignments}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
