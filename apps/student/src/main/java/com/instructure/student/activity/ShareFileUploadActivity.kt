@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (C) 2016 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -47,8 +47,10 @@ import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.ShareFileDestinationDialog
+import com.instructure.student.features.shareextension.ShareExtensionTargetFragment
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AnimationHelpers
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_share_file.*
 import kotlinx.coroutines.Job
@@ -63,6 +65,7 @@ data class ShareFileSubmissionTarget(
     val assignment: Assignment
 ) : Parcelable
 
+@AndroidEntryPoint
 class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.DialogCloseListener {
 
     private val PERMISSION_REQUEST_WRITE_STORAGE = 0
@@ -194,8 +197,10 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
         if (sharedURI == null) {
             Toast.makeText(applicationContext, R.string.uploadingFromSourceFailed, Toast.LENGTH_LONG).show()
         } else {
-            uploadFileSourceFragment = ShareFileDestinationDialog.newInstance(ShareFileDestinationDialog.createBundle(sharedURI!!, courses!!))
-            uploadFileSourceFragment!!.show(supportFragmentManager, ShareFileDestinationDialog.TAG)
+            val fragment = ShareExtensionTargetFragment()
+            fragment.show(supportFragmentManager, ShareFileDestinationDialog.TAG)
+            /*uploadFileSourceFragment = ShareFileDestinationDialog.newInstance(ShareFileDestinationDialog.createBundle(sharedURI!!, courses!!))
+            uploadFileSourceFragment!!.show(supportFragmentManager, ShareFileDestinationDialog.TAG)*/
         }
     }
 
