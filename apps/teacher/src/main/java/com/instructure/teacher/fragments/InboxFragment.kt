@@ -247,6 +247,13 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
         })
     }
 
+    override fun unreadCountUpdated(unreadCount: Int) {
+        val activity = requireActivity()
+        if (activity is InitActivity) {
+            activity.updateInboxUnreadCount(unreadCount)
+        }
+    }
+
     val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.inboxFilter -> {

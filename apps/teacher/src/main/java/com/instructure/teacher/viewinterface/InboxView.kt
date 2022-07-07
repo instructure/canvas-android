@@ -18,4 +18,6 @@ package com.instructure.teacher.viewinterface
 import com.instructure.canvasapi2.models.Conversation
 import instructure.androidblueprint.SyncManager
 
-interface InboxView : SyncManager<Conversation>
+interface InboxView : SyncManager<Conversation> {
+    fun unreadCountUpdated(unreadCount: Int)
+}
