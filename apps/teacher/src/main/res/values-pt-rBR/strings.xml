@@ -873,7 +873,6 @@
         <item quantity="one">-%s ponto</item>
         <item quantity="other">-%s pontos</item>
     </plurals>
-    <string name="todoUnreadCount">%d da lista de tarefas não lido(s)</string>
     <string name="profileSettings">Configurações do perfil</string>
     <string name="downloadingFile">Baixando arquivo&#8230;</string>
     <string name="fileDownloadedSuccessfully">Arquivo baixado com sucesso.</string>

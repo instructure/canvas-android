@@ -19,9 +19,11 @@ package com.instructure.teacher.presenters
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ToDoManager
+import com.instructure.canvasapi2.managers.UnreadCountManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.ToDo
+import com.instructure.canvasapi2.models.UnreadConversationCount
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -65,6 +67,9 @@ class InitActivityPresenter : Presenter<InitActivityView> {
                 view?.gotLaunchDefinitions(definitions)
             }
 
+            val inboxUnreadCount = awaitApi<UnreadConversationCount> { UnreadCountManager.getUnreadConversationCount(it, true) }
+            val unreadCountInt = (inboxUnreadCount.unreadCount ?: "0").toInt()
+            view?.updateInboxUnreadCount(unreadCountInt)
         } catch {
             it.printStackTrace()
         }

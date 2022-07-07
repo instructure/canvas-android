@@ -958,7 +958,6 @@
     <string name="latePenalty">Late penalty (-%s)</string>
     <string name="finalGrade">Final Grade</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Opens in webview</string>

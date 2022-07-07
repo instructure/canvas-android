@@ -34,6 +34,8 @@ import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.IdRes
+import androidx.annotation.PluralsRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -1037,51 +1039,21 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun canBookmark(): Boolean = navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.BOOKMARKS)
 
-    override fun updateUnreadCount(unreadCount: String) {
-        // get the view
-        val bottomBarNavView = bottomBar?.getChildAt(0)
-        // get the inbox item
-        val view = (bottomBarNavView as BottomNavigationMenuView).getChildAt(4)
+    override fun updateUnreadCount(unreadCount: Int) {
+        updateBottomBarBadge(R.id.bottomNavigationInbox, unreadCount, R.plurals.a11y_inboxUnreadCount)
+    }
 
-        // create the badge, set the text and color it
-        val unreadCountValue = unreadCount.toInt()
-        var unreadCountDisplay = unreadCount
-        if(unreadCountValue > 99) {
-            unreadCountDisplay = getString(R.string.moreThan99)
-        } else if(unreadCountValue <= 0) {
-            //don't set the badge or display it, remove any badge
-            if(view.children.size > 2 && view.children[2] is TextView) {
-                (view as BottomNavigationItemView).removeViewAt(2)
+    private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) {
+        if (count > 0) {
+            bottomBar.getOrCreateBadge(menuItemId).number = count
+            bottomBar.getOrCreateBadge(menuItemId).backgroundColor = getColor(R.color.backgroundInfo)
+            bottomBar.getOrCreateBadge(menuItemId).badgeTextColor = getColor(R.color.white)
+            if (quantityContentDescription != null) {
+                bottomBar.getOrCreateBadge(menuItemId).setContentDescriptionQuantityStringsResource(quantityContentDescription)
             }
-            // update content description with no unread count number
-            bottomBar.menu.items.find { it.itemId == R.id.bottomNavigationInbox }.let {
-                val title = it?.title
-                MenuItemCompat.setContentDescription(it, title)
-            }
-            return
-        }
-
-        // update content description
-        bottomBar.menu.items.find { it.itemId == R.id.bottomNavigationInbox }.let {
-            var title: String = it?.title as String
-            title += "$unreadCountValue  "  + getString(R.string.unread)
-            MenuItemCompat.setContentDescription(it, title)
-        }
-
-        // check to see if we already have a badge created
-        with((view as BottomNavigationItemView)) {
-            // first child is the imageView that we use for the bottom bar, second is a layout for the label
-            if(childCount > 2 && getChildAt(2) is TextView) {
-                (getChildAt(2) as TextView).text = unreadCountDisplay
-            } else {
-                // no badge, we need to create one
-                val badge = LayoutInflater.from(context)
-                        .inflate(R.layout.unread_count, bottomBar, false)
-                (badge as TextView).text = unreadCountDisplay
-
-                ColorUtils.colorIt(ContextCompat.getColor(context, R.color.backgroundInfo), badge.background)
-                addView(badge)
-            }
+        } else {
+            // Don't set the badge or display it, remove any badge
+            bottomBar.removeBadge(menuItemId)
         }
     }
 

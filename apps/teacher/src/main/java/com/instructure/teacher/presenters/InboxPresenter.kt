@@ -17,9 +17,14 @@ package com.instructure.teacher.presenters
 
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.managers.InboxManager
+import com.instructure.canvasapi2.managers.UnreadCountManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.UnreadConversationCount
 import com.instructure.canvasapi2.utils.weave.WeaveJob
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weavePaginated
 import com.instructure.teacher.viewinterface.InboxView
 import instructure.androidblueprint.SyncPresenter
@@ -34,9 +39,14 @@ class InboxPresenter : SyncPresenter<Conversation, InboxView>(Conversation::clas
 
     var canvasContext: CanvasContext? = null
     var apiCall: WeaveJob? = null
+    var unreadCountCall: WeaveJob? = null
+
+    private var isLoading = false
 
     override fun loadData(forceNetwork: Boolean) {
-        if (data.size() > 0 && !forceNetwork) return
+        if ((data.size() > 0 || isLoading) && !forceNetwork) return
+
+        isLoading = true
         viewCallback?.onRefreshStarted()
         apiCall = weavePaginated<List<Conversation>> {
             onRequest { callback ->
@@ -45,16 +55,26 @@ class InboxPresenter : SyncPresenter<Conversation, InboxView>(Conversation::clas
                         ?: InboxManager.getConversations(scope, forceNetwork, callback)
             }
             onResponse { response ->
+                isLoading = false
                 data.addOrUpdate(response)
                 viewCallback?.onRefreshFinished()
                 viewCallback?.checkIfEmpty()
             }
-            onError { }
+            onError {
+                isLoading = false
+            }
         }
+
+        unreadCountCall = tryWeave {
+            val inboxUnreadCount = awaitApi<UnreadConversationCount> { UnreadCountManager.getUnreadConversationCount(it, true) }
+            val unreadCountInt = (inboxUnreadCount.unreadCount ?: "0").toInt()
+            viewCallback?.unreadCountUpdated(unreadCountInt)
+        } catch {}
     }
 
     override fun refresh(forceNetwork: Boolean) {
         apiCall?.cancel()
+        unreadCountCall?.cancel()
         clearData()
         loadData(forceNetwork)
     }

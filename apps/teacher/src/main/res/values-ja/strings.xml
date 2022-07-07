@@ -858,7 +858,6 @@
     <plurals name="latePolicyPenaltyFull">
         <item quantity="other">-%s 点</item>
     </plurals>
-    <string name="todoUnreadCount">未読の「するべきこと」%d</string>
     <string name="profileSettings">プロファイル設定</string>
     <string name="downloadingFile">ファイルをダウンロード中&#8230;</string>
     <string name="fileDownloadedSuccessfully">ファイルのダウンロードに成功しました。</string>

@@ -958,7 +958,6 @@
     <string name="latePenalty">Pénalité de retard (-%s)</string>
     <string name="finalGrade">Note Finale</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">S\'ouvre dans une vue web.</string>

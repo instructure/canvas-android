@@ -872,7 +872,6 @@
         <item quantity="one">%s Punkt</item>
         <item quantity="other">%s Punkte</item>
     </plurals>
-    <string name="todoUnreadCount">%d Ungelesene erledigen</string>
     <string name="profileSettings">Profileinstellungen</string>
     <string name="downloadingFile">Datei herunterladen&#8230;</string>
     <string name="fileDownloadedSuccessfully">Datei erfolgreich heruntergeladen.</string>
