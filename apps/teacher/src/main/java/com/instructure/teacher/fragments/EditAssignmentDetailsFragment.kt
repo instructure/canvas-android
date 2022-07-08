@@ -171,7 +171,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                 RequestCodes.CAMERA_PIC_REQUEST -> MediaUploadUtils.handleCameraPicResult(requireActivity(), null)
                 else -> null
             }?.let { imageUri ->
-                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, mCourse, requireActivity()) { imageUrl, _ -> descriptionEditor.insertImage(requireActivity(), imageUrl) }
+                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, mCourse, requireActivity()) { imageUrl -> descriptionEditor.insertImage(requireActivity(), imageUrl) }
             }
         }
     }

@@ -146,6 +146,6 @@ class CreateDiscussionPresenter(private val canvasContext: CanvasContext, privat
     }
 
     override fun uploadRceImage(imageUri: Uri, activity: Activity) {
-        rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, activity) { text, alt -> viewCallback?.insertImageIntoRCE(text) }
+        rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, activity) { imageUrl -> viewCallback?.insertImageIntoRCE(imageUrl) }
     }
 }
