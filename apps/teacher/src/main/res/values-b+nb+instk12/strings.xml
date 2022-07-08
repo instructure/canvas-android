@@ -875,7 +875,6 @@
         <item quantity="one">-%s poeng</item>
         <item quantity="other">-%s poeng</item>
     </plurals>
-    <string name="todoUnreadCount">Gjøremål %d ulest</string>
     <string name="profileSettings">Profilinnstillinger</string>
     <string name="downloadingFile">Laster ned fil&#8230;</string>
     <string name="fileDownloadedSuccessfully">Filnedlasting utført.</string>

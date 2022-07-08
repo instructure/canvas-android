@@ -872,7 +872,6 @@
         <item quantity="one">-%s koinga</item>
         <item quantity="other">-%s ngā koinga</item>
     </plurals>
-    <string name="todoUnreadCount">Hei mahi %d kaore i pānuitia</string>
     <string name="profileSettings">Ngā Tautuhinga Kōtaha</string>
     <string name="downloadingFile">E tikiake ake ana kōnae&#8230;</string>
     <string name="fileDownloadedSuccessfully">I pai te tikiake i te kōnae.</string>

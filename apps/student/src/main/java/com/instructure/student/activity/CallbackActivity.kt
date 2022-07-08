@@ -49,7 +49,7 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
     private var loadInitialDataJob: Job? = null
 
     abstract fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?)
-    abstract fun updateUnreadCount(unreadCount: String)
+    abstract fun updateUnreadCount(unreadCount: Int)
     abstract fun initialCoreDataLoadingComplete()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,7 +139,8 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
     private suspend fun getUnreadMessageCount() {
         val unreadCount = awaitApi<UnreadConversationCount> { UnreadCountManager.getUnreadConversationCount(it, true) }
         unreadCount.let {
-            updateUnreadCount(it.unreadCount!!)
+            val unreadCountInt = (it.unreadCount ?: "0").toInt()
+            updateUnreadCount(unreadCountInt)
         }
     }
 

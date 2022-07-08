@@ -84,7 +84,7 @@ import java.io.File
 import java.util.*
 
 @SuppressLint("ViewConstructor")
-abstract class PdfSubmissionView(context: Context) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+abstract class PdfSubmissionView(context: Context, private val studentAnnotationView: Boolean = false) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     protected lateinit var docSession: DocSession
     protected lateinit var apiValues: ApiValues
@@ -596,7 +596,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                     setIsCurrentlyAnnotating(true)
                 }
 
-                if (annotation.type != AnnotationType.FREETEXT && annotation.name.isValid()) {
+                if (annotation.type != AnnotationType.FREETEXT && annotation.name.isValid() && (!studentAnnotationView || hasComments(annotation))) {
                     // if the annotation is an existing annotation (has an ID) and is NOT freetext
                     // we want to display the button to view/make comments
                     commentsButton.setVisible()
@@ -604,6 +604,13 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             }
             return true
         }
+    }
+
+    private fun hasComments(annotation: Annotation): Boolean {
+        val currentAnnotation = annotation.convertPDFAnnotationToCanvaDoc(docSession.documentId)
+        return currentAnnotation != null
+            && commentRepliesHashMap[currentAnnotation.annotationId] != null
+            && commentRepliesHashMap[currentAnnotation.annotationId]?.isNotEmpty() == true
     }
 
     val mAnnotationDeselectedListener = AnnotationManager.OnAnnotationDeselectedListener { _, _ ->

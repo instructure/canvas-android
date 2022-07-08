@@ -106,19 +106,19 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         waitForDiscussionTopicToDisplay(name)
     }
 
-    fun createAnnouncement(name: String, description: String, verify: Boolean = true) {
+    fun createAnnouncement(name: String, description: String) {
         createNewDiscussion.click()
         onView(withId(R.id.announcementNameEditText)).perform(DirectlyPopulateEditText(name))
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(description))
         onView(withId(R.id.menuSaveAnnouncement)).perform(explicitClick())
+    }
 
-        if(verify) {
-            var expectedTitle = name
-            if (name.isNullOrEmpty()) {
+    fun assertAnnouncementCreated(inputTitle: String) {
+            var expectedTitle = inputTitle
+            if (inputTitle.isNullOrEmpty()) {
                 expectedTitle = InstrumentationRegistry.getInstrumentation().targetContext.resources.getString(R.string.utils_noTitle)
             }
             waitForDiscussionTopicToDisplay(expectedTitle)
-        }
     }
 
     fun launchCreateAnnouncementThenClose() {
