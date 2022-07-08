@@ -120,7 +120,16 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
     }
 
     fun uploadRceImage(imageUri: Uri, activity: Activity, course: Course) {
-        MediaUploadUtils.uploadRceImageJob(imageUri, course, activity) { text, alt -> contentRCEView?.insertImage(text, alt) }
+        MediaUploadUtils.uploadRceImageJob(imageUri, course, activity) { imageUrl, _ -> insertImage(imageUrl) }
+    }
+
+    private fun insertImage(imageUrl: String) {
+        val activity = context as? Activity
+        if (activity != null) {
+            contentRCEView?.insertImage(activity, imageUrl)
+        } else {
+            contentRCEView?.insertImage(imageUrl, "")
+        }
     }
 
     fun closeEditSyllabus() {

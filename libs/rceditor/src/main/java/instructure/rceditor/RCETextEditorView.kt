@@ -40,11 +40,9 @@ import android.webkit.URLUtil
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatEditText
 import kotlinx.android.synthetic.main.rce_color_picker.view.*
 import kotlinx.android.synthetic.main.rce_controller.view.*
 import kotlinx.android.synthetic.main.rce_dialog_alt_text.view.*
-import java.util.*
 import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_bottomDivider as bottomDivider
 import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_colorPickerWrapper as colorPickerView
 import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_controller as controller
@@ -199,11 +197,11 @@ class RCETextEditorView @JvmOverloads constructor(
         editor.setPadding(left, top, right, bottom)
     }
 
-    fun insertImage(activity: Activity, url: String) {
+    fun insertImage(activity: Activity, imageUrl: String) {
         showAltTextDialog(activity, { altText ->
-            editor.insertImage(url, altText)
+            editor.insertImage(imageUrl, altText)
         }, {
-            editor.insertImage(url, "")
+            editor.insertImage(imageUrl, "")
         })
     }
 
