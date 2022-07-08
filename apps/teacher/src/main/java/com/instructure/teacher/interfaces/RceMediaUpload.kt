@@ -12,5 +12,5 @@ interface RceMediaUploadPresenter {
 
 // Counterpart to the presenters
 interface RceMediaUploadView {
-    fun insertImageIntoRCE(text: String, alt: String)
+    fun insertImageIntoRCE(imageUrl: String)
 }

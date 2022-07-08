@@ -143,7 +143,7 @@ object MediaUploadUtils {
             ?: activity.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
     }
 
-    fun uploadRceImageJob(uri: Uri, canvasContext: CanvasContext, activity: Activity, insertImageCallback: (text: String, altText: String) -> Unit): WeaveCoroutine {
+    fun uploadRceImageJob(uri: Uri, canvasContext: CanvasContext, activity: Activity, insertImageCallback: (imageUrl: String, altText: String) -> Unit): WeaveCoroutine {
         val isTeacher = (canvasContext as? Course)?.isTeacher == true
         val tempFile = File(activity.externalCacheDir, "tmp-rce-image")
         var progressDialog: AlertDialog? = null

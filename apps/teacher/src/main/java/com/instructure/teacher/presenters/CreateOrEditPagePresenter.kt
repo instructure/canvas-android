@@ -94,7 +94,7 @@ class CreateOrEditPagePresenter(private val canvasContext: CanvasContext, mPage:
     }
 
     override fun uploadRceImage(imageUri: Uri, activity: Activity) {
-        rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext , activity) { text, alt -> viewCallback?.insertImageIntoRCE(text, alt) }
+        rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext , activity) { text, alt -> viewCallback?.insertImageIntoRCE(text) }
     }
 
     override fun onDestroyed() {

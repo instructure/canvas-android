@@ -19,6 +19,7 @@ package instructure.rceditor
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.res.Resources
@@ -39,8 +40,11 @@ import android.webkit.URLUtil
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatEditText
 import kotlinx.android.synthetic.main.rce_color_picker.view.*
 import kotlinx.android.synthetic.main.rce_controller.view.*
+import kotlinx.android.synthetic.main.rce_dialog_alt_text.view.*
+import java.util.*
 import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_bottomDivider as bottomDivider
 import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_colorPickerWrapper as colorPickerView
 import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_controller as controller
@@ -195,8 +199,43 @@ class RCETextEditorView @JvmOverloads constructor(
         editor.setPadding(left, top, right, bottom)
     }
 
+    fun insertImage(activity: Activity, url: String) {
+        showAltTextDialog(activity, { altText ->
+            editor.insertImage(url, altText)
+        }, {
+            editor.insertImage(url, "")
+        })
+    }
+
     fun insertImage(url: String, alt: String) {
         editor.insertImage(url, alt)
+    }
+
+    private fun showAltTextDialog(activity: Activity, onPositiveClick: (String) -> Unit, onNegativeClick: () -> Unit) {
+        val view = View.inflate(activity, R.layout.rce_dialog_alt_text, null)
+        val altTextInput = view?.altText
+
+        var buttonClicked = false
+
+        val altTextDialog = AlertDialog.Builder(activity)
+            .setTitle(activity.getString(R.string.rce_dialogAltText))
+            .setView(view)
+            .setPositiveButton(activity.getString(android.R.string.ok)) { _, _ ->
+                buttonClicked = true
+                onPositiveClick(altTextInput?.text.toString())
+            }
+            .setNegativeButton(activity.getString(android.R.string.cancel), { _, _ ->
+                buttonClicked = true
+                onNegativeClick()
+            })
+            .setOnDismissListener {
+                if (!buttonClicked) {
+                    onNegativeClick()
+                }
+            }
+            .create()
+
+        altTextDialog.show()
     }
 
     fun setHtml(
