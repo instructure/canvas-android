@@ -245,7 +245,7 @@ class RCETextEditorView @JvmOverloads constructor(
     ) {
         editor.applyHtml(html.orEmpty(), accessibilityTitle)
         editor.setPlaceholder(hint)
-        setThemeColor(themeColor)
+        this.themeColor = themeColor
         this.buttonColor = buttonColor
     }
 
@@ -276,10 +276,6 @@ class RCETextEditorView @JvmOverloads constructor(
         editor.onFocusChangeListener = OnFocusChangeListener { _, focused ->
             label.setTextColor(ContextCompat.getColor(context, if (focused) focusedColor else defaultColor))
         }
-    }
-
-    fun setThemeColor(@ColorInt color: Int) {
-        themeColor = color
     }
 
     private fun toggleColorPicker() {
