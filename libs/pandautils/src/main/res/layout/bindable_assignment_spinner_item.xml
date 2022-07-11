@@ -14,41 +14,32 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
     <data>
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.shareextension.target.itemviewmodels.ShareExtensionCourseItemViewModel" />
+            type="com.instructure.pandautils.features.shareextension.target.itemviewmodels.ShareExtensionAssignmentItemViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:minHeight="?android:listPreferredItemHeightSmall">
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="@dimen/gridIconSizeSmall"
-            android:layout_height="@dimen/gridIconSizeSmall"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="12dp"
-            android:contentDescription="@string/icon"
-            android:importantForAccessibility="no"
-            android:scaleType="fitCenter"
-            app:ovalColor="@{itemViewModel.data.color}"/>
+        android:minHeight="45dp"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/title"
-            style="@style/TextStyle.Primary.SingleLine"
+            android:id="@+id/courseName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@{itemViewModel.data.title}" />
-
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:singleLine="true"
+            android:text="@{itemViewModel.data.title}"
+            android:textColor="@color/textDark"
+            android:textSize="16sp" />
     </LinearLayout>
 </layout>

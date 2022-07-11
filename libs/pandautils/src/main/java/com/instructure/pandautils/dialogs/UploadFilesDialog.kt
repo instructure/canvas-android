@@ -46,6 +46,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.adapter_file_uploads.view.*
 import kotlinx.android.synthetic.main.dialog_files_upload.*
 import kotlinx.android.synthetic.main.dialog_files_upload.view.*

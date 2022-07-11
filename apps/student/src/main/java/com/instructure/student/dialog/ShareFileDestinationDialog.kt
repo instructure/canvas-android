@@ -52,8 +52,8 @@ import com.instructure.student.adapter.FileUploadAssignmentsAdapter
 import com.instructure.student.adapter.FileUploadAssignmentsAdapter.Companion.getOnlineUploadAssignmentsList
 import com.instructure.student.adapter.FileUploadCoursesAdapter
 import com.instructure.student.adapter.FileUploadCoursesAdapter.Companion.getFilteredCourseList
-import com.instructure.student.util.AnimationHelpers.createRevealAnimator
-import com.instructure.student.util.AnimationHelpers.removeGlobalLayoutListeners
+import com.instructure.pandautils.utils.AnimationHelpers.createRevealAnimator
+import com.instructure.pandautils.utils.AnimationHelpers.removeGlobalLayoutListeners
 import com.instructure.student.util.UploadCheckboxManager
 import com.instructure.student.util.UploadCheckboxManager.OnOptionCheckedListener
 import kotlinx.android.synthetic.main.upload_file_destination.*

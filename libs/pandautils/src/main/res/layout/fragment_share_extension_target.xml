@@ -21,7 +21,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.student.features.shareextension.target.ShareExtensionTargetViewModel" />
+            type="com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

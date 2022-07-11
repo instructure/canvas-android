@@ -26,9 +26,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.TextUtils
 import android.view.ViewTreeObserver
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -38,7 +38,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StorageQuotaExceededError
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -46,9 +45,10 @@ import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.ShareFileDestinationDialog
-import com.instructure.student.features.shareextension.target.ShareExtensionTargetFragment
+import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
+import com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetFragment
 import com.instructure.student.util.Analytics
-import com.instructure.student.util.AnimationHelpers
+import com.instructure.pandautils.utils.AnimationHelpers
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_share_file.*
@@ -67,6 +67,8 @@ data class ShareFileSubmissionTarget(
 @AndroidEntryPoint
 class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.DialogCloseListener {
 
+    private val shareExtensionViewModel: ShareExtensionViewModel by viewModels()
+
     private val PERMISSION_REQUEST_WRITE_STORAGE = 0
 
     private var loadCoursesJob: Job? = null
@@ -83,10 +85,10 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share_file)
         ViewStyler.setStatusBarDark(this, ContextCompat.getColor(this, R.color.studentDocumentSharingColor))
-        if (checkLoggedIn()) {
+        if (shareExtensionViewModel.checkIfLoggedIn()) {
             revealBackground()
             Analytics.trackAppFlow(this)
-            sharedURI = parseIntentType()
+            sharedURI = shareExtensionViewModel.parseIntentType(intent)
             if (submissionTarget != null) {
                 // If targeted for submission, skip the picker and go immediately to the submission workflow
                 val bundle = UploadFilesDialog.createAssignmentBundle(
@@ -99,6 +101,8 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
                 getCourses()
             }
             askForStoragePermissionIfNecessary()
+        } else {
+            exitActivity()
         }
     }
 
@@ -156,15 +160,6 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
         })
     }
 
-    private fun checkLoggedIn(): Boolean {
-        return if (TextUtils.isEmpty(ApiPrefs.getValidToken())) {
-            exitActivity()
-            false
-        } else {
-            true
-        }
-    }
-
     private fun exitActivity() {
         val intent = LoginActivity.createIntent(this)
         startActivity(intent)
@@ -201,18 +196,6 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
             /*uploadFileSourceFragment = ShareFileDestinationDialog.newInstance(ShareFileDestinationDialog.createBundle(sharedURI!!, courses!!))
             uploadFileSourceFragment!!.show(supportFragmentManager, ShareFileDestinationDialog.TAG)*/
         }
-    }
-
-    private fun parseIntentType(): Uri? {
-        // Get intent, action and MIME type
-        val intent = intent
-        val action = intent.action
-        val type = intent.type
-
-        return if (Intent.ACTION_SEND == action && type != null) {
-            intent.getParcelableExtra(Intent.EXTRA_STREAM)
-        } else null
-
     }
 
     override fun onCancel(dialog: DialogInterface?) {
