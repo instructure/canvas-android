@@ -17,15 +17,12 @@
 package com.instructure.student.ui.pages
 
 import android.widget.Button
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.AssignmentApiModel
@@ -51,8 +48,16 @@ class TodoPage: BasePage(R.id.todoPage) {
         assertTextDisplayedInRecyclerView(assignment.name!!)
     }
 
+    fun assertQuizDisplayed(quiz: QuizApiModel) {
+        assertTextDisplayedInRecyclerView(quiz.title)
+    }
+
     fun assertQuizDisplayed(quiz: Quiz) {
         assertTextDisplayedInRecyclerView(quiz.title!!)
+    }
+
+    fun assertQuizNotDisplayed(quiz: QuizApiModel) {
+        onView(withText(quiz.title!!)).check(doesNotExist())
     }
 
     fun assertQuizNotDisplayed(quiz: Quiz) {
@@ -69,9 +74,7 @@ class TodoPage: BasePage(R.id.todoPage) {
         onView(withText(quiz.title!!)).click()
     }
 
-    fun assertQuizDisplayed(quiz: QuizApiModel) {
-        assertTextDisplayedInRecyclerView(quiz.title)
-    }
+
 
     fun chooseFavoriteCourseFilter() {
         onView(withId(R.id.todoListFilter)).click()
