@@ -872,7 +872,6 @@
         <item quantity="one">%s pwynt</item>
         <item quantity="other">%s pwynt</item>
     </plurals>
-    <string name="todoUnreadCount">I\'w gwneud %d heb eu darllen</string>
     <string name="profileSettings">Gosodiadau Proffil</string>
     <string name="downloadingFile">Llwytho ffeil i lawr&#8230;</string>
     <string name="fileDownloadedSuccessfully">Wedi llwyddo i lwytho ffeil i lawr.</string>

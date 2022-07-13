@@ -858,7 +858,6 @@
     <plurals name="latePolicyPenaltyFull">
         <item quantity="other">-%s 分</item>
     </plurals>
-    <string name="todoUnreadCount">待辦 %d 未讀</string>
     <string name="profileSettings">個人檔案設定</string>
     <string name="downloadingFile">下載檔案&#8230;</string>
     <string name="fileDownloadedSuccessfully">檔案已成功下載。</string>

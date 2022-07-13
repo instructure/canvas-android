@@ -872,7 +872,6 @@
         <item quantity="one">-%s pwen</item>
         <item quantity="other">-%s pwen yo</item>
     </plurals>
-    <string name="todoUnreadCount">Pou fè %d poko li</string>
     <string name="profileSettings">Paramèt  Pwofi</string>
     <string name="downloadingFile">Telechajman fichye&#8230;</string>
     <string name="fileDownloadedSuccessfully">Fichye telechaje kòrèkteman.</string>

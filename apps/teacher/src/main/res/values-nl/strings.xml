@@ -872,7 +872,6 @@
         <item quantity="one">-%s punt</item>
         <item quantity="other">-%s punten</item>
     </plurals>
-    <string name="todoUnreadCount">Taken %d ongelezen</string>
     <string name="profileSettings">Profielinstellingen</string>
     <string name="downloadingFile">Bestand downloaden&#8230;</string>
     <string name="fileDownloadedSuccessfully">Bestand is gedownload.</string>

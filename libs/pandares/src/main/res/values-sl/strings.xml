@@ -958,7 +958,6 @@
     <string name="latePenalty">Kazen za zamudo (-%s)</string>
     <string name="finalGrade">Končna ocena</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Odpre se v spletnem pogledu</string>

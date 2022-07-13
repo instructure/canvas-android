@@ -872,7 +872,6 @@
         <item quantity="one">– %s točka</item>
         <item quantity="other">– %s točk</item>
     </plurals>
-    <string name="todoUnreadCount">Seznam opravil, %d neprebranih</string>
     <string name="profileSettings">Nastavitve profila</string>
     <string name="downloadingFile">Prenos datoteke&#8230;</string>
     <string name="fileDownloadedSuccessfully">Datoteka je uspešno prenesena.</string>
