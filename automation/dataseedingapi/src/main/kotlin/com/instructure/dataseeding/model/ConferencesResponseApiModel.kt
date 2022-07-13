@@ -19,6 +19,9 @@ package com.instructure.dataseeding.model
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Used to get conferences.
+ */
 data class ConferencesResponseApiModel(
         @SerializedName("id")
         val id: Long? = null,

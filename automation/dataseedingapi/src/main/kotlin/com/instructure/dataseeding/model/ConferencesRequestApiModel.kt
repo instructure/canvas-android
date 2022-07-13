@@ -20,7 +20,7 @@ package com.instructure.dataseeding.model
 import com.google.gson.annotations.SerializedName
 
 /**
- * Used to create/get conferences.
+ * Used to create conferences.
  */
 data class ConferencesRequestApiModel(
         @SerializedName("title")
@@ -37,8 +37,10 @@ data class ConferencesRequestApiModel(
         val userIds: List<Long>? = null
 )
 
+/**
+ * Wrapper class abpve ConferencesRequestApiModel because it is wrapped within a 'web_conference' object in the request.
+ */
 data class WebConferenceWrapper(
         @SerializedName("web_conference")
         val webConference: ConferencesRequestApiModel
-
-        )
+)
