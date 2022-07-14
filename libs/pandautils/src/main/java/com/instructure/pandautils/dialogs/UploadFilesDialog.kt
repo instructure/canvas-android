@@ -32,6 +32,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.content.FileProvider
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
@@ -57,7 +58,8 @@ import java.io.File
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_UPLOAD_FILES)
-class UploadFilesDialog : AppCompatDialogFragment() {
+@AndroidEntryPoint
+class UploadFilesDialog : DialogFragment() {
 
     init {
         retainInstance = true

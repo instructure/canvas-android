@@ -42,6 +42,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.ShareFileDestinationDialog
@@ -191,7 +192,7 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
         if (sharedURI == null) {
             Toast.makeText(applicationContext, R.string.uploadingFromSourceFailed, Toast.LENGTH_LONG).show()
         } else {
-            val fragment = ShareExtensionTargetFragment()
+            val fragment = FileUploadDialogFragment()
             fragment.show(supportFragmentManager, ShareFileDestinationDialog.TAG)
             /*uploadFileSourceFragment = ShareFileDestinationDialog.newInstance(ShareFileDestinationDialog.createBundle(sharedURI!!, courses!!))
             uploadFileSourceFragment!!.show(supportFragmentManager, ShareFileDestinationDialog.TAG)*/
