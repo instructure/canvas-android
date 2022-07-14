@@ -34,10 +34,10 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.R
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader.LoadedMedia
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.FileUploadUtils.createTaskLoaderBundle
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.FileUploadUtils.Companion.createTaskLoaderBundle
 import com.instructure.pandautils.utils.Utils.getAttachmentsDirectory
 import okhttp3.Request
-import okio.Okio
 import okio.Source
 import okio.buffer
 import okio.sink

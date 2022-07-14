@@ -44,7 +44,7 @@ fun Uri?.getVideoIntent(): Intent? = Intent(MediaStore.ACTION_VIDEO_CAPTURE).app
 fun Context.getVideoUri(): Uri {
     // Get the uri that we're saving the file to
     val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-    val file = File(FileUploadUtils.getExternalCacheDir(this), "video_$timeStamp.mp4")
+    val file = File(FileUploadUtils(this, this.contentResolver).getExternalCacheDir(), "video_$timeStamp.mp4")
 
     return FileProvider.getUriForFile(
         this,

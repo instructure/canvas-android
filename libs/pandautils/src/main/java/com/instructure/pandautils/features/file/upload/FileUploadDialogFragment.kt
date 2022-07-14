@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -35,11 +36,15 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.dialog_files_upload.*
 import java.io.File
 import java.util.ArrayList
 
@@ -175,7 +180,7 @@ open class FileUploadDialogFragment : DialogFragment() {
             cameraPermissionContract.launch(Manifest.permission.CAMERA)
         } else {
             val fileName = "pic_" + System.currentTimeMillis().toString() + ".jpg"
-            val file = File(FileUploadUtils.getExternalCacheDir(requireContext()), fileName)
+            val file = File(FileUploadUtils(requireContext(), requireContext().contentResolver).getExternalCacheDir(), fileName)
 
             cameraImageUri = FileProvider.getUriForFile(requireContext(), requireContext().packageName + Const.FILE_PROVIDER_AUTHORITY, file)
             takePictureContract.launch(cameraImageUri)

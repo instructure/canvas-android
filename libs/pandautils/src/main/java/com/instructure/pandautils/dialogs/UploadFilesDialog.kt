@@ -92,6 +92,8 @@ class UploadFilesDialog : DialogFragment() {
 
     private var dialogRootView: View? = null
 
+    private lateinit var fileUploadUtils: FileUploadUtils
+
     //region Lifecycle
 
     override fun onStart() {
@@ -176,6 +178,7 @@ class UploadFilesDialog : DialogFragment() {
     //region View Setup
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        fileUploadUtils = FileUploadUtils(requireContext(), requireContext().contentResolver)
 
         val title: String
         val positiveText: String
@@ -339,7 +342,7 @@ class UploadFilesDialog : DialogFragment() {
         }
 
         val fileName = "pic_" + System.currentTimeMillis().toString() + ".jpg"
-        val file = File(FileUploadUtils.getExternalCacheDir(requireContext()), fileName)
+        val file = File(fileUploadUtils.getExternalCacheDir(), fileName)
 
         cameraImageUri = FileProvider.getUriForFile(requireContext(), requireContext().packageName + Const.FILE_PROVIDER_AUTHORITY, file)
 
@@ -490,9 +493,9 @@ class UploadFilesDialog : DialogFragment() {
 
             val submitObject = inBackground<FileSubmitObject?> {
                 val cr = requireActivity().contentResolver
-                val mimeType = FileUploadUtils.getFileMimeType(cr, fileUri)
-                val fileName = FileUploadUtils.getFileNameWithDefault(cr, fileUri)
-                FileUploadUtils.getFileSubmitObjectFromInputStream(requireContext(), fileUri, fileName, mimeType)
+                val mimeType = fileUploadUtils.getFileMimeType(fileUri)
+                val fileName = fileUploadUtils.getFileNameWithDefault(fileUri)
+                fileUploadUtils.getFileSubmitObjectFromInputStream(fileUri, fileName, mimeType)
             }
 
             submitObject?.let {

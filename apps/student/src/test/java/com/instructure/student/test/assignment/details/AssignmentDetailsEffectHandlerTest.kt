@@ -65,6 +65,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     private val view: AssignmentDetailsView = mockk(relaxed = true)
     private val context: Activity = mockk(relaxed = true)
     private val firebase: FirebaseAnalytics = mockk(relaxed = true)
+    private val fileUploadUtils: FileUploadUtils = mockk(relaxed = true)
     private var effectHandler =
         AssignmentDetailsEffectHandler(context, assignmentId).apply { view = this@AssignmentDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<AssignmentDetailsEvent> = mockk(relaxed = true)
@@ -1279,8 +1280,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         every { any<Uri>().getVideoIntent() } returns intent
         every { any<Context>().isIntentAvailable(any()) } returns true
 
-        mockkObject(FileUploadUtils)
-        every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
+        every { fileUploadUtils.getExternalCacheDir() } returns File("")
 
         mockkStatic(FileProvider::class)
         every { FileProvider.getUriForFile(any(), any(), any()) } returns uri

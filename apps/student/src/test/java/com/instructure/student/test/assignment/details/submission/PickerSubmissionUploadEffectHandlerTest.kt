@@ -45,6 +45,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
     private val context: Activity = mockk(relaxed = true)
     private val view: PickerSubmissionUploadView = mockk(relaxed = true)
     private val eventConsumer: Consumer<PickerSubmissionUploadEvent> = mockk(relaxed = true)
+    private val fileUploadUtils: FileUploadUtils = mockk(relaxed = true)
     private val effectHandler = PickerSubmissionUploadEffectHandler(context)
     private val connection = effectHandler.connect(eventConsumer)
 
@@ -117,8 +118,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         mockkObject(PermissionUtils)
         every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns true
 
-        mockkObject(FileUploadUtils)
-        every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
+        every { fileUploadUtils.getExternalCacheDir() } returns File("")
 
         mockkStatic(FileProvider::class)
         every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
@@ -191,12 +191,10 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val fileName = "file"
         val file = FileSubmitObject(fileName, 1L, mimeType, "fullPath.ext")
 
-        mockkObject(FileUploadUtils)
-        every { FileUploadUtils.getFileMimeType(any(), uri) } returns mimeType
-        every { FileUploadUtils.getFileNameWithDefault(any(), uri) } returns fileName
+        every { fileUploadUtils.getFileMimeType(uri) } returns mimeType
+        every { fileUploadUtils.getFileNameWithDefault(uri) } returns fileName
         every {
-            FileUploadUtils.getFileSubmitObjectFromInputStream(
-                context,
+            fileUploadUtils.getFileSubmitObjectFromInputStream(
                 uri,
                 fileName,
                 mimeType
@@ -221,12 +219,10 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val fileName = "file"
         val file = FileSubmitObject(fileName, 1L, mimeType, "fullPath.ext")
 
-        mockkObject(FileUploadUtils)
-        every { FileUploadUtils.getFileMimeType(any(), uri) } returns mimeType
-        every { FileUploadUtils.getFileNameWithDefault(any(), uri) } returns fileName
+        every { fileUploadUtils.getFileMimeType(uri) } returns mimeType
+        every { fileUploadUtils.getFileNameWithDefault(uri) } returns fileName
         every {
-            FileUploadUtils.getFileSubmitObjectFromInputStream(
-                context,
+            fileUploadUtils.getFileSubmitObjectFromInputStream(
                 uri,
                 fileName,
                 mimeType
@@ -257,12 +253,10 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val file = FileSubmitObject(fileName, 1L, mimeType, "fullPath.ext")
         val allowedExtensions = listOf("bad", "other")
 
-        mockkObject(FileUploadUtils)
-        every { FileUploadUtils.getFileMimeType(any(), uri) } returns mimeType
-        every { FileUploadUtils.getFileNameWithDefault(any(), uri) } returns fileName
+        every { fileUploadUtils.getFileMimeType(uri) } returns mimeType
+        every { fileUploadUtils.getFileNameWithDefault(uri) } returns fileName
         every {
-            FileUploadUtils.getFileSubmitObjectFromInputStream(
-                context,
+            fileUploadUtils.getFileSubmitObjectFromInputStream(
                 uri,
                 fileName,
                 mimeType
@@ -287,12 +281,10 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val errorMessage = "error"
         val file = FileSubmitObject(fileName, 1L, mimeType, "fullPath.ext", errorMessage)
 
-        mockkObject(FileUploadUtils)
-        every { FileUploadUtils.getFileMimeType(any(), uri) } returns mimeType
-        every { FileUploadUtils.getFileNameWithDefault(any(), uri) } returns fileName
+        every { fileUploadUtils.getFileMimeType(uri) } returns mimeType
+        every { fileUploadUtils.getFileNameWithDefault(uri) } returns fileName
         every {
-            FileUploadUtils.getFileSubmitObjectFromInputStream(
-                context,
+            fileUploadUtils.getFileSubmitObjectFromInputStream(
                 uri,
                 fileName,
                 mimeType

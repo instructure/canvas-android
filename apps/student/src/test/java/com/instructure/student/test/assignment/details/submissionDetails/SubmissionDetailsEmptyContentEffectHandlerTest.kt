@@ -62,6 +62,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     private val assignmentId = 2468L
     private val view: SubmissionDetailsEmptyContentView = mockk(relaxed = true)
     private val context: Activity = mockk(relaxed = true)
+    private val fileUploadUtils: FileUploadUtils = mockk(relaxed = true)
     private val effectHandler = SubmissionDetailsEmptyContentEffectHandler(context, assignmentId).apply { view = this@SubmissionDetailsEmptyContentEffectHandlerTest.view }
     private val eventConsumer: Consumer<SubmissionDetailsEmptyContentEvent> = mockk(relaxed = true)
     private lateinit var connection: Connection<SubmissionDetailsEmptyContentEffect>
@@ -580,8 +581,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         every { any<Uri>().getVideoIntent() } returns intent
         every { any<Context>().isIntentAvailable(any()) } returns true
 
-        mockkObject(FileUploadUtils)
-        every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
+        every { fileUploadUtils.getExternalCacheDir() } returns File("")
 
         mockkStatic(FileProvider::class)
         every { FileProvider.getUriForFile(any(), any(), any()) } returns uri

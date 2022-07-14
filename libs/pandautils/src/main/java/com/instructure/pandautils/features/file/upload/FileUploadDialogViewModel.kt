@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.file.upload
 
 import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -36,13 +37,15 @@ import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.android.synthetic.main.dialog_files_upload.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FileUploadDialogViewModel @Inject constructor(
-        private val contentResolver: ContentResolver
+        private val contentResolver: ContentResolver,
+        @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     val events: LiveData<Event<FileUploadAction>>
