@@ -156,7 +156,7 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 
-    override fun insertImageIntoRCE(text: String, alt: String) = rceTextEditor.insertImage(text, alt)
+    override fun insertImageIntoRCE(imageUrl: String) = rceTextEditor.insertImage(requireActivity(), imageUrl)
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {

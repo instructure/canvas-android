@@ -119,7 +119,7 @@ class DiscussionsReplyFragment : ParentFragment() {
                 else -> null
             }?.let { imageUri ->
                 // If the image Uri is not null, upload it
-                MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { text, alt -> rceTextEditor.insertImage(text, alt) }
+                MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> rceTextEditor.insertImage(requireActivity(), imageUrl) }
             }
         }
     }

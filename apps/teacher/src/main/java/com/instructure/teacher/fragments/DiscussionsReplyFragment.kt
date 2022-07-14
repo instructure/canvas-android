@@ -164,7 +164,7 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
         }
     }
 
-    override fun insertImageIntoRCE(text: String, alt: String) = rceTextEditor.insertImage(text, alt)
+    override fun insertImageIntoRCE(imageUrl: String) = rceTextEditor.insertImage(requireActivity(), imageUrl)
 
     companion object {
         private const val DISCUSSION_TOPIC_HEADER_ID = "DISCUSSION_TOPIC_HEADER_ID"

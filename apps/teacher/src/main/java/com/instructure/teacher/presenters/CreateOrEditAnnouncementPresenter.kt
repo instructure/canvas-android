@@ -40,10 +40,8 @@ import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
 import instructure.androidblueprint.FragmentPresenter
 import kotlinx.coroutines.Job
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
@@ -158,7 +156,7 @@ class CreateOrEditAnnouncementPresenter(
     }
 
     override fun uploadRceImage(imageUri: Uri, activity: Activity) {
-        rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, activity) { text, alt -> viewCallback?.insertImageIntoRCE(text, alt) }
+        rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, activity) { imageUrl -> viewCallback?.insertImageIntoRCE(imageUrl) }
     }
 
 

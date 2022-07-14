@@ -188,7 +188,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         }
     }
 
-    override fun insertImageIntoRCE(text: String, alt: String) = descriptionRCEView.insertImage(text, alt)
+    override fun insertImageIntoRCE(imageUrl: String) = descriptionRCEView.insertImage(requireActivity(), imageUrl)
 
     override fun onReadySetGo(presenter: CreateDiscussionPresenter) {
         // If we already have something in the edit date groups we already have the full assignment and don't need to get it again.
