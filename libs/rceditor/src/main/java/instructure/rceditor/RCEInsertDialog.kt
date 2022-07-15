@@ -53,9 +53,10 @@ class RCEInsertDialog : AppCompatDialogFragment() {
         builder.setTitle(arguments?.getString(TITLE))
         builder.setPositiveButton(R.string.rce_dialogDone, null) // Override listener in onShow
         builder.setNegativeButton(R.string.rce_dialogCancel) { _, _ -> dismiss() }
-        val themeColor = arguments?.getInt(THEME_COLOR, Color.BLACK) ?: Color.BLACK
+        val defaultColor = context?.getColor(R.color.rce_defaultTextColor) ?: Color.BLACK
+        val themeColor = arguments?.getInt(THEME_COLOR, defaultColor) ?: defaultColor
         val highlightColor = increaseAlpha(themeColor)
-        val colorStateList = makeEditTextColorStateList(Color.BLACK, themeColor)
+        val colorStateList = makeEditTextColorStateList(defaultColor, themeColor)
         altEditText = root.findViewById(R.id.altEditText)
         urlEditText = root.findViewById(R.id.urlEditText)
         altEditText.highlightColor = highlightColor
@@ -64,7 +65,7 @@ class RCEInsertDialog : AppCompatDialogFragment() {
         urlEditText.supportBackgroundTintList = colorStateList
         val dialog = builder.create()
         dialog.setOnShowListener {
-            val buttonColor = arguments?.getInt(BUTTON_COLOR, Color.BLACK) ?: Color.BLACK
+            val buttonColor = arguments?.getInt(BUTTON_COLOR, defaultColor) ?: defaultColor
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(buttonColor)
             dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(buttonColor)
             val button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)

@@ -28,7 +28,6 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.MediaUploadUtils
-import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.DiscussionsReplyView
 import instructure.androidblueprint.FragmentPresenter
@@ -92,7 +91,7 @@ class DiscussionsReplyPresenter(
     fun getAttachment(): FileSubmitObject? = attachment
 
     override fun uploadRceImage(imageUri: Uri, activity: Activity) {
-        rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, activity) { text, alt -> viewCallback?.insertImageIntoRCE(text, alt) }
+        rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, activity) { imageUrl -> viewCallback?.insertImageIntoRCE(imageUrl) }
     }
 
     companion object {
