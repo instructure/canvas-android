@@ -32,8 +32,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
@@ -60,8 +59,6 @@ open class FileUploadDialogFragment : DialogFragment() {
     private var isOneFileOnly: Boolean by BooleanArg()
     private var position: Int by IntArg()
 
-    private var fileListAdapter: UploadFilesDialog.FileRecyclerViewAdapter? = null
-    private val fileList: ArrayList<FileSubmitObject> by ParcelableArrayListArg(ArrayList())
     private var fileSubmitUri: Uri? = null
     private var cameraImageUri: Uri? = null
 
@@ -76,13 +73,19 @@ open class FileUploadDialogFragment : DialogFragment() {
     }
 
     private val takePictureContract = registerForActivityResult(ActivityResultContracts.TakePicture()) { imageSaved ->
+        if (imageSaved) {
+            cameraImageUri?.let {
+                viewModel.addFile(it)
+            }
+        }
     }
 
-    private val galleryPickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) { fileUri ->
+    private val galleryPickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
+         viewModel.addFile(it)
     }
 
     private val filePickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
-
+        viewModel.addFile(it)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -151,12 +154,6 @@ open class FileUploadDialogFragment : DialogFragment() {
         return dialog
     }
 
-    open fun uploadClicked() {
-    }
-
-    open fun cancelClicked() {
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -165,6 +162,14 @@ open class FileUploadDialogFragment : DialogFragment() {
                 handleAction(it)
             }
         })
+
+        viewModel.setData(assignment, fileSubmitUri, uploadType, canvasContext)
+    }
+
+    open fun uploadClicked() {
+    }
+
+    open fun cancelClicked() {
     }
 
     private fun handleAction(action: FileUploadAction) {
@@ -214,6 +219,86 @@ open class FileUploadDialogFragment : DialogFragment() {
                 courseId = args.getLong(Const.COURSE_ID, INVALID_ID)
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
             }
+        }
+
+        fun createBundle(submitURI: Uri?, type: FileUploadType, parentFolderId: Long?): Bundle {
+            val bundle = Bundle()
+            if(submitURI != null) bundle.putParcelable(Const.URI, submitURI)
+            if (parentFolderId != null) bundle.putLong(Const.PARENT_FOLDER_ID, parentFolderId)
+            bundle.putSerializable(Const.UPLOAD_TYPE, type)
+            return bundle
+        }
+
+        fun createMessageAttachmentsBundle(defaultFileList: ArrayList<FileSubmitObject>): Bundle {
+            val bundle = createBundle(null, FileUploadType.MESSAGE, null)
+            bundle.putParcelableArrayList(Const.FILES, defaultFileList)
+            return bundle
+        }
+
+        fun createDiscussionsBundle(defaultFileList: ArrayList<FileSubmitObject>): Bundle {
+            val bundle = createBundle(null, FileUploadType.DISCUSSION, null)
+            bundle.putParcelableArrayList(Const.FILES, defaultFileList)
+            return bundle
+        }
+
+        fun createFilesBundle(submitURI: Uri?, parentFolderId: Long?): Bundle {
+            return createBundle(submitURI, FileUploadType.USER, parentFolderId)
+        }
+
+        fun createContextBundle(submitURI: Uri?, context: CanvasContext, parentFolderId: Long?): Bundle {
+            return when {
+                context.isCourse -> createCourseBundle(submitURI, context as Course, parentFolderId)
+                context.isGroup -> createGroupBundle(submitURI, context as Group, parentFolderId)
+                else -> createUserBundle(submitURI, context as User, parentFolderId)
+            }
+        }
+
+        private fun createCourseBundle(submitURI: Uri?, course: Course, parentFolderId: Long?): Bundle {
+            val bundle = createBundle(submitURI, FileUploadType.COURSE, parentFolderId)
+            bundle.putParcelable(Const.CANVAS_CONTEXT, course)
+            return bundle
+        }
+
+        private fun createGroupBundle(submitURI: Uri?, group: Group, parentFolderId: Long?): Bundle {
+            val bundle = createBundle(submitURI, FileUploadType.GROUP, parentFolderId)
+            bundle.putParcelable(Const.CANVAS_CONTEXT, group)
+            return bundle
+        }
+
+        private fun createUserBundle(submitURI: Uri?, user: User, parentFolderId: Long?): Bundle {
+            val bundle = createBundle(submitURI, FileUploadType.USER, parentFolderId)
+            bundle.putParcelable(Const.CANVAS_CONTEXT, user)
+            return bundle
+        }
+
+        fun createAssignmentBundle(submitURI: Uri?, course: Course, assignment: Assignment): Bundle {
+            val bundle = createBundle(submitURI, FileUploadType.ASSIGNMENT, null)
+            bundle.putParcelable(Const.CANVAS_CONTEXT, course)
+            bundle.putParcelable(Const.ASSIGNMENT, assignment)
+            return bundle
+        }
+
+        fun createQuizFileBundle(quizQuestionId: Long, courseId: Long, quizId: Long, position: Int): Bundle {
+            val bundle = createBundle(null, FileUploadType.QUIZ, null)
+            bundle.putLong(Const.QUIZ_ANSWER_ID, quizQuestionId)
+            bundle.putLong(Const.QUIZ, quizId)
+            bundle.putLong(Const.COURSE_ID, courseId)
+            bundle.putInt(Const.POSITION, position)
+            return bundle
+        }
+
+        fun createSubmissionCommentBundle(course: Course, assignment: Assignment, defaultFileList: java.util.ArrayList<FileSubmitObject>): Bundle {
+            val bundle = createBundle(null, FileUploadType.SUBMISSION_COMMENT, null)
+            bundle.putParcelable(Const.CANVAS_CONTEXT, course)
+            bundle.putParcelable(Const.ASSIGNMENT, assignment)
+            bundle.putParcelableArrayList(Const.FILES, defaultFileList)
+            return bundle
+        }
+
+        fun createAttachmentsBundle(defaultFileList: ArrayList<FileSubmitObject> = ArrayList()): Bundle {
+            val bundle = createBundle(null, FileUploadType.MESSAGE, null)
+            bundle.putParcelableArrayList(Const.FILES, defaultFileList)
+            return bundle
         }
     }
 }

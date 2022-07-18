@@ -14,22 +14,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.file.upload
+package com.instructure.pandautils.features.file.upload.itemviewmodels
 
-import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.file.upload.FileItemViewData
+import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class FileUploadDialogViewData(
-        val files: List<FileItemViewModel>
-)
-
-data class FileItemViewData(
-        val fileName: String,
-        val fileSize: String
-)
-
-sealed class FileUploadAction {
-    object TakePhoto : FileUploadAction()
-    object PickPhoto : FileUploadAction()
-    object PickFile : FileUploadAction()
+class FileItemViewModel(
+        val data: FileItemViewData
+) : ItemViewModel {
+    override val layoutId: Int
+        get() = R.layout.adapter_file_uploads
 }
-

@@ -92,7 +92,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:layout_height="130dp" />
+                    tools:layout_height="130dp"
+                    app:recyclerViewItemViewModels="@{viewModel.data.files}"/>
 
                 <!-- Ideally these would be buttons instead of nested LinearLayouts, but as of Support Library v23.3
                     support vector drawables in XML only work with the app:srcCompat attribute in ImageViews -->
