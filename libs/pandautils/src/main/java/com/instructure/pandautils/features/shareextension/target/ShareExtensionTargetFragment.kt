@@ -44,6 +44,8 @@ import kotlinx.android.synthetic.main.fragment_share_extension_target.*
 class ShareExtensionTargetFragment : DialogFragment() {
 
     companion object {
+        const val TAG = "ShareExtensionTargetFragment"
+
         fun newInstance() = ShareExtensionTargetFragment()
     }
 
@@ -116,7 +118,8 @@ class ShareExtensionTargetFragment : DialogFragment() {
     }
 
     private fun validateAndShowNext() {
-
+        val data = viewModel.getValidatedData()
+        shareExtensionViewModel.showUploadDialog(data.course, data.assignment, data.fileUploadType)
     }
 
     private fun setRevealContentsListener() {

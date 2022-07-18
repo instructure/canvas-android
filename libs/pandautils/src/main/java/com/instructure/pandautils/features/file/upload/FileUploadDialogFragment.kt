@@ -202,6 +202,8 @@ open class FileUploadDialogFragment : DialogFragment() {
 
     companion object {
 
+        const val TAG = "FileUploadDialogFragment"
+
         private const val INVALID_ID = -1L
         private const val INVALID_ID_INT = -1
 

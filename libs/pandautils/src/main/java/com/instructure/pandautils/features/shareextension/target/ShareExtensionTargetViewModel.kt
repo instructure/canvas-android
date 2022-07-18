@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.R
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.color
@@ -62,7 +63,7 @@ class ShareExtensionTargetViewModel @Inject constructor(
     private var selectedCourse: Course? = null
     private var selectedAssignment: Assignment? = null
 
-    private var selectedTarget: ShareTarget = ShareTarget.MY_FILES
+    private var uploadType: FileUploadType = FileUploadType.USER
 
     init {
         fetchCourses()
@@ -86,6 +87,7 @@ class ShareExtensionTargetViewModel @Inject constructor(
 
     fun onCourseSelected(position: Int) {
         selectedCourse = courses[position]
+        selectedAssignment = null
         fetchAssignment(selectedCourse?.id ?: throw IllegalArgumentException())
     }
 
@@ -122,17 +124,24 @@ class ShareExtensionTargetViewModel @Inject constructor(
     }
 
     fun assignmentTargetSelected() {
-        selectedTarget = ShareTarget.ASSIGNMENT
+        uploadType = FileUploadType.ASSIGNMENT
         _events.postValue(Event(ShareExtensionTargetAction.AssignmentTargetSelected))
     }
 
     fun filesTargetSelected() {
-        selectedTarget = ShareTarget.MY_FILES
+        uploadType = FileUploadType.USER
         _events.postValue(Event(ShareExtensionTargetAction.FilesTargetSelected))
     }
-}
 
-enum class ShareTarget {
-    ASSIGNMENT,
-    MY_FILES
+    fun getValidatedData(): FileUploadTargetData {
+        if (uploadType == FileUploadType.ASSIGNMENT) {
+            if (selectedCourse == null || selectedAssignment == null) {
+                TODO("Handle missing data")
+            } else {
+                return FileUploadTargetData(selectedCourse, selectedAssignment, uploadType)
+            }
+        }
+        return FileUploadTargetData(fileUploadType = uploadType)
+    }
+
 }

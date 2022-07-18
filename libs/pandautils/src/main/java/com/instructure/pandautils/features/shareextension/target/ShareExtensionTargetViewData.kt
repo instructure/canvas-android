@@ -16,8 +16,12 @@
 
 package com.instructure.pandautils.features.shareextension.target
 
+import android.net.Uri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.target.itemviewmodels.ShareExtensionAssignmentItemViewModel
 import com.instructure.pandautils.features.shareextension.target.itemviewmodels.ShareExtensionCourseItemViewModel
 
@@ -28,6 +32,12 @@ data class ShareExtensionCourseViewData(val title: String,
                                         val color: Int)
 
 data class ShareExtensionAssignmentViewData(val title: String)
+
+data class FileUploadTargetData(
+        val course: CanvasContext? = null,
+        val assignment: Assignment? = null,
+        val fileUploadType: FileUploadType
+)
 
 sealed class ShareExtensionTargetAction {
     object AssignmentTargetSelected : ShareExtensionTargetAction()

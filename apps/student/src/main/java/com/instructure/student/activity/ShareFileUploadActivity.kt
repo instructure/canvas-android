@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -43,6 +44,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadType
+import com.instructure.pandautils.features.shareextension.ShareExtensionAction
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.ShareFileDestinationDialog
@@ -90,6 +93,7 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
             revealBackground()
             Analytics.trackAppFlow(this)
             sharedURI = shareExtensionViewModel.parseIntentType(intent)
+            shareExtensionViewModel.uri = sharedURI
             if (submissionTarget != null) {
                 // If targeted for submission, skip the picker and go immediately to the submission workflow
                 val bundle = UploadFilesDialog.createAssignmentBundle(
@@ -104,6 +108,38 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
             askForStoragePermissionIfNecessary()
         } else {
             exitActivity()
+        }
+
+        shareExtensionViewModel.events.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
+    }
+
+    private fun handleAction(action: ShareExtensionAction) {
+        when (action) {
+            is ShareExtensionAction.ShowUploadDialog -> {
+                val bundle: Bundle = if (action.uploadType == FileUploadType.ASSIGNMENT) {
+                    if (action.course == null || action.assignment == null) {
+                        TODO("Handle error")
+                    } else {
+                        FileUploadDialogFragment.createAssignmentBundle(action.fileUri, action.course as Course, action.assignment!!)
+                    }
+                } else {
+                    FileUploadDialogFragment.createFilesBundle(action.fileUri, null)
+                }
+                ValueAnimator.ofObject(ArgbEvaluator(), ContextCompat.getColor(this, R.color.login_studentAppTheme), getColor(bundle)).let {
+                    it.addUpdateListener { animation -> rootView!!.setBackgroundColor(animation.animatedValue as Int) }
+                    it.duration = 500
+                    it.addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationStart(animation: Animator) {
+                            FileUploadDialogFragment.newInstance(bundle).show(supportFragmentManager, FileUploadDialogFragment.TAG)
+                        }
+                    })
+                    it.start()
+                }
+            }
         }
     }
 
@@ -192,8 +228,7 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
         if (sharedURI == null) {
             Toast.makeText(applicationContext, R.string.uploadingFromSourceFailed, Toast.LENGTH_LONG).show()
         } else {
-            val fragment = FileUploadDialogFragment()
-            fragment.show(supportFragmentManager, ShareFileDestinationDialog.TAG)
+            ShareExtensionTargetFragment().show(supportFragmentManager, ShareExtensionTargetFragment.TAG)
             /*uploadFileSourceFragment = ShareFileDestinationDialog.newInstance(ShareFileDestinationDialog.createBundle(sharedURI!!, courses!!))
             uploadFileSourceFragment!!.show(supportFragmentManager, ShareFileDestinationDialog.TAG)*/
         }
