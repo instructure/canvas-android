@@ -20,7 +20,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
 import com.instructure.pandautils.features.notification.preferences.NotificationCategoryHeaderViewData
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesViewType
-import com.instructure.pandautils.mvvm.ItemViewModel
 
 class NotificationCategoryHeaderItemViewModel(
         val data: NotificationCategoryHeaderViewData,

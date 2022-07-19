@@ -30,19 +30,19 @@ import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryHeaderItemViewModel
 import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryItemViewModel
+import com.instructure.pandautils.features.notification.preferences.itemviewmodels.PushNotificationCategoryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class NotificationPreferencesViewModel @Inject constructor(
+abstract class NotificationPreferencesViewModel (
         private val communicationChannelsManager: CommunicationChannelsManager,
-        private val notificationPreferencesManager: NotificationPreferencesManager,
+        protected val notificationPreferencesManager: NotificationPreferencesManager,
         private val apiPrefs: ApiPrefs,
         private val notificationPreferenceUtils: NotificationPreferenceUtils,
-        private val resources: Resources
+        protected val resources: Resources
 ) : ViewModel() {
     val state: LiveData<ViewState>
         get() = _state
@@ -50,13 +50,13 @@ class NotificationPreferencesViewModel @Inject constructor(
 
     val data: LiveData<NotificationPreferencesViewData>
         get() = _data
-    private val _data = MutableLiveData<NotificationPreferencesViewData>()
+    protected val _data = MutableLiveData<NotificationPreferencesViewData>()
 
     val events: LiveData<Event<NotificationPreferencesAction>>
         get() = _events
-    private val _events = MutableLiveData<Event<NotificationPreferencesAction>>()
+    protected val _events = MutableLiveData<Event<NotificationPreferencesAction>>()
 
-    private var pushChannel: CommunicationChannel? = null
+    protected var pushChannel: CommunicationChannel? = null
 
     init {
         _state.postValue(ViewState.Loading)
@@ -106,16 +106,15 @@ class NotificationPreferencesViewModel @Inject constructor(
             val categoryHelper = categoryHelperMap[categoryName] ?: continue
             val header = groupHeaderMap[categoryHelper.categoryGroup] ?: continue
 
-            val categoryItemViewModel = NotificationCategoryItemViewModel(
-                    data = NotificationCategoryViewData(
+            val categoryItemViewModel = createCategoryItemViewModel(
+                    NotificationCategoryViewData(
                             categoryName,
                             titleMap[categoryName],
                             descriptionMap[categoryName],
                             prefs[0].frequency,
                             categoryHelper.position,
                             prefs[0].notification
-                    ),
-                    toggle = this::toggleNotification
+                    )
             )
             if (categories[header] == null) {
                 categories[header] = arrayListOf(categoryItemViewModel)
@@ -132,33 +131,5 @@ class NotificationPreferencesViewModel @Inject constructor(
         }.sortedBy { it.data.position }
     }
 
-    private fun toggleNotification(enabled: Boolean, categoryName: String) {
-        viewModelScope.launch {
-            try {
-                pushChannel?.let {
-                    notificationPreferencesManager.updatePreferenceCategoryAsync(
-                            categoryName,
-                            it.id,
-                            enabled.frequency,
-                    ).await().dataOrThrow
-                } ?: throw IllegalStateException()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                _data.value?.items?.forEach {
-                    val itemViewModel = it.itemViewModels.firstOrNull { it.data.categoryName == categoryName }
-                    itemViewModel?.let {
-                        it.apply {
-                            data.frequency = enabled.not().frequency
-                            notifyPropertyChanged(BR.checked)
-                        }
-                        return@forEach
-                    }
-                }
-                _events.postValue(Event(NotificationPreferencesAction.ShowSnackbar(resources.getString(R.string.errorOccurred))))
-            }
-        }
-    }
-
-    private val Boolean.frequency: String
-        get() = if (this) NotificationPreferencesManager.IMMEDIATELY else NotificationPreferencesManager.NEVER
+    abstract fun createCategoryItemViewModel(viewData: NotificationCategoryViewData): NotificationCategoryItemViewModel
 }

@@ -37,7 +37,7 @@ import kotlinx.android.synthetic.main.fragment_push_preferences.*
 @AndroidEntryPoint
 class NotificationPreferencesFragment : Fragment() {
 
-    private val viewModel: NotificationPreferencesViewModel by viewModels()
+    private val viewModel: PushNotificationPreferencesViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
