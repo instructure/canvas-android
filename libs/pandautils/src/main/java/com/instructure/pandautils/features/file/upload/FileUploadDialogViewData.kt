@@ -24,7 +24,8 @@ data class FileUploadDialogViewData(
 
 data class FileItemViewData(
         val fileName: String,
-        val fileSize: String
+        val fileSize: String,
+        val fullPath: String
 )
 
 sealed class FileUploadAction {

@@ -97,10 +97,16 @@ class FileUploadDialogViewModel @Inject constructor(
         val itemViewModels = submitObjects.map {
             FileItemViewModel(FileItemViewData(
                     it.name,
-                    humanReadableByteCount(it.size)
-            ))
+                    humanReadableByteCount(it.size),
+                    it.fullPath
+            ), this::onRemoveFileClicked)
         }
         _data.postValue(FileUploadDialogViewData(itemViewModels))
+    }
+
+    private fun onRemoveFileClicked(fullPath: String) {
+        submitObjects.removeAt(submitObjects.indexOfFirst { it.fullPath == fullPath })
+        updateItems()
     }
 
     private fun getUriContents(fileUri: Uri): FileSubmitObject? {

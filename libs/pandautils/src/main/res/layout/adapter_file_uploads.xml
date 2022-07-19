@@ -100,6 +100,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/utils_removeAttachment"
+                android:onClick="@{() -> itemViewModel.onRemoveClick.invoke(itemViewModel.data.fullPath)}"
                 android:padding="10dp"
                 android:tint="@color/textDarkest"
                 app:srcCompat="@drawable/ic_close" />

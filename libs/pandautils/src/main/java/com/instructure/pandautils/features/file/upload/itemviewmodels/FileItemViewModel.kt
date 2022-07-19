@@ -21,7 +21,8 @@ import com.instructure.pandautils.features.file.upload.FileItemViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class FileItemViewModel(
-        val data: FileItemViewData
+        val data: FileItemViewData,
+        val onRemoveClick: (String) -> Unit
 ) : ItemViewModel {
     override val layoutId: Int
         get() = R.layout.adapter_file_uploads
