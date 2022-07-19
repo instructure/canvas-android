@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.file.upload
 
+import android.os.Bundle
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 
 data class FileUploadDialogViewData(
@@ -32,5 +33,7 @@ sealed class FileUploadAction {
     object TakePhoto : FileUploadAction()
     object PickPhoto : FileUploadAction()
     object PickFile : FileUploadAction()
+    data class ShowToast(val toast: String): FileUploadAction()
+    data class StartUpload(val bundle: Bundle, val action: String): FileUploadAction()
 }
 

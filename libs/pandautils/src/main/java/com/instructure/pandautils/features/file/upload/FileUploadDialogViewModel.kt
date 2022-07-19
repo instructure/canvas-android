@@ -16,8 +16,10 @@
 
 package com.instructure.pandautils.features.file.upload
 
+import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
+import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,9 +28,12 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
+import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.setVisible
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.dialog_files_upload.*
 import java.lang.IllegalArgumentException
@@ -55,8 +60,13 @@ class FileUploadDialogViewModel @Inject constructor(
     private var submitObjects: MutableList<FileSubmitObject> = mutableListOf()
     private var uploadType: FileUploadType = FileUploadType.ASSIGNMENT
     private var canvasContext: CanvasContext = CanvasContext.defaultCanvasContext()
+    private var isOneFileOnly = false
+    private var parentFolderId: Long? = null
+    private var quizQuestionId: Long = -1L
+    private var quizId: Long = -1L
+    private var position: Int = -1
 
-    fun setData(assignment: Assignment?, file: Uri?, uploadType: FileUploadType, canvasContext: CanvasContext) {
+    fun setData(assignment: Assignment?, file: Uri?, uploadType: FileUploadType, canvasContext: CanvasContext, parentFolderId: Long, quizQuestionId: Long, position: Int, quizId: Long) {
         this.assignment = assignment
         val submitObject = file?.let {
             getUriContents(it)
@@ -64,6 +74,11 @@ class FileUploadDialogViewModel @Inject constructor(
         this.submitObjects = submitObject?.let { mutableListOf(it) } ?: mutableListOf()
         this.uploadType = uploadType
         this.canvasContext = canvasContext
+        this.isOneFileOnly = uploadType == FileUploadType.QUIZ || uploadType == FileUploadType.DISCUSSION
+        this.parentFolderId = parentFolderId
+        this.quizQuestionId = quizQuestionId
+        this.quizId = quizId
+        this.position = position
         updateItems()
     }
 
@@ -176,6 +191,91 @@ class FileUploadDialogViewModel @Inject constructor(
             }
         } else {
             null
+        }
+    }
+
+    private fun isExtensionAllowed(filePath: String): Boolean {
+        if (assignment == null) TODO("Handle null assignment")
+        if (assignment!!.allowedExtensions.isEmpty()) return true
+
+        val extension = filePath.substringAfterLast(".")
+
+        return assignment!!.allowedExtensions.contains(extension)
+    }
+
+    fun uploadFiles() {
+        if (submitObjects.size == 0) {
+            TODO("Handle missing files")
+        } else {
+            if (uploadType == FileUploadType.ASSIGNMENT) {
+
+                if (!checkIfFileSubmissionAllowed()) { //see if we can actually submit files to this assignment
+                    _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.fileUploadNotSupported))))
+                    return
+                }
+
+                submitObjects.forEach {
+                    if (!isExtensionAllowed(it.fullPath)) {
+                        _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneOrMoreExtensionNotAllowed))))
+                        return
+                    }
+                }
+            }
+
+            val fileList = ArrayList(submitObjects)
+
+            // Start the upload service
+            var bundle: Bundle? = null
+            var action = ""
+
+            when (uploadType) {
+                FileUploadType.USER -> {
+                    bundle = FileUploadService.getUserFilesBundle(fileList, parentFolderId)
+                    action = FileUploadService.ACTION_USER_FILE
+                }
+                FileUploadType.COURSE -> {
+                    bundle = FileUploadService.getCourseFilesBundle(fileList, canvasContext.id, parentFolderId)
+                    action = FileUploadService.ACTION_COURSE_FILE
+                }
+                FileUploadType.GROUP -> {
+                    bundle = FileUploadService.getCourseFilesBundle(fileList, canvasContext.id, parentFolderId)
+                    action = FileUploadService.ACTION_GROUP_FILE
+                }
+                FileUploadType.MESSAGE -> {
+                    bundle = FileUploadService.getUserFilesBundle(fileList, null)
+                    action = FileUploadService.ACTION_MESSAGE_ATTACHMENTS
+                }
+                FileUploadType.DISCUSSION -> {
+                    bundle = FileUploadService.getUserFilesBundle(fileList, null)
+                    action = FileUploadService.ACTION_DISCUSSION_ATTACHMENT
+                }
+                FileUploadType.QUIZ -> {
+                    bundle = FileUploadService.getQuizFileBundle(fileList, parentFolderId, quizQuestionId, position, canvasContext.id, quizId)
+                    action = FileUploadService.ACTION_QUIZ_FILE
+                }
+                FileUploadType.SUBMISSION_COMMENT -> {
+                    bundle = FileUploadService.getSubmissionCommentBundle(fileList, canvasContext.id, assignment!!)
+                    action = FileUploadService.ACTION_SUBMISSION_COMMENT
+                }
+                else -> {
+                    if(assignment != null) {
+                        bundle = FileUploadService.getAssignmentSubmissionBundle(fileList, canvasContext.id, assignment!!)
+                        action = FileUploadService.ACTION_ASSIGNMENT_SUBMISSION
+                    }
+                }
+            }
+
+            if (bundle != null) {
+                _events.postValue(Event(FileUploadAction.StartUpload(bundle, action)))
+            }
+
+//            if(bundle != null) {
+//                dialogCallback?.invoke(UploadFilesDialog.EVENT_ON_UPLOAD_BEGIN)
+//                dialogAttachmentCallback?.invoke(UploadFilesDialog.EVENT_ON_UPLOAD_BEGIN, null)
+//                intent.putExtras(bundle)
+//                activity?.startService(intent)
+//                dismiss()
+//            }
         }
     }
 }

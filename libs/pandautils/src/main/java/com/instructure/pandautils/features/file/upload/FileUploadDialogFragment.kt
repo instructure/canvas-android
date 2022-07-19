@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.file.upload
 
 import android.Manifest
 import android.app.Dialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -41,6 +42,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
 import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_files_upload.*
@@ -56,7 +58,6 @@ open class FileUploadDialogFragment : DialogFragment() {
 
     private var uploadType: FileUploadType by SerializableArg(FileUploadType.ASSIGNMENT)
     private var canvasContext: CanvasContext by ParcelableArg(ApiPrefs.user)
-    private var isOneFileOnly: Boolean by BooleanArg()
     private var position: Int by IntArg()
 
     private var fileSubmitUri: Uri? = null
@@ -121,12 +122,10 @@ open class FileUploadDialogFragment : DialogFragment() {
                 positiveText = getString(R.string.utils_okay)
             }
             FileUploadType.DISCUSSION -> {
-                isOneFileOnly = true
                 title= getString(R.string.utils_attachFile)
                 positiveText = getString(R.string.utils_okay)
             }
             FileUploadType.QUIZ -> {
-                isOneFileOnly = true
                 title = getString(R.string.utils_uploadTo) + " " + getString(R.string.utils_uploadMyFiles)
                 positiveText = getString(R.string.utils_upload)
             }
@@ -163,10 +162,11 @@ open class FileUploadDialogFragment : DialogFragment() {
             }
         })
 
-        viewModel.setData(assignment, fileSubmitUri, uploadType, canvasContext)
+        viewModel.setData(assignment, fileSubmitUri, uploadType, canvasContext, parentFolderId, quizQuestionId, position, quizId)
     }
 
     open fun uploadClicked() {
+        viewModel.uploadFiles()
     }
 
     open fun cancelClicked() {
@@ -177,7 +177,16 @@ open class FileUploadDialogFragment : DialogFragment() {
             is FileUploadAction.TakePhoto -> takePicture()
             is FileUploadAction.PickPhoto -> pickFromGallery()
             is FileUploadAction.PickFile -> pickFromFiles()
+            is FileUploadAction.ShowToast -> Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
+            is FileUploadAction.StartUpload -> startUpload(action.bundle, action.action)
         }
+    }
+
+    private fun startUpload(bundle: Bundle, action: String) {
+        val intent = Intent(requireContext(), FileUploadService::class.java)
+        intent.action = action
+        intent.putExtras(bundle)
+        requireActivity().startService(intent)
     }
 
     private fun takePicture() {
