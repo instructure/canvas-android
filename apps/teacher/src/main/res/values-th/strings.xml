@@ -874,6 +874,7 @@
         <item quantity="one">-%s คะแนน</item>
         <item quantity="other">-%s คะแนน</item>
     </plurals>
+    <string name="todoUnreadCount">สิ่งที่ต้องทำ %d ที่ไม่ได้อ่าน</string>
     <string name="profileSettings">ค่าปรับตั้งโพรไฟล์</string>
     <string name="downloadingFile">กำลังดาวน์โหลดไฟล์&#8230;</string>
     <string name="fileDownloadedSuccessfully">ดาวน์โหลดไฟล์เสร็จสิ้น</string>

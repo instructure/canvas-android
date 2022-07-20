@@ -875,6 +875,7 @@
         <item quantity="one">-%s punt</item>
         <item quantity="other">-%s punts</item>
     </plurals>
+    <string name="todoUnreadCount">La tasca pendent %d no s\'ha llegit</string>
     <string name="profileSettings">Configuració del perfil</string>
     <string name="downloadingFile">S\'està baixant el fitxer&#8230;</string>
     <string name="fileDownloadedSuccessfully">S\'ha baixat correctament el fitxer.</string>

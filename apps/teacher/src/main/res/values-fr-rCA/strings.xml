@@ -872,6 +872,7 @@
         <item quantity="one">-%s point</item>
         <item quantity="other">-%s points</item>
     </plurals>
+    <string name="todoUnreadCount">À faire %d non lue</string>
     <string name="profileSettings">Paramètres de profil</string>
     <string name="downloadingFile">Téléchargement du fichier &#8230;</string>
     <string name="fileDownloadedSuccessfully">Fichiers téléchargé avec succès.</string>
