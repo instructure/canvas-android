@@ -19,6 +19,7 @@ package instructure.rceditor
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.res.Resources
@@ -41,6 +42,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.rce_color_picker.view.*
 import kotlinx.android.synthetic.main.rce_controller.view.*
+import kotlinx.android.synthetic.main.rce_dialog_alt_text.view.*
 import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_bottomDivider as bottomDivider
 import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_colorPickerWrapper as colorPickerView
 import kotlinx.android.synthetic.main.rce_text_editor_view.view.rce_controller as controller
@@ -195,8 +197,43 @@ class RCETextEditorView @JvmOverloads constructor(
         editor.setPadding(left, top, right, bottom)
     }
 
+    fun insertImage(activity: Activity, imageUrl: String) {
+        showAltTextDialog(activity, { altText ->
+            editor.insertImage(imageUrl, altText)
+        }, {
+            editor.insertImage(imageUrl, "")
+        })
+    }
+
     fun insertImage(url: String, alt: String) {
         editor.insertImage(url, alt)
+    }
+
+    private fun showAltTextDialog(activity: Activity, onPositiveClick: (String) -> Unit, onNegativeClick: () -> Unit) {
+        val view = View.inflate(activity, R.layout.rce_dialog_alt_text, null)
+        val altTextInput = view?.altText
+
+        var buttonClicked = false
+
+        val altTextDialog = AlertDialog.Builder(activity)
+            .setTitle(activity.getString(R.string.rce_dialogAltText))
+            .setView(view)
+            .setPositiveButton(activity.getString(android.R.string.ok)) { _, _ ->
+                buttonClicked = true
+                onPositiveClick(altTextInput?.text.toString())
+            }
+            .setNegativeButton(activity.getString(android.R.string.cancel), { _, _ ->
+                buttonClicked = true
+                onNegativeClick()
+            })
+            .setOnDismissListener {
+                if (!buttonClicked) {
+                    onNegativeClick()
+                }
+            }
+            .create()
+
+        altTextDialog.show()
     }
 
     fun setHtml(
@@ -208,7 +245,7 @@ class RCETextEditorView @JvmOverloads constructor(
     ) {
         editor.applyHtml(html.orEmpty(), accessibilityTitle)
         editor.setPlaceholder(hint)
-        setThemeColor(themeColor)
+        this.themeColor = themeColor
         this.buttonColor = buttonColor
     }
 
@@ -239,10 +276,6 @@ class RCETextEditorView @JvmOverloads constructor(
         editor.onFocusChangeListener = OnFocusChangeListener { _, focused ->
             label.setTextColor(ContextCompat.getColor(context, if (focused) focusedColor else defaultColor))
         }
-    }
-
-    fun setThemeColor(@ColorInt color: Int) {
-        themeColor = color
     }
 
     private fun toggleColorPicker() {

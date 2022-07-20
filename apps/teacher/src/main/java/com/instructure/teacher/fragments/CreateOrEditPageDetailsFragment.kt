@@ -145,8 +145,8 @@ class CreateOrEditPageDetailsFragment :
         }
     }
 
-    override fun insertImageIntoRCE(text: String, alt: String) {
-        pageRCEView.insertImage(text, alt)
+    override fun insertImageIntoRCE(imageUrl: String) {
+        pageRCEView.insertImage(requireActivity(), imageUrl)
     }
 
     private fun setupTitle() {

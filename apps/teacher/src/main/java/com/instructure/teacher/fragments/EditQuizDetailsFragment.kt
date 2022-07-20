@@ -16,6 +16,8 @@
  */
 package com.instructure.teacher.fragments
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
@@ -343,8 +345,23 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
         descriptionWebView.setLabel(quizDescLabel, R.color.textDarkest, R.color.textDark)
 
+        descriptionWebView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+
         // Dismiss the progress bar
         descriptionProgressBar.setGone()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            // Get the image Uri
+            when (requestCode) {
+                RequestCodes.PICK_IMAGE_GALLERY -> data?.data
+                RequestCodes.CAMERA_PIC_REQUEST -> MediaUploadUtils.handleCameraPicResult(requireActivity(), null)
+                else -> null
+            }?.let { imageUri ->
+                MediaUploadUtils.uploadRceImageJob(imageUri, mCourse, requireActivity()) { imageUrl -> descriptionWebView.insertImage(requireActivity(), imageUrl) }
+            }
+        }
     }
 
     override fun setupOverrides() {

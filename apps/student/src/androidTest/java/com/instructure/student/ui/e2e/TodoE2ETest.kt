@@ -38,14 +38,22 @@ class TodoE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course.")
+        Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course with tomorrow due date.")
         val seededAssignments = seedAssignments(
                 courseId = course.id,
                 teacherToken = teacher.token,
                 dueAt = 1.days.fromNow.iso8601
         )
 
+        Log.d(PREPARATION_TAG,"Seed another assignment for ${course.name} course with 7 days from now due date.")
+        val seededAssignments2 = seedAssignments(
+            courseId = course.id,
+            teacherToken = teacher.token,
+            dueAt = 7.days.fromNow.iso8601
+        )
+
         val testAssignment = seededAssignments[0]
+        val borderDateAssignment = seededAssignments2[0] //We show items in the to do section which are within 7 days.
 
         Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course with tomorrow due date.")
         val quiz = QuizzesApi.createQuiz(
@@ -57,6 +65,16 @@ class TodoE2ETest: StudentTest() {
                         dueAt = 1.days.fromNow.iso8601)
         )
 
+        Log.d(PREPARATION_TAG,"Seed another quiz for ${course.name} course with 8 days from now due date..")
+        val tooFarAwayQuiz = QuizzesApi.createQuiz(
+            QuizzesApi.CreateQuizRequest(
+                courseId = course.id,
+                withDescription = true,
+                published = true,
+                token = teacher.token,
+                dueAt = 8.days.fromNow.iso8601)
+        )
+
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
         tokenLogin(student)
         dashboardPage.waitForRender()
@@ -64,10 +82,12 @@ class TodoE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Navigate to 'To Do' page via bottom-menu.")
         dashboardPage.clickTodoTab()
 
-        Log.d(STEP_TAG,"Assert that ${testAssignment.name} assignment is displayed.")
+        Log.d(STEP_TAG,"Assert that ${testAssignment.name} assignment is displayed and ${borderDateAssignment.name} is displayed because it's 7 days away from now..")
         todoPage.assertAssignmentDisplayed(testAssignment)
+        todoPage.assertAssignmentDisplayed(borderDateAssignment)
 
-        Log.d(STEP_TAG,"Assert that ${quiz.title} quiz is displayed.")
+        Log.d(STEP_TAG,"Assert that ${quiz.title} quiz is displayed and ${tooFarAwayQuiz.title} quiz is not displayed because it's end date is more than a week away..")
         todoPage.assertQuizDisplayed(quiz)
+        todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
     }
 }

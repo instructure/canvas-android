@@ -19,7 +19,6 @@ import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
-import instructure.rceditor.RCEFragment
 
 object RouteResolver {
 
@@ -96,8 +95,6 @@ object RouteResolver {
             fragment = getModuleListFragment(canvasContext, route)
         } else if (QuizDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = getQuizDetailsFragment(canvasContext, route)
-        } else if (RCEFragment::class.java.isAssignableFrom(cls)) {
-            fragment = RCEFragment.newInstance(route.arguments)
         } else if (EditQuizDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = EditQuizDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
         } else if (QuizPreviewWebviewFragment::class.java.isAssignableFrom(cls)) {
