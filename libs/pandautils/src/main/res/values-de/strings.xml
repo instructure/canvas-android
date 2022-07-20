@@ -278,7 +278,7 @@
     <string name="utils_discussionUnpinned">Diskussionen</string>
     <string name="utils_emptyDiscussions">Es sind keine Diskussionen zum Anzeigen in diesem Kursabschnitt vorhanden.</string>
     <string name="utils_description">Beschreibung</string>
-    <string name="utils_allowThreadedReplies">Gelistete Antworten zulassen</string>
+    <string name="utils_allowThreadedReplies">Antworten aller Diskussionsstränge zulassen</string>
     <string name="utils_usersMustPost">Teilnehmer müssen gepostet haben, bevor sie Antworten sehen können.</string>
     <string name="utils_discussionsClosed">Für Kommentare geschlossen</string>
     <string name="utils_discussionsOpen">Für Kommentare öffnen</string>

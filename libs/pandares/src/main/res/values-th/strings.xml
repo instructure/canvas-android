@@ -958,6 +958,7 @@
     <string name="latePenalty">โทษปรับล่าช้า (-%s)</string>
     <string name="finalGrade">เกรดสรุป</string>
 
+    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">เปิดในมุมมองทางเว็บ</string>
@@ -1260,6 +1261,13 @@
     <string name="appThemeSettingsTitle">ธีมของแอพ</string>
     <string name="appThemeLight">สว่าง</string>
     <string name="appThemeDark">มืด</string>
-    <string name="appThemeSystem">ค่าเริ่มต้นระบบ</string>
-
+    <string name="appThemeSystem">เหมือนกันกับอุปกรณ์</string>
+    <string name="themeSelectorTitle">Canvas พร้อมใช้งานในธีมมืดแล้ว</string>
+    <string name="themeSelectorDescription">เลือกธีมของแอพ</string>
+    <string name="themeSelectorLightTheme">ธีมสว่าง</string>
+    <string name="themeSelectorDarkTheme">ธีมมืด</string>
+    <string name="themeSelectorDeviceTheme">ธีมเหมือนกับอุปกรณ์</string>
+    <string name="themeSelectorSave">บันทึก</string>
+    <string name="themeSelectorChangeLater">คุณสามารถแก้ไขได้ในภายหลังจากค่าปรับตั้งแอพ</string>
+    <string name="grabAnnotationTool">คว้าไว้</string>
 </resources>
