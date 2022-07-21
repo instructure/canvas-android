@@ -124,7 +124,7 @@ class CreateDiscussionFragment : ParentFragment() {
                 else -> null
             }?.let { imageUri ->
                 // If the image Uri is not null, upload it
-                rceImageJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { text, alt -> descriptionRCEView.insertImage(text, alt) }
+                rceImageJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> descriptionRCEView.insertImage(requireActivity(), imageUrl) }
             }
         }
     }

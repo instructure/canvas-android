@@ -428,7 +428,7 @@ class CreateOrEditAnnouncementFragment :
                 else getString(R.string.allSections))
     }
 
-    override fun insertImageIntoRCE(text: String, alt: String) = announcementRCEView.insertImage(text, alt)
+    override fun insertImageIntoRCE(imageUrl: String) = announcementRCEView.insertImage(requireActivity(), imageUrl)
 
     companion object {
         fun newInstance(bundle: Bundle) =

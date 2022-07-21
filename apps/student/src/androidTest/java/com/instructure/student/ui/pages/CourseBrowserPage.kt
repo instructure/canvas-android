@@ -23,22 +23,15 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
 import com.instructure.student.R
 import org.hamcrest.Matcher
@@ -134,6 +127,10 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
 
     fun assertTabDisplayed(tab: Tab) {
         assertTabDisplayed(tab.label!!)
+    }
+
+    fun assertTabLabelTextColor(tabTitle: String, expectedColor: String) {
+        onView(withText(tabTitle)).check(TextViewColorAssertion(expectedColor))
     }
 
     fun assertTabDisplayed(tabTitle: String) {

@@ -39,7 +39,11 @@ import com.instructure.canvasapi2.models.ApiValues
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotationResponse
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.extractCanvaDocsDomain
+import com.instructure.canvasapi2.utils.extractSessionId
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -84,7 +88,7 @@ import java.io.File
 import java.util.*
 
 @SuppressLint("ViewConstructor")
-abstract class PdfSubmissionView(context: Context) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+abstract class PdfSubmissionView(context: Context, private val studentAnnotationView: Boolean = false) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     protected lateinit var docSession: DocSession
     protected lateinit var apiValues: ApiValues
@@ -298,6 +302,10 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
     protected fun openComments() {
         // Get current annotation in both forms
+        if (pdfFragment?.selectedAnnotations?.isNullOrEmpty() == true) {
+            toast(R.string.noAnnotationSelected)
+            return
+        }
         val currentPdfAnnotation = pdfFragment?.selectedAnnotations?.get(0)
         val currentAnnotation = currentPdfAnnotation?.convertPDFAnnotationToCanvaDoc(docSession.documentId)
         // Assuming neither is null, continue
@@ -461,14 +469,15 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     private fun handlePageRotation(pdfDocument: PdfDocument, rotationMap: HashMap<String, Int>) {
+        // Removing the listener prevents an infinite loop with onDocumentLoaded, which is triggered
+        // by the calls to setRotationOffset()
+        pdfFragment?.removeDocumentListener(documentListener)
+
         rotationMap.forEach { pageRotation ->
             pageRotation.key.toIntOrNull()?.let { pageIndex ->
                 pdfDocument.setRotationOffset(calculateRotationOffset(pdfDocument.getPageRotation(pageIndex), pageRotation.value), pageIndex)
             }
         }
-        // Removing the listener prevents an infinite loop with onDocumentLoaded, which is triggered
-        // by the calls to setRotationOffset()
-        pdfFragment?.removeDocumentListener(documentListener)
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
@@ -595,7 +604,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                     setIsCurrentlyAnnotating(true)
                 }
 
-                if (annotation.type != AnnotationType.FREETEXT && annotation.name.isValid()) {
+                if (annotation.type != AnnotationType.FREETEXT && annotation.name.isValid() && (!studentAnnotationView || hasComments(annotation))) {
                     // if the annotation is an existing annotation (has an ID) and is NOT freetext
                     // we want to display the button to view/make comments
                     commentsButton.setVisible()
@@ -603,6 +612,13 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             }
             return true
         }
+    }
+
+    private fun hasComments(annotation: Annotation): Boolean {
+        val currentAnnotation = annotation.convertPDFAnnotationToCanvaDoc(docSession.documentId)
+        return currentAnnotation != null
+            && commentRepliesHashMap[currentAnnotation.annotationId] != null
+            && commentRepliesHashMap[currentAnnotation.annotationId]?.isNotEmpty() == true
     }
 
     val mAnnotationDeselectedListener = AnnotationManager.OnAnnotationDeselectedListener { _, _ ->

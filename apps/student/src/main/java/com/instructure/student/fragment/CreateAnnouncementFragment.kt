@@ -106,7 +106,7 @@ class CreateAnnouncementFragment : ParentFragment() {
                 else -> null
             }?.let { imageUri ->
                 // If the image Uri is not null, upload it
-                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { text, alt -> announcementRCEView.insertImage(text, alt) }
+                rceImageUploadJob = MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> announcementRCEView.insertImage(requireActivity(), imageUrl) }
             }
         }
     }

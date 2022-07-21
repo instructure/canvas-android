@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.FileListView
+import instructure.androidblueprint.ListChangeCallback
 import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.Job
 
@@ -80,6 +81,7 @@ class FileListPresenter(var currentFolder: FileFolder, val mCanvasContext: Canva
         createFolderCall = tryWeave {
             val newFolder = awaitApi<FileFolder> { FileFolderManager.createFolder(currentFolder.id, CreateFolder(folderName), it) }
             data.addOrUpdate(newFolder)
+            viewCallback?.folderCreationSuccess()
         } catch {
             viewCallback?.folderCreationError()
         }

@@ -1261,6 +1261,13 @@
     <string name="appThemeSettingsTitle">Tèm app</string>
     <string name="appThemeLight">Limyè</string>
     <string name="appThemeDark">Nwa</string>
-    <string name="appThemeSystem">Sistèm pa defo</string>
-
+    <string name="appThemeSystem">Menm ak aparèy la</string>
+    <string name="themeSelectorTitle">Canvas disponib kounye a an mòd sonm</string>
+    <string name="themeSelectorDescription">Chwazi app pou chanje mòd la</string>
+    <string name="themeSelectorLightTheme">Mòd klere</string>
+    <string name="themeSelectorDarkTheme">Mòd sonm</string>
+    <string name="themeSelectorDeviceTheme">Menm ak mòd aparèy la</string>
+    <string name="themeSelectorSave">Anrejistre</string>
+    <string name="themeSelectorChangeLater">Ou ka chanje l apre nan paramèt app la.</string>
+    <string name="grabAnnotationTool">Sezi</string>
 </resources>

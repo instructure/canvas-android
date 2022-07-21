@@ -37,8 +37,8 @@ import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import com.wonderkiln.camerakit.CameraKitEventCallback
-import com.wonderkiln.camerakit.CameraKitVideo
+import com.otaliastudios.cameraview.CameraListener
+import com.otaliastudios.cameraview.VideoResult
 import kotlinx.android.synthetic.main.view_floating_media_recorder.view.*
 import kotlinx.android.synthetic.main.view_floating_media_recorder_audio.view.*
 import kotlinx.android.synthetic.main.view_floating_media_recorder_video.view.*
@@ -62,7 +62,7 @@ class FloatingRecordingView @JvmOverloads constructor(
     lateinit var stoppedCallback: () -> Unit
     lateinit var replayCallback: (File?) -> Unit
 
-    lateinit var cameraKitVideoCapturedCallback : CameraKitEventCallback<CameraKitVideo>
+    lateinit var videoCaptureCallback: CameraListener
 
     /** The View used to record video. This must be inflated separately from the main layout in
      * order to capture exceptions during inflation and disable the video functionality */
@@ -114,7 +114,7 @@ class FloatingRecordingView @JvmOverloads constructor(
         recordingView.setVisible()
         if (hasVideoError) return
         resetVideoViews()
-        recordingView.camera.start()
+        recordingView.camera.open()
     }
 
     private fun stopVideoView() {
@@ -124,7 +124,7 @@ class FloatingRecordingView @JvmOverloads constructor(
             isRecording = false
             recordingView.camera.stopVideo()
         }
-        recordingView.camera.stop()
+        recordingView.camera.close()
         timerHandler.removeCallbacks(timerRunnable)
         stoppedCallback()
     }
@@ -256,9 +256,11 @@ class FloatingRecordingView @JvmOverloads constructor(
 
         videoFile = File(context.cacheDir, "temp.mp4")
 
-        cameraKitVideoCapturedCallback = CameraKitEventCallback { video ->
-            timerHandler.removeCallbacks(timerRunnable)
-            videoFile = video.videoFile
+        videoCaptureCallback = object : CameraListener() {
+            override fun onVideoTaken(result: VideoResult) {
+                timerHandler.removeCallbacks(timerRunnable)
+                videoFile = result.file
+            }
         }
 
         // Set the close button.
@@ -267,11 +269,13 @@ class FloatingRecordingView @JvmOverloads constructor(
         }
 
         recordingView.startRecordingButton.onClick {
-            recordingView.camera.captureVideo(videoFile, cameraKitVideoCapturedCallback)
-            isRecording = true
-            startTime = System.currentTimeMillis()
-            timerHandler.postDelayed(timerRunnable, 0)
-            setViewStateStartRecording()
+            videoFile?.let { file ->
+                recordingView.camera.takeVideo(file)
+                isRecording = true
+                startTime = System.currentTimeMillis()
+                timerHandler.postDelayed(timerRunnable, 0)
+                setViewStateStartRecording()
+            }
         }
 
         recordingView.endRecordingButton.onClick {
@@ -284,6 +288,8 @@ class FloatingRecordingView @JvmOverloads constructor(
         recordingView.deleteButton.onClick {
             videoFile?.delete()
             resetVideoViews()
+            recordingView.camera.close()
+            recordingView.camera.open()
         }
 
         recordingView.replayButton.onClick {
@@ -300,7 +306,7 @@ class FloatingRecordingView @JvmOverloads constructor(
                 isRecording = false
                 recordingView.camera.stopVideo()
             }
-            recordingView.camera.stop()
+            recordingView.camera.close()
             timerHandler.removeCallbacks(timerRunnable)
         }
     }

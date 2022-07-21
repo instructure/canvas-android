@@ -690,7 +690,7 @@
     <string name="createDiscussion">Neue Diskussion</string>
     <string name="options">Optionen</string>
     <string name="subscribe">Anmelden</string>
-    <string name="allowThreadedReplies">Gelistete Antworten zulassen</string>
+    <string name="allowThreadedReplies">Antworten aller Diskussionsstränge zulassen</string>
     <string name="usersMustPost">Benutzer müssen gepostet haben, bevor sie Antworten sehen können.</string>
     <string name="allowUserComments">Benutzern Kommentare erlauben</string>
     <string name="discussionTitleMustBeSet">Ein Diskussionstitel muss festgelegt werden.</string>

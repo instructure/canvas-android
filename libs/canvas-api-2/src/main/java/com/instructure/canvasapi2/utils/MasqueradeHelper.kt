@@ -97,6 +97,9 @@ object MasqueradeHelper {
                             cleanupMasquerading(ContextKeeper.appContext)
                             ApiPrefs.user = response.body()
                             ApiPrefs.masqueradeId = response.body()!!.id
+                            response.body()?.rootAccount?.let {
+                                ApiPrefs.domain = it
+                            }
                             restartApplication(startingClass)
                         }
                     }

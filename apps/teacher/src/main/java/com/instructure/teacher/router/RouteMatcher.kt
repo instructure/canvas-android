@@ -51,7 +51,6 @@ import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.fragments.FileListFragment
-import instructure.rceditor.RCEFragment
 import java.util.Locale
 
 object RouteMatcher : BaseRouteMatcher() {
@@ -128,7 +127,6 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(AssigneeListFragment::class.java)
         bottomSheetFragments.add(EditFavoritesFragment::class.java)
         bottomSheetFragments.add(CourseSettingsFragment::class.java)
-        bottomSheetFragments.add(RCEFragment::class.java)
         bottomSheetFragments.add(EditQuizDetailsFragment::class.java)
         bottomSheetFragments.add(QuizPreviewWebviewFragment::class.java)
         bottomSheetFragments.add(AddMessageFragment::class.java)
@@ -337,7 +335,6 @@ object RouteMatcher : BaseRouteMatcher() {
             CourseSettingsFragment::class.java.isAssignableFrom(cls) -> fragment = CourseSettingsFragment.newInstance((canvasContext as Course?)!!)
             QuizListFragment::class.java.isAssignableFrom(cls) -> fragment = QuizListFragment.newInstance(canvasContext!!)
             QuizDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getQuizDetailsFragment(canvasContext, route)
-            RCEFragment::class.java.isAssignableFrom(cls) -> fragment = RCEFragment.newInstance(route.arguments)
             EditQuizDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = EditQuizDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
             QuizPreviewWebviewFragment::class.java.isAssignableFrom(cls) -> fragment = QuizPreviewWebviewFragment.newInstance(route.arguments)
             EditQuizDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = EditQuizDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)

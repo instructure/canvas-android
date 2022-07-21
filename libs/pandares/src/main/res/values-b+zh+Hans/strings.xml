@@ -1247,6 +1247,13 @@
     <string name="appThemeSettingsTitle">应用主题</string>
     <string name="appThemeLight">浅色的、轻的</string>
     <string name="appThemeDark">深色的、黑的</string>
-    <string name="appThemeSystem">系统默认</string>
-
+    <string name="appThemeSystem">与设备相同</string>
+    <string name="themeSelectorTitle">Canvas 已推出深色主题</string>
+    <string name="themeSelectorDescription">选择应用程序主题</string>
+    <string name="themeSelectorLightTheme">浅色主题</string>
+    <string name="themeSelectorDarkTheme">深色主题</string>
+    <string name="themeSelectorDeviceTheme">与设备主题相同</string>
+    <string name="themeSelectorSave">保存</string>
+    <string name="themeSelectorChangeLater">您可以后在应用设置中更改</string>
+    <string name="grabAnnotationTool">抓取图像</string>
 </resources>

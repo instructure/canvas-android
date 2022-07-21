@@ -28,11 +28,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -43,24 +39,8 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
-import com.instructure.espresso.OnViewWithContentDescription
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withParent
-import com.instructure.espresso.page.withText
-import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
-import com.instructure.espresso.waitForCheck
+import com.instructure.espresso.*
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
@@ -140,6 +120,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     }
 
+    fun assertCourseLabelTextColor(expectedTextColor: String) {
+        onView(withId(R.id.courseLabel)).check(TextViewColorAssertion(expectedTextColor))
+    }
+
     fun pressChangeUser() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_changeUser).scrollTo().click()
@@ -179,7 +163,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertUnreadEmails(count: Int) {
-        onView(allOf(withParent(R.id.bottomNavigationInbox), withId(R.id.badge), withText(count.toString()))).assertDisplayed()
+        onView(withId(R.id.bottomBar)).check(NotificationBadgeAssertion(R.id.bottomNavigationInbox, count))
     }
 
     fun clickCalendarTab() {
@@ -238,7 +222,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectCourse(course: Course) {
         assertDisplaysCourse(course)
-        onView(withText(course.originalName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
+        onView(withId(R.id.titleTextView) + withText(course.originalName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
     }
 
     fun selectGroup(group: Group) {

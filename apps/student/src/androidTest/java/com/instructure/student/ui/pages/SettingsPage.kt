@@ -17,9 +17,9 @@
 package com.instructure.student.ui.pages
 
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertHasContentDescription
+import com.instructure.espresso.TextViewColorAssertion
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.*
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 
@@ -28,29 +28,49 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
     private val profileSettingLabel by OnViewWithId(R.id.profileSettings)
     private val accountPreferencesLabel by OnViewWithId(R.id.accountPreferences)
     private val pushNotificationsLabel by OnViewWithId(R.id.pushNotifications)
+
     // The pairObserverLabel may not be present if the corresponding remote-config flag is disabled.
-    private val pairObserverLabel by OnViewWithId(R.id.pairObserver,autoAssert=false)
+    private val pairObserverLabel by OnViewWithId(R.id.pairObserver, autoAssert = false)
     private val aboutLabel by OnViewWithId(R.id.about)
     private val legalLabel by OnViewWithId(R.id.legal)
     private val remoteConfigLabel by OnViewWithId(R.id.remoteConfigParams)
+    private val appThemeTitle by OnViewWithId(R.id.appThemeTitle)
+    private val appThemeStatus by OnViewWithId(R.id.appThemeStatus)
 
-    fun launchAboutPage() {
+    fun openAboutPage() {
         aboutLabel.click()
     }
 
-    fun launchLegalPage() {
+    fun openLegalPage() {
         legalLabel.scrollTo().click()
     }
 
-    fun launchRemoteConfigParams() {
+    fun openRemoteConfigParams() {
         remoteConfigLabel.scrollTo().click()
     }
 
-    fun launchPairObserverPage() {
+    fun openPairObserverPage() {
         pairObserverLabel.scrollTo().click()
     }
 
-    fun launchProfileSettings() {
+    fun openProfileSettings() {
         profileSettingLabel.scrollTo().click()
+    }
+
+    fun openAppThemeSettings() {
+        appThemeTitle.scrollTo().click()
+    }
+
+    fun selectAppTheme(appTheme: String)
+    {
+            onView(withText(appTheme) + withParent(R.id.select_dialog_listview)).click()
+    }
+
+    fun assertAppThemeTitleTextColor(expectedTextColor: String) {
+        appThemeTitle.check(TextViewColorAssertion(expectedTextColor))
+    }
+
+    fun assertAppThemeStatusTextColor(expectedTextColor: String) {
+        appThemeStatus.check(TextViewColorAssertion(expectedTextColor))
     }
 }

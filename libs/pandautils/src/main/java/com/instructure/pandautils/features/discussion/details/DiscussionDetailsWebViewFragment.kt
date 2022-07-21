@@ -75,7 +75,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 viewModel.setLoading(false)
-                discussionSwipeRefreshLayout.isRefreshing = false
+                discussionSwipeRefreshLayout?.isRefreshing = false
             }
 
             override fun routeInternallyCallback(url: String) {

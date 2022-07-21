@@ -29,6 +29,8 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseSyncFragment
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.pandautils.utils.toast
@@ -43,6 +45,8 @@ import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.presenters.ToDoPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.viewinterface.ToDoView
 import kotlinx.android.synthetic.main.fragment_todo.*
 import org.greenrobot.eventbus.EventBus
@@ -99,7 +103,14 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     }
 
     private fun setupToolbar() {
-        (activity as? InitActivity)?.attachNavigationDrawer(toDoToolbar)
+        val activity = requireActivity()
+        if (activity is InitActivity) {
+            activity.attachNavigationDrawer(toDoToolbar)
+        } else {
+            toDoToolbar.setupBackButtonAsBackPressedOnly(this)
+        }
+
+        ViewStyler.themeToolbarColored(requireActivity(), toDoToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         toDoToolbar.requestAccessibilityFocus()
     }
 

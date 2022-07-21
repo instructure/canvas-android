@@ -1261,6 +1261,13 @@
     <string name="appThemeSettingsTitle">Apptema</string>
     <string name="appThemeLight">Ljus</string>
     <string name="appThemeDark">Mörk</string>
-    <string name="appThemeSystem">Systemstandard</string>
-
+    <string name="appThemeSystem">Samma som enhet</string>
+    <string name="themeSelectorTitle">Canvas finns inte tillgängligt med ett mörkt tema</string>
+    <string name="themeSelectorDescription">Välj apptema</string>
+    <string name="themeSelectorLightTheme">Ljust tema</string>
+    <string name="themeSelectorDarkTheme">Mörkt tema</string>
+    <string name="themeSelectorDeviceTheme">Samma tema som enheten</string>
+    <string name="themeSelectorSave">Spara</string>
+    <string name="themeSelectorChangeLater">Du kan ändra det sedan i appinställningarna</string>
+    <string name="grabAnnotationTool">Ta tag i</string>
 </resources>

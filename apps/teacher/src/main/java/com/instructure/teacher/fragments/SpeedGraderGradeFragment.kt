@@ -217,7 +217,11 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         val pointsPossible: String = NumberHelper.formatDecimal(presenter.assignment.pointsPossible, 2, true)
         var grade: String? = ""
         if (presenter.submission != null) {
-            grade = presenter.submission?.grade
+            var gradeInput = presenter.submission?.grade
+            if(!gradeInput.isNullOrEmpty() && gradeInput.last().toString() == "%") {
+                gradeInput = gradeInput.dropLast(1)
+            }
+            grade = gradeInput
         }
 
         val dialog = CustomizeGradeDialog.getInstance(requireActivity().supportFragmentManager,
