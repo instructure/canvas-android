@@ -94,7 +94,7 @@ dependencies {
     api project(path: ':blueprint')
     api project(path: ':interactions')
 
-    implementation Libs.WONDERKILN_CAMERA_KIT
+    implementation Libs.CAMERA_VIEW
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB

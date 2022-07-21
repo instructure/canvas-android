@@ -85,7 +85,7 @@ class DiscussionsUpdatePresenter(
     }
 
     override fun uploadRceImage(imageUri: Uri, activity: Activity) {
-        MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, activity) { text, alt -> viewCallback?.insertImageIntoRCE(text, alt) }
+        MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, activity) { imageUrl -> viewCallback?.insertImageIntoRCE(imageUrl) }
     }
 
 

@@ -116,7 +116,9 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
                         view.loadUrl(url, APIHelper.referrer)
                         true
                     } else { // It's content but not a quiz. Could link to a discussion (or whatever) in a quiz. Route
-                        RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
+                        activity?.let {
+                            RouteMatcher.canRouteInternally(it, url, ApiPrefs.domain, true)
+                        } ?: false
                     }// Might need to log in to take the quiz -- the url would say domain/login. If we just use the AppRouter it will take the user
                     // back to the dashboard. This check will keep them here and let them log in and take the quiz
                 }

@@ -31,20 +31,22 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     const val DARK_MULTIPLIER = 0.85f
     const val ALPHA_VALUE = 0x32
 
-    var brandColor by ColorPref(R.color.backgroundDarkest)
+    var brandColor by ColorPref(R.color.textInfo)
 
-    var primaryColor by ColorPref(R.color.textDarkest)
+    // Used for Toolbar background color
+    var primaryColor by ColorPref(R.color.licorice)
 
     val darkPrimaryColor: Int
         get() = darker(primaryColor, DARK_MULTIPLIER)
 
-    var primaryTextColor by ColorPref(R.color.textLightest)
+    // Used for text color in Toolbars
+    var primaryTextColor by ColorPref(R.color.white)
 
     var accentColor by ColorPref(R.color.textInfo)
 
     var buttonColor by ColorPref(R.color.backgroundInfo)
 
-    var buttonTextColor by ColorPref(R.color.textLightest)
+    var buttonTextColor by ColorPref(R.color.white)
 
     var logoUrl by StringPref()
 

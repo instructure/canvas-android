@@ -130,8 +130,13 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         }
     }
 
-    private fun insertImage(text: String, alt: String) {
-        rce.insertImage(text, alt)
+    private fun insertImage(imageUrl: String) {
+        val activity = context as? Activity
+        if (activity != null) {
+            rce?.insertImage(activity, imageUrl)
+        } else {
+            rce?.insertImage(imageUrl, "")
+        }
     }
 
     fun showFailedImageMessage() {

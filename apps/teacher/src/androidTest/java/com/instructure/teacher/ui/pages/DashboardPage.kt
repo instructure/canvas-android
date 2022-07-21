@@ -104,4 +104,8 @@ class DashboardPage : BasePage() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_files).click()
     }
+
+    fun assertCourseLabelTextColor(expectedTextColor: String) {
+        onView(withId(R.id.courseLabel)).check(TextViewColorAssertion(expectedTextColor))
+    }
 }

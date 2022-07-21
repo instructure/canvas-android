@@ -23,8 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
@@ -117,6 +116,11 @@ class ApplicationSettingsFragment : ParentFragment() {
             ViewStyler.themeSwitch(requireContext(), elementaryViewSwitch, ThemePrefs.brandColor)
             elementaryViewSwitch.setOnCheckedChangeListener { _, isChecked ->
                 ApiPrefs.elementaryDashboardEnabledOverride = isChecked
+
+                val analyticsBundle = Bundle().apply {
+                    putBoolean(AnalyticsParamConstants.MANUAL_C4E_STATE, isChecked)
+                }
+                Analytics.logEvent(AnalyticsEventConstants.CHANGED_C4E_MODE, analyticsBundle)
             }
         }
 

@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -39,6 +40,7 @@ import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.CoursesPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.TeacherPrefs
+import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.CoursesView
 import kotlinx.android.synthetic.main.fragment_courses.*
@@ -150,7 +152,15 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         val menuTitleRes = if (TeacherPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
         dashboardLayoutMenuItem.setTitle(menuTitleRes)
 
-        (activity as? InitActivity)?.attachNavigationDrawer(toolbar)
+        val activity = requireActivity()
+        if (activity is InitActivity) {
+            activity.attachNavigationDrawer(toolbar)
+        } else {
+            toolbar.setupAsBackButton(this)
+        }
+
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+
         toolbar.requestAccessibilityFocus()
     }
 
@@ -193,6 +203,8 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         }
         emptyCoursesView.setLoading()
         coursesHeaderWrapper.setGone()
+        notificationsFragment?.setGone()
+        (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment?)?.refresh()
     }
 
     override fun onRefreshFinished() {
@@ -202,6 +214,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         } else {
             coursesHeaderWrapper.setVisible()
         }
+        notificationsFragment?.setVisible()
     }
 
     override fun checkIfEmpty() {

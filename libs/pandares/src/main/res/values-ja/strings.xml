@@ -1247,6 +1247,13 @@
     <string name="appThemeSettingsTitle">アプリのテーマ</string>
     <string name="appThemeLight">明るい</string>
     <string name="appThemeDark">暗い</string>
-    <string name="appThemeSystem">システムデフォルト</string>
-
+    <string name="appThemeSystem">デバイスと同じ</string>
+    <string name="themeSelectorTitle">Canvasがダークテーマで利用可能に</string>
+    <string name="themeSelectorDescription">アプリのテーマを選ぶ</string>
+    <string name="themeSelectorLightTheme">ライトテーマ</string>
+    <string name="themeSelectorDarkTheme">ダークテーマ</string>
+    <string name="themeSelectorDeviceTheme">デバイスのテーマと同じ</string>
+    <string name="themeSelectorSave">保存</string>
+    <string name="themeSelectorChangeLater">後でアプリの設定から変更可能</string>
+    <string name="grabAnnotationTool">捕捉</string>
 </resources>

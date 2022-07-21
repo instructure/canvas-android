@@ -1261,6 +1261,13 @@
     <string name="appThemeSettingsTitle">Thème d\'application</string>
     <string name="appThemeLight">Clair</string>
     <string name="appThemeDark">Foncé</string>
-    <string name="appThemeSystem">Valeur par défaut du système</string>
-
+    <string name="appThemeSystem">Identique à l’appareil</string>
+    <string name="themeSelectorTitle">Canvas est désormais disponible en thème sombre</string>
+    <string name="themeSelectorDescription">Sélectionnez le thème de l’application</string>
+    <string name="themeSelectorLightTheme">Thème clair</string>
+    <string name="themeSelectorDarkTheme">Thème sombre</string>
+    <string name="themeSelectorDeviceTheme">Identique au thème de l’appareil</string>
+    <string name="themeSelectorSave">Enregistrer</string>
+    <string name="themeSelectorChangeLater">Vous pourrez modifier le thème ultérieurement dans les paramètres de l’application</string>
+    <string name="grabAnnotationTool">Attraper</string>
 </resources>

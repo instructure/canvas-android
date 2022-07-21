@@ -119,7 +119,7 @@ class DiscussionsReplyFragment : ParentFragment() {
                 else -> null
             }?.let { imageUri ->
                 // If the image Uri is not null, upload it
-                MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { text, alt -> rceTextEditor.insertImage(text, alt) }
+                MediaUploadUtils.uploadRceImageJob(imageUri, canvasContext, requireActivity()) { imageUrl -> rceTextEditor.insertImage(requireActivity(), imageUrl) }
             }
         }
     }
@@ -187,7 +187,7 @@ class DiscussionsReplyFragment : ParentFragment() {
                 }
             }
         } catch {
-            if (isAdded && (it as StatusCallbackError).response?.code() != 400) messageFailure()
+            if (isVisible && (it as StatusCallbackError).response?.code() != 400) messageFailure()
         }
     }
 
@@ -213,16 +213,16 @@ class DiscussionsReplyFragment : ParentFragment() {
         } else {
             // Post failure
             // 400 will be handled elsewhere. it means the quota has been reached
-            if (response.code() != 400 && isAdded) {
+            if (response.code() != 400 && isVisible) {
                 messageFailure()
             }
         }
     }
 
     private fun messageFailure() {
-        toolbar.menu.findItem(R.id.menu_send).isVisible = true
-        toolbar.menu.findItem(R.id.menu_attachment).isVisible = true
-        savingProgressBar.visibility = View.GONE
+        toolbar.menu.findItem(R.id.menu_send)?.isVisible = true
+        toolbar.menu.findItem(R.id.menu_attachment)?.isVisible = true
+        savingProgressBar?.visibility = View.GONE
         toast(R.string.utils_discussionSentFailure)
     }
     //endregion

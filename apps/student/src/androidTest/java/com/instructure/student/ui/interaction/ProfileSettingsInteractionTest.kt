@@ -43,7 +43,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
         tokenLogin(data.domain, token, student)
 
         dashboardPage.launchSettingsPage()
-        settingsPage.launchProfileSettings()
+        settingsPage.openProfileSettings()
         profileSettingsPage.changeUserNameTo(newUserName)
 
         Espresso.pressBack() // to settings page
@@ -62,7 +62,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
         tokenLogin(data.domain, token, student)
 
         dashboardPage.launchSettingsPage()
-        settingsPage.launchProfileSettings()
+        settingsPage.openProfileSettings()
         profileSettingsPage.assertSettingsDisabled() // No permissions granted
     }
 
@@ -86,7 +86,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
 
         // Navigate to avatar creation page
         dashboardPage.launchSettingsPage()
-        settingsPage.launchProfileSettings()
+        settingsPage.openProfileSettings()
         profileSettingsPage.launchPandaAvatarCreator()
 
         // Select head
