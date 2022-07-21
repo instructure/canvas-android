@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.shareextension.target
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintSet
@@ -80,14 +82,22 @@ class ShareExtensionTargetFragment : DialogFragment() {
 
         val alertDialog = AlertDialog.Builder(requireContext())
                 .setView(binding.root)
-                .setPositiveButton(R.string.next) { _, _ -> validateAndShowNext() }
-                .setNegativeButton(R.string.cancel) { _, _ -> dismissAllowingStateLoss() }
+                .setPositiveButton(R.string.next, null)
+                .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
                 .create()
 
+        alertDialog.setCanceledOnTouchOutside(true)
+        alertDialog.setCancelable(true)
         alertDialog.setOnShowListener {
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+            val positive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
+            positive.setTextColor(ThemePrefs.buttonColor)
+            positive.setOnClickListener { validateAndShowNext() }
+            val negative = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+            negative.setTextColor(ThemePrefs.buttonColor)
+            negative.setOnClickListener {
+                dismissAllowingStateLoss()
+            }
         }
 
         return alertDialog
@@ -119,7 +129,10 @@ class ShareExtensionTargetFragment : DialogFragment() {
 
     private fun validateAndShowNext() {
         val data = viewModel.getValidatedData()
-        shareExtensionViewModel.showUploadDialog(data.course, data.assignment, data.fileUploadType)
+        if (data != null) {
+            shareExtensionViewModel.showUploadDialog(data.course, data.assignment, data.fileUploadType)
+            dismiss()
+        }
     }
 
     private fun setRevealContentsListener() {
@@ -163,6 +176,9 @@ class ShareExtensionTargetFragment : DialogFragment() {
                 filesCheckBox.isChecked = false
                 toggleSpinners(true)
                 moveSelection(R.id.newAssignmentContainer)
+            }
+            is ShareExtensionTargetAction.ShowToast -> {
+                Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
             }
         }
     }

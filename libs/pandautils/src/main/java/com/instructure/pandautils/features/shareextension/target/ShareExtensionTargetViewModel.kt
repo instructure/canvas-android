@@ -88,6 +88,7 @@ class ShareExtensionTargetViewModel @Inject constructor(
     fun onCourseSelected(position: Int) {
         selectedCourse = courses[position]
         selectedAssignment = null
+        assignments = emptyList()
         fetchAssignment(selectedCourse?.id ?: throw IllegalArgumentException())
     }
 
@@ -133,12 +134,20 @@ class ShareExtensionTargetViewModel @Inject constructor(
         _events.postValue(Event(ShareExtensionTargetAction.FilesTargetSelected))
     }
 
-    fun getValidatedData(): FileUploadTargetData {
+    fun getValidatedData(): FileUploadTargetData? {
         if (uploadType == FileUploadType.ASSIGNMENT) {
-            if (selectedCourse == null || selectedAssignment == null) {
-                TODO("Handle missing data")
-            } else {
-                return FileUploadTargetData(selectedCourse, selectedAssignment, uploadType)
+            return when {
+                selectedCourse == null -> {
+                    _events.postValue(Event(ShareExtensionTargetAction.ShowToast(resources.getString(R.string.noCourseSelected))))
+                    null
+                }
+                selectedAssignment == null -> {
+                    _events.postValue(Event(ShareExtensionTargetAction.ShowToast(resources.getString(R.string.noAssignmentSelected))))
+                    null
+                }
+                else -> {
+                    return FileUploadTargetData(selectedCourse, selectedAssignment, uploadType)
+                }
             }
         }
         return FileUploadTargetData(fileUploadType = uploadType)

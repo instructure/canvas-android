@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.shareextension
 
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -27,6 +28,7 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.R
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.file.upload.FileUploadAction
 import com.instructure.pandautils.features.file.upload.FileUploadType
@@ -36,7 +38,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShareExtensionViewModel @Inject constructor(
-        private val apiPrefs: ApiPrefs
+        private val apiPrefs: ApiPrefs,
+        private val resources: Resources
 ) : ViewModel() {
 
     var uri: Uri? = null
@@ -61,10 +64,11 @@ class ShareExtensionViewModel @Inject constructor(
     fun showUploadDialog(course: CanvasContext?, assignment: Assignment?, uploadType: FileUploadType) {
         uri?.let {
             _events.postValue(Event(ShareExtensionAction.ShowUploadDialog(course, assignment, it, uploadType)))
-        } ?: TODO("Handle missing file")
+        } ?: _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.errorOccurred))))
     }
 }
 
 sealed class ShareExtensionAction {
     data class ShowUploadDialog(val course: CanvasContext?, val assignment: Assignment?, val fileUri: Uri, val uploadType: FileUploadType): ShareExtensionAction()
+    data class ShowToast(val toast: String) : ShareExtensionAction()
 }

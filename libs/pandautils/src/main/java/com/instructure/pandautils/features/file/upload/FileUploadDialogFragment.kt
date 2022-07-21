@@ -36,18 +36,12 @@ import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
-import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.dialog_files_upload.*
 import java.io.File
-import java.util.ArrayList
 
 @AndroidEntryPoint
 open class FileUploadDialogFragment : DialogFragment() {

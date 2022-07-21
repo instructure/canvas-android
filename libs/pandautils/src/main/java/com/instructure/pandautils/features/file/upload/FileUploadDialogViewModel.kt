@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.file.upload
 
-import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
@@ -28,15 +27,11 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
-import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.FileUploadUtils
-import com.instructure.pandautils.utils.setVisible
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.android.synthetic.main.dialog_files_upload.*
-import java.lang.IllegalArgumentException
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.ln
@@ -103,9 +98,10 @@ class FileUploadDialogViewModel @Inject constructor(
                     updateItems()
                 }
             } else {
-                TODO("Handle error")
+                _events.postValue(Event(FileUploadAction.ShowToast(it.errorMessage
+                        ?: resources.getString(R.string.errorOccurred))))
             }
-        } ?: TODO("Handle error")
+        } ?: _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.errorOccurred))))
     }
 
     private fun updateItems() {
@@ -147,7 +143,7 @@ class FileUploadDialogViewModel @Inject constructor(
                     return true
                 }
             }
-            TODO("error toast")
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.extensionNotAllowed))))
             return false
         }
 
@@ -159,7 +155,7 @@ class FileUploadDialogViewModel @Inject constructor(
             return true
         }
 
-        TODO("error toast")
+        _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.extensionNotAllowed))))
         return false
     }
 
@@ -195,7 +191,7 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     private fun isExtensionAllowed(filePath: String): Boolean {
-        if (assignment == null) TODO("Handle null assignment")
+        if (assignment == null) _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.noAssignmentSelected))))
         if (assignment!!.allowedExtensions.isEmpty()) return true
 
         val extension = filePath.substringAfterLast(".")
@@ -205,7 +201,7 @@ class FileUploadDialogViewModel @Inject constructor(
 
     fun uploadFiles() {
         if (submitObjects.size == 0) {
-            TODO("Handle missing files")
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.noFilesUploaded))))
         } else {
             if (uploadType == FileUploadType.ASSIGNMENT) {
 
@@ -258,7 +254,7 @@ class FileUploadDialogViewModel @Inject constructor(
                     action = FileUploadService.ACTION_SUBMISSION_COMMENT
                 }
                 else -> {
-                    if(assignment != null) {
+                    if (assignment != null) {
                         bundle = FileUploadService.getAssignmentSubmissionBundle(fileList, canvasContext.id, assignment!!)
                         action = FileUploadService.ACTION_ASSIGNMENT_SUBMISSION
                     }
@@ -268,14 +264,6 @@ class FileUploadDialogViewModel @Inject constructor(
             if (bundle != null) {
                 _events.postValue(Event(FileUploadAction.StartUpload(bundle, action)))
             }
-
-//            if(bundle != null) {
-//                dialogCallback?.invoke(UploadFilesDialog.EVENT_ON_UPLOAD_BEGIN)
-//                dialogAttachmentCallback?.invoke(UploadFilesDialog.EVENT_ON_UPLOAD_BEGIN, null)
-//                intent.putExtras(bundle)
-//                activity?.startService(intent)
-//                dismiss()
-//            }
         }
     }
 }
