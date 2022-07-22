@@ -57,9 +57,6 @@ class LoginE2ETest : StudentTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
-
         Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId} , password: ${student1.password}")
         loginWithUser(student1)
 
@@ -68,9 +65,6 @@ class LoginE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Log out with ${student1.name} student.")
         dashboardPage.logOut()
-
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
 
         Log.d(STEP_TAG,"Login with user: ${student2.name}, login id: ${student2.loginId} , password: ${student2.password}")
         loginWithUser(student2)
@@ -83,9 +77,6 @@ class LoginE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
-
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
 
         Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId} , password: ${student1.password}")
         loginWithUser(student1)
@@ -143,33 +134,51 @@ class LoginE2ETest : StudentTest() {
         val teacher = data.teachersList[0]
         val ta = data.taList[0]
         val course = data.coursesList[0]
+        val parent = parentData.parentsList[0]  //Test with Parent user. parents don't show up in the "People" page so we can't verify their role.
+
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        loginWithUser(student)
 
         Log.d(STEP_TAG,"Validate ${student.name} user's role as a Student.")
         validateUserAndRole(student, course, "Student")
 
+        Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG,"Log out with ${student.name} student.")
+        dashboardPage.logOut()
+
+        Log.d(STEP_TAG,"Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        loginWithUser(teacher)
+
         Log.d(STEP_TAG,"Validate ${teacher.name} user's role as a Teacher.")
         validateUserAndRole(teacher, course, "Teacher")
+
+        Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG,"Log out with ${teacher.name} teacher.")
+        dashboardPage.logOut()
+
+        Log.d(STEP_TAG,"Login with user: ${ta.name}, login id: ${ta.loginId} , password: ${ta.password}")
+        loginWithUser(ta)
 
         Log.d(STEP_TAG,"Validate ${ta.name} user's role as a TA.")
         validateUserAndRole(ta, course, "TA")
 
-         val parent = parentData.parentsList[0]  //Test with Parent user. parents don't show up in the "People" page so we can't verify their role.
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
+        Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
+        ViewUtils.pressBackButton(2)
 
-        Log.d(STEP_TAG,"Enter domain: ${parent.domain}.")
-        loginFindSchoolPage.enterDomain(parent.domain)
-
-        Log.d(STEP_TAG,"Enter domain: ${parent.domain}.")
-        loginFindSchoolPage.clickToolbarNextMenuItem()
+        Log.d(STEP_TAG,"Log out with ${ta.name} teacher assistant.")
+        dashboardPage.logOut()
 
         Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId} , password: ${parent.password}")
-        loginSignInPage.loginAs(parent)
+        loginWithUser(parent)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(parent)
 
-        Log.d(STEP_TAG,"Log out with ${parent.name} student.")
+        Log.d(STEP_TAG,"Log out with ${parent.name} parent.")
         dashboardPage.logOut()
     }
 
@@ -208,11 +217,23 @@ class LoginE2ETest : StudentTest() {
                 enrollmentService = enrollmentsService
         )
 
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        loginWithUser(student)
+
         Log.d(STEP_TAG,"Attempt to sign into our vanity domain, and validate ${student.name} user's role as a Student.")
         validateUserAndRole(student, course,"Student" )
+
+        Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG,"Log out with ${student.name} student.")
+        dashboardPage.logOut()
     }
 
     private fun loginWithUser(user: CanvasUserApiModel) {
+        Log.d(STEP_TAG,"Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
         Log.d(STEP_TAG,"Enter domain: ${user.domain}.")
         loginFindSchoolPage.enterDomain(user.domain)
 
@@ -223,10 +244,6 @@ class LoginE2ETest : StudentTest() {
 
     private fun validateUserAndRole(user: CanvasUserApiModel, course: CourseApiModel, role: String) {
 
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
-        loginWithUser(user)
-
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(user)
 
@@ -236,12 +253,6 @@ class LoginE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Assert that ${user.name} user's role is: $role.")
         peopleListPage.assertPersonListed(user, role)
-
-        Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
-        ViewUtils.pressBackButton(2)
-
-        Log.d(STEP_TAG,"Log out with ${user.name} student.")
-        dashboardPage.logOut()
 
     }
 
