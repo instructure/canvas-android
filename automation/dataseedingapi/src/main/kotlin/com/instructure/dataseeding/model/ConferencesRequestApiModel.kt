@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2018-present Instructure, Inc.
+// Copyright (C) 2022-present Instructure, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ data class ConferencesRequestApiModel(
         @SerializedName("conference_type")
         val conferenceType: String = "",
         @SerializedName("long_running")
-        val longRunning: Boolean? = false,
+        val longRunning: Boolean = false,
         @SerializedName("duration")
         val duration: Int? = null,
         @SerializedName("users")
@@ -38,7 +38,7 @@ data class ConferencesRequestApiModel(
 )
 
 /**
- * Wrapper class abpve ConferencesRequestApiModel because it is wrapped within a 'web_conference' object in the request.
+ * Wrapper class above ConferencesRequestApiModel because it is wrapped within a 'web_conference' object in the request.
  */
 data class WebConferenceWrapper(
         @SerializedName("web_conference")

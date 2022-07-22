@@ -2,7 +2,6 @@ package com.instructure.student.ui.e2e
 
 import android.util.Log
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConferencesApi
 import com.instructure.panda_annotations.FeatureCategory
@@ -33,10 +32,9 @@ class ConferencesE2ETest: StudentTest() {
     // Re-stubbing for now because the interface has changed from webview to native
     // and this test no longer passes.  MBL-14127 is being tracked to re-write this
     // test against the new native interface.
-    @Stub
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.CONFERENCES, TestCategory.E2E, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CONFERENCES, TestCategory.E2E)
     fun testConferencesE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")

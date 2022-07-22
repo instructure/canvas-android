@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2018-present Instructure, Inc.
+// Copyright (C) 2022-present Instructure, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ data class ConferencesResponseApiModel(
         @SerializedName("long_running")
         val longRunning: Int? = null,
         @SerializedName("duration")
-        val duration: Double? = null,
+        val duration: Int? = null,
         @SerializedName("user_ids")
         val userIds: List<Long>? = null
 )
