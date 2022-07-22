@@ -121,7 +121,7 @@ class DashboardPage : BasePage() {
         onViewWithText(android.R.string.yes).click()
         // It can potentially take a long time for the sign-out to take effect, especially on
         // slow FTL devices.  So let's pause for a bit until we see the canvas logo.
-        waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(matches(isDisplayed()))
+        waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 10000).check(matches(isDisplayed()))
     }
 
     fun assertUserLoggedIn(user: CanvasUserApiModel) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2022 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -33,13 +33,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class LoginE2ETest : TeacherTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
