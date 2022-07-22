@@ -29,6 +29,7 @@ import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
+import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class SyllabusRenderTest : TeacherRenderTest() {
@@ -102,7 +103,6 @@ class SyllabusRenderTest : TeacherRenderTest() {
     }
 
     @Test
-    @Stub
     fun tappingEventsDisplaysEvents() {
         val model = baseModel.copy(events = DataResult.Success(List(3) { ScheduleItem(title = it.toString()) }))
         loadPageWithModel(model)
@@ -113,7 +113,6 @@ class SyllabusRenderTest : TeacherRenderTest() {
     }
 
     @Test
-    @Stub
     fun swipingToEventsDisplaysEvents() {
         val model = baseModel.copy(events = DataResult.Success(List(3) { ScheduleItem(title = it.toString()) }))
         loadPageWithModel(model)
@@ -153,5 +152,6 @@ class SyllabusRenderTest : TeacherRenderTest() {
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }
         activityRule.activity.loadFragment(fragment)
+        sleep(3000) // Need to wait here a bit because loadFragment needs some time.
     }
 }

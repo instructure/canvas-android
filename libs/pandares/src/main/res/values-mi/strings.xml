@@ -958,6 +958,7 @@
     <string name="latePenalty">Whiu tōmuri (-%s)</string>
     <string name="finalGrade">Kōeke whakamutunga</string>
 
+    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">E huaki ana i roto i paetukutuku tirohanga</string>
@@ -1260,6 +1261,13 @@
     <string name="appThemeSettingsTitle">Taupānga Kaupapa</string>
     <string name="appThemeLight">Marama</string>
     <string name="appThemeDark">Pōuri</string>
-    <string name="appThemeSystem">Pūnaha taunoa</string>
-
+    <string name="appThemeSystem">Rite tonu ka rite ki pūrere</string>
+    <string name="themeSelectorTitle">Canvas ko inaianei e wātea ana i te pouri kaupapa</string>
+    <string name="themeSelectorDescription">Whiriwhiria taupānga kaupapa</string>
+    <string name="themeSelectorLightTheme">Maama kaupapa</string>
+    <string name="themeSelectorDarkTheme">Pouriuri kaupapa</string>
+    <string name="themeSelectorDeviceTheme">Rite tonu ka rite ki pūrere kaupapa</string>
+    <string name="themeSelectorSave">Tiaki</string>
+    <string name="themeSelectorChangeLater">Ka taea e koe te whakarereke i muri mai i te taupānga tautuhinga</string>
+    <string name="grabAnnotationTool">Kōrapurapu</string>
 </resources>

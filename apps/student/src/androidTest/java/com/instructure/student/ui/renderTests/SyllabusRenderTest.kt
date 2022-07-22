@@ -29,6 +29,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -140,6 +141,7 @@ class SyllabusRenderTest : StudentRenderTest() {
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }
         activityRule.activity.loadFragment(fragment)
+        sleep(3000) // Need to wait here a bit because loadFragment needs some time.
     }
 
 }

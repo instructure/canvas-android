@@ -993,6 +993,7 @@
     <string name="latePenalty">عقوبة التأخير (-%s)</string>
     <string name="finalGrade">الدرجة النهائية</string>
 
+    <string name="moreThan99">أكثر من 99</string>
     <string name="max_count">أكثر من 99</string>
 
     <string name="opensInWebView">الفتح في عرض ويب</string>
@@ -1315,6 +1316,13 @@
     <string name="appThemeSettingsTitle">نسق التطبيق</string>
     <string name="appThemeLight">فاتح</string>
     <string name="appThemeDark">داكن</string>
-    <string name="appThemeSystem">النظام الافتراضي</string>
-
+    <string name="appThemeSystem">مثل الجهاز</string>
+    <string name="themeSelectorTitle">Canvas متاح الآن في النسق الداكن</string>
+    <string name="themeSelectorDescription">اختر نسق التطبيق</string>
+    <string name="themeSelectorLightTheme">النسق الفاتح</string>
+    <string name="themeSelectorDarkTheme">النسق الداكن</string>
+    <string name="themeSelectorDeviceTheme">مثل نسق الجهاز</string>
+    <string name="themeSelectorSave">حفظ</string>
+    <string name="themeSelectorChangeLater">يمكنك تغييرها لاحقًا في إعدادات التطبيق</string>
+    <string name="grabAnnotationTool">تحديد</string>
 </resources>

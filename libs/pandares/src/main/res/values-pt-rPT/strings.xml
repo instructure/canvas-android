@@ -958,6 +958,7 @@
     <string name="latePenalty">Penalidade tardia (-%s)</string>
     <string name="finalGrade">Nota final</string>
 
+    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Abre no webview</string>
@@ -1260,6 +1261,13 @@
     <string name="appThemeSettingsTitle">Tema da App</string>
     <string name="appThemeLight">Claro</string>
     <string name="appThemeDark">Escuro</string>
-    <string name="appThemeSystem">Padrão do sistema</string>
-
+    <string name="appThemeSystem">O mesmo que dispositivo</string>
+    <string name="themeSelectorTitle">O ecrã está agora disponível em tema escuro</string>
+    <string name="themeSelectorDescription">Escolha o tema da aplicação</string>
+    <string name="themeSelectorLightTheme">Tema claro</string>
+    <string name="themeSelectorDarkTheme">Tema escuro</string>
+    <string name="themeSelectorDeviceTheme">O mesmo tema do dispositivo</string>
+    <string name="themeSelectorSave">Guardar</string>
+    <string name="themeSelectorChangeLater">Pode alterá-lo mais tarde nas definições da aplicação</string>
+    <string name="grabAnnotationTool">Agarrar</string>
 </resources>

@@ -928,6 +928,7 @@
         <item quantity="many">-%s نقطة</item>
         <item quantity="other">-%s نقاط</item>
     </plurals>
+    <string name="todoUnreadCount">قائمة مهام %d غير مقروءة</string>
     <string name="profileSettings">إعدادات ملف التعريف</string>
     <string name="downloadingFile">تنزيل الملف&#8230;</string>
     <string name="fileDownloadedSuccessfully">تم تنزيل الملف بنجاح.</string>

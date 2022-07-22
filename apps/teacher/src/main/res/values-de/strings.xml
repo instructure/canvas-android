@@ -690,7 +690,7 @@
     <string name="createDiscussion">Neue Diskussion</string>
     <string name="options">Optionen</string>
     <string name="subscribe">Anmelden</string>
-    <string name="allowThreadedReplies">Gelistete Antworten zulassen</string>
+    <string name="allowThreadedReplies">Antworten aller Diskussionsstränge zulassen</string>
     <string name="usersMustPost">Benutzer müssen gepostet haben, bevor sie Antworten sehen können.</string>
     <string name="allowUserComments">Benutzern Kommentare erlauben</string>
     <string name="discussionTitleMustBeSet">Ein Diskussionstitel muss festgelegt werden.</string>
@@ -872,6 +872,7 @@
         <item quantity="one">%s Punkt</item>
         <item quantity="other">%s Punkte</item>
     </plurals>
+    <string name="todoUnreadCount">%d Ungelesene erledigen</string>
     <string name="profileSettings">Profileinstellungen</string>
     <string name="downloadingFile">Datei herunterladen&#8230;</string>
     <string name="fileDownloadedSuccessfully">Datei erfolgreich heruntergeladen.</string>
