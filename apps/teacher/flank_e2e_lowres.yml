@@ -5,16 +5,17 @@ gcloud:
   #  test: ./build/outputs/apk/androidTest/qa/debug/teacher-qa-debug-androidTest.apk
   app: ./apps/teacher/build/outputs/apk/qa/debug/teacher-qa-debug.apk
   test: ./apps/teacher/build/outputs/apk/androidTest/qa/debug/teacher-qa-debug-androidTest.apk
-  results-bucket: android-student
+  results-bucket: android-teacher
   auto-google-login: true
   use-orchestrator: true
   performance-metrics: false
   record-video: true
   timeout: 60m
   test-targets:
-  - annotation com.instructure.canvas.espresso.FlakyE2E
+  - annotation com.instructure.canvas.espresso.E2E
+  - notAnnotation com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
   device:
-  - model: Nexus6P
+  - model: NexusLowRes
     version: 26
     locale: en_US
     orientation: portrait

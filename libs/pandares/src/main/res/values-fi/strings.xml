@@ -958,6 +958,7 @@
     <string name="latePenalty">Rangaistus myöhästymisestä (-%s)</string>
     <string name="finalGrade">Lopullinen arvosana</string>
 
+    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Avautuu verkkonäkymässä</string>
@@ -1260,6 +1261,13 @@
     <string name="appThemeSettingsTitle">Sovelluksen teema</string>
     <string name="appThemeLight">Valo</string>
     <string name="appThemeDark">Tumma</string>
-    <string name="appThemeSystem">Järjestelmän oletus</string>
-
+    <string name="appThemeSystem">Sama kuin laite</string>
+    <string name="themeSelectorTitle">Canvas on nyt saatavilla tummana teema</string>
+    <string name="themeSelectorDescription">Valitse sovelluksen teema</string>
+    <string name="themeSelectorLightTheme">Vaalea teema</string>
+    <string name="themeSelectorDarkTheme">Tumma teema</string>
+    <string name="themeSelectorDeviceTheme">Sama kuin laitteen teema</string>
+    <string name="themeSelectorSave">Tallenna</string>
+    <string name="themeSelectorChangeLater">Voit vaihtaa sen myöhemmin sovellusasetuksissa</string>
+    <string name="grabAnnotationTool">Nappaa</string>
 </resources>

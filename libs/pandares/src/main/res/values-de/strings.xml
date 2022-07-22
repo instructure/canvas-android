@@ -113,7 +113,7 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s von %2$s Punkten</string>
     <string name="enterWhatIfScore">Hypothetische Punktzahl eingeben</string>
     <string name="scoreStatisticsLow">Gering: %s</string>
-    <string name="scoreStatisticsMean">Mittel: %s</string>
+    <string name="scoreStatisticsMean">Mittelwert: %s</string>
     <string name="scoreStatisticsHigh">Hoch: %s</string>
 
     <!-- Student rubric tab -->
@@ -484,7 +484,7 @@
     <string name="notAuthorizedAnnouncement">Entschuldigung. Sie sind nicht zu Ankündigungen in diesem Kurs berechtigt.</string>
     <string name="notAuthorizedDiscussion">Entschuldigung. Sie sind nicht zu Diskussionen in diesem Kurs berechtigt.</string>
 
-    <string name="announcements">Announcements</string>
+    <string name="announcements">Ankündigungen</string>
 
     <string name="titleBlank">Der Titel darf nicht leer sein.</string>
 
@@ -733,7 +733,7 @@
     <string name="createNewCalendarEvent">Neues Ereignis erstellen</string>
     <string name="enableFunMode">Panda ausstellen</string>
 
-    <string name="accountNotifications">Announcements</string>
+    <string name="accountNotifications">Ankündigungen</string>
     <string name="addAccount">Konto hinzufügen</string>
 
     <string name="changeUser">Benutzer wechseln</string>
@@ -797,7 +797,7 @@
     <string name="notification_desc_announcement">Benachrichtigung erhalten, wenn es eine neue Ankündigung in Ihrem Kurs gibt.</string>
     <string name="notification_desc_announcement_created_by_you">Benachrichtigung erhalten, wenn jemand auf eine Ankündigung von Ihnen antwortet.</string>
     <string name="notification_desc_grading">Benachrichtigung erhalten, wenn eine Aufgabe/Abgabe benotet/geändert wurde und wenn eine Notengewichtung geändert wurde.</string>
-    <string name="notification_desc_invitation">Benachrichtigung erhalten bei Einladungen zu Webkonferenzen, Gruppen, Kooperationen, Bewertung durch Mitstudenten und Erinnerungen.</string>
+    <string name="notification_desc_invitation">Benachrichtigung erhalten bei Einladungen zu Webkonferenzen, Gruppen, Kooperationen, Peer Review und Erinnerungen.</string>
     <string name="notification_desc_all_submissions">Nur für Kursleiter und Administratoren. Benachrichtigung erhalten, wenn eine Aufgabe abgegeben oder erneut abgegeben wird.</string>
     <string name="notification_desc_late_grading">Nur für Kursleiter und Administratoren. Benachrichtigung erhalten, wenn eine Aufgabe zu spät abgegeben wird.</string>
     <string name="notification_desc_submission_comment">Benachrichtigung erhalten, wenn zu Ihrer Einreichung ein Kommentar abgegeben wird.</string>
@@ -958,6 +958,7 @@
     <string name="latePenalty">Strafe für Verspätung (-%s)</string>
     <string name="finalGrade">Gesamtnote</string>
 
+    <string name="moreThan99">über 99</string>
     <string name="max_count">über 99</string>
 
     <string name="opensInWebView">In Webview öffnen</string>
@@ -998,7 +999,7 @@
     <string name="conferencesNotSupported">Konferenzen werden auf Mobilgeräten noch nicht unterstützt.</string>
     <string name="filePreviewContentDescription">Dateivorschaubild</string>
     <string name="pdfError">Fehler beim Versuch diese PDF-Datei zu laden</string>
-    <string name="featureNotAllowedInStudentView">Tut uns sehr leid! Diese Funktion steht für die Studentenansicht nicht erlaubt.</string>
+    <string name="featureNotAllowedInStudentView">Tut uns sehr leid! Diese Funktion steht für die Studierendenansicht nicht erlaubt.</string>
     <string name="nothingToSeeHere">Hier gibt es nichts zu sehen</string>
     <string name="unsupportedFeature">Nicht unterstützte Funktion</string>
 
@@ -1041,7 +1042,7 @@
     <string name="gradeOverride">Note außer Kraft setzen</string>
     <string name="currentGrade">Aktuelle Note</string>
     <string name="opensInCanvasStudent">Öffnet in Canvas Student</string>
-    <string name="tab_student_view">Studentenansicht</string>
+    <string name="tab_student_view">Studierendenansicht</string>
 
 
     <!-- Panda Avatar Content Descriptions -->
@@ -1232,7 +1233,7 @@
     <string name="submissionDraftAvailableSubtitle">Tippen Sie hier, um fortzufahren.</string>
     <string name="submissionDraftAvailableTitle">Entwurf verfügbar</string>
     <string name="errorLoadingSubmission">Fehler bei, Laden der Abgabe</string>
-    <string name="loadFullContent">Tippen Sie hier, um den vollständigen Content anzuzeigen</string>
+    <string name="loadFullContent">Tippen Sie hier, um den vollständigen Inhalt anzuzeigen</string>
     <string name="dashboardTabImportantDates">Wichtige Termine</string>
     <string name="importantDatesEmptyTitle">Keine wichtigen Termine</string>
     <string name="important_dates">Wichtige Termine</string>
@@ -1260,6 +1261,13 @@
     <string name="appThemeSettingsTitle">App-Design</string>
     <string name="appThemeLight">Hell</string>
     <string name="appThemeDark">Dunkel</string>
-    <string name="appThemeSystem">Systemstandard</string>
-
+    <string name="appThemeSystem">Wie Gerät</string>
+    <string name="themeSelectorTitle">Canvas ist jetzt in dunklem Design verfügbar</string>
+    <string name="themeSelectorDescription">App-Design auswählen</string>
+    <string name="themeSelectorLightTheme">Helles Design</string>
+    <string name="themeSelectorDarkTheme">Dunkles Design</string>
+    <string name="themeSelectorDeviceTheme">Entspricht dem Gerätedesign</string>
+    <string name="themeSelectorSave">Speichern</string>
+    <string name="themeSelectorChangeLater">Sie können es später in den App-Einstellungen ändern.</string>
+    <string name="grabAnnotationTool">Greifen</string>
 </resources>

@@ -14,7 +14,7 @@ gcloud:
   test-targets:
     - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
   device:
-    - model: NexusLowRes
+    - model: Nexus6P
       version: 26
       locale: en_US
       orientation: landscape
