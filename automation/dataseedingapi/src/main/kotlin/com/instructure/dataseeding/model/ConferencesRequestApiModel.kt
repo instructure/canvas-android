@@ -32,7 +32,7 @@ data class ConferencesRequestApiModel(
         @SerializedName("long_running")
         val longRunning: Boolean = false,
         @SerializedName("duration")
-        val duration: Int? = null,
+        val duration: Int = 60,
         @SerializedName("users")
         val userIds: List<Long>? = null
 )

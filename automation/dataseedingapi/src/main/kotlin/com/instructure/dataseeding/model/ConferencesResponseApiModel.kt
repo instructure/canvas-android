@@ -24,15 +24,15 @@ import com.google.gson.annotations.SerializedName
  */
 data class ConferencesResponseApiModel(
         @SerializedName("id")
-        val id: Long? = null,
+        val id: Long,
         @SerializedName("description")
-        val description: String? = null,
+        val description: String = "",
         @SerializedName("conference_type")
         val conferenceType: String = "",
         @SerializedName("long_running")
         val longRunning: Int? = null,
         @SerializedName("duration")
-        val duration: Int? = null,
+        val duration: Int,
         @SerializedName("user_ids")
-        val userIds: List<Long>? = null
+        val userIds: List<Long> = listOf()
 )

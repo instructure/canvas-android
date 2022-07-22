@@ -23,7 +23,7 @@ object ConferencesApi {
     private fun conferencesService(token: String): ConferencesService
             = CanvasNetworkAdapter.retrofitWithToken(token).create(ConferencesService::class.java)
 
-    fun createCourseConference(token: String, title: String, description: String, conferenceType: String, longRunning: Boolean, duration: Int?, userIds: List<Long>?, courseId: Long): ConferencesResponseApiModel {
+    fun createCourseConference(token: String, title: String, description: String, conferenceType: String, longRunning: Boolean, duration: Int, userIds: List<Long>, courseId: Long): ConferencesResponseApiModel {
         val conference = WebConferenceWrapper(webConference = ConferencesRequestApiModel(
             title,
             description,
