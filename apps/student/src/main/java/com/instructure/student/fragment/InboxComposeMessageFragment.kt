@@ -35,7 +35,7 @@ import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -51,7 +51,6 @@ import kotlinx.android.synthetic.main.fragment_inbox_compose_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.ArrayList
 
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 class InboxComposeMessageFragment : ParentFragment() {
@@ -279,8 +278,8 @@ class InboxComposeMessageFragment : ParentFragment() {
                     sendMessage()
                 }
                 R.id.menu_attachment -> {
-                    val bundle = UploadFilesDialog.createMessageAttachmentsBundle(arrayListOf())
-                    UploadFilesDialog.show(fragmentManager, bundle, { _ -> })
+                    val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())
+                    FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
                 }
                 else -> return@setOnMenuItemClickListener false
             }

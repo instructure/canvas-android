@@ -44,7 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
 @AndroidEntryPoint
-open class FileUploadDialogFragment : DialogFragment() {
+class FileUploadDialogFragment : DialogFragment() {
 
     private val viewModel: FileUploadDialogViewModel by viewModels()
 
@@ -63,6 +63,9 @@ open class FileUploadDialogFragment : DialogFragment() {
     private var quizId: Long by LongArg()
     private var courseId: Long by LongArg()
 
+    private var dialogCallback: ((Int) -> Unit)? = null
+    private var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
+
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
         if (isPermissionGranted) takePicture()
     }
@@ -76,7 +79,7 @@ open class FileUploadDialogFragment : DialogFragment() {
     }
 
     private val galleryPickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
-         viewModel.addFile(it)
+        viewModel.addFile(it)
     }
 
     private val filePickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
@@ -116,7 +119,7 @@ open class FileUploadDialogFragment : DialogFragment() {
                 positiveText = getString(R.string.utils_okay)
             }
             FileUploadType.DISCUSSION -> {
-                title= getString(R.string.utils_attachFile)
+                title = getString(R.string.utils_attachFile)
                 positiveText = getString(R.string.utils_okay)
             }
             FileUploadType.QUIZ -> {
@@ -159,11 +162,19 @@ open class FileUploadDialogFragment : DialogFragment() {
         viewModel.setData(assignment, fileSubmitUri, uploadType, canvasContext, parentFolderId, quizQuestionId, position, quizId)
     }
 
-    open fun uploadClicked() {
-        viewModel.uploadFiles()
+    private fun uploadClicked() {
+        if (uploadType == FileUploadType.DISCUSSION) {
+            attachmentCallback?.invoke(EVENT_ON_FILE_SELECTED, viewModel.getAttachmentUri())
+            dismiss()
+        } else {
+            viewModel.uploadFiles()
+        }
     }
 
-    open fun cancelClicked() {
+    private fun cancelClicked() {
+        dismissAllowingStateLoss()
+        dialogCallback?.invoke(EVENT_DIALOG_CANCELED)
+        attachmentCallback?.invoke(EVENT_DIALOG_CANCELED, null)
     }
 
     private fun handleAction(action: FileUploadAction) {
@@ -181,6 +192,7 @@ open class FileUploadDialogFragment : DialogFragment() {
         intent.action = action
         intent.putExtras(bundle)
         requireActivity().startService(intent)
+        dialogCallback?.invoke(EVENT_ON_UPLOAD_BEGIN)
     }
 
     private fun takePicture() {
@@ -210,9 +222,13 @@ open class FileUploadDialogFragment : DialogFragment() {
         private const val INVALID_ID = -1L
         private const val INVALID_ID_INT = -1
 
+        const val EVENT_DIALOG_CANCELED = 1
+        const val EVENT_ON_UPLOAD_BEGIN = 2
+        const val EVENT_ON_FILE_SELECTED = 3
+
         fun newInstance(): FileUploadDialogFragment = FileUploadDialogFragment()
 
-        fun newInstance(args: Bundle): FileUploadDialogFragment {
+        fun newInstance(args: Bundle, callback: ((Int) -> Unit)? = null, pickerCallback: ((Int, FileSubmitObject?) -> Unit)? = null): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
 
@@ -223,12 +239,14 @@ open class FileUploadDialogFragment : DialogFragment() {
                 quizId = args.getLong(Const.QUIZ, INVALID_ID)
                 courseId = args.getLong(Const.COURSE_ID, INVALID_ID)
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
+                dialogCallback = callback
+                attachmentCallback = pickerCallback
             }
         }
 
         fun createBundle(submitURI: Uri?, type: FileUploadType, parentFolderId: Long?): Bundle {
             val bundle = Bundle()
-            if(submitURI != null) bundle.putParcelable(Const.URI, submitURI)
+            if (submitURI != null) bundle.putParcelable(Const.URI, submitURI)
             if (parentFolderId != null) bundle.putLong(Const.PARENT_FOLDER_ID, parentFolderId)
             bundle.putSerializable(Const.UPLOAD_TYPE, type)
             return bundle

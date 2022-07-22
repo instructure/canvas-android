@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_REPLY
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -140,12 +140,12 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
                         attachments.add(presenter.getAttachment()!!)
                     }
 
-                    val bundle = UploadFilesDialog.createDiscussionsBundle(attachments)
-                    UploadFilesDialog.show(fragmentManager, bundle) { event, attachment ->
-                        if(event == UploadFilesDialog.EVENT_ON_FILE_SELECTED) {
+                    val bundle = FileUploadDialogFragment.createDiscussionsBundle(attachments)
+                    FileUploadDialogFragment.newInstance(bundle, pickerCallback = { event, attachment ->
+                        if (event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
                             applyAttachment(attachment)
                         }
-                    }
+                    }).show(childFragmentManager, FileUploadDialogFragment.TAG)
                 } else {
                     NoInternetConnectionDialog.show(requireFragmentManager())
                 }
@@ -154,7 +154,7 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
     }
 
     private fun applyAttachment(file: FileSubmitObject?) {
-        if(file != null) {
+        if (file != null) {
             presenter.setAttachment(file)
             attachments.setAttachment(file.toAttachment()) { action, _ ->
                 if (action == AttachmentView.AttachmentAction.REMOVE) {

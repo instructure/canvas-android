@@ -19,7 +19,6 @@ package com.instructure.pandautils.features.file.upload
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -265,5 +264,9 @@ class FileUploadDialogViewModel @Inject constructor(
                 _events.postValue(Event(FileUploadAction.StartUpload(bundle, action)))
             }
         }
+    }
+
+    fun getAttachmentUri(): FileSubmitObject? {
+        return submitObjects.firstOrNull()
     }
 }

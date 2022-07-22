@@ -68,8 +68,6 @@ class ShareFileUploadActivity : AppCompatActivity() {
         intent?.extras?.getParcelable(Const.SUBMISSION_TARGET)
     }
 
-    private var sharedURI: Uri? = null
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share_file)
@@ -77,10 +75,9 @@ class ShareFileUploadActivity : AppCompatActivity() {
         if (shareExtensionViewModel.checkIfLoggedIn()) {
             revealBackground()
             Analytics.trackAppFlow(this)
-            sharedURI = shareExtensionViewModel.parseIntentType(intent)
-            shareExtensionViewModel.uri = sharedURI
+            shareExtensionViewModel.parseIntentType(intent)
             if (submissionTarget != null) {
-                handleAction(ShareExtensionAction.ShowUploadDialog(submissionTarget!!.course, submissionTarget!!.assignment, sharedURI!!, FileUploadType.ASSIGNMENT))
+                shareExtensionViewModel.showUploadDialog(submissionTarget!!.course, submissionTarget!!.assignment, FileUploadType.ASSIGNMENT)
             } else {
                 showDestinationDialog()
             }
@@ -99,11 +96,7 @@ class ShareFileUploadActivity : AppCompatActivity() {
         when (action) {
             is ShareExtensionAction.ShowUploadDialog -> {
                 val bundle: Bundle = if (action.uploadType == FileUploadType.ASSIGNMENT) {
-                    if (action.course == null || action.assignment == null) {
-                        TODO("Handle error")
-                    } else {
-                        FileUploadDialogFragment.createAssignmentBundle(action.fileUri, action.course as Course, action.assignment!!)
-                    }
+                    FileUploadDialogFragment.createAssignmentBundle(action.fileUri, action.course as Course, action.assignment!!)
                 } else {
                     FileUploadDialogFragment.createFilesBundle(action.fileUri, null)
                 }
@@ -112,11 +105,17 @@ class ShareFileUploadActivity : AppCompatActivity() {
                     it.duration = 500
                     it.addListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationStart(animation: Animator) {
-                            FileUploadDialogFragment.newInstance(bundle).show(supportFragmentManager, FileUploadDialogFragment.TAG)
+                            FileUploadDialogFragment.newInstance(bundle, action.dialogCallback).show(supportFragmentManager, FileUploadDialogFragment.TAG)
                         }
                     })
                     it.start()
                 }
+            }
+            is ShareExtensionAction.ShowToast -> {
+                Toast.makeText(this, action.toast, Toast.LENGTH_SHORT).show()
+            }
+            is ShareExtensionAction.Finish -> {
+                finish()
             }
         }
     }
@@ -158,12 +157,8 @@ class ShareFileUploadActivity : AppCompatActivity() {
     }
 
     private fun showDestinationDialog() {
-        if (sharedURI == null) {
-            Toast.makeText(applicationContext, R.string.uploadingFromSourceFailed, Toast.LENGTH_LONG).show()
-        } else {
-            uploadFileSourceFragment = ShareExtensionTargetFragment()
-            uploadFileSourceFragment!!.show(supportFragmentManager, ShareExtensionTargetFragment.TAG)
-        }
+        uploadFileSourceFragment = ShareExtensionTargetFragment()
+        uploadFileSourceFragment!!.show(supportFragmentManager, ShareExtensionTargetFragment.TAG)
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
