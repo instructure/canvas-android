@@ -958,6 +958,7 @@
     <string name="latePenalty">Late penalty (-%s)</string>
     <string name="finalGrade">Final Grade</string>
 
+    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Opens in webview</string>
@@ -1260,6 +1261,13 @@
     <string name="appThemeSettingsTitle">App Theme</string>
     <string name="appThemeLight">Light</string>
     <string name="appThemeDark">Dark</string>
-    <string name="appThemeSystem">System default</string>
-
+    <string name="appThemeSystem">Same as device</string>
+    <string name="themeSelectorTitle">Canvas is now available in dark theme</string>
+    <string name="themeSelectorDescription">Choose app theme</string>
+    <string name="themeSelectorLightTheme">Light theme</string>
+    <string name="themeSelectorDarkTheme">Dark theme</string>
+    <string name="themeSelectorDeviceTheme">Same as device theme</string>
+    <string name="themeSelectorSave">Save</string>
+    <string name="themeSelectorChangeLater">You can change it later in app settings</string>
+    <string name="grabAnnotationTool">Grab</string>
 </resources>

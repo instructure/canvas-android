@@ -39,7 +39,11 @@ import com.instructure.canvasapi2.models.ApiValues
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotationResponse
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.extractCanvaDocsDomain
+import com.instructure.canvasapi2.utils.extractSessionId
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -298,6 +302,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
 
     protected fun openComments() {
         // Get current annotation in both forms
+        if (pdfFragment?.selectedAnnotations?.isNullOrEmpty() == true) {
+            toast(R.string.noAnnotationSelected)
+            return
+        }
         val currentPdfAnnotation = pdfFragment?.selectedAnnotations?.get(0)
         val currentAnnotation = currentPdfAnnotation?.convertPDFAnnotationToCanvaDoc(docSession.documentId)
         // Assuming neither is null, continue

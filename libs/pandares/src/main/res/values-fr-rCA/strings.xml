@@ -958,6 +958,7 @@
     <string name="latePenalty">Pénalité de retard (-%s)</string>
     <string name="finalGrade">Note finale</string>
 
+    <string name="moreThan99">Plus de 99</string>
     <string name="max_count">Plus de 99</string>
 
     <string name="opensInWebView">S’ouvre dans Webview</string>
@@ -1260,6 +1261,13 @@
     <string name="appThemeSettingsTitle">Thème de l\'application</string>
     <string name="appThemeLight">Clair</string>
     <string name="appThemeDark">Foncé</string>
-    <string name="appThemeSystem">Défaut du système</string>
-
+    <string name="appThemeSystem">Identique au dispositif</string>
+    <string name="themeSelectorTitle">Canvas est désormais disponible en thème sombre</string>
+    <string name="themeSelectorDescription">Choisissez le thème de l’application</string>
+    <string name="themeSelectorLightTheme">Thème clair</string>
+    <string name="themeSelectorDarkTheme">Thème sombre</string>
+    <string name="themeSelectorDeviceTheme">Identique au thème du dispositif</string>
+    <string name="themeSelectorSave">Enregistrer</string>
+    <string name="themeSelectorChangeLater">Vous pouvez le changer plus tard dans les paramètres de l’application</string>
+    <string name="grabAnnotationTool">Attraper</string>
 </resources>

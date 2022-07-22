@@ -874,6 +874,7 @@
         <item quantity="one">-%s poäng</item>
         <item quantity="other">-%s poäng</item>
     </plurals>
+    <string name="todoUnreadCount">Att göra %d olästa</string>
     <string name="profileSettings">Profilinställningar</string>
     <string name="downloadingFile">Hämtar fil&#8230;</string>
     <string name="fileDownloadedSuccessfully">Filen hämtades.</string>
