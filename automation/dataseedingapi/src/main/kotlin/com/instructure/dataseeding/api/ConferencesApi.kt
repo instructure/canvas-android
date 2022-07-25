@@ -6,7 +6,6 @@ import com.instructure.dataseeding.model.WebConferenceWrapper
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -15,9 +14,6 @@ object ConferencesApi {
 
         @POST("courses/{courseId}/conferences")
         fun createCourseConference(@Path("courseId") courseId: Long, @Body createConference: WebConferenceWrapper): Call<ConferencesResponseApiModel>
-
-        @GET("courses/{courseId}/conferences")
-        fun getCourseConferences(@Path("courseId") userId: Long): Call<List<ConferencesResponseApiModel>>
     }
 
     private fun conferencesService(token: String): ConferencesService
@@ -34,10 +30,6 @@ object ConferencesApi {
         )
 
         return conferencesService(token).createCourseConference(courseId, conference).execute().body()!!
-    }
-
-    fun getCourseConferences(token: String, courseId: Long): List<ConferencesResponseApiModel> {
-        return conferencesService(token).getCourseConferences(courseId).execute().body()!!
     }
 
 }
