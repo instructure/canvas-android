@@ -14,11 +14,21 @@
  *     limitations under the License.
  */    package com.instructure.teacher.ui.pages
 
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
 import com.instructure.teacher.R
+import org.hamcrest.Matcher
+import org.hamcrest.Matchers
 
 class PeopleListPage : BasePage(R.id.peopleListPage) {
 
@@ -26,4 +36,43 @@ class PeopleListPage : BasePage(R.id.peopleListPage) {
         waitForViewWithText(user.name).click()
     }
 
+    fun assertPersonListed(person: CanvasUserApiModel, role: String? = null)
+    {
+        var matcher : Matcher<View>? = null
+        if(role == null) {
+            matcher = Matchers.allOf(ViewMatchers.withText(person.name), withId(R.id.title))
+        }
+        else {
+            matcher = Matchers.allOf(
+                ViewMatchers.withText(person.name),
+                withId(R.id.userName),
+                ViewMatchers.hasSibling(
+                    Matchers.allOf(
+                        withId(R.id.userRole),
+                        ViewMatchers.withText(role)
+                    )
+
+                )
+            )
+        }
+        scrollToMatch(matcher)
+        Espresso.onView(matcher).assertDisplayed()
+    }
+
+
+    private fun scrollToMatch(matcher: Matcher<View>) {
+        Espresso.onView(
+            Matchers.allOf(
+                withId(R.id.recyclerView),
+                ViewMatchers.isDisplayed(),
+                withAncestor(R.id.peopleListPage)
+            )
+        )
+            .perform(
+                RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                    ViewMatchers.hasDescendant(
+                        matcher
+                    )
+                ))
+    }
 }
