@@ -24,12 +24,15 @@ import android.animation.ValueAnimator
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import com.airbnb.lottie.LottieAnimationView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -38,6 +41,7 @@ import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.ShareExtensionAction
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
+import com.instructure.pandautils.features.shareextension.success.ShareExtensionSuccessDialogFragment
 import com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -117,6 +121,12 @@ class ShareFileUploadActivity : AppCompatActivity() {
             is ShareExtensionAction.Finish -> {
                 finish()
             }
+            is ShareExtensionAction.ShowConfetti -> {
+                showConfetti()
+            }
+            is ShareExtensionAction.ShowSuccessDialog -> {
+                ShareExtensionSuccessDialogFragment.newInstance().show(supportFragmentManager, ShareExtensionSuccessDialogFragment.TAG)
+            }
         }
     }
 
@@ -159,6 +169,21 @@ class ShareFileUploadActivity : AppCompatActivity() {
     private fun showDestinationDialog() {
         uploadFileSourceFragment = ShareExtensionTargetFragment()
         uploadFileSourceFragment!!.show(supportFragmentManager, ShareExtensionTargetFragment.TAG)
+    }
+
+    private fun showConfetti() {
+        runOnUiThread {
+            val root = window.decorView.rootView as ViewGroup
+            val animation = LottieAnimationView(this).apply {
+                setAnimation("confetti.json")
+                scaleType = ImageView.ScaleType.CENTER_CROP;
+            }
+            animation.addAnimatorUpdateListener {
+                if (it.animatedFraction >= 1.0) root.removeView(animation)
+            }
+            root.addView(animation, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            animation.playAnimation()
+        }
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")

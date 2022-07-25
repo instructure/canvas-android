@@ -1277,5 +1277,6 @@
     <string name="themeSelectorChangeLater">You can change it later in app settings</string>
 
     <string name="grabAnnotationTool">Grab</string>
+    <string name="fileUpload">File Upload</string>
 
 </resources>

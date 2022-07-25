@@ -40,6 +40,7 @@ class ShareExtensionViewModel @Inject constructor(
 ) : ViewModel() {
 
     var uri: Uri? = null
+    var uploadType = FileUploadType.USER
 
     val events: LiveData<Event<ShareExtensionAction>>
         get() = _events
@@ -62,6 +63,7 @@ class ShareExtensionViewModel @Inject constructor(
     }
 
     fun showUploadDialog(course: CanvasContext?, assignment: Assignment?, uploadType: FileUploadType) {
+        this.uploadType = uploadType
         uri?.let {
             _events.postValue(Event(ShareExtensionAction.ShowUploadDialog(course, assignment, it, uploadType, this::uploadDialogCallback)))
         } ?: _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.errorOccurred))))
@@ -75,19 +77,27 @@ class ShareExtensionViewModel @Inject constructor(
         _events.postValue(Event(ShareExtensionAction.ShowProgressDialog))
     }
 
+    private fun showSuccessDialog() {
+        _events.postValue(Event(ShareExtensionAction.ShowSuccessDialog))
+    }
+
     private fun uploadDialogCallback(event: Int) {
         when (event) {
             FileUploadDialogFragment.EVENT_DIALOG_CANCELED -> finish()
-            FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN -> showProgressDialog()
+            FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN -> showSuccessDialog()
         }
+    }
+
+    fun showConfetti() {
+        _events.postValue(Event(ShareExtensionAction.ShowConfetti))
     }
 }
 
 sealed class ShareExtensionAction {
     data class ShowUploadDialog(val course: CanvasContext?, val assignment: Assignment?, val fileUri: Uri, val uploadType: FileUploadType, val dialogCallback: (Int) -> Unit) : ShareExtensionAction()
-    object ShowProgressDialog: ShareExtensionAction()
-    object ShowErrorDialog: ShareExtensionAction()
-    object ShowSuccessDialog: ShareExtensionAction()
-    object Finish: ShareExtensionAction()
+    object ShowProgressDialog : ShareExtensionAction()
+    object ShowSuccessDialog : ShareExtensionAction()
+    object Finish : ShareExtensionAction()
+    object ShowConfetti : ShareExtensionAction()
     data class ShowToast(val toast: String) : ShareExtensionAction()
 }
