@@ -68,6 +68,8 @@ abstract class StudentTest : CanvasTest() {
     val calendarEventPage = CalendarEventPage()
     val canvasWebViewPage = CanvasWebViewPage()
     val courseBrowserPage = CourseBrowserPage()
+    val conferenceListPage = ConferenceListPage()
+    val conferenceDetailsPage = ConferenceDetailsPage()
     val elementaryCoursePage = ElementaryCoursePage()
     val courseGradesPage = CourseGradesPage()
     val dashboardPage = DashboardPage()

@@ -16,9 +16,44 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
+import org.hamcrest.CoreMatchers.allOf
 
 open class ConferenceListPage : BasePage(R.id.conferenceListPage) {
-    // For future use
+
+    fun assertEmptyView() {
+        onView(withId(R.id.conferenceListEmptyView)).assertDisplayed()
+        onView(allOf(withId(R.id.emptyTitle), withText(R.string.noConferencesTitle))).assertDisplayed()
+        onView(allOf(withId(R.id.emptyMessage), withText(R.string.noConferencesMessage))).assertDisplayed()
+
+    }
+
+    fun assertConferenceStatus(conferenceTitle: String, expectedStatus: String) {
+        onView(allOf(withId(R.id.statusLabel), withText(expectedStatus), hasSibling(allOf(withId(R.id.title), withText(conferenceTitle)))))
+    }
+
+    fun assertConferenceDisplayed(conferenceTitle: String) {
+        onView(allOf(withId(R.id.title), withText(conferenceTitle))).assertDisplayed()
+    }
+
+    fun clickOnOpenExternallyButton() {
+        onView(withId(R.id.openExternallyButton)).click()
+    }
+
+    fun assertOpenExternallyButtonNotDisplayed() {
+        onView(withId(R.id.openExternallyButton)).check(doesNotExist())
+    }
+
+    fun openConferenceDetails(conferenceTitle: String) {
+        onView(withText(conferenceTitle)).click()
+    }
+
 }
