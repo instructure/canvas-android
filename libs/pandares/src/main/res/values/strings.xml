@@ -1281,4 +1281,6 @@
         <item quantity="one">%s unread message</item>
         <item quantity="other">%s unread messages</item>
     </plurals>
+
+    <string name="emailNotifications">Email Notifications</string>
 </resources>

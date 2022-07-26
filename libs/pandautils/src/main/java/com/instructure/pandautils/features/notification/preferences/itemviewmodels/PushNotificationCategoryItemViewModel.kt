@@ -28,7 +28,7 @@ class PushNotificationCategoryItemViewModel(
 ) : NotificationCategoryItemViewModel(data) {
     override val layoutId: Int = R.layout.item_push_notification_preference
 
-    override val viewType: Int = NotificationPreferencesViewType.CATEGORY.viewType
+    override val viewType: Int = NotificationPreferencesViewType.PUSH_CATEGORY.viewType
 
     @get:Bindable
     val isChecked: Boolean

@@ -36,7 +36,8 @@ data class NotificationCategoryViewData(
 
 enum class NotificationPreferencesViewType(val viewType: Int) {
     HEADER(0),
-    CATEGORY(1)
+    PUSH_CATEGORY(1),
+    EMAIL_CATEGORY(2)
 }
 
 sealed class NotificationPreferencesAction {

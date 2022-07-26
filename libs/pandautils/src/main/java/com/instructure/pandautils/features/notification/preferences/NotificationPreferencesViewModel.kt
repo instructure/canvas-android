@@ -58,6 +58,8 @@ abstract class NotificationPreferencesViewModel (
 
     protected var pushChannel: CommunicationChannel? = null
 
+    abstract val notificationChannelType: String
+
     init {
         _state.postValue(ViewState.Loading)
         fetchData()
@@ -73,7 +75,7 @@ abstract class NotificationPreferencesViewModel (
             try {
                 apiPrefs.user?.let {
                     val communicationChannels = communicationChannelsManager.getCommunicationChannelsAsync(it.id, true).await().dataOrThrow
-                    pushChannel = communicationChannels.first { "push".equals(it.type, true) }
+                    pushChannel = communicationChannels.first { notificationChannelType.equals(it.type, true) }
                     pushChannel?.let { channel ->
 
                         val notificationPreferences = notificationPreferencesManager.getNotificationPreferencesAsync(channel.userId, channel.id, true).await().dataOrThrow
