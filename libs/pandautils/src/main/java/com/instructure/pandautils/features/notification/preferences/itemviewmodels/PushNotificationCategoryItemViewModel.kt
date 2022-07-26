@@ -17,7 +17,8 @@
 package com.instructure.pandautils.features.notification.preferences.itemviewmodels
 
 import androidx.databinding.Bindable
-import com.instructure.canvasapi2.managers.NotificationPreferencesManager
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency.IMMEDIATELY
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency.NEVER
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.notification.preferences.NotificationCategoryViewData
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesViewType
@@ -32,10 +33,10 @@ class PushNotificationCategoryItemViewModel(
 
     @get:Bindable
     val isChecked: Boolean
-        get() = !data.frequency.equals(NotificationPreferencesManager.NEVER, ignoreCase = true)
+        get() = data.frequency != NEVER
 
     fun onCheckedChanged(checked: Boolean) {
-        data.frequency = if (checked) NotificationPreferencesManager.IMMEDIATELY else NotificationPreferencesManager.NEVER
+        data.frequency = if (checked) IMMEDIATELY else NEVER
         toggle(checked, data.categoryName)
     }
 }

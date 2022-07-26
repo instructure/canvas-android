@@ -17,11 +17,7 @@
 package com.instructure.pandautils.features.notification.preferences.itemviewmodels
 
 import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
-import com.instructure.canvasapi2.managers.NotificationPreferencesManager
-import com.instructure.pandautils.R
 import com.instructure.pandautils.features.notification.preferences.NotificationCategoryViewData
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 abstract class NotificationCategoryItemViewModel(val data: NotificationCategoryViewData) : ItemViewModel, BaseObservable()

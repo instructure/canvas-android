@@ -23,11 +23,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
-import com.instructure.pandautils.databinding.FragmentPushPreferencesBinding
+import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_push_preferences.*
+import kotlinx.android.synthetic.main.fragment_notification_preferences.*
 
 @AndroidEntryPoint
 class EmailNotificationPreferencesFragment : Fragment() {
@@ -36,9 +37,10 @@ class EmailNotificationPreferencesFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        val binding = FragmentPushPreferencesBinding.inflate(inflater, container, false)
+        val binding = FragmentNotificationPreferencesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.title = resources.getString(R.string.emailNotifications)
         return binding.root
     }
 

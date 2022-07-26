@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
 import com.instructure.canvasapi2.managers.NotificationPreferencesManager
 import com.instructure.canvasapi2.models.CommunicationChannel
 import com.instructure.canvasapi2.models.NotificationPreference
@@ -113,7 +114,7 @@ abstract class NotificationPreferencesViewModel (
                             categoryName,
                             titleMap[categoryName],
                             descriptionMap[categoryName],
-                            prefs[0].frequency,
+                            NotificationPreferencesFrequency.fromApiString(prefs[0].frequency),
                             categoryHelper.position,
                             prefs[0].notification
                     )

@@ -26,7 +26,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -48,8 +47,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.CourseManager
@@ -70,7 +67,7 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
@@ -751,8 +748,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }
                         }
                         RouteContext.NOTIFICATION_PREFERENCES == route.routeContext -> {
-                            Analytics.trackAppFlow(this@NavigationActivity, NotificationPreferencesFragment::class.java)
-                            RouteMatcher.route(this@NavigationActivity, Route(NotificationPreferencesFragment::class.java, null))
+                            Analytics.trackAppFlow(this@NavigationActivity, PushNotificationPreferencesFragment::class.java)
+                            RouteMatcher.route(this@NavigationActivity, Route(PushNotificationPreferencesFragment::class.java, null))
                         }
                         else -> {
                             //fetch the CanvasContext

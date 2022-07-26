@@ -19,6 +19,8 @@ package com.instructure.pandautils.features.notification.preferences
 import android.content.res.Resources
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency.*
 import com.instructure.canvasapi2.managers.NotificationPreferencesManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.BR
@@ -52,7 +54,7 @@ class PushNotificationPreferencesViewModel @Inject constructor(
                     notificationPreferencesManager.updatePreferenceCategoryAsync(
                         categoryName,
                         it.id,
-                        enabled.frequency,
+                        enabled.frequency.apiString,
                     ).await().dataOrThrow
                 } ?: throw IllegalStateException()
             } catch (e: Exception) {
@@ -75,7 +77,7 @@ class PushNotificationPreferencesViewModel @Inject constructor(
         }
     }
 
-    private val Boolean.frequency: String
-        get() = if (this) NotificationPreferencesManager.IMMEDIATELY else NotificationPreferencesManager.NEVER
+    private val Boolean.frequency: NotificationPreferencesFrequency
+        get() = if (this) IMMEDIATELY else NEVER
 
 }

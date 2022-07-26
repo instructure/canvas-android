@@ -16,16 +16,21 @@
  */
 package com.instructure.pandautils.features.notification.preferences.itemviewmodels
 
+import android.content.res.Resources
 import androidx.databinding.Bindable
-import com.instructure.canvasapi2.managers.NotificationPreferencesManager
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.notification.preferences.NotificationCategoryViewData
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesViewType
 
 class EmailNotificationCategoryItemViewModel(
-    data: NotificationCategoryViewData
+    data: NotificationCategoryViewData,
+    val resources: Resources
 ) : NotificationCategoryItemViewModel(data) {
     override val layoutId: Int = R.layout.item_email_notification_preference
 
     override val viewType: Int = NotificationPreferencesViewType.EMAIL_CATEGORY.viewType
+
+    @get:Bindable
+    val frequency: String
+        get() = resources.getString(data.frequency.stringRes)
 }
