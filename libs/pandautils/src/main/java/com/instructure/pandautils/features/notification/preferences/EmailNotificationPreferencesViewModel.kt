@@ -40,7 +40,8 @@ class EmailNotificationPreferencesViewModel @Inject constructor(
     resources: Resources
 ): NotificationPreferencesViewModel(communicationChannelsManager, notificationPreferencesManager, apiPrefs, notificationPreferenceUtils, resources) {
 
-    override val notificationChannelType: String = "email"
+    override val notificationChannelType: String
+        get() = "email"
 
     override fun createCategoryItemViewModel(viewData: NotificationCategoryViewData): NotificationCategoryItemViewModel {
         return EmailNotificationCategoryItemViewModel(viewData, resources, ::notificationCategorySelected)

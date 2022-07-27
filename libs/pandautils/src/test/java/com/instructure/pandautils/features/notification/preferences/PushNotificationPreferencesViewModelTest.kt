@@ -30,11 +30,11 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.notification.preferences.itemviewmodels.PushNotificationCategoryItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,7 +45,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class NotificationPreferencesViewModelTest {
+class PushNotificationPreferencesViewModelTest {
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
@@ -106,7 +106,7 @@ class NotificationPreferencesViewModelTest {
         assertEquals(2, courseActivitiesHeader?.itemViewModels?.size)
 
         //Due Date
-        val courseActivitiesItems = courseActivitiesHeader?.itemViewModels
+        val courseActivitiesItems = courseActivitiesHeader?.itemViewModels as? List<PushNotificationCategoryItemViewModel>
         assertEquals(2, courseActivitiesItems?.size)
         assertEquals("Due Date", courseActivitiesItems?.get(0)?.data?.title)
         assertEquals("Get notified when an assignment due date changes.", courseActivitiesItems?.get(0)?.data?.description)
@@ -126,7 +126,7 @@ class NotificationPreferencesViewModelTest {
         assertEquals(1, discussionsHeader?.itemViewModels?.size)
 
         //Discussion
-        val discussionItems = discussionsHeader?.itemViewModels
+        val discussionItems = discussionsHeader?.itemViewModels as? List<PushNotificationCategoryItemViewModel>
         assertEquals(1, discussionItems?.size)
         assertEquals("Discussion", discussionItems?.get(0)?.data?.title)
         assertEquals("Get notified when there’s a new discussion topic in your course.", discussionItems?.get(0)?.data?.description)
@@ -140,7 +140,7 @@ class NotificationPreferencesViewModelTest {
         assertEquals(1, groupsHeader?.itemViewModels?.size)
 
         //Membership update
-        val groupsItems = groupsHeader?.itemViewModels
+        val groupsItems = groupsHeader?.itemViewModels as? List<PushNotificationCategoryItemViewModel>
         assertEquals(1, groupsItems?.size)
         assertEquals("Membership Update", groupsItems?.get(0)?.data?.title)
         assertEquals("Admin only, pending enrollment activated. Get notified when a group enrollment is accepted or rejected.", groupsItems?.get(0)?.data?.description)
@@ -228,7 +228,7 @@ class NotificationPreferencesViewModelTest {
 
         val data = viewModel.data.value
 
-        val itemViewModel = data?.items?.get(0)?.itemViewModels?.get(0)
+        val itemViewModel = data?.items?.get(0)?.itemViewModels?.get(0) as? PushNotificationCategoryItemViewModel
 
         assertEquals(true, itemViewModel?.isChecked)
         itemViewModel?.onCheckedChanged(false)
@@ -264,7 +264,7 @@ class NotificationPreferencesViewModelTest {
 
         val data = viewModel.data.value
 
-        val itemViewModel = data?.items?.get(0)?.itemViewModels?.get(0)
+        val itemViewModel = data?.items?.get(0)?.itemViewModels?.get(0) as? PushNotificationCategoryItemViewModel
 
         assertEquals(false, itemViewModel?.isChecked)
         itemViewModel?.onCheckedChanged(true)
@@ -295,7 +295,7 @@ class NotificationPreferencesViewModelTest {
 
         val data = viewModel.data.value
 
-        val itemViewModel = data?.items?.get(0)?.itemViewModels?.get(0)
+        val itemViewModel = data?.items?.get(0)?.itemViewModels?.get(0) as? PushNotificationCategoryItemViewModel
 
         assertEquals(false, itemViewModel?.isChecked)
         itemViewModel?.onCheckedChanged(true)
@@ -335,8 +335,8 @@ class NotificationPreferencesViewModelTest {
         assertEquals(1, viewModel.data.value?.items?.size)
     }
 
-    private fun createViewModel(): NotificationPreferencesViewModel {
-        return NotificationPreferencesViewModel(communicationChannelsManager, notificationPreferencesManager, apiPrefs, notificationPreferenceUtils, resources)
+    private fun createViewModel(): PushNotificationPreferencesViewModel {
+        return PushNotificationPreferencesViewModel(communicationChannelsManager, notificationPreferencesManager, apiPrefs, notificationPreferenceUtils, resources)
     }
 
     private fun setupStrings() {

@@ -41,7 +41,8 @@ class PushNotificationPreferencesViewModel @Inject constructor(
     resources: Resources
 ) : NotificationPreferencesViewModel(communicationChannelsManager, notificationPreferencesManager, apiPrefs, notificationPreferenceUtils, resources) {
 
-    override val notificationChannelType: String = "push"
+    override val notificationChannelType: String
+        get() = "push"
 
     override fun createCategoryItemViewModel(viewData: NotificationCategoryViewData): NotificationCategoryItemViewModel {
         return PushNotificationCategoryItemViewModel(viewData, ::toggleNotification)
