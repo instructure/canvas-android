@@ -16,13 +16,16 @@
  */
 package com.instructure.pandautils.features.notification.preferences
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
 import com.instructure.pandautils.utils.ViewStyler
@@ -58,7 +61,24 @@ class EmailNotificationPreferencesFragment : Fragment() {
     private fun handleAction(action: NotificationPreferencesAction) {
         when (action) {
             is NotificationPreferencesAction.ShowSnackbar -> Snackbar.make(requireView(), action.snackbar, Snackbar.LENGTH_LONG).show()
+            is NotificationPreferencesAction.ShowFrequencySelectionDialog -> showFrequencySelectionDialog(action.categoryName, action.selectedFrequency)
         }
+    }
+
+    private fun showFrequencySelectionDialog(categoryName: String, selectedFrequency: NotificationPreferencesFrequency) {
+        val items = NotificationPreferencesFrequency.values().map { resources.getString(it.stringRes) }.toTypedArray()
+        val selectedIndex = NotificationPreferencesFrequency.values().indexOf(selectedFrequency)
+        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
+            .setTitle(R.string.selectFrequency)
+            .setSingleChoiceItems(items, selectedIndex, { dialog, index -> frequencySelected(dialog, index, categoryName)})
+            .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
+    private fun frequencySelected(dialog: DialogInterface, index: Int, categoryName: String) {
+        val selectedFrequency = NotificationPreferencesFrequency.values()[index]
+        viewModel.updateFrequency(categoryName, selectedFrequency)
+        dialog.dismiss()
     }
 
     private fun setupToolbar() {

@@ -27,16 +27,12 @@ import com.instructure.canvasapi2.managers.NotificationPreferencesManager
 import com.instructure.canvasapi2.models.CommunicationChannel
 import com.instructure.canvasapi2.models.NotificationPreference
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryHeaderItemViewModel
 import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryItemViewModel
-import com.instructure.pandautils.features.notification.preferences.itemviewmodels.PushNotificationCategoryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 abstract class NotificationPreferencesViewModel (
         private val communicationChannelsManager: CommunicationChannelsManager,
@@ -57,7 +53,7 @@ abstract class NotificationPreferencesViewModel (
         get() = _events
     protected val _events = MutableLiveData<Event<NotificationPreferencesAction>>()
 
-    protected var pushChannel: CommunicationChannel? = null
+    protected var communicationChannel: CommunicationChannel? = null
 
     abstract val notificationChannelType: String
 
@@ -76,8 +72,8 @@ abstract class NotificationPreferencesViewModel (
             try {
                 apiPrefs.user?.let {
                     val communicationChannels = communicationChannelsManager.getCommunicationChannelsAsync(it.id, true).await().dataOrThrow
-                    pushChannel = communicationChannels.first { notificationChannelType.equals(it.type, true) }
-                    pushChannel?.let { channel ->
+                    communicationChannel = communicationChannels.first { notificationChannelType.equals(it.type, true) }
+                    communicationChannel?.let { channel ->
 
                         val notificationPreferences = notificationPreferencesManager.getNotificationPreferencesAsync(channel.userId, channel.id, true).await().dataOrThrow
                         val items = groupNotifications(notificationPreferences.notificationPreferences)

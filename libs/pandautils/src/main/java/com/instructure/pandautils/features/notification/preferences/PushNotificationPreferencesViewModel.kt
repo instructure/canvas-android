@@ -50,7 +50,7 @@ class PushNotificationPreferencesViewModel @Inject constructor(
     private fun toggleNotification(enabled: Boolean, categoryName: String) {
         viewModelScope.launch {
             try {
-                pushChannel?.let {
+                communicationChannel?.let {
                     notificationPreferencesManager.updatePreferenceCategoryAsync(
                         categoryName,
                         it.id,

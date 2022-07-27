@@ -18,13 +18,15 @@ package com.instructure.pandautils.features.notification.preferences.itemviewmod
 
 import android.content.res.Resources
 import androidx.databinding.Bindable
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.notification.preferences.NotificationCategoryViewData
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesViewType
 
 class EmailNotificationCategoryItemViewModel(
     data: NotificationCategoryViewData,
-    val resources: Resources
+    val resources: Resources,
+    val onClick: (String, NotificationPreferencesFrequency) -> Unit
 ) : NotificationCategoryItemViewModel(data) {
     override val layoutId: Int = R.layout.item_email_notification_preference
 
@@ -33,4 +35,8 @@ class EmailNotificationCategoryItemViewModel(
     @get:Bindable
     val frequency: String
         get() = resources.getString(data.frequency.stringRes)
+
+    fun onClick() {
+        onClick(data.categoryName, data.frequency)
+    }
 }

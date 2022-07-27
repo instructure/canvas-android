@@ -43,4 +43,5 @@ enum class NotificationPreferencesViewType(val viewType: Int) {
 
 sealed class NotificationPreferencesAction {
     data class ShowSnackbar(val snackbar: String): NotificationPreferencesAction()
+    data class ShowFrequencySelectionDialog(val categoryName: String, val selectedFrequency: NotificationPreferencesFrequency): NotificationPreferencesAction()
 }

@@ -29,58 +29,35 @@
             type="com.instructure.pandautils.features.notification.preferences.itemviewmodels.EmailNotificationCategoryItemViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?android:listPreferredItemHeight" >
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frequencyGuideline"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="120dp"/>
+        android:foreground="?selectableItemBackground"
+        android:gravity="center"
+        android:minHeight="?attr/listPreferredItemHeight"
+        android:onClick="@{() -> itemViewModel.onClick()}"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <TextView
-            android:id="@+id/frequency"
+            android:id="@+id/appThemeTitle"
             style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:labelFor="@+id/toggle"
-            android:text="@{itemViewModel.frequency}"
             android:textSize="16sp"
-            android:textFontWeight="400"
-            android:layout_marginEnd="16dp"
+            android:text="@{itemViewModel.data.title}"
+            tools:text="Due Date" />
+
+        <TextView
+            android:id="@+id/appThemeStatus"
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{itemViewModel.frequency}"
             android:textColor="@color/textDark"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/frequencyGuideline"
-            app:layout_constraintHorizontal_bias="1.0"
+            android:textSize="12sp"
             tools:text="Immediately" />
 
-        <TextView
-            android:id="@+id/title"
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/toggle"
-            android:text="@{itemViewModel.data.title}"
-            android:textSize="16sp"
-            android:layout_marginStart="16dp"
-            android:textColor="@color/textDarkest"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/frequencyGuideline"
-            app:layout_constraintHorizontal_bias="0.0"
-            tools:text="Administrative Notifications" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/backgroundMedium"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </layout>
