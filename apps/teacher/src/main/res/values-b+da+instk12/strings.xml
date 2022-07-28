@@ -874,6 +874,7 @@
         <item quantity="one">-%s point</item>
         <item quantity="other">-%s point</item>
     </plurals>
+    <string name="todoUnreadCount">Opgaveliste %d ulæst</string>
     <string name="profileSettings">Profilindstillinger</string>
     <string name="downloadingFile">Downloader fil&#8230;</string>
     <string name="fileDownloadedSuccessfully">Fil blev downloaded!</string>

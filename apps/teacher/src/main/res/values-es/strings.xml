@@ -873,6 +873,7 @@
         <item quantity="one">-%s punto</item>
         <item quantity="other">-%s puntos</item>
     </plurals>
+    <string name="todoUnreadCount">Por hacer %d sin leer</string>
     <string name="profileSettings">Configuración del perfil</string>
     <string name="downloadingFile">Descargando el archivo&#8230;</string>
     <string name="fileDownloadedSuccessfully">Archivo descargado exitosamente.</string>

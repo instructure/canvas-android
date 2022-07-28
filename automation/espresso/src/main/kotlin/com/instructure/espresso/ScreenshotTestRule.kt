@@ -18,17 +18,15 @@
 
 package com.instructure.espresso
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.base.DefaultFailureHandler
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.espresso.matchers.WaitForCheckMatcher
 import com.instructure.espresso.matchers.WaitForViewMatcher
-
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-
-import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.*
 
 class ScreenshotTestRule : TestRule {
 

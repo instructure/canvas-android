@@ -15,7 +15,7 @@ gcloud:
   - annotation com.instructure.canvas.espresso.E2E
   - notAnnotation com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
   device:
-  - model: NexusLowRes
+  - model: Nexus6P
     version: 26
     locale: en_US
     orientation: portrait

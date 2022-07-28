@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.activities
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -35,17 +34,13 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.isCourseOrGroup
 import com.instructure.teacher.R
-import com.instructure.teacher.events.AssignmentDescriptionEvent
 import com.instructure.teacher.router.RouteResolver
 import dagger.hilt.android.AndroidEntryPoint
-import instructure.rceditor.RCEConst.HTML_RESULT
-import instructure.rceditor.RCEFragment
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 import kotlinx.coroutines.Job
-import org.greenrobot.eventbus.EventBus
 
 @AndroidEntryPoint
-class FullscreenActivity : BaseAppCompatActivity(), RCEFragment.RCEFragmentCallbacks, FullScreenInteractions {
+class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
 
     private var mRoute: Route? = null
     private var groupApiCall: Job? = null
@@ -121,27 +116,10 @@ class FullscreenActivity : BaseAppCompatActivity(), RCEFragment.RCEFragmentCallb
     screen images will be the correct size, and the bottom bar will be easier to implement later*/
 
     override fun onBackPressed() {
-        // Captures back press to prevent accidental exiting of assignment editing.
-        if(supportFragmentManager.findFragmentById(R.id.container) is RCEFragment) {
-            (supportFragmentManager.findFragmentById(R.id.container) as RCEFragment).showExitDialog()
-            return
-        } else if(supportFragmentManager.findFragmentById(R.id.container) is NavigationCallbacks) {
-            if((supportFragmentManager.findFragmentById(R.id.container) as NavigationCallbacks).onHandleBackPressed()) return
+        if (supportFragmentManager.findFragmentById(R.id.container) is NavigationCallbacks) {
+            if ((supportFragmentManager.findFragmentById(R.id.container) as NavigationCallbacks).onHandleBackPressed()) return
         }
         super.onBackPressed()
-    }
-
-    /**
-     * Handles RCEFragment results and passes them along
-     */
-    override fun onResult(activityResult: Int, data: Intent?) {
-        val htmlResult = data?.getStringExtra(HTML_RESULT)
-        if (activityResult == Activity.RESULT_OK && htmlResult != null) {
-            EventBus.getDefault().postSticky(AssignmentDescriptionEvent(htmlResult))
-            super.onBackPressed()
-        } else {
-            super.onBackPressed()
-        }
     }
 
     companion object {
