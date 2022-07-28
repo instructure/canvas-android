@@ -31,16 +31,17 @@ import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBin
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_notification_preferences.*
 
 @AndroidEntryPoint
 class EmailNotificationPreferencesFragment : Fragment() {
 
     private val viewModel: EmailNotificationPreferencesViewModel by viewModels()
 
+    private lateinit var binding: FragmentNotificationPreferencesBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        val binding = FragmentNotificationPreferencesBinding.inflate(inflater, container, false)
+        binding = FragmentNotificationPreferencesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this.viewLifecycleOwner
         binding.viewModel = viewModel
         binding.title = resources.getString(R.string.emailNotifications)
@@ -82,8 +83,8 @@ class EmailNotificationPreferencesFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        toolbar.setupAsBackButton { requireActivity().onBackPressed() }
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        binding.toolbar.setupAsBackButton { requireActivity().onBackPressed() }
+        ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
     }
 
     companion object {
