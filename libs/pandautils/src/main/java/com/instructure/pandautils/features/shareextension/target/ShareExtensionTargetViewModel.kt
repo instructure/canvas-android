@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.R
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.features.file.upload.FileUploadAction
 import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
@@ -80,6 +81,7 @@ class ShareExtensionTargetViewModel @Inject constructor(
                         .map { ShareExtensionCourseItemViewModel(ShareExtensionCourseViewData(it.name, it.color)) }
                 _data.postValue(ShareExtensionTargetViewData(courseViewModels))
             } catch (e: Exception) {
+                _events.postValue(Event(ShareExtensionTargetAction.ShowToast(resources.getString(R.string.errorOccurred))))
                 e.printStackTrace()
             }
         }
@@ -105,12 +107,12 @@ class ShareExtensionTargetViewModel @Inject constructor(
         viewModelScope.launch {
             assignments = assignmentManager.getAllAssignmentsAsync(courseId, true)
                     .await()
-                    .dataOrThrow
-                    .filter {
+                    .dataOrNull
+                    ?.filter {
                         val currentDate = Date()
                         ((it.lockDate == null || it.lockDate != null && currentDate.before(it.lockDate)) && (it.unlockDate == null || it.unlockDate != null && currentDate.after(it.unlockDate)))
                                 && it.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)
-                    }
+                    } ?: emptyList()
 
             val assignmentViewModels = if (assignments.isNullOrEmpty()) {
                 listOf(ShareExtensionAssignmentItemViewModel(ShareExtensionAssignmentViewData(resources.getString(R.string.noAssignmentsWithFileUpload))))
