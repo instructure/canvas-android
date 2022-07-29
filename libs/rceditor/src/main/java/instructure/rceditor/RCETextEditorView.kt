@@ -234,7 +234,9 @@ class RCETextEditorView @JvmOverloads constructor(
                 }
             }
             .create().apply {
-                getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+                setOnShowListener {
+                    (it as? AlertDialog)?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+                }
             }
 
         altTextInput?.addTextChangedListener(object : TextWatcher {
