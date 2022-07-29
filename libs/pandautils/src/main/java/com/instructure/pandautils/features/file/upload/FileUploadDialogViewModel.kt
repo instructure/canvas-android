@@ -190,7 +190,10 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     private fun isExtensionAllowed(filePath: String): Boolean {
-        if (assignment == null) _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.noAssignmentSelected))))
+        if (assignment == null) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.noAssignmentSelected))))
+            return false
+        }
         if (assignment!!.allowedExtensions.isEmpty()) return true
 
         val extension = filePath.substringAfterLast(".")

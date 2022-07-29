@@ -25,7 +25,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintSet
@@ -39,8 +38,8 @@ import com.instructure.pandautils.databinding.FragmentShareExtensionTargetBindin
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
 import com.instructure.pandautils.utils.AnimationHelpers
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_share_extension_target.*
 
 @AndroidEntryPoint
 class ShareExtensionTargetFragment : DialogFragment() {
@@ -105,58 +104,54 @@ class ShareExtensionTargetFragment : DialogFragment() {
     }
 
     private fun moveSelection(@IdRes viewId: Int) {
-        TransitionManager.beginDelayedTransition(selectionWrapper)
+        TransitionManager.beginDelayedTransition(binding.selectionWrapper)
 
         val set = ConstraintSet()
-        set.clone(selectionWrapper)
+        set.clone(binding.selectionWrapper)
 
         set.connect(R.id.selectionIndicator, ConstraintSet.TOP, viewId, ConstraintSet.TOP)
         set.connect(R.id.selectionIndicator, ConstraintSet.BOTTOM, viewId, ConstraintSet.BOTTOM)
 
-        set.applyTo(selectionWrapper)
+        set.applyTo(binding.selectionWrapper)
     }
 
     private fun toggleSpinners(visible: Boolean) {
-        TransitionManager.beginDelayedTransition(assignmentContainer)
+        TransitionManager.beginDelayedTransition(binding.assignmentContainer)
 
         val set = ConstraintSet()
-        set.clone(assignmentContainer)
+        set.clone(binding.assignmentContainer)
 
         set.setVisibility(R.id.studentCourseSpinner, if (visible) View.VISIBLE else View.GONE)
         set.setVisibility(R.id.assignmentSpinner, if (visible) View.VISIBLE else View.GONE)
 
-        set.applyTo(assignmentContainer)
+        set.applyTo(binding.assignmentContainer)
     }
 
     private fun validateAndShowNext() {
-        val data = viewModel.getValidatedData()
-        if (data != null) {
-            shareExtensionViewModel.showUploadDialog(data.course, data.assignment, data.fileUploadType)
-            dismiss()
-        }
+        viewModel.validateDataAndMoveToFileUpload()
     }
 
     private fun setRevealContentsListener() {
         val avatarAnimation = AnimationUtils.loadAnimation(activity, R.anim.ease_in_shrink)
         val titleAnimation = AnimationUtils.loadAnimation(activity, R.anim.ease_in_bottom)
-        avatar.viewTreeObserver.addOnGlobalLayoutListener(
+        binding.avatar.viewTreeObserver.addOnGlobalLayoutListener(
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        AnimationHelpers.removeGlobalLayoutListeners(avatar, this)
-                        avatar.startAnimation(avatarAnimation)
-                        userName.startAnimation(titleAnimation)
-                        dialogTitle.startAnimation(titleAnimation)
+                        AnimationHelpers.removeGlobalLayoutListeners(binding.avatar, this)
+                        binding.avatar.startAnimation(avatarAnimation)
+                        binding.userName.startAnimation(titleAnimation)
+                        binding.dialogTitle.startAnimation(titleAnimation)
                     }
                 }
         )
-        selectionWrapper.viewTreeObserver.addOnGlobalLayoutListener(
+        binding.selectionWrapper.viewTreeObserver.addOnGlobalLayoutListener(
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        AnimationHelpers.removeGlobalLayoutListeners(selectionWrapper, this)
-                        val revealAnimator = AnimationHelpers.createRevealAnimator(selectionWrapper)
+                        AnimationHelpers.removeGlobalLayoutListeners(binding.selectionWrapper, this)
+                        val revealAnimator = AnimationHelpers.createRevealAnimator(binding.selectionWrapper)
                         Handler().postDelayed({
                             if (!isAdded) return@postDelayed
-                            selectionWrapper.visibility = View.VISIBLE
+                            binding.selectionWrapper.visibility = View.VISIBLE
                             revealAnimator.start()
                         }, 600)
                     }
@@ -167,19 +162,23 @@ class ShareExtensionTargetFragment : DialogFragment() {
     private fun handleAction(action: ShareExtensionTargetAction) {
         when (action) {
             is ShareExtensionTargetAction.FilesTargetSelected -> {
-                assignmentCheckBox.isChecked = false
-                filesCheckBox.isChecked = true
+                binding.assignmentCheckBox.isChecked = false
+                binding.filesCheckBox.isChecked = true
                 toggleSpinners(false)
                 moveSelection(R.id.filesCheckBox)
             }
             is ShareExtensionTargetAction.AssignmentTargetSelected -> {
-                assignmentCheckBox.isChecked = true
-                filesCheckBox.isChecked = false
+                binding.assignmentCheckBox.isChecked = true
+                binding.filesCheckBox.isChecked = false
                 toggleSpinners(true)
                 moveSelection(R.id.assignmentContainer)
             }
             is ShareExtensionTargetAction.ShowToast -> {
-                Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
+                toast(action.toast)
+            }
+            is ShareExtensionTargetAction.ShowFileUpload -> {
+                shareExtensionViewModel.showUploadDialog(action.data.course, action.data.assignment, action.data.fileUploadType)
+                dismiss()
             }
         }
     }

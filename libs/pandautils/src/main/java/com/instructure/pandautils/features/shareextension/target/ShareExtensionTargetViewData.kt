@@ -43,4 +43,5 @@ sealed class ShareExtensionTargetAction {
     object AssignmentTargetSelected : ShareExtensionTargetAction()
     object FilesTargetSelected : ShareExtensionTargetAction()
     data class ShowToast(val toast: String) : ShareExtensionTargetAction()
+    data class ShowFileUpload(val data: FileUploadTargetData) : ShareExtensionTargetAction()
 }

@@ -19,7 +19,6 @@ package com.instructure.pandautils.features.shareextension
 import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
-import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,7 +46,7 @@ class ShareExtensionViewModel @Inject constructor(
     private val _events = MutableLiveData<Event<ShareExtensionAction>>()
 
     fun checkIfLoggedIn(): Boolean {
-        return !TextUtils.isEmpty(apiPrefs.getValidToken())
+        return apiPrefs.getValidToken().isNotEmpty()
     }
 
     fun parseIntentType(intent: Intent) {

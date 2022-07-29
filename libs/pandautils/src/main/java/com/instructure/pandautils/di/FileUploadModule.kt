@@ -31,7 +31,6 @@ import javax.inject.Singleton
 class FileUploadModule {
 
     @Provides
-    @Singleton
     fun provideFileUploadUtils(@ApplicationContext context: Context, contentResolver: ContentResolver): FileUploadUtils {
         return FileUploadUtils(context, contentResolver)
     }

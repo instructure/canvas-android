@@ -116,7 +116,7 @@ class ShareFileUploadActivity : AppCompatActivity() {
                 }
             }
             is ShareExtensionAction.ShowToast -> {
-                Toast.makeText(this, action.toast, Toast.LENGTH_SHORT).show()
+                toast(action.toast)
             }
             is ShareExtensionAction.Finish -> {
                 finish()

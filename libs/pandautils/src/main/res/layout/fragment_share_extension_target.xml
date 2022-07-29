@@ -141,7 +141,7 @@
                     android:onItemSelected="@{(parent, view, position, id) -> viewModel.onCourseSelected(position)}"
                     android:visibility="gone"
                     app:itemViewModels="@{viewModel.data.courses}"
-                    app:layoutRes="@{@layout/bindable_canvas_context_spinner_adapter_item}"
+                    app:layoutRes="@{@layout/item_canvas_context_spinner}"
                     app:layout_constraintTop_toBottomOf="@id/assignmentCheckBox" />
 
                 <Spinner
@@ -156,7 +156,7 @@
                     android:onItemSelected="@{(parent, view, position, id) -> viewModel.onAssignmentSelected(position)}"
                     android:visibility="gone"
                     app:itemViewModels="@{viewModel.data.assignments}"
-                    app:layoutRes="@{@layout/bindable_assignment_spinner_item}"
+                    app:layoutRes="@{@layout/item_assignment_spinner}"
                     app:layout_constraintTop_toBottomOf="@id/studentCourseSpinner" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

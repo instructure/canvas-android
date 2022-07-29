@@ -136,23 +136,22 @@ class ShareExtensionTargetViewModel @Inject constructor(
         _events.postValue(Event(ShareExtensionTargetAction.FilesTargetSelected))
     }
 
-    fun getValidatedData(): FileUploadTargetData? {
+    fun validateDataAndMoveToFileUpload() {
         if (uploadType == FileUploadType.ASSIGNMENT) {
-            return when {
+            when {
                 selectedCourse == null -> {
                     _events.postValue(Event(ShareExtensionTargetAction.ShowToast(resources.getString(R.string.noCourseSelected))))
-                    null
                 }
                 selectedAssignment == null -> {
                     _events.postValue(Event(ShareExtensionTargetAction.ShowToast(resources.getString(R.string.noAssignmentSelected))))
-                    null
                 }
                 else -> {
-                    return FileUploadTargetData(selectedCourse, selectedAssignment, uploadType)
+                    _events.postValue(Event(ShareExtensionTargetAction.ShowFileUpload(FileUploadTargetData(selectedCourse, selectedAssignment, uploadType))))
                 }
             }
+        } else {
+            _events.postValue(Event(ShareExtensionTargetAction.ShowFileUpload(FileUploadTargetData(fileUploadType = uploadType))))
         }
-        return FileUploadTargetData(fileUploadType = uploadType)
     }
 
 }

@@ -39,7 +39,7 @@ class ShareExtensionSuccessDialogViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<ShareExtensionSuccessAction>>()
 
-    fun getData(uploadType: FileUploadType) {
+    fun initData(uploadType: FileUploadType) {
         _data.postValue(ShareExtensionSuccessViewData(
                 dialogTitle = if (uploadType == FileUploadType.ASSIGNMENT) resources.getString(R.string.submission) else resources.getString(R.string.fileUpload),
                 subTitle = if (uploadType == FileUploadType.ASSIGNMENT) resources.getString(R.string.submissionSuccessTitle) else resources.getString(R.string.fileUploadSuccess),

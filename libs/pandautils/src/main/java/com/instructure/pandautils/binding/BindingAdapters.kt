@@ -28,6 +28,7 @@ import android.webkit.JavascriptInterface
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.Spinner
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -223,6 +224,6 @@ fun bindSpinner(spinner: Spinner, itemViewModels: List<ItemViewModel>?, @LayoutR
 }
 
 @BindingAdapter("ovalColor")
-fun bindOvalColorBackground(imageView: ImageView, ovalColor: Int) {
+fun bindOvalColorBackground(imageView: ImageView, @ColorInt ovalColor: Int) {
     imageView.background = ShapeDrawable(OvalShape()).apply { paint.color = ovalColor }
 }

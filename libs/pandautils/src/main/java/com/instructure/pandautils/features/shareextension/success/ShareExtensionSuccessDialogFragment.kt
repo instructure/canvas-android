@@ -66,7 +66,7 @@ class ShareExtensionSuccessDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getData(shareExtensionViewModel.uploadType)
+        viewModel.initData(shareExtensionViewModel.uploadType)
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
