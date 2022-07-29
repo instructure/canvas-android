@@ -185,15 +185,9 @@ class SplashActivity : AppCompatActivity() {
                     Logger.e(e.message)
                 }
 
-                // Set logged user details
+                // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
                 val crashlytics = FirebaseCrashlytics.getInstance();
-                if (Logger.canLogUserDetails()) {
-                    Logger.d("User detail logging allowed. Setting values.")
-                    crashlytics.setUserId("UserID: ${ApiPrefs.user?.id.toString()} User Domain: ${ApiPrefs.domain}")
-                } else {
-                    Logger.d("User detail logging disallowed. Clearing values.")
-                    crashlytics.setUserId("")
-                }
+                crashlytics.setUserId("")
 
                 startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))
                 canvasLoadingView.announceForAccessibility(getString(R.string.loading))

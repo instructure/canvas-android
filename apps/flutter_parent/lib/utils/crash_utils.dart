@@ -25,8 +25,8 @@ class CrashUtils {
     FirebaseCrashlytics firebase = locator<FirebaseCrashlytics>();
 
     FlutterError.onError = (error) async {
-      await firebase
-          .setUserIdentifier('domain: ${ApiPrefs.getDomain() ?? 'null'} user_id: ${ApiPrefs.getUser()?.id ?? 'null'}');
+      // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
+      await firebase.setUserIdentifier('');
       firebase.recordFlutterError(error);
     };
 
