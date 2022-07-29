@@ -201,6 +201,7 @@ class FileUploadDialogFragment : DialogFragment() {
         intent.putExtras(bundle)
         requireActivity().startService(intent)
         dialogCallback?.invoke(EVENT_ON_UPLOAD_BEGIN)
+        dismiss()
     }
 
     private fun takePicture() {

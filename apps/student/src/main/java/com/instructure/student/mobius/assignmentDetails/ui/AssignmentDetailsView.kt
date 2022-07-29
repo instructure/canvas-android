@@ -43,7 +43,7 @@ import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.activity.ShareFileSubmissionTarget
+import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment

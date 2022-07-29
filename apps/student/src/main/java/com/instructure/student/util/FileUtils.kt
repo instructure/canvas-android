@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.student.R
 import com.instructure.student.activity.CandroidPSPDFActivity
-import com.instructure.student.activity.ShareFileSubmissionTarget
+import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.annotations.AnnotationType
 import com.pspdfkit.configuration.activity.PdfActivityConfiguration

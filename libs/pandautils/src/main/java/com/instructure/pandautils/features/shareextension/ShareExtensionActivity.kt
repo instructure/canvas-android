@@ -1,21 +1,20 @@
 /*
-* Copyright (C) 2016 - present Instructure, Inc.
-*
-*     This program is free software: you can redistribute it and/or modify
-*     it under the terms of the GNU General Public License as published by
-*     the Free Software Foundation, version 3 of the License.
-*
-*     This program is distributed in the hope that it will be useful,
-*     but WITHOUT ANY WARRANTY; without even the implied warranty of
-*     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*     GNU General Public License for more details.
-*
-*     You should have received a copy of the GNU General Public License
-*     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ * Copyright (C) 2022 - present Instructure, Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-package com.instructure.student.activity
+package com.instructure.pandautils.features.shareextension
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -35,15 +34,12 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StorageQuotaExceededError
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadType
-import com.instructure.pandautils.features.shareextension.ShareExtensionAction
-import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
 import com.instructure.pandautils.features.shareextension.success.ShareExtensionSuccessDialogFragment
 import com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.student.R
-import com.instructure.student.util.Analytics
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_share_file.*
@@ -59,7 +55,7 @@ data class ShareFileSubmissionTarget(
 ) : Parcelable
 
 @AndroidEntryPoint
-class ShareFileUploadActivity : AppCompatActivity() {
+abstract class ShareExtensionActivity : AppCompatActivity() {
 
     private val shareExtensionViewModel: ShareExtensionViewModel by viewModels()
 
@@ -76,7 +72,6 @@ class ShareFileUploadActivity : AppCompatActivity() {
         ViewStyler.setStatusBarDark(this, ContextCompat.getColor(this, R.color.studentDocumentSharingColor))
         if (shareExtensionViewModel.checkIfLoggedIn()) {
             revealBackground()
-            Analytics.trackAppFlow(this)
             shareExtensionViewModel.parseIntentType(intent)
             if (submissionTarget != null) {
                 shareExtensionViewModel.showUploadDialog(submissionTarget!!.course, submissionTarget!!.assignment, FileUploadType.ASSIGNMENT)
@@ -141,11 +136,7 @@ class ShareFileUploadActivity : AppCompatActivity() {
         })
     }
 
-    private fun exitActivity() {
-        val intent = LoginActivity.createIntent(this)
-        startActivity(intent)
-        finish()
-    }
+    abstract fun exitActivity()
 
     override fun onBackPressed() {
         uploadFileSourceFragment?.dismissAllowingStateLoss()
