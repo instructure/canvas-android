@@ -21,13 +21,11 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -98,22 +96,13 @@ class ShareFileUploadActivity : AppCompatActivity() {
 
     private fun handleAction(action: ShareExtensionAction) {
         when (action) {
-            is ShareExtensionAction.ShowUploadDialog -> {
-                val bundle: Bundle = if (action.uploadType == FileUploadType.ASSIGNMENT) {
-                    FileUploadDialogFragment.createAssignmentBundle(action.fileUri, action.course as Course, action.assignment!!)
-                } else {
-                    FileUploadDialogFragment.createFilesBundle(action.fileUri, null)
-                }
-                ValueAnimator.ofObject(ArgbEvaluator(), ContextCompat.getColor(this, R.color.login_studentAppTheme), getColor(bundle)).let {
-                    it.addUpdateListener { animation -> rootView!!.setBackgroundColor(animation.animatedValue as Int) }
-                    it.duration = 500
-                    it.addListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationStart(animation: Animator) {
-                            FileUploadDialogFragment.newInstance(bundle, action.dialogCallback).show(supportFragmentManager, FileUploadDialogFragment.TAG)
-                        }
-                    })
-                    it.start()
-                }
+            is ShareExtensionAction.ShowAssignmentUploadDialog -> {
+                val bundle = FileUploadDialogFragment.createAssignmentBundle(action.fileUri, action.course as Course, action.assignment)
+                showUploadDialog(bundle, action.dialogCallback)
+            }
+            is ShareExtensionAction.ShowMyFilesUploadDialog -> {
+                val bundle = FileUploadDialogFragment.createFilesBundle(action.fileUri, null)
+                showUploadDialog(bundle, action.dialogCallback)
             }
             is ShareExtensionAction.ShowToast -> {
                 toast(action.toast)
@@ -127,6 +116,19 @@ class ShareFileUploadActivity : AppCompatActivity() {
             is ShareExtensionAction.ShowSuccessDialog -> {
                 ShareExtensionSuccessDialogFragment.newInstance().show(supportFragmentManager, ShareExtensionSuccessDialogFragment.TAG)
             }
+        }
+    }
+
+    private fun showUploadDialog(bundle: Bundle, dialogCallback: (Int) -> Unit) {
+        ValueAnimator.ofObject(ArgbEvaluator(), ContextCompat.getColor(this, R.color.login_studentAppTheme), getColor(bundle)).let {
+            it.addUpdateListener { animation -> rootView!!.setBackgroundColor(animation.animatedValue as Int) }
+            it.duration = 500
+            it.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    FileUploadDialogFragment.newInstance(bundle, dialogCallback).show(supportFragmentManager, FileUploadDialogFragment.TAG)
+                }
+            })
+            it.start()
         }
     }
 

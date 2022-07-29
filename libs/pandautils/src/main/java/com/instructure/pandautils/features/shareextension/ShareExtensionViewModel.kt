@@ -64,7 +64,23 @@ class ShareExtensionViewModel @Inject constructor(
     fun showUploadDialog(course: CanvasContext?, assignment: Assignment?, uploadType: FileUploadType) {
         this.uploadType = uploadType
         uri?.let {
-            _events.postValue(Event(ShareExtensionAction.ShowUploadDialog(course, assignment, it, uploadType, this::uploadDialogCallback)))
+            when (uploadType) {
+                FileUploadType.USER -> _events.postValue(Event(ShareExtensionAction.ShowMyFilesUploadDialog(it, this::uploadDialogCallback)))
+                FileUploadType.ASSIGNMENT -> {
+                    when {
+                        course == null -> {
+                            _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.noCourseSelected))))
+                        }
+                        assignment == null -> {
+                            _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.noAssignmentSelected))))
+                        }
+                        else -> {
+                            _events.postValue(Event(ShareExtensionAction.ShowAssignmentUploadDialog(course, assignment, it, uploadType, this::uploadDialogCallback)))
+                        }
+                    }
+                }
+                else -> _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.notSupported))))
+            }
         } ?: _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.errorOccurred))))
     }
 
@@ -93,7 +109,8 @@ class ShareExtensionViewModel @Inject constructor(
 }
 
 sealed class ShareExtensionAction {
-    data class ShowUploadDialog(val course: CanvasContext?, val assignment: Assignment?, val fileUri: Uri, val uploadType: FileUploadType, val dialogCallback: (Int) -> Unit) : ShareExtensionAction()
+    data class ShowAssignmentUploadDialog(val course: CanvasContext, val assignment: Assignment, val fileUri: Uri, val uploadType: FileUploadType, val dialogCallback: (Int) -> Unit) : ShareExtensionAction()
+    data class ShowMyFilesUploadDialog(val fileUri: Uri, val dialogCallback: (Int) -> Unit) : ShareExtensionAction()
     object ShowProgressDialog : ShareExtensionAction()
     object ShowSuccessDialog : ShareExtensionAction()
     object Finish : ShareExtensionAction()
