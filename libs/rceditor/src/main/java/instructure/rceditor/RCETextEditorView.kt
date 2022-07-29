@@ -26,11 +26,8 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.ColorInt
-import androidx.annotation.StringRes
-import androidx.fragment.app.FragmentActivity
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AlertDialog
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -40,6 +37,11 @@ import android.webkit.URLUtil
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.rce_color_picker.view.*
 import kotlinx.android.synthetic.main.rce_controller.view.*
 import kotlinx.android.synthetic.main.rce_dialog_alt_text.view.*
@@ -222,16 +224,28 @@ class RCETextEditorView @JvmOverloads constructor(
                 buttonClicked = true
                 onPositiveClick(altTextInput?.text.toString())
             }
-            .setNegativeButton(activity.getString(android.R.string.cancel), { _, _ ->
+            .setNegativeButton(activity.getString(android.R.string.cancel)) { _, _ ->
                 buttonClicked = true
                 onNegativeClick()
-            })
+            }
             .setOnDismissListener {
                 if (!buttonClicked) {
                     onNegativeClick()
                 }
             }
-            .create()
+            .create().apply {
+                setOnShowListener {
+                    (it as? AlertDialog)?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+                }
+            }
+
+        altTextInput?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                altTextDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = !s.isNullOrEmpty()
+            }
+        })
 
         altTextDialog.show()
     }
