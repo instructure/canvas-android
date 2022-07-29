@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.features.file.upload.FileUploadAction
@@ -43,7 +44,8 @@ import javax.inject.Inject
 class ShareExtensionTargetViewModel @Inject constructor(
         private val courseManager: CourseManager,
         private val assignmentManager: AssignmentManager,
-        private val resources: Resources
+        private val resources: Resources,
+        private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -79,7 +81,7 @@ class ShareExtensionTargetViewModel @Inject constructor(
 
                 val courseViewModels = courses
                         .map { ShareExtensionCourseItemViewModel(ShareExtensionCourseViewData(it.name, it.color)) }
-                _data.postValue(ShareExtensionTargetViewData(courseViewModels))
+                _data.postValue(ShareExtensionTargetViewData(apiPrefs.user?.name, courseViewModels))
             } catch (e: Exception) {
                 _events.postValue(Event(ShareExtensionTargetAction.ShowToast(resources.getString(R.string.errorOccurred))))
                 e.printStackTrace()

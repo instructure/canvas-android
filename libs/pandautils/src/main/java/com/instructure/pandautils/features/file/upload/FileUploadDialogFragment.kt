@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.file.upload
 
 import android.Manifest
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -139,13 +140,20 @@ class FileUploadDialogFragment : DialogFragment() {
         val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(title)
                 .setView(binding.root)
-                .setPositiveButton(positiveText) { _, _ ->
-                    uploadClicked()
-                }
-                .setNegativeButton(R.string.utils_cancel) { _, _ ->
-                    cancelClicked()
-                }
+                .setPositiveButton(positiveText, null)
+                .setNegativeButton(R.string.utils_cancel, null)
                 .create()
+
+        dialog.setOnShowListener {
+            val positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+            positive.setTextColor(ThemePrefs.buttonColor)
+            positive.setOnClickListener { uploadClicked() }
+            val negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+            negative.setTextColor(ThemePrefs.buttonColor)
+            negative.setOnClickListener {
+                cancelClicked()
+            }
+        }
 
         return dialog
     }

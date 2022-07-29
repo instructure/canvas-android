@@ -20,6 +20,7 @@ import android.os.Bundle
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 
 data class FileUploadDialogViewData(
+        val allowedExtensions: String?,
         val files: List<FileItemViewModel>
 )
 

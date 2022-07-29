@@ -19,6 +19,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.file.upload.FileUploadDialogViewModel" />
@@ -81,10 +83,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="@string/allowedExtensions"
+                    android:text="@{viewModel.data.allowedExtensions}"
                     android:textColor="@color/textDarkest"
                     android:textSize="16sp"
-                    android:visibility="gone"
+                    android:visibility="@{viewModel.data.allowedExtensions == null ? View.GONE : View.VISIBLE}"
+                    tools:text="@string/allowedExtensions"
                     tools:visibility="visible" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -92,8 +95,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:layout_height="130dp"
-                    app:recyclerViewItemViewModels="@{viewModel.data.files}"/>
+                    app:recyclerViewItemViewModels="@{viewModel.data.files}"
+                    tools:layout_height="130dp" />
 
                 <!-- Ideally these would be buttons instead of nested LinearLayouts, but as of Support Library v23.3
                     support vector drawables in XML only work with the app:srcCompat attribute in ImageViews -->

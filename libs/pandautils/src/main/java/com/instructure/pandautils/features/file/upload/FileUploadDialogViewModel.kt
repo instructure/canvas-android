@@ -111,7 +111,9 @@ class FileUploadDialogViewModel @Inject constructor(
                     it.fullPath
             ), this::onRemoveFileClicked)
         }
-        _data.postValue(FileUploadDialogViewData(itemViewModels))
+        _data.postValue(FileUploadDialogViewData(
+                setupAllowedExtensions(),
+                itemViewModels))
     }
 
     private fun onRemoveFileClicked(fullPath: String) {
@@ -171,8 +173,7 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     private fun setupAllowedExtensions(): String? {
-        return if (uploadType != FileUploadType.SUBMISSION_COMMENT && assignment != null && assignment?.allowedExtensions != null && (assignment?.allowedExtensions?.size
-                        ?: 0) > 0) {
+        return if (uploadType != FileUploadType.SUBMISSION_COMMENT && assignment != null && !assignment?.allowedExtensions.isNullOrEmpty()) {
             assignment?.let {
                 var extensions = resources.getString(R.string.allowedExtensions)
 
