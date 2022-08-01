@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.notification.preferences
 
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
 import com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryHeaderItemViewModel
 
 data class NotificationPreferencesViewData(val items: List<NotificationCategoryHeaderItemViewModel>)
@@ -26,7 +27,7 @@ data class NotificationCategoryViewData(
         val name: String,
         val title: String?,
         val description: String?,
-        var frequency: String,
+        var frequency: NotificationPreferencesFrequency,
         val position: Int,
         val notification: String?
 ) {
@@ -36,9 +37,11 @@ data class NotificationCategoryViewData(
 
 enum class NotificationPreferencesViewType(val viewType: Int) {
     HEADER(0),
-    CATEGORY(1)
+    PUSH_CATEGORY(1),
+    EMAIL_CATEGORY(2)
 }
 
 sealed class NotificationPreferencesAction {
     data class ShowSnackbar(val snackbar: String): NotificationPreferencesAction()
+    data class ShowFrequencySelectionDialog(val categoryName: String, val selectedFrequency: NotificationPreferencesFrequency): NotificationPreferencesAction()
 }

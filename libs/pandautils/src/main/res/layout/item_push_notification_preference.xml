@@ -25,7 +25,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.pandautils.features.notification.preferences.itemviewmodels.NotificationCategoryItemViewModel" />
+            type="com.instructure.pandautils.features.notification.preferences.itemviewmodels.PushNotificationCategoryItemViewModel" />
     </data>
 
     <RelativeLayout

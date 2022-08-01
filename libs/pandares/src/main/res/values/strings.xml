@@ -1283,4 +1283,11 @@
     </plurals>
 
     <string name="noAnnotationSelected">No annotation selected</string>
+
+    <string name="emailNotifications">Email Notifications</string>
+    <string name="emailNotificationsImmediately">Immediately</string>
+    <string name="emailNotificationsDaily">Daily</string>
+    <string name="emailNotificationsWeekly">Weekly</string>
+    <string name="emailNotificationsNever">Never</string>
+    <string name="selectFrequency">Select frequency</string>
 </resources>
