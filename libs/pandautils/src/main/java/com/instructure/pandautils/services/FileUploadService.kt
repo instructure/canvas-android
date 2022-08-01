@@ -336,7 +336,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
                     NOTIFICATION_ID
                 )
             } catch (e: Exception) {}
-            FileUploadUtils(context, context.contentResolver).deleteTempDirectory()
+            FileUploadUtils.deleteTempDirectory(context)
         }
 
         fun createNotificationChannel(notificationManager: NotificationManager, channelId: String = CHANNEL_ID) {

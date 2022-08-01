@@ -611,7 +611,7 @@ class CanvasWebView @JvmOverloads constructor(
         val cameraIntents: MutableList<Intent> = ArrayList()
         if (allowRecording) {
             val fileName = "vid_" + System.currentTimeMillis() + ".mp4"
-            val file = File(FileUploadUtils(context, context.contentResolver).getExternalCacheDir(), fileName)
+            val file = File(FileUploadUtils.getExternalCacheDir(context), fileName)
             val cameraImageUri = FileProvider.getUriForFile(
                 context,
                 context.packageName + Const.FILE_PROVIDER_AUTHORITY,

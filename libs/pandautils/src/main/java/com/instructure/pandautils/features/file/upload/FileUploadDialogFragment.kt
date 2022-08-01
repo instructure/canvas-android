@@ -209,7 +209,7 @@ class FileUploadDialogFragment : DialogFragment() {
             cameraPermissionContract.launch(Manifest.permission.CAMERA)
         } else {
             val fileName = "pic_" + System.currentTimeMillis().toString() + ".jpg"
-            val file = File(FileUploadUtils(requireContext(), requireContext().contentResolver).getExternalCacheDir(), fileName)
+            val file = File(FileUploadUtils.getExternalCacheDir(requireContext()), fileName)
 
             cameraImageUri = FileProvider.getUriForFile(requireContext(), requireContext().packageName + Const.FILE_PROVIDER_AUTHORITY, file)
             takePictureContract.launch(cameraImageUri)

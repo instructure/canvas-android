@@ -35,7 +35,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader.LoadedMedia
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
-import com.instructure.pandautils.utils.FileUploadUtils.Companion.createTaskLoaderBundle
 import com.instructure.pandautils.utils.Utils.getAttachmentsDirectory
 import okhttp3.Request
 import okio.Source
@@ -123,7 +122,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             intent.putExtra(Const.IS_MEDIA_TYPE, true)
             if (isHtmlFile && canvasContext != null) {
                 val file = downloadFile(context, url, filename)
-                val bundle = createTaskLoaderBundle(
+                val bundle = FileUploadUtils.createTaskLoaderBundle(
                     canvasContext,
                     FileProvider.getUriForFile(
                         context,

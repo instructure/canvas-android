@@ -39,12 +39,9 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.*
 
-private const val FILE_SCHEME = "file"
-private const val CONTENT_SCHEME = "content"
-
-class FileUploadUtils(
-        private val context: Context,
-        private val contentResolver: ContentResolver) {
+object FileUploadUtils {
+    private const val FILE_SCHEME = "file"
+    private const val CONTENT_SCHEME = "content"
 
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
@@ -57,7 +54,7 @@ class FileUploadUtils(
      * @param uri      The Uri to query.
      * @author paulburke
      */
-    fun getPath(uri: Uri): String? {
+    fun getPath(context: Context, uri: Uri): String? {
         // DocumentProvider
         if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
@@ -75,9 +72,9 @@ class FileUploadUtils(
                     return id.replaceFirst("raw:".toRegex(), "")
                 }
                 val contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), id.toLong()
+                    Uri.parse("content://downloads/public_downloads"), id.toLong()
                 )
-                return getDataColumn(contentUri, null, null)
+                return getDataColumn(context.contentResolver, contentUri, null, null)
             } else if (isMediaDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
                 val split = docId.split(":".toRegex()).toTypedArray()
@@ -89,11 +86,11 @@ class FileUploadUtils(
                 }
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(split[1])
-                return getDataColumn(contentUri, selection, selectionArgs)
+                return getDataColumn(context.contentResolver, contentUri, selection, selectionArgs)
             }
         } else if (CONTENT_SCHEME.equals(uri.scheme, ignoreCase = true)) {
             // Return the remote address
-            return getDataColumn(uri, null, null)
+            return getDataColumn(context.contentResolver, uri, null, null)
         } else if (FILE_SCHEME.equals(uri.scheme, ignoreCase = true)) {
             return uri.path
         }
@@ -104,14 +101,14 @@ class FileUploadUtils(
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      */
-    private fun getDataColumn(uri: Uri, selection: String?, selectionArgs: Array<String>?): String? {
+    private fun getDataColumn(resolver: ContentResolver, uri: Uri, selection: String?, selectionArgs: Array<String>?): String? {
         Log.v(Const.PANDA_UTILS_FILE_UPLOAD_UTILS_LOG, "getDataColumn uri: $uri selection: $selection args: " + Arrays.toString(selectionArgs))
         var filePath = ""
         var cursor: Cursor? = null
         val column = MediaStore.MediaColumns.DATA
         val projection = arrayOf(column)
         try {
-            cursor = contentResolver.query(uri, projection, selection, selectionArgs, null)
+            cursor = resolver.query(uri, projection, selection, selectionArgs, null)
             if (cursor != null && cursor.moveToFirst()) {
                 val columnIndex = cursor.getColumnIndexOrThrow(column)
                 filePath = cursor.getString(columnIndex)
@@ -129,8 +126,8 @@ class FileUploadUtils(
     }
 
     @SuppressLint("Recycle")
-    fun getFileNameFromUri(uri: Uri): String? {
-        val cursor = contentResolver.query(uri, null, null, null, null) ?: return null
+    fun getFileNameFromUri(resolver: ContentResolver, uri: Uri): String? {
+        val cursor = resolver.query(uri, null, null, null, null) ?: return null
         val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
         cursor.moveToFirst()
         val name = cursor.getString(nameIndex)
@@ -162,14 +159,14 @@ class FileUploadUtils(
         return "com.android.providers.media.documents" == uri.authority
     }
 
-    fun getFile(uri: Uri): FileSubmitObject? {
+    fun getFile(context: Context, uri: Uri): FileSubmitObject? {
         val contentResolver = context.contentResolver
-        val mimeType = getFileMimeType(uri)
-        val fileName = getFileNameWithDefault(uri)
-        return getFileSubmitObjectFromInputStream(uri, fileName, mimeType)
+        val mimeType = getFileMimeType(contentResolver, uri)
+        val fileName = getFileNameWithDefault(contentResolver, uri)
+        return getFileSubmitObjectFromInputStream(context, uri, fileName, mimeType)
     }
 
-    fun getFileSubmitObjectFromInputStream(uri: Uri?, filename: String, mimeType: String?): FileSubmitObject? {
+    fun getFileSubmitObjectFromInputStream(context: Context, uri: Uri?, filename: String, mimeType: String?): FileSubmitObject? {
         uri ?: return null
         var fileName = filename
         var file: File?
@@ -188,7 +185,7 @@ class FileUploadUtils(
             }
 
             // create a temp file to copy the uri contents into
-            val tempFilePath = getTempFilePath(fileName)
+            val tempFilePath = getTempFilePath(context, fileName)
             output = FileOutputStream(tempFilePath)
             var read: Int
             val bytes = ByteArray(4096)
@@ -217,7 +214,7 @@ class FileUploadUtils(
         } else FileSubmitObject(fileName, 0, mimeType!!, "", errorMessage, FileSubmitObject.STATE.NORMAL)
     }
 
-    fun getFileNameWithDefault(uri: Uri): String {
+    fun getFileNameWithDefault(resolver: ContentResolver, uri: Uri): String {
         var fileName: String? = ""
         val scheme = uri.scheme
         if (FILE_SCHEME.equals(scheme, ignoreCase = true)) {
@@ -229,7 +226,7 @@ class FileUploadUtils(
             var metaCursor: Cursor? = null
             // Don't have try with resources, so we get a finally block that can close the cursor
             try {
-                metaCursor = contentResolver.query(uri, projection, null, null, null)
+                metaCursor = resolver.query(uri, projection, null, null, null)
                 if (metaCursor != null) {
                     if (metaCursor.moveToFirst()) {
                         fileName = metaCursor.getString(0)
@@ -244,7 +241,7 @@ class FileUploadUtils(
         return getTempFilename(fileName)
     }
 
-    fun getFileMimeType(uri: Uri): String {
+    fun getFileMimeType(resolver: ContentResolver, uri: Uri): String {
         val scheme = uri.scheme
         var mimeType: String? = null
         if (FILE_SCHEME.equals(scheme, ignoreCase = true)) {
@@ -252,7 +249,7 @@ class FileUploadUtils(
                 mimeType = getMimeTypeFromFileNameWithExtension(uri.lastPathSegment!!)
             }
         } else if (CONTENT_SCHEME.equals(scheme, ignoreCase = true)) {
-            mimeType = contentResolver.getType(uri)
+            mimeType = resolver.getType(uri)
         }
         return mimeType ?: "*/*"
     }
@@ -271,7 +268,7 @@ class FileUploadUtils(
         return when (fileName) {
             null, "" -> "File_Upload"
             "image.jpg" -> "Image_Upload"
-            "video.mpg", "video.mpeg" -> "Video_Upload"
+            "video.mpg", "video.mpeg" ->  "Video_Upload"
             else -> fileName
         }
     }
@@ -281,20 +278,25 @@ class FileUploadUtils(
         return mime.getExtensionFromMimeType(mimeType) ?: return ""
     }
 
-    private fun getTempFilePath(fileName: String): String {
-        val outputDir = getCacheDir()
+    private fun getTempFilePath(context: Context, fileName: String): String {
+        val outputDir = getCacheDir(context)
         val outputFile = File(outputDir, fileName.replace("/", "_"))
         return outputFile.absolutePath
     }
 
-    private fun getCacheDir(): File {
+    private fun getCacheDir(context: Context): File {
         val canvasFolder = File(context.cacheDir, "file_upload")
         if (!canvasFolder.exists()) canvasFolder.mkdirs()
         return canvasFolder
     }
 
-    fun deleteTempDirectory(): Boolean {
-        return deleteDirectory(getCacheDir()) && deleteDirectory(getExternalCacheDir())
+    fun deleteTempFile(filename: String?): Boolean {
+        val file = File(filename)
+        return file.delete()
+    }
+
+    fun deleteTempDirectory(context: Context): Boolean {
+        return deleteDirectory(getCacheDir(context)) && deleteDirectory(getExternalCacheDir(context))
     }
 
     private fun deleteDirectory(fileFolder: File): Boolean {
@@ -308,25 +310,18 @@ class FileUploadUtils(
         return fileFolder.delete()
     }
 
-    fun getExternalCacheDir(): File {
+    fun getExternalCacheDir(context: Context): File {
         val cacheDir = File(context.externalCacheDir, "file_upload")
         if (!cacheDir.exists()) cacheDir.mkdirs()
         return cacheDir
     }
 
-    companion object {
-        fun createTaskLoaderBundle(canvasContext: CanvasContext?, url: String?, title: String?, authenticate: Boolean): Bundle {
-            val bundle = Bundle()
-            bundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-            bundle.putString(Const.INTERNAL_URL, url)
-            bundle.putBoolean(Const.AUTHENTICATE, authenticate)
-            bundle.putString(Const.ACTION_BAR_TITLE, title)
-            return bundle
-        }
-
-        fun deleteTempFile(filename: String?): Boolean {
-            val file = File(filename)
-            return file.delete()
-        }
+    fun createTaskLoaderBundle(canvasContext: CanvasContext?, url: String?, title: String?, authenticate: Boolean): Bundle {
+        val bundle = Bundle()
+        bundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext)
+        bundle.putString(Const.INTERNAL_URL, url)
+        bundle.putBoolean(Const.AUTHENTICATE, authenticate)
+        bundle.putString(Const.ACTION_BAR_TITLE, title)
+        return bundle
     }
 }

@@ -14,30 +14,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.di
+package com.instructure.pandautils.features.file.upload
 
 import android.content.ContentResolver
 import android.content.Context
-import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
+import android.net.Uri
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.FileUploadUtils
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-class FileUploadModule {
-
-    @Provides
-    fun provideFileUploadUtils(): FileUploadUtils {
-        return FileUploadUtils
+class FileUploadUtilsHelper(private val fileUploadUtils: FileUploadUtils, private val context: Context, private val contentResolver: ContentResolver) {
+    fun getFileMimeType(fileUri: Uri): String {
+        return fileUploadUtils.getFileMimeType(contentResolver, fileUri)
     }
 
-    @Provides
-    fun provideFileUploadUtilsHelper(@ApplicationContext context: Context, contentResolver: ContentResolver, fileUploadUtils: FileUploadUtils): FileUploadUtilsHelper {
-        return FileUploadUtilsHelper(fileUploadUtils, context, contentResolver)
+    fun getFileNameWithDefault(fileUri: Uri): String {
+        return fileUploadUtils.getFileNameWithDefault(contentResolver, fileUri)
+    }
+
+    fun getFileSubmitObjectFromInputStream(fileUri: Uri, fileName: String, mimeType: String): FileSubmitObject? {
+        return fileUploadUtils.getFileSubmitObjectFromInputStream(context, fileUri, fileName, mimeType)
     }
 }

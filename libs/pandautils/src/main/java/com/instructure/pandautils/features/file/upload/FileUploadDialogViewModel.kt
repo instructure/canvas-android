@@ -29,7 +29,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.services.FileUploadService
-import com.instructure.pandautils.utils.FileUploadUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -38,7 +37,7 @@ import kotlin.math.pow
 
 @HiltViewModel
 class FileUploadDialogViewModel @Inject constructor(
-        private val fileUploadUtils: FileUploadUtils,
+        private val fileUploadUtils: FileUploadUtilsHelper,
         private val resources: Resources
 ) : ViewModel() {
 

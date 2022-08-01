@@ -65,8 +65,6 @@ class PickerSubmissionUploadEffectHandler constructor(
 
     val subId = PickerSubmissionUploadEffectHandler::class.java.name
 
-    private val fileUploadUtils = FileUploadUtils(context, context.contentResolver)
-
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(sticky = true)
     fun onActivityResults(event: OnActivityResults) {
@@ -171,7 +169,7 @@ class PickerSubmissionUploadEffectHandler constructor(
     private fun loadFile(allowedExtensions: List<String>, uri: Uri, context: Context) {
         launch(Dispatchers.Main) {
             val submitObject = withContext(Dispatchers.IO) {
-                fileUploadUtils.getFile(uri)
+                FileUploadUtils.getFile(context, uri)
             }
 
             submitObject?.let {
@@ -230,7 +228,7 @@ class PickerSubmissionUploadEffectHandler constructor(
 
         // Store the uri that we're saving the file to
         val fileName = "pic_${System.currentTimeMillis()}.jpg"
-        val file = File(fileUploadUtils.getExternalCacheDir(), fileName)
+        val file = File(FileUploadUtils.getExternalCacheDir(context), fileName)
         val uri = FileProvider.getUriForFile(
             context,
             context.packageName + Const.FILE_PROVIDER_AUTHORITY,
