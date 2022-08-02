@@ -230,7 +230,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
             if (context == null) return@OnClickListener
 
             val popup = PopupMenu(requireContext(), popupViewPosition)
-            popup.menuInflater.inflate(R.menu.conversation_scope, popup.menu)
+            popup.menuInflater.inflate(R.menu.menu_conversation_scope, popup.menu)
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.inbox_all -> onScopeChanged(InboxApi.Scope.ALL)

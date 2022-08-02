@@ -59,7 +59,10 @@ fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>
 fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
     when (state) {
         is ViewState.Success -> emptyView.setGone()
-        is ViewState.Loading -> emptyView.setLoading()
+        is ViewState.Loading -> {
+            emptyView.setVisible()
+            emptyView.setLoading()
+        }
         is ViewState.Refresh -> emptyView.setGone()
         is ViewState.Empty -> {
             emptyView.setVisible()

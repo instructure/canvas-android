@@ -18,7 +18,9 @@ package com.instructure.pandautils.features.inbox.list
 
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 
-data class InboxViewData(val messages: List<InboxEntryItemViewModel>)
+data class InboxViewData(
+    val scope: String,
+    val messages: List<InboxEntryItemViewModel>)
 
 data class InboxEntryViewData(
     val avatarUrl: String,
@@ -32,5 +34,6 @@ data class InboxEntryViewData(
 )
 
 sealed class InboxAction {
-    data class OpenConversation(val conversationId: String)
+    data class OpenConversation(val conversationId: String) : InboxAction()
+    object OpenScopeSelector : InboxAction()
 }

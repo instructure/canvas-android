@@ -20,11 +20,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentInboxNewBinding
+import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesAction
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.withArgs
@@ -51,11 +55,42 @@ class NewInboxFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
+
+        viewModel.events.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
     }
 
     private fun applyTheme() {
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+    }
+
+    private fun handleAction(action: InboxAction) {
+        when (action) {
+            is InboxAction.OpenConversation -> TODO()
+            InboxAction.OpenScopeSelector -> openScopeSelector()
+        }
+    }
+
+    private fun openScopeSelector() {
+        val popup = PopupMenu(requireContext(), binding.popupViewPosition)
+        popup.menuInflater.inflate(R.menu.menu_conversation_scope, popup.menu)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.inbox_all -> viewModel.scopeChanged(InboxApi.Scope.ALL)
+                R.id.inbox_unread -> viewModel.scopeChanged(InboxApi.Scope.UNREAD)
+                R.id.inbox_starred -> viewModel.scopeChanged(InboxApi.Scope.STARRED)
+                R.id.inbox_sent -> viewModel.scopeChanged(InboxApi.Scope.SENT)
+                R.id.inbox_archived -> viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
+            }
+
+            true
+        }
+
+        popup.show()
     }
 
     companion object {

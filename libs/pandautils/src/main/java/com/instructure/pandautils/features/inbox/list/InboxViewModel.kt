@@ -54,11 +54,13 @@ class InboxViewModel @Inject constructor(
 
     val data: LiveData<InboxViewData>
         get() = _data
-    private val _data = MutableLiveData<InboxViewData>()
+    private val _data = MutableLiveData<InboxViewData>(InboxViewData(getTextForScope(InboxApi.Scope.ALL), emptyList()))
 
     val events: LiveData<Event<InboxAction>>
         get() = _events
     private val _events = MutableLiveData<Event<InboxAction>>()
+
+    private var scope = InboxApi.Scope.ALL
 
     init {
         _state.postValue(ViewState.Loading)
@@ -68,10 +70,10 @@ class InboxViewModel @Inject constructor(
     private fun fetchData() {
         viewModelScope.launch {
             try {
-                val conversations = inboxManager.getConversationsAsync(InboxApi.Scope.ALL, true).await().dataOrThrow
+                val conversations = inboxManager.getConversationsAsync(scope, true).await().dataOrThrow
                 val itemViewModels = createInboxEntriesFromResponse(conversations)
                 _state.postValue(ViewState.Success)
-                _data.postValue(InboxViewData(itemViewModels))
+                _data.postValue(InboxViewData(getTextForScope(scope), itemViewModels))
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
@@ -124,7 +126,32 @@ class InboxViewModel @Inject constructor(
         }
     }
 
+    private fun getTextForScope(scope: InboxApi.Scope): String {
+        return when (scope) {
+            InboxApi.Scope.ALL -> resources.getString(R.string.inboxAllMessages)
+            InboxApi.Scope.UNREAD -> resources.getString(R.string.inbox_unread)
+            InboxApi.Scope.STARRED -> resources.getString(R.string.inbox_starred)
+            InboxApi.Scope.SENT -> resources.getString(R.string.inbox_sent)
+            InboxApi.Scope.ARCHIVED -> resources.getString(R.string.inbox_archived)
+            else -> resources.getString(R.string.inboxAllMessages)
+        }
+    }
+
     fun refresh() {
+        _state.postValue(ViewState.Refresh)
         fetchData()
+    }
+
+    fun openScopeSelector() {
+        _events.postValue(Event(InboxAction.OpenScopeSelector))
+    }
+
+    fun scopeChanged(newScope: InboxApi.Scope) {
+        if (newScope != scope) {
+            scope = newScope
+            _state.postValue(ViewState.Loading)
+            _data.postValue(InboxViewData(getTextForScope(scope), emptyList()))
+            fetchData()
+        }
     }
 }

@@ -108,7 +108,8 @@
                 android:background="?android:selectableItemBackground"
                 android:minWidth="120dp"
                 android:paddingEnd="16dp"
-                android:paddingStart="16dp">
+                android:paddingStart="16dp"
+                android:onClick="@{() -> viewModel.openScopeSelector()}" >
 
                 <View
                     android:id="@+id/popupViewPosition"
@@ -132,6 +133,7 @@
                         android:layout_gravity="center_vertical|start"
                         android:textColor="@color/textDarkest"
                         android:textSize="18sp"
+                        android:text="@{viewModel.data.scope}"
                         tools:text="Inbox" />
 
                     <ImageView
