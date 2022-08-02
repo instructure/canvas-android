@@ -132,4 +132,9 @@ class ApiModule {
     fun provideNotificationPreferencesManager(): NotificationPreferencesManager {
         return NotificationPreferencesManager
     }
+
+    @Provides
+    fun provideInboxManager(): InboxManager {
+        return InboxManager
+    }
 }

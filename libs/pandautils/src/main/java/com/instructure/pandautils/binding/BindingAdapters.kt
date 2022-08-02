@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -203,4 +204,14 @@ fun bindUrl(canvasWebView: CanvasWebView, url: String?) {
     url?.let {
         canvasWebView.loadUrl(it)
     }
+}
+
+@BindingAdapter("visible")
+fun bindBooleanToVisibility(view: View, visible: Boolean) {
+    view.setVisible(visible)
+}
+
+@BindingAdapter("imageTint")
+fun bindImageColor(imageView: ImageView, @ColorInt color: Int) {
+    imageView.setColorFilter(color)
 }

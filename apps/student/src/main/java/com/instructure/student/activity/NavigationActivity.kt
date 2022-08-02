@@ -70,6 +70,7 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.inbox.list.NewInboxFragment
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
@@ -379,7 +380,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                         // Inbox not available in Student View
                         selectBottomNavFragment(NothingToSeeHereFragment::class.java)
                     } else {
-                        selectBottomNavFragment(InboxFragment::class.java)
+                        selectBottomNavFragment(NewInboxFragment::class.java)
                     }
                 }
             }
@@ -586,7 +587,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 if (ApiPrefs.isStudentView) {
                     selectBottomNavFragment(NothingToSeeHereFragment::class.java)
                 } else {
-                    selectBottomNavFragment(InboxFragment::class.java)
+                    selectBottomNavFragment(NewInboxFragment::class.java)
                 }
             }
         }
@@ -618,7 +619,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     if (ApiPrefs.isStudentView) {
                         selectBottomNavFragment(NothingToSeeHereFragment::class.java)
                     } else {
-                        selectBottomNavFragment(InboxFragment::class.java)
+                        selectBottomNavFragment(NewInboxFragment::class.java)
                     }
                 }
             }
@@ -880,7 +881,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 }
             }
         } else {
-            super.onBackPressed()
+            if (isBottomNavFragment(topFragment)) {
+                handleBottomNavBackStack()
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 
@@ -1095,7 +1100,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         toast(R.string.errorOccurred)
     }
 
-    private fun createBottomNavFragment(name: String?): ParentFragment? {
+    private fun createBottomNavFragment(name: String?): Fragment? {
         return when (name) {
             navigationBehavior.homeFragmentClass.name -> {
                 val route = navigationBehavior.createHomeFragmentRoute(ApiPrefs.user)
@@ -1113,9 +1118,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 val route = NotificationListFragment.makeRoute(ApiPrefs.user!!)
                 NotificationListFragment.newInstance(route)
             }
-            InboxFragment::class.java.name -> {
-                val route = InboxFragment.makeRoute()
-                InboxFragment.newInstance(route)
+            NewInboxFragment::class.java.name -> {
+                val route = NewInboxFragment.makeRoute()
+                NewInboxFragment.newInstance(route)
             }
             NothingToSeeHereFragment::class.java.name -> NothingToSeeHereFragment.newInstance()
             else -> null
