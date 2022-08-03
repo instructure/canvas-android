@@ -85,6 +85,7 @@ class NewInboxFragment : Fragment() {
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+        inboxRouter.attachNavigationIcon(binding.toolbar)
     }
 
     private fun handleAction(action: InboxAction) {

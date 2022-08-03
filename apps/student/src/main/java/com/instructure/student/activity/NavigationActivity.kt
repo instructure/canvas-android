@@ -520,6 +520,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)
     }
 
+    fun attachNavigationIcon(toolbar: Toolbar) {
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
+        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
+        toolbar.setNavigationOnClickListener {
+            openNavigationDrawer()
+        }
+    }
+
     private fun setUpColorOverlaySwitch() {
         navigationDrawerColorOverlaySwitch.isChecked = !StudentPrefs.hideCourseColorOverlay
         lateinit var checkListener: CompoundButton.OnCheckedChangeListener

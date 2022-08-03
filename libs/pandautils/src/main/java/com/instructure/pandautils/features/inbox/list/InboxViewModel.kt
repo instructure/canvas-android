@@ -77,6 +77,7 @@ class InboxViewModel @Inject constructor(
                 val conversations = inboxManager.getConversationsAsync(scope, true).await().dataOrThrow
                 val itemViewModels = createInboxEntriesFromResponse(conversations)
                 _state.postValue(ViewState.Success)
+                _data.postValue(InboxViewData(getTextForScope(scope)))
                 _itemViewModels.postValue(itemViewModels)
             } catch (e: Exception) {
                 e.printStackTrace()

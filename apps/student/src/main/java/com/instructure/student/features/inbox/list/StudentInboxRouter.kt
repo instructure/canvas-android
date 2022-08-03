@@ -16,10 +16,12 @@
  */
 package com.instructure.student.features.inbox.list
 
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.router.RouteMatcher
 
@@ -30,4 +32,9 @@ class StudentInboxRouter(private val activity: FragmentActivity) : InboxRouter {
         RouteMatcher.route(activity, route)
     }
 
+    override fun attachNavigationIcon(toolbar: Toolbar) {
+        if (activity is NavigationActivity) {
+            activity.attachNavigationIcon(toolbar)
+        }
+    }
 }

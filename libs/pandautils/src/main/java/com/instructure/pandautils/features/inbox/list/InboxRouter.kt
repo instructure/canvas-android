@@ -16,10 +16,13 @@
  */
 package com.instructure.pandautils.features.inbox.list
 
+import androidx.appcompat.widget.Toolbar
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 
 interface InboxRouter {
 
     fun openConversation(conversation: Conversation, scope: InboxApi.Scope)
+
+    fun attachNavigationIcon(toolbar: Toolbar)
 }
