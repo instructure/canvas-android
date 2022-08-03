@@ -24,7 +24,8 @@ import com.instructure.pandautils.features.inbox.list.InboxEntryViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class InboxEntryItemViewModel(
-    val data: InboxEntryViewData,
+    @get:Bindable
+    var data: InboxEntryViewData,
     val openConversationCallback: () -> Unit,
     val selectionModeCallback: () -> Unit,
     var selectionModeActive: Boolean = false,

@@ -142,6 +142,14 @@ object InboxManager {
         InboxApi.markConversationAsUnread(adapter, callback, params, conversationId, conversationEvent)
     }
 
+    fun batchUpdateConversationsAsync(conversationIds: List<Long>, conversationEvent: String) = apiAsync<Void> { batchUpdateConversations(conversationIds, conversationEvent, it) }
+
+    private fun batchUpdateConversations(conversationIds: List<Long>, conversationEvent: String, callback: StatusCallback<Void>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+        InboxApi.batchUpdateConversations(adapter, callback, params, conversationIds, conversationEvent)
+    }
+
     fun getConversationSynchronous(conversationId: Long, forceNetwork: Boolean): Conversation? {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

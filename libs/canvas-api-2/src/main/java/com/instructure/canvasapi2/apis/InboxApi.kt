@@ -88,6 +88,9 @@ object InboxApi {
 
         @PUT("conversations")
         fun markConversationAsUnread(@Query("conversation_ids[]") conversationId: Long, @Query("event") conversationEvent: String): Call<Void>
+
+        @PUT("conversations")
+        fun batchUpdateConversations(@Query("conversation_ids[]") conversationIds: List<Long>, @Query("event") conversationEvent: String): Call<Void>
     }
 
     fun getConversation(adapter: RestBuilder, callback: StatusCallback<Conversation>, params: RestParams, conversationId: Long) {
@@ -142,6 +145,10 @@ object InboxApi {
 
     fun markConversationAsUnread(adapter: RestBuilder, callback: StatusCallback<Void>, params: RestParams, conversationId: Long, conversationEvent: String) {
         callback.addCall(adapter.build(InboxInterface::class.java, params).markConversationAsUnread(conversationId, conversationEvent)).enqueue(callback)
+    }
+
+    fun batchUpdateConversations(adapter: RestBuilder, callback: StatusCallback<Void>, params: RestParams, conversationIds: List<Long>, conversationEvent: String) {
+        callback.addCall(adapter.build(InboxInterface::class.java, params).batchUpdateConversations(conversationIds, conversationEvent)).enqueue(callback)
     }
 
     @Throws(IOException::class)

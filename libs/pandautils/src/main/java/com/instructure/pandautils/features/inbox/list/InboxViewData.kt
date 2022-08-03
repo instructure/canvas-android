@@ -25,6 +25,7 @@ data class InboxViewData(
     val messages: List<InboxEntryItemViewModel>)
 
 data class InboxEntryViewData(
+    val id: Long,
     val avatarUrl: String,
     val username: String,
     val subject: String,

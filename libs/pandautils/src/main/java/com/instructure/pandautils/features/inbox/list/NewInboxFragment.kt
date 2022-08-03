@@ -60,7 +60,14 @@ class NewInboxFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbar.setMenu(R.menu.menu_inbox) {
-
+            when (it.itemId) {
+                R.id.inboxStarSelected -> viewModel.starSelected()
+                R.id.inboxUnstarSelected -> viewModel.unstarSelected()
+                R.id.inboxMarkAsReadSelected -> viewModel.markAsReadSelected()
+                R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
+                R.id.inboxDeleteSelected -> viewModel.deleteSelected()
+                R.id.inboxArchiveSelected -> viewModel.archiveSelected()
+            }
         }
         applyTheme()
 

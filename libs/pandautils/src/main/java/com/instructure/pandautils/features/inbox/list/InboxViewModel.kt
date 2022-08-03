@@ -89,6 +89,7 @@ class InboxViewModel @Inject constructor(
 
     private fun createItemViewModelFromConversation(conversation: Conversation): InboxEntryItemViewModel {
         val viewData = InboxEntryViewData(
+            conversation.id,
             createAvatarUrl(conversation),
             createMessageUsername(conversation),
             conversation.subject ?: "",
@@ -162,6 +163,77 @@ class InboxViewModel @Inject constructor(
             _state.postValue(ViewState.Loading)
             _data.postValue(InboxViewData(getTextForScope(scope), emptyList()))
             fetchData()
+        }
+    }
+
+    fun starSelected() {
+        performBatchOperation("star", { ids ->
+            _data.value?.messages?.forEach {
+                if (ids.contains(it.data.id)) it.data = it.data.copy(starred = true)
+                it.notifyChange()
+            }
+        })
+    }
+
+    fun unstarSelected() {
+        performBatchOperation("unstar", { ids ->
+            _data.value?.messages?.forEach {
+                if (ids.contains(it.data.id)) it.data = it.data.copy(starred = false)
+                it.notifyChange()
+            }
+        })
+    }
+
+    fun markAsReadSelected() {
+        performBatchOperation("mark_as_read", { ids ->
+            _data.value?.messages?.forEach {
+                if (ids.contains(it.data.id)) it.data = it.data.copy(unread = false)
+                it.notifyChange()
+            }
+        })
+    }
+
+    fun markAsUnreadSelected() {
+        performBatchOperation("mark_as_unread", { ids ->
+            _data.value?.messages?.forEach {
+                if (ids.contains(it.data.id)) it.data = it.data.copy(unread = true)
+                it.notifyChange()
+            }
+        })
+    }
+
+    fun deleteSelected() {
+        performBatchOperation("destroy", { ids ->
+            val newMessages = _data.value?.messages?.filterNot { ids.contains(it.data.id) } ?: emptyList()
+            _data.value = _data.value?.copy(messages = newMessages)
+            handleSelectionMode()
+        })
+    }
+
+    fun archiveSelected() {
+        performBatchOperation("archive", { ids ->
+            val newMessages = _data.value?.messages?.filterNot { ids.contains(it.data.id) } ?: emptyList()
+            _data.value = _data.value?.copy(messages = newMessages)
+            handleSelectionMode()
+        })
+    }
+
+    private fun performBatchOperation(operation: String, onSuccess: (Set<Long>) -> Unit, onFailure: () -> Unit = {}) {
+        viewModelScope.launch {
+            try {
+                val ids = _data.value?.messages
+                    ?.filter { it.selected }
+                    ?.map { it.data.id } ?: emptyList()
+
+                val dataResult = inboxManager.batchUpdateConversationsAsync(ids, operation).await()
+                if (dataResult.isSuccess) {
+                    onSuccess(ids.toSet())
+                } else {
+                    onFailure()
+                }
+            } catch (e: Exception) {
+                onFailure()
+            }
         }
     }
 }
