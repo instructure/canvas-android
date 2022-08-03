@@ -22,7 +22,9 @@ import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryI
 
 data class InboxViewData(
     val scope: String,
-    val messages: List<InboxEntryItemViewModel>)
+    val selectedItems: String = "",
+    val selectionMode: Boolean = false
+)
 
 data class InboxEntryViewData(
     val id: Long,

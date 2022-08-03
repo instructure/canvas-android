@@ -33,23 +33,45 @@
         android:background="@color/backgroundLightest"
         tools:context=".feature.inbox.list.NewInboxFragment">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <FrameLayout
+            android:id="@+id/toolbarWrapper"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:layout_alignParentTop="true"
-            android:background="@color/textDarkest"
-            android:elevation="6dp"
-            app:title="@string/inbox"
-            app:popupTheme="@style/ToolBarPopupStyle"
-            app:theme="@style/ToolBarStyle"
-            tools:targetApi="lollipop" />
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_alignParentTop="true"
+                android:background="@color/textDarkest"
+                android:elevation="6dp"
+                app:popupTheme="@style/ToolBarPopupStyle"
+                app:theme="@style/ToolBarStyle"
+                app:title="@string/inbox"
+                app:visible="@{!viewModel.data.selectionMode}"
+                tools:targetApi="lollipop" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/editToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_alignParentTop="true"
+                android:background="@color/textDarkest"
+                android:elevation="6dp"
+                android:visibility="gone"
+                app:popupTheme="@style/ToolBarPopupStyle"
+                app:theme="@style/ToolBarStyle"
+                app:title="@{viewModel.data.selectedItems}"
+                app:visible="@{viewModel.data.selectionMode}"
+                tools:targetApi="lollipop" />
+
+        </FrameLayout>
 
         <RelativeLayout
             android:id="@+id/filterTitleWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
+            android:layout_below="@+id/toolbarWrapper"
             android:layout_marginBottom="-8dp"
             android:layout_marginTop="-8dp"
             android:clipToPadding="false"
@@ -175,7 +197,7 @@
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    app:recyclerViewItemViewModels="@{viewModel.data.messages}"/>
+                    app:recyclerViewItemViewModels="@{viewModel.itemViewModels}"/>
 
             </com.instructure.pandautils.views.SwipeRefreshLayoutAppBar>
 

@@ -875,17 +875,29 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (topFragment is ParentFragment) {
             if (!topFragment.handleBackPressed()) {
                 if (isBottomNavFragment(topFragment)) {
-                    handleBottomNavBackStack()
+                    if (!isBackPressHandledByInbox(topFragment)) {
+                        handleBottomNavBackStack()
+                    }
                 } else {
                     super.onBackPressed()
                 }
             }
         } else {
             if (isBottomNavFragment(topFragment)) {
-                handleBottomNavBackStack()
+                if (!isBackPressHandledByInbox(topFragment!!)) {
+                    handleBottomNavBackStack()
+                }
             } else {
                 super.onBackPressed()
             }
+        }
+    }
+
+    private fun isBackPressHandledByInbox(topFragment: Fragment): Boolean {
+        if (topFragment is NewInboxFragment) {
+            return topFragment.handleBackPress()
+        } else {
+            return false
         }
     }
 

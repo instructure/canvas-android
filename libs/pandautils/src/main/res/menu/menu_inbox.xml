@@ -22,34 +22,4 @@
         android:icon="@drawable/ic_filter"
         android:title="@string/filterInbox"
         app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/inboxDeleteSelected"
-        android:title="@string/deleteSelected"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/inboxArchiveSelected"
-        android:title="@string/archiveSelected"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/inboxMarkAsReadSelected"
-        android:title="@string/markAsReadSelected"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/inboxMarkAsUnreadSelected"
-        android:title="@string/markAsUnreadSelected"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/inboxStarSelected"
-        android:title="@string/starSelected"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/inboxUnstarSelected"
-        android:title="@string/unstarSelected"
-        app:showAsAction="never"/>
 </menu>

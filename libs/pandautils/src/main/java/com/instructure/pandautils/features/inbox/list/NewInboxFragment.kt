@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.notification.preferences.Notification
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -59,7 +60,9 @@ class NewInboxFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbar.setMenu(R.menu.menu_inbox) {
+        binding.toolbar.setMenu(R.menu.menu_inbox) {}
+        binding.editToolbar.setupAsBackButton(this)
+        binding.editToolbar.setMenu(R.menu.menu_inbox_edit) {
             when (it.itemId) {
                 R.id.inboxStarSelected -> viewModel.starSelected()
                 R.id.inboxUnstarSelected -> viewModel.unstarSelected()
@@ -80,6 +83,7 @@ class NewInboxFragment : Fragment() {
 
     private fun applyTheme() {
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
     }
 
@@ -108,6 +112,10 @@ class NewInboxFragment : Fragment() {
         }
 
         popup.show()
+    }
+
+    fun handleBackPress(): Boolean {
+        return viewModel.handleBackPressed()
     }
 
     companion object {

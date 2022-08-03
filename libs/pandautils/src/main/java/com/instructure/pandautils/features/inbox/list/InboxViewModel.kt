@@ -54,7 +54,11 @@ class InboxViewModel @Inject constructor(
 
     val data: LiveData<InboxViewData>
         get() = _data
-    private val _data = MutableLiveData<InboxViewData>(InboxViewData(getTextForScope(InboxApi.Scope.ALL), emptyList()))
+    private val _data = MutableLiveData<InboxViewData>(InboxViewData(getTextForScope(InboxApi.Scope.ALL)))
+
+    val itemViewModels: LiveData<List<InboxEntryItemViewModel>>
+        get() = _itemViewModels
+    private val _itemViewModels = MutableLiveData<List<InboxEntryItemViewModel>>(emptyList())
 
     val events: LiveData<Event<InboxAction>>
         get() = _events
@@ -73,7 +77,7 @@ class InboxViewModel @Inject constructor(
                 val conversations = inboxManager.getConversationsAsync(scope, true).await().dataOrThrow
                 val itemViewModels = createInboxEntriesFromResponse(conversations)
                 _state.postValue(ViewState.Success)
-                _data.postValue(InboxViewData(getTextForScope(scope), itemViewModels))
+                _itemViewModels.postValue(itemViewModels)
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
@@ -108,9 +112,12 @@ class InboxViewModel @Inject constructor(
     }
 
     private fun handleSelectionMode() {
-        val items = _data.value?.messages ?: emptyList()
-        val selectionModeActive = items.count { it.selected } > 0
+        val items = _itemViewModels.value ?: emptyList()
+        val selectedItems = items.count { it.selected }
+        val selectionModeActive = selectedItems > 0
         items.forEach { it.selectionModeActive = selectionModeActive }
+
+        _data.value = _data.value?.copy(selectedItems = selectedItems.toString(), selectionMode = selectionModeActive)
     }
 
     private fun createAvatarUrl(conversation: Conversation): String {
@@ -161,14 +168,15 @@ class InboxViewModel @Inject constructor(
         if (newScope != scope) {
             scope = newScope
             _state.postValue(ViewState.Loading)
-            _data.postValue(InboxViewData(getTextForScope(scope), emptyList()))
+            _data.postValue(InboxViewData(getTextForScope(scope)))
+            _itemViewModels.postValue(emptyList())
             fetchData()
         }
     }
 
     fun starSelected() {
         performBatchOperation("star", { ids ->
-            _data.value?.messages?.forEach {
+            _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = true)
                 it.notifyChange()
             }
@@ -177,7 +185,7 @@ class InboxViewModel @Inject constructor(
 
     fun unstarSelected() {
         performBatchOperation("unstar", { ids ->
-            _data.value?.messages?.forEach {
+            _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = false)
                 it.notifyChange()
             }
@@ -186,7 +194,7 @@ class InboxViewModel @Inject constructor(
 
     fun markAsReadSelected() {
         performBatchOperation("mark_as_read", { ids ->
-            _data.value?.messages?.forEach {
+            _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = false)
                 it.notifyChange()
             }
@@ -195,7 +203,7 @@ class InboxViewModel @Inject constructor(
 
     fun markAsUnreadSelected() {
         performBatchOperation("mark_as_unread", { ids ->
-            _data.value?.messages?.forEach {
+            _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = true)
                 it.notifyChange()
             }
@@ -204,16 +212,16 @@ class InboxViewModel @Inject constructor(
 
     fun deleteSelected() {
         performBatchOperation("destroy", { ids ->
-            val newMessages = _data.value?.messages?.filterNot { ids.contains(it.data.id) } ?: emptyList()
-            _data.value = _data.value?.copy(messages = newMessages)
+            val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
+            _itemViewModels.value = newMessages
             handleSelectionMode()
         })
     }
 
     fun archiveSelected() {
         performBatchOperation("archive", { ids ->
-            val newMessages = _data.value?.messages?.filterNot { ids.contains(it.data.id) } ?: emptyList()
-            _data.value = _data.value?.copy(messages = newMessages)
+            val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
+            _itemViewModels.value = newMessages
             handleSelectionMode()
         })
     }
@@ -221,7 +229,7 @@ class InboxViewModel @Inject constructor(
     private fun performBatchOperation(operation: String, onSuccess: (Set<Long>) -> Unit, onFailure: () -> Unit = {}) {
         viewModelScope.launch {
             try {
-                val ids = _data.value?.messages
+                val ids = _itemViewModels.value
                     ?.filter { it.selected }
                     ?.map { it.data.id } ?: emptyList()
 
@@ -234,6 +242,20 @@ class InboxViewModel @Inject constructor(
             } catch (e: Exception) {
                 onFailure()
             }
+        }
+    }
+
+    fun handleBackPressed(): Boolean {
+        if (_data.value?.selectionMode == true) {
+            _itemViewModels.value?.forEach {
+                it.selected = false
+                it.selectionModeActive = false
+                it.notifyChange()
+            }
+            _data.value = _data.value?.copy(selectedItems = "", selectionMode = false)
+            return true
+        } else {
+            return false
         }
     }
 }
