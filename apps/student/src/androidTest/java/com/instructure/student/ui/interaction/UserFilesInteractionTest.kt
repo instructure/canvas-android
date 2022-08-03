@@ -85,6 +85,7 @@ class UserFilesInteractionTest : StudentTest() {
 
     // Should be able to upload a file from the user's device
     // Mocks the result from the expected intent, then uploads it.
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false)
     fun testUpload_deviceFile() {
@@ -156,6 +157,7 @@ class UserFilesInteractionTest : StudentTest() {
 
     // Should be able to upload a file from the user's photo gallery
     // Mocks the result from the expected intent, then uploads it.
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false)
     fun testUpload_gallery() {
