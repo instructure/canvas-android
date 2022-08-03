@@ -18,24 +18,8 @@ package com.instructure.pandautils.features.inbox.list
 
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
-import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 
-data class InboxViewData(
-    val scope: String,
-    val messages: List<InboxEntryItemViewModel>)
+interface InboxRouter {
 
-data class InboxEntryViewData(
-    val avatarUrl: String,
-    val username: String,
-    val subject: String,
-    val message: String,
-    val date: String,
-    val unread: Boolean,
-    val starred: Boolean,
-    val hasAttachment: Boolean
-)
-
-sealed class InboxAction {
-    data class OpenConversation(val conversation: Conversation, val scope: InboxApi.Scope) : InboxAction()
-    object OpenScopeSelector : InboxAction()
+    fun openConversation(conversation: Conversation, scope: InboxApi.Scope)
 }

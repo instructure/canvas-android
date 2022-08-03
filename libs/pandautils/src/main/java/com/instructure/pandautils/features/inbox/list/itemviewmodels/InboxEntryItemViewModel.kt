@@ -16,11 +16,40 @@
  */
 package com.instructure.pandautils.features.inbox.list.itemviewmodels
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.list.InboxEntryViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class InboxEntryItemViewModel(val data: InboxEntryViewData) : ItemViewModel {
+class InboxEntryItemViewModel(
+    val data: InboxEntryViewData,
+    val openConversationCallback: () -> Unit,
+    val selectionModeCallback: () -> Unit,
+    var selectionModeActive: Boolean = false,
+    @get:Bindable
+    var selected: Boolean = false
+) : ItemViewModel, BaseObservable() {
 
     override val layoutId: Int = R.layout.item_inbox_entry
+
+    fun onClick() {
+        if (selectionModeActive) {
+            changeSelection()
+        } else {
+            openConversationCallback()
+        }
+    }
+
+    fun onLongClick(): Boolean {
+        changeSelection()
+        return true
+    }
+
+    private fun changeSelection() {
+        selected = !selected
+        notifyPropertyChanged(BR.selected)
+        selectionModeCallback()
+    }
 }

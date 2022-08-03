@@ -14,28 +14,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.inbox.list
+package com.instructure.student.features.inbox.list
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
-import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
+import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.student.fragment.InboxConversationFragment
+import com.instructure.student.router.RouteMatcher
 
-data class InboxViewData(
-    val scope: String,
-    val messages: List<InboxEntryItemViewModel>)
+class StudentInboxRouter(private val activity: FragmentActivity) : InboxRouter {
 
-data class InboxEntryViewData(
-    val avatarUrl: String,
-    val username: String,
-    val subject: String,
-    val message: String,
-    val date: String,
-    val unread: Boolean,
-    val starred: Boolean,
-    val hasAttachment: Boolean
-)
+    override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
+        val route = InboxConversationFragment.makeRoute(conversation, InboxApi.conversationScopeToString(scope))
+        RouteMatcher.route(activity, route)
+    }
 
-sealed class InboxAction {
-    data class OpenConversation(val conversation: Conversation, val scope: InboxApi.Scope) : InboxAction()
-    object OpenScopeSelector : InboxAction()
 }

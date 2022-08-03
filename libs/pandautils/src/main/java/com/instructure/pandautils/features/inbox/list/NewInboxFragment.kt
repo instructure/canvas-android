@@ -31,14 +31,19 @@ import com.instructure.pandautils.databinding.FragmentInboxNewBinding
 import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesAction
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewInboxFragment : Fragment() {
 
     private val viewModel: InboxViewModel by viewModels()
+
+    @Inject
+    lateinit var inboxRouter: InboxRouter
 
     private lateinit var binding: FragmentInboxNewBinding
 
@@ -54,6 +59,9 @@ class NewInboxFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.toolbar.setMenu(R.menu.menu_inbox) {
+
+        }
         applyTheme()
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
@@ -70,7 +78,9 @@ class NewInboxFragment : Fragment() {
 
     private fun handleAction(action: InboxAction) {
         when (action) {
-            is InboxAction.OpenConversation -> TODO()
+            is InboxAction.OpenConversation -> {
+                inboxRouter.openConversation(action.conversation, action.scope)
+            }
             InboxAction.OpenScopeSelector -> openScopeSelector()
         }
     }

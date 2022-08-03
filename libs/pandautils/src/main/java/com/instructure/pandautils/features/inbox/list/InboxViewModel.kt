@@ -99,7 +99,17 @@ class InboxViewModel @Inject constructor(
             conversation.hasAttachments() || conversation.hasMedia()
         )
 
-        return InboxEntryItemViewModel(viewData)
+        return InboxEntryItemViewModel(viewData, {
+            _events.postValue(Event(InboxAction.OpenConversation(conversation, scope)))
+        }, {
+            handleSelectionMode()
+        })
+    }
+
+    private fun handleSelectionMode() {
+        val items = _data.value?.messages ?: emptyList()
+        val selectionModeActive = items.count { it.selected } > 0
+        items.forEach { it.selectionModeActive = selectionModeActive }
     }
 
     private fun createAvatarUrl(conversation: Conversation): String {

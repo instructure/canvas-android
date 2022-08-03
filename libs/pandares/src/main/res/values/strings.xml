@@ -1283,4 +1283,10 @@
     </plurals>
 
     <string name="noAnnotationSelected">No annotation selected</string>
+    <string name="deleteSelected">Delete</string>
+    <string name="archiveSelected">Archive</string>
+    <string name="markAsReadSelected">Mark as read</string>
+    <string name="markAsUnreadSelected">Mark as unread</string>
+    <string name="starSelected">Star</string>
+    <string name="unstarSelected">Unstar</string>
 </resources>
