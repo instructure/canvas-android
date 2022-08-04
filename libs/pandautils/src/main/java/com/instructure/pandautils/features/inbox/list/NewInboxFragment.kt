@@ -20,22 +20,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentInboxNewBinding
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesAction
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.addListener
+import com.instructure.pandautils.utils.isVisible
 import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -79,11 +81,44 @@ class NewInboxFragment : Fragment() {
                 handleAction(it)
             }
         }
+
+        viewModel.data.observe(viewLifecycleOwner) { data ->
+            animateToolbars(data.selectionMode)
+        }
+    }
+
+    // Move to data binding?
+    private fun animateToolbars(selectionMode: Boolean) {
+        if (selectionMode && binding.editToolbar.isVisible) return
+        if (!selectionMode && binding.toolbar.isVisible) return
+
+        var currentToolbar: Toolbar? = null
+        var newToolbar: Toolbar? = null
+        if (selectionMode) {
+            currentToolbar = binding.toolbar
+            newToolbar = binding.editToolbar
+        } else {
+            currentToolbar = binding.editToolbar
+            newToolbar = binding.toolbar
+        }
+
+        val fadeOut = AlphaAnimation(1f, 0f)
+        fadeOut.duration = 150
+        fadeOut.addListener(onEnd = { currentToolbar.setVisible(false) })
+
+        val fadeIn = AlphaAnimation(0f, 1f)
+        fadeIn.duration = 150
+        fadeIn.startOffset = 150
+        fadeIn.addListener(onStart = { newToolbar.setVisible(true) })
+
+        currentToolbar.startAnimation(fadeOut)
+        newToolbar.startAnimation(fadeIn)
     }
 
     private fun applyTheme() {
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        binding.toolbarWrapper.setBackgroundColor(ThemePrefs.primaryColor)
         binding.addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
         inboxRouter.attachNavigationIcon(binding.toolbar)
     }

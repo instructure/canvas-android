@@ -772,3 +772,19 @@ fun View.fadeAnimationWithAction(action: () -> Unit) {
 
     startAnimation(fadeOutAnim)
 }
+
+fun Animation.addListener(onStart: (Animation?) -> Unit = {}, onEnd: (Animation?) -> Unit = {}, onRepeat: (Animation?) -> Unit = {}) {
+    this.setAnimationListener(object : Animation.AnimationListener {
+        override fun onAnimationStart(animation: Animation?) {
+            onStart(animation)
+        }
+
+        override fun onAnimationEnd(animation: Animation?) {
+            onEnd(animation)
+        }
+
+        override fun onAnimationRepeat(animation: Animation?) {
+            onRepeat(animation)
+        }
+    })
+}

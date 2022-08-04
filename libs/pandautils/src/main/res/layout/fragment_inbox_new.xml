@@ -48,7 +48,6 @@
                 app:popupTheme="@style/ToolBarPopupStyle"
                 app:theme="@style/ToolBarStyle"
                 app:title="@string/inbox"
-                app:visible="@{!viewModel.data.selectionMode}"
                 tools:targetApi="lollipop" />
 
             <androidx.appcompat.widget.Toolbar
@@ -62,7 +61,6 @@
                 app:popupTheme="@style/ToolBarPopupStyle"
                 app:theme="@style/ToolBarStyle"
                 app:title="@{viewModel.data.selectedItems}"
-                app:visible="@{viewModel.data.selectionMode}"
                 tools:targetApi="lollipop" />
 
         </FrameLayout>
