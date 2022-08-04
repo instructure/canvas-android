@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -62,11 +63,18 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
         holder.bind(itemViewModels[position])
     }
 
-    fun updateItems(items: List<ItemViewModel>?) {
-        itemViewModels = items.orEmpty().toMutableList()
+    fun updateItems(items: List<ItemViewModel>?, useDiffUtil: Boolean = false) {
+        if (useDiffUtil) {
+            val diffResult = DiffUtil.calculateDiff(DiffUtilCallback(itemViewModels, items ?: emptyList()), false)
+            itemViewModels = items.orEmpty().toMutableList()
+            diffResult.dispatchUpdatesTo(this)
+        } else {
+            itemViewModels = items.orEmpty().toMutableList()
+            notifyDataSetChanged()
+        }
+
         val groups = itemViewModels.filterIsInstance<GroupItemViewModel>()
         setupGroups(groups)
-        notifyDataSetChanged()
     }
 
     private fun setupGroups(groups: List<GroupItemViewModel>) {
@@ -99,5 +107,35 @@ class BindableViewHolder(private val binding: ViewDataBinding) : RecyclerView.Vi
 
     fun bind(itemViewModel: ItemViewModel) {
         binding.setVariable(BR.itemViewModel, itemViewModel)
+        binding.executePendingBindings()
+    }
+}
+
+class DiffUtilCallback(
+    val old: List<ItemViewModel>,
+    val new: List<ItemViewModel>
+) : DiffUtil.Callback() {
+    override fun getOldListSize(): Int {
+        return old.size
+    }
+
+    override fun getNewListSize(): Int {
+        return new.size
+    }
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = old[oldItemPosition]
+        val newItem = new[newItemPosition]
+        return newItem.areItemsTheSame(oldItem)
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = old[oldItemPosition]
+        val newItem = new[newItemPosition]
+        return newItem.areContentsTheSame(oldItem)
+    }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        return super.getChangePayload(oldItemPosition, newItemPosition)
     }
 }

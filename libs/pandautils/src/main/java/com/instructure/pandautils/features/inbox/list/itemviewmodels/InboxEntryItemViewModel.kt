@@ -53,4 +53,16 @@ class InboxEntryItemViewModel(
         notifyPropertyChanged(BR.selected)
         selectionModeCallback()
     }
+
+    override fun areContentsTheSame(other: ItemViewModel): Boolean {
+        if (other is InboxEntryItemViewModel) {
+            return data.id == other.data.id
+        }
+
+        return false
+    }
+
+    override fun areItemsTheSame(other: ItemViewModel): Boolean {
+        return other === this
+    }
 }
