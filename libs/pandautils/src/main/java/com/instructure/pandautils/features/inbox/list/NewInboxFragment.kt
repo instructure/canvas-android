@@ -28,6 +28,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.interactions.router.Route
@@ -80,6 +81,7 @@ class NewInboxFragment : Fragment() {
             }
         }
         applyTheme()
+        setUpScrollingBehavior()
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -90,6 +92,19 @@ class NewInboxFragment : Fragment() {
         viewModel.data.observe(viewLifecycleOwner) { data ->
             animateToolbars(data.selectionMode)
         }
+    }
+
+    private fun setUpScrollingBehavior() {
+        binding.inboxRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 && binding.addMessage.visibility == View.VISIBLE) {
+                    binding.addMessage.hide()
+                } else if (dy < 0 && binding.addMessage.visibility != View.VISIBLE) {
+                    binding.addMessage.show()
+                }
+            }
+        })
     }
 
     private fun deleteSelected() {
