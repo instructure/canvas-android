@@ -69,6 +69,15 @@ class AssignmentListByDateRecyclerAdapter(
             // endtodo
             assignmentGroup.assignments
                     .filterWithQuery(searchQuery, Assignment::name)
+                    .filter {
+                        when (filter) {
+                            AssignmentListFilter.ALL -> true
+                            AssignmentListFilter.MISSING -> it.isMissing()
+                            AssignmentListFilter.LATE -> it.submission?.late ?: false
+                            AssignmentListFilter.GRADED -> it.submission?.isGraded ?: false
+                            AssignmentListFilter.UPCOMING -> !it.isSubmitted && it.dueDate?.after(Date()) ?: false
+                        }
+                    }
                     .forEach { assignment ->
                         val dueAt = assignment.dueAt
                         val submission = assignment.submission

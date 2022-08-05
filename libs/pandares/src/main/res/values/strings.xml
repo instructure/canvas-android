@@ -1290,4 +1290,12 @@
     <string name="emailNotificationsWeekly">Weekly</string>
     <string name="emailNotificationsNever">Never</string>
     <string name="selectFrequency">Select frequency</string>
+    <string name="menuTitleFilterAssignments">Filter assignments</string>
+    <string name="filterAssignmentDialogTitle">Filter Assignments</string>
+    <string name="filterAssignmentsDialogCancel">Cancel</string>
+    <string name="filterAssignmentAll">All</string>
+    <string name="filterAssignmentLate">Late</string>
+    <string name="filterAssignmentMissing">Missing</string>
+    <string name="filterAssignmentGraded">Graded</string>
+    <string name="filterAssignmentUpcoming">Upcoming</string>
 </resources>

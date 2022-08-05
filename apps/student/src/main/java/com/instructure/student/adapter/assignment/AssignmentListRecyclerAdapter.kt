@@ -57,6 +57,16 @@ abstract class AssignmentListRecyclerAdapter (
     private var apiJob: WeaveJob? = null
     protected var assignmentGroups: List<AssignmentGroup> = emptyList()
 
+    var filter: AssignmentListFilter = AssignmentListFilter.ALL
+    set(value) {
+        field = value
+        if (isAllPagesLoaded) {
+            clear()
+            populateData()
+            onCallbackFinished(ApiType.CACHE)
+        }
+    }
+
     var searchQuery: String = ""
         set(value) {
             field = value
@@ -230,4 +240,12 @@ abstract class AssignmentListRecyclerAdapter (
         super.cancel()
         apiJob?.cancel()
     }
+}
+
+enum class AssignmentListFilter {
+    ALL,
+    LATE,
+    MISSING,
+    GRADED,
+    UPCOMING
 }
