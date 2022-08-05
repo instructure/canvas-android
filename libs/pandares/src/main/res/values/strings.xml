@@ -1297,4 +1297,6 @@
     <string name="inboxMarkAsUnreadConfirmation">%1$s marked as unread</string>
     <string name="inboxStarredConfirmation">%1$s starred</string>
     <string name="inboxUnstarredConfirmation">%1$s unstarred</string>
+
+    <string name="deleteConfirmation">Are you sure you want to delete these conversations? This action cannot be undone.</string>
 </resources>

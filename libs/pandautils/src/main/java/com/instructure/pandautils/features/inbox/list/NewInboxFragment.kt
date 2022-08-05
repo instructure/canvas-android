@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -39,6 +40,7 @@ import com.instructure.pandautils.utils.isVisible
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -73,7 +75,7 @@ class NewInboxFragment : Fragment() {
                 R.id.inboxUnstarSelected -> viewModel.unstarSelected()
                 R.id.inboxMarkAsReadSelected -> viewModel.markAsReadSelected()
                 R.id.inboxMarkAsUnreadSelected -> viewModel.markAsUnreadSelected()
-                R.id.inboxDeleteSelected -> viewModel.deleteSelected()
+                R.id.inboxDeleteSelected -> deleteSelected()
                 R.id.inboxArchiveSelected -> viewModel.archiveSelected()
             }
         }
@@ -88,6 +90,14 @@ class NewInboxFragment : Fragment() {
         viewModel.data.observe(viewLifecycleOwner) { data ->
             animateToolbars(data.selectionMode)
         }
+    }
+
+    private fun deleteSelected() {
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.deleteConfirmation)
+            .setPositiveButton(R.string.delete) { _, _ -> viewModel.deleteSelected() }
+            .setNegativeButton(R.string.cancel, null)
+            .showThemed()
     }
 
     // TODO Move to data binding?
@@ -139,6 +149,7 @@ class NewInboxFragment : Fragment() {
     private fun animateAvatar(view: View, selected: Boolean) {
         val avatar: ImageView = view.findViewById(R.id.avatar)
         val avatarSelected: ImageView = view.findViewById(R.id.avatarSelected)
+        avatarSelected.setColorFilter(ThemePrefs.buttonColor)
 
         var outView: View
         var inView: View
