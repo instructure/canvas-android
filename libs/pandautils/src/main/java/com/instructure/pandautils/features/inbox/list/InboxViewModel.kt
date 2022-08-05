@@ -181,6 +181,7 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = true)
                 it.notifyChange()
+                _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxStarredConfirmation, ids.size))))
             }
         })
     }
@@ -190,6 +191,7 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(starred = false)
                 it.notifyChange()
+                _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size))))
             }
         })
     }
@@ -199,6 +201,7 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = false)
                 it.notifyChange()
+                _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size))))
             }
         })
     }
@@ -208,6 +211,7 @@ class InboxViewModel @Inject constructor(
             _itemViewModels.value?.forEach {
                 if (ids.contains(it.data.id)) it.data = it.data.copy(unread = true)
                 it.notifyChange()
+                _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size))))
             }
         })
     }
@@ -217,6 +221,7 @@ class InboxViewModel @Inject constructor(
             val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
             _itemViewModels.value = newMessages
             handleSelectionMode()
+            _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxDeletedConfirmation, ids.size))))
         })
     }
 
@@ -225,10 +230,11 @@ class InboxViewModel @Inject constructor(
             val newMessages = _itemViewModels.value?.filterNot { ids.contains(it.data.id) } ?: emptyList()
             _itemViewModels.value = newMessages
             handleSelectionMode()
+            _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxArchivedConfirmation, ids.size))))
         })
     }
 
-    private fun performBatchOperation(operation: String, onSuccess: (Set<Long>) -> Unit, onFailure: () -> Unit = {}) {
+    private fun performBatchOperation(operation: String, onSuccess: (Set<Long>) -> Unit) {
         viewModelScope.launch {
             try {
                 val ids = _itemViewModels.value
@@ -239,10 +245,10 @@ class InboxViewModel @Inject constructor(
                 if (dataResult.isSuccess) {
                     onSuccess(ids.toSet())
                 } else {
-                    onFailure()
+                    _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxOperationFailed))))
                 }
             } catch (e: Exception) {
-                onFailure()
+                _events.postValue(Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxOperationFailed))))
             }
         }
     }

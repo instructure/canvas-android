@@ -27,6 +27,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
@@ -127,11 +128,10 @@ class NewInboxFragment : Fragment() {
 
     private fun handleAction(action: InboxAction) {
         when (action) {
-            is InboxAction.OpenConversation -> {
-                inboxRouter.openConversation(action.conversation, action.scope)
-            }
+            is InboxAction.OpenConversation -> inboxRouter.openConversation(action.conversation, action.scope)
             InboxAction.OpenScopeSelector -> openScopeSelector()
             is InboxAction.ItemSelectionChanged -> animateAvatar(action.view, action.selected)
+            is InboxAction.ShowConfirmationSnackbar -> Snackbar.make(requireView(), action.text, Snackbar.LENGTH_LONG).show()
         }
     }
 

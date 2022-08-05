@@ -1289,4 +1289,12 @@
     <string name="markAsUnreadSelected">Mark as unread</string>
     <string name="starSelected">Star</string>
     <string name="unstarSelected">Unstar</string>
+
+    <string name="inboxOperationFailed">Failed to perform operation</string>
+    <string name="inboxDeletedConfirmation">%1$s deleted</string>
+    <string name="inboxArchivedConfirmation">%1$s archived</string>
+    <string name="inboxMarkAsReadConfirmation">%1$s marked as read</string>
+    <string name="inboxMarkAsUnreadConfirmation">%1$s marked as unread</string>
+    <string name="inboxStarredConfirmation">%1$s starred</string>
+    <string name="inboxUnstarredConfirmation">%1$s unstarred</string>
 </resources>
