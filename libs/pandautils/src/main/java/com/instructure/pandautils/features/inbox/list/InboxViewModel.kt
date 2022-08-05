@@ -270,4 +270,8 @@ class InboxViewModel @Inject constructor(
             return false
         }
     }
+
+    fun createNewMessage() {
+        _events.postValue(Event(InboxAction.CreateNewMessage))
+    }
 }

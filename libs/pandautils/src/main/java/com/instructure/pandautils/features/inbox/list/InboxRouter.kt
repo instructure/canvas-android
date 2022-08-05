@@ -25,4 +25,6 @@ interface InboxRouter {
     fun openConversation(conversation: Conversation, scope: InboxApi.Scope)
 
     fun attachNavigationIcon(toolbar: Toolbar)
+
+    fun routeToNewMessage()
 }

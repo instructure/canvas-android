@@ -157,6 +157,7 @@ class NewInboxFragment : Fragment() {
             InboxAction.OpenScopeSelector -> openScopeSelector()
             is InboxAction.ItemSelectionChanged -> animateAvatar(action.view, action.selected)
             is InboxAction.ShowConfirmationSnackbar -> Snackbar.make(requireView(), action.text, Snackbar.LENGTH_LONG).show()
+            InboxAction.CreateNewMessage -> inboxRouter.routeToNewMessage()
         }
     }
 

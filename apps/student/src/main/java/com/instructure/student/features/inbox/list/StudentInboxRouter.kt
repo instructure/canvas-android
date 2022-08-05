@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.router.RouteMatcher
 
@@ -36,5 +37,10 @@ class StudentInboxRouter(private val activity: FragmentActivity) : InboxRouter {
         if (activity is NavigationActivity) {
             activity.attachNavigationIcon(toolbar)
         }
+    }
+
+    override fun routeToNewMessage() {
+        val route = InboxComposeMessageFragment.makeRoute()
+        RouteMatcher.route(activity, route)
     }
 }
