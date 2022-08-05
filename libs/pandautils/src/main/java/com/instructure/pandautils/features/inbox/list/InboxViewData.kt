@@ -29,14 +29,20 @@ data class InboxViewData(
 
 data class InboxEntryViewData(
     val id: Long,
-    val avatarUrl: String,
-    val username: String,
+    val avatar: AvatarViewData,
+    val title: String,
     val subject: String,
     val message: String,
     val date: String,
     val unread: Boolean,
     val starred: Boolean,
     val hasAttachment: Boolean
+)
+
+data class AvatarViewData(
+    val avatarUrl: String,
+    val firstUserName: String,
+    val group: Boolean
 )
 
 sealed class InboxAction {

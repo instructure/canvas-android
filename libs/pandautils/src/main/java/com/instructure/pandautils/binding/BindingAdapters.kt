@@ -35,11 +35,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.inbox.list.AvatarViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
+import de.hdodenhof.circleimageview.CircleImageView
 import java.net.URLDecoder
 
 @BindingAdapter(value = ["itemViewModels", "onItemsAdded", "shouldUpdate"], requireAll = false)
@@ -195,6 +198,15 @@ fun setBottomMargin(view: View, bottomMargin: Int) {
 @BindingAdapter(value = ["userAvatar", "userName"], requireAll = true)
 fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: String?) {
     ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl)
+}
+
+@BindingAdapter("avatar")
+fun bindUserAvatar(imageView: CircleImageView, avatar: AvatarViewData) {
+    if (avatar.group) {
+        imageView.setImageResource(R.drawable.ic_group)
+    } else {
+        ProfileUtils.loadAvatarForUser(imageView, avatar.firstUserName, avatar.avatarUrl)
+    }
 }
 
 @BindingAdapter("accessibleTouchTarget")

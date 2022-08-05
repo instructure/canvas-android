@@ -56,8 +56,7 @@
                     android:layout_height="@dimen/avatar_size"
                     android:layout_marginStart="4dp"
                     android:padding="4dp"
-                    app:userAvatar="@{itemViewModel.data.avatarUrl}"
-                    app:userName="@{itemViewModel.data.username}"/>
+                    app:avatar="@{itemViewModel.data.avatar}" />
 
                 <ImageView
                     android:id="@+id/avatarSelected"
@@ -110,7 +109,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textSize="16sp"
-                    android:text="@{itemViewModel.data.username}"
+                    android:text="@{itemViewModel.data.title}"
                     tools:text="Emily WithAReallyLongLastName" />
 
                 <ImageView

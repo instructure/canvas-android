@@ -95,8 +95,8 @@ class InboxViewModel @Inject constructor(
     private fun createItemViewModelFromConversation(conversation: Conversation): InboxEntryItemViewModel {
         val viewData = InboxEntryViewData(
             conversation.id,
-            createAvatarUrl(conversation),
-            createMessageUsername(conversation),
+            createAvatarData(conversation),
+            createMessageTitle(conversation),
             conversation.subject ?: "",
             conversation.lastMessagePreview ?: "",
             createDateText(conversation),
@@ -122,8 +122,12 @@ class InboxViewModel @Inject constructor(
         _data.value = _data.value?.copy(selectedItems = selectedItems.toString(), selectionMode = selectionModeActive)
     }
 
-    private fun createAvatarUrl(conversation: Conversation): String {
-        return conversation.avatarUrl ?: ""
+    private fun createAvatarData(conversation: Conversation): AvatarViewData {
+        return AvatarViewData(
+            conversation.avatarUrl ?: "",
+            conversation.participants[0].name ?: "",
+            conversation.participants.size > 2
+        )
     }
 
     private fun createDateText(conversation: Conversation): String {
@@ -131,7 +135,7 @@ class InboxViewModel @Inject constructor(
         return DateHelper.dateToDayMonthYearString(context, date) ?: ""
     }
 
-    private fun createMessageUsername(conversation: Conversation): String {
+    private fun createMessageTitle(conversation: Conversation): String {
         if (conversation.isMonologue(apiPrefs.user?.id ?: 0)) return resources.getString(R.string.monologue)
 
         val users = conversation.participants
