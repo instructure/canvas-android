@@ -21,6 +21,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -87,13 +89,13 @@ class NewInboxFragment : Fragment() {
         }
     }
 
-    // Move to data binding?
+    // TODO Move to data binding?
     private fun animateToolbars(selectionMode: Boolean) {
         if (selectionMode && binding.editToolbar.isVisible) return
         if (!selectionMode && binding.toolbar.isVisible) return
 
-        var currentToolbar: Toolbar? = null
-        var newToolbar: Toolbar? = null
+        var currentToolbar: Toolbar
+        var newToolbar: Toolbar
         if (selectionMode) {
             currentToolbar = binding.toolbar
             newToolbar = binding.editToolbar
@@ -129,7 +131,36 @@ class NewInboxFragment : Fragment() {
                 inboxRouter.openConversation(action.conversation, action.scope)
             }
             InboxAction.OpenScopeSelector -> openScopeSelector()
+            is InboxAction.ItemSelectionChanged -> animateAvatar(action.view, action.selected)
         }
+    }
+
+    // TODO Move to data binding?
+    private fun animateAvatar(view: View, selected: Boolean) {
+        val avatar: ImageView = view.findViewById(R.id.avatar)
+        val avatarSelected: ImageView = view.findViewById(R.id.avatarSelected)
+
+        var outView: View
+        var inView: View
+        if (selected) {
+            outView = avatar
+            inView = avatarSelected
+        } else {
+            outView = avatarSelected
+            inView = avatar
+        }
+
+        val outAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.flip_out_anim)
+        outAnimation.duration = 150
+        outAnimation.addListener(onEnd = { outView.setVisible(false) })
+
+        val inAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.flip_in_anim)
+        inAnimation.duration = 150
+        inAnimation.startOffset = 150
+        inAnimation.addListener(onStart = { inView.setVisible(true) })
+
+        outView.startAnimation(outAnimation)
+        inView.startAnimation(inAnimation)
     }
 
     private fun openScopeSelector() {

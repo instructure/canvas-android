@@ -107,7 +107,8 @@ class InboxViewModel @Inject constructor(
 
         return InboxEntryItemViewModel(viewData, {
             _events.postValue(Event(InboxAction.OpenConversation(conversation, scope)))
-        }, {
+        }, { view, selected ->
+            _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))
             handleSelectionMode()
         })
     }

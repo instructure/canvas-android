@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.inbox.list
 
+import android.view.View
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
@@ -41,4 +42,5 @@ data class InboxEntryViewData(
 sealed class InboxAction {
     data class OpenConversation(val conversation: Conversation, val scope: InboxApi.Scope) : InboxAction()
     object OpenScopeSelector : InboxAction()
+    data class ItemSelectionChanged(val view: View, val selected: Boolean) : InboxAction()
 }

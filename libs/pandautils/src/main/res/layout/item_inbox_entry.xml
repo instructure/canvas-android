@@ -35,8 +35,8 @@
         android:padding="4dp"
         android:foreground="?attr/selectableItemBackground"
         android:background="@{itemViewModel.selected ? @color/backgroundMedium : @color/backgroundLightest}"
-        android:onClick="@{() -> itemViewModel.onClick()}"
-        android:onLongClick="@{() -> itemViewModel.onLongClick()}"
+        android:onClick="@{(view) -> itemViewModel.onClick(view)}"
+        android:onLongClick="@{(view) -> itemViewModel.onLongClick(view)}"
         android:longClickable="true">
 
         <FrameLayout
@@ -45,14 +45,31 @@
             android:clipToPadding="false"
             android:padding="8dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/avatar"
-                android:layout_width="@dimen/avatar_size"
-                android:layout_height="@dimen/avatar_size"
-                android:layout_marginStart="4dp"
-                android:padding="4dp"
-                app:userAvatar="@{itemViewModel.data.avatarUrl}"
-                app:userName="@{itemViewModel.data.username}"/>
+            <FrameLayout
+                android:id="@+id/avatarWrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size"
+                    android:layout_marginStart="4dp"
+                    android:padding="4dp"
+                    app:userAvatar="@{itemViewModel.data.avatarUrl}"
+                    app:userName="@{itemViewModel.data.username}"/>
+
+                <ImageView
+                    android:id="@+id/avatarSelected"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size"
+                    android:layout_marginStart="4dp"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_selected"
+                    android:visibility="invisible"
+                    app:tint="@color/textInfo" />
+
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/unreadMark"
