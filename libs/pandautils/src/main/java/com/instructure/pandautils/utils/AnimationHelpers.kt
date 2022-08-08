@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.util
+package com.instructure.pandautils.utils
 
 import android.animation.Animator
 import android.animation.ObjectAnimator

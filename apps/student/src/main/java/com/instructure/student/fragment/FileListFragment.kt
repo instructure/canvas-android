@@ -44,7 +44,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.FileFolderCallback
@@ -406,8 +406,8 @@ class FileListFragment : ParentFragment(), Bookmarkable {
 
     private fun uploadFile() {
         folder?.let {
-            val bundle = UploadFilesDialog.createContextBundle(null, canvasContext, it.id)
-            UploadFilesDialog.show(fragmentManager, bundle) { _ -> }
+            val bundle = FileUploadDialogFragment.createContextBundle(null, canvasContext, it.id)
+            FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
         }
     }
 

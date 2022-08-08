@@ -35,8 +35,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_REPLY
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.student.R
@@ -76,12 +76,12 @@ class DiscussionsReplyFragment : ParentFragment() {
                     val attachments = ArrayList<FileSubmitObject>()
                     if (attachment != null) attachments.add(attachment!!)
 
-                    val bundle = UploadFilesDialog.createDiscussionsBundle(attachments)
-                    UploadFilesDialog.show(fragmentManager, bundle) { event, attachment ->
-                        if (event == UploadFilesDialog.EVENT_ON_FILE_SELECTED) {
+                    val bundle = FileUploadDialogFragment.createDiscussionsBundle(attachments)
+                    FileUploadDialogFragment.newInstance(bundle, pickerCallback = { event, attachment ->
+                        if (event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
                             handleAttachment(attachment)
                         }
-                    }
+                    }).show(childFragmentManager, FileUploadDialogFragment.TAG)
                 } else {
                     NoInternetConnectionDialog.show(requireFragmentManager())
                 }

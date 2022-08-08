@@ -17,6 +17,7 @@
 package com.instructure.pandautils.di
 
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Resources
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -69,5 +70,11 @@ class ApplicationModule {
     @Singleton
     fun provideNotificationManager(@ApplicationContext context: Context): NotificationManager {
         return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
+
+    @Provides
+    @Singleton
+    fun provideContentResolver(@ApplicationContext context: Context): ContentResolver {
+        return context.contentResolver
     }
 }

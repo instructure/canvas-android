@@ -30,7 +30,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
-import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -294,8 +294,8 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 }
 
                 R.id.menu_attachment -> {
-                    val bundle = UploadFilesDialog.createAttachmentsBundle(ArrayList())
-                    UploadFilesDialog.show(fragmentManager, bundle) { _ -> }
+                    val bundle = FileUploadDialogFragment.createAttachmentsBundle(ArrayList())
+                    FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
                     true
                 }
 

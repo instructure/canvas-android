@@ -96,6 +96,8 @@ dependencies {
 
     implementation Libs.CAMERA_VIEW
 
+    implementation Libs.LOTTIE
+
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
     implementation Libs.ANDROIDX_BROWSER

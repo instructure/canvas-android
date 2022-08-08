@@ -43,8 +43,8 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
-import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -68,17 +68,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.any
-import kotlin.collections.arrayListOf
-import kotlin.collections.firstOrNull
-import kotlin.collections.forEach
-import kotlin.collections.forEachIndexed
-import kotlin.collections.hashMapOf
-import kotlin.collections.isNotEmpty
-import kotlin.collections.last
-import kotlin.collections.plusAssign
-import kotlin.collections.toList
 
 @ScreenView(SCREEN_VIEW_CREATE_DISCUSSION)
 class CreateDiscussionFragment : BasePresenterFragment<
@@ -554,13 +543,13 @@ class CreateDiscussionFragment : BasePresenterFragment<
         // set the description here. When we ask for permission to use the camera the app can call readySetGo and reset the description
         mDescription = descriptionRCEView.html
 
-        val bundle = UploadFilesDialog.createDiscussionsBundle(ArrayList())
-        UploadFilesDialog.show(fragmentManager, bundle) { event, attachment ->
-            if(event == UploadFilesDialog.EVENT_ON_FILE_SELECTED) {
+        val bundle = FileUploadDialogFragment.createDiscussionsBundle(ArrayList())
+        FileUploadDialogFragment.newInstance(bundle, pickerCallback = { event, attachment ->
+            if(event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
                 presenter.attachment = attachment
                 updateAttachmentUI()
             }
-        }
+        }).show(childFragmentManager, FileUploadDialogFragment.TAG)
     }
 
     override fun startSavingDiscussion() {

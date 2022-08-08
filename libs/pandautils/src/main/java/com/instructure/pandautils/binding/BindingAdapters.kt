@@ -18,13 +18,19 @@ package com.instructure.pandautils.binding
 
 import android.graphics.Bitmap
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
+import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.Spinner
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -130,8 +136,8 @@ fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: 
         }
     } else {
         Glide.with(imageView)
-            .load(imageUrl)
-            .into(imageView)
+                .load(imageUrl)
+                .into(imageView)
     }
 }
 
@@ -146,6 +152,7 @@ fun addBorderToContainer(view: View, borderColor: Int?, borderWidth: Int?, backg
     border.cornerRadius = borderCornerRadius?.toPx?.toFloat() ?: 4.toPx.toFloat()
     view.background = border
 }
+
 @BindingAdapter("layout_constraintWidth_percent")
 fun bindConstraintWidthPercentage(view: View, percentage: Float) {
     val params = view.layoutParams as ConstraintLayout.LayoutParams
@@ -182,7 +189,7 @@ fun bindAccesibilityDelegate(view: View, clickDescription: String) {
 fun setBottomMargin(view: View, bottomMargin: Int) {
     val layoutParams: ViewGroup.MarginLayoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
     layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin,
-        layoutParams.rightMargin, bottomMargin)
+            layoutParams.rightMargin, bottomMargin)
     view.layoutParams = layoutParams
 }
 
@@ -203,4 +210,20 @@ fun bindUrl(canvasWebView: CanvasWebView, url: String?) {
     url?.let {
         canvasWebView.loadUrl(it)
     }
+}
+
+@BindingAdapter(value = ["itemViewModels", "layoutRes"], requireAll = false)
+fun bindSpinner(spinner: Spinner, itemViewModels: List<ItemViewModel>?, @LayoutRes layoutRes: Int) {
+    itemViewModels?.let {
+        spinner.adapter = BindableSpinnerAdapter(
+                spinner.context,
+                layoutRes,
+                itemViewModels
+        )
+    }
+}
+
+@BindingAdapter("ovalColor")
+fun bindOvalColorBackground(imageView: ImageView, @ColorInt ovalColor: Int) {
+    imageView.background = ShapeDrawable(OvalShape()).apply { paint.color = ovalColor }
 }

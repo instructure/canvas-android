@@ -44,8 +44,10 @@ import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesContinueDialog
-import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
+import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
+import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.SubmissionContentAdapter
@@ -290,9 +292,9 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == UploadFilesDialog.CAMERA_PIC_REQUEST ||
-                requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
-                requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY) {
+        if (requestCode == CAMERA_PIC_REQUEST ||
+                requestCode == PICK_FILE_FROM_DEVICE ||
+                requestCode == PICK_IMAGE_GALLERY) {
             //File Dialog Fragment will not be notified of onActivityResult(), alert manually
             OnActivityResults(ActivityResult(requestCode, resultCode, data), null).postSticky()
         }

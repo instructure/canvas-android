@@ -210,7 +210,7 @@
         </activity>
 
         <activity
-            android:name=".activity.ShareFileUploadActivity"
+            android:name=".features.shareextension.StudentShareExtensionActivity"
             android:label="@string/canvas"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:excludeFromRecents="true"

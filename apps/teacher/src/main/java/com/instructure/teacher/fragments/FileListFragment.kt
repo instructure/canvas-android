@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -32,7 +31,7 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
@@ -40,8 +39,6 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.FileListAdapter
 import com.instructure.teacher.dialog.CreateFolderDialog
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
-import com.instructure.pandautils.utils.FileFolderDeletedEvent
-import com.instructure.pandautils.utils.FileFolderUpdatedEvent
 import com.instructure.teacher.factory.FileListPresenterFactory
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.holders.FileFolderViewHolder
@@ -232,9 +229,9 @@ class FileListFragment : BaseSyncFragment<
         addFab.setOnClickListener { animateFabs() }
         addFileFab.setOnClickListener {
             animateFabs()
-            handleClick(requireFragmentManager()) {
-                val bundle = UploadFilesDialog.createContextBundle(null, mCanvasContext, presenter.currentFolder.id)
-                UploadFilesDialog.show(fragmentManager, bundle) { _ -> }
+            handleClick(childFragmentManager) {
+                val bundle = FileUploadDialogFragment.createContextBundle(null, mCanvasContext, presenter.currentFolder.id)
+                FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
             }
         }
 

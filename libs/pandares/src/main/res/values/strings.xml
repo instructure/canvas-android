@@ -1276,6 +1276,7 @@
     <string name="themeSelectorChangeLater">You can change it later in app settings</string>
 
     <string name="grabAnnotationTool">Grab</string>
+    <string name="fileUpload">File Upload</string>
 
     <plurals name="a11y_inboxUnreadCount">
         <item quantity="one">%s unread message</item>
