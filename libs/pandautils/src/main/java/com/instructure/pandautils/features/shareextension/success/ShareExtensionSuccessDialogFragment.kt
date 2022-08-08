@@ -73,6 +73,8 @@ class ShareExtensionSuccessDialogFragment : DialogFragment() {
                 handleAction(it)
             }
         }
+
+        binding.doneButton.setTextColor(ThemePrefs.buttonColor)
     }
 
     private fun handleAction(action: ShareExtensionSuccessAction) {
