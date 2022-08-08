@@ -102,7 +102,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //region Test grabbing all courses
     //
 
-    val allCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available"
+    val allCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available"
     val allCoursesPath = "/api/v1/courses"
     val allCoursesFieldInfo = listOf(
             // Evidently, permissions info is *not* returned from this call, even though include[]=permissions is specified
