@@ -60,8 +60,6 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
 
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
-            val crashlytics = FirebaseCrashlytics.getInstance();
-
             // Determine if user can masquerade
             if (ApiPrefs.canBecomeUser == null) {
                 if (ApiPrefs.domain.startsWith("siteadmin", true)) {
@@ -117,14 +115,9 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
             }
 
             if (!ApiPrefs.isMasquerading) {
-                // Set logged user details
-                if (Logger.canLogUserDetails()) {
-                    Logger.d("User detail logging allowed. Setting values.")
-                    crashlytics.setUserId("UserID: ${ApiPrefs.user?.id.toString()} User Domain: ${ApiPrefs.domain}")
-                } else {
-                    Logger.d("User detail logging disallowed. Clearing values.")
-                    crashlytics.setUserId("")
-                }
+                // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
+                val crashlytics = FirebaseCrashlytics.getInstance();
+                crashlytics.setUserId("")
             }
 
             // get unread count of conversations
