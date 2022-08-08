@@ -60,6 +60,8 @@ data class Course(
         val accessRestrictedByDate: Boolean = false,
         @SerializedName("image_download_url")
         val imageUrl: String? = null,
+        @SerializedName("banner_image_download_url")
+        val bannerImageUrl: String? = null,
         @SerializedName("has_weighted_grading_periods")
         val isWeightedGradingPeriods: Boolean = false,
         @SerializedName("has_grading_periods")
