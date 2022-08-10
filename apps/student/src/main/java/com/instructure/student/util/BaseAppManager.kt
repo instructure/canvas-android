@@ -20,9 +20,6 @@ import android.os.Build
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import com.google.android.gms.analytics.GoogleAnalytics
-import com.google.android.gms.analytics.HitBuilders
-import com.google.android.gms.analytics.Tracker
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.*
@@ -52,12 +49,6 @@ import io.flutter.embedding.engine.dart.DartExecutor
 import javax.inject.Inject
 
 open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
-
-    // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-    private val defaultTracker: Tracker by lazy {
-        val analytics = GoogleAnalytics.getInstance(this)
-        analytics.newTracker(R.xml.analytics)
-    }
 
     override fun onCreate() {
         if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
@@ -118,94 +109,31 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
     override fun onCanvasTokenRefreshed() = FlutterComm.sendUpdatedLogin()
 
     override fun trackButtonPressed(buttonName: String?, buttonValue: Long?) {
-        if (buttonName == null) return
 
-        if (buttonValue == null) {
-            defaultTracker.send(
-                    HitBuilders.EventBuilder()
-                            .setCategory("UI Actions")
-                            .setAction("Button Pressed")
-                            .setLabel(buttonName)
-                            .build()
-            )
-        } else {
-            defaultTracker.send(
-                    HitBuilders.EventBuilder()
-                            .setCategory("UI Actions")
-                            .setAction("Button Pressed")
-                            .setLabel(buttonName)
-                            .setValue(buttonValue)
-                            .build()
-            )
-        }
     }
 
     override fun trackScreen(screenName: String?) {
-        if (screenName == null) return
 
-        val tracker = defaultTracker
-        tracker.setScreenName(screenName)
-        tracker.send(HitBuilders.ScreenViewBuilder().build())
     }
 
     override fun trackEnrollment(enrollmentType: String?) {
-        if (enrollmentType == null) return
 
-        defaultTracker.send(
-                HitBuilders.AppViewBuilder()
-                        .setCustomDimension(1, enrollmentType)
-                        .build()
-        )
     }
 
     override fun trackDomain(domain: String?) {
-        if (domain == null) return
 
-        defaultTracker.send(
-                HitBuilders.AppViewBuilder()
-                        .setCustomDimension(2, domain)
-                        .build()
-        )
     }
 
     override fun trackEvent(category: String?, action: String?, label: String?, value: Long) {
-        if (category == null || action == null || label == null) return
 
-        val tracker = defaultTracker
-        tracker.send(
-                HitBuilders.EventBuilder()
-                        .setCategory(category)
-                        .setAction(action)
-                        .setLabel(label)
-                        .setValue(value)
-                        .build()
-        )
     }
 
     override fun trackUIEvent(action: String?, label: String?, value: Long) {
-        if (action == null || label == null) return
 
-        defaultTracker.send(
-                HitBuilders.EventBuilder()
-                        .setAction(action)
-                        .setLabel(label)
-                        .setValue(value)
-                        .build()
-        )
     }
 
     override fun trackTiming(category: String?, name: String?, label: String?, duration: Long) {
-        if (category == null || name == null || label == null) return
 
-        val tracker = defaultTracker
-        tracker.send(
-                HitBuilders.TimingBuilder()
-                        .setCategory(category)
-                        .setLabel(label)
-                        .setVariable(name)
-                        .setValue(duration)
-                        .build()
-        )
     }
 
     private fun initPSPDFKit() {

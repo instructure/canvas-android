@@ -135,7 +135,9 @@ dependencies {
     api Libs.PAPERDB
 
     // Firebase
-    implementation platform(Libs.FIREBASE_BOM)
+    implementation platform(Libs.FIREBASE_BOM) {
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
+    }
     implementation Libs.FIREBASE_CORE
     implementation Libs.FIREBASE_CONFIG
 
