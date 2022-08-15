@@ -56,7 +56,7 @@
     <string name="noAttemptsLeft">Aucune tentative restante</string>
     <string name="resubmitAssignment">Soumettre à nouveau le travail</string>
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">L’envoi d\'un ou plusieurs fichiers a échoué. Vérifiez l’état de votre connexion internet, puis réessayez.</string>
     <string name="submissionUploadByteProgress">%1$s de %2$s</string>
@@ -72,7 +72,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URLs utilisant « http:// »</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Entrez une URL ici pour votre soumission</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer de l’audio</string>
     <string name="recordVideo">Enregistrer la vidéo</string>
     <string name="a11y_textSubmissionEditor">Éditeur de soumission de texte</string>
@@ -930,7 +930,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Ce travail n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Ce travail n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>O</item>
@@ -958,7 +958,6 @@
     <string name="latePenalty">Pénalité de retard (-%s)</string>
     <string name="finalGrade">Note Finale</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">S\'ouvre dans une vue web.</string>
@@ -1093,7 +1092,7 @@
     <string name="closeRecordingView">Fermer la vue enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur est survenue lors de la tentative d\'afficher le replay.</string>
+    <string name="errorShowingVideoReplay">Une erreur est survenue lors de la tentative d&apos;afficher le replay.</string>
     <string name="errorSubmittingMediaComment">Une erreur est survenue lors de la tentative de soumettre votre commentaire au format média.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>
@@ -1270,4 +1269,8 @@
     <string name="themeSelectorSave">Enregistrer</string>
     <string name="themeSelectorChangeLater">Vous pourrez modifier le thème ultérieurement dans les paramètres de l’application</string>
     <string name="grabAnnotationTool">Attraper</string>
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s message non lu</item>
+        <item quantity="other">%s Messages non lus</item>
+    </plurals>
 </resources>

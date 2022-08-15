@@ -958,7 +958,6 @@
     <string name="latePenalty">Förseningsbestraffning (-%s)</string>
     <string name="finalGrade">Totalt omdöme</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Öppnas i webbvy</string>
@@ -1270,4 +1269,8 @@
     <string name="themeSelectorSave">Spara</string>
     <string name="themeSelectorChangeLater">Du kan ändra det sedan i appinställningarna</string>
     <string name="grabAnnotationTool">Ta tag i</string>
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s oläst meddelande</item>
+        <item quantity="other">%s olästa meddelanden</item>
+    </plurals>
 </resources>

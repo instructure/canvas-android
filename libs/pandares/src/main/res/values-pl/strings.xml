@@ -976,7 +976,6 @@
     <string name="latePenalty">Kara za spóźnienie (-%s)</string>
     <string name="finalGrade">Ocena końcowa</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Otwiera się w widoku sieciowym</string>
@@ -1298,4 +1297,10 @@
     <string name="themeSelectorSave">Zapisz</string>
     <string name="themeSelectorChangeLater">Można zmienić go później w Ustawieniach aplikacji</string>
     <string name="grabAnnotationTool">Chwyć</string>
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s nieprzeczytana wiadomość</item>
+        <item quantity="few">%s nieprzeczytane wiadomości</item>
+        <item quantity="many">%s nieprzeczytane wiadomości</item>
+        <item quantity="other">%s nieprzeczytane wiadomości</item>
+    </plurals>
 </resources>

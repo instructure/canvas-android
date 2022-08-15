@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -69,4 +69,5 @@
 
     <string name="rce_emptyUrlError">Url cannot be blank</string>
     <string name="rce_httpNotAllowed">Only https urls are accepted</string>
+    <string name="rce_dialogAltText">Add alt text for screen readers</string>
 </resources>

@@ -958,7 +958,6 @@
     <string name="latePenalty">Sanctie indien te laat (-%s)</string>
     <string name="finalGrade">Eindcijfer</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Wordt geopend in webview</string>
@@ -1270,4 +1269,8 @@
     <string name="themeSelectorSave">Opslaan</string>
     <string name="themeSelectorChangeLater">Je kunt dit later wijzigen in de app-instellingen.</string>
     <string name="grabAnnotationTool">Pakken</string>
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s ongelezen bericht</item>
+        <item quantity="other">%s ongelezen berichten</item>
+    </plurals>
 </resources>

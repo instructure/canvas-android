@@ -958,7 +958,6 @@
     <string name="latePenalty">Penale ritardo (-%s)</string>
     <string name="finalGrade">Voto finale</string>
 
-    <string name="moreThan99">Più di 99</string>
     <string name="max_count">Più di 99</string>
 
     <string name="opensInWebView">Si apre in visualizzazione web</string>
@@ -1270,4 +1269,8 @@
     <string name="themeSelectorSave">Salva</string>
     <string name="themeSelectorChangeLater">Puoi modificarlo successivamente nelle impostazioni dell’app</string>
     <string name="grabAnnotationTool">Afferra</string>
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s messaggio non letto</item>
+        <item quantity="other">%s messaggi non letti</item>
+    </plurals>
 </resources>

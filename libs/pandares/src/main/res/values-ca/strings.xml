@@ -958,7 +958,6 @@
     <string name="latePenalty">Sanció per endarreriment (-%s)</string>
     <string name="finalGrade">Nota final</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">S\'obre en vista web</string>
@@ -1271,4 +1270,8 @@
     <string name="themeSelectorSave">Desa</string>
     <string name="themeSelectorChangeLater">Podeu canviar-lo més endavant a la configuració de l’aplicació</string>
     <string name="grabAnnotationTool">Agafa</string>
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s missatge sense llegir</item>
+        <item quantity="other">%s missatges sense llegir</item>
+    </plurals>
 </resources>

@@ -70,4 +70,5 @@
 
     <string name="rce_emptyUrlError">Url ปล่อยว่างไม่ได้</string>
     <string name="rce_httpNotAllowed">เฉพาะ https url ที่ใช้ได้</string>
+    <string name="rce_dialogAltText">เพิ่มข้อความเผื่อเลือกสำหรับระบบอ่านหน้าจอ</string>
 </resources>

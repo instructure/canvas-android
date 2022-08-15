@@ -958,7 +958,6 @@
     <string name="latePenalty">Forsinkelsesstraff (-%s)</string>
     <string name="finalGrade">Sluttvurdering</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Åpne i nettvisning</string>
@@ -1271,4 +1270,8 @@
     <string name="themeSelectorSave">Lagre</string>
     <string name="themeSelectorChangeLater">Du kan endre det senere i appinnstillinger</string>
     <string name="grabAnnotationTool">Grip</string>
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s uleste melding</item>
+        <item quantity="other">%s uleste meldinger</item>
+    </plurals>
 </resources>

@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Z drsnikom poiščite vsa orodja za urejanje.</string>
     <string name="rce_emptyUrlError">URL ne more ostati prazen</string>
     <string name="rce_httpNotAllowed">Sprejemljivi so samo URL-ji, ki ste začnejo s »https«</string>
+    <string name="rce_dialogAltText">Dodaj nadomestno besedilo za bralnike zaslona</string>
 </resources>

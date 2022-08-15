@@ -976,7 +976,6 @@
     <string name="latePenalty">Снижение оценки за опоздание (-%s)</string>
     <string name="finalGrade">Итоговая оценка</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Открывается в веб-представлении</string>
@@ -1298,4 +1297,10 @@
     <string name="themeSelectorSave">Сохранить</string>
     <string name="themeSelectorChangeLater">Вы можете изменить этот параметр позднее в настройках приложения</string>
     <string name="grabAnnotationTool">Захват</string>
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s непрочитанное сообщение</item>
+        <item quantity="few">%s непрочитанных сообщений(-я)</item>
+        <item quantity="many">%s непрочитанных сообщений(-я)</item>
+        <item quantity="other">%s непрочитанных сообщений(-я)</item>
+    </plurals>
 </resources>

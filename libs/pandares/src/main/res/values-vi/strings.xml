@@ -958,7 +958,6 @@
     <string name="latePenalty">Hình phạt trễ (-%s)</string>
     <string name="finalGrade">Điểm Cuối Cùng</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Mở trong dạng xem web</string>
@@ -1271,4 +1270,8 @@
     <string name="themeSelectorSave">Lưu</string>
     <string name="themeSelectorChangeLater">Bạn có thể thay đổi sau trong cài đặt ứng dụng</string>
     <string name="grabAnnotationTool">Nắm lấy</string>
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s tin nhắn chưa đọc</item>
+        <item quantity="other">%s tin nhắn chưa đọc</item>
+    </plurals>
 </resources>
