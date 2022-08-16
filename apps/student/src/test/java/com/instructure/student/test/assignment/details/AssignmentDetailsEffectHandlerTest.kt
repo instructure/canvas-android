@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
@@ -64,7 +63,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     private val assignmentId = 2468L
     private val view: AssignmentDetailsView = mockk(relaxed = true)
     private val context: Activity = mockk(relaxed = true)
-    private val firebase: FirebaseAnalytics = mockk(relaxed = true)
     private var effectHandler =
         AssignmentDetailsEffectHandler(context, assignmentId).apply { view = this@AssignmentDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<AssignmentDetailsEvent> = mockk(relaxed = true)
@@ -101,8 +99,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         // Connect after mocks, so database is setup properly
         connection = effectHandler.connect(eventConsumer)
-
-        Analytics.firebase = firebase
 
         mockkObject(CourseManager)
         every { CourseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
@@ -229,11 +225,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             eventConsumer.accept(expectedEvent)
         }
 
-        verify {
-            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT, null)
-        }
-
-        confirmVerified(firebase)
         confirmVerified(eventConsumer)
     }
 
@@ -274,11 +265,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             eventConsumer.accept(expectedEvent)
         }
 
-        verify {
-            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT, null)
-        }
-
-        confirmVerified(firebase)
         confirmVerified(eventConsumer)
     }
 
@@ -332,11 +318,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             eventConsumer.accept(expectedEvent)
         }
 
-        verify {
-            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT, null)
-        }
-
-        confirmVerified(firebase)
         confirmVerified(eventConsumer)
     }
 
@@ -369,11 +350,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             eventConsumer.accept(expectedEvent)
         }
 
-        verify {
-            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSION, null)
-        }
-
-        confirmVerified(firebase)
         confirmVerified(eventConsumer)
     }
 
@@ -623,11 +599,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             eventConsumer.accept(expectedEvent)
         }
 
-        verify {
-            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZ, null)
-        }
-
-        confirmVerified(firebase)
         confirmVerified(eventConsumer)
     }
 

@@ -50,8 +50,6 @@ abstract class AppManager : Application() {
         super.onCreate()
         AndroidThreeTen.init(this)
         Paper.init(this)
-        // Permissions missing lint suppressed - we have the permissions in the app manifests
-        Analytics.firebase = FirebaseAnalytics.getInstance(this)
         EventBus.getDefault().register(this)
         logTokenAnalytics()
     }

@@ -30,7 +30,6 @@ object Versions {
     /* Others */
     const val APOLLO = "2.5.9"
     const val CRASHLYTICS = "17.2.1"
-    const val FIREBASE_ANALYTICS = "17.4.1"
     const val PSPDFKIT = "8.1.0"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
@@ -78,7 +77,6 @@ object Libs {
 
     /* Firebase */
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:29.3.0"
-    const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging"
     const val FIREBASE_CORE = "com.google.firebase:firebase-core"
@@ -86,7 +84,6 @@ object Libs {
     const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk"
 
     /* Play Services */
-    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:18.0.1"
     const val PLAY_CORE = "com.google.android.play:core:${Versions.PLAY_CORE}"
     const val PLAY_CORE_KTX = "com.google.android.play:core-ktx:${Versions.PLAY_CORE_KTX}"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
