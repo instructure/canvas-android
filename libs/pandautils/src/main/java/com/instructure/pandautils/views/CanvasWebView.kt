@@ -484,9 +484,9 @@ class CanvasWebView @JvmOverloads constructor(
      * @param title
      * @return
      */
-    fun loadHtml(html: String, title: String?, backgroundColorRes: Int = R.color.backgroundLightest): String {
+    fun loadHtml(html: String, title: String?, backgroundColorRes: Int = R.color.backgroundLightest, baseUrl: String? = null): String {
         val result = formatHtml(html, title, backgroundColorRes)
-        loadDataWithBaseURL(getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
+        loadDataWithBaseURL(baseUrl ?: getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
         return result
     }
 
