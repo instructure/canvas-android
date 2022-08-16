@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.presenters
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -95,6 +96,8 @@ class SpeedGraderGradePresenter(var submission: Submission?, val assignment: Ass
         viewCallback?.updateGradeText()
         AssignmentGradedEvent(assignment.id).post() //post bus event
         SubmissionUpdatedEvent(newSubmission).post()
+        CanvasRestAdapter.clearCacheUrls("courses/${course.id}/assignment_groups")
+        CanvasRestAdapter.clearCacheUrls("courses/${course.id}/assignments/${assignment.id}")
     }
 
 }
