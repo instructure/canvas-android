@@ -170,7 +170,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
-        val route = Route(CalendarEventFragment::class.java, canvasContext, CalendarEventFragment.createArgs(canvasContext, scheduleItem))
+        val route = Route(null, CalendarEventFragment::class.java, canvasContext, CalendarEventFragment.createArgs(canvasContext, scheduleItem))
         RouteMatcher.route(context, route)
     }
 
