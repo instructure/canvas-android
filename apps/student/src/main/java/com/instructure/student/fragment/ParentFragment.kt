@@ -508,7 +508,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
     fun openMedia(canvasContext: CanvasContext, url: String, filename: String?) {
         val owner = activity ?: return
         onMainThread {
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, url, filename)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, filename, canvasContext)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
         }
     }
