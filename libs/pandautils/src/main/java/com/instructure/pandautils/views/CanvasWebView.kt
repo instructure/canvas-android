@@ -36,7 +36,10 @@ import android.app.Activity
 import android.content.*
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.*
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
+import android.os.Parcelable
 import android.provider.MediaStore
 import android.text.Html
 import android.util.AttributeSet
@@ -61,7 +64,6 @@ import com.instructure.canvasapi2.utils.FileUtils.getAssetsFile
 import com.instructure.canvasapi2.utils.Logger.e
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.FileUploadUtils.getExternalCacheDir
 import com.instructure.pandautils.video.VideoWebChromeClient
 import java.io.File
 import java.io.UnsupportedEncodingException
@@ -609,7 +611,7 @@ class CanvasWebView @JvmOverloads constructor(
         val cameraIntents: MutableList<Intent> = ArrayList()
         if (allowRecording) {
             val fileName = "vid_" + System.currentTimeMillis() + ".mp4"
-            val file = File(getExternalCacheDir(context), fileName)
+            val file = File(FileUploadUtils.getExternalCacheDir(context), fileName)
             val cameraImageUri = FileProvider.getUriForFile(
                 context,
                 context.packageName + Const.FILE_PROVIDER_AUTHORITY,

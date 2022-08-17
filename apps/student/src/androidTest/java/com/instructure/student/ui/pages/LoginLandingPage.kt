@@ -16,16 +16,18 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.withChild
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.*
 import com.instructure.student.R
+import org.hamcrest.CoreMatchers.allOf
 
 @Suppress("unused")
 class LoginLandingPage : BasePage() {
@@ -63,6 +65,22 @@ class LoginLandingPage : BasePage() {
 
     fun assertDisplaysPreviousLogins() {
         previousLoginTitleText.assertDisplayed()
+    }
+
+    fun assertNotDisplaysPreviousLogins() {
+        previousLoginTitleText.assertNotDisplayed()
+    }
+
+    fun assertPreviousLoginUserDisplayed(userName: String) {
+        onView(withText(userName)).assertDisplayed()
+    }
+
+    fun assertPreviousLoginUserNotExist(userName: String) {
+        onView(withText(userName)).check(doesNotExist())
+    }
+
+    fun removeUserFromPreviousLogins(userName: String) {
+        onView(allOf(withId(R.id.removePreviousUser), hasSibling(withChild(withText(userName))))).click()
     }
 
     fun loginWithPreviousUser(previousUser: CanvasUserApiModel) {

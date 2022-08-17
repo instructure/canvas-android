@@ -27,9 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:paddingStart="16dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
+        android:paddingEnd="16dp">
 
         <TextView
             android:id="@+id/title"
@@ -39,7 +37,14 @@
             android:layout_gravity="start|bottom"
             android:text="@{itemViewModel.data.title}"
             android:textColor="@color/textDark"
+            android:layout_marginBottom="8dp"
             tools:text="Course Activities" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_gravity="bottom"
+            android:background="@color/backgroundMedium" />
 
     </FrameLayout>
 </layout>

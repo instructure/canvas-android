@@ -28,7 +28,8 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
@@ -94,7 +95,11 @@ class ApplicationSettingsFragment : ParentFragment() {
         }
 
         pushNotifications.onClick {
-            addFragment(NotificationPreferencesFragment.newInstance())
+            addFragment(PushNotificationPreferencesFragment.newInstance())
+        }
+
+        emailNotifications.onClick {
+            addFragment(EmailNotificationPreferencesFragment.newInstance())
         }
 
         about.onClick {

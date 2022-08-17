@@ -32,6 +32,8 @@ import kotlin.reflect.KProperty
 /** Show a toast with a default length of Toast.LENGTH_SHORT */
 fun Fragment.toast(messageResId: Int, length: Int = Toast.LENGTH_SHORT) { if(context != null) Toast.makeText(context, messageResId, length).show() }
 
+fun Fragment.toast(message: String, length: Int = Toast.LENGTH_SHORT) { if(context != null) Toast.makeText(context, message, length).show() }
+
 fun Fragment.getModuleItemId(): Long? {
     return arguments?.getLong(Const.MODULE_ITEM_ID, -1)?.takeUnless { it < 0 } ?: parentFragment?.getModuleItemId()
 }

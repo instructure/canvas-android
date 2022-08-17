@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2022 - present Instructure, Inc.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.instructure.canvasapi2.managers.NotificationPreferencesManager" />
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.notification.preferences.itemviewmodels.EmailNotificationCategoryItemViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        android:gravity="center"
+        android:minHeight="?attr/listPreferredItemHeight"
+        android:onClick="@{() -> itemViewModel.onClick()}"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:id="@+id/appThemeTitle"
+            style="@style/TextFont.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@{itemViewModel.data.title}"
+            tools:text="Due Date" />
+
+        <TextView
+            android:id="@+id/appThemeStatus"
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{itemViewModel.frequency}"
+            android:textColor="@color/textDark"
+            android:textSize="12sp"
+            tools:text="Immediately" />
+
+    </LinearLayout>
+</layout>

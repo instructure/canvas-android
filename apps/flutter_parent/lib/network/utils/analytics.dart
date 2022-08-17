@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:device_info/device_info.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
@@ -79,12 +78,11 @@ class AnalyticsParamConstants {
 }
 
 class Analytics {
-  FirebaseAnalytics get _analytics => FirebaseAnalytics();
 
-  /// Set the current screen in Firebase Analytics
+  /// Set the current screen in analytics
   void setCurrentScreen(String screenName) async {
     if (kReleaseMode) {
-      await _analytics.setCurrentScreen(screenName: screenName);
+
     }
 
     if (DebugFlags.isDebug) {
@@ -92,7 +90,7 @@ class Analytics {
     }
   }
 
-  /// Log an event to Firebase analytics (only in release mode).
+  /// Log an event to analytics (only in release mode).
   /// If isDebug, it will also print to the console
   ///
   /// Params
@@ -100,7 +98,7 @@ class Analytics {
   /// * [extras] a map of keys [AnalyticsParamConstants] to values. Use sparingly, we only get 25 unique parameters
   void logEvent(String event, {Map<String, dynamic> extras = const {}}) async {
     if (kReleaseMode) {
-      await _analytics.logEvent(name: event, parameters: extras);
+
     }
 
     if (DebugFlags.isDebug) {
@@ -122,14 +120,6 @@ class Analytics {
 
   /// Sets environment properties such as the build type and SDK int. This only needs to be called once per session.
   void setEnvironmentProperties() async {
-    var androidInfo = await DeviceInfoPlugin().androidInfo;
-    await _analytics.setUserProperty(
-      name: AnalyticsEventConstants.USER_PROPERTY_BUILD_TYPE,
-      value: kReleaseMode ? 'release' : 'debug',
-    );
-    await _analytics.setUserProperty(
-      name: AnalyticsEventConstants.USER_PROPERTY_OS_VERSION,
-      value: androidInfo.version.sdkInt.toString(),
-    );
+
   }
 }
