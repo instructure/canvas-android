@@ -420,7 +420,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun loadHTMLTopic(html: String, contentDescription: String?) {
-        discussionTopicHeaderWebView.loadHtml(html, contentDescription)
+        discussionTopicHeaderWebView.loadHtml(html, contentDescription, baseUrl = mDiscussionTopicHeader.htmlUrl)
     }
 
     private fun loadHTMLReplies(html: String, contentDescription: String? = null) {

@@ -377,7 +377,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     }
 
     private fun loadQuizHTML(html: String, contentDescription: String?) {
-        instructionsWebView.loadHtml(html, contentDescription)
+        instructionsWebView.loadHtml(html, contentDescription, baseUrl = mQuiz.htmlUrl)
     }
 
     private fun setupListeners(quiz: Quiz) {

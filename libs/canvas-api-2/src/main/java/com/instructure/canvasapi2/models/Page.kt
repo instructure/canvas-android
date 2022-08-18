@@ -43,7 +43,9 @@ data class Page(
         @SerializedName("published")
         var published: Boolean = false,
         @SerializedName("editing_roles")
-        var editingRoles: String? = null
+        var editingRoles: String? = null,
+        @SerializedName("html_url")
+        var htmlUrl: String? = null
 ) : CanvasModel<Page>(), Parcelable {
     override val comparisonDate get() = updatedAt
     override val comparisonString get() = title
