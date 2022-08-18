@@ -69,7 +69,7 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openPeopleTab() {
-        scrollOpen("People", scrollPosition = 4)
+        scrollOpen("People", scrollPosition = 3)
     }
 
     fun clickSettingsButton() {
