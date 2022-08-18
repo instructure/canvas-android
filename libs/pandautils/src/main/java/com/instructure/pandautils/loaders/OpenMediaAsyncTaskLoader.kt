@@ -322,7 +322,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             return openMediaBundle
         }
 
-        fun createBundle(canvasContext: CanvasContext?, url: String?, filename: String?): Bundle {
+        fun createBundle(url: String?, filename: String?, canvasContext: CanvasContext? = null): Bundle {
             val openMediaBundle = Bundle()
             openMediaBundle.putString(Const.URL, url)
             openMediaBundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext)

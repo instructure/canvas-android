@@ -182,7 +182,7 @@ class PageDetailsFragment : BasePresenterFragment<
     }
 
     private fun loadPageHtml(html: String, contentDescription: String?) {
-        canvasWebView.loadHtml(html, contentDescription)
+        canvasWebView.loadHtml(html, contentDescription, baseUrl = mPage.htmlUrl)
     }
 
     override fun onError(stringId: Int) {

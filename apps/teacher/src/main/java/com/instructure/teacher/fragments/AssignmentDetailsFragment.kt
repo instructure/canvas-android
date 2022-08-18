@@ -298,7 +298,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     }
 
     private fun loadAssignmentHTML(html: String, contentDescription: String?) {
-        descriptionWebView.loadHtml(html, contentDescription)
+        descriptionWebView.loadHtml(html, contentDescription, baseUrl = mAssignment.htmlUrl)
     }
 
     private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(assignment) {

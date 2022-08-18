@@ -248,7 +248,8 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             discussionHeaderViewState = discussionHeaderViewState,
             allowedAttempts = assignment.allowedAttempts,
             usedAttempts = assignment.submission?.attempt ?: 0,
-            showSubmissionsAndRubric = showSubmissionsAndRubric
+            showSubmissionsAndRubric = showSubmissionsAndRubric,
+            htmlUrl = assignment.htmlUrl
         )
     }
 
