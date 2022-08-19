@@ -130,7 +130,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                RouteMatcher.openMedia(activity, url)
+                RouteMatcher.openMedia(activity, url, filename)
             }
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
