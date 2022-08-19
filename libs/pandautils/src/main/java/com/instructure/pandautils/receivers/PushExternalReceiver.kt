@@ -103,14 +103,14 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
                 context,
                 notification.notificationId,
                 contentIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         }
 
         private fun createDeleteIntent(context: Context, notificationId: Int): PendingIntent? {
             val deleteIntent = Intent(context, PushDeleteReceiver::class.java)
             deleteIntent.putExtra(ID_PUSH_NOTIFICATION, notificationId)
-            return PendingIntent.getBroadcast(context, notificationId, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getBroadcast(context, notificationId, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         }
 
         private fun createGroup(context: Context, @ColorRes appColor: Int, channelId: String): Notification? {

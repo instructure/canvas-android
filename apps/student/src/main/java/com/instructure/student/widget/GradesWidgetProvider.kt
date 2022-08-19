@@ -44,9 +44,22 @@ class GradesWidgetProvider : CanvasWidgetProvider() {
         remoteViews.setTextColor(R.id.widget_title, textColor)
 
         val listViewItemIntent = Intent(context, InterwebsToApplication::class.java)
-        remoteViews.setPendingIntentTemplate(R.id.contentList, PendingIntent.getActivity(context, CanvasWidgetProvider.cycleBit++, listViewItemIntent, PendingIntent.FLAG_UPDATE_CURRENT))
+        remoteViews.setPendingIntentTemplate(
+            R.id.contentList,
+            PendingIntent.getActivity(
+                context,
+                CanvasWidgetProvider.cycleBit++,
+                listViewItemIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        )
 
-        val pendingRefreshIntent = PendingIntent.getBroadcast(context, refreshIntentID, getRefreshIntent(appWidgetManager), PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingRefreshIntent = PendingIntent.getBroadcast(
+            context,
+            refreshIntentID,
+            getRefreshIntent(appWidgetManager),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         remoteViews.setOnClickPendingIntent(R.id.widget_refresh, pendingRefreshIntent)
     }
 
