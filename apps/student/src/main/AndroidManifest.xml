@@ -81,7 +81,8 @@
             android:clearTaskOnLaunch="true"
             android:launchMode="singleTop"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/LoginFlowTheme.Splash_Student">
+            android:theme="@style/LoginFlowTheme.Splash_Student"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -105,7 +106,8 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/canvas"
-            android:theme="@style/CanvasMaterialTheme_Default">
+            android:theme="@style/CanvasMaterialTheme_Default"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="com.instructure.student.ROUTING_ACTIVITY"/>
@@ -146,7 +148,8 @@
             android:excludeFromRecents="true"
             android:theme="@style/Theme.Transparent.NoAnimationOrBackground"
             android:label="@string/student_app_name"
-            android:configChanges="keyboardHidden|orientation">
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true">
             <intent-filter>
                 <data
                     android:host="*.instructure.com"
@@ -214,7 +217,8 @@
             android:label="@string/canvas"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:excludeFromRecents="true"
-            android:theme="@style/CanvasMaterialTheme_Default.Translucent">
+            android:theme="@style/CanvasMaterialTheme_Default.Translucent"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -238,7 +242,8 @@
 
         <activity
             android:theme="@style/Theme.Transparent"
-            android:name=".activity.WidgetSetupActivity">
+            android:name=".activity.WidgetSetupActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -248,7 +253,8 @@
             android:name=".activity.BookmarkShortcutActivity"
             android:icon="@drawable/ic_bookmark_shortcut"
             android:label="@string/student_app_name"
-            android:theme="@style/CanvasMaterialTheme_DefaultNoTransparency">
+            android:theme="@style/CanvasMaterialTheme_DefaultNoTransparency"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -259,7 +265,8 @@
 
         <activity
             android:name=".activity.StudentViewStarterActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.instructure.student.STUDENT_VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -280,7 +287,8 @@
             android:name=".util.FileDownloadJobIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name=".receivers.InitializeReceiver">
+        <receiver android:name=".receivers.InitializeReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -301,7 +309,8 @@
         <!-- To do widget -->
         <receiver
             android:name=".widget.TodoWidgetProvider"
-            android:label="@string/todoWidgetTitleLong">
+            android:label="@string/todoWidgetTitleLong"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -321,7 +330,8 @@
         <!-- Grades Widget -->
         <receiver
             android:name=".widget.GradesWidgetProvider"
-            android:label="@string/gradesWidgetTitleLong">
+            android:label="@string/gradesWidgetTitleLong"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -341,7 +351,8 @@
         <!-- Notifications widget-->
         <receiver
             android:name=".widget.NotificationWidgetProvider"
-            android:label="@string/notificationWidgetTitleLong">
+            android:label="@string/notificationWidgetTitleLong"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />

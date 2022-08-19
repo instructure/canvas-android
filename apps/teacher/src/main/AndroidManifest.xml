@@ -60,7 +60,8 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/LoginFlowTheme.Splash_Teacher"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -93,7 +94,8 @@
             android:launchMode="singleTop"
             android:excludeFromRecents="true"
             android:noHistory="true"
-            android:theme="@style/LoginFlowTheme.Splash_Teacher">
+            android:theme="@style/LoginFlowTheme.Splash_Teacher"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -223,7 +225,8 @@
 
         <!--Push Notifications-->
 
-        <receiver android:name=".receivers.InitializeReceiver">
+        <receiver android:name=".receivers.InitializeReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
