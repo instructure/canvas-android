@@ -25,9 +25,11 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.activities.MasterDetailActivity
 import com.instructure.teacher.events.SyllabusUpdatedEvent
 import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.syllabus.SyllabusEvent
@@ -73,7 +75,10 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         syllabusTabLayout.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
 
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        if (context !is MasterDetailActivity) {
+            toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        }
+
         toolbar.title = context.getString(com.instructure.pandares.R.string.syllabus)
         toolbar.subtitle = canvasContext.name
 
