@@ -466,6 +466,7 @@ class DiscussionsInteractionTest : StudentTest() {
         val attachment = createHtmlAttachment(data, attachmentHtml)
         discussionEntry.attachments = mutableListOf(attachment)
 
+        Thread.sleep(3000) //allow some time to the reply to propagate
         discussionDetailsPage.assertReplyDisplayed(discussionEntry)
         discussionDetailsPage.assertReplyAttachment(discussionEntry)
         discussionDetailsPage.previewAndCheckReplyAttachment(discussionEntry,
