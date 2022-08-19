@@ -163,7 +163,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     }
 
     fun assertMarkedAsDoneShown() {
-        onViewWithText(R.string.schedule_marked_as_done).assertDisplayed()
+        waitForViewWithText(R.string.schedule_marked_as_done).assertDisplayed()
     }
 
     fun assertMarkedAsDoneNotShown() {
