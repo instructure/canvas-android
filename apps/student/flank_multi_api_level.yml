@@ -14,15 +14,15 @@ gcloud:
   test-targets:
   - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
   device:
-  - model: Nexus6P
+  - model: Pixel2
     version: 27
     locale: en_US
     orientation: portrait
-  - model: Nexus6P
+  - model: Pixel2
     version: 28
     locale: en_US
     orientation: portrait
-  - model: Nexus6P
+  - model: Pixel2
     version: 29
     locale: en_US
     orientation: portrait
