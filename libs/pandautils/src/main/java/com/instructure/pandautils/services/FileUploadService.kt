@@ -325,8 +325,8 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         const val ACTION_DISCUSSION_ATTACHMENT = "ACTION_DISCUSSION_ATTACHMENT"
         const val ACTION_SUBMISSION_COMMENT = "ACTION_SUBMISSION_COMMENT"
 
-        private const val MESSAGE_ATTACHMENT_PATH = "conversation attachments"
-        private const val DISCUSSION_ATTACHMENT_PATH = "discussion attachments"
+        const val MESSAGE_ATTACHMENT_PATH = "conversation attachments"
+        const val DISCUSSION_ATTACHMENT_PATH = "discussion attachments"
         const val ACTION_CANCEL_UPLOAD = "ACTION_CANCEL_UPLOAD"
 
         fun shutDown(context: Context) {

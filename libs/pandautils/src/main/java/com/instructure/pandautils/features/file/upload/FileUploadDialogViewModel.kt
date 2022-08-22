@@ -22,6 +22,7 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.work.Data
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -59,9 +60,12 @@ class FileUploadDialogViewModel @Inject constructor(
     private var quizId: Long = -1L
     private var position: Int = -1
 
+    private var uris = mutableListOf<Uri>()
+
     fun setData(assignment: Assignment?, file: Uri?, uploadType: FileUploadType, canvasContext: CanvasContext, parentFolderId: Long, quizQuestionId: Long, position: Int, quizId: Long) {
         this.assignment = assignment
         val submitObject = file?.let {
+            uris.add(it)
             getUriContents(it)
         }
         this.submitObjects = submitObject?.let { mutableListOf(it) } ?: mutableListOf()
@@ -88,6 +92,7 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     fun addFile(fileUri: Uri) {
+        uris.add(fileUri)
         val submitObject = getUriContents(fileUri)
         submitObject?.let {
             if (it.errorMessage.isNullOrEmpty()) {
@@ -116,7 +121,9 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     private fun onRemoveFileClicked(fullPath: String) {
-        submitObjects.removeAt(submitObjects.indexOfFirst { it.fullPath == fullPath })
+        val index = submitObjects.indexOfFirst { it.fullPath == fullPath }
+        submitObjects.removeAt(index)
+        uris.removeAt(index)
         updateItems()
     }
 
@@ -222,50 +229,51 @@ class FileUploadDialogViewModel @Inject constructor(
 
             val fileList = ArrayList(submitObjects)
 
-            // Start the upload service
-            var bundle: Bundle? = null
-            var action = ""
-
-            when (uploadType) {
+            val data: Data = when (uploadType) {
                 FileUploadType.USER -> {
-                    bundle = FileUploadService.getUserFilesBundle(fileList, parentFolderId)
-                    action = FileUploadService.ACTION_USER_FILE
+                    FileUploadWorker.getUserFilesBundle(uris, parentFolderId)
+                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_USER_FILE)
+                            .build()
                 }
                 FileUploadType.COURSE -> {
-                    bundle = FileUploadService.getCourseFilesBundle(fileList, canvasContext.id, parentFolderId)
-                    action = FileUploadService.ACTION_COURSE_FILE
+                    FileUploadWorker.getCourseFilesBundle(uris, canvasContext.id, parentFolderId)
+                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_COURSE_FILE)
+                            .build()
                 }
                 FileUploadType.GROUP -> {
-                    bundle = FileUploadService.getCourseFilesBundle(fileList, canvasContext.id, parentFolderId)
-                    action = FileUploadService.ACTION_GROUP_FILE
+                    FileUploadWorker.getCourseFilesBundle(uris, canvasContext.id, parentFolderId)
+                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_GROUP_FILE)
+                            .build()
                 }
                 FileUploadType.MESSAGE -> {
-                    bundle = FileUploadService.getUserFilesBundle(fileList, null)
-                    action = FileUploadService.ACTION_MESSAGE_ATTACHMENTS
+                    FileUploadWorker.getUserFilesBundle(uris, null)
+                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_MESSAGE_ATTACHMENTS)
+                            .build()
                 }
                 FileUploadType.DISCUSSION -> {
-                    bundle = FileUploadService.getUserFilesBundle(fileList, null)
-                    action = FileUploadService.ACTION_DISCUSSION_ATTACHMENT
+                    FileUploadWorker.getUserFilesBundle(uris, null)
+                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_DISCUSSION_ATTACHMENT)
+                            .build()
                 }
                 FileUploadType.QUIZ -> {
-                    bundle = FileUploadService.getQuizFileBundle(fileList, parentFolderId, quizQuestionId, position, canvasContext.id, quizId)
-                    action = FileUploadService.ACTION_QUIZ_FILE
+                    FileUploadWorker.getQuizFileBundle(uris, parentFolderId, quizQuestionId, position, canvasContext.id, quizId)
+                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_QUIZ_FILE)
+                            .build()
                 }
                 FileUploadType.SUBMISSION_COMMENT -> {
-                    bundle = FileUploadService.getSubmissionCommentBundle(fileList, canvasContext.id, assignment!!)
-                    action = FileUploadService.ACTION_SUBMISSION_COMMENT
+                    FileUploadWorker.getSubmissionCommentBundle(uris, canvasContext.id, assignment!!)
+                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_SUBMISSION_COMMENT)
+                            .build()
                 }
                 else -> {
-                    if (assignment != null) {
-                        bundle = FileUploadService.getAssignmentSubmissionBundle(fileList, canvasContext.id, assignment!!)
-                        action = FileUploadService.ACTION_ASSIGNMENT_SUBMISSION
-                    }
+                    FileUploadWorker.getAssignmentSubmissionBundle(uris, canvasContext.id, assignment!!)
+                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_ASSIGNMENT_SUBMISSION)
+                            .build()
+
                 }
             }
 
-            if (bundle != null) {
-                _events.postValue(Event(FileUploadAction.StartUpload(bundle, action)))
-            }
+            _events.postValue(Event(FileUploadAction.StartUpload(data)))
         }
     }
 

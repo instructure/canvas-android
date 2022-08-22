@@ -19,7 +19,6 @@ package com.instructure.pandautils.features.file.upload
 import android.Manifest
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -34,12 +33,12 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.work.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
-import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -191,15 +190,21 @@ class FileUploadDialogFragment : DialogFragment() {
             is FileUploadAction.PickPhoto -> pickFromGallery()
             is FileUploadAction.PickFile -> pickFromFiles()
             is FileUploadAction.ShowToast -> Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
-            is FileUploadAction.StartUpload -> startUpload(action.bundle, action.action)
+            is FileUploadAction.StartUpload -> startUpload(action.data)
         }
     }
 
-    private fun startUpload(bundle: Bundle, action: String) {
-        val intent = Intent(requireContext(), FileUploadService::class.java)
-        intent.action = action
-        intent.putExtras(bundle)
-        requireActivity().startService(intent)
+    private fun startUpload(data: Data) {
+        val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
+                .setInputData(data)
+                .build()
+        WorkManager.getInstance(requireContext())
+                .enqueue(worker)
+//
+//        val intent = Intent(requireContext(), FileUploadService::class.java)
+//        intent.action = action
+//        intent.putExtras(bundle)
+//        requireActivity().startService(intent)
         dialogCallback?.invoke(EVENT_ON_UPLOAD_BEGIN)
         dismiss()
     }
