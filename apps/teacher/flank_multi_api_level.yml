@@ -12,7 +12,7 @@ gcloud:
   record-video: true
   timeout: 60m
   test-targets:
-    - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
+    - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
   device:
     - model: Nexus6P
       version: 27
@@ -26,7 +26,10 @@ gcloud:
       version: 29
       locale: en_US
       orientation: portrait
-
+    - model: Pixel4
+      version: 30
+      locale: en_US
+      orientation: portrait
 flank:
   testShards: 10
   testRuns: 1
