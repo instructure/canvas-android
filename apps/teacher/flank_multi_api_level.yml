@@ -26,10 +26,7 @@ gcloud:
       version: 29
       locale: en_US
       orientation: portrait
-    - model: NexusLowRes
-      version: 30
-      locale: en_US
-      orientation: portrait
+
 flank:
   testShards: 10
   testRuns: 1
