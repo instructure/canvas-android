@@ -46,6 +46,7 @@ class SpeedGraderGradePage : BasePage() {
 
     fun enterNewGrade(grade: String) {
         gradeEditText.replaceText(grade)
+        Thread.sleep(3000) //some tests are flaky because waitForViewWithText does not work properly with this dialog
         waitForViewWithText(getStringFromResource(android.R.string.ok)).click()
     }
 
