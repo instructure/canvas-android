@@ -72,6 +72,7 @@ class _CalendarMonthState extends State<CalendarMonth> {
 
   @override
   Widget build(BuildContext context) {
+    weekStarts = CalendarMonth.generateWeekStarts(widget.year, widget.month);
     final weekWidgets = weekStarts.mapIndexed<Widget>((index, weekStart) {
       final weekWidget = CalendarWeek(
         firstDay: weekStart,
