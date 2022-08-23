@@ -18,30 +18,72 @@ package com.instructure.pandautils.features.file.upload
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.FileUploadUtils
-import java.io.File
+import com.instructure.pandautils.R
+import com.instructure.pandautils.services.FileUploadService
+import com.instructure.pandautils.utils.*
 
 class FileUploadWorker(private val context: Context, private val workerParameters: WorkerParameters) : CoroutineWorker(context, workerParameters) {
+
+    private val courseId = inputData.getLong(Const.COURSE_ID, INVALID_ID)
+    private val assignmentId = inputData.getLong(Const.ASSIGNMENT_ID, INVALID_ID)
+    private val quizQuestionId = inputData.getLong(Const.QUIZ_ANSWER_ID, INVALID_ID)
+    private val quizId = inputData.getLong(Const.QUIZ, INVALID_ID)
+    private val position = inputData.getInt(Const.POSITION, INVALID_ID.toInt())
+    private val parentFolderId = inputData.getLong(Const.PARENT_FOLDER_ID, INVALID_ID)
+    private val notificationId = notificationId(inputData)
+    private val submissionId = inputData.getLong(Const.SUBMISSION_ID, INVALID_ID)
+    private val action = inputData.getString(FILE_SUBMIT_ACTION)
+
     override suspend fun doWork(): Result {
-        val courseId = workerParameters.inputData.getLong(Const.COURSE_ID, INVALID_ID)
-        val assignmentId = workerParameters.inputData.getLong(Const.ASSIGNMENT_ID, INVALID_ID)
-        val quizQuestionId = workerParameters.inputData.getLong(Const.QUIZ_ANSWER_ID, INVALID_ID)
-        val quizId = workerParameters.inputData.getLong(Const.QUIZ, INVALID_ID)
-        val position = workerParameters.inputData.getInt(Const.POSITION, INVALID_ID.toInt())
-        val parentFolderId = workerParameters.inputData.getLong(Const.PARENT_FOLDER_ID, INVALID_ID)
-        val notificationId = notificationId(workerParameters.inputData)
-        val submissionId = workerParameters.inputData.getLong(Const.SUBMISSION_ID, INVALID_ID)
+        try {
+            val filePaths = inputData.getStringArray(FILE_PATHS)
 
-        val filePaths = workerParameters.inputData.getStringArray(FILE_PATHS)
+            val fileSubmitObjects = filePaths?.let {
+                getFileSubmitObjects(it)
+            } ?: TODO("Handle missing files")
 
-        val fileSubmitObjects = filePaths?.map {
+            var groupId: Long? = null
+            if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
+                val assignment = getAssignment(assignmentId, courseId)
+                groupId = getGroupId(assignment, courseId)
+            }
+
+            val attachments = uploadFiles(fileSubmitObjects, groupId)
+
+            val attachmentsIds = attachments.map { it.id }.plus(inputData.getLongArray(Const.ATTACHMENTS)?.toList() ?: emptyList())
+
+            when (action) {
+                ACTION_ASSIGNMENT_SUBMISSION -> {
+                    submitAttachmentsToSubmission(attachmentsIds)?.let {
+
+                    } ?: TODO("Handle submission error")
+                }
+                ACTION_DISCUSSION_ATTACHMENT -> TODO("Handle discussion success")
+                ACTION_QUIZ_FILE -> TODO("Handle quiz success")
+                ACTION_MESSAGE_ATTACHMENTS -> TODO("Handle upload success")
+                ACTION_SUBMISSION_COMMENT -> TODO("Handle submission comment success")
+                else -> {
+                    TODO("Handle upload success and update notification")
+                }
+            }
+
+            return Result.success()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Result.failure()
+        }
+    }
+
+    private fun getFileSubmitObjects(filePaths: Array<String>): List<FileSubmitObject> {
+        val fileSubmitObjects = filePaths.map {
             val uri = Uri.parse(it)
             val fileUploadUtilsHelper = FileUploadUtilsHelper(FileUploadUtils, context, context.contentResolver)
             val mimeType = fileUploadUtilsHelper.getFileMimeType(uri)
@@ -49,11 +91,53 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
             fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(uri, fileName, mimeType)
         }
+        if (fileSubmitObjects.contains(null)) TODO("Handle parsing error")
 
-        Log.d(this::class.java.simpleName, "doWork: ${fileSubmitObjects?.size ?: "null ffs"}")
+        return fileSubmitObjects.filterNotNull()
+    }
 
+    private suspend fun getAssignment(assignmentId: Long, courseId: Long): Assignment {
+        return AssignmentManager.getAssignmentAsync(assignmentId, courseId, true).await().dataOrThrow
+    }
 
-        return Result.success()
+    private suspend fun getGroupId(assignment: Assignment, courseId: Long): Long? {
+        return if (assignment.groupCategoryId != 0L) {
+            GroupManager.getAllGroupsForCourseAsync(courseId, true).await().dataOrThrow
+                    .find { it.groupCategoryId == assignment.groupCategoryId }?.id ?: TODO("No group found")
+        } else {
+            null
+        }
+    }
+
+    private fun uploadFiles(fileSubmitObjects: List<FileSubmitObject>, groupId: Long?): List<Attachment> {
+        val attachments = mutableListOf<Attachment>()
+
+        fileSubmitObjects.forEach {
+            val config: FileUploadConfig = when (action) {
+                ACTION_ASSIGNMENT_SUBMISSION -> {
+                    if (groupId == null) {
+                        FileUploadConfig.forSubmission(it, courseId, assignmentId)
+                    } else {
+                        FileUploadConfig.forGroup(it, groupId)
+                    }
+                }
+                ACTION_COURSE_FILE -> FileUploadConfig.forCourse(it, courseId, if (parentFolderId != INVALID_ID) parentFolderId else null)
+                ACTION_GROUP_FILE -> FileUploadConfig.forGroup(it, courseId, if (parentFolderId != INVALID_ID) parentFolderId else null)
+                ACTION_USER_FILE -> FileUploadConfig.forUser(it, if (parentFolderId != INVALID_ID) parentFolderId else null)
+                ACTION_MESSAGE_ATTACHMENTS -> FileUploadConfig.forUser(it, parentFolderPath = MESSAGE_ATTACHMENT_PATH)
+                ACTION_QUIZ_FILE -> FileUploadConfig.forQuiz(it, courseId, quizId)
+                ACTION_DISCUSSION_ATTACHMENT -> FileUploadConfig.forUser(it, parentFolderPath = DISCUSSION_ATTACHMENT_PATH)
+                ACTION_SUBMISSION_COMMENT -> FileUploadConfig.forSubmissionComment(it, courseId, assignmentId)
+                else -> throw IllegalArgumentException("Unknown file upload action: $action")
+            }
+
+            attachments += FileUploadManager.uploadFile(config).dataOrThrow
+        }
+        return attachments
+    }
+
+    private fun submitAttachmentsToSubmission(attachmentIds: List<Long>): Submission? {
+        return SubmissionManager.postSubmissionAttachmentsSynchronous(courseId, assignmentId, attachmentIds)
     }
 
     private fun notificationId(data: Data): Int {
@@ -78,6 +162,9 @@ class FileUploadWorker(private val context: Context, private val workerParameter
         const val ACTION_QUIZ_FILE = "ACTION_QUIZ_FILE"
         const val ACTION_DISCUSSION_ATTACHMENT = "ACTION_DISCUSSION_ATTACHMENT"
         const val ACTION_SUBMISSION_COMMENT = "ACTION_SUBMISSION_COMMENT"
+
+        const val MESSAGE_ATTACHMENT_PATH = "conversation attachments"
+        const val DISCUSSION_ATTACHMENT_PATH = "discussion attachments"
 
         fun getUserFilesBundle(
                 fileSubmitObjects: List<Uri>,
