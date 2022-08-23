@@ -18,9 +18,7 @@ package com.instructure.teacher.fragments
 
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
-import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -29,7 +27,10 @@ import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView

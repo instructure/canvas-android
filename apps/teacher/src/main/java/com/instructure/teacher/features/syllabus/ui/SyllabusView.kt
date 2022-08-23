@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
