@@ -106,14 +106,7 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/canvas"
-            android:theme="@style/CanvasMaterialTheme_Default"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="com.instructure.student.ROUTING_ACTIVITY"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
+            android:theme="@style/CanvasMaterialTheme_Default">
         </activity>
 
         <activity
@@ -243,7 +236,7 @@
         <activity
             android:theme="@style/Theme.Transparent"
             android:name=".activity.WidgetSetupActivity"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -310,7 +303,7 @@
         <receiver
             android:name=".widget.TodoWidgetProvider"
             android:label="@string/todoWidgetTitleLong"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -331,7 +324,7 @@
         <receiver
             android:name=".widget.GradesWidgetProvider"
             android:label="@string/gradesWidgetTitleLong"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -352,7 +345,7 @@
         <receiver
             android:name=".widget.NotificationWidgetProvider"
             android:label="@string/notificationWidgetTitleLong"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
