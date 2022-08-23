@@ -190,6 +190,7 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.scrollToItem(R.id.title, assignmentName, schedulePage.withAncestor(R.id.plannerItems))
         schedulePage.assertMarkedAsDoneNotShown()
         schedulePage.clickDoneCheckbox()
+        Thread.sleep(2000)
         schedulePage.assertMarkedAsDoneShown()
     }
 
