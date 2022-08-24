@@ -404,13 +404,9 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
 
-        // MBL-13604: This does not work on FTL, so we're commenting it out for now.
-        // You could also break this out to a separate E2E test and annotate it with
-        // @Stub, so that we can run it locally but it doesn't run as part of our CI suite.
-        // send video comment
-        //submissionDetailsPage.addAndSendVideoComment()
-        //sleep(3000) // wait for video comment submission to propagate
-        //submissionDetailsPage.assertVideoCommentDisplayed()
+        submissionDetailsPage.addAndSendVideoComment()
+        sleep(3000) // wait for video comment submission to propagate
+        submissionDetailsPage.assertVideoCommentDisplayed()
 
         Log.d(STEP_TAG,"Send an audio comment.")
         submissionDetailsPage.addAndSendAudioComment()
