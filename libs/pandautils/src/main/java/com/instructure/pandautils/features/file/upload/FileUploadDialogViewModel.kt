@@ -18,7 +18,6 @@ package com.instructure.pandautils.features.file.upload
 
 import android.content.res.Resources
 import android.net.Uri
-import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,8 +27,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.services.FileUploadService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject

@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.work.*
 import com.instructure.canvasapi2.models.*
@@ -39,9 +40,11 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class FileUploadDialogFragment : DialogFragment() {
@@ -65,6 +68,7 @@ class FileUploadDialogFragment : DialogFragment() {
 
     private var dialogCallback: ((Int) -> Unit)? = null
     private var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
+    private var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
         if (isPermissionGranted) takePicture()
@@ -79,11 +83,15 @@ class FileUploadDialogFragment : DialogFragment() {
     }
 
     private val galleryPickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        viewModel.addFile(it)
+        it?.let {
+            viewModel.addFile(it)
+        }
     }
 
     private val filePickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        viewModel.addFile(it)
+        it?.let {
+            viewModel.addFile(it)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -198,13 +206,11 @@ class FileUploadDialogFragment : DialogFragment() {
         val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
                 .setInputData(data)
                 .build()
+
+        val workManager = WorkManager.getInstance(requireContext())
+        workerCallback?.invoke(workManager.getWorkInfoByIdLiveData(worker.id))
         WorkManager.getInstance(requireContext())
                 .enqueue(worker)
-//
-//        val intent = Intent(requireContext(), FileUploadService::class.java)
-//        intent.action = action
-//        intent.putExtras(bundle)
-//        requireActivity().startService(intent)
         dialogCallback?.invoke(EVENT_ON_UPLOAD_BEGIN)
         dismiss()
     }
@@ -255,6 +261,21 @@ class FileUploadDialogFragment : DialogFragment() {
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
                 dialogCallback = callback
                 attachmentCallback = pickerCallback
+            }
+        }
+
+        fun newInstance(args: Bundle, workerLiveDateCallback: (LiveData<WorkInfo>) -> Unit): FileUploadDialogFragment {
+            return FileUploadDialogFragment().apply {
+                arguments = args
+
+                fileSubmitUri = args.getParcelable(Const.URI)
+                uploadType = args.getSerializable(Const.UPLOAD_TYPE) as FileUploadType
+                parentFolderId = args.getLong(Const.PARENT_FOLDER_ID, INVALID_ID)
+                quizQuestionId = args.getLong(Const.QUIZ_ANSWER_ID, INVALID_ID)
+                quizId = args.getLong(Const.QUIZ, INVALID_ID)
+                courseId = args.getLong(Const.COURSE_ID, INVALID_ID)
+                position = args.getInt(Const.POSITION, INVALID_ID_INT)
+                workerCallback = workerLiveDateCallback
             }
         }
 

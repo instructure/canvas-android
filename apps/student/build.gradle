@@ -330,6 +330,10 @@ dependencies {
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
 
     androidTestImplementation Libs.UI_AUTOMATOR
+
+    /* WorkManager */
+    implementation Libs.ANDROIDX_WORK_MANAGER
+    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 }
 
 // Comment out this line if the reporting logic starts going wonky.

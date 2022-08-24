@@ -22,7 +22,9 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
@@ -138,14 +140,14 @@ class FileListFragment : BaseSyncFragment<
 
     override fun onPresenterPrepared(presenter: FileListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = rootView,
-            context = requireContext(),
-            recyclerAdapter = adapter,
-            presenter = presenter,
-            swipeToRefreshLayoutResId = R.id.swipeRefreshLayout,
-            recyclerViewResId = R.id.fileListRecyclerView,
-            emptyViewResId = R.id.emptyPandaView,
-            emptyViewText = getString(R.string.noFiles)
+                rootView = rootView,
+                context = requireContext(),
+                recyclerAdapter = adapter,
+                presenter = presenter,
+                swipeToRefreshLayoutResId = R.id.swipeRefreshLayout,
+                recyclerViewResId = R.id.fileListRecyclerView,
+                emptyViewResId = R.id.emptyPandaView,
+                emptyViewText = getString(R.string.noFiles)
         )
     }
 
@@ -215,6 +217,7 @@ class FileListFragment : BaseSyncFragment<
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nofiles))
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
+
     override fun folderCreationError() = toast(R.string.folderCreationError)
 
     override fun folderCreationSuccess() {
@@ -231,7 +234,7 @@ class FileListFragment : BaseSyncFragment<
             animateFabs()
             handleClick(childFragmentManager) {
                 val bundle = FileUploadDialogFragment.createContextBundle(null, mCanvasContext, presenter.currentFolder.id)
-                FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                FileUploadDialogFragment.newInstance(bundle, this::workInfoLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
             }
         }
 
@@ -247,16 +250,24 @@ class FileListFragment : BaseSyncFragment<
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                    if (dy > 0 && addFab.isShown) {
-                        if (fabOpen) {
-                            animateFabs()
-                        }
-                        addFab.hide()
-                    } else if (dy < 0 && !addFab.isShown) {
-                        addFab.show()
+                if (dy > 0 && addFab.isShown) {
+                    if (fabOpen) {
+                        animateFabs()
                     }
+                    addFab.hide()
+                } else if (dy < 0 && !addFab.isShown) {
+                    addFab.show()
+                }
             }
         })
+    }
+
+    private fun workInfoLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(viewLifecycleOwner) {
+            if (it.state == WorkInfo.State.SUCCEEDED) {
+                presenter.refresh(true)
+            }
+        }
     }
 
     private fun setupToolbar() {

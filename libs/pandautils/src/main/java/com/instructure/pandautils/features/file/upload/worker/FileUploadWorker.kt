@@ -14,21 +14,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.file.upload
+package com.instructure.pandautils.features.file.upload.worker
 
 import android.content.Context
 import android.net.Uri
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.pandautils.R
-import com.instructure.pandautils.services.FileUploadService
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
+import com.instructure.pandautils.toJson
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileUploadUtils
 
 class FileUploadWorker(private val context: Context, private val workerParameters: WorkerParameters) : CoroutineWorker(context, workerParameters) {
 
@@ -48,7 +50,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
             val fileSubmitObjects = filePaths?.let {
                 getFileSubmitObjects(it)
-            } ?: TODO("Handle missing files")
+            } ?: return Result.failure()
 
             var groupId: Long? = null
             if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
@@ -60,22 +62,20 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
             val attachmentsIds = attachments.map { it.id }.plus(inputData.getLongArray(Const.ATTACHMENTS)?.toList() ?: emptyList())
 
-            when (action) {
+            return when (action) {
                 ACTION_ASSIGNMENT_SUBMISSION -> {
                     submitAttachmentsToSubmission(attachmentsIds)?.let {
-
-                    } ?: TODO("Handle submission error")
+                        Result.success()
+                    } ?: Result.retry()
                 }
-                ACTION_DISCUSSION_ATTACHMENT -> TODO("Handle discussion success")
-                ACTION_QUIZ_FILE -> TODO("Handle quiz success")
-                ACTION_MESSAGE_ATTACHMENTS -> TODO("Handle upload success")
-                ACTION_SUBMISSION_COMMENT -> TODO("Handle submission comment success")
+                ACTION_MESSAGE_ATTACHMENTS -> {
+                    val attachmentJsons = attachments.map { it.toJson() }.toTypedArray()
+                    Result.success(workDataOf(RESULT_ATTACHMENTS to attachmentJsons))
+                }
                 else -> {
-                    TODO("Handle upload success and update notification")
+                    Result.success()
                 }
             }
-
-            return Result.success()
         } catch (e: Exception) {
             e.printStackTrace()
             return Result.failure()
@@ -91,7 +91,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
             fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(uri, fileName, mimeType)
         }
-        if (fileSubmitObjects.contains(null)) TODO("Handle parsing error")
+        if (fileSubmitObjects.contains(null)) throw IllegalArgumentException("Could not parse file.")
 
         return fileSubmitObjects.filterNotNull()
     }
@@ -103,7 +103,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
     private suspend fun getGroupId(assignment: Assignment, courseId: Long): Long? {
         return if (assignment.groupCategoryId != 0L) {
             GroupManager.getAllGroupsForCourseAsync(courseId, true).await().dataOrThrow
-                    .find { it.groupCategoryId == assignment.groupCategoryId }?.id ?: TODO("No group found")
+                    .find { it.groupCategoryId == assignment.groupCategoryId }?.id ?: throw IllegalArgumentException()
         } else {
             null
         }
@@ -165,6 +165,8 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
         const val MESSAGE_ATTACHMENT_PATH = "conversation attachments"
         const val DISCUSSION_ATTACHMENT_PATH = "discussion attachments"
+
+        const val RESULT_ATTACHMENTS = "attachments"
 
         fun getUserFilesBundle(
                 fileSubmitObjects: List<Uri>,

@@ -29,6 +29,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -407,7 +409,18 @@ class FileListFragment : ParentFragment(), Bookmarkable {
     private fun uploadFile() {
         folder?.let {
             val bundle = FileUploadDialogFragment.createContextBundle(null, canvasContext, it.id)
-            FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
+            FileUploadDialogFragment.newInstance(bundle, this::workInfoLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
+        }
+    }
+
+    private fun workInfoLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(viewLifecycleOwner) {
+            if (it.state == WorkInfo.State.SUCCEEDED) {
+                recyclerAdapter?.refresh()
+                folder?.let {
+                    StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + it.id
+                }
+            }
         }
     }
 
