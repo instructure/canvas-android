@@ -458,11 +458,12 @@ class InboxComposeMessageFragment : ParentFragment() {
     private fun fileUploadLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
-                val attachments = it.outputData.getStringArray(FileUploadWorker.RESULT_ATTACHMENTS)
-                        ?.map { it.fromJson<Attachment>() } ?: TODO("Handle error")
-
-                this.attachments.addAll(attachments)
-                refreshAttachments()
+                it.outputData.getStringArray(FileUploadWorker.RESULT_ATTACHMENTS)
+                        ?.map { it.fromJson<Attachment>() }
+                        ?.let {
+                            this.attachments.addAll(it)
+                            refreshAttachments()
+                        } ?: toast(R.string.errorUploadingFile)
             }
         }
     }

@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
+import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
 import com.instructure.pandautils.toJson
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
@@ -53,6 +54,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
     override suspend fun doWork(): Result {
         try {
+            FileUploadPreferences.addWorkerId(id)
             val filePaths = inputData.getStringArray(FILE_PATHS)
 
             val fileSubmitObjects = filePaths?.let {
@@ -72,7 +74,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
             val attachmentsIds = attachments.map { it.id }.plus(inputData.getLongArray(Const.ATTACHMENTS)?.toList()
                     ?: emptyList())
 
-            return when (action) {
+            val result = when (action) {
                 ACTION_ASSIGNMENT_SUBMISSION -> {
                     submitAttachmentsToSubmission(attachmentsIds)?.let {
                         updateSubmissionComplete(notificationId)
@@ -89,7 +91,11 @@ class FileUploadWorker(private val context: Context, private val workerParameter
                     Result.success()
                 }
             }
+
+            FileUploadPreferences.removeWorkerId(id)
+            return result
         } catch (e: Exception) {
+            FileUploadPreferences.removeWorkerId(id)
             e.printStackTrace()
             return Result.failure()
         }
