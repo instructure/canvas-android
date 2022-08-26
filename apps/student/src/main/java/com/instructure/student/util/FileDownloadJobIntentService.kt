@@ -53,7 +53,7 @@ class FileDownloadJobIntentService : JobIntentService() {
 
         // Tell Android where to send the user if they click on the notification
         val viewDownloadIntent = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
-        val pendingIntent = PendingIntent.getActivity(this, 0, viewDownloadIntent, 0)
+        val pendingIntent = PendingIntent.getActivity(this, 0, viewDownloadIntent, PendingIntent.FLAG_IMMUTABLE)
 
         // Setup a notification
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)

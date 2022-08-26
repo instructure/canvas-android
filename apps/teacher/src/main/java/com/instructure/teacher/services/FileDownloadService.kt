@@ -17,7 +17,11 @@
 
 package com.instructure.teacher.services
 
-import android.app.*
+import android.app.Activity
+import android.app.IntentService
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -290,7 +294,12 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileDownloadS
                 setDataAndType(fileUri, "video/*")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            val pendingIntent = PendingIntent.getActivity(this@FileDownloadService, 0, contentIntent, 0)
+            val pendingIntent = PendingIntent.getActivity(
+                this@FileDownloadService,
+                0,
+                contentIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
             notificationBuilder?.setContentIntent(pendingIntent)
         } else {
             // All other downloads
@@ -299,7 +308,12 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileDownloadS
             bundle.putBoolean(Const.FILE_DOWNLOADED, true)
             intent.putExtras(bundle)
 
-            val contentIntent = PendingIntent.getActivity(this@FileDownloadService, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val contentIntent = PendingIntent.getActivity(
+                this@FileDownloadService,
+                NOTIFICATION_ID,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
             notificationBuilder?.setContentIntent(contentIntent)
 
         }

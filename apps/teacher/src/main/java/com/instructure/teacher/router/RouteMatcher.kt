@@ -48,6 +48,7 @@ import com.instructure.teacher.activities.*
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
+import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.fragments.FileListFragment
@@ -142,6 +143,7 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(AttendanceListFragment::class.java)
         bottomSheetFragments.add(EditFileFolderFragment::class.java)
         bottomSheetFragments.add(CreateOrEditPageDetailsFragment::class.java)
+        bottomSheetFragments.add(EditSyllabusFragment::class.java)
     }
 
     private fun routeUrl(context: Context, url: String) {

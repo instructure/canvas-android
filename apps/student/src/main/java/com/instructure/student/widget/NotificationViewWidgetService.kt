@@ -141,7 +141,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
                     val courses = CourseManager.getCoursesSynchronous(true)
                             .filter { it.isFavorite && !it.accessRestrictedByDate && !it.isInvited() }
                     val groups = GroupManager.getFavoriteGroupsSynchronous(false)
-                    val userStream = StreamManager.getUserStreamSynchronous(25, false).toMutableList()
+                    val userStream = StreamManager.getUserStreamSynchronous(25, true).toMutableList()
 
                     userStream.sort()
                     userStream.reverse()
