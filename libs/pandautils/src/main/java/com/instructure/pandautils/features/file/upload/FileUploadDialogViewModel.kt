@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
+import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +43,8 @@ import kotlin.math.pow
 class FileUploadDialogViewModel @Inject constructor(
         private val fileUploadUtils: FileUploadUtilsHelper,
         private val resources: Resources,
-        private val workManager: WorkManager
+        private val workManager: WorkManager,
+        private val fileUploadBundleCreator: FileUploadBundleCreator
 ) : ViewModel() {
 
     val data: LiveData<FileUploadDialogViewData>
@@ -54,7 +56,6 @@ class FileUploadDialogViewModel @Inject constructor(
     private val _events = MutableLiveData<Event<FileUploadAction>>()
 
     private var assignment: Assignment? = null
-    private var submitObjects: MutableList<FileSubmitObject> = mutableListOf()
     private var uploadType: FileUploadType = FileUploadType.ASSIGNMENT
     private var canvasContext: CanvasContext = CanvasContext.defaultCanvasContext()
     private var isOneFileOnly = false
@@ -67,7 +68,7 @@ class FileUploadDialogViewModel @Inject constructor(
     var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
     var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
 
-    private var uris = mutableListOf<Uri>()
+    private var filesToUpload = mutableListOf<FileUploadData>()
 
     fun setData(
             assignment: Assignment?,
@@ -83,11 +84,12 @@ class FileUploadDialogViewModel @Inject constructor(
             workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
     ) {
         this.assignment = assignment
-        val submitObject = file?.let {
-            uris.add(it)
-            getUriContents(it)
+        file?.let { uri ->
+            val submitObject = getUriContents(uri)
+            submitObject?.let {
+                this.filesToUpload = mutableListOf(FileUploadData(uri, it))
+            }
         }
-        this.submitObjects = submitObject?.let { mutableListOf(it) } ?: mutableListOf()
         this.uploadType = uploadType
         this.canvasContext = canvasContext
         this.isOneFileOnly = uploadType == FileUploadType.QUIZ || uploadType == FileUploadType.DISCUSSION
@@ -120,11 +122,10 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     fun addFile(fileUri: Uri) {
-        uris.add(fileUri)
         val submitObject = getUriContents(fileUri)
         submitObject?.let {
             if (it.errorMessage.isNullOrEmpty()) {
-                val added = addIfExtensionAllowed(it)
+                val added = addIfExtensionAllowed(fileUri, it)
                 if (added) {
                     updateItems()
                 }
@@ -136,11 +137,11 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     private fun updateItems() {
-        val itemViewModels = submitObjects.map {
+        val itemViewModels = filesToUpload.map {
             FileItemViewModel(FileItemViewData(
-                    it.name,
-                    humanReadableByteCount(it.size),
-                    it.fullPath
+                    it.fileSubmitObject.name,
+                    humanReadableByteCount(it.fileSubmitObject.size),
+                    it.fileSubmitObject.fullPath
             ), this::onRemoveFileClicked)
         }
         _data.postValue(FileUploadDialogViewData(
@@ -149,9 +150,9 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     private fun onRemoveFileClicked(fullPath: String) {
-        val index = submitObjects.indexOfFirst { it.fullPath == fullPath }
-        submitObjects.removeAt(index)
-        uris.removeAt(index)
+        filesToUpload.removeIf {
+            it.fileSubmitObject.fullPath == fullPath
+        }
         updateItems()
     }
 
@@ -162,9 +163,9 @@ class FileUploadDialogViewModel @Inject constructor(
         return fileUploadUtils.getFileSubmitObjectFromInputStream(fileUri, fileName, mimeType)
     }
 
-    private fun addIfExtensionAllowed(fileSubmitObject: FileSubmitObject): Boolean {
+    private fun addIfExtensionAllowed(uri: Uri, fileSubmitObject: FileSubmitObject): Boolean {
         if (assignment != null && (assignment?.allowedExtensions == null || assignment?.allowedExtensions?.size == 0)) {
-            submitObjects.add(fileSubmitObject)
+            filesToUpload.add(FileUploadData(uri, fileSubmitObject))
             return true
         }
 
@@ -174,7 +175,7 @@ class FileUploadDialogViewModel @Inject constructor(
             val ext = fileSubmitObject.fullPath.substring(index + 1)
             for (i in 0 until (assignment?.allowedExtensions?.size ?: 0)) {
                 if (assignment!!.allowedExtensions[i].trim { it <= ' ' }.equals(ext, ignoreCase = true)) {
-                    submitObjects.add(fileSubmitObject)
+                    filesToUpload.add(FileUploadData(uri, fileSubmitObject))
                     return true
                 }
             }
@@ -186,7 +187,7 @@ class FileUploadDialogViewModel @Inject constructor(
         //submit to, so we won't know if there are any extension limits
         //also, the assignment and/or course could be null due to memory pressures
         if (assignment == null || canvasContext.id != 0L) {
-            submitObjects.add(fileSubmitObject)
+            filesToUpload.add(FileUploadData(uri, fileSubmitObject))
             return true
         }
 
@@ -237,7 +238,7 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     fun uploadFiles() {
-        if (submitObjects.size == 0) {
+        if (filesToUpload.size == 0) {
             _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.noFilesUploaded))))
         } else {
             if (uploadType == FileUploadType.ASSIGNMENT) {
@@ -247,52 +248,54 @@ class FileUploadDialogViewModel @Inject constructor(
                     return
                 }
 
-                submitObjects.forEach {
-                    if (!isExtensionAllowed(it.fullPath)) {
+                filesToUpload.forEach {
+                    if (!isExtensionAllowed(it.fileSubmitObject.fullPath)) {
                         _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneOrMoreExtensionNotAllowed))))
                         return
                     }
                 }
             }
 
+            val uris = filesToUpload.map { it.uri }
+
             val data: Data = when (uploadType) {
                 FileUploadType.USER -> {
-                    FileUploadWorker.getUserFilesBundle(uris, parentFolderId)
+                    fileUploadBundleCreator.getUserFilesBundle(uris, parentFolderId)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_USER_FILE)
                             .build()
                 }
                 FileUploadType.COURSE -> {
-                    FileUploadWorker.getCourseFilesBundle(uris, canvasContext.id, parentFolderId)
+                    fileUploadBundleCreator.getCourseFilesBundle(uris, canvasContext.id, parentFolderId)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_COURSE_FILE)
                             .build()
                 }
                 FileUploadType.GROUP -> {
-                    FileUploadWorker.getCourseFilesBundle(uris, canvasContext.id, parentFolderId)
+                    fileUploadBundleCreator.getCourseFilesBundle(uris, canvasContext.id, parentFolderId)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_GROUP_FILE)
                             .build()
                 }
                 FileUploadType.MESSAGE -> {
-                    FileUploadWorker.getUserFilesBundle(uris, null)
+                    fileUploadBundleCreator.getUserFilesBundle(uris, null)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_MESSAGE_ATTACHMENTS)
                             .build()
                 }
                 FileUploadType.DISCUSSION -> {
-                    FileUploadWorker.getUserFilesBundle(uris, null)
+                    fileUploadBundleCreator.getUserFilesBundle(uris, null)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_DISCUSSION_ATTACHMENT)
                             .build()
                 }
                 FileUploadType.QUIZ -> {
-                    FileUploadWorker.getQuizFileBundle(uris, parentFolderId, quizQuestionId, position, canvasContext.id, quizId)
+                    fileUploadBundleCreator.getQuizFileBundle(uris, parentFolderId, quizQuestionId, position, canvasContext.id, quizId)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_QUIZ_FILE)
                             .build()
                 }
                 FileUploadType.SUBMISSION_COMMENT -> {
-                    FileUploadWorker.getSubmissionCommentBundle(uris, canvasContext.id, assignment!!)
+                    fileUploadBundleCreator.getSubmissionCommentBundle(uris, canvasContext.id, assignment!!)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_SUBMISSION_COMMENT)
                             .build()
                 }
                 else -> {
-                    FileUploadWorker.getAssignmentSubmissionBundle(uris, canvasContext.id, assignment!!)
+                    fileUploadBundleCreator.getAssignmentSubmissionBundle(uris, canvasContext.id, assignment!!)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_ASSIGNMENT_SUBMISSION)
                             .build()
 
@@ -304,7 +307,7 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     private fun getAttachmentUri(): FileSubmitObject? {
-        return submitObjects.firstOrNull()
+        return filesToUpload.firstOrNull()?.fileSubmitObject
     }
 
     private fun startUpload(data: Data) {

@@ -59,7 +59,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
             val fileSubmitObjects = filePaths?.let {
                 getFileSubmitObjects(it)
-            } ?: return Result.failure()
+            } ?: throw IllegalArgumentException()
 
             uploadCount = fileSubmitObjects.size
 
@@ -223,7 +223,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
     companion object {
         private const val NOTIFICATION_ID = -2
-        private const val INVALID_ID = -1L
+        const val INVALID_ID = -1L
         const val FILE_SUBMIT_ACTION = "fileSubmitAction"
         const val FILE_PATHS = "filePaths"
         const val CHANNEL_ID = "uploadChannel"
@@ -242,81 +242,5 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
         const val RESULT_ATTACHMENTS = "attachments"
 
-        fun getUserFilesBundle(
-                fileSubmitObjects: List<Uri>,
-                parentFolderId: Long?
-        ) = Data.Builder()
-                .putStringArray(FILE_PATHS, fileSubmitObjects.map { it.toString() }.toTypedArray())
-                .putLong(Const.PARENT_FOLDER_ID, parentFolderId ?: INVALID_ID)
-
-        fun getQuizFileBundle(
-                fileSubmitObjects: List<Uri>,
-                parentFolderId: Long?,
-                quizQuestionId: Long,
-                position: Int,
-                courseId: Long,
-                quizId: Long
-        ) = Data.Builder()
-                .putStringArray(FILE_PATHS, fileSubmitObjects.map { it.toString() }.toTypedArray())
-                .putLong(Const.QUIZ_ANSWER_ID, quizQuestionId)
-                .putLong(Const.QUIZ, quizId)
-                .putLong(Const.COURSE_ID, courseId)
-                .putInt(Const.POSITION, position)
-                .putLong(Const.PARENT_FOLDER_ID, parentFolderId ?: INVALID_ID)
-
-        fun getCourseFilesBundle(
-                fileSubmitObjects: List<Uri>,
-                courseId: Long,
-                parentFolderId: Long?
-        ) = Data.Builder()
-                .putStringArray(FILE_PATHS, fileSubmitObjects.map { it.toString() }.toTypedArray())
-                .putLong(Const.COURSE_ID, courseId)
-                .putLong(Const.PARENT_FOLDER_ID, parentFolderId ?: INVALID_ID)
-
-        fun getAssignmentSubmissionBundle(
-                fileSubmitObjects: List<Uri>,
-                courseId: Long,
-                assignment: Assignment,
-                dbSubmissionId: Long? = null,
-                additionalAttachmentIds: ArrayList<Long>? = null
-        ) = Data.Builder()
-                .putStringArray(FILE_PATHS, fileSubmitObjects.map { it.toString() }.toTypedArray())
-                .putLong(Const.COURSE_ID, courseId)
-                .putLong(Const.ASSIGNMENT_ID, assignment.id)
-                .putLong(Const.SUBMISSION_ID, dbSubmissionId ?: INVALID_ID)
-                .putLongArray(Const.ATTACHMENTS, additionalAttachmentIds?.toLongArray() ?: longArrayOf())
-
-        fun getMessageBundle(
-                fileSubmitObjects: List<Uri>,
-                messageText: String,
-                conversationId: Long
-        ) = Data.Builder()
-                .putStringArray(FILE_PATHS, fileSubmitObjects.map { it.toString() }.toTypedArray())
-                .putLong(Const.CONVERSATION, conversationId)
-                .putString(Const.MESSAGE, messageText)
-
-        fun getNewMessageBundle(
-                fileSubmitObjects: List<Uri>,
-                userIds: ArrayList<String>,
-                subject: String,
-                messageText: String,
-                isGroup: Boolean,
-                contextId: String
-        ) = Data.Builder()
-                .putStringArray(FILE_PATHS, fileSubmitObjects.map { it.toString() }.toTypedArray())
-                .putStringArray(Const.USER_IDS, userIds.toTypedArray())
-                .putString(Const.SUBJECT, subject)
-                .putString(Const.MESSAGE, messageText)
-                .putBoolean(Const.IS_GROUP, isGroup)
-                .putString(Const.CONTEXT_ID, contextId)
-
-        fun getSubmissionCommentBundle(
-                fileSubmitObjects: List<Uri>,
-                courseId: Long,
-                assignment: Assignment
-        ) = Data.Builder()
-                .putStringArray(FILE_PATHS, fileSubmitObjects.map { it.toString() }.toTypedArray())
-                .putLong(Const.COURSE_ID, courseId)
-                .putLong(Const.ASSIGNMENT_ID, assignment.id)
     }
 }

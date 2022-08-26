@@ -461,11 +461,12 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
     private fun fileUploadLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
-                val attachments = it.outputData.getStringArray(RESULT_ATTACHMENTS)
-                        ?.map { it.fromJson<Attachment>() } ?: TODO("Handle error")
-
-                presenter.addAttachments(attachments)
-                refreshAttachments()
+                it.outputData.getStringArray(RESULT_ATTACHMENTS)
+                        ?.map { it.fromJson<Attachment>() }
+                        ?.let {
+                            presenter.addAttachments(it)
+                            refreshAttachments()
+                        } ?: toast(R.string.errorUploadingFile)
             }
         }
     }
