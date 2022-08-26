@@ -37,7 +37,7 @@ object Versions {
     const val HILT = "2.38.1"
     const val LIFECYCLE = "2.3.1"
     const val FRAGMENT = "1.3.6"
-    const val WORK_MANAGER = "2.6.0"
+    const val WORK_MANAGER = "2.7.1"
     const val GLIDE_VERSION = "4.12.0"
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.9.1"
