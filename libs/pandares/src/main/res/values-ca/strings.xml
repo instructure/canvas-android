@@ -1263,12 +1263,5 @@
     <string name="appThemeLight">Clar</string>
     <string name="appThemeDark">Fosc</string>
     <string name="appThemeSystem">El mateix que el dispositiu</string>
-    <string name="themeSelectorTitle">Ara, el Canvas està disponible en tema fosc</string>
-    <string name="themeSelectorDescription">Trieu el tema de l’aplicació</string>
-    <string name="themeSelectorLightTheme">Tema clar</string>
-    <string name="themeSelectorDarkTheme">Tema fosc</string>
-    <string name="themeSelectorDeviceTheme">El mateix tema que el del dispositiu</string>
-    <string name="themeSelectorSave">Desa</string>
-    <string name="themeSelectorChangeLater">Podeu canviar-lo més endavant a la configuració de l’aplicació</string>
     <string name="grabAnnotationTool">Agafa</string>
 </resources>

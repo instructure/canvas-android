@@ -1262,12 +1262,5 @@
     <string name="appThemeLight">Lys</string>
     <string name="appThemeDark">Mørk</string>
     <string name="appThemeSystem">Samme som enhed</string>
-    <string name="themeSelectorTitle">Canvas er nu tilgængelig i mørkt tema</string>
-    <string name="themeSelectorDescription">Vælg app-tema</string>
-    <string name="themeSelectorLightTheme">Lyst tema</string>
-    <string name="themeSelectorDarkTheme">Mørkt tema</string>
-    <string name="themeSelectorDeviceTheme">Samme tema som på enhed</string>
-    <string name="themeSelectorSave">Gem</string>
-    <string name="themeSelectorChangeLater">Du kan ændre det senere i app-indstillinger</string>
     <string name="grabAnnotationTool">Tag fat</string>
 </resources>
