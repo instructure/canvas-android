@@ -409,7 +409,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
     private fun uploadFile() {
         folder?.let {
             val bundle = FileUploadDialogFragment.createContextBundle(null, canvasContext, it.id)
-            FileUploadDialogFragment.newInstance(bundle, this::workInfoLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
+            FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::workInfoLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
         }
     }
 

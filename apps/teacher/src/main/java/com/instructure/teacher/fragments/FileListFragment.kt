@@ -234,7 +234,7 @@ class FileListFragment : BaseSyncFragment<
             animateFabs()
             handleClick(childFragmentManager) {
                 val bundle = FileUploadDialogFragment.createContextBundle(null, mCanvasContext, presenter.currentFolder.id)
-                FileUploadDialogFragment.newInstance(bundle, this::workInfoLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::workInfoLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
             }
         }
 

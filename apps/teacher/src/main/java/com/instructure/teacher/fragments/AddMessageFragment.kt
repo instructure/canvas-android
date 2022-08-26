@@ -299,7 +299,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
                 R.id.menu_attachment -> {
                     val bundle = FileUploadDialogFragment.createAttachmentsBundle(ArrayList())
-                    FileUploadDialogFragment.newInstance(bundle, this::fileUploadLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::fileUploadLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
                     true
                 }
 

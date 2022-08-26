@@ -40,7 +40,6 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fromJson
-import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter
@@ -283,7 +282,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                 }
                 R.id.menu_attachment -> {
                     val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())
-                    FileUploadDialogFragment.newInstance(bundle, this::fileUploadLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::fileUploadLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
                 }
                 else -> return@setOnMenuItemClickListener false
             }
@@ -438,20 +437,6 @@ class InboxComposeMessageFragment : ParentFragment() {
             // so clear the view so we only add the users selected
             chips.clearRecipients()
             addRecipients(recipients)
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onFileUploadedEvent(event: FileUploadEvent) {
-        event.get {
-            event.remove()
-            if(it.intent?.action == FileUploadService.ALL_UPLOADS_COMPLETED) {
-                it.attachments.forEach {
-                    attachments += it
-                }
-                refreshAttachments()
-            }
         }
     }
 

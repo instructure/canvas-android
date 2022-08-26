@@ -22,6 +22,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -38,7 +41,8 @@ import kotlin.math.pow
 @HiltViewModel
 class FileUploadDialogViewModel @Inject constructor(
         private val fileUploadUtils: FileUploadUtilsHelper,
-        private val resources: Resources
+        private val resources: Resources,
+        private val workManager: WorkManager
 ) : ViewModel() {
 
     val data: LiveData<FileUploadDialogViewData>
@@ -59,9 +63,25 @@ class FileUploadDialogViewModel @Inject constructor(
     private var quizId: Long = -1L
     private var position: Int = -1
 
+    var dialogCallback: ((Int) -> Unit)? = null
+    var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
+    var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+
     private var uris = mutableListOf<Uri>()
 
-    fun setData(assignment: Assignment?, file: Uri?, uploadType: FileUploadType, canvasContext: CanvasContext, parentFolderId: Long, quizQuestionId: Long, position: Int, quizId: Long) {
+    fun setData(
+            assignment: Assignment?,
+            file: Uri?,
+            uploadType: FileUploadType,
+            canvasContext: CanvasContext,
+            parentFolderId: Long,
+            quizQuestionId: Long,
+            position: Int,
+            quizId: Long,
+            dialogCallback: ((Int) -> Unit)? = null,
+            attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
+            workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+    ) {
         this.assignment = assignment
         val submitObject = file?.let {
             uris.add(it)
@@ -75,6 +95,15 @@ class FileUploadDialogViewModel @Inject constructor(
         this.quizQuestionId = quizQuestionId
         this.quizId = quizId
         this.position = position
+        dialogCallback?.let {
+            this.dialogCallback = it
+        }
+        attachmentCallback?.let {
+            this.attachmentCallback = it
+        }
+        workerCallback?.let {
+            this.workerCallback = it
+        }
         updateItems()
     }
 
@@ -226,8 +255,6 @@ class FileUploadDialogViewModel @Inject constructor(
                 }
             }
 
-            val fileList = ArrayList(submitObjects)
-
             val data: Data = when (uploadType) {
                 FileUploadType.USER -> {
                     FileUploadWorker.getUserFilesBundle(uris, parentFolderId)
@@ -272,11 +299,31 @@ class FileUploadDialogViewModel @Inject constructor(
                 }
             }
 
-            _events.postValue(Event(FileUploadAction.StartUpload(data)))
+            startUpload(data)
         }
     }
 
-    fun getAttachmentUri(): FileSubmitObject? {
+    private fun getAttachmentUri(): FileSubmitObject? {
         return submitObjects.firstOrNull()
+    }
+
+    private fun startUpload(data: Data) {
+        if (uploadType == FileUploadType.DISCUSSION) {
+            attachmentCallback?.invoke(FileUploadDialogFragment.EVENT_ON_FILE_SELECTED, getAttachmentUri())
+        } else {
+            val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
+                    .setInputData(data)
+                    .build()
+
+            workerCallback?.invoke(workManager.getWorkInfoByIdLiveData(worker.id))
+            workManager.enqueue(worker)
+            dialogCallback?.invoke(FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN)
+        }
+        _events.postValue(Event(FileUploadAction.UploadStarted))
+    }
+
+    fun onCancelClicked() {
+        dialogCallback?.invoke(FileUploadDialogFragment.EVENT_DIALOG_CANCELED)
+        attachmentCallback?.invoke(FileUploadDialogFragment.EVENT_DIALOG_CANCELED, null)
     }
 }

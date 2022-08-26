@@ -40,7 +40,6 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
-import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -174,22 +173,17 @@ class FileUploadDialogFragment : DialogFragment() {
             }
         })
 
-        viewModel.setData(assignment, fileSubmitUri, uploadType, canvasContext, parentFolderId, quizQuestionId, position, quizId)
+        viewModel.setData(assignment, fileSubmitUri, uploadType, canvasContext, parentFolderId, quizQuestionId,
+                position, quizId, dialogCallback, attachmentCallback, workerCallback)
     }
 
     private fun uploadClicked() {
-        if (uploadType == FileUploadType.DISCUSSION) {
-            attachmentCallback?.invoke(EVENT_ON_FILE_SELECTED, viewModel.getAttachmentUri())
-            dismiss()
-        } else {
-            viewModel.uploadFiles()
-        }
+        viewModel.uploadFiles()
     }
 
     private fun cancelClicked() {
         dismissAllowingStateLoss()
-        dialogCallback?.invoke(EVENT_DIALOG_CANCELED)
-        attachmentCallback?.invoke(EVENT_DIALOG_CANCELED, null)
+        viewModel.onCancelClicked()
     }
 
     private fun handleAction(action: FileUploadAction) {
@@ -198,21 +192,8 @@ class FileUploadDialogFragment : DialogFragment() {
             is FileUploadAction.PickPhoto -> pickFromGallery()
             is FileUploadAction.PickFile -> pickFromFiles()
             is FileUploadAction.ShowToast -> Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
-            is FileUploadAction.StartUpload -> startUpload(action.data)
+            is FileUploadAction.UploadStarted -> dismiss()
         }
-    }
-
-    private fun startUpload(data: Data) {
-        val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
-                .setInputData(data)
-                .build()
-
-        val workManager = WorkManager.getInstance(requireContext())
-        workerCallback?.invoke(workManager.getWorkInfoByIdLiveData(worker.id))
-        WorkManager.getInstance(requireContext())
-                .enqueue(worker)
-        dialogCallback?.invoke(EVENT_ON_UPLOAD_BEGIN)
-        dismiss()
     }
 
     private fun takePicture() {
@@ -248,7 +229,10 @@ class FileUploadDialogFragment : DialogFragment() {
 
         fun newInstance(): FileUploadDialogFragment = FileUploadDialogFragment()
 
-        fun newInstance(args: Bundle, callback: ((Int) -> Unit)? = null, pickerCallback: ((Int, FileSubmitObject?) -> Unit)? = null): FileUploadDialogFragment {
+        fun newInstance(args: Bundle,
+                        callback: ((Int) -> Unit)? = null,
+                        pickerCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
+                        workerLiveDataCallback: ((LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
 
@@ -261,21 +245,7 @@ class FileUploadDialogFragment : DialogFragment() {
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
                 dialogCallback = callback
                 attachmentCallback = pickerCallback
-            }
-        }
-
-        fun newInstance(args: Bundle, workerLiveDateCallback: (LiveData<WorkInfo>) -> Unit): FileUploadDialogFragment {
-            return FileUploadDialogFragment().apply {
-                arguments = args
-
-                fileSubmitUri = args.getParcelable(Const.URI)
-                uploadType = args.getSerializable(Const.UPLOAD_TYPE) as FileUploadType
-                parentFolderId = args.getLong(Const.PARENT_FOLDER_ID, INVALID_ID)
-                quizQuestionId = args.getLong(Const.QUIZ_ANSWER_ID, INVALID_ID)
-                quizId = args.getLong(Const.QUIZ, INVALID_ID)
-                courseId = args.getLong(Const.COURSE_ID, INVALID_ID)
-                position = args.getInt(Const.POSITION, INVALID_ID_INT)
-                workerCallback = workerLiveDateCallback
+                workerCallback = workerLiveDataCallback
             }
         }
 

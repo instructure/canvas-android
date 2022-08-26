@@ -22,6 +22,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -50,6 +51,7 @@ class FileUploadViewModelTest {
 
     private val resources: Resources = mockk(relaxed = true)
     private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
+    private val workManager: WorkManager = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -185,7 +187,7 @@ class FileUploadViewModelTest {
         viewModel.addFile(uri)
         viewModel.uploadFiles()
 
-        assert(viewModel.events.value?.getContentIfNotHandled() is FileUploadAction.StartUpload)
+        assert(viewModel.events.value?.getContentIfNotHandled() is FileUploadAction.UploadStarted)
     }
 
     private fun setupStrings() {
@@ -207,6 +209,6 @@ class FileUploadViewModelTest {
     }
 
     private fun createViewModel(): FileUploadDialogViewModel {
-        return FileUploadDialogViewModel(fileUploadUtilsHelper, resources)
+        return FileUploadDialogViewModel(fileUploadUtilsHelper, resources, workManager)
     }
 }
