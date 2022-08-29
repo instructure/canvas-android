@@ -1317,12 +1317,5 @@
     <string name="appThemeLight">فاتح</string>
     <string name="appThemeDark">داكن</string>
     <string name="appThemeSystem">مثل الجهاز</string>
-    <string name="themeSelectorTitle">Canvas متاح الآن في النسق الداكن</string>
-    <string name="themeSelectorDescription">اختر نسق التطبيق</string>
-    <string name="themeSelectorLightTheme">النسق الفاتح</string>
-    <string name="themeSelectorDarkTheme">النسق الداكن</string>
-    <string name="themeSelectorDeviceTheme">مثل نسق الجهاز</string>
-    <string name="themeSelectorSave">حفظ</string>
-    <string name="themeSelectorChangeLater">يمكنك تغييرها لاحقًا في إعدادات التطبيق</string>
     <string name="grabAnnotationTool">تحديد</string>
 </resources>

@@ -1262,12 +1262,5 @@
     <string name="appThemeLight">Golau</string>
     <string name="appThemeDark">Tywyll</string>
     <string name="appThemeSystem">Yn un fath a’r ddyfais</string>
-    <string name="themeSelectorTitle">Mae Canvas bellach ar gael mewn thema dywyll</string>
-    <string name="themeSelectorDescription">Dewis thema ap</string>
-    <string name="themeSelectorLightTheme">Thema golau</string>
-    <string name="themeSelectorDarkTheme">Thema dywyll</string>
-    <string name="themeSelectorDeviceTheme">Yr un fath a thema’r ddyfais</string>
-    <string name="themeSelectorSave">Cadw</string>
-    <string name="themeSelectorChangeLater">Gallwch chi ei newid yn nes ymlaen yng ngosodiadau’r ap</string>
     <string name="grabAnnotationTool">Gafael</string>
 </resources>
