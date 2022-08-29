@@ -23,7 +23,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -32,7 +31,6 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.pandautils.services.FileUploadService.Companion.CHANNEL_ID
 import com.instructure.student.R
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -190,6 +188,8 @@ class FileDownloadJobIntentService : JobIntentService() {
         val CONTENT_TYPE = "contenttype"
         val NOTIFICATION_ID = "notificationid"
         val USE_HTTPURLCONNECTION = "usehttpurlconnection"
+
+        const val CHANNEL_ID = "uploadChannel"
 
         // Notification ID is passed into the extras of the job, make sure to use that for any notification updates inside the job
         var notificationId = 1

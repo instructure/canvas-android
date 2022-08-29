@@ -24,6 +24,8 @@ import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.InboxManager
@@ -36,7 +38,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
-import com.instructure.pandautils.services.FileUploadService
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
+import com.instructure.pandautils.fromJson
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter
@@ -279,7 +282,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                 }
                 R.id.menu_attachment -> {
                     val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())
-                    FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::fileUploadLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
                 }
                 else -> return@setOnMenuItemClickListener false
             }
@@ -437,16 +440,15 @@ class InboxComposeMessageFragment : ParentFragment() {
         }
     }
 
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onFileUploadedEvent(event: FileUploadEvent) {
-        event.get {
-            event.remove()
-            if(it.intent?.action == FileUploadService.ALL_UPLOADS_COMPLETED) {
-                it.attachments.forEach {
-                    attachments += it
-                }
-                refreshAttachments()
+    private fun fileUploadLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(viewLifecycleOwner) {
+            if (it.state == WorkInfo.State.SUCCEEDED) {
+                it.outputData.getStringArray(FileUploadWorker.RESULT_ATTACHMENTS)
+                        ?.map { it.fromJson<Attachment>() }
+                        ?.let {
+                            this.attachments.addAll(it)
+                            refreshAttachments()
+                        } ?: toast(R.string.errorUploadingFile)
             }
         }
     }

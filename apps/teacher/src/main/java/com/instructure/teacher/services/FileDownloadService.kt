@@ -37,8 +37,6 @@ import com.instructure.canvasapi2.utils.HttpHelper
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
-import com.instructure.pandautils.services.FileUploadService
-import com.instructure.pandautils.services.FileUploadService.Companion.ACTION_CANCEL_UPLOAD
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.R
@@ -48,7 +46,7 @@ import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class FileDownloadService @JvmOverloads constructor(name: String = FileUploadService::class.java.simpleName) : IntentService(name) {
+class FileDownloadService @JvmOverloads constructor(name: String = FileDownloadService::class.java.simpleName) : IntentService(name) {
 
     private var isCanceled = false
     private var url = ""
@@ -340,6 +338,8 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
     companion object {
         private const val NOTIFICATION_ID = 2
         const val CHANNEL_ID = "fileDownloadChannel"
+
+        const val ACTION_CANCEL_UPLOAD = "ACTION_CANCEL_UPLOAD"
 
         fun scheduleDownloadJob(context: Context, fileUrl: String, fileName: String) {
             val intent = Intent(context, FileDownloadService::class.java)

@@ -120,7 +120,7 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
             it.duration = 500
             it.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    FileUploadDialogFragment.newInstance(bundle, dialogCallback).show(supportFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle, callback = dialogCallback).show(supportFragmentManager, FileUploadDialogFragment.TAG)
                 }
             })
             it.start()
