@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.dashboard.notifications
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
@@ -78,10 +79,17 @@ class DashboardNotificationsViewModel @Inject constructor(
     private var coursesMap: Map<Long, Course> = emptyMap()
     private var groupMap: Map<Long, Group> = emptyMap()
 
+    private val runningWorkersObserver = Observer<List<UUID>> {
+        loadData()
+    }
+
     init {
-        fileUploadPreferences.getRunningWorkersLiveData().observeForever {
-            loadData()
-        }
+        fileUploadPreferences.getRunningWorkersLiveData().observeForever(runningWorkersObserver)
+    }
+
+    override fun onCleared() {
+        fileUploadPreferences.getRunningWorkersLiveData().removeObserver(runningWorkersObserver)
+        super.onCleared()
     }
 
     fun loadData(forceNetwork: Boolean = false) {
