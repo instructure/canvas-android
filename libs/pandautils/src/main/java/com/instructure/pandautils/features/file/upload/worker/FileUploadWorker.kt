@@ -50,24 +50,41 @@ class FileUploadWorker(private val context: Context, private val workerParameter
     private val submissionId = inputData.getLong(Const.SUBMISSION_ID, INVALID_ID)
     private val action = inputData.getString(FILE_SUBMIT_ACTION)
 
+    private var fullSize = 0L
+    private var currentProgress = 0L
+
     private var uploadCount = 0
+
+    private val workData = Data.EMPTY
 
     override suspend fun doWork(): Result {
         try {
             FileUploadPreferences.addWorkerId(id)
+
             val filePaths = inputData.getStringArray(FILE_PATHS)
 
             val fileSubmitObjects = filePaths?.let {
                 getFileSubmitObjects(it)
             } ?: throw IllegalArgumentException()
 
+            val fsoJson = fileSubmitObjects.map {
+                it.toJson()
+            }.toTypedArray()
+            workData.keyValueMap.putIfAbsent(FILES_IN_PROGRESS, fsoJson)
+
+            fullSize = fileSubmitObjects.sumOf { it.size }
+            workData.keyValueMap.putIfAbsent(FULL_SIZE, fullSize)
+
             uploadCount = fileSubmitObjects.size
 
             var groupId: Long? = null
             if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
                 val assignment = getAssignment(assignmentId, courseId)
+                workData.keyValueMap.putIfAbsent(ASSIGNMENT_NAME, assignment.name)
                 groupId = getGroupId(assignment, courseId)
             }
+
+            setProgress(workData)
 
             val attachments = uploadFiles(fileSubmitObjects, groupId)
 
@@ -152,6 +169,14 @@ class FileUploadWorker(private val context: Context, private val workerParameter
             }
 
             attachments += FileUploadManager.uploadFile(config).dataOrThrow
+
+            val updatedList = workData.getStringArray(FILES_SUCCEEDED).orEmpty().toMutableList().apply {
+                add(fileSubmitObject.toJson())
+            }.toTypedArray()
+            workData.keyValueMap[FILES_SUCCEEDED] = updatedList
+            currentProgress += fileSubmitObject.size
+            workData.keyValueMap[CURRENT_PROGRESS] = currentProgress
+            setProgress(workData)
         }
         return attachments
     }
@@ -242,5 +267,11 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
         const val RESULT_ATTACHMENTS = "attachments"
 
+        const val FILES_IN_PROGRESS = "filesInProgress"
+        const val FILES_SUCCEEDED = "filesSucceeded"
+        const val FILES_FAILED = "filesFailed"
+        const val ASSIGNMENT_NAME = "assignmentName"
+        const val FULL_SIZE = "fullSize"
+        const val CURRENT_PROGRESS = "currentProgress"
     }
 }

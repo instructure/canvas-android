@@ -29,6 +29,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
 import com.airbnb.lottie.LottieAnimationView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -37,6 +39,7 @@ import com.instructure.canvasapi2.models.StorageQuotaExceededError
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadType
+import com.instructure.pandautils.features.shareextension.progress.ShareExtensionProgressDialogFragment
 import com.instructure.pandautils.features.shareextension.success.ShareExtensionSuccessDialogFragment
 import com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetFragment
 import com.instructure.pandautils.utils.*
@@ -47,6 +50,7 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 @Parcelize
 data class ShareFileSubmissionTarget(
@@ -93,11 +97,11 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
         when (action) {
             is ShareExtensionAction.ShowAssignmentUploadDialog -> {
                 val bundle = FileUploadDialogFragment.createAssignmentBundle(action.fileUri, action.course as Course, action.assignment)
-                showUploadDialog(bundle, action.dialogCallback)
+                showUploadDialog(bundle, action.dialogCallback, action.workerCallback)
             }
             is ShareExtensionAction.ShowMyFilesUploadDialog -> {
                 val bundle = FileUploadDialogFragment.createFilesBundle(action.fileUri, null)
-                showUploadDialog(bundle, action.dialogCallback)
+                showUploadDialog(bundle, action.dialogCallback, action.workerCallback)
             }
             is ShareExtensionAction.ShowToast -> {
                 toast(action.toast)
@@ -111,16 +115,19 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
             is ShareExtensionAction.ShowSuccessDialog -> {
                 ShareExtensionSuccessDialogFragment.newInstance().show(supportFragmentManager, ShareExtensionSuccessDialogFragment.TAG)
             }
+            is ShareExtensionAction.ShowProgressDialog -> {
+                ShareExtensionProgressDialogFragment.newInstance(action.uuid)
+            }
         }
     }
 
-    private fun showUploadDialog(bundle: Bundle, dialogCallback: (Int) -> Unit) {
+    private fun showUploadDialog(bundle: Bundle, dialogCallback: (Int) -> Unit, workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) {
         ValueAnimator.ofObject(ArgbEvaluator(), ContextCompat.getColor(this, R.color.login_studentAppTheme), getColor(bundle)).let {
             it.addUpdateListener { animation -> rootView!!.setBackgroundColor(animation.animatedValue as Int) }
             it.duration = 500
             it.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    FileUploadDialogFragment.newInstance(bundle, callback = dialogCallback).show(supportFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle, callback = dialogCallback, workerLiveDataCallback = workerCallback).show(supportFragmentManager, FileUploadDialogFragment.TAG)
                 }
             })
             it.start()

@@ -23,25 +23,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.Const
+import java.util.*
 
 class ShareExtensionProgressDialogFragment : DialogFragment() {
 
-    companion object {
-        fun newInstance() = ShareExtensionProgressDialogFragment()
-    }
-
-    private lateinit var viewModel: ShareExtensionProgressDialogViewModel
+    private val viewModel: ShareExtensionProgressDialogViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_share_extension_progress_dialog, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ShareExtensionProgressDialogViewModel::class.java)
-        // TODO: Use the ViewModel
+    companion object {
+        const val UUID = "UUID"
+        fun newInstance(uuid: UUID) : ShareExtensionProgressDialogFragment {
+            return ShareExtensionProgressDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(UUID, uuid)
+                }
+            }
+        }
     }
 
 }

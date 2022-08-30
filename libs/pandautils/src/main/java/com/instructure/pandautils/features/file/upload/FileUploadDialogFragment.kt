@@ -43,6 +43,7 @@ import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import java.util.*
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
@@ -67,7 +68,7 @@ class FileUploadDialogFragment : DialogFragment() {
 
     private var dialogCallback: ((Int) -> Unit)? = null
     private var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
-    private var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+    private var workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
         if (isPermissionGranted) takePicture()
@@ -232,7 +233,7 @@ class FileUploadDialogFragment : DialogFragment() {
         fun newInstance(args: Bundle,
                         callback: ((Int) -> Unit)? = null,
                         pickerCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
-                        workerLiveDataCallback: ((LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
+                        workerLiveDataCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
 

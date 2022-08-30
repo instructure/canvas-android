@@ -66,7 +66,7 @@ class FileUploadDialogViewModel @Inject constructor(
 
     var dialogCallback: ((Int) -> Unit)? = null
     var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
-    var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+    var workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
 
     private var filesToUpload = mutableListOf<FileUploadData>()
 
@@ -81,7 +81,7 @@ class FileUploadDialogViewModel @Inject constructor(
             quizId: Long,
             dialogCallback: ((Int) -> Unit)? = null,
             attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
-            workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+            workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
     ) {
         this.assignment = assignment
         file?.let { uri ->
@@ -318,7 +318,7 @@ class FileUploadDialogViewModel @Inject constructor(
                     .setInputData(data)
                     .build()
 
-            workerCallback?.invoke(workManager.getWorkInfoByIdLiveData(worker.id))
+            workerCallback?.invoke(worker.id, workManager.getWorkInfoByIdLiveData(worker.id))
             workManager.enqueue(worker)
             dialogCallback?.invoke(FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN)
         }
