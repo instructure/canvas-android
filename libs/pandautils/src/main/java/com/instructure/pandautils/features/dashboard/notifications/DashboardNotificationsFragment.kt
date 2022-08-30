@@ -59,11 +59,11 @@ class DashboardNotificationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.events.observe(viewLifecycleOwner, { event ->
+        viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
-        })
+        }
     }
 
     fun refresh() {
@@ -74,14 +74,14 @@ class DashboardNotificationsFragment : Fragment() {
         when (action) {
             is DashboardNotificationsActions.LaunchConference -> {
                 val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-                        .setToolbarColor(ColorKeeper.getOrGenerateColor(action.canvasContext))
-                        .build()
+                    .setToolbarColor(ColorKeeper.getOrGenerateColor(action.canvasContext))
+                    .build()
 
                 var intent = CustomTabsIntent.Builder()
-                        .setDefaultColorSchemeParams(colorSchemeParams)
-                        .setShowTitle(true)
-                        .build()
-                        .intent
+                    .setDefaultColorSchemeParams(colorSchemeParams)
+                    .setShowTitle(true)
+                    .build()
+                    .intent
 
                 intent.data = Uri.parse(action.url)
 

@@ -41,7 +41,7 @@ object FileUploadPreferences : PrefManager("fileUploadPrefs") {
         }
     }
 
-    private fun getRunningWorkerIds(): List<UUID> {
+    fun getRunningWorkerIds(): List<UUID> {
         return runningWorkerIds.map { UUID.fromString(it) }
     }
 

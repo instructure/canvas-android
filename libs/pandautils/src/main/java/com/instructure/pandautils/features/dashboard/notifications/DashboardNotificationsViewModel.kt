@@ -21,19 +21,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.AccountNotificationManager
-import com.instructure.canvasapi2.managers.ConferenceManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.models.AccountNotification
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.BR
@@ -41,6 +32,10 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
+import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
+import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_SUBTITLE
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_TITLE
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -63,7 +58,9 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val accountNotificationManager: AccountNotificationManager,
     private val oauthManager: OAuthManager,
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val workManager: WorkManager,
+    private val fileUploadPreferences: FileUploadPreferences
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -81,6 +78,12 @@ class DashboardNotificationsViewModel @Inject constructor(
     private var coursesMap: Map<Long, Course> = emptyMap()
     private var groupMap: Map<Long, Group> = emptyMap()
 
+    init {
+        fileUploadPreferences.getRunningWorkersLiveData().observeForever {
+            loadData()
+        }
+    }
+
     fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
 
@@ -92,6 +95,9 @@ class DashboardNotificationsViewModel @Inject constructor(
             coursesMap = courses?.associateBy { it.id } ?: emptyMap()
 
             groupMap = groups?.associateBy { it.id } ?: emptyMap()
+
+            val uploadViewModels = getUploads(fileUploadPreferences.getRunningWorkerIds())
+            items.addAll(uploadViewModels)
 
             val invitationViewModels = getInvitations(forceNetwork)
             items.addAll(invitationViewModels)
@@ -201,6 +207,20 @@ class DashboardNotificationsViewModel @Inject constructor(
                 ),
                 this@DashboardNotificationsViewModel::handleInvitation
             )
+        }
+    }
+
+    private fun getUploads(runningWorkerIds: List<UUID>) = runningWorkerIds.map {
+        val workInfo = workManager.getWorkInfoById(it).get()
+        UploadItemViewModel(
+            it, UploadViewData(
+                workInfo.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
+                workInfo.progress.getString(PROGRESS_DATA_SUBTITLE).orEmpty(),
+                "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
+                R.drawable.ic_upload
+            )
+        ) {
+            //TODO on item click
         }
     }
 

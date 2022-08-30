@@ -45,8 +45,15 @@ data class AnnouncementViewData(
     @DrawableRes val icon: Int
 )
 
+data class UploadViewData(
+    val title: String,
+    val subTitle: String,
+    val color: String,
+    @DrawableRes val icon: Int
+)
+
 sealed class DashboardNotificationsActions {
-    data class ShowToast(val toast: String): DashboardNotificationsActions()
-    data class LaunchConference(val canvasContext: CanvasContext, val url: String): DashboardNotificationsActions()
-    data class OpenAnnouncement(val subject: String, val message: String): DashboardNotificationsActions()
+    data class ShowToast(val toast: String) : DashboardNotificationsActions()
+    data class LaunchConference(val canvasContext: CanvasContext, val url: String) : DashboardNotificationsActions()
+    data class OpenAnnouncement(val subject: String, val message: String) : DashboardNotificationsActions()
 }

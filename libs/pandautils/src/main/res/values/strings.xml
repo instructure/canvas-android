@@ -99,6 +99,8 @@
     <string name="assignmentSubmissionUpload">Uploading submission for %s</string>
     <string name="assignmentSubmissionError">Submission failed for %s</string>
     <string name="assignmentSubmissionComplete">Successfully submitted %s</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Uploading files</string>
 
     <!--Errors-->
     <string name="errorOccurred">An unexpected error occurred.</string>
