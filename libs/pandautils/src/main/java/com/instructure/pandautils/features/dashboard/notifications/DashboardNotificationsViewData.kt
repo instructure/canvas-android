@@ -20,6 +20,7 @@ import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.pandautils.mvvm.ItemViewModel
+import java.util.*
 
 data class DashboardNotificationsViewData(
     val items: List<ItemViewModel>
@@ -56,4 +57,5 @@ sealed class DashboardNotificationsActions {
     data class ShowToast(val toast: String) : DashboardNotificationsActions()
     data class LaunchConference(val canvasContext: CanvasContext, val url: String) : DashboardNotificationsActions()
     data class OpenAnnouncement(val subject: String, val message: String) : DashboardNotificationsActions()
+    data class OpenProgressDialog(val uuid: UUID): DashboardNotificationsActions()
 }

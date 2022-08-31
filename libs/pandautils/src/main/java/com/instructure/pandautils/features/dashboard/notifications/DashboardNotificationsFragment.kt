@@ -97,6 +97,7 @@ class DashboardNotificationsFragment : Fragment() {
                 action.subject,
                 action.message
             )
+            is DashboardNotificationsActions.OpenProgressDialog -> {}
         }
     }
 

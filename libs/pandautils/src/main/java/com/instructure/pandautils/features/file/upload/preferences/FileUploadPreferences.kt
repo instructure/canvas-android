@@ -25,19 +25,18 @@ import java.util.*
 object FileUploadPreferences : PrefManager("fileUploadPrefs") {
 
     private var runningWorkerIds by StringSetPref()
-
-    private val runningWorkersLiveData = MutableLiveData(getRunningWorkerIds())
+    private var runningWorkersLiveData: MutableLiveData<List<UUID>>? = null
 
     fun addWorkerId(id: UUID) {
         runningWorkerIds = runningWorkerIds + id.toString()
-        runningWorkersLiveData.postValue(getRunningWorkerIds())
+        runningWorkersLiveData?.postValue(getRunningWorkerIds())
     }
 
     fun removeWorkerId(id: UUID) {
         val idString = id.toString()
         if (runningWorkerIds.contains(idString)) {
             runningWorkerIds = runningWorkerIds - id.toString()
-            runningWorkersLiveData.postValue(getRunningWorkerIds())
+            runningWorkersLiveData?.postValue(getRunningWorkerIds())
         }
     }
 
@@ -46,7 +45,7 @@ object FileUploadPreferences : PrefManager("fileUploadPrefs") {
     }
 
     fun getRunningWorkersLiveData(): LiveData<List<UUID>> {
-        return runningWorkersLiveData
+        if (runningWorkersLiveData == null) runningWorkersLiveData = MutableLiveData(getRunningWorkerIds())
+        return runningWorkersLiveData!!
     }
-
 }

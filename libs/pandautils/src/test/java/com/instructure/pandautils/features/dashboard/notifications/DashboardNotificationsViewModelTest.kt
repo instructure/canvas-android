@@ -20,9 +20,10 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.*
+import androidx.work.Data
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
@@ -33,24 +34,23 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
+import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
+import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
-import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.pandautils.utils.ThemePrefs
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
+import io.mockk.*
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import okhttp3.internal.toHexString
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
-import kotlin.math.exp
+import java.util.*
 
 @ExperimentalCoroutinesApi
 class DashboardNotificationsViewModelTest {
@@ -72,6 +72,7 @@ class DashboardNotificationsViewModelTest {
     private val oauthManager: OAuthManager = mockk(relaxed = true)
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val workManager: WorkManager = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardNotificationsViewModel
 
@@ -108,20 +109,31 @@ class DashboardNotificationsViewModelTest {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
+        mockkObject(FileUploadPreferences)
+        every { FileUploadPreferences.getRunningWorkerIds() } returns emptyList()
+        every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(emptyList())
+
         viewModel = DashboardNotificationsViewModel(
-                resources,
-                courseManager,
-                groupManager,
-                enrollmentManager,
-                conferenceManager,
-                accountNotificationManager,
-                oauthManager,
-                conferenceDashboardBlacklist,
-                apiPrefs
+            resources,
+            courseManager,
+            groupManager,
+            enrollmentManager,
+            conferenceManager,
+            accountNotificationManager,
+            oauthManager,
+            conferenceDashboardBlacklist,
+            apiPrefs,
+            workManager,
+            FileUploadPreferences
         )
 
         viewModel.data.observe(lifecycleOwner, {})
         viewModel.events.observe(lifecycleOwner, {})
+    }
+
+    @After
+    fun tearDown() {
+        unmockkObject(FileUploadPreferences)
     }
 
     private fun setupResources() {
@@ -408,5 +420,96 @@ class DashboardNotificationsViewModelTest {
             assert(itemViewModel is ConferenceItemViewModel)
             assertEquals(expectedData[index], (itemViewModel as ConferenceItemViewModel).data)
         }
+    }
+
+    @Test
+    fun `Upload map correctly`() {
+        val workerId = UUID.randomUUID()
+        val title = "Title"
+        val subTitle = "SubTitle"
+
+        every { FileUploadPreferences.getRunningWorkerIds() } returns listOf(workerId)
+        every { workManager.getWorkInfoById(workerId).get() } returns WorkInfo(
+            workerId,
+            WorkInfo.State.RUNNING,
+            Data.EMPTY,
+            emptyList(),
+            Data.Builder()
+                .putString(FileUploadWorker.PROGRESS_DATA_TITLE, title)
+                .putString(FileUploadWorker.PROGRESS_DATA_SUBTITLE, subTitle)
+                .build(),
+            1
+        )
+
+        val expectedData = listOf(
+            UploadViewData(
+                title,
+                subTitle,
+                "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
+                R.drawable.ic_upload
+            )
+        )
+
+        viewModel.loadData()
+
+        viewModel.data.value?.items?.forEachIndexed { index, itemViewModel ->
+            assert(itemViewModel is UploadItemViewModel)
+            assertEquals(expectedData[index], (itemViewModel as UploadItemViewModel).data)
+        }
+    }
+
+    @Test
+    fun `Upload notification shows up and disappears when it's finished`() {
+        val workerId = UUID.randomUUID()
+
+        every { FileUploadPreferences.getRunningWorkerIds() } returns listOf(workerId)
+        every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(listOf(workerId))
+        every { workManager.getWorkInfoById(workerId).get() } returns WorkInfo(
+            workerId,
+            WorkInfo.State.RUNNING,
+            Data.EMPTY,
+            emptyList(),
+            Data.EMPTY,
+            1
+        )
+
+        viewModel.loadData()
+        assertEquals(false, viewModel.data.value?.items?.isEmpty())
+
+        every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(emptyList())
+        every { FileUploadPreferences.getRunningWorkerIds() } returns emptyList()
+
+        viewModel.loadData()
+        assertEquals(true, viewModel.data.value?.items?.isEmpty())
+    }
+
+    @Test
+    fun `Open progress dialog`() {
+        val workerId = UUID.randomUUID()
+
+        every { FileUploadPreferences.getRunningWorkerIds() } returns listOf(workerId)
+        every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(listOf(workerId))
+        every { workManager.getWorkInfoById(workerId).get() } returns WorkInfo(
+            workerId,
+            WorkInfo.State.RUNNING,
+            Data.EMPTY,
+            emptyList(),
+            Data.EMPTY,
+            1
+        )
+
+        viewModel.loadData()
+
+        val itemViewModel = viewModel.data.value?.items?.first()
+        assert(itemViewModel is UploadItemViewModel)
+
+        itemViewModel as UploadItemViewModel
+        itemViewModel.open(workerId)
+
+        val event = viewModel.events.value?.getContentIfNotHandled()
+        assert(event is DashboardNotificationsActions.OpenProgressDialog)
+
+        event as DashboardNotificationsActions.OpenProgressDialog
+        assertEquals(workerId, event.uuid)
     }
 }

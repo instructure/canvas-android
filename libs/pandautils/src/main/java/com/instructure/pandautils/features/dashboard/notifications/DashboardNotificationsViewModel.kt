@@ -227,8 +227,8 @@ class DashboardNotificationsViewModel @Inject constructor(
                 "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
                 R.drawable.ic_upload
             )
-        ) {
-            //TODO on item click
+        ) { uuid ->
+            _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
         }
     }
 
