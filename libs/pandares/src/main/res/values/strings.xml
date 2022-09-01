@@ -1291,4 +1291,8 @@
     <string name="emailNotificationsWeekly">Weekly</string>
     <string name="emailNotificationsNever">Never</string>
     <string name="selectFrequency">Select frequency</string>
+    <string name="a11y_closeProgress">Close progress dialog</string>
+    <string name="fileUploadProgress">%1$s of %2$s</string>
+    <string name="fileUploadProgressSubtitle">Uploading to Files</string>
+    <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
 </resources>

@@ -116,7 +116,7 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
                 ShareExtensionSuccessDialogFragment.newInstance().show(supportFragmentManager, ShareExtensionSuccessDialogFragment.TAG)
             }
             is ShareExtensionAction.ShowProgressDialog -> {
-                ShareExtensionProgressDialogFragment.newInstance(action.uuid)
+                ShareExtensionProgressDialogFragment.newInstance(action.uuid).show(supportFragmentManager, ShareExtensionProgressDialogFragment.TAG)
             }
         }
     }

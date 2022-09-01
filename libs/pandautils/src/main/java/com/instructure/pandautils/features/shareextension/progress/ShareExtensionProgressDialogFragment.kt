@@ -16,34 +16,68 @@
 
 package com.instructure.pandautils.features.shareextension.progress
 
-import androidx.lifecycle.ViewModelProvider
+import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.databinding.FragmentShareExtensionProgressDialogBinding
+import com.instructure.pandautils.utils.NullableSerializableArg
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class ShareExtensionProgressDialogFragment : DialogFragment() {
 
     private val viewModel: ShareExtensionProgressDialogViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_share_extension_progress_dialog, container, false)
+    private var uuid: UUID? by NullableSerializableArg(KEY_UUID)
+
+    private lateinit var binding: FragmentShareExtensionProgressDialogBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        uuid?.let {
+            viewModel.setUUID(it)
+        }
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        binding = FragmentShareExtensionProgressDialogBinding.inflate(layoutInflater, null, false)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(binding.root)
+            .setNegativeButton(R.string.utils_cancel, null)
+            .setCancelable(false)
+            .create()
+
+        return dialog
     }
 
     companion object {
-        const val UUID = "UUID"
-        fun newInstance(uuid: UUID) : ShareExtensionProgressDialogFragment {
+        const val TAG = "ShareExtensionProgressDialogFragment"
+        const val KEY_UUID = "UUID"
+        fun newInstance(uuid: UUID): ShareExtensionProgressDialogFragment {
             return ShareExtensionProgressDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(UUID, uuid)
+                    putSerializable(KEY_UUID, uuid)
                 }
+                this.uuid = uuid
             }
         }
     }
