@@ -92,6 +92,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text="@{itemViewModel.data.subTitle}"
                 android:textColor="@color/textDark"
                 android:textSize="14sp"
                 android:visibility="@{itemViewModel.data.subTitle.empty ? View.GONE : View.VISIBLE}"
