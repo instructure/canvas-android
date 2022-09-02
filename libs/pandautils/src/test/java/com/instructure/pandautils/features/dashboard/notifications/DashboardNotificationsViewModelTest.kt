@@ -452,7 +452,7 @@ class DashboardNotificationsViewModelTest {
 
         viewModel.loadData()
 
-        viewModel.data.value?.items?.forEachIndexed { index, itemViewModel ->
+        viewModel.data.value?.uploadItems?.forEachIndexed { index, itemViewModel ->
             assert(itemViewModel is UploadItemViewModel)
             assertEquals(expectedData[index], (itemViewModel as UploadItemViewModel).data)
         }
@@ -474,13 +474,13 @@ class DashboardNotificationsViewModelTest {
         )
 
         viewModel.loadData()
-        assertEquals(false, viewModel.data.value?.items?.isEmpty())
+        assertEquals(false, viewModel.data.value?.uploadItems?.isEmpty())
 
         every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(emptyList())
         every { FileUploadPreferences.getRunningWorkerIds() } returns emptyList()
 
         viewModel.loadData()
-        assertEquals(true, viewModel.data.value?.items?.isEmpty())
+        assertEquals(true, viewModel.data.value?.uploadItems?.isEmpty())
     }
 
     @Test
@@ -500,7 +500,7 @@ class DashboardNotificationsViewModelTest {
 
         viewModel.loadData()
 
-        val itemViewModel = viewModel.data.value?.items?.first()
+        val itemViewModel = viewModel.data.value?.uploadItems?.first()
         assert(itemViewModel is UploadItemViewModel)
 
         itemViewModel as UploadItemViewModel

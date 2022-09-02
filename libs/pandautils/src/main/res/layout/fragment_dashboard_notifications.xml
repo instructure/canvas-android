@@ -32,6 +32,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingTop="12dp"
-        android:visibility="@{viewModel.data.items.size() == 0 ? View.GONE : View.VISIBLE}"
-        app:itemViewModels="@{viewModel.data.items}" />
+        android:visibility="@{viewModel.data.concatenatedItems.size() == 0 ? View.GONE : View.VISIBLE}"
+        app:itemViewModels="@{viewModel.data.concatenatedItems}" />
 </layout>

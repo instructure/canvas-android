@@ -17,14 +17,20 @@
 package com.instructure.pandautils.features.dashboard.notifications
 
 import androidx.annotation.DrawableRes
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.pandautils.mvvm.ItemViewModel
 import java.util.*
 
 data class DashboardNotificationsViewData(
-    val items: List<ItemViewModel>
-)
+    val items: List<ItemViewModel>,
+    var uploadItems: List<ItemViewModel>
+) : BaseObservable() {
+    @Bindable
+    fun getConcatenatedItems() = uploadItems + items
+}
 
 data class InvitationViewData(
     val title: String,

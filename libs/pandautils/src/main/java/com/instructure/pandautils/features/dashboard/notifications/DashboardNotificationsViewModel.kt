@@ -80,7 +80,8 @@ class DashboardNotificationsViewModel @Inject constructor(
     private var groupMap: Map<Long, Group> = emptyMap()
 
     private val runningWorkersObserver = Observer<List<UUID>> {
-        loadData()
+        _data.value?.uploadItems = getUploads(it)
+        _data.value?.notifyPropertyChanged(BR.concatenatedItems)
     }
 
     init {
@@ -105,7 +106,6 @@ class DashboardNotificationsViewModel @Inject constructor(
             groupMap = groups?.associateBy { it.id } ?: emptyMap()
 
             val uploadViewModels = getUploads(fileUploadPreferences.getRunningWorkerIds())
-            items.addAll(uploadViewModels)
 
             val invitationViewModels = getInvitations(forceNetwork)
             items.addAll(invitationViewModels)
@@ -116,7 +116,7 @@ class DashboardNotificationsViewModel @Inject constructor(
             val conferenceViewModels = getConferences(forceNetwork)
             items.addAll(conferenceViewModels)
 
-            _data.postValue(DashboardNotificationsViewData(items))
+            _data.postValue(DashboardNotificationsViewData(items, uploadViewModels))
         }
     }
 
