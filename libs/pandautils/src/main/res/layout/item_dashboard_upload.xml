@@ -99,11 +99,15 @@
                 app:layout_constraintTop_toBottomOf="@id/uploadTitle" />
 
             <ProgressBar
-                style="@android:style/Widget.ProgressBar.Horizontal"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="3dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:indeterminate="true"
                 android:indeterminateOnly="true"
+                android:indeterminateTint="@color/backgroundInfo"
+                android:indeterminateTintMode="src_atop"
+                android:progressTint="@color/backgroundInfo"
                 app:layout_constraintTop_toBottomOf="@id/uploadSubtitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

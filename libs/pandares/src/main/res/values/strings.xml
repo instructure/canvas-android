@@ -1291,4 +1291,7 @@
     <string name="emailNotificationsWeekly">Weekly</string>
     <string name="emailNotificationsNever">Never</string>
     <string name="selectFrequency">Select frequency</string>
+
+    <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Uploading files</string>
 </resources>
