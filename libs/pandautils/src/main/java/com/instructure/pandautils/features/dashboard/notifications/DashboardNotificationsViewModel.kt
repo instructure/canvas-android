@@ -105,8 +105,6 @@ class DashboardNotificationsViewModel @Inject constructor(
 
             groupMap = groups?.associateBy { it.id } ?: emptyMap()
 
-            val uploadViewModels = getUploads(fileUploadPreferences.getRunningWorkerIds())
-
             val invitationViewModels = getInvitations(forceNetwork)
             items.addAll(invitationViewModels)
 
@@ -115,6 +113,8 @@ class DashboardNotificationsViewModel @Inject constructor(
 
             val conferenceViewModels = getConferences(forceNetwork)
             items.addAll(conferenceViewModels)
+
+            val uploadViewModels = getUploads(fileUploadPreferences.getRunningWorkerIds())
 
             _data.postValue(DashboardNotificationsViewData(items, uploadViewModels))
         }
