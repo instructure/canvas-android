@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.shareextension.target
 
 import android.content.res.Resources
-import android.graphics.Canvas
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -25,18 +24,13 @@ import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ColorPref
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadType
-import com.instructure.pandautils.features.shareextension.target.itemviewmodels.ShareExtensionAssignmentItemViewModel
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.color
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

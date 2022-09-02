@@ -109,6 +109,8 @@ dependencies {
     testImplementation Libs.ANDROIDX_CORE_TESTING
     testImplementation Libs.THREETEN_BP
 
+    testImplementation project(path: ':pandautils')
+
     /* Media handling */
     api(Libs.GLIDE) {
         exclude group: "com.android.support"

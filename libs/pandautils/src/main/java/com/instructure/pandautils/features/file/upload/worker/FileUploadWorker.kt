@@ -54,7 +54,31 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
     override suspend fun doWork(): Result {
         try {
+            var assignmentName = ""
+            var groupId: Long? = null
+            if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
+                val assignment = getAssignment(assignmentId, courseId)
+                groupId = getGroupId(assignment, courseId)
+                assignmentName = assignment.name.orEmpty()
+            }
+
+            val title = context.getString(
+                if (action == ACTION_ASSIGNMENT_SUBMISSION) {
+                    R.string.dashboardNotificationUploadingSubmissionTitle
+                } else {
+                    R.string.dashboardNotificationUploadingFilesTitle
+                }
+            )
+
+            setProgress(
+                Data.Builder()
+                    .putString(PROGRESS_DATA_TITLE, title)
+                    .putString(PROGRESS_DATA_SUBTITLE, assignmentName)
+                    .build()
+            )
+
             FileUploadPreferences.addWorkerId(id)
+
             val filePaths = inputData.getStringArray(FILE_PATHS)
 
             val fileSubmitObjects = filePaths?.let {
@@ -62,12 +86,6 @@ class FileUploadWorker(private val context: Context, private val workerParameter
             } ?: throw IllegalArgumentException()
 
             uploadCount = fileSubmitObjects.size
-
-            var groupId: Long? = null
-            if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
-                val assignment = getAssignment(assignmentId, courseId)
-                groupId = getGroupId(assignment, courseId)
-            }
 
             val attachments = uploadFiles(fileSubmitObjects, groupId)
 
@@ -242,5 +260,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
         const val RESULT_ATTACHMENTS = "attachments"
 
+        const val PROGRESS_DATA_TITLE = "PROGRESS_DATA_TITLE"
+        const val PROGRESS_DATA_SUBTITLE = "PROGRESS_DATA_SUBTITLE"
     }
 }
