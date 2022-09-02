@@ -167,7 +167,7 @@ class DioConfig {
     if (path == null) {
       return DioCacheManager(CacheConfig(baseUrl: baseUrl)).clearAll();
     } else {
-      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path);
+      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path, requestMethod: "GET");
     }
   }
 }
