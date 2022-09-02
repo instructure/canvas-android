@@ -1,5 +1,6 @@
 package com.instructure.pandautils.features.shareextension.progress
 
+import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -20,6 +21,6 @@ data class ShareExtensionProgressViewData(
 data class FileProgressViewData(
     val name: String,
     val size: String,
-    @DrawableRes val icon: Int,
+    val icon: Drawable,
     @get:Bindable var uploaded: Boolean
 ) : BaseObservable()

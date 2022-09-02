@@ -1,7 +1,9 @@
 package com.instructure.pandautils.features.shareextension.progress
 
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -44,6 +46,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
         workManager.getWorkInfoByIdLiveData(uuid).observeForever {
             if (allDataPresent(it.progress)) {
                 _state.postValue(ViewState.Success)
+
                 val maxSize = it.progress.getLong(FileUploadWorker.FULL_SIZE, 1L)
                 val currentSize = it.progress.getLong(FileUploadWorker.CURRENT_PROGRESS, 0L)
                 val assignmentName =
@@ -62,7 +65,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                             FileProgressViewData(
                                 it.name,
                                 humanReadableByteCount(it.size),
-                                R.drawable.ic_image,
+                                getIconDrawable(it.contentType),
                                 uploadedMap.containsKey(it.name)
                             )
                         }
@@ -116,6 +119,13 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
 
     fun onCloseClicked() {
 
+    }
+
+    private fun getIconDrawable(contentType: String): Drawable {
+        return if (contentType.contains("image")) resources.getDrawable(R.drawable.ic_image)
+        else if (contentType.contains("video")) resources.getDrawable(R.drawable.ic_media)
+        else if (contentType.contains("pdf")) resources.getDrawable(R.drawable.ic_pdf)
+        else resources.getDrawable(R.drawable.ic_attachment)
     }
 
     private fun humanReadableByteCount(bytes: Long): String {
