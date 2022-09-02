@@ -1290,12 +1290,5 @@
     <string name="appThemeLight">Jasny</string>
     <string name="appThemeDark">Ciemny</string>
     <string name="appThemeSystem">Taki sam jak urządzenia</string>
-    <string name="themeSelectorTitle">Dla Canvas jest teraz dostępny ciemny motyw</string>
-    <string name="themeSelectorDescription">Wybierz motyw aplikacji</string>
-    <string name="themeSelectorLightTheme">Jasny motyw</string>
-    <string name="themeSelectorDarkTheme">Ciemny motyw</string>
-    <string name="themeSelectorDeviceTheme">Taki sam jak motyw urządzenia</string>
-    <string name="themeSelectorSave">Zapisz</string>
-    <string name="themeSelectorChangeLater">Można zmienić go później w Ustawieniach aplikacji</string>
     <string name="grabAnnotationTool">Chwyć</string>
 </resources>

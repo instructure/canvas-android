@@ -1290,12 +1290,5 @@
     <string name="appThemeLight">Светлая</string>
     <string name="appThemeDark">Темная</string>
     <string name="appThemeSystem">Аналогично устройству</string>
-    <string name="themeSelectorTitle">Canvas теперь доступно в темной теме</string>
-    <string name="themeSelectorDescription">Выбрать тему приложения</string>
-    <string name="themeSelectorLightTheme">Светлая тема</string>
-    <string name="themeSelectorDarkTheme">Темная тема</string>
-    <string name="themeSelectorDeviceTheme">Аналогично теме устройства</string>
-    <string name="themeSelectorSave">Сохранить</string>
-    <string name="themeSelectorChangeLater">Вы можете изменить этот параметр позднее в настройках приложения</string>
     <string name="grabAnnotationTool">Захват</string>
 </resources>

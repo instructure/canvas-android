@@ -1267,14 +1267,6 @@
     <string name="appThemeDark">Dark</string>
     <string name="appThemeSystem">Same as device</string>
 
-    <string name="themeSelectorTitle">Canvas is now available in dark theme</string>
-    <string name="themeSelectorDescription">Choose app theme</string>
-    <string name="themeSelectorLightTheme">Light theme</string>
-    <string name="themeSelectorDarkTheme">Dark theme</string>
-    <string name="themeSelectorDeviceTheme">Same as device theme</string>
-    <string name="themeSelectorSave">Save</string>
-    <string name="themeSelectorChangeLater">You can change it later in app settings</string>
-
     <string name="grabAnnotationTool">Grab</string>
     <string name="fileUpload">File Upload</string>
 
@@ -1295,4 +1287,7 @@
     <string name="fileUploadProgress">%1$s of %2$s</string>
     <string name="fileUploadProgressSubtitle">Uploading to Files</string>
     <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
+
+    <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Uploading files</string>
 </resources>

@@ -66,6 +66,29 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
     override suspend fun doWork(): Result {
         try {
+            var assignmentName = ""
+            var groupId: Long? = null
+            if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
+                val assignment = getAssignment(assignmentId, courseId)
+                groupId = getGroupId(assignment, courseId)
+                assignmentName = assignment.name.orEmpty()
+            }
+
+            val title = context.getString(
+                if (action == ACTION_ASSIGNMENT_SUBMISSION) {
+                    R.string.dashboardNotificationUploadingSubmissionTitle
+                } else {
+                    R.string.dashboardNotificationUploadingFilesTitle
+                }
+            )
+
+            setProgress(
+                Data.Builder()
+                    .putString(PROGRESS_DATA_TITLE, title)
+                    .putString(PROGRESS_DATA_SUBTITLE, assignmentName)
+                    .build()
+            )
+
             FileUploadPreferences.addWorkerId(id)
 
             var groupId: Long? = null
@@ -318,5 +341,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
         const val ASSIGNMENT_NAME = "assignmentName"
         const val FULL_SIZE = "fullSize"
         const val CURRENT_PROGRESS = "currentProgress"
+        const val PROGRESS_DATA_TITLE = "PROGRESS_DATA_TITLE"
+        const val PROGRESS_DATA_SUBTITLE = "PROGRESS_DATA_SUBTITLE"
     }
 }

@@ -146,6 +146,26 @@ class PagesE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that ${testPage2.title} is displayed as a front page.")
         pageListPage.assertFrontPageDisplayed(testPage2.title)
 
+        Log.d(STEP_TAG,"Click on '+' icon on the UI to create a new page.")
+        pageListPage.clickOnCreateNewPage()
+
+        val newPageTitle = "Test Page Mobile UI"
+        Log.d(STEP_TAG,"Set '$newPageTitle' as the page's title and set some description as well.")
+        editPageDetailsPage.editPageName(newPageTitle)
+        editPageDetailsPage.editDescription("Mobile UI Page description")
+
+        Log.d(STEP_TAG,"Toggle Publish checkbox and save the page.")
+        editPageDetailsPage.togglePublished()
+        editPageDetailsPage.savePage()
+
+        Log.d(STEP_TAG,"Assert that '$newPageTitle' page is displayed and published.")
+        pageListPage.assertPageIsPublished(newPageTitle)
+        Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created page's title.")
+        pageListPage.openSearch()
+        pageListPage.enterSearchQuery("Test")
+        Log.d(STEP_TAG,"Assert that the '$newPageTitle' titled page is displayed and it is the only one.")
+        pageListPage.assertPageIsPublished(newPageTitle)
+        pageListPage.assertPageCount(1)
     }
 
 }
