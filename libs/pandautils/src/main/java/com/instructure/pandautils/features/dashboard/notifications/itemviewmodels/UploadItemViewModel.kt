@@ -17,18 +17,41 @@
 
 package com.instructure.pandautils.features.dashboard.notifications.itemviewmodels
 
-import androidx.databinding.BaseObservable
+import androidx.lifecycle.Observer
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.UploadViewData
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_FULL_SIZE
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_UPLOADED_SIZE
 import com.instructure.pandautils.mvvm.ItemViewModel
 import java.util.*
 
 class UploadItemViewModel(
     private val workerId: UUID,
+    val workManager: WorkManager,
     val data: UploadViewData,
     val open: (UUID) -> Unit
-) : ItemViewModel, BaseObservable() {
+) : ItemViewModel {
+
+    private val observer = Observer<WorkInfo> {
+        val uploadedSize = it.progress.getLong(PROGRESS_DATA_UPLOADED_SIZE, 0L)
+        val fullSize = it.progress.getLong(PROGRESS_DATA_FULL_SIZE, 1L)
+
+        data.progress = ((uploadedSize.toDouble() / fullSize.toDouble()) * 100.0).toInt()
+        data.notifyPropertyChanged(BR.progress)
+    }
     override val layoutId = R.layout.item_dashboard_upload
+
+    init {
+        workManager.getWorkInfoByIdLiveData(workerId).observeForever(observer)
+    }
+
+    fun clear() {
+        workManager.getWorkInfoByIdLiveData(workerId).removeObserver(observer)
+    }
+
 
     fun open() = open.invoke(workerId)
 }

@@ -81,6 +81,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     private var groupMap: Map<Long, Group> = emptyMap()
 
     private val runningWorkersObserver = Observer<List<UUID>> {
+        _data.value?.uploadItems?.forEach { it.clear() }
         _data.value?.uploadItems = getUploads(it)
         _data.value?.notifyPropertyChanged(BR.concatenatedItems)
     }
@@ -90,6 +91,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        _data.value?.uploadItems?.forEach { it.clear() }
         fileUploadPreferences.getRunningWorkersLiveData().removeObserver(runningWorkersObserver)
         super.onCleared()
     }
@@ -221,14 +223,12 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private fun getUploads(runningWorkerIds: List<UUID>) = runningWorkerIds.map {
         val workInfo = workManager.getWorkInfoById(it).get()
-        UploadItemViewModel(
-            it, UploadViewData(
-                workInfo.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
-                workInfo.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
-                "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
-                R.drawable.ic_upload
-            )
-        ) { uuid ->
+        val uploadViewData = UploadViewData(
+            workInfo.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
+            workInfo.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
+            "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
+        )
+        UploadItemViewModel(it, workManager, uploadViewData) { uuid ->
             _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
         }
     }

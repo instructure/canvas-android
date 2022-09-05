@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.work.Data
 import androidx.work.WorkInfo
@@ -48,17 +49,29 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
 
     private var itemViewData: List<FileProgressViewData> = emptyList()
 
-    fun setUUID(uuid: UUID) {
-        _state.postValue(ViewState.Loading)
-        workManager.getWorkInfoByIdLiveData(uuid).observeForever {
-            when (it.state) {
-                WorkInfo.State.SUCCEEDED -> {
-                    _events.postValue(Event((ShareExtensionProgressAction.ShowSuccessDialog)))
-                }
-                WorkInfo.State.RUNNING -> {
-                    updateViewData(it.progress)
-                }
+    private var workerId: UUID? = null
+
+    private val observer = Observer<WorkInfo> {
+        when (it.state) {
+            WorkInfo.State.SUCCEEDED -> {
+                _events.postValue(Event((ShareExtensionProgressAction.ShowSuccessDialog)))
             }
+            WorkInfo.State.RUNNING -> {
+                updateViewData(it.progress)
+            }
+        }
+    }
+
+    fun setUUID(uuid: UUID) {
+        this.workerId = uuid
+        _state.postValue(ViewState.Loading)
+        workManager.getWorkInfoByIdLiveData(uuid).observeForever(observer)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        workerId?.let {
+            workManager.getWorkInfoByIdLiveData(it).removeObserver(observer)
         }
     }
 

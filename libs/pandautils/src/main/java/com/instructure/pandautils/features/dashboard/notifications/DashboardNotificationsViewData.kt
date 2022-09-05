@@ -21,12 +21,13 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
+import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
 import java.util.*
 
 data class DashboardNotificationsViewData(
     val items: List<ItemViewModel>,
-    var uploadItems: List<ItemViewModel>
+    var uploadItems: List<UploadItemViewModel>
 ) : BaseObservable() {
     @Bindable
     fun getConcatenatedItems() = uploadItems + items
@@ -53,11 +54,11 @@ data class AnnouncementViewData(
 )
 
 data class UploadViewData(
-    val title: String,
-    val subTitle: String,
-    val color: String,
-    @DrawableRes val icon: Int
-)
+    @get:Bindable var title: String = "",
+    @get:Bindable var subTitle: String = "",
+    @get:Bindable var color: String = "",
+    @get:Bindable var progress: Int = 0
+): BaseObservable()
 
 sealed class DashboardNotificationsActions {
     data class ShowToast(val toast: String) : DashboardNotificationsActions()

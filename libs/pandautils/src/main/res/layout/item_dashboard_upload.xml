@@ -56,7 +56,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
-                app:imageRes="@{itemViewModel.data.icon}"
+                android:src="@drawable/ic_upload"
                 app:tint="@color/white" />
 
         </FrameLayout>
@@ -103,12 +103,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:indeterminate="true"
-                android:indeterminateOnly="true"
-                android:indeterminateTint="@color/backgroundInfo"
-                android:indeterminateTintMode="src_atop"
+                android:max="100"
+                android:progress="@{itemViewModel.data.progress}"
                 android:progressTint="@color/backgroundInfo"
-                app:layout_constraintTop_toBottomOf="@id/uploadSubtitle" />
+                app:layout_constraintTop_toBottomOf="@id/uploadSubtitle"
+                tools:progress="25" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
