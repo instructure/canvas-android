@@ -23,9 +23,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentShareExtensionProgressDialogBinding
+import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
 import com.instructure.pandautils.utils.NullableSerializableArg
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -34,6 +36,8 @@ import java.util.*
 class ShareExtensionProgressDialogFragment : DialogFragment() {
 
     private val viewModel: ShareExtensionProgressDialogViewModel by viewModels()
+
+    private val shareExtensionViewModel: ShareExtensionViewModel by activityViewModels()
 
     private var uuid: UUID? by NullableSerializableArg(KEY_UUID)
 
@@ -54,6 +58,20 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
 
         uuid?.let {
             viewModel.setUUID(it)
+        }
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
+    }
+
+    private fun handleAction(action: ShareExtensionProgressAction) {
+        when (action) {
+            is ShareExtensionProgressAction.ShowSuccessDialog -> {
+                shareExtensionViewModel.showSuccessDialog()
+            }
         }
     }
 

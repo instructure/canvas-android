@@ -86,20 +86,16 @@ class ShareExtensionViewModel @Inject constructor(
         } ?: _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.errorOccurred))))
     }
 
-    private fun workerCallback(uuid: UUID, liveData: LiveData<WorkInfo>) {
-        showProgressDialog(uuid)
-    }
-
     fun finish() {
         _events.postValue(Event(ShareExtensionAction.Finish))
     }
 
-    private fun showProgressDialog(uuid: UUID) {
-        _events.postValue(Event(ShareExtensionAction.ShowProgressDialog(uuid)))
+    fun showSuccessDialog() {
+        _events.postValue(Event(ShareExtensionAction.ShowSuccessDialog))
     }
 
-    private fun showSuccessDialog() {
-        _events.postValue(Event(ShareExtensionAction.ShowSuccessDialog))
+    fun showConfetti() {
+        _events.postValue(Event(ShareExtensionAction.ShowConfetti))
     }
 
     private fun uploadDialogCallback(event: Int) {
@@ -108,9 +104,14 @@ class ShareExtensionViewModel @Inject constructor(
         }
     }
 
-    fun showConfetti() {
-        _events.postValue(Event(ShareExtensionAction.ShowConfetti))
+    private fun showProgressDialog(uuid: UUID) {
+        _events.postValue(Event(ShareExtensionAction.ShowProgressDialog(uuid)))
     }
+
+    private fun workerCallback(uuid: UUID, liveData: LiveData<WorkInfo>) {
+        showProgressDialog(uuid)
+    }
+
 }
 
 sealed class ShareExtensionAction {

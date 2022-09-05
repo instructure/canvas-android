@@ -24,3 +24,7 @@ data class FileProgressViewData(
     val icon: Drawable,
     @get:Bindable var uploaded: Boolean
 ) : BaseObservable()
+
+sealed class ShareExtensionProgressAction {
+    object ShowSuccessDialog : ShareExtensionProgressAction()
+}
