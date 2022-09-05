@@ -2,8 +2,6 @@ package com.instructure.pandautils.features.shareextension.progress
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.view.View
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,19 +45,19 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
             if (allDataPresent(it.progress)) {
                 _state.postValue(ViewState.Success)
 
-                val maxSize = it.progress.getLong(FileUploadWorker.FULL_SIZE, 1L)
-                val currentSize = it.progress.getLong(FileUploadWorker.CURRENT_PROGRESS, 0L)
+                val maxSize = it.progress.getLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
+                val currentSize = it.progress.getLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
                 val assignmentName =
-                    if (it.progress.hasKeyWithValueOfType<String>(FileUploadWorker.ASSIGNMENT_NAME)) {
-                        it.progress.getString(FileUploadWorker.ASSIGNMENT_NAME)
+                    if (it.progress.hasKeyWithValueOfType<String>(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME)) {
+                        it.progress.getString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME)
                     } else null
 
-                val uploadedMap = it.progress.getStringArray(FileUploadWorker.FILES_SUCCEEDED).orEmpty()
+                val uploadedMap = it.progress.getStringArray(FileUploadWorker.PROGRESS_DATA_UPLOADED_FILES).orEmpty()
                     .map { it.fromJson<FileSubmitObject>() }
                     .associateBy { it.name }
 
                 if (viewData == null) {
-                    itemViewData = it.progress.getStringArray(FileUploadWorker.FILES_IN_PROGRESS).orEmpty().toList()
+                    itemViewData = it.progress.getStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD).orEmpty().toList()
                         .map { it.fromJson<FileSubmitObject>() }
                         .map {
                             FileProgressViewData(
@@ -112,8 +110,8 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
     }
 
     private fun allDataPresent(progress: Data): Boolean {
-        return progress.hasKeyWithValueOfType<Long>(FileUploadWorker.FULL_SIZE) && progress.hasKeyWithValueOfType<Array<String>>(
-            FileUploadWorker.FILES_IN_PROGRESS
+        return progress.hasKeyWithValueOfType<Long>(FileUploadWorker.PROGRESS_DATA_FULL_SIZE) && progress.hasKeyWithValueOfType<Array<String>>(
+            FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD
         )
     }
 

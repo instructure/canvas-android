@@ -1289,5 +1289,5 @@
     <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
 
     <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Uploading files</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
 </resources>

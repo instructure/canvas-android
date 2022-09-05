@@ -35,11 +35,7 @@ import com.instructure.pandautils.features.file.upload.preferences.FileUploadPre
 import com.instructure.pandautils.toJson
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
 import java.util.*
-import kotlin.coroutines.suspendCoroutine
 
 class FileUploadWorker(private val context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
@@ -66,13 +62,13 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
     override suspend fun doWork(): Result {
         try {
-            var assignmentName = ""
-            var groupId: Long? = null
-            if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
-                val assignment = getAssignment(assignmentId, courseId)
-                groupId = getGroupId(assignment, courseId)
-                assignmentName = assignment.name.orEmpty()
-            }
+            val filePaths = inputData.getStringArray(FILE_PATHS)
+
+            val fileSubmitObjects = filePaths?.let {
+                getFileSubmitObjects(it)
+            } ?: throw IllegalArgumentException()
+            fullSize = fileSubmitObjects.sumOf { it.size }
+            uploadCount = fileSubmitObjects.size
 
             val title = context.getString(
                 if (action == ACTION_ASSIGNMENT_SUBMISSION) {
@@ -82,39 +78,26 @@ class FileUploadWorker(private val context: Context, private val workerParameter
                 }
             )
 
+            var assignmentName = ""
+            var groupId: Long? = null
+            if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
+                val assignment = getAssignment(assignmentId, courseId)
+                groupId = getGroupId(assignment, courseId)
+                assignmentName = assignment.name.orEmpty()
+            }
+
             setProgress(
-                Data.Builder()
+                workDataBuilder
                     .putString(PROGRESS_DATA_TITLE, title)
-                    .putString(PROGRESS_DATA_SUBTITLE, assignmentName)
+                    .putString(PROGRESS_DATA_ASSIGNMENT_NAME, assignmentName)
+                    .putLong(PROGRESS_DATA_FULL_SIZE, fullSize)
+                    .putStringArray(PROGRESS_DATA_FILES_TO_UPLOAD, fileSubmitObjects.map {
+                        it.toJson()
+                    }.toTypedArray())
                     .build()
             )
 
             FileUploadPreferences.addWorkerId(id)
-
-            var groupId: Long? = null
-            if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
-                val assignment = getAssignment(assignmentId, courseId)
-                workDataBuilder.putString(ASSIGNMENT_NAME, assignment.name)
-                groupId = getGroupId(assignment, courseId)
-            }
-
-            val filePaths = inputData.getStringArray(FILE_PATHS)
-
-            val fileSubmitObjects = filePaths?.let {
-                getFileSubmitObjects(it)
-            } ?: throw IllegalArgumentException()
-
-            val fsoJson = fileSubmitObjects.map {
-                it.toJson()
-            }.toTypedArray()
-            workDataBuilder.putStringArray(FILES_IN_PROGRESS, fsoJson)
-
-            fullSize = fileSubmitObjects.sumOf { it.size }
-            workDataBuilder.putLong(FULL_SIZE, fullSize)
-
-            uploadCount = fileSubmitObjects.size
-
-            setProgress(workDataBuilder.build())
 
             val attachments = uploadFiles(fileSubmitObjects, groupId)
 
@@ -224,20 +207,28 @@ class FileUploadWorker(private val context: Context, private val workerParameter
             attachments += FileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
                 override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
                     currentProgress = uploaded + (fileSubmitObject.size * progressPercent).toLong()
-                    workDataBuilder.putLong(CURRENT_PROGRESS, currentProgress)
-                    setProgressAsync(workDataBuilder.build())
+                    setProgressAsync(
+                        workDataBuilder
+                            .putLong(PROGRESS_DATA_UPLOADED_SIZE, currentProgress)
+                            .build()
+                    )
                     return true
                 }
             }).dataOrThrow
 
-            val updatedList = workDataBuilder.build().getStringArray(FILES_SUCCEEDED).orEmpty().toMutableList().apply {
-                add(fileSubmitObject.toJson())
-            }.toTypedArray()
+            val updatedList =
+                workDataBuilder.build().getStringArray(PROGRESS_DATA_UPLOADED_FILES).orEmpty().toMutableList().apply {
+                    add(fileSubmitObject.toJson())
+                }.toTypedArray()
             uploaded += fileSubmitObject.size
             currentProgress = uploaded
-            workDataBuilder.putStringArray(FILES_SUCCEEDED, updatedList)
-            workDataBuilder.putLong(CURRENT_PROGRESS, currentProgress)
-            setProgress(workDataBuilder.build())
+
+            setProgress(
+                workDataBuilder
+                    .putStringArray(PROGRESS_DATA_UPLOADED_FILES, updatedList)
+                    .putLong(PROGRESS_DATA_UPLOADED_SIZE, currentProgress)
+                    .build()
+            )
         }
         return attachments
     }
@@ -335,12 +326,11 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
         const val RESULT_ATTACHMENTS = "attachments"
 
-        const val FILES_IN_PROGRESS = "filesInProgress"
-        const val FILES_SUCCEEDED = "filesSucceeded"
-        const val FILES_FAILED = "filesFailed"
-        const val ASSIGNMENT_NAME = "assignmentName"
-        const val FULL_SIZE = "fullSize"
-        const val CURRENT_PROGRESS = "currentProgress"
+        const val PROGRESS_DATA_FILES_TO_UPLOAD = "filesToUpload"
+        const val PROGRESS_DATA_UPLOADED_FILES = "uploadedFiles"
+        const val PROGRESS_DATA_ASSIGNMENT_NAME = "assignmentName"
+        const val PROGRESS_DATA_FULL_SIZE = "fullSize"
+        const val PROGRESS_DATA_UPLOADED_SIZE = "uploadedSize"
         const val PROGRESS_DATA_TITLE = "PROGRESS_DATA_TITLE"
         const val PROGRESS_DATA_SUBTITLE = "PROGRESS_DATA_SUBTITLE"
     }

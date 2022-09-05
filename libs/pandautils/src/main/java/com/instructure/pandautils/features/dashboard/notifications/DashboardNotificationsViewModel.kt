@@ -35,6 +35,7 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
 import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_ASSIGNMENT_NAME
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_SUBTITLE
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_TITLE
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
@@ -223,7 +224,7 @@ class DashboardNotificationsViewModel @Inject constructor(
         UploadItemViewModel(
             it, UploadViewData(
                 workInfo.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
-                workInfo.progress.getString(PROGRESS_DATA_SUBTITLE).orEmpty(),
+                workInfo.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
                 "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
                 R.drawable.ic_upload
             )
