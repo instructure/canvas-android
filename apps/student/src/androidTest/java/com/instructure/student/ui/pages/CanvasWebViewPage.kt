@@ -21,7 +21,10 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.model.Atoms.getCurrentUrl
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.*
+import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
+import androidx.test.espresso.web.webdriver.DriverAtoms.getText
+import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
+import androidx.test.espresso.web.webdriver.DriverAtoms.webScrollIntoView
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.espresso.assertVisible
@@ -35,7 +38,11 @@ import org.hamcrest.Matchers.containsString
  */
 open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
 
-    fun verifyTitle(@StringRes title: Int) {
+    fun assertTitle(@StringRes title: Int) {
+        onView(withAncestor(R.id.toolbar) + withText(title)).assertVisible()
+    }
+
+    fun assertTitle(title: String) {
         onView(withAncestor(R.id.toolbar) + withText(title)).assertVisible()
     }
 
