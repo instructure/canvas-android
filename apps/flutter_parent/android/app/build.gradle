@@ -78,6 +78,19 @@ android {
             shrinkResources false // Must be false, otherwise resources we need are erroneously stripped out
             proguardFiles 'proguard-rules.pro'
         }
+        applicationVariants.all{
+            variant ->
+                variant.outputs.each{
+                    output->
+                        project.ext { appName = 'parent' }
+                        def dateTimeStamp = new Date().format('yyyy-MM-dd-HH-mm-ss')
+                        def newName = output.outputFile.name
+                        newName = newName.replace("app-", "$project.ext.appName-")
+                        newName = newName.replace("-debug", "-dev-debug-" + dateTimeStamp)
+                        newName = newName.replace("-release", "-prod-release")
+                        output.outputFileName  = newName
+                }
+        }
     }
 }
 
