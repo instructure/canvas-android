@@ -42,7 +42,7 @@
                 android:layout_height="48dp"
                 android:contentDescription="@string/a11y_closeProgress"
                 android:onClick="@{() -> viewModel.onCloseClicked()}"
-                android:padding="16dp"
+                android:padding="8dp"
                 android:src="@drawable/ic_close"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

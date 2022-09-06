@@ -51,6 +51,9 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import javax.inject.Inject
+
+const val WORKER_ID = "workerId"
 
 @Parcelize
 data class ShareFileSubmissionTarget(
@@ -70,17 +73,29 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
         intent?.extras?.getParcelable(Const.SUBMISSION_TARGET)
     }
 
+    private val workerId: UUID? by lazy {
+        intent?.extras?.getSerializable(WORKER_ID) as? UUID
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share_file)
         ViewStyler.setStatusBarDark(this, ContextCompat.getColor(this, R.color.studentDocumentSharingColor))
         if (shareExtensionViewModel.checkIfLoggedIn()) {
             revealBackground()
-            shareExtensionViewModel.parseIntentType(intent)
-            if (submissionTarget != null) {
-                shareExtensionViewModel.showUploadDialog(submissionTarget!!.course, submissionTarget!!.assignment, FileUploadType.ASSIGNMENT)
+            if (workerId != null) {
+                showProgressDialog(workerId!!)
             } else {
-                showDestinationDialog()
+                shareExtensionViewModel.parseIntentType(intent)
+                if (submissionTarget != null) {
+                    shareExtensionViewModel.showUploadDialog(
+                        submissionTarget!!.course,
+                        submissionTarget!!.assignment,
+                        FileUploadType.ASSIGNMENT
+                    )
+                } else {
+                    showDestinationDialog()
+                }
             }
         } else {
             exitActivity()
@@ -116,9 +131,13 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
                 ShareExtensionSuccessDialogFragment.newInstance().show(supportFragmentManager, ShareExtensionSuccessDialogFragment.TAG)
             }
             is ShareExtensionAction.ShowProgressDialog -> {
-                ShareExtensionProgressDialogFragment.newInstance(action.uuid).show(supportFragmentManager, ShareExtensionProgressDialogFragment.TAG)
+                showProgressDialog(action.uuid)
             }
         }
+    }
+
+    private fun showProgressDialog(uuid: UUID) {
+        ShareExtensionProgressDialogFragment.newInstance(uuid).show(supportFragmentManager, ShareExtensionProgressDialogFragment.TAG)
     }
 
     private fun showUploadDialog(bundle: Bundle, dialogCallback: (Int) -> Unit, workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) {

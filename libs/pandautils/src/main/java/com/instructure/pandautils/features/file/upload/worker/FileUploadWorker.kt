@@ -212,7 +212,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
                             .putLong(PROGRESS_DATA_UPLOADED_SIZE, currentProgress)
                             .build()
                     )
-                    return true
+                    return !this@FileUploadWorker.isStopped
                 }
             }).dataOrThrow
 

@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.shareextension.progress
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentShareExtensionProgressDialogBinding
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
 import com.instructure.pandautils.utils.NullableSerializableArg
+import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -72,6 +74,9 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
             is ShareExtensionProgressAction.ShowSuccessDialog -> {
                 shareExtensionViewModel.showSuccessDialog()
             }
+            is ShareExtensionProgressAction.Close -> {
+                shareExtensionViewModel.finish()
+            }
         }
     }
 
@@ -84,7 +89,28 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
             .setCancelable(false)
             .create()
 
+        dialog.setOnShowListener {
+            val negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+            negative.setTextColor(ThemePrefs.buttonColor)
+            negative.setOnClickListener {
+                cancelClicked()
+            }
+        }
+
         return dialog
+    }
+
+    private fun cancelClicked() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.cancel_submission_dialog_title)
+            .setMessage(R.string.cancel_submission_dialog_message)
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .setPositiveButton(R.string.yes) { _, _ ->
+                uuid?.let {
+                    viewModel.cancelUpload(it)
+                }
+                shareExtensionViewModel.finish()
+            }.show()
     }
 
     companion object {

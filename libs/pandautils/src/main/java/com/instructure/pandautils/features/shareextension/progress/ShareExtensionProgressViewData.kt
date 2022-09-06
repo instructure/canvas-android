@@ -21,10 +21,11 @@ data class ShareExtensionProgressViewData(
 data class FileProgressViewData(
     val name: String,
     val size: String,
-    val icon: Drawable,
+    @DrawableRes val icon: Int,
     @get:Bindable var uploaded: Boolean
 ) : BaseObservable()
 
 sealed class ShareExtensionProgressAction {
     object ShowSuccessDialog : ShareExtensionProgressAction()
+    object Close : ShareExtensionProgressAction()
 }

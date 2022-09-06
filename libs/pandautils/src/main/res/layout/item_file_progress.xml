@@ -24,7 +24,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:importantForAccessibility="no"
-            android:src="@{itemViewModel.data.icon}"
+            app:imageRes="@{itemViewModel.data.icon}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

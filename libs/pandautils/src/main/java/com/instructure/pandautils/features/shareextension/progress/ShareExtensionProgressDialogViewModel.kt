@@ -2,6 +2,7 @@ package com.instructure.pandautils.features.shareextension.progress
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -150,15 +151,15 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
     }
 
     fun onCloseClicked() {
-
+        _events.postValue(Event(ShareExtensionProgressAction.Close))
     }
 
-    private fun getIconDrawable(contentType: String): Drawable {
+    @DrawableRes private fun getIconDrawable(contentType: String): Int {
         return when {
-            contentType.contains("image") -> resources.getDrawable(R.drawable.ic_image)
-            contentType.contains("video") -> resources.getDrawable(R.drawable.ic_media)
-            contentType.contains("pdf") -> resources.getDrawable(R.drawable.ic_pdf)
-            else -> resources.getDrawable(R.drawable.ic_attachment)
+            contentType.contains("image") -> R.drawable.ic_image
+            contentType.contains("video") -> R.drawable.ic_media
+            contentType.contains("pdf") -> R.drawable.ic_pdf
+            else -> R.drawable.ic_attachment
         }
     }
 
@@ -168,5 +169,9 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
         val exp = (ln(bytes.toDouble()) / ln(unit.toDouble())).toInt()
         val pre = "KMGTPE"[exp - 1].toString()
         return String.format(Locale.getDefault(), "%.1f %sB", bytes / unit.toDouble().pow(exp.toDouble()), pre)
+    }
+
+    fun cancelUpload(workerId: UUID) {
+        workManager.cancelWorkById(workerId)
     }
 }
