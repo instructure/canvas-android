@@ -18,34 +18,12 @@ package com.instructure.student.ui.interaction
 import android.text.Html
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
-import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
-import com.instructure.canvas.espresso.mockCanvas.addItemToModule
-import com.instructure.canvas.espresso.mockCanvas.addModuleToCourse
-import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
-import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
-import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
-import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.LockInfo
-import com.instructure.canvasapi2.models.LockedModule
-import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.models.Page
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.QuizAnswer
-import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.SecondaryFeatureCategory
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.panda_annotations.*
 import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
@@ -101,12 +79,16 @@ class ModuleInteractionTest : StudentTest() {
         discussionDetailsPage.assertTopicInfoShowing(topicHeader!!)
     }
 
-    // I'm punting on LTI testing for now.  But MBL-13517 captures this work.
-    @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.MODULES, TestCategory.INTERACTION)
     fun testModules_launchesIntoExternalTool() {
         // Tapping an ExternalTool module item should navigate to that item's detail page
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
+        val course1 = data.courses.values.first()
+        val module = data.courseModules[course1.id]!!.first()
+
+        modulesPage.clickModuleItem(module, "Google Drive")
+        canvasWebViewPage.assertTitle("Google Drive")
     }
 
     // Tapping an ExternalURL module item should navigate to that item's detail page
@@ -122,6 +104,7 @@ class ModuleInteractionTest : StudentTest() {
         modulesPage.clickModuleItem(module,externalUrl)
         // Not much we can test here, as it is an external URL, but testModules_navigateToNextAndPreviousModuleItems
         // will test that the module name and module item name are displayed correctly.
+        canvasWebViewPage.checkWebViewURL("https://www.google.com")
     }
 
     // Tapping a File module item should navigate to that item's detail page
@@ -487,6 +470,12 @@ class ModuleInteractionTest : StudentTest() {
                 item = quiz!!
         )
 
+        val ltiTool = data.addLTITool("Google Drive", "http://google.com", course1, 1234L)
+        data.addItemToModule(
+            course = course1,
+            moduleId = module.id,
+            item = ltiTool!!
+        )
 
         // Sign in
         val student = data.students[0]
