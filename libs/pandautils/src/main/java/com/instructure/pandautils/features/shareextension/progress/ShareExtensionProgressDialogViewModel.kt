@@ -1,7 +1,6 @@
 package com.instructure.pandautils.features.shareextension.progress
 
 import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,13 +11,10 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.hasKeyWithValueOfType
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
-import com.instructure.pandautils.features.shareextension.ShareExtensionAction
 import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
-import com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetAction
 import com.instructure.pandautils.fromJson
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
@@ -99,7 +95,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                             FileProgressViewData(
                                 it.name,
                                 humanReadableByteCount(it.size),
-                                getIconDrawable(it.contentType),
+                                getIconDrawableRes(it.contentType),
                                 uploadedMap.containsKey(it.name)
                             )
                         }
@@ -154,7 +150,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
         _events.postValue(Event(ShareExtensionProgressAction.Close))
     }
 
-    @DrawableRes private fun getIconDrawable(contentType: String): Int {
+    @DrawableRes private fun getIconDrawableRes(contentType: String): Int {
         return when {
             contentType.contains("image") -> R.drawable.ic_image
             contentType.contains("video") -> R.drawable.ic_media
@@ -173,5 +169,9 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
 
     fun cancelUpload(workerId: UUID) {
         workManager.cancelWorkById(workerId)
+    }
+
+    fun cancelClicked() {
+        _events.postValue(Event(ShareExtensionProgressAction.CancelUpload))
     }
 }

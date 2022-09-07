@@ -77,6 +77,9 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
             is ShareExtensionProgressAction.Close -> {
                 shareExtensionViewModel.finish()
             }
+            is ShareExtensionProgressAction.CancelUpload -> {
+                cancelClicked()
+            }
         }
     }
 
@@ -93,7 +96,7 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
             val negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
             negative.setTextColor(ThemePrefs.buttonColor)
             negative.setOnClickListener {
-                cancelClicked()
+                viewModel.cancelClicked()
             }
         }
 
