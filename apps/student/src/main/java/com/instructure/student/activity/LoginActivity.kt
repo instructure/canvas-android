@@ -102,13 +102,6 @@ class LoginActivity : BaseLoginInitActivity() {
         startActivity(intent)
     }
 
-    fun generateLoginData(token: String, domain: String, user: User, canvasForElementary: Boolean = false) {
-        ApiPrefs.accessToken = token
-        ApiPrefs.domain = domain
-        ApiPrefs.user = user
-        ApiPrefs.userAgent = Utils.generateUserAgent(this, userAgent())
-    }
-
     companion object {
         fun createIntent(context: Context): Intent {
             val intent = Intent(context, LoginActivity::class.java)

@@ -100,7 +100,7 @@
                 android:drawableStart="?android:attr/listChoiceIndicatorSingle"
                 android:drawableEnd="@null"
                 android:gravity="center_vertical"
-                android:minHeight="45dp"
+                android:minHeight="48dp"
                 android:onClick="@{() -> viewModel.filesTargetSelected()}"
                 android:text="@string/uploadMyFiles"
                 android:textSize="16sp"
@@ -112,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:minHeight="45dp"
+                android:minHeight="48dp"
                 app:layout_constraintTop_toBottomOf="@id/filesCheckBox">
 
                 <CheckedTextView
@@ -125,7 +125,7 @@
                     android:drawableStart="?android:attr/listChoiceIndicatorSingle"
                     android:drawableEnd="@null"
                     android:gravity="center_vertical"
-                    android:minHeight="45dp"
+                    android:minHeight="48dp"
                     android:onClick="@{() -> viewModel.assignmentTargetSelected()}"
                     android:text="@string/submitAssignment"
                     android:textSize="16sp"

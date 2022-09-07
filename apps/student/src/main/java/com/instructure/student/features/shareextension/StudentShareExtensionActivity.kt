@@ -16,8 +16,6 @@
 
 package com.instructure.student.features.shareextension
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
 import com.instructure.student.activity.LoginActivity
@@ -34,13 +32,5 @@ class StudentShareExtensionActivity : ShareExtensionActivity() {
         val intent = LoginActivity.createIntent(this)
         startActivity(intent)
         finish()
-    }
-
-    companion object {
-        fun createIntent(context: Context): Intent {
-            val intent = Intent(context, StudentShareExtensionActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            return intent
-        }
     }
 }

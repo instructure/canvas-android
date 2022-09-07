@@ -59,6 +59,7 @@
                     app:srcCompat="@drawable/ic_panda_choosefile" />
 
                 <TextView
+                    android:id="@+id/chooseFileTitle"
                     style="@style/TextFont.Medium"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -68,6 +69,7 @@
                     android:textSize="20sp" />
 
                 <TextView
+                    android:id="@+id/chooseFileSubtitle"
                     style="@style/TextFont.Regular"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

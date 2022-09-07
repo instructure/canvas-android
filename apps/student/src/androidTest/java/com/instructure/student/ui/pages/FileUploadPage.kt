@@ -18,15 +18,20 @@ package com.instructure.student.ui.pages
 
 import android.widget.Button
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.scrollTo
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.core.AllOf.allOf
@@ -35,6 +40,8 @@ class FileUploadPage : BasePage() {
     private val cameraButton by OnViewWithId(R.id.fromCamera)
     private val galleryButton by OnViewWithId(R.id.fromGallery)
     private val deviceButton by OnViewWithId(R.id.fromDevice)
+    private val chooseFileTitle by OnViewWithId(R.id.chooseFileTitle)
+    private val chooseFileSubtitle by OnViewWithId(R.id.chooseFileSubtitle)
 
     fun chooseCamera() {
         cameraButton.scrollTo().click()
@@ -50,5 +57,24 @@ class FileUploadPage : BasePage() {
 
     fun clickUpload() {
         onView(allOf(isAssignableFrom(Button::class.java),containsTextCaseInsensitive("upload"))).click()
+    }
+
+    fun removeFile(filename: String) {
+        val fileItemMatcher = withId(R.id.fileItem) + withDescendant(withId(R.id.fileName) + withText(filename))
+
+        onView(withId(R.id.removeFile) + ViewMatchers.isDescendantOfA(fileItemMatcher))
+            .click()
+    }
+
+    fun assertDialogTitle(title: String) {
+        onViewWithText(title).assertDisplayed()
+    }
+
+    fun assertFileDisplayed(filename: String) {
+        onView(withId(R.id.fileName) + withText(filename))
+    }
+
+    fun assertFileNotDisplayed(filename: String) {
+        onView(withId(R.id.fileName) + withText(filename)).check(doesNotExist())
     }
 }
