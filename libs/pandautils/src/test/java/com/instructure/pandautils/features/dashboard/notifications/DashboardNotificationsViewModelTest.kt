@@ -436,7 +436,9 @@ class DashboardNotificationsViewModelTest {
             emptyList(),
             Data.Builder()
                 .putString(FileUploadWorker.PROGRESS_DATA_TITLE, title)
-                .putString(FileUploadWorker.PROGRESS_DATA_SUBTITLE, subTitle)
+                .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, subTitle)
+                .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
+                .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
                 .build(),
             1
         )
@@ -446,7 +448,7 @@ class DashboardNotificationsViewModelTest {
                 title,
                 subTitle,
                 "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
-                R.drawable.ic_upload
+                0
             )
         )
 
