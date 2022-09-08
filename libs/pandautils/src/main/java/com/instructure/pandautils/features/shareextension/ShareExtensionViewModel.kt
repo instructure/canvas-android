@@ -38,7 +38,7 @@ class ShareExtensionViewModel @Inject constructor(
         private val resources: Resources
 ) : ViewModel() {
 
-    var uri: ArrayList<Uri>? = arrayListOf()
+    var uris: ArrayList<Uri>? = null
     var uploadType = FileUploadType.USER
 
     val events: LiveData<Event<ShareExtensionAction>>
@@ -53,17 +53,26 @@ class ShareExtensionViewModel @Inject constructor(
         val action = intent.action
         val type = intent.type
 
-        uri = if (Intent.ACTION_SEND_MULTIPLE == action && type != null) {
-            intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM) as ArrayList<Uri>
-        } else {
+        if (type == null) {
             _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.uploadingFromSourceFailed))))
-            null
+            return
+        }
+        when (action) {
+            Intent.ACTION_SEND -> {
+                val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                uri?.let {
+                    uris = arrayListOf(it)
+                } ?: _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.errorOccurred))))
+            }
+            Intent.ACTION_SEND_MULTIPLE -> {
+                uris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
+            }
         }
     }
 
     fun showUploadDialog(course: CanvasContext?, assignment: Assignment?, uploadType: FileUploadType) {
         this.uploadType = uploadType
-        uri?.let {
+        uris?.let {
             when (uploadType) {
                 FileUploadType.USER -> _events.postValue(Event(ShareExtensionAction.ShowMyFilesUploadDialog(it, this::uploadDialogCallback)))
                 FileUploadType.ASSIGNMENT -> {
