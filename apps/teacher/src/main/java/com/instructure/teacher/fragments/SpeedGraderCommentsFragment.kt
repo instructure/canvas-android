@@ -21,12 +21,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
@@ -41,6 +46,8 @@ import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.SpeedGraderCommentsPresenterFactory
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel
 import com.instructure.teacher.holders.SpeedGraderCommentHolder
+import com.instructure.teacher.models.CommentWrapper
+import com.instructure.teacher.models.PendingCommentWrapper
 import com.instructure.teacher.models.SubmissionCommentWrapper
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
@@ -165,7 +172,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
                     }, when (presenter.assignee) {
                 is GroupAssignee -> true
                 else -> false
-            })
+            }, ::showFileUploadDialog)
 
             addMediaAttachment.isEnabled = false
         }
@@ -202,6 +209,50 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             presenter.createPendingMediaComment(event.file.absolutePath)
             uploadSGMediaComment(event.file, event.assignmentId, event.courseId)
             addMediaAttachment.isEnabled = true
+        }
+    }
+
+    private fun showFileUploadDialog() {
+        val bundle = FileUploadDialogFragment.createTeacherSubmissionCommentBundle(
+            presenter.courseId,
+            presenter.assignmentId,
+            presenter.assignee.id
+        )
+
+        FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = ::fileUploadLiveDataCallback).show(
+            childFragmentManager, FileUploadDialogFragment.TAG
+        )
+    }
+
+    private fun fileUploadLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
+        val comment = PendingSubmissionComment(presenter.mPageId).apply {
+            status = CommentSendStatus.SENDING
+            onError = {
+                //TODO restart worker
+            }
+        }
+
+        workInfoLiveData.observe(this) { workInfo ->
+            when (workInfo.state) {
+                WorkInfo.State.RUNNING -> {
+                    presenter.data.addOrUpdate(PendingCommentWrapper(comment))
+                }
+                WorkInfo.State.SUCCEEDED -> {
+                    val submissionComment = workInfo.outputData.getString(
+                        FileUploadWorker.RESULT_SUBMISSION_COMMENT
+                    )?.fromJson<SubmissionComment>()
+                    presenter.data.remove(PendingCommentWrapper(comment))
+                    presenter.data.add(submissionComment?.let { CommentWrapper(it) })
+                }
+                WorkInfo.State.FAILED -> {
+                    comment.status = CommentSendStatus.ERROR
+                    presenter.data.addOrUpdate(PendingCommentWrapper(comment))
+                }
+                else -> {}
+            }
+
+            checkIfEmpty()
+            scrollToBottom()
         }
     }
 

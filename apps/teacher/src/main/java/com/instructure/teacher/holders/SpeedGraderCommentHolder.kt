@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.holders
 
-import android.graphics.Color
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
@@ -120,7 +119,7 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                     CommentSendStatus.SENDING -> itemView.sendingLayout.setVisible()
                     CommentSendStatus.ERROR -> {
                         itemView.errorLayout.setVisible()
-                        onClick { presenter.sendComment(wrapper) }
+                        onClick { wrapper.pendingComment.onError?.let { it() } ?: presenter.sendComment(wrapper) }
                     }
                     CommentSendStatus.DRAFT -> { /* Drafts should not display in the list, only in the EditText */ }
                 }

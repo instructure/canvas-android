@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils
+package com.instructure.pandautils.utils
 
 import com.google.gson.Gson
 
@@ -24,4 +24,8 @@ fun Any.toJson(): String {
 
 inline fun <reified T> String.fromJson(): T {
     return Gson().fromJson<T>(this, T::class.java)
+}
+
+fun Long?.orDefault(default: Long = 0): Long {
+    return this ?: default
 }

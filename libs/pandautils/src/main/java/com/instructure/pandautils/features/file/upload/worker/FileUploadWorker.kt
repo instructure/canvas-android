@@ -28,15 +28,16 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
-import com.instructure.pandautils.toJson
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.toJson
 import java.util.*
 
-class FileUploadWorker(private val context: Context, private val workerParameters: WorkerParameters) : CoroutineWorker(context, workerParameters) {
+class FileUploadWorker(private val context: Context, workerParameters: WorkerParameters) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -49,6 +50,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
     private val notificationId = notificationId(inputData)
     private val submissionId = inputData.getLong(Const.SUBMISSION_ID, INVALID_ID)
     private val action = inputData.getString(FILE_SUBMIT_ACTION)
+    private val userId = inputData.getLong(Const.USER_ID, INVALID_ID)
 
     private var uploadCount = 0
 
@@ -103,6 +105,12 @@ class FileUploadWorker(private val context: Context, private val workerParameter
                     updateNotificationComplete(notificationId)
                     val attachmentJsons = attachments.map { it.toJson() }.toTypedArray()
                     Result.success(workDataOf(RESULT_ATTACHMENTS to attachmentJsons))
+                }
+                ACTION_TEACHER_SUBMISSION_COMMENT -> {
+                    postSubmissionComment(attachmentsIds).let {
+                        updateSubmissionComplete(notificationId)
+                        Result.success(workDataOf(RESULT_SUBMISSION_COMMENT to it.submissionComments.lastOrNull()?.toJson()))
+                    }
                 }
                 else -> {
                     updateNotificationComplete(notificationId)
@@ -166,6 +174,12 @@ class FileUploadWorker(private val context: Context, private val workerParameter
                 ACTION_QUIZ_FILE -> FileUploadConfig.forQuiz(fileSubmitObject, courseId, quizId)
                 ACTION_DISCUSSION_ATTACHMENT -> FileUploadConfig.forUser(fileSubmitObject, parentFolderPath = DISCUSSION_ATTACHMENT_PATH)
                 ACTION_SUBMISSION_COMMENT -> FileUploadConfig.forSubmissionComment(fileSubmitObject, courseId, assignmentId)
+                ACTION_TEACHER_SUBMISSION_COMMENT -> FileUploadConfig.forSubmissionCommentFromTeacher(
+                    fileSubmitObject,
+                    courseId,
+                    assignmentId,
+                    userId
+                )
                 else -> throw IllegalArgumentException("Unknown file upload action: $action")
             }
 
@@ -176,6 +190,18 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
     private fun submitAttachmentsToSubmission(attachmentIds: List<Long>): Submission? {
         return SubmissionManager.postSubmissionAttachmentsSynchronous(courseId, assignmentId, attachmentIds)
+    }
+
+    private suspend fun postSubmissionComment(attachmentIds: List<Long>) = awaitApi<Submission> {
+        SubmissionManager.postSubmissionComment(
+            courseId,
+            assignmentId,
+            userId,
+            "",
+            false,
+            attachmentIds,
+            it
+        )
     }
 
     private fun notificationId(data: Data): Int {
@@ -254,11 +280,13 @@ class FileUploadWorker(private val context: Context, private val workerParameter
         const val ACTION_QUIZ_FILE = "ACTION_QUIZ_FILE"
         const val ACTION_DISCUSSION_ATTACHMENT = "ACTION_DISCUSSION_ATTACHMENT"
         const val ACTION_SUBMISSION_COMMENT = "ACTION_SUBMISSION_COMMENT"
+        const val ACTION_TEACHER_SUBMISSION_COMMENT = "ACTION_SUBMISSION_COMMENT_TEACHER"
 
         const val MESSAGE_ATTACHMENT_PATH = "conversation attachments"
         const val DISCUSSION_ATTACHMENT_PATH = "discussion attachments"
 
         const val RESULT_ATTACHMENTS = "attachments"
+        const val RESULT_SUBMISSION_COMMENT = "submission-comment"
 
         const val PROGRESS_DATA_TITLE = "PROGRESS_DATA_TITLE"
         const val PROGRESS_DATA_SUBTITLE = "PROGRESS_DATA_SUBTITLE"

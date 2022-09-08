@@ -29,6 +29,7 @@ data class PendingSubmissionComment(
     var status = CommentSendStatus.DRAFT
     var progress = 0f
     var filePath = ""
+    var onError: (() -> Unit)? = null
 }
 
 enum class CommentSendStatus { DRAFT, SENDING, ERROR }

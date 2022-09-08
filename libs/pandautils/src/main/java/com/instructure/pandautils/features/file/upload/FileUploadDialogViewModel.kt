@@ -33,6 +33,7 @@ import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemVi
 import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -58,6 +59,7 @@ class FileUploadDialogViewModel @Inject constructor(
     private var assignment: Assignment? = null
     private var uploadType: FileUploadType = FileUploadType.ASSIGNMENT
     private var canvasContext: CanvasContext = CanvasContext.defaultCanvasContext()
+    private var userId: Long? = null
     private var isOneFileOnly = false
     private var parentFolderId: Long? = null
     private var quizQuestionId: Long = -1L
@@ -79,6 +81,7 @@ class FileUploadDialogViewModel @Inject constructor(
             quizQuestionId: Long,
             position: Int,
             quizId: Long,
+            userId: Long,
             dialogCallback: ((Int) -> Unit)? = null,
             attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
             workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
@@ -97,6 +100,7 @@ class FileUploadDialogViewModel @Inject constructor(
         this.quizQuestionId = quizQuestionId
         this.quizId = quizId
         this.position = position
+        this.userId = userId
         dialogCallback?.let {
             this.dialogCallback = it
         }
@@ -293,6 +297,17 @@ class FileUploadDialogViewModel @Inject constructor(
                     fileUploadBundleCreator.getSubmissionCommentBundle(uris, canvasContext.id, assignment!!)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_SUBMISSION_COMMENT)
                             .build()
+                }
+                FileUploadType.TEACHER_SUBMISSION_COMMENT -> {
+                    fileUploadBundleCreator.getTeacherSubmissionCommentBundle(
+                        uris,
+                        assignment?.courseId.orDefault(),
+                        assignment?.id.orDefault(),
+                        userId.orDefault()
+                    ).putString(
+                        FileUploadWorker.FILE_SUBMIT_ACTION,
+                        FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT
+                    ).build()
                 }
                 else -> {
                     fileUploadBundleCreator.getAssignmentSubmissionBundle(uris, canvasContext.id, assignment!!)

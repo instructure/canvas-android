@@ -33,8 +33,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.work.*
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -43,7 +42,6 @@ import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class FileUploadDialogFragment : DialogFragment() {
@@ -64,6 +62,7 @@ class FileUploadDialogFragment : DialogFragment() {
     private var quizQuestionId: Long by LongArg()
     private var quizId: Long by LongArg()
     private var courseId: Long by LongArg()
+    private var userId: Long by LongArg()
 
     private var dialogCallback: ((Int) -> Unit)? = null
     private var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
@@ -133,7 +132,7 @@ class FileUploadDialogFragment : DialogFragment() {
                 title = getString(R.string.utils_uploadTo) + " " + getString(R.string.utils_uploadMyFiles)
                 positiveText = getString(R.string.utils_upload)
             }
-            FileUploadType.SUBMISSION_COMMENT -> {
+            FileUploadType.SUBMISSION_COMMENT, FileUploadType.TEACHER_SUBMISSION_COMMENT -> {
                 title = getString(R.string.utils_uploadToSubmissionComment)
                 positiveText = getString(R.string.utils_upload)
             }
@@ -167,14 +166,16 @@ class FileUploadDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.events.observe(this, Observer {
-            it.getContentIfNotHandled()?.let {
+        viewModel.events.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
-        })
+        }
 
-        viewModel.setData(assignment, fileSubmitUri, uploadType, canvasContext, parentFolderId, quizQuestionId,
-                position, quizId, dialogCallback, attachmentCallback, workerCallback)
+        viewModel.setData(
+            assignment, fileSubmitUri, uploadType, canvasContext, parentFolderId, quizQuestionId,
+            position, quizId, userId, dialogCallback, attachmentCallback, workerCallback
+        )
     }
 
     private fun uploadClicked() {
@@ -246,6 +247,7 @@ class FileUploadDialogFragment : DialogFragment() {
                 dialogCallback = callback
                 attachmentCallback = pickerCallback
                 workerCallback = workerLiveDataCallback
+                userId = args.getLong(Const.USER_ID, INVALID_ID)
             }
         }
 
@@ -315,11 +317,22 @@ class FileUploadDialogFragment : DialogFragment() {
             return bundle
         }
 
-        fun createSubmissionCommentBundle(course: Course, assignment: Assignment, defaultFileList: java.util.ArrayList<FileSubmitObject>): Bundle {
+        fun createSubmissionCommentBundle(course: Course, assignment: Assignment, defaultFileList: ArrayList<FileSubmitObject>): Bundle {
             val bundle = createBundle(null, FileUploadType.SUBMISSION_COMMENT, null)
             bundle.putParcelable(Const.CANVAS_CONTEXT, course)
             bundle.putParcelable(Const.ASSIGNMENT, assignment)
             bundle.putParcelableArrayList(Const.FILES, defaultFileList)
+            return bundle
+        }
+
+        fun createTeacherSubmissionCommentBundle(
+            courseId: Long,
+            assignmentId: Long,
+            userId: Long
+        ): Bundle {
+            val bundle = createBundle(null, FileUploadType.TEACHER_SUBMISSION_COMMENT, null)
+            bundle.putParcelable(Const.ASSIGNMENT, Assignment(assignmentId, courseId = courseId))
+            bundle.putLong(Const.USER_ID, userId)
             return bundle
         }
 
