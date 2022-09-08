@@ -56,6 +56,9 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
             WorkInfo.State.RUNNING -> {
                 updateViewData(it.progress)
             }
+            WorkInfo.State.FAILED -> {
+                _events.postValue(Event(ShareExtensionProgressAction.ShowErrorDialog))
+            }
         }
     }
 

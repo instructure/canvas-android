@@ -1292,4 +1292,5 @@
     <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
     <string name="cancel_submission_dialog_title">Cancel Submission</string>
     <string name="cancel_submission_dialog_message">This will cancel and delete your submission.</string>
+    <string name="fileUploadError">File Upload Failed</string>
 </resources>

@@ -40,7 +40,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.progress.ShareExtensionProgressDialogFragment
-import com.instructure.pandautils.features.shareextension.success.ShareExtensionSuccessDialogFragment
+import com.instructure.pandautils.features.shareextension.status.ShareExtensionStatus
+import com.instructure.pandautils.features.shareextension.status.ShareExtensionStatusDialogFragment
 import com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetFragment
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,7 +52,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
-import javax.inject.Inject
 
 const val WORKER_ID = "workerId"
 
@@ -128,10 +128,13 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
                 showConfetti()
             }
             is ShareExtensionAction.ShowSuccessDialog -> {
-                ShareExtensionSuccessDialogFragment.newInstance().show(supportFragmentManager, ShareExtensionSuccessDialogFragment.TAG)
+                ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.SUCCEEDED).show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
             }
             is ShareExtensionAction.ShowProgressDialog -> {
                 showProgressDialog(action.uuid)
+            }
+            is ShareExtensionAction.ShowErrorDialog -> {
+                ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.FAILED).show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
             }
         }
     }

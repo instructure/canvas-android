@@ -70,6 +70,15 @@ class ShareExtensionProgressViewModelTest {
     }
 
     @Test
+    fun `Show error dialog when upload failed`() {
+        viewModel.setUUID(uuid)
+        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.FAILED, Data.EMPTY, emptyList(), Data.EMPTY, 1))
+
+        viewModel.events.observe(lifecycleOwner) {}
+        assertEquals(ShareExtensionProgressAction.ShowErrorDialog, viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
     fun `Cancel clicked`() {
         viewModel.events.observe(lifecycleOwner) {}
         viewModel.setUUID(uuid)
@@ -246,7 +255,6 @@ class ShareExtensionProgressViewModelTest {
         every { resources.getString(R.string.fileUpload) } returns "File Upload"
         every { resources.getString(R.string.submission) } returns "Submission"
         every { resources.getString(R.string.fileUploadProgressSubtitle) } returns "Uploading to Files"
-        val captor1: ArgumentCaptor<String> = ArgumentCaptor.forClass(String::class.java)
     }
 
     private fun createViewModel(): ShareExtensionProgressDialogViewModel {

@@ -80,6 +80,9 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
             is ShareExtensionProgressAction.CancelUpload -> {
                 cancelClicked()
             }
+            is ShareExtensionProgressAction.ShowErrorDialog -> {
+                shareExtensionViewModel.showErrorDialog()
+            }
         }
     }
 

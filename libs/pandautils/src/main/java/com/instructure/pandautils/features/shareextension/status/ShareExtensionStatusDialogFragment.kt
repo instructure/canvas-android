@@ -14,10 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.shareextension.success
+package com.instructure.pandautils.features.shareextension.status
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,21 +25,21 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.instructure.pandautils.R
-import com.instructure.pandautils.databinding.FragmentShareExtensionSuccessDialogBinding
-import com.instructure.pandautils.databinding.FragmentShareExtensionTargetBinding
+import com.instructure.pandautils.databinding.FragmentShareExtensionStatusDialogBinding
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
 import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ShareExtensionSuccessDialogFragment : DialogFragment() {
+class ShareExtensionStatusDialogFragment : DialogFragment() {
 
-    private val viewModel: ShareExtensionSuccessDialogViewModel by viewModels()
+    private var state: ShareExtensionStatus = ShareExtensionStatus.SUCCEEDED
+
+    private val viewModel: ShareExtensionStatusDialogViewModel by viewModels()
 
     private val shareExtensionViewModel: ShareExtensionViewModel by activityViewModels()
 
-    private lateinit var binding: FragmentShareExtensionSuccessDialogBinding
+    private lateinit var binding: FragmentShareExtensionStatusDialogBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -50,7 +49,7 @@ class ShareExtensionSuccessDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentShareExtensionSuccessDialogBinding.inflate(layoutInflater, null, false)
+        binding = FragmentShareExtensionStatusDialogBinding.inflate(layoutInflater, null, false)
 
         val alertDialog = AlertDialog.Builder(requireContext())
                 .setView(binding.root)
@@ -66,7 +65,7 @@ class ShareExtensionSuccessDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.initData(shareExtensionViewModel.uploadType)
+        viewModel.initData(shareExtensionViewModel.uploadType, state)
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -77,13 +76,13 @@ class ShareExtensionSuccessDialogFragment : DialogFragment() {
         binding.doneButton.setTextColor(ThemePrefs.buttonColor)
     }
 
-    private fun handleAction(action: ShareExtensionSuccessAction) {
+    private fun handleAction(action: ShareExtensionStatusAction) {
         when (action) {
-            is ShareExtensionSuccessAction.Done -> {
+            is ShareExtensionStatusAction.Done -> {
                 dismissAllowingStateLoss()
                 shareExtensionViewModel.finish()
             }
-            is ShareExtensionSuccessAction.ShowConfetti -> {
+            is ShareExtensionStatusAction.ShowConfetti -> {
                 shareExtensionViewModel.showConfetti()
             }
         }
@@ -92,6 +91,11 @@ class ShareExtensionSuccessDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "ShareExtensionSuccessDialogFragment"
 
-        fun newInstance() = ShareExtensionSuccessDialogFragment()
+        fun newInstance(state: ShareExtensionStatus): ShareExtensionStatusDialogFragment {
+            return ShareExtensionStatusDialogFragment()
+                .apply {
+                    this.state = state
+                }
+        }
     }
 }

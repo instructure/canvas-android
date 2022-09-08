@@ -26,4 +26,5 @@ sealed class ShareExtensionProgressAction {
     object ShowSuccessDialog : ShareExtensionProgressAction()
     object Close : ShareExtensionProgressAction()
     object CancelUpload : ShareExtensionProgressAction()
+    object ShowErrorDialog : ShareExtensionProgressAction()
 }

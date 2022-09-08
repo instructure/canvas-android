@@ -112,6 +112,10 @@ class ShareExtensionViewModel @Inject constructor(
         showProgressDialog(uuid)
     }
 
+    fun showErrorDialog() {
+        _events.postValue(Event(ShareExtensionAction.ShowErrorDialog))
+    }
+
 }
 
 sealed class ShareExtensionAction {
@@ -119,6 +123,7 @@ sealed class ShareExtensionAction {
     data class ShowMyFilesUploadDialog(val fileUri: Uri, val dialogCallback: (Int) -> Unit, val workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) : ShareExtensionAction()
     data class ShowProgressDialog(val uuid: UUID) : ShareExtensionAction()
     object ShowSuccessDialog : ShareExtensionAction()
+    object ShowErrorDialog : ShareExtensionAction()
     object Finish : ShareExtensionAction()
     object ShowConfetti : ShareExtensionAction()
     data class ShowToast(val toast: String) : ShareExtensionAction()

@@ -14,15 +14,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.shareextension.success
+package com.instructure.pandautils.features.shareextension.status
 
-data class ShareExtensionSuccessViewData(
+import androidx.annotation.DrawableRes
+
+data class ShareExtensionStatusViewData(
         val dialogTitle: String,
         val subTitle: String,
-        val description: String
+        val description: String,
+        @DrawableRes val imageRes: Int
 )
 
-sealed class ShareExtensionSuccessAction {
-    object Done : ShareExtensionSuccessAction()
-    object ShowConfetti: ShareExtensionSuccessAction()
+sealed class ShareExtensionStatusAction {
+    object Done : ShareExtensionStatusAction()
+    object ShowConfetti: ShareExtensionStatusAction()
+}
+
+enum class ShareExtensionStatus {
+    SUCCEEDED, FAILED
 }

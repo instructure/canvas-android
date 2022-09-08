@@ -19,28 +19,30 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
-            type="com.instructure.pandautils.features.shareextension.success.ShareExtensionSuccessDialogViewModel" />
+            type="com.instructure.pandautils.features.shareextension.status.ShareExtensionStatusDialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".features.shareextension.success.ShareExtensionSuccessDialogFragment">
+        tools:context=".features.shareextension.status.ShareExtensionStatusDialogFragment">
 
         <ImageView
+            android:id="@+id/closeButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_close"
-            app:tint="@color/textDarkest"
-            android:padding="8dp"
-            app:layout_constraintTop_toTopOf="@+id/dialogTitle"
-            app:layout_constraintBottom_toBottomOf="@+id/dialogTitle"
-            android:id="@+id/closeButton"
-            android:onClick="@{() -> viewModel.onDoneClick()}"
             android:contentDescription="@string/close"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:onClick="@{() -> viewModel.onDoneClick()}"
+            android:padding="8dp"
+            android:src="@drawable/ic_close"
+            app:layout_constraintBottom_toBottomOf="@+id/dialogTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dialogTitle"
+            app:tint="@color/textDarkest" />
 
         <TextView
             android:id="@+id/dialogTitle"
@@ -50,9 +52,9 @@
             android:text="@{viewModel.data.dialogTitle}"
             android:textColor="@color/textDarkest"
             android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@id/closeButton"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Submission"
-            app:layout_constraintStart_toEndOf="@id/closeButton"/>
+            tools:text="Submission" />
 
         <View
             android:id="@+id/headerDivider"
@@ -118,12 +120,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
             android:layout_marginBottom="64dp"
-            android:background="@drawable/ic_panda_jumping"
             android:importantForAccessibility="no"
+            android:visibility="@{viewModel.data.imageRes != 0 ? View.VISIBLE : View.INVISIBLE}"
+            app:imageRes="@{viewModel.data.imageRes}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:src="@drawable/ic_panda_jumping" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
