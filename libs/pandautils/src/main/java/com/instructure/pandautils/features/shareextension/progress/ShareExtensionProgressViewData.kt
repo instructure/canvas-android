@@ -8,7 +8,7 @@ import com.instructure.pandautils.features.shareextension.progress.itemviewmodel
 data class ShareExtensionProgressViewData(
     val items: List<FileProgressItemViewModel>,
     val dialogTitle: String,
-    val subtitle: String,
+    val subtitle: String?,
     val maxSize: String,
     @get:Bindable var progressInt: Int,
     @get:Bindable var percentage: String,

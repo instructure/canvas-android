@@ -29,6 +29,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@{@string/a11y_contentDescriptionShareExtensionStatus(viewModel.data.subTitle, viewModel.data.description)}"
         tools:context=".features.shareextension.status.ShareExtensionStatusDialogFragment">
 
         <ImageView
@@ -36,6 +37,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:contentDescription="@string/close"
+            android:importantForAccessibility="yes"
             android:onClick="@{() -> viewModel.onDoneClick()}"
             android:padding="8dp"
             android:src="@drawable/ic_close"
@@ -49,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:importantForAccessibility="no"
             android:text="@{viewModel.data.dialogTitle}"
             android:textColor="@color/textDarkest"
             android:textSize="20sp"
@@ -62,6 +65,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:background="@color/backgroundMedium"
+            android:importantForAccessibility="no"
             app:layout_constraintTop_toBottomOf="@id/dialogTitle" />
 
         <TextView
@@ -71,6 +75,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:importantForAccessibility="no"
             android:text="@{viewModel.data.subTitle}"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
@@ -84,6 +89,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
+            android:importantForAccessibility="no"
             android:text="@{viewModel.data.description}"
             android:textColor="@color/textDark"
             android:textSize="14sp"
@@ -98,6 +104,7 @@
             android:layout_marginEnd="16dp"
             android:background="?android:selectableItemBackground"
             android:gravity="center"
+            android:importantForAccessibility="yes"
             android:minWidth="48dp"
             android:minHeight="48dp"
             android:onClick="@{() -> viewModel.onDoneClick()}"
@@ -113,6 +120,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/backgroundMedium"
+            android:importantForAccessibility="no"
             app:layout_constraintTop_toBottomOf="@id/doneButton" />
 
         <ImageView

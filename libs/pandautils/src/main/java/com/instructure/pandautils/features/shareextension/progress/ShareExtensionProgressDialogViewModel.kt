@@ -108,7 +108,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                     dialogTitle = if (assignmentName == null) resources.getString(R.string.fileUpload) else resources.getString(
                         R.string.submission
                     ),
-                    subtitle = if (assignmentName == null) resources.getString(R.string.fileUploadProgressSubtitle) else resources.getString(
+                    subtitle = if (assignmentName.isNullOrEmpty()) resources.getString(R.string.fileUploadProgressSubtitle) else resources.getString(
                         R.string.submissionProgressSubtitle,
                         assignmentName
                     ),

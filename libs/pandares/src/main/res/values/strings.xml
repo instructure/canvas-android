@@ -1293,4 +1293,10 @@
     <string name="cancel_submission_dialog_title">Cancel Submission</string>
     <string name="cancel_submission_dialog_message">This will cancel and delete your submission.</string>
     <string name="fileUploadError">File Upload Failed</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Upload to Canvas for %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Upload to My Files</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Submit assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choose a course</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choose an assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
 </resources>
