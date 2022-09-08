@@ -92,11 +92,11 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
     private fun handleAction(action: ShareExtensionAction) {
         when (action) {
             is ShareExtensionAction.ShowAssignmentUploadDialog -> {
-                val bundle = FileUploadDialogFragment.createAssignmentBundle(action.fileUri, action.course as Course, action.assignment)
+                val bundle = FileUploadDialogFragment.createAssignmentBundle(action.fileUris, action.course as Course, action.assignment)
                 showUploadDialog(bundle, action.dialogCallback)
             }
             is ShareExtensionAction.ShowMyFilesUploadDialog -> {
-                val bundle = FileUploadDialogFragment.createFilesBundle(action.fileUri, null)
+                val bundle = FileUploadDialogFragment.createFilesBundle(action.fileUris, null)
                 showUploadDialog(bundle, action.dialogCallback)
             }
             is ShareExtensionAction.ShowToast -> {

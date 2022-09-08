@@ -72,7 +72,7 @@ class FileUploadDialogViewModel @Inject constructor(
 
     fun setData(
             assignment: Assignment?,
-            file: Uri?,
+            files: ArrayList<Uri>,
             uploadType: FileUploadType,
             canvasContext: CanvasContext,
             parentFolderId: Long,
@@ -84,10 +84,10 @@ class FileUploadDialogViewModel @Inject constructor(
             workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
     ) {
         this.assignment = assignment
-        file?.let { uri ->
+        files.forEach { uri ->
             val submitObject = getUriContents(uri)
-            submitObject?.let {
-                this.filesToUpload = mutableListOf(FileUploadData(uri, it))
+            submitObject?.let { fso ->
+                this.filesToUpload.add(FileUploadData(uri, fso))
             }
         }
         this.uploadType = uploadType
