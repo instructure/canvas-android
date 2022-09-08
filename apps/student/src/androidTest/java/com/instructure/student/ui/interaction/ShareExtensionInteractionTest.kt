@@ -26,8 +26,11 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
@@ -119,6 +122,63 @@ class ShareExtensionInteractionTest : StudentTest() {
 
         fileUploadPage.assertFileNotDisplayed("sample.jpg")
         fileUploadPage.assertFileDisplayed("samplepdf.pdf")
+    }
+
+    @Test
+    fun fileUploadDialogShowsCorrectlyForAssignmentSubmission() {
+        val data = createMockData()
+        val student = data.students[0]
+        val uri = setupFileOnDevice("sample.jpg")
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        val assignment = data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+
+        login(student)
+        device.pressHome()
+
+        shareExternalFile(uri)
+
+        device.findObject(UiSelector().text("Canvas")).click()
+        device.waitForIdle()
+
+        shareExtensionTargetPage.selectSubmission()
+        shareExtensionTargetPage.assertCourseSelectorDisplayedWithCourse(data.courses.values.first().name)
+        shareExtensionTargetPage.assertAssignmentSelectorDisplayedWithAssignment(assignment.name!!)
+        shareExtensionTargetPage.pressNext()
+
+        fileUploadPage.assertPageObjects()
+        fileUploadPage.assertDialogTitle("Assignment : ${assignment.name}")
+        fileUploadPage.assertFileDisplayed("sample.jpg")
+    }
+
+    // Clicking spinner item not working.
+    @Test
+    @Stub
+    fun changeTargetAssignment() {
+        val data = createMockData()
+        val student = data.students[0]
+        val uri = setupFileOnDevice("sample.jpg")
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+        val assignment2 = data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+
+        login(student)
+        device.pressHome()
+
+        shareExternalFile(uri)
+
+        device.findObject(UiSelector().text("Canvas")).click()
+        device.waitForIdle()
+
+        shareExtensionTargetPage.selectSubmission()
+        shareExtensionTargetPage.selectAssignment(assignment2.name!!)
+
+        shareExtensionTargetPage.pressNext()
+
+        fileUploadPage.assertPageObjects()
+        fileUploadPage.assertDialogTitle("Assignment : ${assignment2.name}")
+        fileUploadPage.assertFileDisplayed("sample.jpg")
     }
 
     private fun createMockData(): MockCanvas {

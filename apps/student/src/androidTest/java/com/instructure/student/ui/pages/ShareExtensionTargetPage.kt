@@ -16,18 +16,30 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.RootMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.WaitForViewWithStringTextIgnoreCase
 import com.instructure.espresso.WaitForViewWithText
+import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertSelected
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithSpinnerText
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
+import org.hamcrest.Matchers.anything
 
 class ShareExtensionTargetPage : BasePage() {
 
@@ -46,6 +58,26 @@ class ShareExtensionTargetPage : BasePage() {
 
     fun assertUserName(username: String) {
         userName.assertHasText(username)
+    }
+
+    fun assertCourseSelectorDisplayedWithCourse(courseName: String) {
+        onViewWithId(R.id.studentCourseSpinner).assertDisplayed()
+        onView(withText(courseName) + withAncestor(R.id.studentCourseSpinner)).assertDisplayed()
+    }
+
+    fun assertAssignmentSelectorDisplayedWithAssignment(assignmentName: String) {
+        onViewWithId(R.id.assignmentSpinner).assertDisplayed()
+        onView(withText(assignmentName) + withAncestor(R.id.assignmentSpinner)).assertDisplayed()
+    }
+
+    fun selectAssignment(assignmentName: String) {
+        onViewWithId(R.id.assignmentSpinner).click()
+        //onViewWithSpinnerText(assignmentName).inRoot(isPlatformPopup())
+        onData(anything()).inRoot(isDialog()).atPosition(1)
+    }
+
+    fun selectSubmission() {
+        assignmentCheckbox.click()
     }
 
     fun pressNext() {
