@@ -216,7 +216,6 @@ class ShareExtensionInteractionTest : StudentTest() {
         val intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
             type = "image/jpg"
         }
 
