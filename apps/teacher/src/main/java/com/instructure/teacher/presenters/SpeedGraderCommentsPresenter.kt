@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.presenters
 
+import androidx.work.Data
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
@@ -28,6 +29,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent
@@ -40,7 +42,6 @@ import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import instructure.androidblueprint.ListPresenter
 import kotlinx.coroutines.Job
-import java.util.*
 
 class SpeedGraderCommentsPresenter(
         rawComments: List<SubmissionComment>,
@@ -246,20 +247,34 @@ class SpeedGraderCommentsPresenter(
         TeacherPrefs.pendingSubmissionComments = pending
     }
 
-    private fun createPendingFileComment(workerId: UUID) {
+    private fun createPendingFileComment(workInfo: WorkInfo) {
         val newComment = PendingSubmissionComment(mPageId).apply {
-            this.workerId = workerId
+            workerId = workInfo.id
             status = CommentSendStatus.SENDING
             onError = {
-
+                TeacherPrefs.pendingSubmissionComments.find { it.workerId == workInfo.id }?.let { pending ->
+                    TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
+                    data.remove(PendingCommentWrapper(pending))
+                    viewCallback?.restartWorker(pending)
+                }
             }
         }
 
-        if (!TeacherPrefs.pendingSubmissionComments.any { it.workerId == workerId }) {
+        if (!TeacherPrefs.pendingSubmissionComments.any { it.workerId == workInfo.id }) {
             TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { add(newComment) }
             val commentWrapper = PendingCommentWrapper(newComment)
             data.addOrUpdate(commentWrapper)
         }
+
+        val progress = workInfo.progress
+        TeacherPrefs.pendingSubmissionComments.find { it.workerId == workInfo.id }
+            ?.workerInputData = Data.Builder()
+            .putStringArray(FileUploadWorker.FILE_PATHS, progress.getStringArray(FileUploadWorker.FILE_PATHS).orEmpty())
+            .putLong(Const.COURSE_ID, progress.getLong(Const.COURSE_ID, FileUploadWorker.INVALID_ID))
+            .putLong(Const.ASSIGNMENT_ID, progress.getLong(Const.ASSIGNMENT_ID, FileUploadWorker.INVALID_ID))
+            .putLong(Const.USER_ID, progress.getLong(Const.USER_ID, FileUploadWorker.INVALID_ID))
+            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, progress.getString(FileUploadWorker.FILE_SUBMIT_ACTION))
+            .build()
     }
 
     private fun handleFileUploadSuccess(workInfo: WorkInfo) {
@@ -282,7 +297,7 @@ class SpeedGraderCommentsPresenter(
 
     fun onFileUploadWorkInfoChanged(workInfo: WorkInfo) {
         when (workInfo.state) {
-            WorkInfo.State.RUNNING -> createPendingFileComment(workInfo.id)
+            WorkInfo.State.RUNNING -> createPendingFileComment(workInfo)
             WorkInfo.State.SUCCEEDED -> handleFileUploadSuccess(workInfo)
             WorkInfo.State.FAILED -> handleFileUploadFailure(workInfo)
             else -> {}

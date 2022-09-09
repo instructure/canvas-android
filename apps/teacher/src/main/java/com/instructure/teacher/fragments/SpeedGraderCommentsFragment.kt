@@ -24,6 +24,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.*
@@ -31,6 +32,7 @@ import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
@@ -232,6 +234,21 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         context?.let { context ->
             workerIds.forEach {
                 fileUploadLiveDataCallback(WorkManager.getInstance(context).getWorkInfoByIdLiveData(it))
+            }
+        }
+    }
+
+    override fun restartWorker(pendingSubmissionComment: PendingSubmissionComment) {
+        pendingSubmissionComment.workerInputData?.let { data ->
+            val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
+                .setInputData(data)
+                .build()
+
+            context?.let {
+                WorkManager.getInstance(it).apply {
+                    fileUploadLiveDataCallback(getWorkInfoByIdLiveData(worker.id))
+                    enqueue(worker)
+                }
             }
         }
     }
