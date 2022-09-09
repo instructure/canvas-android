@@ -25,13 +25,12 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
-import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
@@ -46,8 +45,6 @@ import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.SpeedGraderCommentsPresenterFactory
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel
 import com.instructure.teacher.holders.SpeedGraderCommentHolder
-import com.instructure.teacher.models.CommentWrapper
-import com.instructure.teacher.models.PendingCommentWrapper
 import com.instructure.teacher.models.SubmissionCommentWrapper
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
@@ -64,6 +61,7 @@ import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
+import java.util.*
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_COMMENTS)
 @AndroidEntryPoint
@@ -225,34 +223,16 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     }
 
     private fun fileUploadLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
-        val comment = PendingSubmissionComment(presenter.mPageId).apply {
-            status = CommentSendStatus.SENDING
-            onError = {
-                //TODO restart worker
-            }
+        workInfoLiveData.observe(this) {
+            presenter.onFileUploadWorkInfoChanged(it)
         }
+    }
 
-        workInfoLiveData.observe(this) { workInfo ->
-            when (workInfo.state) {
-                WorkInfo.State.RUNNING -> {
-                    presenter.data.addOrUpdate(PendingCommentWrapper(comment))
-                }
-                WorkInfo.State.SUCCEEDED -> {
-                    val submissionComment = workInfo.outputData.getString(
-                        FileUploadWorker.RESULT_SUBMISSION_COMMENT
-                    )?.fromJson<SubmissionComment>()
-                    presenter.data.remove(PendingCommentWrapper(comment))
-                    presenter.data.add(submissionComment?.let { CommentWrapper(it) })
-                }
-                WorkInfo.State.FAILED -> {
-                    comment.status = CommentSendStatus.ERROR
-                    presenter.data.addOrUpdate(PendingCommentWrapper(comment))
-                }
-                else -> {}
+    override fun subscribePendingWorkers(workerIds: List<UUID>) {
+        context?.let { context ->
+            workerIds.forEach {
+                fileUploadLiveDataCallback(WorkManager.getInstance(context).getWorkInfoByIdLiveData(it))
             }
-
-            checkIfEmpty()
-            scrollToBottom()
         }
     }
 

@@ -29,6 +29,7 @@ data class PendingSubmissionComment(
     var status = CommentSendStatus.DRAFT
     var progress = 0f
     var filePath = ""
+    var workerId: UUID? = null
     var onError: (() -> Unit)? = null
 }
 
