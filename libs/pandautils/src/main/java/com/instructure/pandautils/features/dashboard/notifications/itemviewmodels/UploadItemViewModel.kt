@@ -17,6 +17,8 @@
 
 package com.instructure.pandautils.features.dashboard.notifications.itemviewmodels
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -32,15 +34,16 @@ class UploadItemViewModel(
     private val workerId: UUID,
     val workManager: WorkManager,
     val data: UploadViewData,
+    @get:Bindable var progress: Int = 0,
     val open: (UUID) -> Unit
-) : ItemViewModel {
+) : ItemViewModel, BaseObservable() {
 
     private val observer = Observer<WorkInfo> {
         val uploadedSize = it.progress.getLong(PROGRESS_DATA_UPLOADED_SIZE, 0L)
         val fullSize = it.progress.getLong(PROGRESS_DATA_FULL_SIZE, 1L)
 
-        data.progress = ((uploadedSize.toDouble() / fullSize.toDouble()) * 100.0).toInt()
-        data.notifyPropertyChanged(BR.progress)
+        progress = ((uploadedSize.toDouble() / fullSize.toDouble()) * 100.0).toInt()
+        notifyPropertyChanged(BR.progress)
     }
     override val layoutId = R.layout.item_dashboard_upload
 

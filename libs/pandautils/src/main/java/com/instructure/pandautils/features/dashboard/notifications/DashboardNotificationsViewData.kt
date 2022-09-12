@@ -54,11 +54,10 @@ data class AnnouncementViewData(
 )
 
 data class UploadViewData(
-    @get:Bindable var title: String = "",
-    @get:Bindable var subTitle: String = "",
-    @get:Bindable var color: String = "",
-    @get:Bindable var progress: Int = 0
-): BaseObservable()
+    var title: String = "",
+    var subTitle: String = "",
+    var color: String = ""
+)
 
 sealed class DashboardNotificationsActions {
     data class ShowToast(val toast: String) : DashboardNotificationsActions()
