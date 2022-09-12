@@ -90,8 +90,12 @@ class ShareExtensionViewModel @Inject constructor(
         _events.postValue(Event(ShareExtensionAction.Finish))
     }
 
-    fun showSuccessDialog() {
-        _events.postValue(Event(ShareExtensionAction.ShowSuccessDialog))
+    fun showSuccessDialog(fileUploadType: FileUploadType) {
+        _events.postValue(Event(ShareExtensionAction.ShowSuccessDialog(fileUploadType)))
+    }
+
+    fun showErrorDialog(fileUploadType: FileUploadType) {
+        _events.postValue(Event(ShareExtensionAction.ShowErrorDialog(fileUploadType)))
     }
 
     fun showConfetti() {
@@ -112,18 +116,14 @@ class ShareExtensionViewModel @Inject constructor(
         showProgressDialog(uuid)
     }
 
-    fun showErrorDialog() {
-        _events.postValue(Event(ShareExtensionAction.ShowErrorDialog))
-    }
-
 }
 
 sealed class ShareExtensionAction {
     data class ShowAssignmentUploadDialog(val course: CanvasContext, val assignment: Assignment, val fileUri: Uri, val uploadType: FileUploadType, val dialogCallback: (Int) -> Unit, val workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) : ShareExtensionAction()
     data class ShowMyFilesUploadDialog(val fileUri: Uri, val dialogCallback: (Int) -> Unit, val workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) : ShareExtensionAction()
     data class ShowProgressDialog(val uuid: UUID) : ShareExtensionAction()
-    object ShowSuccessDialog : ShareExtensionAction()
-    object ShowErrorDialog : ShareExtensionAction()
+    data class ShowSuccessDialog(val fileUploadType: FileUploadType) : ShareExtensionAction()
+    data class ShowErrorDialog(val fileUploadType: FileUploadType) : ShareExtensionAction()
     object Finish : ShareExtensionAction()
     object ShowConfetti : ShareExtensionAction()
     data class ShowToast(val toast: String) : ShareExtensionAction()

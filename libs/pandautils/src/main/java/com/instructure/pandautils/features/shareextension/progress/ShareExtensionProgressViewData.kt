@@ -3,6 +3,7 @@ package com.instructure.pandautils.features.shareextension.progress
 import androidx.annotation.DrawableRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
 
 data class ShareExtensionProgressViewData(
@@ -23,8 +24,8 @@ data class FileProgressViewData(
 ) : BaseObservable()
 
 sealed class ShareExtensionProgressAction {
-    object ShowSuccessDialog : ShareExtensionProgressAction()
     object Close : ShareExtensionProgressAction()
-    object CancelUpload : ShareExtensionProgressAction()
-    object ShowErrorDialog : ShareExtensionProgressAction()
+    data class CancelUpload(val title: String, val message: String) : ShareExtensionProgressAction()
+    data class ShowSuccessDialog(val fileUploadType: FileUploadType) : ShareExtensionProgressAction()
+    data class ShowErrorDialog(val fileUploadType: FileUploadType) : ShareExtensionProgressAction()
 }

@@ -72,16 +72,19 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
     private fun handleAction(action: ShareExtensionProgressAction) {
         when (action) {
             is ShareExtensionProgressAction.ShowSuccessDialog -> {
-                shareExtensionViewModel.showSuccessDialog()
+                dismiss()
+                shareExtensionViewModel.showSuccessDialog(action.fileUploadType)
             }
             is ShareExtensionProgressAction.Close -> {
+                dismiss()
                 shareExtensionViewModel.finish()
             }
             is ShareExtensionProgressAction.CancelUpload -> {
-                cancelClicked()
+                cancelClicked(action.title, action.message)
             }
             is ShareExtensionProgressAction.ShowErrorDialog -> {
-                shareExtensionViewModel.showErrorDialog()
+                dismiss()
+                shareExtensionViewModel.showErrorDialog(action.fileUploadType)
             }
         }
     }
@@ -106,16 +109,16 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
         return dialog
     }
 
-    private fun cancelClicked() {
+    private fun cancelClicked(title: String, message: String) {
         AlertDialog.Builder(requireContext())
-            .setTitle(R.string.cancel_submission_dialog_title)
-            .setMessage(R.string.cancel_submission_dialog_message)
+            .setTitle(title)
+            .setMessage(message)
             .setNegativeButton(R.string.no) { _, _ -> }
             .setPositiveButton(R.string.yes) { _, _ ->
                 uuid?.let {
                     viewModel.cancelUpload(it)
                 }
-                shareExtensionViewModel.finish()
+                viewModel.onCloseClicked()
             }.show()
     }
 

@@ -13,12 +13,13 @@ import androidx.work.hasKeyWithValueOfType
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
-import com.instructure.pandautils.utils.fromJson
-import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.fromJson
+import com.instructure.pandautils.utils.humanReadableByteCount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -46,17 +47,18 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
     private var itemViewData: List<FileProgressViewData> = emptyList()
 
     private var workerId: UUID? = null
+    private var fileUploadType = FileUploadType.USER
 
     private val observer = Observer<WorkInfo> {
         when (it.state) {
             WorkInfo.State.SUCCEEDED -> {
-                _events.postValue(Event((ShareExtensionProgressAction.ShowSuccessDialog)))
+                _events.postValue(Event((ShareExtensionProgressAction.ShowSuccessDialog(fileUploadType))))
             }
             WorkInfo.State.RUNNING -> {
                 updateViewData(it.progress)
             }
             WorkInfo.State.FAILED -> {
-                _events.postValue(Event(ShareExtensionProgressAction.ShowErrorDialog))
+                _events.postValue(Event(ShareExtensionProgressAction.ShowErrorDialog(fileUploadType)))
             }
         }
     }
@@ -84,6 +86,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                 if (progress.hasKeyWithValueOfType<String>(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME)) {
                     progress.getString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME)
                 } else null
+            fileUploadType = if (assignmentName.isNullOrEmpty()) FileUploadType.USER else FileUploadType.ASSIGNMENT
 
             val uploadedMap = progress.getStringArray(FileUploadWorker.PROGRESS_DATA_UPLOADED_FILES).orEmpty()
                 .map { it.fromJson<FileSubmitObject>() }
@@ -104,7 +107,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
 
                 viewData = ShareExtensionProgressViewData(
                     items = itemViewData.map { FileProgressItemViewModel(it) },
-                    dialogTitle = if (assignmentName == null) resources.getString(R.string.fileUpload) else resources.getString(
+                    dialogTitle = if (assignmentName.isNullOrEmpty()) resources.getString(R.string.fileUpload) else resources.getString(
                         R.string.submission
                     ),
                     subtitle = if (assignmentName.isNullOrEmpty()) resources.getString(R.string.fileUploadProgressSubtitle) else resources.getString(
@@ -152,7 +155,8 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
         _events.postValue(Event(ShareExtensionProgressAction.Close))
     }
 
-    @DrawableRes private fun getIconDrawableRes(contentType: String): Int {
+    @DrawableRes
+    private fun getIconDrawableRes(contentType: String): Int {
         return when {
             contentType.contains("image") -> R.drawable.ic_image
             contentType.contains("video") -> R.drawable.ic_media
@@ -166,6 +170,9 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
     }
 
     fun cancelClicked() {
-        _events.postValue(Event(ShareExtensionProgressAction.CancelUpload))
+        _events.postValue(Event(ShareExtensionProgressAction.CancelUpload(
+            title = if (fileUploadType == FileUploadType.ASSIGNMENT) resources.getString(R.string.cancelSubmissionDialogTitle) else resources.getString(R.string.cancelFileUploadTitle),
+            message = if (fileUploadType == FileUploadType.ASSIGNMENT) resources.getString(R.string.cancelSubmissionDialogMessage) else resources.getString(R.string.cancelFileUploadMessage)
+        )))
     }
 }

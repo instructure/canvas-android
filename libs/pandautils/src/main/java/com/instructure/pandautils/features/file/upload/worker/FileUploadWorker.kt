@@ -332,6 +332,5 @@ class FileUploadWorker(private val context: Context, private val workerParameter
         const val PROGRESS_DATA_FULL_SIZE = "fullSize"
         const val PROGRESS_DATA_UPLOADED_SIZE = "uploadedSize"
         const val PROGRESS_DATA_TITLE = "PROGRESS_DATA_TITLE"
-        const val PROGRESS_DATA_SUBTITLE = "PROGRESS_DATA_SUBTITLE"
     }
 }

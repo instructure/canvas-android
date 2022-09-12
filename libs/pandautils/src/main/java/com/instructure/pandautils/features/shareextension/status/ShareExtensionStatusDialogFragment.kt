@@ -22,18 +22,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.databinding.FragmentShareExtensionStatusDialogBinding
+import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
+import com.instructure.pandautils.utils.SerializableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ShareExtensionStatusDialogFragment : DialogFragment() {
 
-    private var state: ShareExtensionStatus = ShareExtensionStatus.SUCCEEDED
+    private var state: ShareExtensionStatus by SerializableArg(ShareExtensionStatus.SUCCEEDED, KEY_STATUS)
+    private var fileUploadType: FileUploadType by SerializableArg(FileUploadType.USER, KEY_FILE_UPLOAD_TYPE)
 
     private val viewModel: ShareExtensionStatusDialogViewModel by viewModels()
 
@@ -41,8 +45,10 @@ class ShareExtensionStatusDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentShareExtensionStatusDialogBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         return binding.root
@@ -52,9 +58,9 @@ class ShareExtensionStatusDialogFragment : DialogFragment() {
         binding = FragmentShareExtensionStatusDialogBinding.inflate(layoutInflater, null, false)
 
         val alertDialog = AlertDialog.Builder(requireContext())
-                .setView(binding.root)
-                .setCancelable(true)
-                .create()
+            .setView(binding.root)
+            .setCancelable(true)
+            .create()
 
         alertDialog.setCanceledOnTouchOutside(true)
         alertDialog.setCancelable(true)
@@ -65,7 +71,7 @@ class ShareExtensionStatusDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.initData(shareExtensionViewModel.uploadType, state)
+        viewModel.initData(fileUploadType, state)
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -90,10 +96,19 @@ class ShareExtensionStatusDialogFragment : DialogFragment() {
 
     companion object {
         const val TAG = "ShareExtensionSuccessDialogFragment"
+        const val KEY_STATUS = "status"
+        const val KEY_FILE_UPLOAD_TYPE = "fileUploadType"
 
-        fun newInstance(state: ShareExtensionStatus): ShareExtensionStatusDialogFragment {
+        fun newInstance(
+            state: ShareExtensionStatus,
+            fileUploadType: FileUploadType
+        ): ShareExtensionStatusDialogFragment {
             return ShareExtensionStatusDialogFragment()
                 .apply {
+                    arguments = Bundle().apply {
+                        putSerializable(KEY_STATUS, state)
+                        putSerializable(KEY_FILE_UPLOAD_TYPE, fileUploadType)
+                    }
                     this.state = state
                 }
         }

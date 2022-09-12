@@ -128,13 +128,13 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
                 showConfetti()
             }
             is ShareExtensionAction.ShowSuccessDialog -> {
-                ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.SUCCEEDED).show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
+                ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.SUCCEEDED, action.fileUploadType).show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
             }
             is ShareExtensionAction.ShowProgressDialog -> {
                 showProgressDialog(action.uuid)
             }
             is ShareExtensionAction.ShowErrorDialog -> {
-                ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.FAILED).show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
+                ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.FAILED, action.fileUploadType).show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
             }
         }
     }
