@@ -15,14 +15,13 @@ import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel
-import com.instructure.pandautils.fromJson
+import com.instructure.pandautils.utils.fromJson
+import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.ln
-import kotlin.math.pow
 
 @HiltViewModel
 class ShareExtensionProgressDialogViewModel @Inject constructor(
@@ -97,7 +96,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                         .map {
                             FileProgressViewData(
                                 it.name,
-                                humanReadableByteCount(it.size),
+                                it.size.humanReadableByteCount(),
                                 getIconDrawableRes(it.contentType),
                                 uploadedMap.containsKey(it.name)
                             )
@@ -112,8 +111,8 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                         R.string.submissionProgressSubtitle,
                         assignmentName
                     ),
-                    maxSize = humanReadableByteCount(maxSize),
-                    currentSize = humanReadableByteCount(currentSize),
+                    maxSize = maxSize.humanReadableByteCount(),
+                    currentSize = currentSize.humanReadableByteCount(),
                     progressInt = ((currentSize.toDouble() / maxSize.toDouble()) * 100.0).toInt(),
                     percentage = "${String.format("%.1f", currentSize.toDouble() / maxSize.toDouble() * 100.0)}%"
                 )
@@ -122,7 +121,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
                 }
             } else {
                 viewData?.apply {
-                    this.currentSize = humanReadableByteCount(currentSize)
+                    this.currentSize = currentSize.humanReadableByteCount()
                     this.progressInt = ((currentSize.toDouble() / maxSize.toDouble()) * 100).toInt()
                     this.percentage =
                         "${String.format("%.1f", currentSize.toDouble() / maxSize.toDouble() * 100.0)}%"
@@ -160,14 +159,6 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
             contentType.contains("pdf") -> R.drawable.ic_pdf
             else -> R.drawable.ic_attachment
         }
-    }
-
-    private fun humanReadableByteCount(bytes: Long): String {
-        val unit = 1024
-        if (bytes < unit) return "$bytes B"
-        val exp = (ln(bytes.toDouble()) / ln(unit.toDouble())).toInt()
-        val pre = "KMGTPE"[exp - 1].toString()
-        return String.format(Locale.getDefault(), "%.1f %sB", bytes / unit.toDouble().pow(exp.toDouble()), pre)
     }
 
     fun cancelUpload(workerId: UUID) {

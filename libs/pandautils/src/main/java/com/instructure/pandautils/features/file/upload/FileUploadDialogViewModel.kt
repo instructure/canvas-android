@@ -32,12 +32,11 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
+import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.mvvm.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.ln
-import kotlin.math.pow
 
 @HiltViewModel
 class FileUploadDialogViewModel @Inject constructor(
@@ -140,7 +139,7 @@ class FileUploadDialogViewModel @Inject constructor(
         val itemViewModels = filesToUpload.map {
             FileItemViewModel(FileItemViewData(
                     it.fileSubmitObject.name,
-                    humanReadableByteCount(it.fileSubmitObject.size),
+                    it.fileSubmitObject.size.humanReadableByteCount(),
                     it.fileSubmitObject.fullPath
             ), this::onRemoveFileClicked)
         }
@@ -197,14 +196,6 @@ class FileUploadDialogViewModel @Inject constructor(
 
     private fun checkIfFileSubmissionAllowed(): Boolean {
         return assignment?.submissionTypesRaw?.contains(Assignment.SubmissionType.ONLINE_UPLOAD.apiString) ?: false
-    }
-
-    private fun humanReadableByteCount(bytes: Long): String {
-        val unit = 1024
-        if (bytes < unit) return "$bytes B"
-        val exp = (ln(bytes.toDouble()) / ln(unit.toDouble())).toInt()
-        val pre = "KMGTPE"[exp - 1].toString()
-        return String.format(Locale.getDefault(), "%.1f %sB", bytes / unit.toDouble().pow(exp.toDouble()), pre)
     }
 
     private fun setupAllowedExtensions(): String? {

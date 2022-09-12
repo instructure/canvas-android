@@ -32,7 +32,7 @@ import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
-import com.instructure.pandautils.toJson
+import com.instructure.pandautils.utils.toJson
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import java.util.*
