@@ -37,11 +37,10 @@ class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         isFirstItem: Boolean,
         isLastItem: Boolean
     ) = with(itemView) {
-        ProfileUtils.loadAvatarForUser(icon, item)
+        ProfileUtils.loadAvatarForUser(icon, item.name, item.avatarUrl, 1f, courseColor)
 
         itemView.setOnClickListener { adapterToFragmentCallback.onRowClicked(item, adapterPosition, true) }
 
-        icon.borderColor = courseColor
         title.text = Pronouns.span(item.name, item.pronouns)
 
         val enrollmentIndex = item.enrollmentIndex

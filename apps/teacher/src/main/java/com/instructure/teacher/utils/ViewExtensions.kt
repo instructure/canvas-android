@@ -25,6 +25,7 @@ import android.text.SpannableString
 import android.text.style.URLSpan
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.MenuRes
@@ -43,6 +44,8 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 
 fun CircleImageView.setAnonymousAvatar() = setImageResource(R.drawable.ic_user_avatar)
+
+fun ImageView.setAnonymousAvatar() = setImageResource(R.drawable.ic_user_avatar)
 
 /**
  * Loads the given resource as this Toolbar's icon, assigns it the given content description, and

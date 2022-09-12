@@ -27,7 +27,7 @@
         android:layout_marginStart="16dp"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/assigneeAvatarImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"

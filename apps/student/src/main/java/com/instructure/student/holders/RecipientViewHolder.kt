@@ -17,7 +17,6 @@ package com.instructure.student.holders
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Recipient
@@ -47,7 +46,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
                 setBackgroundColor(selectionColor and selectionTransparencyMask)
-                avatar.setImageDrawable(ColorDrawable(selectionColor))
+                avatar.setBackgroundColor(selectionColor)
                 checkMarkImageView.setVisible()
                 ColorUtils.colorIt(Color.WHITE, checkMarkImageView)
             } else {

@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/icon"
             style="@style/AdapterItemIcon"
             android:layout_width="@dimen/avatar_size"

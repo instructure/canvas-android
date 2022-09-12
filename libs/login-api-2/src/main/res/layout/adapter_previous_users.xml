@@ -26,12 +26,11 @@
     android:paddingEnd="16dp"
     android:background="?android:selectableItemBackground">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/usersAvatar"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentStart="true"
-        app:civ_circle_background_color="@color/backgroundMedium"
         android:layout_centerVertical="true"/>
 
     <LinearLayout

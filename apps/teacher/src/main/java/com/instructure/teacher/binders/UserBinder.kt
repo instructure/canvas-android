@@ -33,7 +33,7 @@ object UserBinder {
         basicUser.name = user.name
         basicUser.pronouns = user.pronouns
         basicUser.avatarUrl = user.avatarUrl
-        ProfileUtils.loadAvatarForUser(holder.itemView.studentAvatar, basicUser)
+        ProfileUtils.loadAvatarForUser(holder.itemView.studentAvatar, basicUser.name, basicUser.avatarUrl)
 
         // Set student name
         holder.itemView.userName.text = Pronouns.span(user.name, user.pronouns)
