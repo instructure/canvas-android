@@ -34,7 +34,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.work.*
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -43,7 +43,6 @@ import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class FileUploadDialogFragment : DialogFragment() {
@@ -56,7 +55,7 @@ class FileUploadDialogFragment : DialogFragment() {
     private var canvasContext: CanvasContext by ParcelableArg(ApiPrefs.user)
     private var position: Int by IntArg()
 
-    private var fileSubmitUris: ArrayList<Uri> = arrayListOf()
+    private var fileSubmitUris: ArrayList<Uri>? = arrayListOf()
     private var cameraImageUri: Uri? = null
 
     private var assignment: Assignment? by NullableParcelableArg()
@@ -236,7 +235,7 @@ class FileUploadDialogFragment : DialogFragment() {
             return FileUploadDialogFragment().apply {
                 arguments = args
 
-                fileSubmitUris = args.getParcelableArrayList<Uri>(Const.URIS) as ArrayList<Uri>
+                fileSubmitUris = args.getParcelableArrayList(Const.URIS)
                 uploadType = args.getSerializable(Const.UPLOAD_TYPE) as FileUploadType
                 parentFolderId = args.getLong(Const.PARENT_FOLDER_ID, INVALID_ID)
                 quizQuestionId = args.getLong(Const.QUIZ_ANSWER_ID, INVALID_ID)
