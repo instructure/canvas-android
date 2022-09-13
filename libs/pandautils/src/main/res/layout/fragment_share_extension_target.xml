@@ -21,6 +21,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.instructure.pandautils.features.file.upload.FileUploadType" />
+
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetViewModel" />
@@ -157,10 +159,11 @@
                         android:importantForAccessibility="yes"
                         android:minHeight="45dp"
                         android:onItemSelected="@{(parent, view, position, id) -> viewModel.onCourseSelected(position)}"
-                        android:visibility="gone"
+                        android:visibility="@{viewModel.data.uploadType == FileUploadType.ASSIGNMENT ? View.VISIBLE : View.GONE}"
                         app:itemViewModels="@{viewModel.data.courses}"
                         app:layoutRes="@{@layout/item_canvas_context_spinner}"
-                        app:layout_constraintTop_toBottomOf="@id/assignmentCheckBox" />
+                        app:layout_constraintTop_toBottomOf="@id/assignmentCheckBox"
+                        tools:visibility="gone" />
 
                     <Spinner
                         android:id="@+id/assignmentSpinner"
@@ -174,10 +177,11 @@
                         android:importantForAccessibility="yes"
                         android:minHeight="45dp"
                         android:onItemSelected="@{(parent, view, position, id) -> viewModel.onAssignmentSelected(position)}"
-                        android:visibility="gone"
+                        android:visibility="@{viewModel.data.uploadType == FileUploadType.ASSIGNMENT ? View.VISIBLE : View.GONE}"
                         app:itemViewModels="@{viewModel.data.assignments}"
                         app:layoutRes="@{@layout/item_assignment_spinner}"
-                        app:layout_constraintTop_toBottomOf="@id/studentCourseSpinner" />
+                        app:layout_constraintTop_toBottomOf="@id/studentCourseSpinner"
+                        tools:visibility="gone" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
