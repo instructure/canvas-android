@@ -17,12 +17,12 @@
 package com.instructure.pandautils.features.shareextension.status
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -62,8 +62,7 @@ class ShareExtensionStatusDialogFragment : DialogFragment() {
             .setCancelable(true)
             .create()
 
-        alertDialog.setCanceledOnTouchOutside(true)
-        alertDialog.setCancelable(true)
+        alertDialog.setCanceledOnTouchOutside(false)
 
         return alertDialog
     }
@@ -80,6 +79,11 @@ class ShareExtensionStatusDialogFragment : DialogFragment() {
         }
 
         binding.doneButton.setTextColor(ThemePrefs.buttonColor)
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        requireActivity().onBackPressed()
     }
 
     private fun handleAction(action: ShareExtensionStatusAction) {

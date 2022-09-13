@@ -98,6 +98,8 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
             .setCancelable(false)
             .create()
 
+        dialog.setCanceledOnTouchOutside(false)
+
         dialog.setOnShowListener {
             val negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
             negative.setTextColor(ThemePrefs.buttonColor)
@@ -107,6 +109,11 @@ class ShareExtensionProgressDialogFragment : DialogFragment() {
         }
 
         return dialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        requireActivity().onBackPressed()
     }
 
     private fun cancelClicked(title: String, message: String) {

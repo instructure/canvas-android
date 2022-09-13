@@ -67,7 +67,7 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
     private val shareExtensionViewModel: ShareExtensionViewModel by viewModels()
 
     private var loadCoursesJob: Job? = null
-    private var uploadFileSourceFragment: DialogFragment? = null
+    private var currentFragment: DialogFragment? = null
 
     private val submissionTarget: ShareFileSubmissionTarget? by lazy {
         intent?.extras?.getParcelable(Const.SUBMISSION_TARGET)
@@ -128,19 +128,24 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
                 showConfetti()
             }
             is ShareExtensionAction.ShowSuccessDialog -> {
-                ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.SUCCEEDED, action.fileUploadType).show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
+                rootView?.postDelayed({
+                    currentFragment = ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.SUCCEEDED, action.fileUploadType)
+                    currentFragment?.show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
+                }, 250)
             }
             is ShareExtensionAction.ShowProgressDialog -> {
                 showProgressDialog(action.uuid)
             }
             is ShareExtensionAction.ShowErrorDialog -> {
-                ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.FAILED, action.fileUploadType).show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
+                currentFragment = ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.FAILED, action.fileUploadType)
+                currentFragment?.show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
             }
         }
     }
 
     private fun showProgressDialog(uuid: UUID) {
-        ShareExtensionProgressDialogFragment.newInstance(uuid).show(supportFragmentManager, ShareExtensionProgressDialogFragment.TAG)
+        currentFragment = ShareExtensionProgressDialogFragment.newInstance(uuid)
+        currentFragment?.show(supportFragmentManager, ShareExtensionProgressDialogFragment.TAG)
     }
 
     private fun showUploadDialog(bundle: Bundle, dialogCallback: (Int) -> Unit, workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) {
@@ -149,7 +154,8 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
             it.duration = 500
             it.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    FileUploadDialogFragment.newInstance(bundle, callback = dialogCallback, workerLiveDataCallback = workerCallback).show(supportFragmentManager, FileUploadDialogFragment.TAG)
+                    currentFragment = FileUploadDialogFragment.newInstance(bundle, callback = dialogCallback, workerLiveDataCallback = workerCallback)
+                    currentFragment?.show(supportFragmentManager, FileUploadDialogFragment.TAG)
                 }
             })
             it.start()
@@ -168,12 +174,12 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
     abstract fun exitActivity()
 
     override fun onBackPressed() {
-        uploadFileSourceFragment?.dismissAllowingStateLoss()
-        super.onBackPressed()
+        currentFragment?.dismissAllowingStateLoss()
+        finish()
     }
 
     override fun onDestroy() {
-        uploadFileSourceFragment?.dismissAllowingStateLoss()
+        currentFragment?.dismissAllowingStateLoss()
         loadCoursesJob?.cancel()
         super.onDestroy()
     }
@@ -189,8 +195,8 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
     }
 
     private fun showDestinationDialog() {
-        uploadFileSourceFragment = ShareExtensionTargetFragment()
-        uploadFileSourceFragment!!.show(supportFragmentManager, ShareExtensionTargetFragment.TAG)
+        currentFragment = ShareExtensionTargetFragment()
+        currentFragment?.show(supportFragmentManager, ShareExtensionTargetFragment.TAG)
     }
 
     private fun showConfetti() {

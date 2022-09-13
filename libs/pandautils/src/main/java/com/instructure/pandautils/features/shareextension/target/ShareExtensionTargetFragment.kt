@@ -88,8 +88,7 @@ class ShareExtensionTargetFragment : DialogFragment() {
                 .setCancelable(true)
                 .create()
 
-        alertDialog.setCanceledOnTouchOutside(true)
-        alertDialog.setCancelable(true)
+        alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setOnShowListener {
             val positive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
             positive.setTextColor(ThemePrefs.buttonColor)
@@ -103,6 +102,11 @@ class ShareExtensionTargetFragment : DialogFragment() {
         }
 
         return alertDialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        requireActivity().onBackPressed()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

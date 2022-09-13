@@ -34,17 +34,17 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.work.*
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
+import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class FileUploadDialogFragment : DialogFragment() {
@@ -151,6 +151,8 @@ class FileUploadDialogFragment : DialogFragment() {
                 .setNegativeButton(R.string.utils_cancel, null)
                 .create()
 
+        dialog.setCanceledOnTouchOutside(false)
+
         dialog.setOnShowListener {
             val positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
             positive.setTextColor(ThemePrefs.buttonColor)
@@ -163,6 +165,13 @@ class FileUploadDialogFragment : DialogFragment() {
         }
 
         return dialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        if (requireActivity() is ShareExtensionActivity) {
+            requireActivity().onBackPressed()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
