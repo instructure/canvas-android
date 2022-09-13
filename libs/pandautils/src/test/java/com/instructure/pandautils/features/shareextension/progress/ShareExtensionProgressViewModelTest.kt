@@ -11,6 +11,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.toJson
@@ -65,7 +66,7 @@ class ShareExtensionProgressViewModelTest {
         mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.SUCCEEDED, Data.EMPTY, emptyList(), Data.EMPTY, 1))
 
         viewModel.events.observe(lifecycleOwner) {}
-        assertEquals(ShareExtensionProgressAction.ShowSuccessDialog, viewModel.events.value?.getContentIfNotHandled())
+        assertEquals(ShareExtensionProgressAction.ShowSuccessDialog(FileUploadType.USER), viewModel.events.value?.getContentIfNotHandled())
     }
 
     @Test
@@ -74,7 +75,7 @@ class ShareExtensionProgressViewModelTest {
         mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.FAILED, Data.EMPTY, emptyList(), Data.EMPTY, 1))
 
         viewModel.events.observe(lifecycleOwner) {}
-        assertEquals(ShareExtensionProgressAction.ShowErrorDialog, viewModel.events.value?.getContentIfNotHandled())
+        assertEquals(ShareExtensionProgressAction.ShowErrorDialog(FileUploadType.USER), viewModel.events.value?.getContentIfNotHandled())
     }
 
     @Test
@@ -83,7 +84,7 @@ class ShareExtensionProgressViewModelTest {
         viewModel.setUUID(uuid)
         viewModel.cancelClicked()
 
-        assertEquals(ShareExtensionProgressAction.CancelUpload, viewModel.events.value?.getContentIfNotHandled())
+        assert(viewModel.events.value?.getContentIfNotHandled() is ShareExtensionProgressAction.CancelUpload)
     }
 
     @Test

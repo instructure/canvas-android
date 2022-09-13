@@ -447,16 +447,15 @@ class DashboardNotificationsViewModelTest {
             UploadViewData(
                 title,
                 subTitle,
-                "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
-                0
+                "#${resources.getColor(R.color.backgroundInfo).toHexString()}"
             )
         )
 
         viewModel.loadData()
 
         viewModel.data.value?.uploadItems?.forEachIndexed { index, itemViewModel ->
-            assert(itemViewModel is UploadItemViewModel)
-            assertEquals(expectedData[index], (itemViewModel as UploadItemViewModel).data)
+            assertEquals(0, itemViewModel.progress)
+            assertEquals(expectedData[index], itemViewModel.data)
         }
     }
 
