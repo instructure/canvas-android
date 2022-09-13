@@ -1262,5 +1262,12 @@
     <string name="appThemeLight">Svetlo</string>
     <string name="appThemeDark">Temno</string>
     <string name="appThemeSystem">Enako kot naprava</string>
+    <string name="themeSelectorTitle">Sistem Canvas je zdaj na voljo v temni preobleki</string>
+    <string name="themeSelectorDescription">Izberite preobleko aplikacije</string>
+    <string name="themeSelectorLightTheme">Svetla preobleka</string>
+    <string name="themeSelectorDarkTheme">Temna preobleka</string>
+    <string name="themeSelectorDeviceTheme">Enako kot preobleka na napravi</string>
+    <string name="themeSelectorSave">Shrani</string>
+    <string name="themeSelectorChangeLater">To lahko pozneje spremenite v nastavitvah aplikacije</string>
     <string name="grabAnnotationTool">Zgrabi</string>
 </resources>

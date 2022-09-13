@@ -1263,5 +1263,12 @@
     <string name="appThemeLight">Sáng</string>
     <string name="appThemeDark">Tối</string>
     <string name="appThemeSystem">Tương tự như thiết bị</string>
+    <string name="themeSelectorTitle">Canvas hiện nay đã có sẵn ở chủ đề tối</string>
+    <string name="themeSelectorDescription">Lựa chọn chủ đề ứng dụng</string>
+    <string name="themeSelectorLightTheme">Chủ đề sáng</string>
+    <string name="themeSelectorDarkTheme">Chủ đề tối</string>
+    <string name="themeSelectorDeviceTheme">Tương tự như chủ đề thiết bị</string>
+    <string name="themeSelectorSave">Lưu</string>
+    <string name="themeSelectorChangeLater">Bạn có thể thay đổi sau trong cài đặt ứng dụng</string>
     <string name="grabAnnotationTool">Nắm lấy</string>
 </resources>

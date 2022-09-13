@@ -23,6 +23,7 @@ import com.instructure.student.util.StudentPrefs
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.utils.PandaAppResetter
+import com.instructure.pandautils.utils.ThemePrefs
 
 class StudentActivityTestRule<T : Activity>(activityClass: Class<T>) : InstructureActivityTestRule<T>(activityClass) {
 
@@ -31,6 +32,9 @@ class StudentActivityTestRule<T : Activity>(activityClass: Class<T>) : Instructu
         StudentPrefs.clearPrefs()
         CacheControlFlags.clearPrefs()
         PreviousUsersUtils.clear(context)
+
+        // We need to set this true so the theme selector won't stop our tests.
+        ThemePrefs.themeSelectionShown = true
     }
 
 }

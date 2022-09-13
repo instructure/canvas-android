@@ -1262,5 +1262,12 @@
     <string name="appThemeLight">Licht</string>
     <string name="appThemeDark">Donker</string>
     <string name="appThemeSystem">Hetzelfde als apparaat</string>
+    <string name="themeSelectorTitle">Canvas is niet beschikbaar in donker thema</string>
+    <string name="themeSelectorDescription">Kies app-thema</string>
+    <string name="themeSelectorLightTheme">Licht thema</string>
+    <string name="themeSelectorDarkTheme">Donker thema</string>
+    <string name="themeSelectorDeviceTheme">Hetzelfde als apparaatthema</string>
+    <string name="themeSelectorSave">Opslaan</string>
+    <string name="themeSelectorChangeLater">Je kunt dit later wijzigen in de app-instellingen.</string>
     <string name="grabAnnotationTool">Pakken</string>
 </resources>
