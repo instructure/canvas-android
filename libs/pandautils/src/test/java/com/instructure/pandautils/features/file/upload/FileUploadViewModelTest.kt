@@ -101,7 +101,7 @@ class FileUploadViewModelTest {
         val viewModel = createViewModel()
         val course = createCourse(1L, "Course 1")
         val assignment = createAssignment(1L, "Assignment 1", 1L, listOf("pdf", "mp4", "docx"))
-        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L)
+        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -114,7 +114,7 @@ class FileUploadViewModelTest {
         val viewModel = createViewModel()
         val course = createCourse(1L, "Course 1")
         val assignment = createAssignment(1L, "Assignment 1", 1L, listOf("pdf"))
-        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L)
+        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L)
 
         every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns createSubmitObject("test.pdf")
 
@@ -132,7 +132,7 @@ class FileUploadViewModelTest {
         val viewModel = createViewModel()
         val course = createCourse(1L, "Course 1")
         val assignment = createAssignment(1L, "Assignment 1", 1L, listOf("pdf"))
-        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L)
+        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L)
 
         every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns createSubmitObject("test.doc")
 
@@ -150,7 +150,7 @@ class FileUploadViewModelTest {
         val viewModel = createViewModel()
         val course = createCourse(1L, "Course 1")
         val assignment = createAssignment(1L, "Assignment 1", 1L)
-        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L)
+        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.uploadFiles()
 
@@ -163,7 +163,7 @@ class FileUploadViewModelTest {
         val viewModel = createViewModel()
         val course = createCourse(1L, "Course 1")
         val assignment = createAssignment(1L, "Assignment 1", 1L, submissionTypes = listOf("online_text_entry"))
-        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L)
+        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.addFile(uri)
         viewModel.uploadFiles()
@@ -181,7 +181,7 @@ class FileUploadViewModelTest {
 
         every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns submitObject
 
-        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L)
+        viewModel.setData(assignment, null, FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
