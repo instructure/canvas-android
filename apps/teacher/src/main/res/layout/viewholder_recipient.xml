@@ -40,7 +40,8 @@
             android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            tools:background="#AA00FF" />
+            android:background="@drawable/ic_circle"
+            tools:backgroundTint="#AA00FF" />
 
         <ImageView
             android:id="@+id/checkMarkImageView"

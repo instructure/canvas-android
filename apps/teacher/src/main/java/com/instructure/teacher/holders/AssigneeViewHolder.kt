@@ -15,11 +15,8 @@
  */
 package com.instructure.teacher.holders
 
-import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -29,15 +26,12 @@ import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.ProfileUtils
-import com.instructure.pandautils.utils.TextDrawable
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.models.EveryoneAssignee
 import com.instructure.teacher.presenters.AssigneeListPresenter
-import com.instructure.teacher.utils.getColorCompat
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.adapter_assignee.view.*
 import kotlinx.android.synthetic.main.adapter_assignee_header.view.*
 

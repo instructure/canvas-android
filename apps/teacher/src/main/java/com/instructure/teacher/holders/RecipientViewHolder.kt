@@ -39,7 +39,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
                 setBackgroundColor(selectionColor and SELECTION_TRANSPARENCY_MASK)
-                avatar.setImageDrawable(ColorDrawable(selectionColor))
+                avatar.setBackgroundColor(selectionColor)
                 checkMarkImageView.setVisible()
                 ColorUtils.colorIt(Color.WHITE, checkMarkImageView)
             } else {

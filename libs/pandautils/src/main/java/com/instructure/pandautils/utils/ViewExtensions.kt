@@ -74,7 +74,6 @@ import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.abc_search_view.view.*
 import kotlinx.coroutines.delay
 import java.util.*
@@ -509,24 +508,6 @@ fun View.setupAvatarA11y(userName: String?) {
 fun View.clearAvatarA11y() {
     contentDescription = ""
     setAccessibilityDelegate(null)
-}
-
-@JvmName("setUserAvatarImage")
-fun CircleImageView.setAvatarImage(context: Context, userName: String?) {
-    val initials = ProfileUtils.getUserInitials(userName)
-    val color = ContextCompat.getColor(context, R.color.textDark)
-    val drawable = TextDrawable.builder()
-            .beginConfig()
-            .height(context.resources.getDimensionPixelSize(com.instructure.pandautils.R.dimen.avatar_size))
-            .width(context.resources.getDimensionPixelSize(com.instructure.pandautils.R.dimen.avatar_size))
-            .toUpperCase()
-            .useFont(Typeface.DEFAULT_BOLD)
-            .textColor(color)
-            .endConfig()
-            .buildRound(initials, Color.WHITE)
-    this.borderColor = color
-    this.borderWidth = context.DP(0.5f).toInt()
-    this.setImageDrawable(drawable)
 }
 
 /**

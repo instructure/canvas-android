@@ -38,12 +38,7 @@ import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
-import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
-import de.hdodenhof.circleimageview.CircleImageView
-
-
-fun CircleImageView.setAnonymousAvatar() = setImageResource(R.drawable.ic_user_avatar)
 
 fun ImageView.setAnonymousAvatar() = setImageResource(R.drawable.ic_user_avatar)
 
