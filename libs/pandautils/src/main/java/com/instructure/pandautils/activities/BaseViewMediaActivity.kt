@@ -192,7 +192,7 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
     private fun prepare() = mExoAgent.prepare(mediaPlayerView)
 
     override fun onPause() {
-        if (!mDestroyOnExit) mExoAgent.flagForResume()
+        mExoAgent.flagForResume()
         super.onPause()
     }
 

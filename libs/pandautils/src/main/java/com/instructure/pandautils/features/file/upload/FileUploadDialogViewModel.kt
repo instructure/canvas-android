@@ -32,12 +32,11 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
+import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.mvvm.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.ln
-import kotlin.math.pow
 
 @HiltViewModel
 class FileUploadDialogViewModel @Inject constructor(
@@ -66,13 +65,13 @@ class FileUploadDialogViewModel @Inject constructor(
 
     var dialogCallback: ((Int) -> Unit)? = null
     var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
-    var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+    var workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
 
     private var filesToUpload = mutableListOf<FileUploadData>()
 
     fun setData(
             assignment: Assignment?,
-            file: Uri?,
+            files: ArrayList<Uri>?,
             uploadType: FileUploadType,
             canvasContext: CanvasContext,
             parentFolderId: Long,
@@ -81,13 +80,13 @@ class FileUploadDialogViewModel @Inject constructor(
             quizId: Long,
             dialogCallback: ((Int) -> Unit)? = null,
             attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
-            workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+            workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
     ) {
         this.assignment = assignment
-        file?.let { uri ->
+        files?.forEach { uri ->
             val submitObject = getUriContents(uri)
-            submitObject?.let {
-                this.filesToUpload = mutableListOf(FileUploadData(uri, it))
+            submitObject?.let { fso ->
+                this.filesToUpload.add(FileUploadData(uri, fso))
             }
         }
         this.uploadType = uploadType
@@ -140,7 +139,7 @@ class FileUploadDialogViewModel @Inject constructor(
         val itemViewModels = filesToUpload.map {
             FileItemViewModel(FileItemViewData(
                     it.fileSubmitObject.name,
-                    humanReadableByteCount(it.fileSubmitObject.size),
+                    it.fileSubmitObject.size.humanReadableByteCount(),
                     it.fileSubmitObject.fullPath
             ), this::onRemoveFileClicked)
         }
@@ -197,14 +196,6 @@ class FileUploadDialogViewModel @Inject constructor(
 
     private fun checkIfFileSubmissionAllowed(): Boolean {
         return assignment?.submissionTypesRaw?.contains(Assignment.SubmissionType.ONLINE_UPLOAD.apiString) ?: false
-    }
-
-    private fun humanReadableByteCount(bytes: Long): String {
-        val unit = 1024
-        if (bytes < unit) return "$bytes B"
-        val exp = (ln(bytes.toDouble()) / ln(unit.toDouble())).toInt()
-        val pre = "KMGTPE"[exp - 1].toString()
-        return String.format(Locale.getDefault(), "%.1f %sB", bytes / unit.toDouble().pow(exp.toDouble()), pre)
     }
 
     private fun setupAllowedExtensions(): String? {
@@ -318,7 +309,7 @@ class FileUploadDialogViewModel @Inject constructor(
                     .setInputData(data)
                     .build()
 
-            workerCallback?.invoke(workManager.getWorkInfoByIdLiveData(worker.id))
+            workerCallback?.invoke(worker.id, workManager.getWorkInfoByIdLiveData(worker.id))
             workManager.enqueue(worker)
             dialogCallback?.invoke(FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN)
         }

@@ -16,32 +16,130 @@
 
 package com.instructure.pandautils.features.shareextension.progress
 
-import androidx.lifecycle.ViewModelProvider
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.FragmentShareExtensionProgressDialogBinding
+import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
+import com.instructure.pandautils.utils.NullableSerializableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
+@AndroidEntryPoint
 class ShareExtensionProgressDialogFragment : DialogFragment() {
 
+    private val viewModel: ShareExtensionProgressDialogViewModel by viewModels()
+
+    private val shareExtensionViewModel: ShareExtensionViewModel by activityViewModels()
+
+    private var uuid: UUID? by NullableSerializableArg(KEY_UUID)
+
+    private lateinit var binding: FragmentShareExtensionProgressDialogBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        uuid?.let {
+            viewModel.setUUID(it)
+        }
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
+    }
+
+    private fun handleAction(action: ShareExtensionProgressAction) {
+        when (action) {
+            is ShareExtensionProgressAction.ShowSuccessDialog -> {
+                dismiss()
+                shareExtensionViewModel.showSuccessDialog(action.fileUploadType)
+            }
+            is ShareExtensionProgressAction.Close -> {
+                dismiss()
+                shareExtensionViewModel.finish()
+            }
+            is ShareExtensionProgressAction.CancelUpload -> {
+                cancelClicked(action.title, action.message)
+            }
+            is ShareExtensionProgressAction.ShowErrorDialog -> {
+                dismiss()
+                shareExtensionViewModel.showErrorDialog(action.fileUploadType)
+            }
+        }
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        binding = FragmentShareExtensionProgressDialogBinding.inflate(layoutInflater, null, false)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(binding.root)
+            .setNegativeButton(R.string.utils_cancel, null)
+            .setCancelable(false)
+            .create()
+
+        dialog.setCanceledOnTouchOutside(false)
+
+        dialog.setOnShowListener {
+            val negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+            negative.setTextColor(ThemePrefs.buttonColor)
+            negative.setOnClickListener {
+                viewModel.cancelClicked()
+            }
+        }
+
+        return dialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        requireActivity().onBackPressed()
+    }
+
+    private fun cancelClicked(title: String, message: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .setPositiveButton(R.string.yes) { _, _ ->
+                uuid?.let {
+                    viewModel.cancelUpload(it)
+                }
+                viewModel.onCloseClicked()
+            }.show()
+    }
+
     companion object {
-        fun newInstance() = ShareExtensionProgressDialogFragment()
-    }
-
-    private lateinit var viewModel: ShareExtensionProgressDialogViewModel
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_share_extension_progress_dialog, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ShareExtensionProgressDialogViewModel::class.java)
-        // TODO: Use the ViewModel
+        const val TAG = "ShareExtensionProgressDialogFragment"
+        const val KEY_UUID = "UUID"
+        fun newInstance(uuid: UUID): ShareExtensionProgressDialogFragment {
+            return ShareExtensionProgressDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(KEY_UUID, uuid)
+                }
+                this.uuid = uuid
+            }
+        }
     }
 
 }

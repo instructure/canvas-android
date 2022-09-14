@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.shareextension.progress.itemviewmodels.FileProgressItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp">
+
+        <ImageView
+            android:id="@+id/typeIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:importantForAccessibility="no"
+            app:imageRes="@{itemViewModel.data.icon}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/textDarkest"
+            tools:src="@drawable/ic_media" />
+
+        <TextView
+            android:id="@+id/fileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{itemViewModel.data.name}"
+            android:textColor="@color/textDarkest"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/statusIndicator"
+            app:layout_constraintStart_toEndOf="@id/typeIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Video_3222017" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@{itemViewModel.data.size}"
+            android:textColor="@color/textDark"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/statusIndicator"
+            app:layout_constraintStart_toStartOf="@id/fileName"
+            app:layout_constraintTop_toBottomOf="@id/fileName"
+            tools:text="350 MB" />
+
+        <FrameLayout
+            android:id="@+id/statusIndicator"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:importantForAccessibility="noHideDescendants"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:progressTint="@color/backgroundInfo"
+                android:visibility="@{itemViewModel.data.uploaded ? View.GONE : View.VISIBLE}" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_checkmark"
+                android:visibility="@{itemViewModel.data.uploaded ? View.VISIBLE : View.GONE}"
+                app:tint="@color/backgroundSuccess"
+                tools:visibility="gone" />
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

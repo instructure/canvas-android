@@ -1267,6 +1267,14 @@
     <string name="appThemeDark">Dark</string>
     <string name="appThemeSystem">Same as device</string>
 
+    <string name="themeSelectorTitle">Canvas is now available in dark theme</string>
+    <string name="themeSelectorDescription">Choose app theme</string>
+    <string name="themeSelectorLightTheme">Light theme</string>
+    <string name="themeSelectorDarkTheme">Dark theme</string>
+    <string name="themeSelectorDeviceTheme">Same as device theme</string>
+    <string name="themeSelectorSave">Save</string>
+    <string name="themeSelectorChangeLater">You can change it later in app settings</string>
+
     <string name="grabAnnotationTool">Grab</string>
     <string name="fileUpload">File Upload</string>
 
@@ -1283,4 +1291,22 @@
     <string name="emailNotificationsWeekly">Weekly</string>
     <string name="emailNotificationsNever">Never</string>
     <string name="selectFrequency">Select frequency</string>
+    <string name="a11y_closeProgress">Close progress dialog</string>
+    <string name="fileUploadProgress">%1$s of %2$s</string>
+    <string name="fileUploadProgressSubtitle">Uploading to Files</string>
+    <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
+
+    <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
+    <string name="cancelSubmissionDialogTitle">Cancel Submission</string>
+    <string name="cancelSubmissionDialogMessage">This will cancel and delete your submission.</string>
+    <string name="fileUploadError">File Upload Failed</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Upload to Canvas for %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Upload to My Files</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Submit assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choose a course</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choose an assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Cancel Upload?</string>
+    <string name="cancelFileUploadMessage">This will cancel your upload.</string>
 </resources>

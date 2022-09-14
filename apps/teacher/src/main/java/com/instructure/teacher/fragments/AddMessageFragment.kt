@@ -35,7 +35,7 @@ import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.RESULT_ATTACHMENTS
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.fromJson
+import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
@@ -52,6 +52,8 @@ import kotlinx.android.synthetic.main.fragment_add_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
+import kotlin.collections.ArrayList
 
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView {
@@ -458,7 +460,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         }
     }
 
-    private fun fileUploadLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
+    private fun fileUploadLiveDataCallback(uuid: UUID, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
                 it.outputData.getStringArray(RESULT_ATTACHMENTS)

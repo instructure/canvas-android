@@ -1248,5 +1248,12 @@
     <string name="appThemeLight">亮色</string>
     <string name="appThemeDark">暗色</string>
     <string name="appThemeSystem">和裝置相同</string>
+    <string name="themeSelectorTitle">Canvas 現在可在暗色主題中使用</string>
+    <string name="themeSelectorDescription">選擇應用程式主題</string>
+    <string name="themeSelectorLightTheme">淡色主題</string>
+    <string name="themeSelectorDarkTheme">暗色主題</string>
+    <string name="themeSelectorDeviceTheme">和裝置主題相同</string>
+    <string name="themeSelectorSave">儲存</string>
+    <string name="themeSelectorChangeLater">您可以稍後在應用桯式設定中變更</string>
     <string name="grabAnnotationTool">擷取</string>
 </resources>

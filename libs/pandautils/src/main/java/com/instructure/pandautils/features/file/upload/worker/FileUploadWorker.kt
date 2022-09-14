@@ -28,15 +28,17 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
-import com.instructure.pandautils.toJson
+import com.instructure.pandautils.utils.toJson
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import java.util.*
 
-class FileUploadWorker(private val context: Context, private val workerParameters: WorkerParameters) : CoroutineWorker(context, workerParameters) {
+class FileUploadWorker(private val context: Context, private val workerParameters: WorkerParameters) :
+    CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -50,29 +52,59 @@ class FileUploadWorker(private val context: Context, private val workerParameter
     private val submissionId = inputData.getLong(Const.SUBMISSION_ID, INVALID_ID)
     private val action = inputData.getString(FILE_SUBMIT_ACTION)
 
+    private var fullSize = 0L
+    private var currentProgress = 0L
+    private var uploaded = 0L
+
     private var uploadCount = 0
+
+    private val workDataBuilder = Data.Builder()
 
     override suspend fun doWork(): Result {
         try {
-            FileUploadPreferences.addWorkerId(id)
             val filePaths = inputData.getStringArray(FILE_PATHS)
 
             val fileSubmitObjects = filePaths?.let {
                 getFileSubmitObjects(it)
             } ?: throw IllegalArgumentException()
-
+            fullSize = fileSubmitObjects.sumOf { it.size }
             uploadCount = fileSubmitObjects.size
 
+            val title = context.getString(
+                if (action == ACTION_ASSIGNMENT_SUBMISSION) {
+                    R.string.dashboardNotificationUploadingSubmissionTitle
+                } else {
+                    R.string.dashboardNotificationUploadingFilesTitle
+                }
+            )
+
+            var assignmentName = ""
             var groupId: Long? = null
             if (assignmentId != INVALID_ID && courseId != INVALID_ID) {
                 val assignment = getAssignment(assignmentId, courseId)
                 groupId = getGroupId(assignment, courseId)
+                assignmentName = assignment.name.orEmpty()
             }
+
+            setProgress(
+                workDataBuilder
+                    .putString(PROGRESS_DATA_TITLE, title)
+                    .putString(PROGRESS_DATA_ASSIGNMENT_NAME, assignmentName)
+                    .putLong(PROGRESS_DATA_FULL_SIZE, fullSize)
+                    .putStringArray(PROGRESS_DATA_FILES_TO_UPLOAD, fileSubmitObjects.map {
+                        it.toJson()
+                    }.toTypedArray())
+                    .build()
+            )
+
+            FileUploadPreferences.addWorkerId(id)
 
             val attachments = uploadFiles(fileSubmitObjects, groupId)
 
-            val attachmentsIds = attachments.map { it.id }.plus(inputData.getLongArray(Const.ATTACHMENTS)?.toList()
-                    ?: emptyList())
+            val attachmentsIds = attachments.map { it.id }.plus(
+                inputData.getLongArray(Const.ATTACHMENTS)?.toList()
+                    ?: emptyList()
+            )
 
             val result = when (action) {
                 ACTION_ASSIGNMENT_SUBMISSION -> {
@@ -122,7 +154,7 @@ class FileUploadWorker(private val context: Context, private val workerParameter
     private suspend fun getGroupId(assignment: Assignment, courseId: Long): Long? {
         return if (assignment.groupCategoryId != 0L) {
             GroupManager.getAllGroupsForCourseAsync(courseId, true).await().dataOrThrow
-                    .find { it.groupCategoryId == assignment.groupCategoryId }?.id ?: throw IllegalArgumentException()
+                .find { it.groupCategoryId == assignment.groupCategoryId }?.id ?: throw IllegalArgumentException()
         } else {
             null
         }
@@ -141,17 +173,62 @@ class FileUploadWorker(private val context: Context, private val workerParameter
                         FileUploadConfig.forGroup(fileSubmitObject, groupId)
                     }
                 }
-                ACTION_COURSE_FILE -> FileUploadConfig.forCourse(fileSubmitObject, courseId, if (parentFolderId != INVALID_ID) parentFolderId else null)
-                ACTION_GROUP_FILE -> FileUploadConfig.forGroup(fileSubmitObject, courseId, if (parentFolderId != INVALID_ID) parentFolderId else null)
-                ACTION_USER_FILE -> FileUploadConfig.forUser(fileSubmitObject, if (parentFolderId != INVALID_ID) parentFolderId else null)
-                ACTION_MESSAGE_ATTACHMENTS -> FileUploadConfig.forUser(fileSubmitObject, parentFolderPath = MESSAGE_ATTACHMENT_PATH)
+                ACTION_COURSE_FILE -> FileUploadConfig.forCourse(
+                    fileSubmitObject,
+                    courseId,
+                    if (parentFolderId != INVALID_ID) parentFolderId else null
+                )
+                ACTION_GROUP_FILE -> FileUploadConfig.forGroup(
+                    fileSubmitObject,
+                    courseId,
+                    if (parentFolderId != INVALID_ID) parentFolderId else null
+                )
+                ACTION_USER_FILE -> FileUploadConfig.forUser(
+                    fileSubmitObject,
+                    if (parentFolderId != INVALID_ID) parentFolderId else null
+                )
+                ACTION_MESSAGE_ATTACHMENTS -> FileUploadConfig.forUser(
+                    fileSubmitObject,
+                    parentFolderPath = MESSAGE_ATTACHMENT_PATH
+                )
                 ACTION_QUIZ_FILE -> FileUploadConfig.forQuiz(fileSubmitObject, courseId, quizId)
-                ACTION_DISCUSSION_ATTACHMENT -> FileUploadConfig.forUser(fileSubmitObject, parentFolderPath = DISCUSSION_ATTACHMENT_PATH)
-                ACTION_SUBMISSION_COMMENT -> FileUploadConfig.forSubmissionComment(fileSubmitObject, courseId, assignmentId)
+                ACTION_DISCUSSION_ATTACHMENT -> FileUploadConfig.forUser(
+                    fileSubmitObject,
+                    parentFolderPath = DISCUSSION_ATTACHMENT_PATH
+                )
+                ACTION_SUBMISSION_COMMENT -> FileUploadConfig.forSubmissionComment(
+                    fileSubmitObject,
+                    courseId,
+                    assignmentId
+                )
                 else -> throw IllegalArgumentException("Unknown file upload action: $action")
             }
 
-            attachments += FileUploadManager.uploadFile(config).dataOrThrow
+            attachments += FileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
+                override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
+                    currentProgress = uploaded + (fileSubmitObject.size * progressPercent).toLong()
+                    setProgressAsync(
+                        workDataBuilder
+                            .putLong(PROGRESS_DATA_UPLOADED_SIZE, currentProgress)
+                            .build()
+                    )
+                    return !this@FileUploadWorker.isStopped
+                }
+            }).dataOrThrow
+
+            val updatedList =
+                workDataBuilder.build().getStringArray(PROGRESS_DATA_UPLOADED_FILES).orEmpty().toMutableList().apply {
+                    add(fileSubmitObject.toJson())
+                }.toTypedArray()
+            uploaded += fileSubmitObject.size
+            currentProgress = uploaded
+
+            setProgress(
+                workDataBuilder
+                    .putStringArray(PROGRESS_DATA_UPLOADED_FILES, updatedList)
+                    .putLong(PROGRESS_DATA_UPLOADED_SIZE, currentProgress)
+                    .build()
+            )
         }
         return attachments
     }
@@ -191,33 +268,40 @@ class FileUploadWorker(private val context: Context, private val workerParameter
         createNotificationChannel(notificationManager)
 
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-                .setContentTitle(String.format(Locale.US, context.getString(R.string.uploadingFileNum), currentItem, uploadCount))
-                .setContentText(fileName)
-                .setProgress(0, 0, true)
-                .setOngoing(true)
-                .build()
+            .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+            .setContentTitle(
+                String.format(
+                    Locale.US,
+                    context.getString(R.string.uploadingFileNum),
+                    currentItem,
+                    uploadCount
+                )
+            )
+            .setContentText(fileName)
+            .setProgress(0, 0, true)
+            .setOngoing(true)
+            .build()
 
         return ForegroundInfo(notificationId, notification)
     }
 
     private fun updateNotificationComplete(notificationId: Int) {
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-                .setProgress(0, 0, false)
-                .setOngoing(false)
-                .setContentTitle(context.getString(R.string.filesUploadedSuccessfully))
-                .build()
+            .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+            .setProgress(0, 0, false)
+            .setOngoing(false)
+            .setContentTitle(context.getString(R.string.filesUploadedSuccessfully))
+            .build()
         notificationManager.notify(notificationId + 1, notification)
     }
 
     private fun updateSubmissionComplete(notificationId: Int) {
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-                .setProgress(0, 0, false)
-                .setOngoing(false)
-                .setContentTitle(context.getString(R.string.filesSubmittedSuccessfully))
-                .build()
+            .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+            .setProgress(0, 0, false)
+            .setOngoing(false)
+            .setContentTitle(context.getString(R.string.filesSubmittedSuccessfully))
+            .build()
         notificationManager.notify(notificationId + 1, notification)
     }
 
@@ -242,5 +326,11 @@ class FileUploadWorker(private val context: Context, private val workerParameter
 
         const val RESULT_ATTACHMENTS = "attachments"
 
+        const val PROGRESS_DATA_FILES_TO_UPLOAD = "filesToUpload"
+        const val PROGRESS_DATA_UPLOADED_FILES = "uploadedFiles"
+        const val PROGRESS_DATA_ASSIGNMENT_NAME = "assignmentName"
+        const val PROGRESS_DATA_FULL_SIZE = "fullSize"
+        const val PROGRESS_DATA_UPLOADED_SIZE = "uploadedSize"
+        const val PROGRESS_DATA_TITLE = "PROGRESS_DATA_TITLE"
     }
 }

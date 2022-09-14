@@ -1262,5 +1262,12 @@
     <string name="appThemeLight">Hell</string>
     <string name="appThemeDark">Dunkel</string>
     <string name="appThemeSystem">Wie Gerät</string>
+    <string name="themeSelectorTitle">Canvas ist jetzt in dunklem Design verfügbar</string>
+    <string name="themeSelectorDescription">App-Design auswählen</string>
+    <string name="themeSelectorLightTheme">Helles Design</string>
+    <string name="themeSelectorDarkTheme">Dunkles Design</string>
+    <string name="themeSelectorDeviceTheme">Entspricht dem Gerätedesign</string>
+    <string name="themeSelectorSave">Speichern</string>
+    <string name="themeSelectorChangeLater">Sie können es später in den App-Einstellungen ändern.</string>
     <string name="grabAnnotationTool">Greifen</string>
 </resources>

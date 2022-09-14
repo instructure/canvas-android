@@ -1262,5 +1262,12 @@
     <string name="appThemeLight">Ljóst</string>
     <string name="appThemeDark">Dökkt</string>
     <string name="appThemeSystem">Sama og tæki</string>
+    <string name="themeSelectorTitle">Canvas er nú í boði með dökku þema</string>
+    <string name="themeSelectorDescription">Veldu þema smáforrits</string>
+    <string name="themeSelectorLightTheme">Ljóst þema</string>
+    <string name="themeSelectorDarkTheme">Dökkt þema</string>
+    <string name="themeSelectorDeviceTheme">Sama og þema tækis</string>
+    <string name="themeSelectorSave">Vista</string>
+    <string name="themeSelectorChangeLater">Þú getur breytt því síðar í stillingum smáforrits</string>
     <string name="grabAnnotationTool">Grípa</string>
 </resources>

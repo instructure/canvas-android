@@ -26,15 +26,13 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.R
 import com.instructure.pandautils.BR
-import com.instructure.pandautils.features.file.upload.FileUploadAction
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadType
-import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.features.shareextension.target.itemviewmodels.ShareExtensionAssignmentItemViewModel
 import com.instructure.pandautils.features.shareextension.target.itemviewmodels.ShareExtensionCourseItemViewModel
+import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -82,7 +80,7 @@ class ShareExtensionTargetViewModel @Inject constructor(
 
                 val courseViewModels = courses
                         .map { ShareExtensionCourseItemViewModel(ShareExtensionCourseViewData(it.name, ColorKeeper.getOrGenerateColor(it.contextId))) }
-                _data.postValue(ShareExtensionTargetViewData(apiPrefs.user?.name, courseViewModels))
+                _data.postValue(ShareExtensionTargetViewData(apiPrefs.user?.name, courseViewModels, uploadType))
             } catch (e: Exception) {
                 _events.postValue(Event(ShareExtensionTargetAction.ShowToast(resources.getString(R.string.errorOccurred))))
                 e.printStackTrace()
@@ -131,11 +129,13 @@ class ShareExtensionTargetViewModel @Inject constructor(
 
     fun assignmentTargetSelected() {
         uploadType = FileUploadType.ASSIGNMENT
+        _data.value?.uploadType = uploadType
         _events.postValue(Event(ShareExtensionTargetAction.AssignmentTargetSelected))
     }
 
     fun filesTargetSelected() {
         uploadType = FileUploadType.USER
+        _data.value?.uploadType = uploadType
         _events.postValue(Event(ShareExtensionTargetAction.FilesTargetSelected))
     }
 
