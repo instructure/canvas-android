@@ -39,7 +39,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
-import com.instructure.pandautils.fromJson
+import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter
@@ -54,6 +54,8 @@ import kotlinx.android.synthetic.main.fragment_inbox_compose_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
+import kotlin.collections.ArrayList
 
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 class InboxComposeMessageFragment : ParentFragment() {
@@ -440,7 +442,7 @@ class InboxComposeMessageFragment : ParentFragment() {
         }
     }
 
-    private fun fileUploadLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
+    private fun fileUploadLiveDataCallback(uuid: UUID, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
                 it.outputData.getStringArray(FileUploadWorker.RESULT_ATTACHMENTS)

@@ -22,6 +22,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -30,6 +31,7 @@ import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.mvvm.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,7 +76,7 @@ class ShareExtensionViewModel @Inject constructor(
         this.uploadType = uploadType
         uris?.let {
             when (uploadType) {
-                FileUploadType.USER -> _events.postValue(Event(ShareExtensionAction.ShowMyFilesUploadDialog(it, this::uploadDialogCallback)))
+                FileUploadType.USER -> _events.postValue(Event(ShareExtensionAction.ShowMyFilesUploadDialog(it, this::uploadDialogCallback, this::workerCallback)))
                 FileUploadType.ASSIGNMENT -> {
                     when {
                         course == null -> {
@@ -84,7 +86,7 @@ class ShareExtensionViewModel @Inject constructor(
                             _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.noAssignmentSelected))))
                         }
                         else -> {
-                            _events.postValue(Event(ShareExtensionAction.ShowAssignmentUploadDialog(course, assignment, it, uploadType, this::uploadDialogCallback)))
+                            _events.postValue(Event(ShareExtensionAction.ShowAssignmentUploadDialog(course, assignment, it, uploadType, this::uploadDialogCallback, this::workerCallback)))
                         }
                     }
                 }
@@ -97,31 +99,40 @@ class ShareExtensionViewModel @Inject constructor(
         _events.postValue(Event(ShareExtensionAction.Finish))
     }
 
-    private fun showProgressDialog() {
-        _events.postValue(Event(ShareExtensionAction.ShowProgressDialog))
+    fun showSuccessDialog(fileUploadType: FileUploadType) {
+        _events.postValue(Event(ShareExtensionAction.ShowSuccessDialog(fileUploadType)))
     }
 
-    private fun showSuccessDialog() {
-        _events.postValue(Event(ShareExtensionAction.ShowSuccessDialog))
-    }
-
-    private fun uploadDialogCallback(event: Int) {
-        when (event) {
-            FileUploadDialogFragment.EVENT_DIALOG_CANCELED -> finish()
-            FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN -> showSuccessDialog()
-        }
+    fun showErrorDialog(fileUploadType: FileUploadType) {
+        _events.postValue(Event(ShareExtensionAction.ShowErrorDialog(fileUploadType)))
     }
 
     fun showConfetti() {
         _events.postValue(Event(ShareExtensionAction.ShowConfetti))
     }
+
+    private fun uploadDialogCallback(event: Int) {
+        when (event) {
+            FileUploadDialogFragment.EVENT_DIALOG_CANCELED -> finish()
+        }
+    }
+
+    private fun showProgressDialog(uuid: UUID) {
+        _events.postValue(Event(ShareExtensionAction.ShowProgressDialog(uuid)))
+    }
+
+    private fun workerCallback(uuid: UUID, liveData: LiveData<WorkInfo>) {
+        showProgressDialog(uuid)
+    }
+
 }
 
 sealed class ShareExtensionAction {
-    data class ShowAssignmentUploadDialog(val course: CanvasContext, val assignment: Assignment, val fileUris: ArrayList<Uri>, val uploadType: FileUploadType, val dialogCallback: (Int) -> Unit) : ShareExtensionAction()
-    data class ShowMyFilesUploadDialog(val fileUris: ArrayList<Uri>, val dialogCallback: (Int) -> Unit) : ShareExtensionAction()
-    object ShowProgressDialog : ShareExtensionAction()
-    object ShowSuccessDialog : ShareExtensionAction()
+    data class ShowAssignmentUploadDialog(val course: CanvasContext, val assignment: Assignment, val fileUris: ArrayList<Uri>, val uploadType: FileUploadType, val dialogCallback: (Int) -> Unit, val workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) : ShareExtensionAction()
+    data class ShowMyFilesUploadDialog(val fileUris: ArrayList<Uri>, val dialogCallback: (Int) -> Unit, val workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) : ShareExtensionAction()
+    data class ShowProgressDialog(val uuid: UUID) : ShareExtensionAction()
+    data class ShowSuccessDialog(val fileUploadType: FileUploadType) : ShareExtensionAction()
+    data class ShowErrorDialog(val fileUploadType: FileUploadType) : ShareExtensionAction()
     object Finish : ShareExtensionAction()
     object ShowConfetti : ShareExtensionAction()
     data class ShowToast(val toast: String) : ShareExtensionAction()

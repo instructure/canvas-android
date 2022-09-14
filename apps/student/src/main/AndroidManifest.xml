@@ -209,7 +209,6 @@
             android:name=".features.shareextension.StudentShareExtensionActivity"
             android:label="@string/canvas"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:excludeFromRecents="true"
             android:theme="@style/CanvasMaterialTheme_Default.Translucent"
             android:exported="true">
             <intent-filter>

@@ -40,9 +40,11 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
+import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import java.util.*
 
 @AndroidEntryPoint
 class FileUploadDialogFragment : DialogFragment() {
@@ -66,7 +68,7 @@ class FileUploadDialogFragment : DialogFragment() {
 
     private var dialogCallback: ((Int) -> Unit)? = null
     private var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
-    private var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+    private var workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
         if (isPermissionGranted) takePicture()
@@ -149,6 +151,8 @@ class FileUploadDialogFragment : DialogFragment() {
                 .setNegativeButton(R.string.utils_cancel, null)
                 .create()
 
+        dialog.setCanceledOnTouchOutside(false)
+
         dialog.setOnShowListener {
             val positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
             positive.setTextColor(ThemePrefs.buttonColor)
@@ -161,6 +165,13 @@ class FileUploadDialogFragment : DialogFragment() {
         }
 
         return dialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        if (requireActivity() is ShareExtensionActivity) {
+            requireActivity().onBackPressed()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -231,7 +242,7 @@ class FileUploadDialogFragment : DialogFragment() {
         fun newInstance(args: Bundle,
                         callback: ((Int) -> Unit)? = null,
                         pickerCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
-                        workerLiveDataCallback: ((LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
+                        workerLiveDataCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
 

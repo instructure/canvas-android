@@ -35,7 +35,7 @@ import com.instructure.pandautils.features.dashboard.notifications.itemviewmodel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
 import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
-import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_SUBTITLE
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_ASSIGNMENT_NAME
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_TITLE
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
@@ -80,6 +80,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     private var groupMap: Map<Long, Group> = emptyMap()
 
     private val runningWorkersObserver = Observer<List<UUID>> {
+        _data.value?.uploadItems?.forEach { it.clear() }
         _data.value?.uploadItems = getUploads(it)
         _data.value?.notifyPropertyChanged(BR.concatenatedItems)
     }
@@ -89,6 +90,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        _data.value?.uploadItems?.forEach { it.clear() }
         fileUploadPreferences.getRunningWorkersLiveData().removeObserver(runningWorkersObserver)
         super.onCleared()
     }
@@ -220,14 +222,12 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private fun getUploads(runningWorkerIds: List<UUID>) = runningWorkerIds.map {
         val workInfo = workManager.getWorkInfoById(it).get()
-        UploadItemViewModel(
-            it, UploadViewData(
-                workInfo.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
-                workInfo.progress.getString(PROGRESS_DATA_SUBTITLE).orEmpty(),
-                "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
-                R.drawable.ic_upload
-            )
-        ) { uuid ->
+        val uploadViewData = UploadViewData(
+            workInfo.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
+            workInfo.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
+            "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
+        )
+        UploadItemViewModel(it, workManager, uploadViewData) { uuid ->
             _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
         }
     }
