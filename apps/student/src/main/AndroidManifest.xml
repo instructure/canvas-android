@@ -209,11 +209,11 @@
             android:name=".features.shareextension.StudentShareExtensionActivity"
             android:label="@string/canvas"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:excludeFromRecents="true"
             android:theme="@style/CanvasMaterialTheme_Default.Translucent"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
                 <category android:name="android.intent.category.DEFAULT"/>
 
                 <data android:mimeType="audio/*"/>

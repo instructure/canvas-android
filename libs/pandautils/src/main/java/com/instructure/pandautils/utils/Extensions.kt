@@ -17,6 +17,9 @@
 package com.instructure.pandautils.utils
 
 import com.google.gson.Gson
+import java.util.*
+import kotlin.math.ln
+import kotlin.math.pow
 
 fun Any.toJson(): String {
     return Gson().toJson(this)
@@ -24,6 +27,14 @@ fun Any.toJson(): String {
 
 inline fun <reified T> String.fromJson(): T {
     return Gson().fromJson<T>(this, T::class.java)
+}
+
+fun Long.humanReadableByteCount(): String {
+    val unit = 1024
+    if (this < unit) return "$this B"
+    val exp = (ln(this.toDouble()) / ln(unit.toDouble())).toInt()
+    val pre = "KMGTPE"[exp - 1].toString()
+    return String.format(Locale.getDefault(), "%.1f %sB", this / unit.toDouble().pow(exp.toDouble()), pre)
 }
 
 fun Long?.orDefault(default: Long = 0): Long {

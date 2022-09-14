@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.shareextension.target
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -35,6 +36,7 @@ import androidx.lifecycle.Observer
 import androidx.transition.TransitionManager
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentShareExtensionTargetBinding
+import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
 import com.instructure.pandautils.utils.AnimationHelpers
 import com.instructure.pandautils.utils.ThemePrefs
@@ -86,8 +88,7 @@ class ShareExtensionTargetFragment : DialogFragment() {
                 .setCancelable(true)
                 .create()
 
-        alertDialog.setCanceledOnTouchOutside(true)
-        alertDialog.setCancelable(true)
+        alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setOnShowListener {
             val positive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
             positive.setTextColor(ThemePrefs.buttonColor)
@@ -101,6 +102,27 @@ class ShareExtensionTargetFragment : DialogFragment() {
         }
 
         return alertDialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        requireActivity().onBackPressed()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        when (viewModel.data.value?.uploadType) {
+            FileUploadType.ASSIGNMENT -> assignmentTargetSelected()
+            FileUploadType.USER -> filesTargetSelected()
+            else -> filesTargetSelected()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        TransitionManager.endTransitions(binding.assignmentContainer)
+        TransitionManager.endTransitions(binding.selectionWrapper)
     }
 
     private fun moveSelection(@IdRes viewId: Int) {
@@ -162,16 +184,10 @@ class ShareExtensionTargetFragment : DialogFragment() {
     private fun handleAction(action: ShareExtensionTargetAction) {
         when (action) {
             is ShareExtensionTargetAction.FilesTargetSelected -> {
-                binding.assignmentCheckBox.isChecked = false
-                binding.filesCheckBox.isChecked = true
-                toggleSpinners(false)
-                moveSelection(R.id.filesCheckBox)
+                filesTargetSelected()
             }
             is ShareExtensionTargetAction.AssignmentTargetSelected -> {
-                binding.assignmentCheckBox.isChecked = true
-                binding.filesCheckBox.isChecked = false
-                toggleSpinners(true)
-                moveSelection(R.id.assignmentContainer)
+                assignmentTargetSelected()
             }
             is ShareExtensionTargetAction.ShowToast -> {
                 toast(action.toast)
@@ -181,6 +197,20 @@ class ShareExtensionTargetFragment : DialogFragment() {
                 dismiss()
             }
         }
+    }
+
+    private fun filesTargetSelected() {
+        binding.assignmentCheckBox.isChecked = false
+        binding.filesCheckBox.isChecked = true
+        toggleSpinners(false)
+        moveSelection(R.id.filesCheckBox)
+    }
+
+    private fun assignmentTargetSelected() {
+        binding.assignmentCheckBox.isChecked = true
+        binding.filesCheckBox.isChecked = false
+        toggleSpinners(true)
+        moveSelection(R.id.assignmentContainer)
     }
 
 }

@@ -27,6 +27,7 @@ import com.instructure.pandautils.features.shareextension.target.itemviewmodels.
 data class ShareExtensionTargetViewData(
         val userName: String?,
         val courses: List<ShareExtensionCourseItemViewModel>,
+        var uploadType: FileUploadType,
         @get:Bindable var assignments: List<ShareExtensionAssignmentItemViewModel> = emptyList()) : BaseObservable()
 
 data class ShareExtensionCourseViewData(val title: String,

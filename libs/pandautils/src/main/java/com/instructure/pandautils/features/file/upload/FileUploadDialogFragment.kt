@@ -33,15 +33,19 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.work.WorkInfo
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
+import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import java.util.*
 
 @AndroidEntryPoint
 class FileUploadDialogFragment : DialogFragment() {
@@ -54,7 +58,7 @@ class FileUploadDialogFragment : DialogFragment() {
     private var canvasContext: CanvasContext by ParcelableArg(ApiPrefs.user)
     private var position: Int by IntArg()
 
-    private var fileSubmitUri: Uri? = null
+    private var fileSubmitUris: ArrayList<Uri>? = arrayListOf()
     private var cameraImageUri: Uri? = null
 
     private var assignment: Assignment? by NullableParcelableArg()
@@ -67,7 +71,7 @@ class FileUploadDialogFragment : DialogFragment() {
     private var dialogCallback: ((Int) -> Unit)? = null
     private var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
     private var selectedUriStringsCallback: ((List<String>) -> Unit)? = null
-    private var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+    private var workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
         if (isPermissionGranted) takePicture()
@@ -150,6 +154,8 @@ class FileUploadDialogFragment : DialogFragment() {
                 .setNegativeButton(R.string.utils_cancel, null)
                 .create()
 
+        dialog.setCanceledOnTouchOutside(false)
+
         dialog.setOnShowListener {
             val positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
             positive.setTextColor(ThemePrefs.buttonColor)
@@ -164,6 +170,13 @@ class FileUploadDialogFragment : DialogFragment() {
         return dialog
     }
 
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        if (requireActivity() is ShareExtensionActivity) {
+            requireActivity().onBackPressed()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -174,7 +187,7 @@ class FileUploadDialogFragment : DialogFragment() {
         }
 
         viewModel.setData(
-            assignment, fileSubmitUri, uploadType, canvasContext, parentFolderId, quizQuestionId,
+            assignment, fileSubmitUris, uploadType, canvasContext, parentFolderId, quizQuestionId,
             position, quizId, userId, dialogCallback, attachmentCallback, selectedUriStringsCallback, workerCallback
         )
     }
@@ -235,11 +248,11 @@ class FileUploadDialogFragment : DialogFragment() {
                         callback: ((Int) -> Unit)? = null,
                         pickerCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
                         selectedUriStringsCallback: ((List<String>) -> Unit)? = null,
-                        workerLiveDataCallback: ((LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
+                        workerLiveDataCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
 
-                fileSubmitUri = args.getParcelable(Const.URI)
+                fileSubmitUris = args.getParcelableArrayList(Const.URIS)
                 uploadType = args.getSerializable(Const.UPLOAD_TYPE) as FileUploadType
                 parentFolderId = args.getLong(Const.PARENT_FOLDER_ID, INVALID_ID)
                 quizQuestionId = args.getLong(Const.QUIZ_ANSWER_ID, INVALID_ID)
@@ -254,28 +267,28 @@ class FileUploadDialogFragment : DialogFragment() {
             }
         }
 
-        fun createBundle(submitURI: Uri?, type: FileUploadType, parentFolderId: Long?): Bundle {
+        fun createBundle(submitURIs: ArrayList<Uri>, type: FileUploadType, parentFolderId: Long?): Bundle {
             val bundle = Bundle()
-            if (submitURI != null) bundle.putParcelable(Const.URI, submitURI)
+            if (submitURIs.isNotEmpty()) bundle.putParcelableArrayList(Const.URIS, submitURIs)
             if (parentFolderId != null) bundle.putLong(Const.PARENT_FOLDER_ID, parentFolderId)
             bundle.putSerializable(Const.UPLOAD_TYPE, type)
             return bundle
         }
 
         fun createMessageAttachmentsBundle(defaultFileList: ArrayList<FileSubmitObject>): Bundle {
-            val bundle = createBundle(null, FileUploadType.MESSAGE, null)
+            val bundle = createBundle(arrayListOf(), FileUploadType.MESSAGE, null)
             bundle.putParcelableArrayList(Const.FILES, defaultFileList)
             return bundle
         }
 
         fun createDiscussionsBundle(defaultFileList: ArrayList<FileSubmitObject>): Bundle {
-            val bundle = createBundle(null, FileUploadType.DISCUSSION, null)
+            val bundle = createBundle(arrayListOf(), FileUploadType.DISCUSSION, null)
             bundle.putParcelableArrayList(Const.FILES, defaultFileList)
             return bundle
         }
 
-        fun createFilesBundle(submitURI: Uri?, parentFolderId: Long?): Bundle {
-            return createBundle(submitURI, FileUploadType.USER, parentFolderId)
+        fun createFilesBundle(submitUris: ArrayList<Uri>, parentFolderId: Long?): Bundle {
+            return createBundle(submitUris, FileUploadType.USER, parentFolderId)
         }
 
         fun createContextBundle(submitURI: Uri?, context: CanvasContext, parentFolderId: Long?): Bundle {
@@ -287,32 +300,41 @@ class FileUploadDialogFragment : DialogFragment() {
         }
 
         private fun createCourseBundle(submitURI: Uri?, course: Course, parentFolderId: Long?): Bundle {
-            val bundle = createBundle(submitURI, FileUploadType.COURSE, parentFolderId)
+            val submitUris = submitURI?.let {
+                arrayListOf(it)
+            } ?: arrayListOf()
+            val bundle = createBundle(submitUris, FileUploadType.COURSE, parentFolderId)
             bundle.putParcelable(Const.CANVAS_CONTEXT, course)
             return bundle
         }
 
         private fun createGroupBundle(submitURI: Uri?, group: Group, parentFolderId: Long?): Bundle {
-            val bundle = createBundle(submitURI, FileUploadType.GROUP, parentFolderId)
+            val submitUris = submitURI?.let {
+                arrayListOf(it)
+            } ?: arrayListOf()
+            val bundle = createBundle(submitUris, FileUploadType.GROUP, parentFolderId)
             bundle.putParcelable(Const.CANVAS_CONTEXT, group)
             return bundle
         }
 
         private fun createUserBundle(submitURI: Uri?, user: User, parentFolderId: Long?): Bundle {
-            val bundle = createBundle(submitURI, FileUploadType.USER, parentFolderId)
+            val submitUris = submitURI?.let {
+                arrayListOf(it)
+            } ?: arrayListOf()
+            val bundle = createBundle(submitUris, FileUploadType.USER, parentFolderId)
             bundle.putParcelable(Const.CANVAS_CONTEXT, user)
             return bundle
         }
 
-        fun createAssignmentBundle(submitURI: Uri?, course: Course, assignment: Assignment): Bundle {
-            val bundle = createBundle(submitURI, FileUploadType.ASSIGNMENT, null)
+        fun createAssignmentBundle(submitURIs: ArrayList<Uri>, course: Course, assignment: Assignment): Bundle {
+            val bundle = createBundle(submitURIs, FileUploadType.ASSIGNMENT, null)
             bundle.putParcelable(Const.CANVAS_CONTEXT, course)
             bundle.putParcelable(Const.ASSIGNMENT, assignment)
             return bundle
         }
 
         fun createQuizFileBundle(quizQuestionId: Long, courseId: Long, quizId: Long, position: Int): Bundle {
-            val bundle = createBundle(null, FileUploadType.QUIZ, null)
+            val bundle = createBundle(arrayListOf(), FileUploadType.QUIZ, null)
             bundle.putLong(Const.QUIZ_ANSWER_ID, quizQuestionId)
             bundle.putLong(Const.QUIZ, quizId)
             bundle.putLong(Const.COURSE_ID, courseId)
@@ -321,9 +343,15 @@ class FileUploadDialogFragment : DialogFragment() {
         }
 
         fun createSubmissionCommentBundle(course: Course, assignment: Assignment, defaultFileList: ArrayList<FileSubmitObject>): Bundle {
-            val bundle = createBundle(null, FileUploadType.SUBMISSION_COMMENT, null)
+            val bundle = createBundle(arrayListOf(), FileUploadType.SUBMISSION_COMMENT, null)
             bundle.putParcelable(Const.CANVAS_CONTEXT, course)
             bundle.putParcelable(Const.ASSIGNMENT, assignment)
+            bundle.putParcelableArrayList(Const.FILES, defaultFileList)
+            return bundle
+        }
+
+        fun createAttachmentsBundle(defaultFileList: ArrayList<FileSubmitObject> = ArrayList()): Bundle {
+            val bundle = createBundle(arrayListOf(), FileUploadType.MESSAGE, null)
             bundle.putParcelableArrayList(Const.FILES, defaultFileList)
             return bundle
         }
@@ -336,12 +364,6 @@ class FileUploadDialogFragment : DialogFragment() {
             val bundle = createBundle(null, FileUploadType.TEACHER_SUBMISSION_COMMENT, null)
             bundle.putParcelable(Const.ASSIGNMENT, Assignment(assignmentId, courseId = courseId))
             bundle.putLong(Const.USER_ID, userId)
-            return bundle
-        }
-
-        fun createAttachmentsBundle(defaultFileList: ArrayList<FileSubmitObject> = ArrayList()): Bundle {
-            val bundle = createBundle(null, FileUploadType.MESSAGE, null)
-            bundle.putParcelableArrayList(Const.FILES, defaultFileList)
             return bundle
         }
     }

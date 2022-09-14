@@ -162,7 +162,9 @@ fun bindConstraintWidthPercentage(view: View, percentage: Float) {
 
 @BindingAdapter("imageRes")
 fun bindImageResource(imageView: ImageView, @DrawableRes imageRes: Int) {
-    imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
+    if (imageRes != 0) {
+        imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
+    }
 }
 
 @BindingAdapter("bitmap")

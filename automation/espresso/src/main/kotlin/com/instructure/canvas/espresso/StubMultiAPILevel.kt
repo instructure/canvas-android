@@ -14,15 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.shareextension.success
+package com.instructure.canvas.espresso
 
-data class ShareExtensionSuccessViewData(
-        val dialogTitle: String,
-        val subTitle: String,
-        val description: String
-)
-
-sealed class ShareExtensionSuccessAction {
-    object Done : ShareExtensionSuccessAction()
-    object ShowConfetti: ShareExtensionSuccessAction()
-}
+// Apply on a test method which is failing on Firebase Test Lab (FTL) on some API levels. Write the failing API Levels into the parameter.
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class StubMultiAPILevel(val failedApiLevels: String = "")

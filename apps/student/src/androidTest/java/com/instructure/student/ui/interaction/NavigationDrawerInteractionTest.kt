@@ -34,9 +34,9 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
-import com.instructure.student.R
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers
 import org.junit.Before
@@ -164,7 +164,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
         dashboardPage.goToHelp()
         helpPage.launchGuides()
-        canvasWebViewPage.verifyTitle(R.string.searchGuides)
+        canvasWebViewPage.assertTitle(R.string.searchGuides)
     }
 
     // Should send an error report

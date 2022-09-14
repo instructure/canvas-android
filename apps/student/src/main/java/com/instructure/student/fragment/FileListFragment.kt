@@ -60,6 +60,7 @@ import kotlinx.android.synthetic.main.fragment_file_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 @ScreenView(SCREEN_VIEW_FILE_LIST)
 @PageView
@@ -413,7 +414,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun workInfoLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
+    private fun workInfoLiveDataCallback(uuid: UUID, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
                 recyclerAdapter?.refresh()

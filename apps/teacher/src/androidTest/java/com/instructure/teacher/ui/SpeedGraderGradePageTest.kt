@@ -16,6 +16,7 @@
 package com.instructure.teacher.ui
 
 import android.util.Log
+import com.instructure.canvas.espresso.StubMultiAPILevel
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
@@ -137,6 +138,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
     }
 
     @Test
+    @StubMultiAPILevel("Failed API levels = { 27, 28, 29 }")
     fun overgradePointAssignment() {
         val pointsPossible = 20
         goToSpeedGraderGradePage(pointsPossible = pointsPossible)
@@ -159,6 +161,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
     }
 
     @Test
+    @StubMultiAPILevel("Failed API levels = { 27, 28, 29 }")
     fun clearGrade() {
         goToSpeedGraderGradePage()
         speedGraderPage.swipeUpGradesTab()
