@@ -112,7 +112,7 @@ class FileUploadDialogFragment : DialogFragment() {
         // Get dialog headers
         when (uploadType) {
             FileUploadType.ASSIGNMENT -> {
-                title = getString(R.string.assignmentHeader) + " " + assignment?.name
+                title = getString(R.string.submission)
                 positiveText = getString(R.string.turnIn)
             }
             FileUploadType.COURSE -> {
