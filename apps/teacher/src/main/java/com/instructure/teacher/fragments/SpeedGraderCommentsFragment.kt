@@ -235,7 +235,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         presenter.selectedFilePaths = filePaths
     }
 
-    private fun fileUploadLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
+    private fun fileUploadLiveDataCallback(uuid: UUID? = null, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(this) {
             presenter.onFileUploadWorkInfoChanged(it)
         }
@@ -243,7 +243,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     override fun subscribePendingWorkers(workerIds: List<UUID>) {
         workerIds.forEach {
-            fileUploadLiveDataCallback(WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(it))
+            fileUploadLiveDataCallback(null, WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(it))
         }
     }
 
@@ -260,7 +260,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             .build()
 
         WorkManager.getInstance(requireContext()).apply {
-            fileUploadLiveDataCallback(getWorkInfoByIdLiveData(worker.id))
+            fileUploadLiveDataCallback(null, getWorkInfoByIdLiveData(worker.id))
             enqueue(worker)
         }
     }

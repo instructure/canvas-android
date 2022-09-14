@@ -33,8 +33,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.work.WorkInfo
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -361,7 +359,7 @@ class FileUploadDialogFragment : DialogFragment() {
             assignmentId: Long,
             userId: Long
         ): Bundle {
-            val bundle = createBundle(null, FileUploadType.TEACHER_SUBMISSION_COMMENT, null)
+            val bundle = createBundle(arrayListOf(), FileUploadType.TEACHER_SUBMISSION_COMMENT, null)
             bundle.putParcelable(Const.ASSIGNMENT, Assignment(assignmentId, courseId = courseId))
             bundle.putLong(Const.USER_ID, userId)
             return bundle
