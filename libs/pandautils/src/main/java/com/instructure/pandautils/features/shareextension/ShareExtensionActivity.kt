@@ -149,7 +149,7 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
     }
 
     private fun showUploadDialog(bundle: Bundle, dialogCallback: (Int) -> Unit, workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) {
-        ValueAnimator.ofObject(ArgbEvaluator(), ContextCompat.getColor(this, R.color.login_studentAppTheme), getColor(bundle)).let {
+        ValueAnimator.ofObject(ArgbEvaluator(), ContextCompat.getColor(this, R.color.studentDocumentSharingColor), getColor(bundle)).let {
             it.addUpdateListener { animation -> rootView!!.setBackgroundColor(animation.animatedValue as Int) }
             it.duration = 500
             it.addListener(object : AnimatorListenerAdapter() {

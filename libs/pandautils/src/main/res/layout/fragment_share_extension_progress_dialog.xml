@@ -46,7 +46,7 @@
                 android:src="@drawable/ic_close"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/black" />
+                app:tint="@color/textDarkest" />
 
             <TextView
                 android:id="@+id/title"
