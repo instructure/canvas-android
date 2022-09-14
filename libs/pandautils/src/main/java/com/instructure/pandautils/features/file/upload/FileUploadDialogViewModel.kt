@@ -32,8 +32,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
-import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.utils.humanReadableByteCount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -109,15 +109,37 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     fun onCameraClicked() {
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            return
+        }
         _events.postValue(Event(FileUploadAction.TakePhoto))
     }
 
     fun onGalleryClicked() {
-        _events.postValue(Event(FileUploadAction.PickPhoto))
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            return
+        }
+
+        if (isOneFileOnly) {
+            _events.postValue(Event(FileUploadAction.PickImage))
+        } else {
+            _events.postValue(Event(FileUploadAction.PickMultipleImage))
+        }
     }
 
     fun onFilesClicked() {
-        _events.postValue(Event(FileUploadAction.PickFile))
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            return
+        }
+
+        if (isOneFileOnly) {
+            _events.postValue(Event(FileUploadAction.PickFile))
+        } else {
+            _events.postValue(Event(FileUploadAction.PickMultipleFile))
+        }
     }
 
     fun addFile(fileUri: Uri) {
@@ -133,6 +155,12 @@ class FileUploadDialogViewModel @Inject constructor(
                         ?: resources.getString(R.string.errorOccurred))))
             }
         } ?: _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.errorOccurred))))
+    }
+
+    fun addFiles(fileUris: List<Uri>) {
+        fileUris.forEach {
+            addFile(it)
+        }
     }
 
     private fun updateItems() {
