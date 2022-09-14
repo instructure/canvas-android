@@ -1268,6 +1268,13 @@
     <string name="appThemeDark">Dark</string>
     <string name="appThemeSystem">Same as device</string>
 
+    <string name="themeSelectorTitle">Canvas is now available in dark theme</string>
+    <string name="themeSelectorDescription">Choose app theme</string>
+    <string name="themeSelectorLightTheme">Light theme</string>
+    <string name="themeSelectorDarkTheme">Dark theme</string>
+    <string name="themeSelectorDeviceTheme">Same as device theme</string>
+    <string name="themeSelectorSave">Save</string>
+    <string name="themeSelectorChangeLater">You can change it later in app settings</string>
 
     <string name="grabAnnotationTool">Grab</string>
 
