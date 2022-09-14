@@ -119,7 +119,11 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                     CommentSendStatus.SENDING -> itemView.sendingLayout.setVisible()
                     CommentSendStatus.ERROR -> {
                         itemView.errorLayout.setVisible()
-                        onClick { wrapper.pendingComment.onError?.let { it() } ?: presenter.sendComment(wrapper) }
+                        onClick {
+                            wrapper.pendingComment.workerInputData?.let {
+                                presenter.retryFileUpload(wrapper.pendingComment)
+                            } ?: presenter.sendComment(wrapper)
+                        }
                     }
                     CommentSendStatus.DRAFT -> { /* Drafts should not display in the list, only in the EditText */ }
                 }

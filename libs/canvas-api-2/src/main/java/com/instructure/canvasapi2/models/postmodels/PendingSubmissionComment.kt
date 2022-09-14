@@ -16,7 +16,6 @@
 package com.instructure.canvasapi2.models.postmodels
 
 import android.os.Parcelable
-import androidx.work.Data
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -31,9 +30,15 @@ data class PendingSubmissionComment(
     var progress = 0f
     var filePath = ""
     var workerId: UUID? = null
-    var workerInputData: Data? = null
-    var onError: (() -> Unit)? = null
+    var workerInputData: FileUploadWorkerData? = null
 }
+
+data class FileUploadWorkerData(
+    val filePaths: List<String>,
+    val courseId: Long,
+    val assignmentId: Long,
+    val userId: Long
+)
 
 enum class CommentSendStatus { DRAFT, SENDING, ERROR }
 

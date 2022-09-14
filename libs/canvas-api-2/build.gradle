@@ -134,10 +134,6 @@ dependencies {
     /* Paper No SQl Storage */
     api Libs.PAPERDB
 
-    /* Work Manager */
-    implementation Libs.ANDROIDX_WORK_MANAGER
-    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
-
     // Firebase
     implementation platform(Libs.FIREBASE_BOM) {
         exclude group: 'com.google.firebase', module: 'firebase-analytics'

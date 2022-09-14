@@ -16,11 +16,11 @@
  */
 package com.instructure.teacher.presenters
 
-import androidx.work.Data
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
+import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
@@ -29,7 +29,6 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
-import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent
@@ -53,6 +52,7 @@ class SpeedGraderCommentsPresenter(
 ) : ListPresenter<SubmissionCommentWrapper, SpeedGraderCommentsView>(SubmissionCommentWrapper::class.java) {
 
     val mPageId = "${ApiPrefs.domain}-$courseId-$assignmentId-${assignee.id}"
+    var selectedFilePaths: List<String>? = null
 
     private val comments = rawComments.map { CommentWrapper(it) }
     private var sendingJob: Job? = null
@@ -251,13 +251,12 @@ class SpeedGraderCommentsPresenter(
         val newComment = PendingSubmissionComment(mPageId).apply {
             workerId = workInfo.id
             status = CommentSendStatus.SENDING
-            onError = {
-                TeacherPrefs.pendingSubmissionComments.find { it.workerId == workInfo.id }?.let { pending ->
-                    TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
-                    data.remove(PendingCommentWrapper(pending))
-                    viewCallback?.restartWorker(pending)
-                }
-            }
+            workerInputData = FileUploadWorkerData(
+                selectedFilePaths.orEmpty(),
+                courseId,
+                assignmentId,
+                assignee.id
+            )
         }
 
         if (!TeacherPrefs.pendingSubmissionComments.any { it.workerId == workInfo.id }) {
@@ -265,16 +264,15 @@ class SpeedGraderCommentsPresenter(
             val commentWrapper = PendingCommentWrapper(newComment)
             data.addOrUpdate(commentWrapper)
         }
+    }
 
-        val progress = workInfo.progress
-        TeacherPrefs.pendingSubmissionComments.find { it.workerId == workInfo.id }
-            ?.workerInputData = Data.Builder()
-            .putStringArray(FileUploadWorker.FILE_PATHS, progress.getStringArray(FileUploadWorker.FILE_PATHS).orEmpty())
-            .putLong(Const.COURSE_ID, progress.getLong(Const.COURSE_ID, FileUploadWorker.INVALID_ID))
-            .putLong(Const.ASSIGNMENT_ID, progress.getLong(Const.ASSIGNMENT_ID, FileUploadWorker.INVALID_ID))
-            .putLong(Const.USER_ID, progress.getLong(Const.USER_ID, FileUploadWorker.INVALID_ID))
-            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, progress.getString(FileUploadWorker.FILE_SUBMIT_ACTION))
-            .build()
+    fun retryFileUpload(pending: PendingSubmissionComment) {
+        TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
+        data.remove(PendingCommentWrapper(pending))
+        pending.workerInputData?.let { data ->
+            selectedFilePaths = data.filePaths
+            viewCallback?.restartWorker(data)
+        }
     }
 
     private fun handleFileUploadSuccess(workInfo: WorkInfo) {
@@ -293,6 +291,11 @@ class SpeedGraderCommentsPresenter(
             pending.status = CommentSendStatus.ERROR
             data.addOrUpdate(PendingCommentWrapper(pending))
         }
+    }
+
+    fun removePendingFileUpload() {
+        val pendingFileUploads = TeacherPrefs.pendingSubmissionComments.filter { it.status == CommentSendStatus.ERROR && it.workerId != null }
+        TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { removeAll(pendingFileUploads) }
     }
 
     fun onFileUploadWorkInfoChanged(workInfo: WorkInfo) {

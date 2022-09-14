@@ -33,9 +33,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.Const.ASSIGNMENT_ID
-import com.instructure.pandautils.utils.Const.COURSE_ID
-import com.instructure.pandautils.utils.Const.USER_ID
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.toJson
 import java.util.*
@@ -79,11 +76,6 @@ class FileUploadWorker(private val context: Context, workerParameters: WorkerPar
                 Data.Builder()
                     .putString(PROGRESS_DATA_TITLE, title)
                     .putString(PROGRESS_DATA_SUBTITLE, assignmentName)
-                    .putStringArray(FILE_PATHS, inputData.getStringArray(FILE_PATHS).orEmpty())
-                    .putLong(COURSE_ID, inputData.getLong(COURSE_ID, INVALID_ID))
-                    .putLong(ASSIGNMENT_ID, inputData.getLong(ASSIGNMENT_ID, INVALID_ID))
-                    .putLong(USER_ID, inputData.getLong(USER_ID, INVALID_ID))
-                    .putString(FILE_SUBMIT_ACTION, inputData.getString(FILE_SUBMIT_ACTION))
                     .build()
             )
 
@@ -298,6 +290,5 @@ class FileUploadWorker(private val context: Context, workerParameters: WorkerPar
 
         const val PROGRESS_DATA_TITLE = "PROGRESS_DATA_TITLE"
         const val PROGRESS_DATA_SUBTITLE = "PROGRESS_DATA_SUBTITLE"
-        const val PROGRESS_DATA_INPUT = "PROGRESS_DATA_INPUT"
     }
 }

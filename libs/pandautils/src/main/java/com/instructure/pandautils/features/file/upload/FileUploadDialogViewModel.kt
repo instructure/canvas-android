@@ -68,23 +68,25 @@ class FileUploadDialogViewModel @Inject constructor(
 
     var dialogCallback: ((Int) -> Unit)? = null
     var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
+    var selectedUriStringsCallback: ((List<String>) -> Unit)? = null
     var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
 
     private var filesToUpload = mutableListOf<FileUploadData>()
 
     fun setData(
-            assignment: Assignment?,
-            file: Uri?,
-            uploadType: FileUploadType,
-            canvasContext: CanvasContext,
-            parentFolderId: Long,
-            quizQuestionId: Long,
-            position: Int,
-            quizId: Long,
-            userId: Long,
-            dialogCallback: ((Int) -> Unit)? = null,
-            attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
-            workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
+        assignment: Assignment?,
+        file: Uri?,
+        uploadType: FileUploadType,
+        canvasContext: CanvasContext,
+        parentFolderId: Long,
+        quizQuestionId: Long,
+        position: Int,
+        quizId: Long,
+        userId: Long,
+        dialogCallback: ((Int) -> Unit)? = null,
+        attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
+        selectedFilePathsCallback: ((List<String>) -> Unit)? = null,
+        workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
     ) {
         this.assignment = assignment
         file?.let { uri ->
@@ -106,6 +108,9 @@ class FileUploadDialogViewModel @Inject constructor(
         }
         attachmentCallback?.let {
             this.attachmentCallback = it
+        }
+        selectedFilePathsCallback?.let {
+            this.selectedUriStringsCallback = it
         }
         workerCallback?.let {
             this.workerCallback = it
@@ -304,9 +309,6 @@ class FileUploadDialogViewModel @Inject constructor(
                         assignment?.courseId.orDefault(),
                         assignment?.id.orDefault(),
                         userId.orDefault()
-                    ).putString(
-                        FileUploadWorker.FILE_SUBMIT_ACTION,
-                        FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT
                     ).build()
                 }
                 else -> {
@@ -333,6 +335,7 @@ class FileUploadDialogViewModel @Inject constructor(
                     .setInputData(data)
                     .build()
 
+            selectedUriStringsCallback?.invoke(filesToUpload.map { it.uri.toString() })
             workerCallback?.invoke(workManager.getWorkInfoByIdLiveData(worker.id))
             workManager.enqueue(worker)
             dialogCallback?.invoke(FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN)

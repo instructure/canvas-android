@@ -110,4 +110,5 @@ class FileUploadBundleCreator {
         .putLong(Const.COURSE_ID, courseId)
         .putLong(Const.ASSIGNMENT_ID, assignmentId)
         .putLong(Const.USER_ID, userId)
+        .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT)
 }

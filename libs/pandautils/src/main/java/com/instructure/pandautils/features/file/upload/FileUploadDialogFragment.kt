@@ -66,6 +66,7 @@ class FileUploadDialogFragment : DialogFragment() {
 
     private var dialogCallback: ((Int) -> Unit)? = null
     private var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
+    private var selectedUriStringsCallback: ((List<String>) -> Unit)? = null
     private var workerCallback: ((LiveData<WorkInfo>) -> Unit)? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
@@ -174,7 +175,7 @@ class FileUploadDialogFragment : DialogFragment() {
 
         viewModel.setData(
             assignment, fileSubmitUri, uploadType, canvasContext, parentFolderId, quizQuestionId,
-            position, quizId, userId, dialogCallback, attachmentCallback, workerCallback
+            position, quizId, userId, dialogCallback, attachmentCallback, selectedUriStringsCallback, workerCallback
         )
     }
 
@@ -233,6 +234,7 @@ class FileUploadDialogFragment : DialogFragment() {
         fun newInstance(args: Bundle,
                         callback: ((Int) -> Unit)? = null,
                         pickerCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
+                        selectedUriStringsCallback: ((List<String>) -> Unit)? = null,
                         workerLiveDataCallback: ((LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
@@ -246,6 +248,7 @@ class FileUploadDialogFragment : DialogFragment() {
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
                 dialogCallback = callback
                 attachmentCallback = pickerCallback
+                this.selectedUriStringsCallback = selectedUriStringsCallback
                 workerCallback = workerLiveDataCallback
                 userId = args.getLong(Const.USER_ID, INVALID_ID)
             }

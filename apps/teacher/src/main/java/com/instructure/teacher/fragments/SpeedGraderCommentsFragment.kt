@@ -20,6 +20,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,10 +29,12 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.services.NotoriousUploadService
@@ -219,9 +222,17 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             presenter.assignee.id
         )
 
-        FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = ::fileUploadLiveDataCallback).show(
+        FileUploadDialogFragment.newInstance(
+            bundle,
+            selectedUriStringsCallback = ::fileUploadPikerCallback,
+            workerLiveDataCallback = ::fileUploadLiveDataCallback
+        ).show(
             childFragmentManager, FileUploadDialogFragment.TAG
         )
+    }
+
+    private fun fileUploadPikerCallback(filePaths: List<String>) {
+        presenter.selectedFilePaths = filePaths
     }
 
     private fun fileUploadLiveDataCallback(workInfoLiveData: LiveData<WorkInfo>) {
@@ -231,26 +242,32 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     }
 
     override fun subscribePendingWorkers(workerIds: List<UUID>) {
-        context?.let { context ->
-            workerIds.forEach {
-                fileUploadLiveDataCallback(WorkManager.getInstance(context).getWorkInfoByIdLiveData(it))
-            }
+        workerIds.forEach {
+            fileUploadLiveDataCallback(WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(it))
         }
     }
 
-    override fun restartWorker(pendingSubmissionComment: PendingSubmissionComment) {
-        pendingSubmissionComment.workerInputData?.let { data ->
-            val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
-                .setInputData(data)
-                .build()
+    override fun restartWorker(fileUploadWorkerData: FileUploadWorkerData) {
+        val data = FileUploadBundleCreator().getTeacherSubmissionCommentBundle(
+            fileUploadWorkerData.filePaths.map { it.toUri() },
+            fileUploadWorkerData.courseId,
+            fileUploadWorkerData.assignmentId,
+            fileUploadWorkerData.userId
+        ).build()
 
-            context?.let {
-                WorkManager.getInstance(it).apply {
-                    fileUploadLiveDataCallback(getWorkInfoByIdLiveData(worker.id))
-                    enqueue(worker)
-                }
-            }
+        val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
+            .setInputData(data)
+            .build()
+
+        WorkManager.getInstance(requireContext()).apply {
+            fileUploadLiveDataCallback(getWorkInfoByIdLiveData(worker.id))
+            enqueue(worker)
         }
+    }
+
+    override fun onDestroy() {
+        presenter.removePendingFileUpload()
+        super.onDestroy()
     }
 
     @Suppress("UNUSED_PARAMETER", "unused")
