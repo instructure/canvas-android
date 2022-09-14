@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -63,6 +64,8 @@ class ShareExtensionStatusDialogFragment : DialogFragment() {
             .create()
 
         alertDialog.setCanceledOnTouchOutside(false)
+
+        alertDialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
         return alertDialog
     }
