@@ -266,7 +266,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     }
 
     override fun onDestroy() {
-        presenter.removePendingFileUpload()
+        presenter.removeFailedFileUploads()
         super.onDestroy()
     }
 

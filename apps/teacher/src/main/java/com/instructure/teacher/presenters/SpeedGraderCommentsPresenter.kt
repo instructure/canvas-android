@@ -293,9 +293,9 @@ class SpeedGraderCommentsPresenter(
         }
     }
 
-    fun removePendingFileUpload() {
-        val pendingFileUploads = TeacherPrefs.pendingSubmissionComments.filter { it.status == CommentSendStatus.ERROR && it.workerId != null }
-        TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { removeAll(pendingFileUploads) }
+    fun removeFailedFileUploads() {
+        val failedFileUploads = TeacherPrefs.pendingSubmissionComments.filter { it.status == CommentSendStatus.ERROR && it.workerId != null }
+        TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { removeAll(failedFileUploads) }
     }
 
     fun onFileUploadWorkInfoChanged(workInfo: WorkInfo) {
