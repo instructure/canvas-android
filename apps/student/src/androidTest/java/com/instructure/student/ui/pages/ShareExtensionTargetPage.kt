@@ -72,7 +72,6 @@ class ShareExtensionTargetPage : BasePage() {
 
     fun selectAssignment(assignmentName: String) {
         onViewWithId(R.id.assignmentSpinner).click()
-        //onViewWithSpinnerText(assignmentName).inRoot(isPlatformPopup())
         onData(anything()).inRoot(isDialog()).atPosition(1)
     }
 
