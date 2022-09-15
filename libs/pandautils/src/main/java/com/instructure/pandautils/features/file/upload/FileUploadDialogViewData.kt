@@ -38,8 +38,10 @@ data class FileUploadData(
 
 sealed class FileUploadAction {
     object TakePhoto : FileUploadAction()
-    object PickPhoto : FileUploadAction()
+    object PickImage : FileUploadAction()
     object PickFile : FileUploadAction()
+    object PickMultipleImage : FileUploadAction()
+    object PickMultipleFile : FileUploadAction()
     object UploadStarted : FileUploadAction()
     data class ShowToast(val toast: String) : FileUploadAction()
 }

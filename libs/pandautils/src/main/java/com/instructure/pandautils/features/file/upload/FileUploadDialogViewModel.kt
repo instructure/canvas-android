@@ -118,15 +118,37 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     fun onCameraClicked() {
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            return
+        }
         _events.postValue(Event(FileUploadAction.TakePhoto))
     }
 
     fun onGalleryClicked() {
-        _events.postValue(Event(FileUploadAction.PickPhoto))
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            return
+        }
+
+        if (isOneFileOnly) {
+            _events.postValue(Event(FileUploadAction.PickImage))
+        } else {
+            _events.postValue(Event(FileUploadAction.PickMultipleImage))
+        }
     }
 
     fun onFilesClicked() {
-        _events.postValue(Event(FileUploadAction.PickFile))
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            return
+        }
+
+        if (isOneFileOnly) {
+            _events.postValue(Event(FileUploadAction.PickFile))
+        } else {
+            _events.postValue(Event(FileUploadAction.PickMultipleFile))
+        }
     }
 
     fun addFile(fileUri: Uri) {
@@ -142,6 +164,12 @@ class FileUploadDialogViewModel @Inject constructor(
                         ?: resources.getString(R.string.errorOccurred))))
             }
         } ?: _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.errorOccurred))))
+    }
+
+    fun addFiles(fileUris: List<Uri>) {
+        fileUris.forEach {
+            addFile(it)
+        }
     }
 
     private fun updateItems() {
