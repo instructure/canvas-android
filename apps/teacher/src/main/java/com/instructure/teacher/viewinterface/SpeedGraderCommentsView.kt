@@ -16,10 +16,14 @@
  */
 package com.instructure.teacher.viewinterface
 
+import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.teacher.models.SubmissionCommentWrapper
 import instructure.androidblueprint.ListManager
+import java.util.*
 
 interface SpeedGraderCommentsView : ListManager<SubmissionCommentWrapper> {
     fun setDraftText(comment: String?)
     fun scrollToBottom()
+    fun subscribePendingWorkers(workerIds: List<UUID>)
+    fun restartWorker(fileUploadWorkerData: FileUploadWorkerData)
 }

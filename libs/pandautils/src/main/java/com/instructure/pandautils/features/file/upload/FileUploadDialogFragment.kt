@@ -33,7 +33,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -65,9 +64,11 @@ class FileUploadDialogFragment : DialogFragment() {
     private var quizQuestionId: Long by LongArg()
     private var quizId: Long by LongArg()
     private var courseId: Long by LongArg()
+    private var userId: Long by LongArg()
 
     private var dialogCallback: ((Int) -> Unit)? = null
     private var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
+    private var selectedUriStringsCallback: ((List<String>) -> Unit)? = null
     private var workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
@@ -134,7 +135,7 @@ class FileUploadDialogFragment : DialogFragment() {
                 title = getString(R.string.utils_uploadTo) + " " + getString(R.string.utils_uploadMyFiles)
                 positiveText = getString(R.string.utils_upload)
             }
-            FileUploadType.SUBMISSION_COMMENT -> {
+            FileUploadType.SUBMISSION_COMMENT, FileUploadType.TEACHER_SUBMISSION_COMMENT -> {
                 title = getString(R.string.utils_uploadToSubmissionComment)
                 positiveText = getString(R.string.utils_upload)
             }
@@ -177,14 +178,16 @@ class FileUploadDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.events.observe(this, Observer {
-            it.getContentIfNotHandled()?.let {
+        viewModel.events.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
-        })
+        }
 
-        viewModel.setData(assignment, fileSubmitUris, uploadType, canvasContext, parentFolderId, quizQuestionId,
-                position, quizId, dialogCallback, attachmentCallback, workerCallback)
+        viewModel.setData(
+            assignment, fileSubmitUris, uploadType, canvasContext, parentFolderId, quizQuestionId,
+            position, quizId, userId, dialogCallback, attachmentCallback, selectedUriStringsCallback, workerCallback
+        )
     }
 
     private fun uploadClicked() {
@@ -252,6 +255,7 @@ class FileUploadDialogFragment : DialogFragment() {
         fun newInstance(args: Bundle,
                         callback: ((Int) -> Unit)? = null,
                         pickerCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
+                        selectedUriStringsCallback: ((List<String>) -> Unit)? = null,
                         workerLiveDataCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
@@ -265,7 +269,9 @@ class FileUploadDialogFragment : DialogFragment() {
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
                 dialogCallback = callback
                 attachmentCallback = pickerCallback
+                this.selectedUriStringsCallback = selectedUriStringsCallback
                 workerCallback = workerLiveDataCallback
+                userId = args.getLong(Const.USER_ID, INVALID_ID)
             }
         }
 
@@ -344,7 +350,7 @@ class FileUploadDialogFragment : DialogFragment() {
             return bundle
         }
 
-        fun createSubmissionCommentBundle(course: Course, assignment: Assignment, defaultFileList: java.util.ArrayList<FileSubmitObject>): Bundle {
+        fun createSubmissionCommentBundle(course: Course, assignment: Assignment, defaultFileList: ArrayList<FileSubmitObject>): Bundle {
             val bundle = createBundle(arrayListOf(), FileUploadType.SUBMISSION_COMMENT, null)
             bundle.putParcelable(Const.CANVAS_CONTEXT, course)
             bundle.putParcelable(Const.ASSIGNMENT, assignment)
@@ -355,6 +361,17 @@ class FileUploadDialogFragment : DialogFragment() {
         fun createAttachmentsBundle(defaultFileList: ArrayList<FileSubmitObject> = ArrayList()): Bundle {
             val bundle = createBundle(arrayListOf(), FileUploadType.MESSAGE, null)
             bundle.putParcelableArrayList(Const.FILES, defaultFileList)
+            return bundle
+        }
+
+        fun createTeacherSubmissionCommentBundle(
+            courseId: Long,
+            assignmentId: Long,
+            userId: Long
+        ): Bundle {
+            val bundle = createBundle(arrayListOf(), FileUploadType.TEACHER_SUBMISSION_COMMENT, null)
+            bundle.putParcelable(Const.ASSIGNMENT, Assignment(assignmentId, courseId = courseId))
+            bundle.putLong(Const.USER_ID, userId)
             return bundle
         }
     }
