@@ -83,7 +83,7 @@ class FileUploadViewModelTest {
 
         viewModel.onGalleryClicked()
 
-        assertEquals(FileUploadAction.PickPhoto, viewModel.events.value?.getContentIfNotHandled())
+        assertEquals(FileUploadAction.PickMultipleImage, viewModel.events.value?.getContentIfNotHandled())
     }
 
     @Test
@@ -93,7 +93,7 @@ class FileUploadViewModelTest {
 
         viewModel.onFilesClicked()
 
-        assertEquals(FileUploadAction.PickFile, viewModel.events.value?.getContentIfNotHandled())
+        assertEquals(FileUploadAction.PickMultipleFile, viewModel.events.value?.getContentIfNotHandled())
     }
 
     @Test
@@ -192,10 +192,99 @@ class FileUploadViewModelTest {
         assert(viewModel.events.value?.getContentIfNotHandled() is FileUploadAction.UploadStarted)
     }
 
+    @Test
+    fun `Only single image can be picked as discussion attachment`() {
+        val viewModel = createViewModel()
+        val course = createCourse(1L, "Course 1")
+        viewModel.setData(null, arrayListOf(), FileUploadType.DISCUSSION, course, -1L, -1L, -1, -1L)
+
+        viewModel.onGalleryClicked()
+
+        assertEquals(FileUploadAction.PickImage, viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Only single file can be picked as discussion attachment`() {
+        val viewModel = createViewModel()
+        val course = createCourse(1L, "Course 1")
+        viewModel.setData(null, arrayListOf(), FileUploadType.DISCUSSION, course, -1L, -1L, -1, -1L)
+
+        viewModel.onFilesClicked()
+
+        assertEquals(FileUploadAction.PickFile, viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Only single image can be picked as quiz attachment`() {
+        val viewModel = createViewModel()
+        val course = createCourse(1L, "Course 1")
+        viewModel.setData(null, arrayListOf(), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L)
+
+        viewModel.onGalleryClicked()
+
+        assertEquals(FileUploadAction.PickImage, viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Only single file can be picked as quiz attachment`() {
+        val viewModel = createViewModel()
+        val course = createCourse(1L, "Course 1")
+        viewModel.setData(null, arrayListOf(), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L)
+
+        viewModel.onFilesClicked()
+
+        assertEquals(FileUploadAction.PickFile, viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Error when trying to add more files to quiz attachments`() {
+        val uri: Uri = mockk(relaxed = true)
+        val viewModel = createViewModel()
+        val course = createCourse(1L, "Course 1")
+        val assignment = createAssignment(1L, "Assignment 1", 1L, listOf("pdf"))
+        val submitObject = createSubmitObject("test.pdf")
+
+        every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns submitObject
+
+        viewModel.setData(assignment, arrayListOf(uri), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L)
+
+        viewModel.onFilesClicked()
+        assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
+
+        viewModel.onCameraClicked()
+        assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
+
+        viewModel.onGalleryClicked()
+        assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Error when trying to add more files to discussion attachments`() {
+        val uri: Uri = mockk(relaxed = true)
+        val viewModel = createViewModel()
+        val course = createCourse(1L, "Course 1")
+        val assignment = createAssignment(1L, "Assignment 1", 1L, listOf("pdf"))
+        val submitObject = createSubmitObject("test.pdf")
+
+        every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns submitObject
+
+        viewModel.setData(assignment, arrayListOf(uri), FileUploadType.DISCUSSION, course, -1L, -1L, -1, -1L)
+
+        viewModel.onFilesClicked()
+        assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
+
+        viewModel.onCameraClicked()
+        assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
+
+        viewModel.onGalleryClicked()
+        assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
+    }
+
     private fun setupStrings() {
         every { resources.getString(R.string.extensionNotAllowed) } returns "The selected file type is not allowed."
         every { resources.getString(R.string.noFilesUploaded) } returns "You haven't selected any files."
         every { resources.getString(R.string.fileUploadNotSupported) } returns "You can't upload files to the selected assignment."
+        every { resources.getString(R.string.oneFileOnly) } returns "This submission only accepts one file upload"
     }
 
     private fun createCourse(id: Long, name: String): Course {

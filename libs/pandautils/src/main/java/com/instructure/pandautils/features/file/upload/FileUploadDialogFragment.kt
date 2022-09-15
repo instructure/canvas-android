@@ -82,15 +82,15 @@ class FileUploadDialogFragment : DialogFragment() {
         }
     }
 
-    private val galleryPickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
+    private val filePickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
         it?.let {
             viewModel.addFile(it)
         }
     }
 
-    private val filePickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
+    private val multipleFilePickerContract = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
         it?.let {
-            viewModel.addFile(it)
+            viewModel.addFiles(it)
         }
     }
 
@@ -199,8 +199,10 @@ class FileUploadDialogFragment : DialogFragment() {
     private fun handleAction(action: FileUploadAction) {
         when (action) {
             is FileUploadAction.TakePhoto -> takePicture()
-            is FileUploadAction.PickPhoto -> pickFromGallery()
+            is FileUploadAction.PickImage -> pickFromGallery()
             is FileUploadAction.PickFile -> pickFromFiles()
+            is FileUploadAction.PickMultipleFile -> pickMultipleFile()
+            is FileUploadAction.PickMultipleImage -> pickMultipleImage()
             is FileUploadAction.ShowToast -> Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
             is FileUploadAction.UploadStarted -> dismiss()
         }
@@ -219,11 +221,19 @@ class FileUploadDialogFragment : DialogFragment() {
     }
 
     private fun pickFromGallery() {
-        galleryPickerContract.launch("image/*")
+        filePickerContract.launch("image/*")
     }
 
     private fun pickFromFiles() {
         filePickerContract.launch("*/*")
+    }
+
+    private fun pickMultipleFile() {
+        multipleFilePickerContract.launch("*/*")
+    }
+
+    private fun pickMultipleImage() {
+        multipleFilePickerContract.launch("image/*")
     }
 
     companion object {
