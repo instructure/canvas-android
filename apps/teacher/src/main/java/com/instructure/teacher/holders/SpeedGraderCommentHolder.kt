@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.holders
 
-import android.graphics.Color
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
