@@ -196,7 +196,7 @@ class FileUploadViewModelTest {
     fun `Only single image can be picked as discussion attachment`() {
         val viewModel = createViewModel()
         val course = createCourse(1L, "Course 1")
-        viewModel.setData(null, arrayListOf(), FileUploadType.DISCUSSION, course, -1L, -1L, -1, -1L)
+        viewModel.setData(null, arrayListOf(), FileUploadType.DISCUSSION, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.onGalleryClicked()
 
@@ -207,7 +207,7 @@ class FileUploadViewModelTest {
     fun `Only single file can be picked as discussion attachment`() {
         val viewModel = createViewModel()
         val course = createCourse(1L, "Course 1")
-        viewModel.setData(null, arrayListOf(), FileUploadType.DISCUSSION, course, -1L, -1L, -1, -1L)
+        viewModel.setData(null, arrayListOf(), FileUploadType.DISCUSSION, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.onFilesClicked()
 
@@ -218,7 +218,7 @@ class FileUploadViewModelTest {
     fun `Only single image can be picked as quiz attachment`() {
         val viewModel = createViewModel()
         val course = createCourse(1L, "Course 1")
-        viewModel.setData(null, arrayListOf(), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L)
+        viewModel.setData(null, arrayListOf(), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.onGalleryClicked()
 
@@ -229,7 +229,7 @@ class FileUploadViewModelTest {
     fun `Only single file can be picked as quiz attachment`() {
         val viewModel = createViewModel()
         val course = createCourse(1L, "Course 1")
-        viewModel.setData(null, arrayListOf(), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L)
+        viewModel.setData(null, arrayListOf(), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.onFilesClicked()
 
@@ -246,7 +246,7 @@ class FileUploadViewModelTest {
 
         every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns submitObject
 
-        viewModel.setData(assignment, arrayListOf(uri), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L)
+        viewModel.setData(assignment, arrayListOf(uri), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.onFilesClicked()
         assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
@@ -268,7 +268,7 @@ class FileUploadViewModelTest {
 
         every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns submitObject
 
-        viewModel.setData(assignment, arrayListOf(uri), FileUploadType.DISCUSSION, course, -1L, -1L, -1, -1L)
+        viewModel.setData(assignment, arrayListOf(uri), FileUploadType.DISCUSSION, course, -1L, -1L, -1, -1L, -1L)
 
         viewModel.onFilesClicked()
         assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
