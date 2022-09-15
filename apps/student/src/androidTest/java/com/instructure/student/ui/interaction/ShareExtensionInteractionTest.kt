@@ -20,7 +20,6 @@ import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -33,7 +32,6 @@ import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.User
-import com.instructure.espresso.page.waitForView
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
@@ -149,7 +147,7 @@ class ShareExtensionInteractionTest : StudentTest() {
         shareExtensionTargetPage.pressNext()
 
         fileUploadPage.assertPageObjects()
-        fileUploadPage.assertDialogTitle("Assignment : ${assignment.name}")
+        fileUploadPage.assertDialogTitle("Submission")
         fileUploadPage.assertFileDisplayed("sample.jpg")
     }
 
@@ -179,7 +177,7 @@ class ShareExtensionInteractionTest : StudentTest() {
         shareExtensionTargetPage.pressNext()
 
         fileUploadPage.assertPageObjects()
-        fileUploadPage.assertDialogTitle("Assignment : ${assignment2.name}")
+        fileUploadPage.assertDialogTitle("Submission")
         fileUploadPage.assertFileDisplayed("sample.jpg")
     }
 
