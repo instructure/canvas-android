@@ -31,7 +31,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/courseName"
+            android:id="@+id/assignmentName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ellipsize="end"

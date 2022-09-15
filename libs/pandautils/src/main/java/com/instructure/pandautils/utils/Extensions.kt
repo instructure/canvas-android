@@ -36,3 +36,7 @@ fun Long.humanReadableByteCount(): String {
     val pre = "KMGTPE"[exp - 1].toString()
     return String.format(Locale.getDefault(), "%.1f %sB", this / unit.toDouble().pow(exp.toDouble()), pre)
 }
+
+fun Long?.orDefault(default: Long = 0): Long {
+    return this ?: default
+}

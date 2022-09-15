@@ -32,8 +32,9 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
 import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
-import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.utils.humanReadableByteCount
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -57,6 +58,7 @@ class FileUploadDialogViewModel @Inject constructor(
     private var assignment: Assignment? = null
     private var uploadType: FileUploadType = FileUploadType.ASSIGNMENT
     private var canvasContext: CanvasContext = CanvasContext.defaultCanvasContext()
+    private var userId: Long? = null
     private var isOneFileOnly = false
     private var parentFolderId: Long? = null
     private var quizQuestionId: Long = -1L
@@ -65,22 +67,25 @@ class FileUploadDialogViewModel @Inject constructor(
 
     var dialogCallback: ((Int) -> Unit)? = null
     var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
+    var selectedUriStringsCallback: ((List<String>) -> Unit)? = null
     var workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
 
     private var filesToUpload = mutableListOf<FileUploadData>()
 
     fun setData(
-            assignment: Assignment?,
-            files: ArrayList<Uri>?,
-            uploadType: FileUploadType,
-            canvasContext: CanvasContext,
-            parentFolderId: Long,
-            quizQuestionId: Long,
-            position: Int,
-            quizId: Long,
-            dialogCallback: ((Int) -> Unit)? = null,
-            attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
-            workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
+        assignment: Assignment?,
+        files: ArrayList<Uri>?,
+        uploadType: FileUploadType,
+        canvasContext: CanvasContext,
+        parentFolderId: Long,
+        quizQuestionId: Long,
+        position: Int,
+        quizId: Long,
+        userId: Long,
+        dialogCallback: ((Int) -> Unit)? = null,
+        attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
+        selectedFilePathsCallback: ((List<String>) -> Unit)? = null,
+        workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
     ) {
         this.assignment = assignment
         files?.forEach { uri ->
@@ -96,11 +101,15 @@ class FileUploadDialogViewModel @Inject constructor(
         this.quizQuestionId = quizQuestionId
         this.quizId = quizId
         this.position = position
+        this.userId = userId
         dialogCallback?.let {
             this.dialogCallback = it
         }
         attachmentCallback?.let {
             this.attachmentCallback = it
+        }
+        selectedFilePathsCallback?.let {
+            this.selectedUriStringsCallback = it
         }
         workerCallback?.let {
             this.workerCallback = it
@@ -109,15 +118,37 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     fun onCameraClicked() {
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            return
+        }
         _events.postValue(Event(FileUploadAction.TakePhoto))
     }
 
     fun onGalleryClicked() {
-        _events.postValue(Event(FileUploadAction.PickPhoto))
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            return
+        }
+
+        if (isOneFileOnly) {
+            _events.postValue(Event(FileUploadAction.PickImage))
+        } else {
+            _events.postValue(Event(FileUploadAction.PickMultipleImage))
+        }
     }
 
     fun onFilesClicked() {
-        _events.postValue(Event(FileUploadAction.PickFile))
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            return
+        }
+
+        if (isOneFileOnly) {
+            _events.postValue(Event(FileUploadAction.PickFile))
+        } else {
+            _events.postValue(Event(FileUploadAction.PickMultipleFile))
+        }
     }
 
     fun addFile(fileUri: Uri) {
@@ -133,6 +164,12 @@ class FileUploadDialogViewModel @Inject constructor(
                         ?: resources.getString(R.string.errorOccurred))))
             }
         } ?: _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.errorOccurred))))
+    }
+
+    fun addFiles(fileUris: List<Uri>) {
+        fileUris.forEach {
+            addFile(it)
+        }
     }
 
     private fun updateItems() {
@@ -285,6 +322,14 @@ class FileUploadDialogViewModel @Inject constructor(
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_SUBMISSION_COMMENT)
                             .build()
                 }
+                FileUploadType.TEACHER_SUBMISSION_COMMENT -> {
+                    fileUploadBundleCreator.getTeacherSubmissionCommentBundle(
+                        uris,
+                        assignment?.courseId.orDefault(),
+                        assignment?.id.orDefault(),
+                        userId.orDefault()
+                    ).build()
+                }
                 else -> {
                     fileUploadBundleCreator.getAssignmentSubmissionBundle(uris, canvasContext.id, assignment!!)
                             .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_ASSIGNMENT_SUBMISSION)
@@ -309,6 +354,7 @@ class FileUploadDialogViewModel @Inject constructor(
                     .setInputData(data)
                     .build()
 
+            selectedUriStringsCallback?.invoke(filesToUpload.map { it.uri.toString() })
             workerCallback?.invoke(worker.id, workManager.getWorkInfoByIdLiveData(worker.id))
             workManager.enqueue(worker)
             dialogCallback?.invoke(FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN)

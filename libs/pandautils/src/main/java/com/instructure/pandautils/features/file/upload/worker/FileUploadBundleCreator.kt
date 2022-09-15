@@ -20,7 +20,6 @@ import android.net.Uri
 import androidx.work.Data
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.utils.Const
-import java.util.ArrayList
 
 class FileUploadBundleCreator {
 
@@ -100,4 +99,16 @@ class FileUploadBundleCreator {
             .putStringArray(FileUploadWorker.FILE_PATHS, fileSubmitObjects.map { it.toString() }.toTypedArray())
             .putLong(Const.COURSE_ID, courseId)
             .putLong(Const.ASSIGNMENT_ID, assignment.id)
+
+    fun getTeacherSubmissionCommentBundle(
+        fileSubmitObjects: List<Uri>,
+        courseId: Long,
+        assignmentId: Long,
+        userId: Long
+    ) = Data.Builder()
+        .putStringArray(FileUploadWorker.FILE_PATHS, fileSubmitObjects.map { it.toString() }.toTypedArray())
+        .putLong(Const.COURSE_ID, courseId)
+        .putLong(Const.ASSIGNMENT_ID, assignmentId)
+        .putLong(Const.USER_ID, userId)
+        .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT)
 }

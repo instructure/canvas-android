@@ -29,7 +29,16 @@ data class PendingSubmissionComment(
     var status = CommentSendStatus.DRAFT
     var progress = 0f
     var filePath = ""
+    var workerId: UUID? = null
+    var workerInputData: FileUploadWorkerData? = null
 }
+
+data class FileUploadWorkerData(
+    val filePaths: List<String>,
+    val courseId: Long,
+    val assignmentId: Long,
+    val userId: Long
+)
 
 enum class CommentSendStatus { DRAFT, SENDING, ERROR }
 

@@ -16,9 +16,11 @@
  */
 package com.instructure.teacher.presenters
 
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
+import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
@@ -26,6 +28,8 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
+import com.instructure.pandautils.utils.fromJson
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
@@ -48,6 +52,7 @@ class SpeedGraderCommentsPresenter(
 ) : ListPresenter<SubmissionCommentWrapper, SpeedGraderCommentsView>(SubmissionCommentWrapper::class.java) {
 
     val mPageId = "${ApiPrefs.domain}-$courseId-$assignmentId-${assignee.id}"
+    var selectedFilePaths: List<String>? = null
 
     private val comments = rawComments.map { CommentWrapper(it) }
     private var sendingJob: Job? = null
@@ -85,6 +90,7 @@ class SpeedGraderCommentsPresenter(
 
             // Add pending comments
             addPendingComments()
+            subscribePendingWorkers()
 
             viewCallback?.onRefreshFinished()
             viewCallback?.checkIfEmpty()
@@ -239,5 +245,72 @@ class SpeedGraderCommentsPresenter(
         pending -= currentDrafts
         if (!text.isBlank()) pending += PendingSubmissionComment(mPageId, text)
         TeacherPrefs.pendingSubmissionComments = pending
+    }
+
+    private fun createPendingFileComment(workInfo: WorkInfo) {
+        val newComment = PendingSubmissionComment(mPageId).apply {
+            workerId = workInfo.id
+            status = CommentSendStatus.SENDING
+            workerInputData = FileUploadWorkerData(
+                selectedFilePaths.orEmpty(),
+                courseId,
+                assignmentId,
+                assignee.id
+            )
+        }
+
+        if (!TeacherPrefs.pendingSubmissionComments.any { it.workerId == workInfo.id }) {
+            TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { add(newComment) }
+            val commentWrapper = PendingCommentWrapper(newComment)
+            data.addOrUpdate(commentWrapper)
+        }
+    }
+
+    fun retryFileUpload(pending: PendingSubmissionComment) {
+        TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
+        data.remove(PendingCommentWrapper(pending))
+        pending.workerInputData?.let { data ->
+            selectedFilePaths = data.filePaths
+            viewCallback?.restartWorker(data)
+        }
+    }
+
+    private fun handleFileUploadSuccess(workInfo: WorkInfo) {
+        TeacherPrefs.pendingSubmissionComments.find { it.workerId == workInfo.id }?.let { pending ->
+            TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
+            data.remove(PendingCommentWrapper(pending))
+            workInfo.outputData.getString(FileUploadWorker.RESULT_SUBMISSION_COMMENT)?.fromJson<SubmissionComment>()?.let {
+                data.add(CommentWrapper(it))
+            }
+            SubmissionCommentsUpdated().post()
+        }
+    }
+
+    private fun handleFileUploadFailure(workInfo: WorkInfo) {
+        TeacherPrefs.pendingSubmissionComments.find { it.workerId == workInfo.id }?.let { pending ->
+            pending.status = CommentSendStatus.ERROR
+            data.addOrUpdate(PendingCommentWrapper(pending))
+        }
+    }
+
+    fun removeFailedFileUploads() {
+        val failedFileUploads = TeacherPrefs.pendingSubmissionComments.filter { it.status == CommentSendStatus.ERROR && it.workerId != null }
+        TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { removeAll(failedFileUploads) }
+    }
+
+    fun onFileUploadWorkInfoChanged(workInfo: WorkInfo) {
+        when (workInfo.state) {
+            WorkInfo.State.RUNNING -> createPendingFileComment(workInfo)
+            WorkInfo.State.SUCCEEDED -> handleFileUploadSuccess(workInfo)
+            WorkInfo.State.FAILED -> handleFileUploadFailure(workInfo)
+            else -> {}
+        }
+
+        viewCallback?.checkIfEmpty()
+        viewCallback?.scrollToBottom()
+    }
+
+    private fun subscribePendingWorkers() {
+        viewCallback?.subscribePendingWorkers(TeacherPrefs.pendingSubmissionComments.filter { it.pageId == mPageId }.mapNotNull { it.workerId })
     }
 }
