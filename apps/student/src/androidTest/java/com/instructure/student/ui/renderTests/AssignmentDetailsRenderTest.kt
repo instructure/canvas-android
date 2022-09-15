@@ -76,7 +76,8 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     fun displaysTitleDataNotSubmitted() {
         val assignment = Assignment(
             name = "Test Assignment",
-            pointsPossible = 35.0
+            pointsPossible = 35.0,
+            submissionTypesRaw = listOf("online_text_entry")
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)

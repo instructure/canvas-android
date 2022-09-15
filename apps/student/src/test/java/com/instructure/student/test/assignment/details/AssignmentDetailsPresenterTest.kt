@@ -266,7 +266,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is null`() {
-        val assignment = baseAssignment.copy(submission = null, dueAt = null)
+        val assignment = baseAssignment.copy(submission = null, dueAt = null, submissionTypesRaw = listOf("online_text_entry"))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Not Submitted", state.submittedStateLabel)
@@ -275,7 +275,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     @Test
     fun `Uses correct label text for submitted status when submission is not submitted`() {
         val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted", submittedAt = null)
-        val assignment = baseAssignment.copy(submission = submission)
+        val assignment = baseAssignment.copy(submission = submission, submissionTypesRaw = listOf("online_text_entry"))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Not Submitted", state.submittedStateLabel)
@@ -284,7 +284,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     @Test
     fun `Uses correct label text for submitted status when submission is graded but not submitted`() {
         val submission = baseSubmission.copy(attempt = 0, submittedAt = null, grade = "8", postedAt = Date(), workflowState = "graded")
-        val assignment = baseAssignment.copy(submission = submission)
+        val assignment = baseAssignment.copy(submission = submission, submissionTypesRaw = listOf("online_text_entry"))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Not Submitted", state.submittedStateLabel)
@@ -300,21 +300,21 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `uses correct icon for not-submitted status`() {
-        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(submissionTypesRaw = listOf("online_text_entry"))))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals(R.drawable.ic_no, state.submittedStateIcon)
     }
 
     @Test
     fun `Uses correct text for non-submitted status`() {
-        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(submissionTypesRaw = listOf("online_text_entry"))))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Not Submitted", state.submittedStateLabel)
     }
 
     @Test
     fun `Uses gray color for non-submitted status`() {
-        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(submissionTypesRaw = listOf("online_text_entry"))))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals(0xFF556572.toInt(), state.submittedStateColor)
     }
@@ -1140,7 +1140,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Dont show submission and rubric when assignment is not graded and does not have submission`() {
-        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(gradingType = Assignment.NOT_GRADED_TYPE)))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(submissionTypesRaw = listOf("online_text_entry"), gradingType = Assignment.NOT_GRADED_TYPE)))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertFalse(state.showSubmissionsAndRubric)
     }
