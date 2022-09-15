@@ -29,6 +29,7 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withDescendant
 import com.instructure.espresso.page.withText
@@ -57,6 +58,10 @@ class FileUploadPage : BasePage() {
 
     fun clickUpload() {
         onView(allOf(isAssignableFrom(Button::class.java),containsTextCaseInsensitive("upload"))).click()
+    }
+
+    fun clickTurnIn() {
+        onView(containsTextCaseInsensitive("turn in")).click()
     }
 
     fun removeFile(filename: String) {

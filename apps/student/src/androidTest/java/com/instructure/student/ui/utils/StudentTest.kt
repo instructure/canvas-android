@@ -113,6 +113,7 @@ abstract class StudentTest : CanvasTest() {
     val resourcesPage = ResourcesPage()
     val importantDatesPage = ImportantDatesPage()
     val shareExtensionTargetPage = ShareExtensionTargetPage()
+    val shareExtensionStatusPage = ShareExtensionStatusPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

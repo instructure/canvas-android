@@ -20,6 +20,7 @@ import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -32,6 +33,7 @@ import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.User
+import com.instructure.espresso.page.waitForView
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
@@ -181,6 +183,58 @@ class ShareExtensionInteractionTest : StudentTest() {
         fileUploadPage.assertFileDisplayed("sample.jpg")
     }
 
+    @Test
+    fun shareExtensionShowsUpCorrectlyWhenSharingMultipleFiles() {
+        val data = createMockData()
+        val student = data.students[0]
+        val uri = setupFileOnDevice("sample.jpg")
+        val uri2 = setupFileOnDevice("samplepdf.pdf")
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        login(student)
+        device.pressHome()
+
+        shareMultipleFiles(arrayListOf(uri, uri2))
+
+        device.findObject(UiSelector().text("Canvas")).click()
+        device.waitForIdle()
+
+        shareExtensionTargetPage.assertPageObjects()
+        shareExtensionTargetPage.assertFilesCheckboxIsSelected()
+        shareExtensionTargetPage.assertUserName(student.name)
+
+        shareExtensionTargetPage.pressNext()
+
+        fileUploadPage.assertPageObjects()
+        fileUploadPage.assertFileDisplayed("sample.jpg")
+        fileUploadPage.assertFileDisplayed("samplepdf.pdf")
+    }
+
+    @Test
+    fun testFileAssignmentSubmission() {
+        val data = createMockData()
+        val student = data.students[0]
+        val uri = setupFileOnDevice("sample.jpg")
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+
+        login(student)
+        device.pressHome()
+
+        shareExternalFile(uri)
+
+        device.findObject(UiSelector().text("Canvas")).click()
+        device.waitForIdle()
+
+        shareExtensionTargetPage.selectSubmission()
+        shareExtensionTargetPage.pressNext()
+        fileUploadPage.clickTurnIn()
+
+        shareExtensionStatusPage.assertPageObjects()
+        shareExtensionStatusPage.assertAssignemntSubmissionSuccess()
+    }
+
     private fun createMockData(): MockCanvas {
 
         val data = MockCanvas.init(
@@ -217,6 +271,19 @@ class ShareExtensionInteractionTest : StudentTest() {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
             type = "image/jpg"
+        }
+
+        val chooser = Intent.createChooser(intent, null)
+        chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        InstrumentationRegistry.getInstrumentation().context.startActivity(chooser)
+    }
+
+    private fun shareMultipleFiles(uris: ArrayList<Uri>) {
+        val intent = Intent().apply {
+            action = Intent.ACTION_SEND_MULTIPLE
+            putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+            type = "*/*"
         }
 
         val chooser = Intent.createChooser(intent, null)
