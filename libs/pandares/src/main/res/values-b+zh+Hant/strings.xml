@@ -949,7 +949,6 @@
     <string name="latePenalty">逾期懲罰 (-%s)</string>
     <string name="finalGrade">最終評分</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">在網頁中打開</string>
@@ -1256,4 +1255,16 @@
     <string name="themeSelectorSave">儲存</string>
     <string name="themeSelectorChangeLater">您可以稍後在應用桯式設定中變更</string>
     <string name="grabAnnotationTool">擷取</string>
+    <string name="fileUpload">檔案上傳</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="other">%s 條未讀訊息</item>
+    </plurals>
+    <string name="noAnnotationSelected">未選擇任何註釋</string>
+    <string name="emailNotifications">電子郵件通知</string>
+    <string name="emailNotificationsImmediately">立即</string>
+    <string name="emailNotificationsDaily">每天</string>
+    <string name="emailNotificationsWeekly">每週</string>
+    <string name="emailNotificationsNever">永不</string>
+    <string name="selectFrequency">選擇頻率</string>
 </resources>

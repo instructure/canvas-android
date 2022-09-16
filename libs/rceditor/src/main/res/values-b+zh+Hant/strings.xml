@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">滾動查看所有編輯工具</string>
     <string name="rce_emptyUrlError">URL 不可空白</string>
     <string name="rce_httpNotAllowed">僅接受 https url</string>
+    <string name="rce_dialogAltText">為螢幕讀取器添加替代文字</string>
 </resources>
