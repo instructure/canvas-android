@@ -930,7 +930,7 @@
     <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
     <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
     <string name="fileTypeNotSupported">Mathau o Ffeil Anghydnaws</string>
-    <string name="fileTypeNotSupportedBody">Dydy\'r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
+    <string name="fileTypeNotSupportedBody">Dydy&apos;r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -958,7 +958,6 @@
     <string name="latePenalty">Cosb am fod yn hwyr (-%s)</string>
     <string name="finalGrade">Gradd Derfynol</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Agor yn webview</string>
@@ -1270,4 +1269,17 @@
     <string name="themeSelectorSave">Cadw</string>
     <string name="themeSelectorChangeLater">Gallwch chi ei newid yn nes ymlaen yng ngosodiadau’r ap</string>
     <string name="grabAnnotationTool">Gafael</string>
+    <string name="fileUpload">Llwytho Ffeil i Fyny</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s neges heb ei darllen</item>
+        <item quantity="other">%s neges heb ei darllen</item>
+    </plurals>
+    <string name="noAnnotationSelected">Dim anodiad wedi’i ddewis</string>
+    <string name="emailNotifications">Hysbysiadau E-bost</string>
+    <string name="emailNotificationsImmediately">Yn syth</string>
+    <string name="emailNotificationsDaily">Pob dydd</string>
+    <string name="emailNotificationsWeekly">Pob wythnos</string>
+    <string name="emailNotificationsNever">Byth</string>
+    <string name="selectFrequency">Dewis amlder</string>
 </resources>

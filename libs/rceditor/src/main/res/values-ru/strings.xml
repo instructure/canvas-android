@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Просмотр всех инструментов для редактирования</string>
     <string name="rce_emptyUrlError">Поле URL должно быть заполнено</string>
     <string name="rce_httpNotAllowed">Принимается только адреса URL в формате https</string>
+    <string name="rce_dialogAltText">Добавить альтернативный текст для скринридеров</string>
 </resources>

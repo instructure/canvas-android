@@ -56,7 +56,7 @@
     <string name="noAttemptsLeft">Aucune tentative restante</string>
     <string name="resubmitAssignment">Envoyer la tâche de nouveau</string>
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">Le téléversement d\'un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
     <string name="submissionUploadByteProgress">%1$s sur %2$s</string>
@@ -72,7 +72,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URL utilisant http://</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Saisissez un URL ici pour votre envoi</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer le son</string>
     <string name="recordVideo">Enregistrer la vidéo</string>
     <string name="a11y_textSubmissionEditor">Éditeur d’envoi de texte</string>
@@ -930,7 +930,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Cette tâche n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Cette tâche n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -958,7 +958,6 @@
     <string name="latePenalty">Pénalité de retard (-%s)</string>
     <string name="finalGrade">Note finale</string>
 
-    <string name="moreThan99">Plus de 99</string>
     <string name="max_count">Plus de 99</string>
 
     <string name="opensInWebView">S’ouvre dans Webview</string>
@@ -1093,8 +1092,8 @@
     <string name="closeRecordingView">Fermer la vue d’enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur s\'est produite lors de la tentative de lecture.</string>
-    <string name="errorSubmittingMediaComment">Une erreur s\'est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
+    <string name="errorShowingVideoReplay">Une erreur s&apos;est produite lors de la tentative de lecture.</string>
+    <string name="errorSubmittingMediaComment">Une erreur s&apos;est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>
     <string name="addAudioComment">Ajouter un commentaire audio</string>
@@ -1270,4 +1269,17 @@
     <string name="themeSelectorSave">Enregistrer</string>
     <string name="themeSelectorChangeLater">Vous pouvez le changer plus tard dans les paramètres de l’application</string>
     <string name="grabAnnotationTool">Attraper</string>
+    <string name="fileUpload">Téléversement de fichier</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s message non lu</item>
+        <item quantity="other">%s messages non lus</item>
+    </plurals>
+    <string name="noAnnotationSelected">Aucune annotation sélectionnée</string>
+    <string name="emailNotifications">Notifications par courriel</string>
+    <string name="emailNotificationsImmediately">Immédiatement</string>
+    <string name="emailNotificationsDaily">Tous les jours</string>
+    <string name="emailNotificationsWeekly">Hebdomadaire</string>
+    <string name="emailNotificationsNever">Jamais</string>
+    <string name="selectFrequency">Sélectionner la fréquence</string>
 </resources>

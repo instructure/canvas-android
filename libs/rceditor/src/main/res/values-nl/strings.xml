@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Scrollen voor alle bewerkingstools</string>
     <string name="rce_emptyUrlError">URL kan niet leeg zijn</string>
     <string name="rce_httpNotAllowed">Alleen https-URL\'s worden geaccepteerd</string>
+    <string name="rce_dialogAltText">Alt-tekst toevoegen voor schermlezers</string>
 </resources>

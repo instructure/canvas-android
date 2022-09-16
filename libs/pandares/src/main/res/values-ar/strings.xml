@@ -993,7 +993,6 @@
     <string name="latePenalty">عقوبة التأخير (-%s)</string>
     <string name="finalGrade">الدرجة النهائية</string>
 
-    <string name="moreThan99">أكثر من 99</string>
     <string name="max_count">أكثر من 99</string>
 
     <string name="opensInWebView">الفتح في عرض ويب</string>
@@ -1325,4 +1324,21 @@
     <string name="themeSelectorSave">حفظ</string>
     <string name="themeSelectorChangeLater">يمكنك تغييرها لاحقًا في إعدادات التطبيق</string>
     <string name="grabAnnotationTool">تحديد</string>
+    <string name="fileUpload">تحميل ملف</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="zero">%s من الرسائل غير المقروءة</item>
+        <item quantity="one">%s رسالة غير مقروءة</item>
+        <item quantity="two">%s من الرسائل غير المقروءة</item>
+        <item quantity="few">%s من الرسائل غير المقروءة</item>
+        <item quantity="many">%s من الرسائل غير المقروءة</item>
+        <item quantity="other">%s من الرسائل غير المقروءة</item>
+    </plurals>
+    <string name="noAnnotationSelected">لم يتم تحديد تعليق توضيحي</string>
+    <string name="emailNotifications">إعلامات البريد الإلكتروني</string>
+    <string name="emailNotificationsImmediately">فورًا</string>
+    <string name="emailNotificationsDaily">يوميًا</string>
+    <string name="emailNotificationsWeekly">أسبوعيًا</string>
+    <string name="emailNotificationsNever">أبدًا</string>
+    <string name="selectFrequency">حدد التكرار</string>
 </resources>
