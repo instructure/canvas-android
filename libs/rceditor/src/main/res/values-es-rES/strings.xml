@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="rce_contentDescription_undo">Deshacer</string>
     <string name="rce_contentDescription_redo">Rehacer</string>
     <string name="rce_contentDescription_bold">Dar formato en negrita</string>
@@ -69,4 +70,5 @@
 
     <string name="rce_emptyUrlError">La url no puede estar en blanco</string>
     <string name="rce_httpNotAllowed">Solo se aceptan url https</string>
+    <string name="rce_dialogAltText">Añadir texto alternativo para los lectores de pantalla</string>
 </resources>

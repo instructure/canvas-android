@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Scroll for all editing tools</string>
     <string name="rce_emptyUrlError">Url cannot be blank</string>
     <string name="rce_httpNotAllowed">Only https urls are accepted</string>
+    <string name="rce_dialogAltText">Add alt text for screen readers</string>
 </resources>

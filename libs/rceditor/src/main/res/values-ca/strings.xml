@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="rce_contentDescription_undo">Desfés</string>
     <string name="rce_contentDescription_redo">Refés</string>
     <string name="rce_contentDescription_bold">Format negreta</string>
@@ -69,4 +70,5 @@
 
     <string name="rce_emptyUrlError">L\'URL no pot estar en blanc</string>
     <string name="rce_httpNotAllowed">Només s\'accepten URLs https</string>
+    <string name="rce_dialogAltText">Afegiu text alternatiu per als lectors de pantalla</string>
 </resources>

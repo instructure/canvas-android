@@ -958,7 +958,6 @@
     <string name="latePenalty">Förseningsbestraffning (-%s)</string>
     <string name="finalGrade">Totalt omdöme</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Öppnas i webbvy</string>
@@ -1270,4 +1269,17 @@
     <string name="themeSelectorSave">Spara</string>
     <string name="themeSelectorChangeLater">Du kan ändra det sedan i appinställningarna</string>
     <string name="grabAnnotationTool">Ta tag i</string>
+    <string name="fileUpload">Filuppladdning</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s oläst meddelande</item>
+        <item quantity="other">%s olästa meddelanden</item>
+    </plurals>
+    <string name="noAnnotationSelected">Inga noteringar har valts</string>
+    <string name="emailNotifications">E-postaviseringar</string>
+    <string name="emailNotificationsImmediately">Omedelbart</string>
+    <string name="emailNotificationsDaily">Varje dag</string>
+    <string name="emailNotificationsWeekly">Varje vecka</string>
+    <string name="emailNotificationsNever">Aldrig</string>
+    <string name="selectFrequency">Välj frekvens</string>
 </resources>
