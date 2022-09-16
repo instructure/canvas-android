@@ -21,10 +21,7 @@ import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
 import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
@@ -100,6 +97,8 @@ class ShareExtensionTargetFragment : DialogFragment() {
                 shareExtensionViewModel.finish()
             }
         }
+
+        alertDialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
         return alertDialog
     }
