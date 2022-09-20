@@ -53,8 +53,8 @@ class CollaborationsE2ETest: StudentTest() {
         // For some reason, these aren't showing up when run in FTL, though they do
         // show up when run locally (same server environment in each).  I'll comment
         // them out for now, with MBL-14427 being created to pursue the issue.
-//        CollaborationsPage.assertStartANewCollaborationPresent()
-//        CollaborationsPage.assertGoogleDocsChoicePresent()
-//        CollaborationsPage.assertGoogleDocsExplanationPresent()
+        CollaborationsPage.assertStartANewCollaborationPresent()
+        CollaborationsPage.assertGoogleDocsChoicePresent()
+        CollaborationsPage.assertGoogleDocsExplanationPresent()
     }
 }
