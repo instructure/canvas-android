@@ -76,7 +76,7 @@ class ShareExtensionViewModel @Inject constructor(
         this.uploadType = uploadType
         uris?.let {
             when (uploadType) {
-                FileUploadType.USER -> _events.postValue(Event(ShareExtensionAction.ShowMyFilesUploadDialog(it, this::uploadDialogCallback, this::workerCallback)))
+                FileUploadType.USER -> _events.postValue(Event(ShareExtensionAction.ShowMyFilesUploadDialog(it, this::uploadDialogCallback)))
                 FileUploadType.ASSIGNMENT -> {
                     when {
                         course == null -> {
@@ -86,7 +86,7 @@ class ShareExtensionViewModel @Inject constructor(
                             _events.postValue(Event(ShareExtensionAction.ShowToast(resources.getString(R.string.noAssignmentSelected))))
                         }
                         else -> {
-                            _events.postValue(Event(ShareExtensionAction.ShowAssignmentUploadDialog(course, assignment, it, uploadType, this::uploadDialogCallback, this::workerCallback)))
+                            _events.postValue(Event(ShareExtensionAction.ShowAssignmentUploadDialog(course, assignment, it, uploadType, this::uploadDialogCallback)))
                         }
                     }
                 }
@@ -121,15 +121,15 @@ class ShareExtensionViewModel @Inject constructor(
         _events.postValue(Event(ShareExtensionAction.ShowProgressDialog(uuid)))
     }
 
-    private fun workerCallback(uuid: UUID, liveData: LiveData<WorkInfo>) {
+    fun workerCallback(uuid: UUID) {
         showProgressDialog(uuid)
     }
 
 }
 
 sealed class ShareExtensionAction {
-    data class ShowAssignmentUploadDialog(val course: CanvasContext, val assignment: Assignment, val fileUris: ArrayList<Uri>, val uploadType: FileUploadType, val dialogCallback: (Int) -> Unit, val workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) : ShareExtensionAction()
-    data class ShowMyFilesUploadDialog(val fileUris: ArrayList<Uri>, val dialogCallback: (Int) -> Unit, val workerCallback: (UUID, LiveData<WorkInfo>) -> Unit) : ShareExtensionAction()
+    data class ShowAssignmentUploadDialog(val course: CanvasContext, val assignment: Assignment, val fileUris: ArrayList<Uri>, val uploadType: FileUploadType, val dialogCallback: (Int) -> Unit) : ShareExtensionAction()
+    data class ShowMyFilesUploadDialog(val fileUris: ArrayList<Uri>, val dialogCallback: (Int) -> Unit) : ShareExtensionAction()
     data class ShowProgressDialog(val uuid: UUID) : ShareExtensionAction()
     data class ShowSuccessDialog(val fileUploadType: FileUploadType) : ShareExtensionAction()
     data class ShowErrorDialog(val fileUploadType: FileUploadType) : ShareExtensionAction()

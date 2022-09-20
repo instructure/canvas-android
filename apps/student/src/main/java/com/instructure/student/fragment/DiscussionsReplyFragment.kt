@@ -37,6 +37,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_REPLY
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.student.R
@@ -47,7 +48,7 @@ import retrofit2.Response
 import java.io.File
 
 @ScreenView(SCREEN_VIEW_DISCUSSIONS_REPLY)
-class DiscussionsReplyFragment : ParentFragment() {
+class DiscussionsReplyFragment : ParentFragment(), FileUploadDialogParent {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -77,15 +78,17 @@ class DiscussionsReplyFragment : ParentFragment() {
                     if (attachment != null) attachments.add(attachment!!)
 
                     val bundle = FileUploadDialogFragment.createDiscussionsBundle(attachments)
-                    FileUploadDialogFragment.newInstance(bundle, pickerCallback = { event, attachment ->
-                        if (event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
-                            handleAttachment(attachment)
-                        }
-                    }).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
                 } else {
                     NoInternetConnectionDialog.show(requireFragmentManager())
                 }
             }
+        }
+    }
+
+    override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
+        if (event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
+            handleAttachment(attachment)
         }
     }
 

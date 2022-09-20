@@ -47,6 +47,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.FileFolderCallback
@@ -64,7 +65,7 @@ import java.util.*
 
 @ScreenView(SCREEN_VIEW_FILE_LIST)
 @PageView
-class FileListFragment : ParentFragment(), Bookmarkable {
+class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -410,11 +411,11 @@ class FileListFragment : ParentFragment(), Bookmarkable {
     private fun uploadFile() {
         folder?.let {
             val bundle = FileUploadDialogFragment.createContextBundle(null, canvasContext, it.id)
-            FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::workInfoLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
+            FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
         }
     }
 
-    private fun workInfoLiveDataCallback(uuid: UUID, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
                 recyclerAdapter?.refresh()

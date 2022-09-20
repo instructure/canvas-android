@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
@@ -70,7 +71,7 @@ import java.util.*
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_COMMENTS)
 @AndroidEntryPoint
-class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, SpeedGraderCommentsPresenter, SpeedGraderCommentsView, SpeedGraderCommentHolder, SpeedGraderCommentsAdapter>(), SpeedGraderCommentsView {
+class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, SpeedGraderCommentsPresenter, SpeedGraderCommentsView, SpeedGraderCommentHolder, SpeedGraderCommentsAdapter>(), SpeedGraderCommentsView, FileUploadDialogParent {
     var mRawComments by ParcelableArrayListArg<SubmissionComment>()
     var mSubmissionId by LongArg()
     var mSubmissionHistory by ParcelableArrayListArg<Submission>()
@@ -222,20 +223,16 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             presenter.assignee.id
         )
 
-        FileUploadDialogFragment.newInstance(
-            bundle,
-            selectedUriStringsCallback = ::fileUploadPikerCallback,
-            workerLiveDataCallback = ::fileUploadLiveDataCallback
-        ).show(
+        FileUploadDialogFragment.newInstance(bundle).show(
             childFragmentManager, FileUploadDialogFragment.TAG
         )
     }
 
-    private fun fileUploadPikerCallback(filePaths: List<String>) {
+    override fun selectedUriStringsCallback(filePaths: List<String>) {
         presenter.selectedFilePaths = filePaths
     }
 
-    private fun fileUploadLiveDataCallback(uuid: UUID? = null, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(this) {
             presenter.onFileUploadWorkInfoChanged(it)
         }
@@ -243,7 +240,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     override fun subscribePendingWorkers(workerIds: List<UUID>) {
         workerIds.forEach {
-            fileUploadLiveDataCallback(null, WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(it))
+            workInfoLiveDataCallback(null, WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(it))
         }
     }
 
@@ -260,7 +257,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             .build()
 
         WorkManager.getInstance(requireContext()).apply {
-            fileUploadLiveDataCallback(null, getWorkInfoByIdLiveData(worker.id))
+            workInfoLiveDataCallback(null, getWorkInfoByIdLiveData(worker.id))
             enqueue(worker)
         }
     }

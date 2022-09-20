@@ -68,9 +68,6 @@ class FileUploadDialogFragment : DialogFragment() {
     private var userId: Long by LongArg()
 
     private var dialogCallback: ((Int) -> Unit)? = null
-    private var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
-    private var selectedUriStringsCallback: ((List<String>) -> Unit)? = null
-    private var workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
         if (isPermissionGranted) takePicture()
@@ -191,7 +188,7 @@ class FileUploadDialogFragment : DialogFragment() {
 
         viewModel.setData(
             assignment, fileSubmitUris, uploadType, canvasContext, parentFolderId, quizQuestionId,
-            position, quizId, userId, dialogCallback, attachmentCallback, selectedUriStringsCallback, workerCallback
+            position, quizId, userId, dialogCallback
         )
     }
 
@@ -213,7 +210,21 @@ class FileUploadDialogFragment : DialogFragment() {
             is FileUploadAction.PickMultipleImage -> pickMultipleImage()
             is FileUploadAction.ShowToast -> Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
             is FileUploadAction.UploadStarted -> dismiss()
+            is FileUploadAction.AttachmentSelectedAction -> getParent()?.attachmentCallback(action.event, action.attachment)
+            is FileUploadAction.UploadStartedAction -> {
+                getParent()?.selectedUriStringsCallback(action.selectedUris)
+                getParent()?.workInfoLiveDataCallback(action.id, action.liveData)
+            }
         }
+    }
+
+    private fun getParent(): FileUploadDialogParent? {
+        var parent = parentFragment as? FileUploadDialogParent
+        if (parent == null) {
+            parent = activity as? FileUploadDialogParent
+        }
+
+        return parent
     }
 
     private fun takePicture() {
@@ -257,11 +268,7 @@ class FileUploadDialogFragment : DialogFragment() {
 
         fun newInstance(): FileUploadDialogFragment = FileUploadDialogFragment()
 
-        fun newInstance(args: Bundle,
-                        callback: ((Int) -> Unit)? = null,
-                        pickerCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
-                        selectedUriStringsCallback: ((List<String>) -> Unit)? = null,
-                        workerLiveDataCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null): FileUploadDialogFragment {
+        fun newInstance(args: Bundle, callback: ((Int) -> Unit)? = null): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
 
@@ -273,9 +280,6 @@ class FileUploadDialogFragment : DialogFragment() {
                 courseId = args.getLong(Const.COURSE_ID, INVALID_ID)
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
                 dialogCallback = callback
-                attachmentCallback = pickerCallback
-                this.selectedUriStringsCallback = selectedUriStringsCallback
-                workerCallback = workerLiveDataCallback
                 userId = args.getLong(Const.USER_ID, INVALID_ID)
             }
         }

@@ -21,6 +21,7 @@ import android.os.Handler
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
@@ -63,7 +65,7 @@ class FileListFragment : BaseSyncFragment<
         FileListPresenter,
         FileListView,
         FileFolderViewHolder,
-        FileListAdapter>(), FileListView {
+        FileListAdapter>(), FileListView, FileUploadDialogParent {
 
     private lateinit var mRecyclerView: RecyclerView
 
@@ -235,7 +237,7 @@ class FileListFragment : BaseSyncFragment<
             animateFabs()
             handleClick(childFragmentManager) {
                 val bundle = FileUploadDialogFragment.createContextBundle(null, mCanvasContext, presenter.currentFolder.id)
-                FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::workInfoLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
             }
         }
 
@@ -263,7 +265,7 @@ class FileListFragment : BaseSyncFragment<
         })
     }
 
-    private fun workInfoLiveDataCallback(uuid: UUID, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
                 presenter.refresh(true)
