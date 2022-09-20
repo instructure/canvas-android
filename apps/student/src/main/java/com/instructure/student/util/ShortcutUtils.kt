@@ -62,7 +62,7 @@ object ShortcutUtils {
                     .build()
 
             val successIntent = shortcutManager.createShortcutResultIntent(pinShortcutInfo)
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, successIntent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(context, 0, successIntent, PendingIntent.FLAG_IMMUTABLE)
             shortcutManager.requestPinShortcut(pinShortcutInfo, pendingIntent.intentSender)
             return true
         }

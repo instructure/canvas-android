@@ -1,6 +1,7 @@
 package com.instructure.canvasapi2.di
 
 import com.instructure.canvasapi2.apis.HelpLinksAPI
+import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -130,6 +131,6 @@ class ApiModule {
 
     @Provides
     fun provideNotificationPreferencesManager(): NotificationPreferencesManager {
-        return NotificationPreferencesManager
+        return NotificationPreferencesManager(NotificationPreferencesAPI)
     }
 }

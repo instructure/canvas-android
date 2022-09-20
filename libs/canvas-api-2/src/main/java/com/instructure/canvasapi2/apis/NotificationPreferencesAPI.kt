@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.NotificationPreferenceResponse
 import retrofit2.Call
 import retrofit2.http.*
 
-internal object NotificationPreferencesAPI {
+object NotificationPreferencesAPI {
 
     interface NotificationPreferencesInterface {
         @GET("users/{userId}/communication_channels/{communicationChannelId}/notification_preferences")

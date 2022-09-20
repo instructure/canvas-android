@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Vieritä kaikkiin muokkaustyökaluihin</string>
     <string name="rce_emptyUrlError">Url ei voi olla tyhjä</string>
     <string name="rce_httpNotAllowed">Vain https-alkuiset url-osoitteet hyväksytään</string>
+    <string name="rce_dialogAltText">Lisää alt-teksti kuvanlukijoille</string>
 </resources>

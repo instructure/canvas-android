@@ -17,7 +17,6 @@
 package com.instructure.teacher.ui.e2e
 
 import android.util.Log
-import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -34,9 +33,7 @@ import org.junit.Test
 class QuizE2ETest: TeacherTest() {
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -61,7 +58,7 @@ class QuizE2ETest: TeacherTest() {
         quizListPage.assertDisplaysNoQuizzesView()
 
         Log.d(PREPARATION_TAG,"Seed a quiz for the ${course.name} course. Also, seed a question into the quiz and publish it.")
-        val quizPublished = seedQuizzes(
+        val testQuizList = seedQuizzes(
                 courseId = course.id,
                 withDescription = true,
                 dueAt = 3.days.fromNow.iso8601,
@@ -71,101 +68,45 @@ class QuizE2ETest: TeacherTest() {
 
         seedQuizQuestion(
                 courseId = course.id,
-                quizId = quizPublished.quizList[0].id,
+                quizId = testQuizList.quizList[0].id,
                 teacherToken = teacher.token
         )
 
-        publishQuiz(
-                courseId = course.id,
-                quizId = quizPublished.quizList[0].id,
-                teacherToken = teacher.token
-        )
-
-        Log.d(STEP_TAG,"Refresh the page. Assert that the quiz is there and click on the previously seeded quiz: ${quizPublished.quizList[0].title}.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that the quiz is there and click on the previously seeded quiz: ${testQuizList.quizList[0].title}.")
         quizListPage.refresh()
-        quizListPage.clickQuiz(quizPublished.quizList[0])
-        Log.d(STEP_TAG,"Assert that ${quizPublished.quizList[0].title} quiz is not published. Navigate back.")
+        quizListPage.clickQuiz(testQuizList.quizList[0].title)
+
+        Log.d(STEP_TAG,"Assert that ${testQuizList.quizList[0].title} quiz is 'Not Submitted' and it is unpublished.")
         quizDetailsPage.assertNotSubmitted()
-        Espresso.pressBack()
-
-        Log.d(PREPARATION_TAG,"Submit the ${quizPublished.quizList[0].title} quiz.")
-        seedQuizSubmission(
-                courseId = course.id,
-                quizId = quizPublished.quizList[0].id,
-                studentToken = student.token
-        )
-
-        Log.d(STEP_TAG,"Refresh the page. Click on ${quizPublished.quizList[0].title} quiz and assert that it needs grading because of the previous submission.")
-        quizListPage.refresh()
-        quizListPage.clickQuiz(quizPublished.quizList[0])
-        quizDetailsPage.refresh()
-        quizDetailsPage.assertNeedsGrading()
-    }
-
-    @E2E
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.QUIZZES, TestCategory.E2E)
-    fun editQuizE2E() {
-
-        Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
-        tokenLogin(teacher)
-
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to Quizzes Page.")
-        dashboardPage.openCourse(course.name)
-        courseBrowserPage.openQuizzesTab()
-
-        Log.d(STEP_TAG,"Assert that there is no quiz displayed on the page.")
-        quizListPage.assertDisplaysNoQuizzesView()
-
-        Log.d(PREPARATION_TAG,"Seed a quiz for the ${course.name} course. Also, seed a question into the quiz and publish it.")
-        val quizPublished = seedQuizzes(
-                courseId = course.id,
-                withDescription = true,
-                dueAt = 3.days.fromNow.iso8601,
-                teacherToken = teacher.token,
-                published = false
-        )
-
-        seedQuizQuestion(
-                courseId = course.id,
-                quizId = quizPublished.quizList[0].id,
-                teacherToken = teacher.token
-        )
-
-        publishQuiz(
-                courseId = course.id,
-                quizId = quizPublished.quizList[0].id,
-                teacherToken = teacher.token
-        )
-
-        Log.d(STEP_TAG,"Refresh the page. Click on ${quizPublished.quizList[0].title} quiz.")
-        quizListPage.refresh()
-        quizListPage.clickQuiz(quizPublished.quizList[0])
-
-        Log.d(STEP_TAG,"Assert that ${quizPublished.quizList[0].title} quiz is 'Not Submitted' and it is published.")
-        quizDetailsPage.assertNotSubmitted()
-        quizDetailsPage.assertQuizPublished()
+        quizDetailsPage.assertQuizUnpublished()
 
         val newQuizTitle = "This is a new quiz"
-        Log.d(STEP_TAG,"Open 'Edit' page and edit the ${quizPublished.quizList[0].title} quiz's title to: $newQuizTitle.")
+        Log.d(STEP_TAG,"Open 'Edit' page and edit the ${testQuizList.quizList[0].title} quiz's title to: $newQuizTitle.")
         quizDetailsPage.openEditPage()
         editQuizDetailsPage.editQuizTitle(newQuizTitle)
 
         Log.d(STEP_TAG,"Assert that the quiz name has been changed to: $newQuizTitle.")
         quizDetailsPage.assertQuizNameChanged(newQuizTitle)
 
-        Log.d(STEP_TAG,"Open 'Edit' page and switch off the 'Published' checkbox, so unpublish the $newQuizTitle quiz. Click on 'Save'.")
+        Log.d(STEP_TAG,"Open 'Edit' page and switch on the 'Published' checkbox, so publish the $newQuizTitle quiz. Click on 'Save'.")
         quizDetailsPage.openEditPage()
         editQuizDetailsPage.switchPublish()
         editQuizDetailsPage.saveQuiz()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that $newQuizTitle quiz has been unpublished.")
         quizDetailsPage.refresh()
-        quizDetailsPage.assertQuizUnpublished()
+        quizDetailsPage.assertQuizPublished()
+
+        Log.d(PREPARATION_TAG,"Submit the ${testQuizList.quizList[0].title} quiz.")
+        seedQuizSubmission(
+                courseId = course.id,
+                quizId = testQuizList.quizList[0].id,
+                studentToken = student.token
+        )
+
+        Log.d(STEP_TAG,"Refresh the page. Assert that it needs grading because of the previous submission.")
+        quizListPage.refresh()
+        quizDetailsPage.assertNeedsGrading()
     }
+
 }

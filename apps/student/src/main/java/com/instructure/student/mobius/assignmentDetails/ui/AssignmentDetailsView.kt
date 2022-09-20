@@ -37,13 +37,13 @@ import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
@@ -217,11 +217,14 @@ class AssignmentDetailsView(
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
-            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description, ::loadDescriptionHtml,{
-                val args = LtiLaunchFragment.makeLTIBundle(
-                        URLDecoder.decode(it, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
-            }, state.assignmentName)
+            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description,
+                { html, contentDescription -> loadDescriptionHtml(html, contentDescription, state.htmlUrl) }, {
+                    val args = LtiLaunchFragment.makeLTIBundle(
+                        URLDecoder.decode(it, "utf-8"), context.getString(R.string.utils_externalToolTitle), true
+                    )
+                    RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+                }, state.assignmentName
+            )
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
         if(state.visibilities.discussionTopicHeader) renderDiscussionTopicHeader(state.discussionHeaderViewState!!)
@@ -230,8 +233,8 @@ class AssignmentDetailsView(
         submissionAndRubricLabel.text = context.getText(submissionAndRubricText)
     }
 
-    private fun loadDescriptionHtml(html: String, contentDescrption: String?) {
-        descriptionWebView.loadHtml(html, contentDescrption)
+    private fun loadDescriptionHtml(html: String, contentDescription: String?, baseUrl: String?) {
+        descriptionWebView.loadHtml(html, contentDescription, baseUrl = baseUrl)
     }
 
     private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {

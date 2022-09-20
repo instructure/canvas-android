@@ -26,7 +26,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -48,8 +47,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.CourseManager
@@ -68,15 +65,17 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
-import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
+import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
+import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
 import com.instructure.student.events.*
@@ -105,7 +104,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 private const val BOTTOM_NAV_SCREEN = "bottomNavScreen"
 private const val BOTTOM_SCREENS_BUNDLE_KEY = "bottomScreens"
@@ -342,9 +340,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == UploadFilesDialog.CAMERA_PIC_REQUEST ||
-            requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
-            requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY ||
+        if (requestCode == CAMERA_PIC_REQUEST ||
+            requestCode == PICK_FILE_FROM_DEVICE ||
+            requestCode == PICK_IMAGE_GALLERY ||
             PickerSubmissionUploadEffectHandler.isPickerRequest(requestCode) ||
             AssignmentDetailsFragment.isFileRequest(requestCode) ||
             SubmissionDetailsEmptyContentFragment.isFileRequest(requestCode)
@@ -751,8 +749,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }
                         }
                         RouteContext.NOTIFICATION_PREFERENCES == route.routeContext -> {
-                            Analytics.trackAppFlow(this@NavigationActivity, NotificationPreferencesFragment::class.java)
-                            RouteMatcher.route(this@NavigationActivity, Route(NotificationPreferencesFragment::class.java, null))
+                            Analytics.trackAppFlow(this@NavigationActivity, PushNotificationPreferencesFragment::class.java)
+                            RouteMatcher.route(this@NavigationActivity, Route(PushNotificationPreferencesFragment::class.java, null))
                         }
                         else -> {
                             //fetch the CanvasContext

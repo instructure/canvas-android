@@ -958,7 +958,6 @@
     <string name="latePenalty">Cosb am fod yn hwyr (-%s)</string>
     <string name="finalGrade">Gradd Derfynol</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Agor yn webview</string>
@@ -1114,8 +1113,8 @@
     <string name="discussions_unknown_date">Dyddiad Anhysbys</string>
     <string name="a11y_gradeLetterMinusContentDescription">%s. minws</string>
     <string name="a11y_letterGrade">%s.</string>
-    <string name="a11y_gradeCellContentDescription">%s %s</string>
-    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <string name="a11y_gradeCellContentDescription">%1$s %2$s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%1$s %2$s, %3$s</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Munud</item>
@@ -1127,8 +1126,8 @@
     <string name="noConferencesMessage">Does dim cynadleddau i’w dangos eto</string>
     <string name="noConferenceDescription">Does dim disgrifiad ar gyfer y gynhadledd hon</string>
     <string name="conferenceListError">Gwall wrth lwytho’ch cynadleddau</string>
-    <string name="conferenceConcludedDateAtTime">Wedi dirwyn i ben %s am %s</string>
-    <string name="conferenceStartedDateAtTime">Wedi dechrau %s am %s</string>
+    <string name="conferenceConcludedDateAtTime">Wedi dirwyn i ben %1$s am %2$s</string>
+    <string name="conferenceStartedDateAtTime">Wedi dechrau %1$s am %2$s</string>
     <string name="notStarted">Heb ei ddechrau</string>
     <string name="inProgress">Ar y Gweill</string>
     <string name="join">Ymuno</string>
@@ -1139,7 +1138,7 @@
     <string name="conferenceInProgress">Cynhadledd ar waith</string>
 
     <string name="a11y_criterion_content_description">Sgoriau maen prawf %s</string>
-    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_description_content_description">%1$s, %2$s</string>
     <string name="a11y_criterion_button_click_description">rhagor o wybodaeth</string>
     <string name="a11y_create_file_folder_visible">Botymau Creu Ffeil a Creu Ffolder yn weladwy</string>
     <string name="a11y_create_file_folder_gone">Botymau Creu Ffeil a Creu Ffolder yn gudd</string>
@@ -1270,4 +1269,17 @@
     <string name="themeSelectorSave">Cadw</string>
     <string name="themeSelectorChangeLater">Gallwch chi ei newid yn nes ymlaen yng ngosodiadau’r ap</string>
     <string name="grabAnnotationTool">Gafael</string>
+    <string name="fileUpload">Llwytho Ffeil i Fyny</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s neges heb ei darllen</item>
+        <item quantity="other">%s neges heb ei darllen</item>
+    </plurals>
+    <string name="noAnnotationSelected">Dim anodiad wedi’i ddewis</string>
+    <string name="emailNotifications">Hysbysiadau E-bost</string>
+    <string name="emailNotificationsImmediately">Yn syth</string>
+    <string name="emailNotificationsDaily">Pob dydd</string>
+    <string name="emailNotificationsWeekly">Pob wythnos</string>
+    <string name="emailNotificationsNever">Byth</string>
+    <string name="selectFrequency">Dewis amlder</string>
 </resources>

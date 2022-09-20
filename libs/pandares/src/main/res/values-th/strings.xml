@@ -958,7 +958,6 @@
     <string name="latePenalty">โทษปรับล่าช้า (-%s)</string>
     <string name="finalGrade">เกรดสรุป</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">เปิดในมุมมองทางเว็บ</string>
@@ -1270,4 +1269,17 @@
     <string name="themeSelectorSave">บันทึก</string>
     <string name="themeSelectorChangeLater">คุณสามารถแก้ไขได้ในภายหลังจากค่าปรับตั้งแอพ</string>
     <string name="grabAnnotationTool">คว้าไว้</string>
+    <string name="fileUpload">การอัพโหลดไฟล์</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s ข้อความที่ไม่ได้อ่าน</item>
+        <item quantity="other">%s ข้อความที่ไม่ได้อ่าน</item>
+    </plurals>
+    <string name="noAnnotationSelected">ไม่ได้เลือกหมายเหตุกำกับใด ๆ</string>
+    <string name="emailNotifications">การแจ้งข้อมูลทางอีเมล</string>
+    <string name="emailNotificationsImmediately">ทันที</string>
+    <string name="emailNotificationsDaily">รายวัน</string>
+    <string name="emailNotificationsWeekly">รายสัปดาห์</string>
+    <string name="emailNotificationsNever">ไม่เลย</string>
+    <string name="selectFrequency">เลือกความถี่</string>
 </resources>

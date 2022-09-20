@@ -1,9 +1,12 @@
 package com.instructure.teacher.ui.pages
 
+import com.instructure.canvasapi2.models.User
+import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onViewWithText
 import com.instructure.teacher.R
 
 @Suppress("unused")
@@ -33,5 +36,17 @@ class LoginLandingPage : BasePage() {
 
     fun assertDisplaysAppDescriptionType() {
         appDescriptionTypeTextView.assertDisplayed()
+    }
+
+    fun assertDisplaysPreviousLogins() {
+        previousLoginTitleText.assertDisplayed()
+    }
+
+    fun loginWithPreviousUser(previousUser: CanvasUserApiModel) {
+        onViewWithText(previousUser.name).click()
+    }
+
+    fun loginWithPreviousUser(previousUser: User) {
+        onViewWithText(previousUser.name).click()
     }
 }

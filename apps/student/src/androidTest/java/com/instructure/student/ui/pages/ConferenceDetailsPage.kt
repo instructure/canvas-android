@@ -16,9 +16,23 @@
  */
 package com.instructure.student.ui.pages
 
-import com.instructure.espresso.page.BasePage
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.page.*
 import com.instructure.student.R
+import org.hamcrest.CoreMatchers.allOf
 
 open class ConferenceDetailsPage : BasePage(R.id.conferenceDetailsPage) {
-    // For future use
+
+    fun assertConferenceTitleDisplayed() {
+        onView(allOf(withId(R.id.title), hasSibling(withId(R.id.statusDetails)))).assertDisplayed()
+    }
+
+    fun assertConferenceStatus(expectedStatus: String) {
+        onView(allOf(withId(R.id.status), withText(expectedStatus), withParent(R.id.statusDetails))).assertDisplayed()
+    }
+
+    fun assertDescription(expectedDescription: String) {
+        onView(allOf(withId(R.id.description) + withText(expectedDescription), hasSibling(withId(R.id.statusDetails)))).assertDisplayed()
+    }
 }

@@ -22,7 +22,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.RatingDialog
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
@@ -48,7 +49,8 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         profileButton.onClick { RouteMatcher.route(requireContext(), Route(ProfileFragment::class.java, null)) }
         rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), com.instructure.pandautils.utils.AppType.TEACHER) }
         legalButton.onClick { LegalDialog().show(requireFragmentManager(), LegalDialog.TAG) }
-        notificationPreferenesButton.onClick { RouteMatcher.route(requireContext(), Route(NotificationPreferencesFragment::class.java, null)) }
+        notificationPreferenesButton.onClick { RouteMatcher.route(requireContext(), Route(PushNotificationPreferencesFragment::class.java, null)) }
+        emailNotifications.onClick { RouteMatcher.route(requireContext(), Route(EmailNotificationPreferencesFragment::class.java, null)) }
         if (BuildConfig.DEBUG) {
             featureFlagButton.setVisible()
             featureFlagButton.onClick { RouteMatcher.route(requireContext(), Route(FeatureFlagsFragment::class.java, null)) }
