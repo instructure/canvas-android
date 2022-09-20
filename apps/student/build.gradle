@@ -54,8 +54,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 242
-        versionName = '6.19.0'
+        versionCode = 243
+        versionName = '6.20.0'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -271,12 +271,11 @@ dependencies {
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
     /* Firebase */
-    implementation platform(Libs.FIREBASE_BOM)
+    implementation platform(Libs.FIREBASE_BOM) {
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
+    }
     implementation Libs.FIREBASE_MESSAGING
     implementation Libs.FIREBASE_CRASHLYTICS_NDK
-    implementation (Libs.FIREBASE_ANALYTICS) {
-        transitive = true
-    }
     implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
@@ -308,7 +307,6 @@ dependencies {
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
-    implementation Libs.PLAY_SERVICES_ANALYTICS
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_CORE
 
@@ -332,6 +330,10 @@ dependencies {
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
 
     androidTestImplementation Libs.UI_AUTOMATOR
+
+    /* WorkManager */
+    implementation Libs.ANDROIDX_WORK_MANAGER
+    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 }
 
 // Comment out this line if the reporting logic starts going wonky.

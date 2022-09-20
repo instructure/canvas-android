@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.e2e
 
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -32,9 +33,7 @@ import org.junit.Test
 class DiscussionsE2ETest : TeacherTest() {
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We dont want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -59,35 +58,73 @@ class DiscussionsE2ETest : TeacherTest() {
         courseBrowserPage.openDiscussionsTab()
         discussionsListPage.assertHasDiscussion(discussion)
 
-        Log.d(STEP_TAG,"Click on ${discussion.title} discussion and navigate to Discussions Details Page by clicking on 'Edit'.")
+        Log.d(STEP_TAG,"Click on '${discussion.title}' discussion and navigate to Discussions Details Page by clicking on 'Edit'.")
         discussionsListPage.clickDiscussion(discussion)
         discussionsDetailsPage.openEdit()
 
         val newTitle = "New Discussion"
-        Log.d(STEP_TAG,"Edit the discussions's title to: $newTitle. Click on 'Save'.")
+        Log.d(STEP_TAG,"Edit the discussion's title to: '$newTitle'. Click on 'Save'.")
         editDiscussionsDetailsPage.editTitle(newTitle)
         editDiscussionsDetailsPage.clickSave()
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that the discussion's name has been changed to $newTitle and it is published.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that the discussion's name has been changed to '$newTitle' and it is published.")
         discussionsDetailsPage.refresh()
         discussionsDetailsPage.assertDiscussionTitle(newTitle)
         discussionsDetailsPage.assertDiscussionPublished()
 
-        Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Unpublish the $newTitle discussion and click on 'Save'.")
+        Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Unpublish the '$newTitle' discussion and click on 'Save'.")
         discussionsDetailsPage.openEdit()
-        editDiscussionsDetailsPage.switchPublished()
+        editDiscussionsDetailsPage.togglePublished()
         editDiscussionsDetailsPage.clickSave()
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that the $newTitle discussion has been unpublished.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that the '$newTitle' discussion has been unpublished.")
         discussionsDetailsPage.refresh()
         discussionsDetailsPage.assertDiscussionUnpublished()
 
-        Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the $newTitle discussion.")
+        Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '$newTitle' discussion.")
         discussionsDetailsPage.openEdit()
         editDiscussionsDetailsPage.deleteDiscussion()
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that there is no discussion, so the $newTitle discussion has been deleted successfully.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that there is no discussion, so the '$newTitle' discussion has been deleted successfully.")
         discussionsListPage.refresh()
         discussionsListPage.assertNoDiscussion()
+
+        Log.d(STEP_TAG,"Click on '+' icon on the UI to create a new discussion.")
+        discussionsListPage.createNewDiscussion()
+
+        val newDiscussionTitle = "Test Discussion Mobile UI"
+        Log.d(STEP_TAG,"Set '$newDiscussionTitle' as the discussion's title and set some description as well.")
+        editDiscussionsDetailsPage.editTitle(newDiscussionTitle)
+        editDiscussionsDetailsPage.editDescription("Mobile UI Discussion description")
+
+        Log.d(STEP_TAG,"Toggle Publish checkbox and save the page.")
+        editDiscussionsDetailsPage.togglePublished()
+        editDiscussionsDetailsPage.clickSendNewDiscussion()
+
+        Log.d(STEP_TAG,"Assert that '$newDiscussionTitle' discussion is displayed and published.")
+        discussionsListPage.assertHasDiscussion(newDiscussionTitle)
+        discussionsListPage.clickDiscussion(newDiscussionTitle)
+        discussionsDetailsPage.assertDiscussionPublished()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")
+        discussionsListPage.openSearch()
+        discussionsListPage.enterSearchQuery("Test Discussion")
+
+        Log.d(STEP_TAG,"Assert that the '$newDiscussionTitle' discussion is displayed and it is the only one.")
+        discussionsListPage.assertDiscussionCount(2) // header + single search result
+        discussionsListPage.assertHasDiscussion(newDiscussionTitle)
+        Espresso.pressBack() // need to press back to exit from the search input field
+
+        Log.d(STEP_TAG,"Collapse the discussion list and assert that the '$newDiscussionTitle' discussion can NOT be seen.")
+        discussionsListPage.toggleCollapseExpandIcon()
+        discussionsListPage.assertDiscussionCount(1) // header only
+        discussionsListPage.assertDiscussionDoesNotExist(newDiscussionTitle)
+
+        Log.d(STEP_TAG,"Expand the discussion list and assert that the '$newDiscussionTitle' discussion can be seen.")
+        discussionsListPage.toggleCollapseExpandIcon()
+        discussionsListPage.assertDiscussionCount(2) // header only + single search result
+        discussionsListPage.assertHasDiscussion(newDiscussionTitle)
+
     }
 }

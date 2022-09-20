@@ -544,7 +544,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region Loading
     private fun loadHTMLTopic(html: String, contentDescription: String?) {
         setupHeaderWebView()
-        discussionTopicHeaderWebView.loadHtml(html, contentDescription)
+        discussionTopicHeaderWebView.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
     }
 
     private fun loadHTMLReplies(html: String, contentDescription: String? = null) {

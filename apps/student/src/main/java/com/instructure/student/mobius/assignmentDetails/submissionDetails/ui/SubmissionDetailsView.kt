@@ -76,6 +76,7 @@ class SubmissionDetailsView(
             if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                 slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
             }
+            drawerViewPager.hideKeyboard()
             logTabSelected(tab?.position)
         }
     }

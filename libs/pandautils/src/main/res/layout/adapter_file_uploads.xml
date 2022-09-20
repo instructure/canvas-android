@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,84 +14,99 @@
   ~     limitations under the License.
   ~
   -->
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:foreground="?attr/selectableItemBackground">
 
-    <RelativeLayout
+<layout>
+
+    <data>
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:layout_margin="8dp"
+        android:foreground="?attr/selectableItemBackground">
 
-        <FrameLayout
-            android:id="@+id/iconWrapper"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_centerVertical="true">
-
-            <ImageView
-                android:id="@+id/fileIcon"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/utils_contentDescriptionFiles"
-                android:padding="4dp"
-                android:tint="@color/textDarkest"
-                app:srcCompat="@drawable/ic_attachment" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="4dp"
-                android:visibility="gone"
-                tools:visibility="visible"/>
-
-        </FrameLayout>
-
-        <LinearLayout
-            android:id="@+id/content"
+        <RelativeLayout
+            android:id="@+id/fileItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="4dp"
-            android:layout_toEndOf="@id/iconWrapper"
-            android:layout_toStartOf="@+id/removeFile"
-            android:orientation="vertical">
+            android:padding="8dp">
 
-            <TextView
-                android:id="@+id/fileName"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/iconWrapper"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_centerVertical="true">
+
+                <ImageView
+                    android:id="@+id/fileIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/utils_contentDescriptionFiles"
+                    android:padding="4dp"
+                    android:tint="@color/textDarkest"
+                    app:srcCompat="@drawable/ic_attachment" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textColor="@color/textDarkest"
-                android:textSize="16sp"
-                tools:text="attachment_name_which_is_really_long.docx" />
+                android:layout_centerVertical="true"
+                android:layout_marginStart="4dp"
+                android:layout_toStartOf="@+id/removeFile"
+                android:layout_toEndOf="@id/iconWrapper"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/fileSize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textColor="@color/textDark"
-                android:textSize="14sp"
-                tools:text="123.4 KB" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/fileName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="@{itemViewModel.data.fileName}"
+                    android:textColor="@color/textDarkest"
+                    android:textSize="16sp"
+                    tools:text="attachment_name_which_is_really_long.docx" />
 
-        <ImageView
-            android:id="@+id/removeFile"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/utils_removeAttachment"
-            android:padding="10dp"
-            app:srcCompat="@drawable/ic_close"
-            android:tint="@color/textDarkest" />
+                <TextView
+                    android:id="@+id/fileSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="@{itemViewModel.data.fileSize}"
+                    android:textColor="@color/textDark"
+                    android:textSize="14sp"
+                    tools:text="123.4 KB" />
+            </LinearLayout>
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/removeFile"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/utils_removeAttachment"
+                android:onClick="@{() -> itemViewModel.onRemoveClick.invoke(itemViewModel.data.fullPath)}"
+                android:padding="10dp"
+                android:tint="@color/textDarkest"
+                app:srcCompat="@drawable/ic_close" />
 
-</androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

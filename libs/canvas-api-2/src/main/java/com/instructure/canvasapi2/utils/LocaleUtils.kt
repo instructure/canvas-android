@@ -69,7 +69,7 @@ object LocaleUtils {
         Handler().postDelayed({
             val intent = Intent(context, startingClass)
             intent.putExtra(LANGUAGES_PENDING_INTENT_KEY, LANGUAGES_PENDING_INTENT_ID)
-            val mPendingIntent = PendingIntent.getActivity(context, LANGUAGES_PENDING_INTENT_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            val mPendingIntent = PendingIntent.getActivity(context, LANGUAGES_PENDING_INTENT_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
             exitProcess(0)

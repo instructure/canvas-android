@@ -68,6 +68,8 @@ abstract class StudentTest : CanvasTest() {
     val calendarEventPage = CalendarEventPage()
     val canvasWebViewPage = CanvasWebViewPage()
     val courseBrowserPage = CourseBrowserPage()
+    val conferenceListPage = ConferenceListPage()
+    val conferenceDetailsPage = ConferenceDetailsPage()
     val elementaryCoursePage = ElementaryCoursePage()
     val courseGradesPage = CourseGradesPage()
     val dashboardPage = DashboardPage()
@@ -110,6 +112,8 @@ abstract class StudentTest : CanvasTest() {
     val gradesPage = GradesPage()
     val resourcesPage = ResourcesPage()
     val importantDatesPage = ImportantDatesPage()
+    val shareExtensionTargetPage = ShareExtensionTargetPage()
+    val shareExtensionStatusPage = ShareExtensionStatusPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

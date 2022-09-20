@@ -19,7 +19,6 @@
 package com.instructure.student.test.assignment.details.submissionDetails.commentTab
 
 import android.app.Activity
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
@@ -51,14 +50,12 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
 
     private val mockView: SubmissionCommentsView = mockk(relaxed = true)
     private val context: Activity = mockk(relaxed = true)
-    private val firebase: FirebaseAnalytics = mockk(relaxed = true)
     private val effectHandler = SubmissionCommentsEffectHandler(context).apply { view = mockView }
     private val eventConsumer: Consumer<SubmissionCommentsEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
 
     @Before
     fun setup() {
-        Analytics.firebase = firebase
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
     }
 
@@ -100,11 +97,6 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             )
         }
 
-        verify {
-            firebase.logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_MEDIA_REPLY, null)
-        }
-
-        confirmVerified(firebase)
         confirmVerified(SubmissionService)
     }
 
@@ -232,11 +224,6 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             )
         }
 
-        verify {
-            firebase.logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_TEXT_REPLY, null)
-        }
-
-        confirmVerified(firebase)
         confirmVerified(SubmissionService)
     }
 

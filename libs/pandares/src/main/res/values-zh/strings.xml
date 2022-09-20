@@ -949,7 +949,6 @@
     <string name="latePenalty">迟交罚分 (-%s)</string>
     <string name="finalGrade">最终评分</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">在网页视图中打开</string>
@@ -1256,4 +1255,16 @@
     <string name="themeSelectorSave">保存</string>
     <string name="themeSelectorChangeLater">您可以后在应用设置中更改</string>
     <string name="grabAnnotationTool">抓取图像</string>
+    <string name="fileUpload">文件上传</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="other">%s条未读消息</item>
+    </plurals>
+    <string name="noAnnotationSelected">未选择任何批注</string>
+    <string name="emailNotifications">电子邮件通知</string>
+    <string name="emailNotificationsImmediately">立即</string>
+    <string name="emailNotificationsDaily">每天</string>
+    <string name="emailNotificationsWeekly">每周</string>
+    <string name="emailNotificationsNever">从不</string>
+    <string name="selectFrequency">选择频率</string>
 </resources>

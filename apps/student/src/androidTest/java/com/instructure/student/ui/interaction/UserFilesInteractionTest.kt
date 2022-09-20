@@ -20,6 +20,7 @@ import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
+import androidx.core.content.FileProvider
 import androidx.test.espresso.intent.ActivityResultFunction
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
@@ -34,6 +35,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -70,7 +72,11 @@ class UserFilesInteractionTest : StudentTest() {
         val resultData = Intent()
         val dir = activity.externalCacheDir
         val file = File(dir?.path, "sample.jpg")
-        val uri = Uri.fromFile(file)
+        val uri = FileProvider.getUriForFile(
+            activityRule.activity,
+            "com.instructure.candroid" + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
         resultData.data = uri
         activityResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
     }
@@ -96,8 +102,7 @@ class UserFilesInteractionTest : StudentTest() {
             intending(
                     allOf(
                             hasAction(Intent.ACTION_GET_CONTENT),
-                            hasType("*/*"),
-                            hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            hasType("*/*")
                     )
             ).respondWith(activityResult)
             fileUploadPage.chooseDevice()
@@ -167,8 +172,8 @@ class UserFilesInteractionTest : StudentTest() {
             // Set up the "from gallery" mock result, then press "from gallery"
             intending(
                     allOf(
-                            hasAction(Intent.ACTION_PICK),
-                            hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        hasAction(Intent.ACTION_GET_CONTENT),
+                        hasType("image/*")
                     )
             ).respondWith(activityResult)
             fileUploadPage.chooseGallery()

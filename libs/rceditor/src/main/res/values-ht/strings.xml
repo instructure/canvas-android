@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Woule ou tout enstriman modifikasyon yo</string>
     <string name="rce_emptyUrlError">URL la pa dwe vid</string>
     <string name="rce_httpNotAllowed">Sèlman URL ki https ki akseptab</string>
+    <string name="rce_dialogAltText">Ajoute tèks alt pou lektè ekran yo</string>
 </resources>

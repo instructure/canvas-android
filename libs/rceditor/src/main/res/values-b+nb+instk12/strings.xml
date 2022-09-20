@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="rce_contentDescription_undo">Angre</string>
     <string name="rce_contentDescription_redo">Gjør om</string>
     <string name="rce_contentDescription_bold">Formater fet</string>
@@ -69,4 +70,5 @@
 
     <string name="rce_emptyUrlError">URL kan ikke være tom</string>
     <string name="rce_httpNotAllowed">Kun URL-er som begynner med https vil godtas</string>
+    <string name="rce_dialogAltText">Legg til alternativ tekst for skjermlesere</string>
 </resources>

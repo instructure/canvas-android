@@ -20,13 +20,22 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
@@ -57,6 +66,7 @@ import kotlinx.android.synthetic.main.speed_grader_comment_input_view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
+import java.util.*
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_COMMENTS)
 @AndroidEntryPoint
@@ -165,7 +175,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
                     }, when (presenter.assignee) {
                 is GroupAssignee -> true
                 else -> false
-            })
+            }, ::showFileUploadDialog)
 
             addMediaAttachment.isEnabled = false
         }
@@ -203,6 +213,61 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             uploadSGMediaComment(event.file, event.assignmentId, event.courseId)
             addMediaAttachment.isEnabled = true
         }
+    }
+
+    private fun showFileUploadDialog() {
+        val bundle = FileUploadDialogFragment.createTeacherSubmissionCommentBundle(
+            presenter.courseId,
+            presenter.assignmentId,
+            presenter.assignee.id
+        )
+
+        FileUploadDialogFragment.newInstance(
+            bundle,
+            selectedUriStringsCallback = ::fileUploadPikerCallback,
+            workerLiveDataCallback = ::fileUploadLiveDataCallback
+        ).show(
+            childFragmentManager, FileUploadDialogFragment.TAG
+        )
+    }
+
+    private fun fileUploadPikerCallback(filePaths: List<String>) {
+        presenter.selectedFilePaths = filePaths
+    }
+
+    private fun fileUploadLiveDataCallback(uuid: UUID? = null, workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(this) {
+            presenter.onFileUploadWorkInfoChanged(it)
+        }
+    }
+
+    override fun subscribePendingWorkers(workerIds: List<UUID>) {
+        workerIds.forEach {
+            fileUploadLiveDataCallback(null, WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(it))
+        }
+    }
+
+    override fun restartWorker(fileUploadWorkerData: FileUploadWorkerData) {
+        val data = FileUploadBundleCreator().getTeacherSubmissionCommentBundle(
+            fileUploadWorkerData.filePaths.map { it.toUri() },
+            fileUploadWorkerData.courseId,
+            fileUploadWorkerData.assignmentId,
+            fileUploadWorkerData.userId
+        ).build()
+
+        val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
+            .setInputData(data)
+            .build()
+
+        WorkManager.getInstance(requireContext()).apply {
+            fileUploadLiveDataCallback(null, getWorkInfoByIdLiveData(worker.id))
+            enqueue(worker)
+        }
+    }
+
+    override fun onDestroy() {
+        presenter.removeFailedFileUploads()
+        super.onDestroy()
     }
 
     @Suppress("UNUSED_PARAMETER", "unused")

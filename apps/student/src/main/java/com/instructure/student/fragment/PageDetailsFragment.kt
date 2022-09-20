@@ -218,8 +218,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         checkCanEdit()
     }
 
-    private fun loadPageHtml(html: String, contentDescrption: String?) {
-        canvasWebView.loadHtml(html, contentDescrption)
+    private fun loadPageHtml(html: String, contentDescription: String?) {
+        canvasWebView.loadHtml(html, contentDescription, baseUrl = page.htmlUrl)
     }
 
     /**

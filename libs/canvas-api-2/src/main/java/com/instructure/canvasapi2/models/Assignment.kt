@@ -123,7 +123,13 @@ data class Assignment(
      * an empty submission with a null value for "submittedAt". For very old assignments, canvas might not
      * return a submission at all.
      */
-    val isSubmitted: Boolean get() = submission?.submittedAt != null
+    val isSubmitted: Boolean get() {
+        return if (turnInType == TurnInType.NONE || turnInType == TurnInType.ON_PAPER) {
+            !(submission?.missing ?: false)
+        } else {
+            submission?.submittedAt != null
+        }
+    }
 
     val isAllowedToSubmit: Boolean
         get() {

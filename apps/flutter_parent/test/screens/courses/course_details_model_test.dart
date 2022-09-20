@@ -150,8 +150,7 @@ void main() {
       // Initial setup
       final termEnrollment = Enrollment((b) => b
         ..id = '10'
-        ..enrollmentState = 'active'
-        ..userId = _studentId);
+        ..enrollmentState = 'active');
       final gradingPeriods = [
         GradingPeriod((b) => b
           ..id = '123'

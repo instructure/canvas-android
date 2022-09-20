@@ -219,4 +219,6 @@ object AssignmentManager {
         AssignmentAPI.getFirstPageAssignments(courseId, forceNetwork, adapter, depaginatedCallback)
     }
 
+    fun getAllAssignmentsAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<List<Assignment>> { getAllAssignments(courseId, forceNetwork, it) }
+
 }

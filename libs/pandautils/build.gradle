@@ -96,6 +96,8 @@ dependencies {
 
     implementation Libs.CAMERA_VIEW
 
+    implementation Libs.LOTTIE
+
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
     implementation Libs.ANDROIDX_BROWSER
@@ -106,6 +108,8 @@ dependencies {
     testImplementation Libs.KOTLIN_COROUTINES_TEST
     testImplementation Libs.ANDROIDX_CORE_TESTING
     testImplementation Libs.THREETEN_BP
+
+    testImplementation project(path: ':pandautils')
 
     /* Media handling */
     api(Libs.GLIDE) {
@@ -127,11 +131,10 @@ dependencies {
         exclude group: "androidx.exifinterface"
     }
 
-    implementation platform(Libs.FIREBASE_BOM)
-    implementation Libs.FIREBASE_MESSAGING
-    implementation (Libs.FIREBASE_ANALYTICS) {
-        transitive = true
+    implementation platform(Libs.FIREBASE_BOM) {
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
     }
+    implementation Libs.FIREBASE_MESSAGING
     implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
