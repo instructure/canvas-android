@@ -39,8 +39,7 @@ import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class SyllabusPresenterTest : Assert() {
@@ -79,6 +78,14 @@ class SyllabusPresenterTest : Assert() {
             assignment = Assignment(id = 125L, submissionTypesRaw = listOf("discussion_topic")),
             startAt = null,
             itemType = ScheduleItem.Type.TYPE_ASSIGNMENT
+        ),
+        ScheduleItem(
+            itemId = "4",
+            title = "discussion",
+            assignment = Assignment(id = 126L, submissionTypesRaw = listOf("discussion_topic")),
+            startAt = null,
+            itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+            isHidden = true
         )
     )
     private lateinit var baseEventsViewState: List<ScheduleItemViewState>
