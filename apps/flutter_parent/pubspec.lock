@@ -425,7 +425,7 @@ packages:
       name: flutter_downloader
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.1"
+    version: "1.7.4"
   flutter_driver:
     dependency: "direct dev"
     description: flutter
