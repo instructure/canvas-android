@@ -61,13 +61,13 @@ object ProfileUtils {
         imageView: ImageView,
         name: String?,
         url: String?,
-        @Dimension borderWidth: Int = imageView.context.resources.getDimension(R.dimen.avatar_border_width_thin).toInt()
+        @Dimension altAvatarBorderWidth: Int = imageView.context.resources.getDimension(R.dimen.avatar_border_width_thin).toInt()
     ) {
         if (shouldLoadAltAvatarImage(url)) {
-            imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), borderWidth))
+            imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), altAvatarBorderWidth))
         } else {
             imageView.loadCircularImage(url, R.drawable.recipient_avatar_placeholder) {
-                imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), borderWidth))
+                imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), altAvatarBorderWidth))
             }
         }
     }
