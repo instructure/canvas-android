@@ -16,17 +16,14 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.swipeUp
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.checkRepeat
-import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.student.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.containsString
@@ -44,12 +41,8 @@ object CollaborationsPage {
     }
 
     fun assertStartANewCollaborationPresent() {
-
-        // Debug maneuver to help see what was being displayed
-        //onView(withId(R.id.canvasWebView)).perform(swipeUp())
-
         Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
-                .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "h2")) // lucky there is only one of these!
+                .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "h2"))
                 .perform(DriverAtoms.webScrollIntoView())
                 .checkRepeat(webMatches(getText(), containsString("Start a New Collaboration") ), 30)
     }
