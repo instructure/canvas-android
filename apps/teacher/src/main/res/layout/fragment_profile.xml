@@ -74,9 +74,9 @@
                 android:layout_below="@+id/profileBanner"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-84dp"
-                android:background="@drawable/avatar_background_border_6"
+                android:background="@drawable/avatar_circular_border_thick"
                 android:backgroundTint="@color/textDark"
-                android:padding="@dimen/avatar_border_width_6" />
+                android:padding="@dimen/avatar_border_width_thick" />
 
             <TextView
                 android:id="@+id/usersName"

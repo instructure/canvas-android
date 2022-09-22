@@ -16,6 +16,7 @@
  */
 package com.instructure.student.holders
 
+import android.content.res.ColorStateList
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.User
@@ -38,7 +39,7 @@ class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         isLastItem: Boolean
     ) = with(itemView) {
         ProfileUtils.loadAvatarForUser(icon, item.name, item.avatarUrl)
-        icon.setBackgroundColor(courseColor)
+        icon.backgroundTintList = ColorStateList.valueOf(courseColor)
 
         itemView.setOnClickListener { adapterToFragmentCallback.onRowClicked(item, adapterPosition, true) }
 

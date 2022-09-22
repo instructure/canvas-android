@@ -60,10 +60,7 @@ object ProfileUtils {
         if (shouldLoadAltAvatarImage(url)) {
             imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty()))
         } else {
-            imageView.loadCircularImage(
-                url,
-                R.drawable.recipient_avatar_placeholder
-            ) {
+            imageView.loadCircularImage(url, R.drawable.recipient_avatar_placeholder) {
                 imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty()))
             }
         }
@@ -79,7 +76,7 @@ object ProfileUtils {
             .toUpperCase()
             .useFont(Typeface.DEFAULT_BOLD)
             .textColor(color)
-            .withBorder(context.DP(0.5f).toInt())
+            .withBorder(context.resources.getDimension(R.dimen.avatar_border_width_thin).toInt())
             .withBorderColor(color)
             .endConfig()
             .buildRound(initials, Color.WHITE)
