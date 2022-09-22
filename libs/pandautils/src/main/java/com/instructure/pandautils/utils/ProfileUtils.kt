@@ -26,6 +26,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.Dimension
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
@@ -56,17 +57,22 @@ object ProfileUtils {
         }
     }
 
-    fun loadAvatarForUser(imageView: ImageView, name: String?, url: String?) {
+    fun loadAvatarForUser(
+        imageView: ImageView,
+        name: String?,
+        url: String?,
+        @Dimension borderWidth: Int = imageView.context.resources.getDimension(R.dimen.avatar_border_width_thin).toInt()
+    ) {
         if (shouldLoadAltAvatarImage(url)) {
-            imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty()))
+            imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), borderWidth))
         } else {
             imageView.loadCircularImage(url, R.drawable.recipient_avatar_placeholder) {
-                imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty()))
+                imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), borderWidth))
             }
         }
     }
 
-    private fun createAvatarDrawable(context: Context, userName: String): Drawable {
+    private fun createAvatarDrawable(context: Context, userName: String, @Dimension borderWidth: Int): Drawable {
         val initials = getUserInitials(userName)
         val color = ContextCompat.getColor(context, R.color.textDark)
         return TextDrawable.builder()
@@ -76,7 +82,7 @@ object ProfileUtils {
             .toUpperCase()
             .useFont(Typeface.DEFAULT_BOLD)
             .textColor(color)
-            .withBorder(context.resources.getDimension(R.dimen.avatar_border_width_thin).toInt())
+            .withBorder(borderWidth)
             .withBorderColor(color)
             .endConfig()
             .buildRound(initials, Color.WHITE)

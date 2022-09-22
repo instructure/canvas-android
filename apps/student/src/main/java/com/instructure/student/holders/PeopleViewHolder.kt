@@ -38,7 +38,7 @@ class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         isFirstItem: Boolean,
         isLastItem: Boolean
     ) = with(itemView) {
-        ProfileUtils.loadAvatarForUser(icon, item.name, item.avatarUrl)
+        ProfileUtils.loadAvatarForUser(icon, item.name, item.avatarUrl, 0)
         icon.backgroundTintList = ColorStateList.valueOf(courseColor)
 
         itemView.setOnClickListener { adapterToFragmentCallback.onRowClicked(item, adapterPosition, true) }

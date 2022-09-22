@@ -62,7 +62,7 @@ class PreviousUsersAdapter(
 
 class PreviousUserHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(user: SignedInUser, onUserClick: () -> Unit, onUserRemove: () -> Unit) = with(itemView) {
-        ProfileUtils.loadAvatarForUser(usersAvatar, user.user.name, user.user.avatarUrl)
+        ProfileUtils.loadAvatarForUser(usersAvatar, user.user.name, user.user.avatarUrl, 0)
         userName.text = span(user.user.name, user.user.pronouns)
         schoolDomain.text = user.domain
         setOnClickListener { onUserClick() }

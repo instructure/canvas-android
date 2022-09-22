@@ -65,7 +65,7 @@ class ProfileFragment : BaseFragment() {
 
     private fun setupViewableData() {
         val user = ApiPrefs.user
-        ProfileUtils.loadAvatarForUser(usersAvatar, user?.shortName, user?.avatarUrl)
+        ProfileUtils.loadAvatarForUser(usersAvatar, user?.shortName, user?.avatarUrl, 0)
         usersName.text = Pronouns.span(user?.shortName, user?.pronouns)
         usersEmail.text = user?.primaryEmail
         usersBio.text = user?.bio
