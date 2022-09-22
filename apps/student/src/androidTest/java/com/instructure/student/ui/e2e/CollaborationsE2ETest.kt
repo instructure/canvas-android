@@ -2,6 +2,7 @@ package com.instructure.student.ui.e2e
 
 import android.util.Log
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.KnownBug
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -27,6 +28,7 @@ class CollaborationsE2ETest: StudentTest() {
 
     @E2E
     @Test
+    @KnownBug("https://instructure.atlassian.net/browse/VICE-3157")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COLLABORATIONS, TestCategory.E2E)
     fun testCollaborationsE2E() {
 
@@ -49,7 +51,7 @@ class CollaborationsE2ETest: StudentTest() {
         //On some screen size, this spinner does not displayed at all, instead of it,
         //there is a button on the top-right corner with the 'Start a new Collaboration' text
         //and clicking on it will 'expand' and display this spinner.
-        //However, there is a bug (https://instructure.atlassian.net/browse/VICE-3157) which is about the button not displayed on some screen size
+        //However, there is a bug (see link in this @KnownBug annotation) which is about the button not displayed on some screen size
         //So this test will breaks until it this ticket will be fixed.
         CollaborationsPage.assertStartANewCollaborationPresent()
         CollaborationsPage.assertGoogleDocsChoicePresent()
