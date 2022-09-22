@@ -110,7 +110,7 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
     }
 
     private fun setItemAvatar(itemName: String, imageView: ImageView) {
-        ProfileUtils.loadAvatarForUser(imageView, itemName, null, 1f, R.color.textDark)
+        ProfileUtils.loadAvatarForUser(imageView, itemName, null)
     }
 }
 

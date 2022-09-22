@@ -59,8 +59,9 @@
                 android:layout_below="@+id/profileBanner"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-84dp"
-                android:background="@drawable/ic_circle"
-                android:backgroundTint="@color/backgroundLightest" />
+                android:background="@drawable/avatar_background_border_6"
+                android:backgroundTint="@color/textDark"
+                android:padding="@dimen/avatar_border_width_6" />
 
             <FrameLayout
                 android:id="@+id/profileCameraIconWrapper"

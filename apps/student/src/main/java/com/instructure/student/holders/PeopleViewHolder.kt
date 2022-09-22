@@ -25,8 +25,8 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import com.instructure.student.util.BinderUtils
 import com.instructure.student.interfaces.AdapterToFragmentCallback
+import com.instructure.student.util.BinderUtils
 import kotlinx.android.synthetic.main.viewholder_people.view.*
 
 class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,7 +37,8 @@ class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         isFirstItem: Boolean,
         isLastItem: Boolean
     ) = with(itemView) {
-        ProfileUtils.loadAvatarForUser(icon, item.name, item.avatarUrl, 1f, courseColor)
+        ProfileUtils.loadAvatarForUser(icon, item.name, item.avatarUrl)
+        icon.setBackgroundColor(courseColor)
 
         itemView.setOnClickListener { adapterToFragmentCallback.onRowClicked(item, adapterPosition, true) }
 

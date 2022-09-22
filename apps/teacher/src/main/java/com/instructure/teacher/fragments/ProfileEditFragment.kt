@@ -83,7 +83,7 @@ class ProfileEditFragment : BasePresenterFragment<
 
         val user = user
 
-        ProfileUtils.loadAvatarForUser(usersAvatar, user?.shortName, user?.avatarUrl, 6f, R.color.textDark)
+        ProfileUtils.loadAvatarForUser(usersAvatar, user?.shortName, user?.avatarUrl)
 
         usersName.setText(user?.shortName)
         usersName.hint = user?.shortName
@@ -135,7 +135,7 @@ class ProfileEditFragment : BasePresenterFragment<
     }
 
     private fun updateAvatarImage(url: String?) {
-        ProfileUtils.loadAvatarForUser(usersAvatar, user?.shortName, url, 6f, R.color.textDark)
+        ProfileUtils.loadAvatarForUser(usersAvatar, user?.shortName, url)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

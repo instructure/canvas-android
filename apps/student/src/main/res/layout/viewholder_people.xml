@@ -30,7 +30,8 @@
             style="@style/AdapterItemIcon"
             android:layout_width="@dimen/avatar_size"
             android:layout_height="@dimen/avatar_size"
-            android:padding="4dp"
+            android:padding="@dimen/avatar_border_width_1"
+            android:background="@drawable/avatar_background_border_1"
             android:importantForAccessibility="no"/>
 
         <LinearLayout

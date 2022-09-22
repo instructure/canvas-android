@@ -56,15 +56,13 @@ object ProfileUtils {
         }
     }
 
-    fun loadAvatarForUser(imageView: ImageView, name: String?, url: String?, borderSize: Float = 0f, borderColor: Int = Color.TRANSPARENT) {
+    fun loadAvatarForUser(imageView: ImageView, name: String?, url: String?) {
         if (shouldLoadAltAvatarImage(url)) {
             imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty()))
         } else {
             imageView.loadCircularImage(
                 url,
-                R.drawable.recipient_avatar_placeholder_circular_bg,
-                borderSize,
-                borderColor
+                R.drawable.recipient_avatar_placeholder
             ) {
                 imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty()))
             }

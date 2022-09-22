@@ -31,7 +31,10 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:background="@drawable/avatar_background_border_1"
+        android:backgroundTint="@color/backgroundMedium"
+        android:padding="@dimen/avatar_border_width_1" />
 
     <LinearLayout
         android:layout_width="match_parent"

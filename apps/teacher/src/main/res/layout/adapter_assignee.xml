@@ -31,15 +31,17 @@
             android:id="@+id/assigneeAvatarImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            tools:src="@color/backgroundDarkest"/>
+            android:background="@drawable/avatar_background_border_1"
+            android:backgroundTint="@color/textDark"
+            android:padding="@dimen/avatar_border_width_1" />
 
         <ImageView
             android:id="@+id/checkMarkImageView"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_gravity="center"
-            android:tint="@color/white"
-            app:srcCompat="@drawable/ic_checkmark"/>
+            app:srcCompat="@drawable/ic_checkmark"
+            app:tint="@color/white" />
 
     </FrameLayout>
 

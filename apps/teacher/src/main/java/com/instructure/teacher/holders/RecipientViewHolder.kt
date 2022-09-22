@@ -16,9 +16,10 @@
 package com.instructure.teacher.holders
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.Pronouns
@@ -39,7 +40,9 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
                 setBackgroundColor(selectionColor and SELECTION_TRANSPARENCY_MASK)
-                avatar.setBackgroundColor(selectionColor)
+                avatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_circle)?.apply {
+                    mutate().setTintList(ColorStateList.valueOf(selectionColor))
+                })
                 checkMarkImageView.setVisible()
                 ColorUtils.colorIt(Color.WHITE, checkMarkImageView)
             } else {
