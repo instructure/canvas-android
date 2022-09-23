@@ -23,7 +23,9 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -45,7 +47,8 @@ abstract class AssignmentListRecyclerAdapter (
         context: Context,
         private val canvasContext: CanvasContext,
         private val adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
-        isTesting: Boolean = false
+        isTesting: Boolean = false,
+        filter: AssignmentListFilter = AssignmentListFilter.ALL
 ) : ExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder>(
         context,
         AssignmentGroup::class.java,
@@ -80,6 +83,7 @@ abstract class AssignmentListRecyclerAdapter (
     init {
         isExpandedByDefault = true
         isDisplayEmptyCell = true
+        this.filter = filter
         if (!isTesting) loadData()
     }
 

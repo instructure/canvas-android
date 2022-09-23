@@ -20,6 +20,7 @@ package com.instructure.student.fragment
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -55,6 +56,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.assignment_list_layout.*
 
+@com.google.android.material.badge.ExperimentalBadgeUtils
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 @PageView(url = "{canvasContext}/assignments")
 class AssignmentListFragment : ParentFragment(), Bookmarkable {
@@ -65,6 +67,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     private var termAdapter: TermSpinnerAdapter? = null
 
     private var filterPosition = 0
+    private var filter = AssignmentListFilter.ALL
 
     private var badgeDrawable: BadgeDrawable? = null
 
@@ -144,11 +147,23 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         setupSortByButton()
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            updateBadge()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateBadge()
+    }
+
     private fun createRecyclerAdapter(): AssignmentListRecyclerAdapter {
         return if (sortOrder == AssignmentsSortOrder.SORT_BY_TIME) {
-            AssignmentListByDateRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+            AssignmentListByDateRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback, filter = filter)
         } else {
-            AssignmentListByTypeRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+            AssignmentListByTypeRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback, filter = filter)
         }
     }
 
@@ -187,19 +202,25 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private fun filterSelected(dialog: DialogInterface, index: Int) {
         dialog.dismiss()
-        if (badgeDrawable == null) {
-            badgeDrawable = BadgeDrawable.create(requireContext()).apply {
-                backgroundColor = ThemePrefs.accentColor
-                number = 1
-            }
-        }
-        if (index == 0) {
-            BadgeUtils.detachBadgeDrawable(badgeDrawable, toolbar, R.id.menu_filter_assignments)
-        } else {
-            BadgeUtils.attachBadgeDrawable(badgeDrawable!!, toolbar, R.id.menu_filter_assignments)
-        }
         filterPosition = index
-        recyclerAdapter.filter = AssignmentListFilter.values()[index]
+        filter = AssignmentListFilter.values()[index]
+        recyclerAdapter.filter = filter
+        updateBadge()
+    }
+
+    private fun updateBadge() {
+        Handler().postDelayed({
+            if (badgeDrawable == null) {
+                badgeDrawable = BadgeDrawable.create(requireContext()).apply {
+                    backgroundColor = ThemePrefs.accentColor
+                }
+            }
+            if (filterPosition == 0) {
+                BadgeUtils.detachBadgeDrawable(badgeDrawable, toolbar, R.id.menu_filter_assignments)
+            } else {
+                BadgeUtils.attachBadgeDrawable(badgeDrawable!!, toolbar, R.id.menu_filter_assignments)
+            }
+        }, 100)
     }
 
 

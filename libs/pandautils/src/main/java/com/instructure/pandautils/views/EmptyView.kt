@@ -30,7 +30,6 @@ import androidx.core.content.ContextCompat
 import com.instructure.pandarecycler.interfaces.EmptyInterface
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.isGone
-import com.instructure.pandautils.utils.isVisible
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import kotlinx.android.synthetic.main.empty_view.view.*
@@ -79,7 +78,17 @@ open class EmptyView @JvmOverloads constructor(
         // we don't have an image for the empty state we want the title to be centered instead.
         if (image.isGone) {
             centerTitle()
+        } else {
+            resetTitle()
         }
+    }
+
+    private fun resetTitle() {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(emptyViewLayout)
+        constraintSet.connect(R.id.textViews, ConstraintSet.TOP, R.id.titleTop, ConstraintSet.BOTTOM)
+        constraintSet.clear(R.id.textViews, ConstraintSet.BOTTOM)
+        constraintSet.applyTo(emptyViewLayout)
     }
 
     private fun centerTitle() {
