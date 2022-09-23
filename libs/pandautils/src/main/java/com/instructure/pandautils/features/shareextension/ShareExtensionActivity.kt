@@ -226,7 +226,7 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
             ViewStyler.setStatusBarDark(this, color)
             color
         } else {
-            val color = ContextCompat.getColor(this, R.color.login_studentAppTheme)
+            val color = ContextCompat.getColor(this, R.color.studentDocumentSharingColor)
             ViewStyler.setStatusBarDark(this, color)
             color
         }
