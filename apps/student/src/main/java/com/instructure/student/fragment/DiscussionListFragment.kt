@@ -345,7 +345,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                     recyclerAdapter.addOrUpdateItem(DiscussionListRecyclerAdapter.CLOSED_FOR_COMMENTS, it)
                 }
                 else -> {
-                    recyclerAdapter.addOrUpdateItem(DiscussionListRecyclerAdapter.UNPINNED, it)
+                    if (!isAnnouncement) recyclerAdapter.addOrUpdateItem(DiscussionListRecyclerAdapter.UNPINNED, it)
                 }
             }
         }
