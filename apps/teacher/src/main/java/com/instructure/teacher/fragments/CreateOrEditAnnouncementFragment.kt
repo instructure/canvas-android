@@ -26,6 +26,7 @@ import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
@@ -36,6 +37,7 @@ import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -59,7 +61,8 @@ import java.util.*
 class CreateOrEditAnnouncementFragment :
         BasePresenterFragment<CreateOrEditAnnouncementPresenter, CreateOrEditAnnouncementView>(),
         CreateOrEditAnnouncementView,
-        Identity {
+        Identity,
+        FileUploadDialogParent {
 
     /* The course this announcement belongs to */
     private var mCanvasContext by ParcelableArg<CanvasContext>(Course())
@@ -402,12 +405,14 @@ class CreateOrEditAnnouncementFragment :
 
     private fun addAttachment() {
         val bundle = FileUploadDialogFragment.createDiscussionsBundle(ArrayList())
-        FileUploadDialogFragment.newInstance(bundle, pickerCallback = { event, attachment ->
-            if(event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
-                presenter.attachment = attachment
-                updateAttachmentUI()
-            }
-        }).show(childFragmentManager, FileUploadDialogFragment.TAG)
+        FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
+    }
+
+    override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
+        if(event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
+            presenter.attachment = attachment
+            updateAttachmentUI()
+        }
     }
 
     override fun onSectionsLoaded() {

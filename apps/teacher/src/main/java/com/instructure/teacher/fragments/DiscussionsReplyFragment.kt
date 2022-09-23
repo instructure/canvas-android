@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_REPLY
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -47,7 +48,7 @@ import com.instructure.teacher.viewinterface.DiscussionsReplyView
 import kotlinx.android.synthetic.main.fragment_discussions_reply.*
 
 @ScreenView(SCREEN_VIEW_DISCUSSIONS_REPLY)
-class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter, DiscussionsReplyView>(), DiscussionsReplyView {
+class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter, DiscussionsReplyView>(), DiscussionsReplyView, FileUploadDialogParent {
 
     private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
     private var mDiscussionTopicHeaderId: Long by LongArg(default = 0L) // The topic the discussion belongs too
@@ -141,15 +142,17 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
                     }
 
                     val bundle = FileUploadDialogFragment.createDiscussionsBundle(attachments)
-                    FileUploadDialogFragment.newInstance(bundle, pickerCallback = { event, attachment ->
-                        if (event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
-                            applyAttachment(attachment)
-                        }
-                    }).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
                 } else {
                     NoInternetConnectionDialog.show(requireFragmentManager())
                 }
             }
+        }
+    }
+
+    override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
+        if (event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
+            applyAttachment(attachment)
         }
     }
 
