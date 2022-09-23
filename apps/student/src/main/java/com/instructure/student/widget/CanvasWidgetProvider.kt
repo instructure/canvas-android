@@ -92,7 +92,7 @@ abstract class CanvasWidgetProvider : AppWidgetProvider() {
 
             // Tapping on the logo or title should open the app
             val launchMain = Intent(context, LoginActivity::class.java)
-            val pendingMainIntent = PendingIntent.getActivity(context, 0, launchMain, 0)
+            val pendingMainIntent = PendingIntent.getActivity(context, 0, launchMain, PendingIntent.FLAG_IMMUTABLE)
             remoteViews.setOnClickPendingIntent(R.id.widget_title, pendingMainIntent)
             remoteViews.setOnClickPendingIntent(R.id.widget_logo, pendingMainIntent)
 

@@ -25,16 +25,16 @@ import android.util.LayoutDirection
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.text.TextUtilsCompat
 import com.instructure.annotations.CanvasPdfMenuGrouping
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PSPDFKIT
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
+import com.instructure.student.features.shareextension.StudentShareExtensionActivity
 import com.pspdfkit.document.processor.PdfProcessorTask
 import com.pspdfkit.document.sharing.DefaultDocumentSharingController
 import com.pspdfkit.document.sharing.DocumentSharingIntentHelper
@@ -132,7 +132,7 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     ) : DefaultDocumentSharingController(mContext) {
 
         override fun onDocumentPrepared(shareUri: Uri) {
-            val intent = Intent(mContext, ShareFileUploadActivity::class.java)
+            val intent = Intent(mContext, StudentShareExtensionActivity::class.java)
             intent.type = DocumentSharingIntentHelper.MIME_TYPE_PDF
             intent.putExtra(Intent.EXTRA_STREAM, shareUri)
             intent.putExtra(Const.SUBMISSION_TARGET, submissionTarget)

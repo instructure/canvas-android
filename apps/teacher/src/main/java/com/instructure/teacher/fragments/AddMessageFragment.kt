@@ -23,6 +23,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -30,8 +32,10 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
-import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.RESULT_ATTACHMENTS
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
@@ -48,6 +52,8 @@ import kotlinx.android.synthetic.main.fragment_add_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
+import kotlin.collections.ArrayList
 
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView {
@@ -294,8 +300,8 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 }
 
                 R.id.menu_attachment -> {
-                    val bundle = UploadFilesDialog.createAttachmentsBundle(ArrayList())
-                    UploadFilesDialog.show(fragmentManager, bundle) { _ -> }
+                    val bundle = FileUploadDialogFragment.createAttachmentsBundle(ArrayList())
+                    FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::fileUploadLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
                     true
                 }
 
@@ -451,6 +457,19 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             EventBus.getDefault().removeStickyEvent(it)
             presenter.addAttachments(it.attachments)
             refreshAttachments()
+        }
+    }
+
+    private fun fileUploadLiveDataCallback(uuid: UUID, workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(viewLifecycleOwner) {
+            if (it.state == WorkInfo.State.SUCCEEDED) {
+                it.outputData.getStringArray(RESULT_ATTACHMENTS)
+                        ?.map { it.fromJson<Attachment>() }
+                        ?.let {
+                            presenter.addAttachments(it)
+                            refreshAttachments()
+                        } ?: toast(R.string.errorUploadingFile)
+            }
         }
     }
 

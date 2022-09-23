@@ -16,6 +16,7 @@
  */
 package com.instructure.student.holders
 
+import android.content.res.ColorStateList
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.User
@@ -25,8 +26,8 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import com.instructure.student.util.BinderUtils
 import com.instructure.student.interfaces.AdapterToFragmentCallback
+import com.instructure.student.util.BinderUtils
 import kotlinx.android.synthetic.main.viewholder_people.view.*
 
 class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,11 +38,11 @@ class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         isFirstItem: Boolean,
         isLastItem: Boolean
     ) = with(itemView) {
-        ProfileUtils.loadAvatarForUser(icon, item)
+        ProfileUtils.loadAvatarForUser(icon, item.name, item.avatarUrl, 0)
+        icon.backgroundTintList = ColorStateList.valueOf(courseColor)
 
         itemView.setOnClickListener { adapterToFragmentCallback.onRowClicked(item, adapterPosition, true) }
 
-        icon.borderColor = courseColor
         title.text = Pronouns.span(item.name, item.pronouns)
 
         val enrollmentIndex = item.enrollmentIndex

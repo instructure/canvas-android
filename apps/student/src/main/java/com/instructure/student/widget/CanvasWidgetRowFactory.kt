@@ -100,7 +100,7 @@ abstract class CanvasWidgetRowFactory<I> : RemoteViewsService.RemoteViewsFactory
             //create log in intent
             val intent = LoginActivity.createIntent(ContextKeeper.appContext)
             val pendingIntent = PendingIntent.getActivity(
-                    ContextKeeper.appContext, CanvasWidgetProvider.cycleBit++, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    ContextKeeper.appContext, CanvasWidgetProvider.cycleBit++, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             row.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
             true
         } else {

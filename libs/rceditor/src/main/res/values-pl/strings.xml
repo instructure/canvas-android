@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Przewiń, aby wyświetlić narzędzia edycji</string>
     <string name="rce_emptyUrlError">Pole adresu URL nie może być puste</string>
     <string name="rce_httpNotAllowed">Obsługiwane są tylko adresy HTTPS</string>
+    <string name="rce_dialogAltText">Dodaj alternatywny tekst dla czytników ekranu</string>
 </resources>

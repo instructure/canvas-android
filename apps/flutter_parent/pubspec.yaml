@@ -39,7 +39,6 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  firebase_analytics: ^8.3.4
   firebase_remote_config: ^0.11.0+2
   firebase_core: ^1.8.0
   firebase_crashlytics: ^2.2.4
@@ -59,7 +58,7 @@ dependencies:
 
   # File handling
   path_provider: ^2.0.6
-  flutter_downloader: ^1.7.1
+  flutter_downloader: 1.7.4
   mime: ^1.0.1
   file_picker: ^4.2.0
 

@@ -32,6 +32,7 @@ object RequestCodes {
     // Profile Fragment
     const val CAMERA_PIC_REQUEST = 4000
     const val PICK_IMAGE_GALLERY = 4001
+    const val PICK_FILE_FROM_DEVICE = 7000
     const val CROP_IMAGE = 4003
 
     // Canvas Context

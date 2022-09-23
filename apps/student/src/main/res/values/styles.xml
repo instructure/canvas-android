@@ -110,7 +110,7 @@
     <style name="TextStyle.Primary.SingleLine">
         <item name="android:maxLines">1</item>
         <item name="android:singleLine">true</item>
-        <item name="android:fontFamily">san-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="TextStyle.Primary.CardView">

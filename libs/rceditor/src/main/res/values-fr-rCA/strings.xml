@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Faites défiler pour tous les outils d\'édition</string>
     <string name="rce_emptyUrlError">Le URL ne peut être vide</string>
     <string name="rce_httpNotAllowed">Seules les URL https sont acceptées</string>
+    <string name="rce_dialogAltText">Ajouter texte alt pour lecteurs d’écran</string>
 </resources>

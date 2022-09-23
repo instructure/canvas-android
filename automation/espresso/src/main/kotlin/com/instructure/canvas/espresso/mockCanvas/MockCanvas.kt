@@ -1510,6 +1510,11 @@ fun MockCanvas.addItemToModule(
             itemTitle = item
             itemUrl = item
         }
+        is LTITool -> {
+            itemType = ModuleItem.Type.ExternalTool
+            itemTitle = item.name
+            itemUrl = item.url
+        }
         else -> {
             throw Exception("Unknown item type: ${item::class.java.simpleName}")
         }

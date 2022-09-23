@@ -57,7 +57,7 @@ class CommentView @JvmOverloads constructor(
     fun setCommentBubbleColor(@ColorInt color: Int) = commentTextView.setBubbleColor(color)
 
     fun setAvatar(avatarUrl: String?, userName: String) {
-        ProfileUtils.loadAvatarForUser(avatarView, userName, avatarUrl ?: "")
+        ProfileUtils.loadAvatarForUser(avatarView, userName, avatarUrl.orEmpty())
     }
 
     var commentTextColor: Int

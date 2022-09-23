@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Pānia mo ngā taputapu whakatika katoa</string>
     <string name="rce_emptyUrlError">Url kaore e taea kia kore te taitara</string>
     <string name="rce_httpNotAllowed">Kō ngā https urls anake ka whakaetia</string>
+    <string name="rce_dialogAltText">Tāpiri kuputuhi alt mō te pūpānui mata</string>
 </resources>

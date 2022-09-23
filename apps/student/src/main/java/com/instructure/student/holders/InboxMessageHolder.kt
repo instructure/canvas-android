@@ -37,7 +37,7 @@ import com.instructure.student.interfaces.MessageAdapterCallback
 import com.instructure.student.view.ViewUtils
 import kotlinx.android.synthetic.main.viewholder_message.view.*
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
 class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -52,7 +52,7 @@ class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Set author info
         if (author != null) {
             authorName.text = getAuthorTitle(author.id, conversation, message)
-            ProfileUtils.loadAvatarForUser(authorAvatar, author)
+            ProfileUtils.loadAvatarForUser(authorAvatar, author.name, author.avatarUrl)
             authorAvatar.setupAvatarA11y(author.name)
             authorAvatar.onClick { callback.onAvatarClicked(author) }
         } else {

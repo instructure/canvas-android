@@ -256,11 +256,10 @@ dependencies {
     implementation Libs.PLAY_CORE_KTX
 
     /* Firebase */
-    implementation platform(Libs.FIREBASE_BOM)
-    implementation Libs.FIREBASE_MESSAGING
-    implementation (Libs.FIREBASE_ANALYTICS) {
-        transitive = true
+    implementation platform(Libs.FIREBASE_BOM) {
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
     }
+    implementation Libs.FIREBASE_MESSAGING
     implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
@@ -281,6 +280,10 @@ dependencies {
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
 
     androidTestImplementation Libs.UI_AUTOMATOR
+
+    /* WorkManager */
+    implementation Libs.ANDROIDX_WORK_MANAGER
+    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 }
 
 apply plugin: 'com.google.gms.google-services'

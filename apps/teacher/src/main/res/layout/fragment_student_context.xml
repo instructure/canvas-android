@@ -66,7 +66,7 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="24dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/avatarView"
                     android:layout_width="80dp"
                     android:layout_height="80dp"

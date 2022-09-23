@@ -205,7 +205,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
     }
 
     fun openMedia(canvasContext: CanvasContext?, url: String) {
-        openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, url, null)
+        openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, null, canvasContext)
         LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
             LoaderManager.getInstance(this), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
     }

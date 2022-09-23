@@ -24,7 +24,7 @@ class FlutterDownloaderVeneer {
     bool showNotification = true,
     bool openFileFromNotification = true,
     bool requiresStorageNotLow = true,
-  }) =>
+    bool saveInPublicStorage = true}) =>
       FlutterDownloader.enqueue(
           url: url,
           savedDir: savedDir,
@@ -32,7 +32,8 @@ class FlutterDownloaderVeneer {
           headers: headers,
           showNotification: showNotification,
           openFileFromNotification: openFileFromNotification,
-          requiresStorageNotLow: requiresStorageNotLow);
+          requiresStorageNotLow: requiresStorageNotLow,
+          saveInPublicStorage: saveInPublicStorage);
 
   Future<List<DownloadTask>> loadTasks() => FlutterDownloader.loadTasks();
 

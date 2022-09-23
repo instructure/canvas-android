@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Rul for alle redigeringsværktøjer</string>
     <string name="rce_emptyUrlError">Url kan ikke være tom</string>
     <string name="rce_httpNotAllowed">Kun https-webadresser accepteres</string>
+    <string name="rce_dialogAltText">Tilføj alternativ tekst til skærmlæsere</string>
 </resources>

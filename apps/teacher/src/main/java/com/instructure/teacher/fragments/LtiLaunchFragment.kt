@@ -54,6 +54,16 @@ class LtiLaunchFragment : BaseFragment() {
 
     override fun layoutResId(): Int = R.layout.fragment_lti_launch
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        customTabLaunched = savedInstanceState?.getBoolean(CUSTOM_TAB_LAUNCHED_STATE) ?: false
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(CUSTOM_TAB_LAUNCHED_STATE, customTabLaunched)
+    }
+
     override fun onCreateView(view: View) = Unit
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -149,6 +159,7 @@ class LtiLaunchFragment : BaseFragment() {
         private const val TAB = "tab"
         private const val LTI_URL = "lti_url"
         private const val SESSION_LESS = "session_less"
+        private const val CUSTOM_TAB_LAUNCHED_STATE = "custom_tab_launched_state"
 
         fun makeTabBundle(canvasContext: CanvasContext, ltiTab: Tab): Bundle {
             val args = createBundle(canvasContext)
