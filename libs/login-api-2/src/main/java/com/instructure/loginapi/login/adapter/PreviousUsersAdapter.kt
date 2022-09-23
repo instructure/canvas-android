@@ -23,9 +23,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.Pronouns.span
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.model.SignedInUser
-import com.instructure.pandautils.utils.ProfileUtils.loadAvatarForUser
+import com.instructure.pandautils.utils.ProfileUtils
 import kotlinx.android.synthetic.main.adapter_previous_users.view.*
-import java.util.*
 
 class PreviousUsersAdapter(
     private val previousUsers: ArrayList<SignedInUser>,
@@ -63,7 +62,7 @@ class PreviousUsersAdapter(
 
 class PreviousUserHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(user: SignedInUser, onUserClick: () -> Unit, onUserRemove: () -> Unit) = with(itemView) {
-        loadAvatarForUser(usersAvatar, user.user.name, user.user.avatarUrl)
+        ProfileUtils.loadAvatarForUser(usersAvatar, user.user.name, user.user.avatarUrl, 0)
         userName.text = span(user.user.name, user.user.pronouns)
         schoolDomain.text = user.domain
         setOnClickListener { onUserClick() }

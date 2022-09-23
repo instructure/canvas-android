@@ -37,12 +37,13 @@
         android:gravity="center_vertical"
         android:paddingBottom="16dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/avatar"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_marginEnd="8dp"
-            android:visibility="invisible"/>
+            android:background="@drawable/ic_circle"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/dialogTitle"

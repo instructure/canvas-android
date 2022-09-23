@@ -49,7 +49,7 @@ object MessageBinder {
         with(holder.itemView.authorName) {
             if (author != null) {
                 text = getAuthorTitle(author.id, conversation, message)
-                ProfileUtils.loadAvatarForUser(holder.itemView.authorAvatar, author)
+                ProfileUtils.loadAvatarForUser(holder.itemView.authorAvatar, author.name, author.avatarUrl)
                 setupAvatarA11y(author.name)
                 setOnClickListener { callback.onAvatarClicked(author) }
             } else {

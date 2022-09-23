@@ -419,23 +419,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (user != null) {
             navigationDrawerUserName.text = Pronouns.span(user.shortName, user.pronouns)
             navigationDrawerUserEmail.text = user.primaryEmail
-
-            if(ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
-                val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = ContextCompat.getColor(context, R.color.textDark)
-                val drawable = TextDrawable.builder()
-                        .beginConfig()
-                        .height(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                        .width(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                        .toUpperCase()
-                        .useFont(Typeface.DEFAULT_BOLD)
-                        .textColor(color)
-                        .endConfig()
-                        .buildRound(initials, Color.WHITE)
-                navigationDrawerProfileImage.setImageDrawable(drawable)
-            } else {
-                Glide.with(context).load(user.avatarUrl).into(navigationDrawerProfileImage)
-            }
+            ProfileUtils.loadAvatarForUser(navigationDrawerProfileImage, user.shortName, user.avatarUrl)
         }
     }
 

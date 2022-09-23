@@ -122,10 +122,6 @@ dependencies {
 
     api Libs.ANDROID_SVG
 
-    // TODO These should be replaced in the future with Glide.
-    api 'com.squareup.picasso:picasso:2.5.2'
-    api 'de.hdodenhof:circleimageview:3.0.0'
-
     api Libs.EXOPLAYER
     api (Libs.SCALE_IMAGE_VIEW) {
         exclude group: "androidx.exifinterface"

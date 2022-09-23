@@ -116,7 +116,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun setupUserViews() {
         user?.let { u ->
-            ProfileUtils.loadAvatarForUser(avatar, u)
+            ProfileUtils.loadAvatarForUser(avatar, u.name, u.avatarUrl)
             userName.text = Pronouns.span(u.name, u.pronouns)
             userRole.text = u.enrollments.distinctBy { it.displayType }.joinToString { it.displayType }
             userBackground.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
