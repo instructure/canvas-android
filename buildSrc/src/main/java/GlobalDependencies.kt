@@ -30,7 +30,7 @@ object Versions {
     /* Others */
     const val APOLLO = "2.5.9"
     const val CRASHLYTICS = "17.2.1"
-    const val PSPDFKIT = "8.1.0"
+    const val PSPDFKIT = "8.3.0"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.4.3"
