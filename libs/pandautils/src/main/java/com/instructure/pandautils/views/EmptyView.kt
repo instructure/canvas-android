@@ -84,11 +84,13 @@ open class EmptyView @JvmOverloads constructor(
     }
 
     private fun resetTitle() {
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(emptyViewLayout)
-        constraintSet.connect(R.id.textViews, ConstraintSet.TOP, R.id.titleTop, ConstraintSet.BOTTOM)
-        constraintSet.clear(R.id.textViews, ConstraintSet.BOTTOM)
-        constraintSet.applyTo(emptyViewLayout)
+        emptyViewLayout?.let {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(it)
+            constraintSet.connect(R.id.textViews, ConstraintSet.TOP, R.id.titleTop, ConstraintSet.BOTTOM)
+            constraintSet.clear(R.id.textViews, ConstraintSet.BOTTOM)
+            constraintSet.applyTo(it)
+        }
     }
 
     private fun centerTitle() {
