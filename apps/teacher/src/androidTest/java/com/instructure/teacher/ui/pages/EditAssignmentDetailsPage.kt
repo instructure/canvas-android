@@ -16,20 +16,21 @@
 package com.instructure.teacher.ui.pages
 
 
+import android.widget.DatePicker
+import android.widget.TimePicker
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
-import android.widget.DatePicker
-import android.widget.TimePicker
-import androidx.test.espresso.Espresso
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.espresso.*
 import com.instructure.canvas.espresso.has
 import com.instructure.canvas.espresso.hasTextInputLayoutErrorText
 import com.instructure.canvas.espresso.withIndex
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 import com.instructure.teacher.view.AssignmentOverrideView
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
@@ -46,6 +47,7 @@ class EditAssignmentDetailsPage : BasePage() {
     private val descriptionWebView by OnViewWithId(R.id.descriptionWebView, autoAssert = false)
     private val noDescriptionTextView by OnViewWithId(R.id.noDescriptionTextView, autoAssert = false)
     private val overlayContainer by OnViewWithId(R.id.overrideContainer, autoAssert = false)
+    private val contentRceView by WaitForViewWithId(R.id.rce_webView, autoAssert = false)
 
     fun saveAssignment() {
         saveButton.click()
@@ -63,14 +65,12 @@ class EditAssignmentDetailsPage : BasePage() {
     fun editAssignmentName(newName: String) {
         assignmentNameEditText.replaceText(newName)
         Espresso.closeSoftKeyboard()
-        saveAssignment()
     }
 
     fun editAssignmentPoints(newPoints: Double) {
         val df = DecimalFormat("#")
         pointsPossibleEditText.replaceText(df.format(newPoints))
         Espresso.closeSoftKeyboard()
-        saveAssignment()
     }
 
     fun editAssignees() = waitScrollClick(R.id.assignTo)
@@ -134,4 +134,17 @@ class EditAssignmentDetailsPage : BasePage() {
     fun assertNoAssigneesErrorShown() {
         onView(withIndex(withId(R.id.assignToTextInput), 1)).check(matches(hasTextInputLayoutErrorText(R.string.assignee_blank_error)))
     }
+
+    fun clickOnDisplayGradeAsSpinner() {
+        onView(withId(R.id.displayGradeAsSpinner)).click()
+    }
+
+    fun selectGradeType(gradeType: String) {
+        onView(withText(gradeType)).click()
+    }
+
+    fun editDescription(newDescription: String) {
+        contentRceView.perform(TypeInRCETextEditor(newDescription))
+    }
+
 }
