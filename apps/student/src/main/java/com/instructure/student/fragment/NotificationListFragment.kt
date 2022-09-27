@@ -24,6 +24,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.StreamItem.Type.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -79,6 +81,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
                         emptyView.setGuidelines(.28f,.6f,.73f,.12f,.88f)
                     }
                 }
+                (activity as? OnNotificationCountInvalidated)?.invalidateNotificationCount()
             }
 
             override fun onShowEditView(isVisible: Boolean) {
@@ -87,6 +90,10 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
 
             override fun onShowErrorCrouton(message: Int) {
                 showToast(message)
+            }
+
+            override fun onItemRemoved() {
+                (activity as? OnNotificationCountInvalidated)?.invalidateNotificationCount()
             }
         }
 
@@ -184,11 +191,16 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
             return false
         }
         addFragmentForStreamItem(streamItem, activity as ParentActivity, false)
+        (activity as? OnNotificationCountInvalidated)?.invalidateNotificationCount()
         return true
     }
 
     override val bookmark: Bookmarker
         get() = Bookmarker(canvasContext.isCourseOrGroup, canvasContext)
+
+    interface OnNotificationCountInvalidated {
+        fun invalidateNotificationCount()
+    }
 
     companion object {
         fun addFragmentForStreamItem(streamItem: StreamItem, context: Context, fromWidget: Boolean) {
@@ -215,6 +227,8 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
             val route: Route? = when (streamItem.getStreamItemType()) {
                 SUBMISSION -> {
                     if (canvasContext !is Course) return
+
+                    markSubmissionAsRead(streamItem)
 
                     if (streamItem.assignment == null) {
                         RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignmentId))
@@ -248,6 +262,14 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
         fun makeRoute(canvasContext: CanvasContext): Route = Route(NotificationListFragment::class.java, canvasContext, Bundle())
 
         private fun validateRoute(route: Route) = route.canvasContext != null
+
+        private fun markSubmissionAsRead(streamItem: StreamItem) {
+            SubmissionManager.markSubmissionAsRead(
+                streamItem.courseId,
+                streamItem.assignmentId,
+                streamItem.userId,
+                object : StatusCallback<Void>() {})
+        }
 
         fun newInstance(route: Route): NotificationListFragment? {
             if (!validateRoute(route)) return null

@@ -66,7 +66,7 @@ object InboxApi {
             @Field("bulk_message") isBulk: Int): Call<List<Conversation>>
 
         @GET("conversations/{conversationId}?include[]=participant_avatars")
-        fun getConversation(@Path("conversationId") conversationId: Long): Call<Conversation>
+        fun getConversation(@Path("conversationId") conversationId: Long, @Query("auto_mark_as_read") markAsRead: Boolean): Call<Conversation>
 
         @PUT("conversations/{conversationId}")
         fun updateConversation(@Path("conversationId") conversationId: Long, @Query("conversation[workflow_state]") workflowState: String, @Query("conversation[starred]") isStarred: Boolean?): Call<Conversation>
@@ -90,8 +90,8 @@ object InboxApi {
         fun markConversationAsUnread(@Query("conversation_ids[]") conversationId: Long, @Query("event") conversationEvent: String): Call<Void>
     }
 
-    fun getConversation(adapter: RestBuilder, callback: StatusCallback<Conversation>, params: RestParams, conversationId: Long) {
-        callback.addCall(adapter.build(InboxInterface::class.java, params).getConversation(conversationId)).enqueue(callback)
+    fun getConversation(adapter: RestBuilder, callback: StatusCallback<Conversation>, params: RestParams, conversationId: Long, markAsRead: Boolean) {
+        callback.addCall(adapter.build(InboxInterface::class.java, params).getConversation(conversationId, markAsRead)).enqueue(callback)
     }
 
     fun getConversations(scope: Scope, adapter: RestBuilder, callback: StatusCallback<List<Conversation>>, params: RestParams) {
@@ -145,7 +145,7 @@ object InboxApi {
     }
 
     @Throws(IOException::class)
-    fun getConversation(adapter: RestBuilder, params: RestParams, conversationId: Long): Response<Conversation> {
-        return adapter.build(InboxInterface::class.java, params).getConversation(conversationId).execute()
+    fun getConversation(adapter: RestBuilder, params: RestParams, conversationId: Long, markAsRead: Boolean): Response<Conversation> {
+        return adapter.build(InboxInterface::class.java, params).getConversation(conversationId, markAsRead).execute()
     }
 }
