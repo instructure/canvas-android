@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
@@ -49,7 +50,7 @@ import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 
 @ScreenView(SCREEN_VIEW_NOTIFICATION_LIST)
 @PageView
-class NotificationListFragment : ParentFragment(), Bookmarkable {
+class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager.OnBackStackChangedListener {
 
     @PageViewUrl
     @Suppress("unused")
@@ -100,7 +101,6 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
     // Used to help determine if the bottom bar should be highlighted
     fun isCourseOrGroup(): Boolean = canvasContext.isCourseOrGroup
 
-
     override fun title(): String = getString(if (canvasContext.isCourse || canvasContext.isGroup) R.string.homePageIdForNotifications else R.string.notifications)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -126,10 +126,24 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
         cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
 
         applyTheme()
+
+        activity?.supportFragmentManager?.addOnBackStackChangedListener(this)
+    }
+
+    private var shouldRefreshOnResume = false
+
+    override fun onBackStackChanged() {
+        if (activity?.supportFragmentManager?.fragments?.lastOrNull()?.javaClass == this.javaClass) {
+            if (shouldRefreshOnResume) {
+                recyclerAdapter.refresh()
+                shouldRefreshOnResume = false
+            }
+        }
     }
 
     override fun onDestroyView() {
         recyclerAdapter.cancel()
+        activity?.supportFragmentManager?.removeOnBackStackChangedListener(this)
         super.onDestroyView()
     }
 
@@ -191,7 +205,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
             return false
         }
         addFragmentForStreamItem(streamItem, activity as ParentActivity, false)
-        (activity as? OnNotificationCountInvalidated)?.invalidateNotificationCount()
+        shouldRefreshOnResume = !streamItem.isReadState
         return true
     }
 
