@@ -22,6 +22,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -39,6 +40,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.instructure.canvasapi2.apis.ErrorReportAPI
+import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.models.ErrorReportPreFill
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Analytics
@@ -57,7 +59,9 @@ import com.instructure.loginapi.login.util.Const.MOBILE_VERIFY_FLOW
 import com.instructure.loginapi.login.util.Const.NORMAL_FLOW
 import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
 import com.instructure.loginapi.login.util.Const.URL_CANVAS_NETWORK
+import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
+import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.*
@@ -74,7 +78,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
 
     protected abstract fun beginFindSchoolFlow(): Intent
 
-    protected abstract fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent
+    protected abstract fun signInActivityIntent(accountDomain: AccountDomain): Intent
 
     protected abstract fun beginCanvasNetworkFlow(url: String): Intent
 
@@ -104,19 +108,14 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         setupSnickerDoodles()
     }
 
+    override fun onResume() {
+        super.onResume()
+        setupButtons()
+    }
+
     private fun bindViews() {
         // Only show the what's new text if the app supports it
         changesLayout.visibility = if (appChangesLink() != null) View.VISIBLE else View.GONE
-
-        findMySchool.onClick {
-            if (APIHelper.hasNetworkConnection()) {
-                val intent = beginFindSchoolFlow()
-                intent.putExtra(Const.CANVAS_LOGIN, canvasLogin)
-                startActivity(intent)
-            } else {
-                NoInternetConnectionDialog.show(supportFragmentManager)
-            }
-        }
 
         canvasNetwork.onClick {
             if (APIHelper.hasNetworkConnection()) {
@@ -358,7 +357,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
             drawerRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, true)
             drawerRecyclerView.adapter = SnickerDoodleAdapter(snickerDoodles) { snickerDoodle ->
                 drawerLayout.closeDrawers()
-                val intent = signInActivityIntent(snickerDoodle)
+                val intent = signInActivityIntent(AccountDomain(snickerDoodle.domain))
                 intent.putExtra(SNICKER_DOODLES, snickerDoodle)
                 startActivity(intent)
                 finish()
@@ -366,6 +365,50 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         } catch (e: Throwable) {
             drawerEmptyView.setVisible()
             drawerEmptyText.setVisible()
+        }
+    }
+
+    private fun setupButtons() {
+        val lastSavedLogin = LoginPrefs.lastSavedLogin
+        if (lastSavedLogin != null) {
+            openRecentSchool?.visibility = View.VISIBLE
+            findAnotherSchool?.visibility = View.VISIBLE
+            findMySchool?.visibility = View.GONE
+
+            openRecentSchool?.text = if (lastSavedLogin.accountDomain.name.isNullOrEmpty()) {
+                lastSavedLogin.accountDomain.domain
+            } else {
+                lastSavedLogin.accountDomain.name
+            }
+            openRecentSchool?.onClick { openRecentSchool(lastSavedLogin) }
+
+            findAnotherSchool?.onClick { findSchool() }
+        } else {
+            openRecentSchool?.visibility = View.GONE
+            findAnotherSchool?.visibility = View.GONE
+            findMySchool?.visibility = View.VISIBLE
+
+            findMySchool?.onClick { findSchool() }
+        }
+    }
+
+    private fun openRecentSchool(lastSavedLogin: SavedLoginInfo) {
+        if (APIHelper.hasNetworkConnection()) {
+            val intent = signInActivityIntent(lastSavedLogin.accountDomain)
+            intent.putExtra(Const.CANVAS_LOGIN, lastSavedLogin.canvasLogin)
+            startActivity(intent)
+        } else {
+            NoInternetConnectionDialog.show(supportFragmentManager)
+        }
+    }
+
+    private fun findSchool() {
+        if (APIHelper.hasNetworkConnection()) {
+            val intent = beginFindSchoolFlow()
+            intent.putExtra(Const.CANVAS_LOGIN, canvasLogin)
+            startActivity(intent)
+        } else {
+            NoInternetConnectionDialog.show(supportFragmentManager)
         }
     }
 

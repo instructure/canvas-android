@@ -51,6 +51,8 @@ import com.instructure.loginapi.login.adapter.DomainAdapter
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.Const
+import com.instructure.loginapi.login.util.LoginPrefs
+import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -251,9 +253,13 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
         accountDomain.domain = url
 
+        val canvasLogin = getIntent().extras?.getInt(Const.CANVAS_LOGIN, 0) ?: 0
+
         val intent = signInActivityIntent(accountDomain)
-        intent.putExtra(Const.CANVAS_LOGIN, getIntent().extras!!.getInt(Const.CANVAS_LOGIN, 0))
+        intent.putExtra(Const.CANVAS_LOGIN, canvasLogin)
         startActivity(intent)
+
+        LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
     }
 
     protected open fun applyTheme() {
