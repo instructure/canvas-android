@@ -18,8 +18,11 @@
 package com.instructure.student.adapter.assignment
 
 import android.content.Context
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.filterWithQuery
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.student.R
@@ -35,8 +38,9 @@ class AssignmentListByDateRecyclerAdapter(
         context: Context,
         canvasContext: CanvasContext,
         adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
-        isTesting: Boolean = false
-) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting) {
+        isTesting: Boolean = false,
+        filter: AssignmentListFilter = AssignmentListFilter.ALL
+) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting, filter) {
 
     private val overdue = AssignmentGroup(name = context.getString(R.string.overdueAssignments), position = HEADER_POSITION_OVERDUE)
     private val upcoming = AssignmentGroup(name = context.getString(R.string.upcomingAssignments), position = HEADER_POSITION_UPCOMING)
@@ -69,6 +73,15 @@ class AssignmentListByDateRecyclerAdapter(
             // endtodo
             assignmentGroup.assignments
                     .filterWithQuery(searchQuery, Assignment::name)
+                    .filter {
+                        when (filter) {
+                            AssignmentListFilter.ALL -> true
+                            AssignmentListFilter.MISSING -> it.isMissing()
+                            AssignmentListFilter.LATE -> it.submission?.late ?: false
+                            AssignmentListFilter.GRADED -> it.submission?.isGraded ?: false
+                            AssignmentListFilter.UPCOMING -> !it.isSubmitted && it.dueDate?.after(Date()) ?: false
+                        }
+                    }
                     .forEach { assignment ->
                         val dueAt = assignment.dueAt
                         val submission = assignment.submission

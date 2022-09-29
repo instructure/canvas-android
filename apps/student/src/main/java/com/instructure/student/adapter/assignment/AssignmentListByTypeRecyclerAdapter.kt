@@ -24,17 +24,30 @@ import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
+import java.util.*
 
 class AssignmentListByTypeRecyclerAdapter(
         context: Context,
         canvasContext: CanvasContext,
         adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
-        isTesting: Boolean = false
-) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting) {
+        isTesting: Boolean = false,
+        filter: AssignmentListFilter = AssignmentListFilter.ALL
+) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting, filter) {
 
     override fun populateData() {
-        assignmentGroups.forEach { assignmentGroup ->
-            val filteredAssignments = assignmentGroup.assignments.filterWithQuery(searchQuery, Assignment::name)
+        assignmentGroups
+            .forEach { assignmentGroup ->
+            val filteredAssignments = assignmentGroup.assignments
+                .filterWithQuery(searchQuery, Assignment::name)
+                .filter {
+                    when (filter) {
+                        AssignmentListFilter.ALL -> true
+                        AssignmentListFilter.MISSING -> it.isMissing()
+                        AssignmentListFilter.LATE -> it.submission?.late ?: false
+                        AssignmentListFilter.GRADED -> it.submission?.isGraded ?: false
+                        AssignmentListFilter.UPCOMING -> !it.isSubmitted && it.dueDate?.after(Date()) ?: false
+                    }
+                }
             addOrUpdateAllItems(assignmentGroup, filteredAssignments)
         }
         isAllPagesLoaded = true
