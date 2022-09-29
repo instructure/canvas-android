@@ -106,10 +106,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         loadPreviousUsers()
         setupGesture()
         setupSnickerDoodles()
-    }
-
-    override fun onResume() {
-        super.onResume()
         setupButtons()
     }
 

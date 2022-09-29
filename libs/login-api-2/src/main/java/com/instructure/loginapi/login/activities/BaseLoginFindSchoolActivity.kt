@@ -253,13 +253,9 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
         accountDomain.domain = url
 
-        val canvasLogin = getIntent().extras?.getInt(Const.CANVAS_LOGIN, 0) ?: 0
-
         val intent = signInActivityIntent(accountDomain)
-        intent.putExtra(Const.CANVAS_LOGIN, canvasLogin)
+        intent.putExtra(Const.CANVAS_LOGIN, getIntent().extras!!.getInt(Const.CANVAS_LOGIN, 0))
         startActivity(intent)
-
-        LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
     }
 
     protected open fun applyTheme() {
