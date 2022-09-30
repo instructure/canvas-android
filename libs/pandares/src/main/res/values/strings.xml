@@ -1309,4 +1309,12 @@
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Cancel Upload?</string>
     <string name="cancelFileUploadMessage">This will cancel your upload.</string>
+    <string name="menuTitleFilterAssignments">Filter assignments</string>
+    <string name="filterAssignmentDialogTitle">Filter Assignments</string>
+    <string name="filterAssignmentsDialogCancel">Cancel</string>
+    <string name="filterAssignmentAll">All</string>
+    <string name="filterAssignmentLate">Late</string>
+    <string name="filterAssignmentMissing">Missing</string>
+    <string name="filterAssignmentGraded">Graded</string>
+    <string name="filterAssignmentUpcoming">Upcoming</string>
 </resources>
