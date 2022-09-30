@@ -37,5 +37,6 @@
     <string name="sendingSimple">جارٍ الإرسال</string>
     <string name="pspdf__annotation_type_stamp">لون الملاحظة</string>
     <string name="removedComment">تمت إزالة %1$s بواسطة %2$s</string>
+    <string name="pspdf__stamp_standard_section"></string>
 
 </resources>
