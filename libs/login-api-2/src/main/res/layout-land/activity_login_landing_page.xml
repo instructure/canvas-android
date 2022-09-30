@@ -55,15 +55,7 @@
 
                 <Button
                     android:id="@+id/openRecentSchool"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_button_rounded"
-                    android:textColor="@color/white"
-                    android:layout_width="wrap_content"
-                    android:minHeight="48dp"
-                    android:textSize="16sp"
-                    android:textAllCaps="false"
-                    android:paddingVertical="8dp"
-                    android:paddingHorizontal="16dp"
+                    style="@style/LoginButtonStyle.Filled"
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:layout_marginHorizontal="48dp"
@@ -74,15 +66,7 @@
 
                 <Button
                     android:id="@+id/findAnotherSchool"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_button_rounded_outline"
-                    android:textColor="@color/textDarkest"
-                    android:layout_width="wrap_content"
-                    android:minHeight="48dp"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    android:paddingVertical="10dp"
-                    android:paddingHorizontal="16dp"
+                    style="@style/LoginButtonStyle.Outline"
                     android:layout_marginHorizontal="48dp"
                     android:layout_marginBottom="32dp"
                     android:text="@string/findAnotherSchool"
@@ -91,15 +75,7 @@
 
                 <Button
                     android:id="@+id/findMySchool"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_button_rounded"
-                    android:textColor="@color/white"
-                    android:layout_width="wrap_content"
-                    android:minHeight="48dp"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    android:paddingVertical="10dp"
-                    android:paddingHorizontal="16dp"
+                    style="@style/LoginButtonStyle.Filled"
                     android:layout_marginHorizontal="48dp"
                     android:layout_marginBottom="36dp"
                     android:text="@string/findMySchool"/>
