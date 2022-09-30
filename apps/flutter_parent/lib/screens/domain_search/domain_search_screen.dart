@@ -195,8 +195,11 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                   var item = _schoolDomains[index];
                   return ListTile(
                     title: Text(item.name),
-                    onTap: () => locator<QuickNav>().pushRoute(context,
-                        PandaRouter.loginWeb(item.domain, authenticationProvider: item.authenticationProvider)),
+                    onTap: () {
+                      final accountName = (item.name == null || item.name.isEmpty) ? item.domain : item.name;
+                      return locator<QuickNav>().pushRoute(context,
+                        PandaRouter.loginWeb(item.domain, accountName: accountName, authenticationProvider: item.authenticationProvider));
+                    },
                   );
                 },
               ),
@@ -280,6 +283,6 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
     if (regExp.hasMatch(domain)) domain = regExp.stringMatch(domain);
     if (domain.startsWith('www.')) domain = domain.substring(4); // Strip off www. if they typed it
     if (!domain.contains('.') || domain.endsWith('.beta')) domain += '.instructure.com';
-    locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(domain, loginFlow: widget.loginFlow));
+    locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(domain, accountName: domain, loginFlow: widget.loginFlow));
   }
 }

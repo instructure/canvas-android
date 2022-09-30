@@ -19,9 +19,11 @@ import 'dart:ui' as ui;
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
@@ -29,6 +31,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tuple/tuple.dart';
 
 import 'dio_config.dart';
 
@@ -42,6 +45,8 @@ class ApiPrefs {
   static const String KEY_LOGINS = 'logins';
   static const String KEY_RATING_DONT_SHOW_AGAIN = 'dont_show_again';
   static const String KEY_RATING_NEXT_SHOW_DATE = 'next_show_date';
+  static const String KEY_LAST_ACCOUNT = 'last_account';
+  static const String KEY_LAST_ACCOUNT_LOGIN_FLOW = 'last_account_login_flow';
 
   static EncryptedSharedPreferences _prefs;
   static PackageInfo _packageInfo;
@@ -165,6 +170,26 @@ class ApiPrefs {
   static List<Login> getLogins() {
     _checkInit();
     return _prefs.getStringList(KEY_LOGINS)?.map((it) => deserialize<Login>(json.decode(it)))?.toList() ?? [];
+  }
+
+  static setLastAccount(SchoolDomain lastAccount, LoginFlow loginFlow) {
+    _checkInit();
+    final lastAccountJson = json.encode(serialize(lastAccount));
+    _prefs.setString(KEY_LAST_ACCOUNT, lastAccountJson);
+    _prefs.setInt(KEY_LAST_ACCOUNT_LOGIN_FLOW, loginFlow.index);
+  }
+
+  static Tuple2<SchoolDomain, LoginFlow> getLastAccount() {
+    _checkInit();
+    if (!_prefs.containsKey(KEY_LAST_ACCOUNT)) return null;
+
+    final accountJson = _prefs.getString(KEY_LAST_ACCOUNT);
+    if (accountJson == null || accountJson.isEmpty) return null;
+
+    final lastAccount = deserialize<SchoolDomain>(json.decode(accountJson));
+    final loginFlow = _prefs.containsKey(KEY_LAST_ACCOUNT_LOGIN_FLOW) ? LoginFlow.values[_prefs.getInt(KEY_LAST_ACCOUNT_LOGIN_FLOW)] : LoginFlow.normal;
+
+    return Tuple2(lastAccount, loginFlow);
   }
 
   static Future<void> removeLogin(Login login) => removeLoginByUuid(login.uuid);
