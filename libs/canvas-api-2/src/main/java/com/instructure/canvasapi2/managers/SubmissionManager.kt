@@ -277,12 +277,11 @@ object SubmissionManager {
     fun markSubmissionAsRead(
         courseId: Long,
         assignmentId: Long,
-        studentId: Long,
         callback: StatusCallback<Void>
     ) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
-        SubmissionAPI.markSubmissionAsRead(adapter, params, courseId, assignmentId, studentId, callback)
+        SubmissionAPI.markSubmissionAsRead(adapter, params, courseId, assignmentId, callback)
     }
 
     private fun postStudentAnnotationSubmission(

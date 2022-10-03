@@ -132,11 +132,10 @@ object SubmissionAPI {
         fun getSubmissionSummary(@Path("courseId") courseId: Long,
                                  @Path("assignmentId") assignmentId: Long): Call<SubmissionSummary>
 
-        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}/read")
+        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/self/read")
         fun markSubmissionAsRead(
             @Path("courseId") courseId: Long,
-            @Path("assignmentId") assignmentId: Long,
-            @Path("userId") userId: Long,
+            @Path("assignmentId") assignmentId: Long
         ): Call<Void>
     }
 
@@ -224,11 +223,9 @@ object SubmissionAPI {
         params: RestParams,
         courseId: Long,
         assignmentId: Long,
-        studentId: Long,
         callback: StatusCallback<Void>
     ) {
-        callback.addCall(adapter.build(SubmissionInterface::class.java, params).markSubmissionAsRead(courseId, assignmentId, studentId))
-            .enqueue(callback)
+        callback.addCall(adapter.build(SubmissionInterface::class.java, params).markSubmissionAsRead(courseId, assignmentId)).enqueue(callback)
     }
 
     private fun generateRubricAssessmentQueryMap(rubricAssessment: Map<String, RubricCriterionAssessment>): Map<String, String> {

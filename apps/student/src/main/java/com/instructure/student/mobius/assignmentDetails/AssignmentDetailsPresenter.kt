@@ -21,9 +21,11 @@ import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.isRtl
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.AssignmentUtils2
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
 import com.instructure.student.Submission
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
@@ -56,17 +58,16 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
 
         val quiz = model.quizResult?.dataOrNull
 
-        markSubmissionAsRead(assignment.courseId, assignment.id, ApiPrefs.user?.id.orDefault())
+        markSubmissionAsRead(assignment)
 
         // Loaded state
         return presentLoadedState(assignment, quiz, model.databaseSubmission, context, model.isObserver, model.course)
     }
 
-    private fun markSubmissionAsRead(courseId: Long, assignmentId: Long, userId: Long) {
+    private fun markSubmissionAsRead(assignment: Assignment) {
         SubmissionManager.markSubmissionAsRead(
-            courseId,
-            assignmentId,
-            userId,
+            assignment.courseId,
+            assignment.id,
             object : StatusCallback<Void>() {})
     }
 
