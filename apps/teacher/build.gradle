@@ -120,6 +120,18 @@ android {
             buildConfigField "boolean", "POINT_NINE", "false"
 
         }
+
+        applicationVariants.all {
+            variant ->
+                variant.outputs.each{
+                    output->
+                        def dateTimeStamp = new Date().format('yyyy-MM-dd-HH-mm-ss')
+                        def newName = output.outputFile.name
+                        newName = newName.replace("-dev-debug", "-dev-debug-" + dateTimeStamp)
+                        newName = newName.replace("-qa-debug", "-qa-debug-" + dateTimeStamp)
+                        output.outputFileName  = newName
+                }
+        }
     }
 
     configurations.all {
