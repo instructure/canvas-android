@@ -454,6 +454,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                             )
                             add(this@BaseLoginSignInActivity, user)
                             refreshWidgets()
+                            LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
                             handleLaunchApplicationMainActivityIntent()
                         }
                     }
@@ -494,7 +495,6 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
      * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
      */
     protected open fun handleLaunchApplicationMainActivityIntent() {
-        LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
         viewModel.checkCanvasForElementaryFeature().observe(this, Observer { event: Event<Boolean>? ->
             event?.getContentIfNotHandled()?.let { result: Boolean ->
                 val intent = launchApplicationMainActivityIntent()
