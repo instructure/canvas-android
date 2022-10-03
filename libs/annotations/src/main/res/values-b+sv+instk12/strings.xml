@@ -36,5 +36,6 @@
     <string name="sendingSimple">Skickar</string>
     <string name="pspdf__annotation_type_stamp">Anteckningsfärg</string>
     <string name="removedComment">Borttagen %1$s av %2$s</string>
+    <string name="pspdf__stamp_standard_section"></string>
 
 </resources>

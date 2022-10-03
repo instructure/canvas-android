@@ -37,5 +37,6 @@
     <string name="sendingSimple">Đang Gửi</string>
     <string name="pspdf__annotation_type_stamp">Màu Ghi Chú</string>
     <string name="removedComment">Đã bị gỡ %1$s bởi %2$s</string>
+    <string name="pspdf__stamp_standard_section"></string>
 
 </resources>
