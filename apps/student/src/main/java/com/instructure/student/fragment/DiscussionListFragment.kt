@@ -335,6 +335,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onDiscussionTopicCountChange(event: DiscussionTopicHeaderEvent) {
+        if (isAnnouncement) return
         event.get {
             // Gets written over on phones - added also to {@link #onRefreshFinished()}
             when {
@@ -345,7 +346,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                     recyclerAdapter.addOrUpdateItem(DiscussionListRecyclerAdapter.CLOSED_FOR_COMMENTS, it)
                 }
                 else -> {
-                    if (!isAnnouncement) recyclerAdapter.addOrUpdateItem(DiscussionListRecyclerAdapter.UNPINNED, it)
+                    recyclerAdapter.addOrUpdateItem(DiscussionListRecyclerAdapter.UNPINNED, it)
                 }
             }
         }
