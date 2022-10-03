@@ -39,16 +39,10 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.io.File
 
-
-/**
- * Very basic test to verify that the collaborations web page shows up correctly.
- * We make no attempt to actually start a collaboration.
- * This test could break if changes are made to the web page that we bring up.
- */
 @HiltAndroidTest
 class ShareExtensionE2ETest: StudentTest() {
-    override fun displaysPageObjects() = Unit
 
+    override fun displaysPageObjects() = Unit
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
@@ -57,9 +51,11 @@ class ShareExtensionE2ETest: StudentTest() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
+        val jpgTestFileName = "sample.jpg"
+        val pdfTestFileName = "samplepdf.pdf"
+        val uri = setupFileOnDevice(jpgTestFileName)
+        val uri2 = setupFileOnDevice(pdfTestFileName)
         val student = data.studentsList[0]
-        val uri = setupFileOnDevice("sample.jpg")
-        val uri2 = setupFileOnDevice("samplepdf.pdf")
         val course = data.coursesList[0]
         val teacher = data.teachersList[0]
 
@@ -74,7 +70,7 @@ class ShareExtensionE2ETest: StudentTest() {
             dueAt = 1.days.fromNow.iso8601
         ))
 
-        val testAssignmentTwo = AssignmentsApi.createAssignment(
+        AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
@@ -87,13 +83,13 @@ class ShareExtensionE2ETest: StudentTest() {
         Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
 
         Log.d(STEP_TAG, "Press 'Home' button on the device so it will take the Student application into the background.")
         device.pressHome()
 
-        Log.d(STEP_TAG," Share the 'sample.jpg' and 'samplepdf.pdf' files from the following uris: '$uri' and '$uri2'.")
+        Log.d(STEP_TAG," Share the '$jpgTestFileName' and '$pdfTestFileName' files from the following uris: '$uri' and '$uri2'.")
         shareMultipleFiles(arrayListOf(uri, uri2))
 
         Log.d(STEP_TAG,"Click on the Canvas Student app.")
@@ -133,7 +129,7 @@ class ShareExtensionE2ETest: StudentTest() {
         device.pressRecentApps()
         device.findObject(UiSelector().descriptionContains("Canvas")).click()
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is displayed. Select ${course.name} and navigate to Assginments Page.")
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is displayed. Select ${course.name} and navigate to Assignments Page.")
         dashboardPage.assertPageObjects()
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
@@ -147,7 +143,7 @@ class ShareExtensionE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Press 'Home' button on the device so it will take the Student application into the background.")
         device.pressHome()
 
-        Log.d(STEP_TAG," Share the 'sample.jpg' and 'samplepdf.pdf' files from the following uris: '$uri' and '$uri2'.")
+        Log.d(STEP_TAG," Share the '$jpgTestFileName' and '$pdfTestFileName' files from the following uris: '$uri' and '$uri2'.")
         shareMultipleFiles(arrayListOf(uri, uri2))
 
         Log.d(STEP_TAG,"Click on the Canvas Student app.")
@@ -166,13 +162,13 @@ class ShareExtensionE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Assert that the title of the File Upload Page is correct and both of the shared files are displayed.")
         fileUploadPage.assertPageObjects()
         fileUploadPage.assertDialogTitle("Upload To My Files")
-        fileUploadPage.assertFileDisplayed("sample.jpg")
-        fileUploadPage.assertFileDisplayed("samplepdf.pdf")
+        fileUploadPage.assertFileDisplayed(jpgTestFileName)
+        fileUploadPage.assertFileDisplayed(pdfTestFileName)
 
-        Log.d(STEP_TAG,"Remove 'samplepdf.pdf' file and assert that it's not displayed any more on the list but the other file is displayed.")
-        fileUploadPage.removeFile("samplepdf.pdf")
-        fileUploadPage.assertFileNotDisplayed("samplepdf.pdf")
-        fileUploadPage.assertFileDisplayed("samplepdf.jpg")
+        Log.d(STEP_TAG,"Remove '$pdfTestFileName' file and assert that it's not displayed any more on the list but the other file is displayed.")
+        fileUploadPage.removeFile(pdfTestFileName)
+        fileUploadPage.assertFileNotDisplayed(pdfTestFileName)
+        fileUploadPage.assertFileDisplayed("$pdfTestFileName.jpg")
 
         Log.d(STEP_TAG, "Click on 'Upload' button to upload the file.")
         fileUploadPage.clickUpload()
@@ -199,10 +195,10 @@ class ShareExtensionE2ETest: StudentTest() {
         dashboardPage.gotoGlobalFiles()
 
         Log.d(STEP_TAG, "Assert that the 'unfiled' directory is displayed." +
-                "Click on it, and assert that the previously uploaded file (sample.jpg) is displayed within the folder.")
+                "Click on it, and assert that the previously uploaded file ($jpgTestFileName) is displayed within the folder.")
         fileListPage.assertItemDisplayed("unfiled")
         fileListPage.selectItem("unfiled")
-        fileListPage.assertItemDisplayed("sample.jpg")
+        fileListPage.assertItemDisplayed(jpgTestFileName)
 
     }
 
@@ -218,19 +214,6 @@ class ShareExtensionE2ETest: StudentTest() {
             "com.instructure.candroid" + Const.FILE_PROVIDER_AUTHORITY,
             file
         )
-    }
-
-    private fun shareExternalFile(uri: Uri) {
-        val intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, uri)
-            type = "image/jpg"
-        }
-
-        val chooser = Intent.createChooser(intent, null)
-        chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        InstrumentationRegistry.getInstrumentation().context.startActivity(chooser)
     }
 
     private fun shareMultipleFiles(uris: ArrayList<Uri>) {

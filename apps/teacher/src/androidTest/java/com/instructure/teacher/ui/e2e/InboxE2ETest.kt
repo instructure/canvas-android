@@ -42,7 +42,7 @@ class InboxE2ETest : TeacherTest() {
         Log.d(PREPARATION_TAG, "Create group membership for ${student1.name} student to the group: ${group.name}.")
         GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course)
