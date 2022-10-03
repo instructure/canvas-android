@@ -25,14 +25,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.StreamItem
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
-import com.instructure.student.util.BinderUtils
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
+import com.instructure.student.util.BinderUtils
 import kotlinx.android.synthetic.main.viewholder_notification.view.*
 
 class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -155,8 +152,11 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         // Read/Unread
         if (item.isReadState) {
             title.setTypeface(null, Typeface.NORMAL)
+            unreadMark.setInvisible()
         } else {
             title.setTypeface(null, Typeface.BOLD)
+            unreadMark.setVisible()
+            unreadMark.setImageDrawable(ColorUtils.colorIt(ThemePrefs.accentColor, unreadMark.drawable))
         }
     }
 
