@@ -37,5 +37,6 @@
     <string name="sendingSimple">Wrthi’n anfon</string>
     <string name="pspdf__annotation_type_stamp">Lliw y Nodyn</string>
     <string name="removedComment">%2$s wedi tynnu %1$s </string>
+    <string name="pspdf__stamp_standard_section"></string>
 
 </resources>

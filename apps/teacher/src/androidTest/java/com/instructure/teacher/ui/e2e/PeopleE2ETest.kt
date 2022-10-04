@@ -21,13 +21,13 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.dataseeding.util.days
-import com.instructure.dataseeding.util.fromNow
-import com.instructure.dataseeding.util.iso8601
 import com.instructure.teacher.ui.utils.*
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
@@ -82,7 +82,7 @@ class PeopleE2ETest: TeacherTest() {
                 excused = false
         )
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
 
         Log.d(STEP_TAG,"Open ${course.name} course and navigate to People Page.")

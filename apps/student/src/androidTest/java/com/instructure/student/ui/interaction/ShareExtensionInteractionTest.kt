@@ -230,7 +230,7 @@ class ShareExtensionInteractionTest : StudentTest() {
         fileUploadPage.clickTurnIn()
 
         shareExtensionStatusPage.assertPageObjects()
-        shareExtensionStatusPage.assertAssignemntSubmissionSuccess()
+        shareExtensionStatusPage.assertAssignmentSubmissionSuccess()
     }
 
     private fun createMockData(): MockCanvas {

@@ -101,7 +101,7 @@ class SpeedGraderE2ETest : TeacherTest() {
                 excused = false
         )
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
 
         Log.d(STEP_TAG,"Open ${course.name} course and navigate to Assignments Page.")

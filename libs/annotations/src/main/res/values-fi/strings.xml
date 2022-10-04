@@ -36,5 +36,6 @@
     <string name="sendingSimple">Lähetetään</string>
     <string name="pspdf__annotation_type_stamp">Huomautuksen väri</string>
     <string name="removedComment">Kohteen %1$s poistaja %2$s</string>
+    <string name="pspdf__stamp_standard_section"></string>
 
 </resources>

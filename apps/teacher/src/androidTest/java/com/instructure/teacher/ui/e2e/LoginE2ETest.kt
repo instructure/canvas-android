@@ -57,7 +57,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG,"Login with user: ${teacher1.name}, login id: ${teacher1.loginId} , password: ${teacher1.password}")
+        Log.d(STEP_TAG,"Login with user: ${teacher1.name}, login id: ${teacher1.loginId}.")
         loginSignInPage.loginAs(teacher1)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
@@ -78,7 +78,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG,"Login with user: ${teacher2.name}, login id: ${teacher2.loginId} , password: ${teacher2.password}")
+        Log.d(STEP_TAG,"Login with user: ${teacher2.name}, login id: ${teacher2.loginId}.")
         loginSignInPage.loginAs(teacher2)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
@@ -99,7 +99,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG,"Login with user: ${teacher1.name}, login id: ${teacher1.loginId} , password: ${teacher1.password}")
+        Log.d(STEP_TAG,"Login with user: ${teacher1.name}, login id: ${teacher1.loginId}.")
         loginSignInPage.loginAs(teacher1)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
@@ -142,7 +142,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Enter domain: ${parent.domain}.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         loginSignInPage.loginAs(student)
 
         Log.d(STEP_TAG,"Assert that the user has been landed on 'Not a teacher?' Page.")
@@ -166,7 +166,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that the Login page has been displayed.")
         loginSignInPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId} , password: ${parent.password}")
+        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
         loginSignInPage.loginAs(parent)
 
         Log.d(STEP_TAG,"Assert that the user has been landed on 'Not a teacher?' Page.")

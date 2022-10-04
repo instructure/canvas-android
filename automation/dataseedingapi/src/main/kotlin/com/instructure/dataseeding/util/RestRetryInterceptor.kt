@@ -33,6 +33,7 @@ object RestRetryInterceptor : Interceptor {
         var response = chain.proceed(request)
         while (response.failed && attempt <= MAX_RETRIES) {
             RetryBackoff.wait(attempt)
+            response.close()
             response = chain.proceed(request)
             attempt += 1
         }
