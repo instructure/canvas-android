@@ -51,7 +51,7 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun themeColor(): Int = ContextCompat.getColor(this, R.color.login_teacherAppTheme)
 
-    override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent = SignInActivity.createIntent(this, AccountDomain(snickerDoodle.domain))
+    override fun signInActivityIntent(accountDomain: AccountDomain): Intent = SignInActivity.createIntent(this, accountDomain)
 
     override fun startApp() {
         val intent = launchApplicationMainActivityIntent()

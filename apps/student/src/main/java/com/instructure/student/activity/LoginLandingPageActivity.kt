@@ -63,8 +63,8 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
         return ContextCompat.getColor(this, R.color.login_studentAppTheme)
     }
 
-    override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent {
-        return SignInActivity.createIntent(this, AccountDomain(snickerDoodle.domain))
+    override fun signInActivityIntent(accountDomain: AccountDomain): Intent {
+        return SignInActivity.createIntent(this, accountDomain)
     }
 
     override fun loginWithQRCodeEnabled(): Boolean = true
