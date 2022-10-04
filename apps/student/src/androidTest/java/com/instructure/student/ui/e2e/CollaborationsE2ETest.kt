@@ -37,7 +37,7 @@ class CollaborationsE2ETest: StudentTest() {
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 

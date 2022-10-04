@@ -59,7 +59,7 @@ class PagesE2ETest : TeacherTest() {
                 body = "<h1 id=\"header1\">Front Page Text</h1>"
         )
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 

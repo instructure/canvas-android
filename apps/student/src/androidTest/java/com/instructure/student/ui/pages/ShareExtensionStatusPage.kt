@@ -18,7 +18,10 @@ package com.instructure.student.ui.pages
 
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertHasText
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withId
 import com.instructure.student.R
 
 class ShareExtensionStatusPage : BasePage() {
@@ -27,9 +30,20 @@ class ShareExtensionStatusPage : BasePage() {
     private val subtitle by WaitForViewWithId(R.id.subtitle)
     private val description by WaitForViewWithId(R.id.description)
 
-    fun assertAssignemntSubmissionSuccess() {
+    fun assertAssignmentSubmissionSuccess() {
         dialogTitle.assertHasText(R.string.submission)
         subtitle.assertHasText(R.string.submissionSuccessTitle)
         description.assertHasText(R.string.submissionSuccessMessage)
     }
+
+    fun assertFileUploadSuccess() {
+        dialogTitle.assertHasText(R.string.fileUpload)
+        subtitle.assertHasText(R.string.fileUploadSuccess)
+        description.assertHasText(R.string.filesUploadedSuccessfully)
+    }
+
+    fun clickOnDone() {
+        onView(withId(R.id.doneButton)).click()
+    }
+
 }
