@@ -129,6 +129,7 @@ android {
                         def newName = output.outputFile.name
                         newName = newName.replace("-dev-debug", "-dev-debug-" + dateTimeStamp)
                         newName = newName.replace("-qa-debug", "-qa-debug-" + dateTimeStamp)
+                        newName = newName.replace("-qa-debug-androidTest", "-qa-debug-androidTest-" + dateTimeStamp)
                         output.outputFileName  = newName
                 }
         }
