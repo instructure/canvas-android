@@ -303,7 +303,8 @@ class NotificationListRecyclerAdapter(
                                 notifyDataSetChanged()
                             }
                         }
-                    }
+                    },
+                    false
                 )
             }
 
@@ -319,7 +320,10 @@ class NotificationListRecyclerAdapter(
             streamItem.id,
             object : StatusCallback<HiddenStreamItem>() {
                 override fun onResponse(response: Response<HiddenStreamItem>, linkHeaders: LinkHeaders, type: ApiType) {
-                    if (response.body()!!.isHidden) removeItem(streamItem)
+                    if (response.body()!!.isHidden) {
+                        removeItem(streamItem)
+                        adapterToFragmentCallback.onItemRemoved()
+                    }
                 }
 
                 override fun onFail(call: Call<HiddenStreamItem>?, error: Throwable, response: Response<*>?) {

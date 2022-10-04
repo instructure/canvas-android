@@ -405,6 +405,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun setupHeaderWebView() {
         setupWebView(discussionTopicHeaderWebView)
         discussionTopicHeaderWebView.addJavascriptInterface(JSDiscussionHeaderInterface(), "accessor")
+        DiscussionManager.markDiscussionTopicRead(canvasContext, getTopicId(), object : StatusCallback<Void>() {})
     }
 
     @SuppressLint("SetJavaScriptEnabled")

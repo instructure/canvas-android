@@ -16,12 +16,20 @@
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/AdapterItem"
-    android:orientation="horizontal">
+    style="@style/AdapterItem">
+
+    <ImageView
+        android:id="@+id/unreadMark"
+        android:layout_width="@dimen/unread_message_marker_size"
+        android:layout_height="@dimen/unread_message_marker_size"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/unread"
+        android:src="@drawable/ic_circle" />
 
     <ImageView
         android:id="@+id/icon"
         style="@style/AdapterItemIcon"
+        android:layout_marginStart="4dp"
         android:importantForAccessibility="no"
         tools:srcCompat="@drawable/ic_copy" />
 

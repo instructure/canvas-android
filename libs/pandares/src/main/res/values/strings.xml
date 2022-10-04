@@ -1283,6 +1283,11 @@
         <item quantity="other">%s unread messages</item>
     </plurals>
 
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s unread notification</item>
+        <item quantity="other">%s unread notifications</item>
+    </plurals>
+
     <string name="noAnnotationSelected">No annotation selected</string>
 
     <string name="emailNotifications">Email Notifications</string>
