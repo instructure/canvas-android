@@ -49,19 +49,20 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
     if(html.contains("<iframe")) {
         return this.tryWeave {
             var hasLtiTool = false
+            var hasGoogleDoc = false
             var newHTML: String = html
 
             // First we need to find LTIs by looking for iframes
             val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
 
             while (iframeMatcher.find()) {
-                val iframe = iframeMatcher.group(0)
+                val iframe = iframeMatcher.group(0).orEmpty()
                 // We found an iframe, we need to do a few things...
                 val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
                 // First we find the src
                 if (matcher.find()) {
                     // Snag that src
-                    val srcUrl = matcher.group(1)
+                    val srcUrl = matcher.group(1).orEmpty()
 
                     if (srcUrl.contains("external_tools")) {
                         // Handle the LTI case
@@ -80,6 +81,12 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
                         val newIframe = iframeWithLink(srcUrl, iframe, context)
                         newHTML = newHTML.replace(iframe, newIframe)
                     }
+
+                    if (srcUrl.isGoogleDocsUrl()) {
+                        hasGoogleDoc = true
+                        val newIframe = iframeWithButton(srcUrl, iframe, context.getString(R.string.openLtiInExternalApp))
+                        newHTML = newHTML.replace(iframe, newIframe)
+                    }
                 }
             }
 
@@ -89,7 +96,7 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
             newHTML = newHTML.replace("__LTI_BUTTON_MARGIN__", if (isTablet) "0px" else "auto")
 
             // Add the JS interface
-            if(hasLtiTool && jsCallback != null) {
+            if ((hasLtiTool || hasGoogleDoc) && jsCallback != null) {
                 // Its possible, i.e. for discussions, that the js interface is already configured
                 this@loadHtmlWithIframes.addJavascriptInterface(JsExternalToolInterface(jsCallback), "accessor")
             }
@@ -126,6 +133,12 @@ private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): St
     val buttonText = context.getString(R.string.loadFullContent)
     val htmlButton = "</br><p><div class=\"lti_button\" onClick=\"location.href=\'$srcUrl\'\">$buttonText</div></p>"
 
+    return iframe + htmlButton
+}
+
+private fun iframeWithButton(srcUrl: String, iframe: String, buttonText: String): String {
+    val button = "</br><p><div class=\"lti_button\" onClick=\"onLtiToolButtonPressed('%s')\">%s</div></p>"
+    val htmlButton = String.format(button, srcUrl, buttonText)
     return iframe + htmlButton
 }
 
@@ -195,3 +208,5 @@ fun WebView.addDarkThemeToHtmlDocument() {
                 """
     evaluateJavascript(js, {})
 }
+
+fun String.isGoogleDocsUrl() = this.contains("docs.google.com")

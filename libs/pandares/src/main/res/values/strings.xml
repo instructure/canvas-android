@@ -1235,6 +1235,7 @@
     <string name="submissionDraftAvailableTitle">Draft Available</string>
     <string name="errorLoadingSubmission">An error occurred while loading submission</string>
     <string name="loadFullContent">Tap to see full content</string>
+    <string name="openLtiInExternalApp">Tap to open in external app</string>
     <string name="dashboardTabImportantDates">Important Dates</string>
     <string name="importantDatesEmptyTitle">No important dates</string>
     <string name="important_dates">Important Dates</string>
