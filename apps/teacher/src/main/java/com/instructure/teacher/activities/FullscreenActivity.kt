@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -33,7 +32,6 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.interfaces.NavigationCallbacks
-import com.instructure.pandautils.utils.PermissionReceiver
 import com.instructure.pandautils.utils.isCourseOrGroup
 import com.instructure.teacher.R
 import com.instructure.teacher.router.RouteResolver
@@ -42,9 +40,7 @@ import kotlinx.android.synthetic.main.activity_fullscreen.*
 import kotlinx.coroutines.Job
 
 @AndroidEntryPoint
-@Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
-class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions,
-    ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
+class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
 
     private var mRoute: Route? = null
     private var groupApiCall: Job? = null
