@@ -16,7 +16,9 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -84,7 +86,7 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
 
                     if (isGoogleDocsUrl(srcUrl)) {
                         hasGoogleDoc = true
-                        val newIframe = iframeWithButton(srcUrl, iframe, context.getString(R.string.openLtiInExternalApp))
+                        val newIframe = iframeWithGoogleDocsButton(srcUrl, iframe, context.getString(R.string.openLtiInExternalApp))
                         newHTML = newHTML.replace(iframe, newIframe)
                     }
                 }
@@ -98,7 +100,7 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
             // Add the JS interface
             if ((hasLtiTool || hasGoogleDoc) && jsCallback != null) {
                 // Its possible, i.e. for discussions, that the js interface is already configured
-                this@loadHtmlWithIframes.addJavascriptInterface(JsExternalToolInterface(jsCallback), "accessor")
+                this@loadHtmlWithIframes.addJavascriptInterface(JsExternalToolInterface(jsCallback, context), "accessor")
             }
 
             loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML), contentDescription)
@@ -136,8 +138,8 @@ private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): St
     return iframe + htmlButton
 }
 
-private fun iframeWithButton(srcUrl: String, iframe: String, buttonText: String): String {
-    val button = "</br><p><div class=\"lti_button\" onClick=\"onLtiToolButtonPressed('%s')\">%s</div></p>"
+private fun iframeWithGoogleDocsButton(srcUrl: String, iframe: String, buttonText: String): String {
+    val button = "</br><p><div class=\"lti_button\" onClick=\"accessor.onGoogleDocsButtonPressed('%s')\">%s</div></p>"
     val htmlButton = String.format(button, srcUrl, buttonText)
     return iframe + htmlButton
 }
@@ -159,11 +161,16 @@ suspend fun authenticateLTIUrl(ltiUrl: String): String {
 
 data class Placeholder(val iframeHtml: String, val placeHolderHtml: String)
 
-class JsExternalToolInterface(val callback: (ltiUrl: String) -> Unit) {
-    @Suppress("UNUSED_PARAMETER")
+@Suppress("UNUSED_PARAMETER")
+class JsExternalToolInterface(private val callback: (ltiUrl: String) -> Unit, private val context: Context) {
     @JavascriptInterface
     fun onLtiToolButtonPressed(ltiUrl: String) {
         callback(ltiUrl)
+    }
+
+    @JavascriptInterface
+    fun onGoogleDocsButtonPressed(url: String) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 }
 
@@ -209,4 +216,4 @@ fun WebView.addDarkThemeToHtmlDocument() {
     evaluateJavascript(js, {})
 }
 
-fun isGoogleDocsUrl(url: String) = url.contains("docs.google.com")
+private fun isGoogleDocsUrl(url: String) = url.contains("docs.google.com")

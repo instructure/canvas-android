@@ -17,8 +17,6 @@
 
 package com.instructure.teacher.fragments
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -176,12 +174,8 @@ class PageDetailsFragment : BasePresenterFragment<
     override fun populatePageDetails(page: Page) {
         mPage = page
         loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, {
-            if (isGoogleDocsUrl(it)) {
-                activity?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
-            } else {
-                val args = LtiLaunchFragment.makeBundle(mCanvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-            }
+            val args = LtiLaunchFragment.makeBundle(mCanvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
         }, page.title)
         setupToolbar()
     }

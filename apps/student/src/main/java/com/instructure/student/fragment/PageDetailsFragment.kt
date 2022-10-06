@@ -16,8 +16,6 @@
  */
 package com.instructure.student.fragment
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -207,12 +205,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
             // Load the html with the helper function to handle iframe cases
             loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, body, ::loadPageHtml, {
-                if (isGoogleDocsUrl(it)) {
-                    activity?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
-                } else {
-                    val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-                }
+                val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+                RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
             }, page.title)
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
