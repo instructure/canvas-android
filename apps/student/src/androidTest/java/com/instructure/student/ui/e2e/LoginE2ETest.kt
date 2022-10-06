@@ -57,64 +57,91 @@ class LoginE2ETest : StudentTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId}.")
+        Log.d(STEP_TAG, "Login with user: ${student1.name}, login id: ${student1.loginId}.")
         loginWithUser(student1)
 
-        Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(student1)
 
-        Log.d(STEP_TAG,"Log out with ${student1.name} student.")
+        Log.d(STEP_TAG, "Log out with ${student1.name} student.")
         dashboardPage.logOut()
 
-        Log.d(STEP_TAG,"Login with user: ${student2.name}, login id: ${student2.loginId}.")
-        loginWithUser(student2)
+        Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
+        loginWithUser(student2, true)
 
-        Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(student2)
 
-        Log.d(STEP_TAG,"Click on 'Change User' button on the left-side menu.")
+        Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         dashboardPage.pressChangeUser()
 
-        Log.d(STEP_TAG,"Assert that the previously logins has been displayed.")
+        Log.d(STEP_TAG, "Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
 
-        Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId}.")
-        loginWithUser(student1)
+        Log.d(STEP_TAG, "Login with user: ${student1.name}, login id: ${student1.loginId}.")
+        loginWithUser(student1, true)
 
-        Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(student1)
 
-        Log.d(STEP_TAG,"Click on 'Change User' button on the left-side menu.")
+        Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         dashboardPage.pressChangeUser()
 
-        Log.d(STEP_TAG,"Assert that the previously logins has been displayed. Assert that ${student1.name} and ${student2.name} students are displayed within the previous login section.")
+        Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that ${student1.name} and ${student2.name} students are displayed within the previous login section.")
         loginLandingPage.assertDisplaysPreviousLogins()
         loginLandingPage.assertPreviousLoginUserDisplayed(student1.name)
         loginLandingPage.assertPreviousLoginUserDisplayed(student2.name)
 
-        Log.d(STEP_TAG,"Remove ${student1.name} student from the previous login section.")
+        Log.d(STEP_TAG, "Remove ${student1.name} student from the previous login section.")
         loginLandingPage.removeUserFromPreviousLogins(student1.name)
 
-        Log.d(STEP_TAG,"Login with the previous user, ${student2.name}, with one click, by clicking on the user's name on the bottom.")
+        Log.d(STEP_TAG, "Login with the previous user, ${student2.name}, with one click, by clicking on the user's name on the bottom.")
         loginLandingPage.loginWithPreviousUser(student2)
 
-        Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(student2)
 
-        Log.d(STEP_TAG,"Click on 'Change User' button on the left-side menu.")
+        Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         dashboardPage.pressChangeUser()
 
-        Log.d(STEP_TAG,"Assert that the previously logins has been displayed. Assert that ${student1.name} and ${student2.name} students are displayed within the previous login section.")
+        Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that ${student1.name} and ${student2.name} students are displayed within the previous login section.")
         loginLandingPage.assertDisplaysPreviousLogins()
         loginLandingPage.assertPreviousLoginUserDisplayed(student2.name)
 
-        Log.d(STEP_TAG,"Remove ${student2.name} student from the previous login section.")
+        Log.d(STEP_TAG, "Remove ${student2.name} student from the previous login section.")
         loginLandingPage.removeUserFromPreviousLogins(student2.name)
 
-        Log.d(STEP_TAG,"Assert that none of the students, ${student1.name} and ${student2.name} are displayed and not even the 'Previous Logins' label is displayed.")
+        Log.d(STEP_TAG, "Assert that none of the students, ${student1.name} and ${student2.name} are displayed and not even the 'Previous Logins' label is displayed.")
         loginLandingPage.assertPreviousLoginUserNotExist(student1.name)
         loginLandingPage.assertPreviousLoginUserNotExist(student2.name)
         loginLandingPage.assertNotDisplaysPreviousLogins()
+
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testLoginE2EWithLastSavedSchool() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, teachers = 1, courses = 1)
+        val student1 = data.studentsList[0]
+        val student2 = data.studentsList[1]
+
+        Log.d(STEP_TAG, "Login with user: ${student1.name}, login id: ${student1.loginId}.")
+        loginWithUser(student1)
+
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        assertDashboardPageDisplayed(student1)
+
+        Log.d(STEP_TAG, "Log out with ${student1.name} student.")
+        dashboardPage.logOut()
+
+        Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
+        loginWithLastSavedSchool(student2)
+
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        assertDashboardPageDisplayed(student2)
 
     }
 
@@ -149,7 +176,7 @@ class LoginE2ETest : StudentTest() {
         dashboardPage.logOut()
 
         Log.d(STEP_TAG,"Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
-        loginWithUser(teacher)
+        loginWithUser(teacher, true)
 
         Log.d(STEP_TAG,"Validate ${teacher.name} user's role as a Teacher.")
         validateUserAndRole(teacher, course, "Teacher")
@@ -161,7 +188,7 @@ class LoginE2ETest : StudentTest() {
         dashboardPage.logOut()
 
         Log.d(STEP_TAG,"Login with user: ${ta.name}, login id: ${ta.loginId}.")
-        loginWithUser(ta)
+        loginWithUser(ta, true)
 
         Log.d(STEP_TAG,"Validate ${ta.name} user's role as a TA.")
         validateUserAndRole(ta, course, "TA")
@@ -173,7 +200,7 @@ class LoginE2ETest : StudentTest() {
         dashboardPage.logOut()
 
         Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
-        loginWithUser(parent)
+        loginWithUser(parent, true)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(parent)
@@ -230,15 +257,31 @@ class LoginE2ETest : StudentTest() {
         dashboardPage.logOut()
     }
 
-    private fun loginWithUser(user: CanvasUserApiModel) {
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
+    private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
+
+        if(lastSchoolSaved) {
+            Log.d(STEP_TAG,"Click 'Find Another School' button.")
+            loginLandingPage.clickFindAnotherSchoolButton()
+        }
+        else {
+            Log.d(STEP_TAG, "Click 'Find My School' button.")
+            loginLandingPage.clickFindMySchoolButton()
+        }
 
         Log.d(STEP_TAG,"Enter domain: ${user.domain}.")
         loginFindSchoolPage.enterDomain(user.domain)
 
         Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
+        loginSignInPage.loginAs(user)
+    }
+
+    private fun loginWithLastSavedSchool(user: CanvasUserApiModel) {
+
+        Log.d(STEP_TAG, "Click on last saved school's button.")
+        loginLandingPage.clickOnLastSavedSchoolButton()
+
+        Log.d(STEP_TAG, "Login with ${user.name} user.")
         loginSignInPage.loginAs(user)
     }
 
