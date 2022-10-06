@@ -56,13 +56,13 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
             val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
 
             while (iframeMatcher.find()) {
-                val iframe = iframeMatcher.group(0).orEmpty()
+                val iframe = iframeMatcher.group(0)
                 // We found an iframe, we need to do a few things...
                 val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
                 // First we find the src
                 if (matcher.find()) {
                     // Snag that src
-                    val srcUrl = matcher.group(1).orEmpty()
+                    val srcUrl = matcher.group(1)
 
                     if (srcUrl.contains("external_tools")) {
                         // Handle the LTI case
@@ -82,7 +82,7 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
                         newHTML = newHTML.replace(iframe, newIframe)
                     }
 
-                    if (srcUrl.isGoogleDocsUrl()) {
+                    if (isGoogleDocsUrl(srcUrl)) {
                         hasGoogleDoc = true
                         val newIframe = iframeWithButton(srcUrl, iframe, context.getString(R.string.openLtiInExternalApp))
                         newHTML = newHTML.replace(iframe, newIframe)
@@ -209,4 +209,4 @@ fun WebView.addDarkThemeToHtmlDocument() {
     evaluateJavascript(js, {})
 }
 
-fun String.isGoogleDocsUrl() = this.contains("docs.google.com")
+fun isGoogleDocsUrl(url: String) = url.contains("docs.google.com")

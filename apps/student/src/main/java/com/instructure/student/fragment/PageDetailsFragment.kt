@@ -207,7 +207,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
             // Load the html with the helper function to handle iframe cases
             loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, body, ::loadPageHtml, {
-                if (it.isGoogleDocsUrl()) {
+                if (isGoogleDocsUrl(it)) {
                     activity?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
                 } else {
                     val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)

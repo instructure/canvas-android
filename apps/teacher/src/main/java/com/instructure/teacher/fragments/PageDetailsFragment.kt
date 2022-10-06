@@ -176,7 +176,7 @@ class PageDetailsFragment : BasePresenterFragment<
     override fun populatePageDetails(page: Page) {
         mPage = page
         loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, {
-            if (it.isGoogleDocsUrl()) {
+            if (isGoogleDocsUrl(it)) {
                 activity?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
             } else {
                 val args = LtiLaunchFragment.makeBundle(mCanvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
