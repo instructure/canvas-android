@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Skruna fyrir öll breytingartæki</string>
     <string name="rce_emptyUrlError">Vefslóð má ekki vera auð</string>
     <string name="rce_httpNotAllowed">Aðeins https vefslóðir eru samþykktar</string>
+    <string name="rce_dialogAltText">Bættu við baktexta fyrir skjálesara</string>
 </resources>

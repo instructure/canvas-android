@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="rce_contentDescription_undo">Annulla</string>
     <string name="rce_contentDescription_redo">Ripeti</string>
     <string name="rce_contentDescription_bold">Formato grassetto</string>
@@ -69,4 +70,5 @@
 
     <string name="rce_emptyUrlError">L’URL non può essere vuoto</string>
     <string name="rce_httpNotAllowed">Solo accettati solo URL https</string>
+    <string name="rce_dialogAltText">Aggiungi testo alternativo per screen reader</string>
 </resources>

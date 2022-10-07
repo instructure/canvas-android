@@ -958,7 +958,6 @@
     <string name="latePenalty">Kazen za zamudo (-%s)</string>
     <string name="finalGrade">Končna ocena</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Odpre se v spletnem pogledu</string>
@@ -1261,6 +1260,26 @@
     <string name="appThemeSettingsTitle">Tema aplikacije</string>
     <string name="appThemeLight">Svetlo</string>
     <string name="appThemeDark">Temno</string>
-    <string name="appThemeSystem">Sistemsko privzeta nastavitev</string>
+    <string name="appThemeSystem">Enako kot naprava</string>
+    <string name="themeSelectorTitle">Sistem Canvas je zdaj na voljo v temni preobleki</string>
+    <string name="themeSelectorDescription">Izberite preobleko aplikacije</string>
+    <string name="themeSelectorLightTheme">Svetla preobleka</string>
+    <string name="themeSelectorDarkTheme">Temna preobleka</string>
+    <string name="themeSelectorDeviceTheme">Enako kot preobleka na napravi</string>
+    <string name="themeSelectorSave">Shrani</string>
+    <string name="themeSelectorChangeLater">To lahko pozneje spremenite v nastavitvah aplikacije</string>
+    <string name="grabAnnotationTool">Zgrabi</string>
+    <string name="fileUpload">Nalaganje datotek</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s neprebrano sporočilo</item>
+        <item quantity="other">%s neprebranih(-i/a) sporočil(-i/a)</item>
+    </plurals>
+    <string name="noAnnotationSelected">Izbrana ni nobena opomba</string>
+    <string name="emailNotifications">E-poštno obveščanje</string>
+    <string name="emailNotificationsImmediately">Takoj</string>
+    <string name="emailNotificationsDaily">Dnevno</string>
+    <string name="emailNotificationsWeekly">Tedensko</string>
+    <string name="emailNotificationsNever">Nikoli</string>
+    <string name="selectFrequency">Izberite pogostost</string>
 </resources>

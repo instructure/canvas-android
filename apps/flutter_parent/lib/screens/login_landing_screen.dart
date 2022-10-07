@@ -17,6 +17,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
@@ -38,6 +39,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/snickers.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tuple/tuple.dart';
 
 class LoginLandingScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -100,6 +102,7 @@ class LoginLandingScreen extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
+    final lastLoginAccount = ApiPrefs.getLastAccount();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -109,27 +112,71 @@ class LoginLandingScreen extends StatelessWidget {
             semanticsLabel: L10n(context).canvasLogoLabel,
           ),
           SizedBox(height: 64),
-          ButtonTheme(
-            minWidth: 260,
-            child: RaisedButton(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  L10n(context).findSchool,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-              onPressed: () {
-                onFindSchoolPressed(context);
-              },
-            ),
-          ),
+          if (lastLoginAccount == null)
+            _filledButton(context, L10n(context).findSchool, () {
+              onFindSchoolPressed(context);
+            }),
+          if (lastLoginAccount != null)
+            _filledButton(
+                context,
+                lastLoginAccount.item1.name == null || lastLoginAccount.item1.name.isEmpty
+                    ? lastLoginAccount.item1.domain
+                    : lastLoginAccount.item1.name, () {
+              onSavedSchoolPressed(context, lastLoginAccount);
+            }),
+          SizedBox(height: 16),
+          if (lastLoginAccount != null)
+            _outlineButton(context, L10n(context).findAnotherSchool, () {
+              onFindSchoolPressed(context);
+            }),
           SizedBox(height: 8),
           if (_hasCameras()) _qrLogin(context),
         ],
+      ),
+    );
+  }
+
+  Widget _filledButton(
+      BuildContext context, String title, VoidCallback onPressed) {
+    return ButtonTheme(
+      minWidth: 260,
+      child: RaisedButton(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+        color: Theme.of(context).accentColor,
+        textColor: Colors.white,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4))),
+        onPressed: onPressed,
+      ),
+    );
+  }
+
+  Widget _outlineButton(
+      BuildContext context, String title, VoidCallback onPressed) {
+    return ButtonTheme(
+      minWidth: 260,
+      child: OutlinedButton(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+        ),
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          side: BorderSide(
+              width: 1, color: ParentTheme.of(context).onSurfaceColor),
+        ),
+        onPressed: onPressed,
       ),
     );
   }
@@ -233,36 +280,18 @@ class LoginLandingScreen extends StatelessWidget {
     );
   }
 
-  Widget _helpRequestButton(BuildContext context) {
-    return Semantics(
-      label: L10n(context).loginHelpHint,
-      child: GestureDetector(
-        onTap: () {
-          locator<Analytics>().logEvent(AnalyticsEventConstants.HELP_LOGIN);
-          ErrorReportDialog.asDialog(context,
-              title: L10n(context).loginHelpTitle,
-              subject: L10n(context).loginHelpSubject,
-              severity: ErrorReportSeverity.BLOCKING,
-              includeEmail: true,
-              hideSeverityPicker: true);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Align(
-            child: Icon(
-              CanvasIcons.question,
-              color: ParentColors.ash,
-            ),
-            alignment: Alignment.topRight,
-          ),
-        ),
-      ),
-    );
-  }
-
   onFindSchoolPressed(BuildContext context) {
     LoginFlow flow = LoginFlow.values[loginFlowIndex % LoginFlow.values.length];
-    locator<QuickNav>().pushRoute(context, PandaRouter.domainSearch(loginFlow: flow));
+    locator<QuickNav>()
+        .pushRoute(context, PandaRouter.domainSearch(loginFlow: flow));
+  }
+
+  onSavedSchoolPressed(BuildContext context, Tuple2<SchoolDomain, LoginFlow> lastAccount) {
+    locator<QuickNav>().pushRoute(
+        context,
+        PandaRouter.loginWeb(lastAccount.item1.domain,
+            accountName: lastAccount.item1.name,
+        loginFlow: lastAccount.item2));
   }
 
   void _changeLoginFlow(BuildContext context) {

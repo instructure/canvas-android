@@ -17,12 +17,16 @@ package com.instructure.teacher.ui.pages
 
 
 import androidx.test.InstrumentationRegistry
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.web.assertion.WebViewAssertions
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
+import org.hamcrest.Matchers
 
 @Suppress("unused")
 class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
@@ -143,6 +147,15 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         pointsTextView.assertContainsText(newAssignmentPoints)
     }
 
+    fun assertDisplaysDescription(text: String) {
+        descriptionWebView.assertVisible()
+        Web.onWebView().withElement(
+            DriverAtoms.findElement(
+                Locator.XPATH,
+                "//div[@id='content' and contains(text(),'$text')]"
+            )
+        ).check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(text)))    }
+
     fun assertNeedsGrading(actual: Int = 1, outOf: Int = 1) {
         val resources = InstrumentationRegistry.getTargetContext()
         ungradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_needs_grading).format(actual, outOf))
@@ -158,7 +171,11 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         gradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_graded).format(actual, outOf))
     }
 
-    fun scrollToSubmissionType() {
+    fun viewAllSubmission() {
+        onView(withId(R.id.viewAllSubmissions)).click()
+    }
+
+    private fun scrollToSubmissionType() {
         scrollTo(R.id.submissionTypesTextView)
     }
 
@@ -176,6 +193,10 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         } else {
             publishStatusTextView.assertHasText(R.string.not_published)
         }
+    }
+
+    fun assertMultipleDueDates() {
+        onView(withId(R.id.otherDueDateTextView) + withText(R.string.multiple_due_dates)).assertDisplayed()
     }
 
     private fun assertAssignmentDetails(assignmentName: String, published: Boolean) {

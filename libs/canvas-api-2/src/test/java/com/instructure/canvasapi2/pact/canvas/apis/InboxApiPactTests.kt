@@ -221,7 +221,7 @@ class InboxApiPactTests : ApiPactTestBase() {
     // populated.  Make sure that the provider_state is set up accordingly.
     //
 
-    val getOneConversationQuery = "include[]=participant_avatars"
+    val getOneConversationQuery = "include[]=participant_avatars&auto_mark_as_read=true"
     val getOneConversationPath = "/api/v1/conversations/1"
     val getOneConversationFieldConfig = PactConversationFieldConfig(
             includeMessages = true,
@@ -255,7 +255,7 @@ class InboxApiPactTests : ApiPactTestBase() {
     fun `grab a specific conversation`() {
         val service = createService()
 
-        val getConversationCall = service.getConversation(1)
+        val getConversationCall = service.getConversation(1, true)
         val getConversationResult = getConversationCall.execute()
 
         assertQueryParamsAndPath(getConversationCall, getOneConversationQuery, getOneConversationPath)

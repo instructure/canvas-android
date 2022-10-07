@@ -134,6 +134,16 @@ object DiscussionManager {
         DiscussionAPI.rateDiscussionEntry(adapter, canvasContext, topicId, entryId, rating, callback, params)
     }
 
+    fun markDiscussionTopicRead(
+        canvasContext: CanvasContext,
+        topicId: Long,
+        callback: StatusCallback<Void>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+        DiscussionAPI.markDiscussionTopicRead(adapter, canvasContext, topicId, callback, params)
+    }
+
     fun markDiscussionTopicEntryRead(
         canvasContext: CanvasContext,
         topicId: Long,

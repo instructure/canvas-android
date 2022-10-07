@@ -326,8 +326,7 @@ void main() {
       ];
       final enrollment = Enrollment((b) => b
         ..enrollmentState = 'active'
-        ..grades = _mockGrade(currentScore: 1.2345)
-        ..userId = _studentId);
+        ..grades = _mockGrade(currentScore: 1.2345));
 
       final model = CourseDetailsModel(_student, _courseId);
       model.course = _mockCourse();
@@ -351,8 +350,7 @@ void main() {
       ];
       final enrollment = Enrollment((b) => b
         ..enrollmentState = 'active'
-        ..grades = _mockGrade(currentGrade: grade)
-        ..userId = _studentId);
+        ..grades = _mockGrade(currentGrade: grade));
       final model = CourseDetailsModel(_student, _courseId);
       model.course = _mockCourse();
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);

@@ -16,14 +16,18 @@
  */
 package com.instructure.espresso
 
+import android.graphics.Color
+import android.view.View
+import android.widget.TextView
+import androidx.annotation.IdRes
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.viewpager.widget.ViewPager
-import androidx.recyclerview.widget.RecyclerView
-import android.view.View
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.hamcrest.Matchers
-import java.lang.ClassCastException
+import org.junit.Assert.assertEquals
 
 class RecyclerViewItemCountAssertion(private val expectedCount: Int) : ViewAssertion {
     override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
@@ -49,5 +53,24 @@ class ViewPagerItemCountAssertion(private val expectedCount: Int) : ViewAssertio
         val count = (view as? ViewPager)?.adapter?.count
                 ?: throw ClassCastException("View of type ${view.javaClass.simpleName} must be a ViewPager")
         ViewMatchers.assertThat(count, Matchers.`is`(expectedCount))
+    }
+}
+
+class TextViewColorAssertion(private val colorHexCode: String) : ViewAssertion {
+    override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        val item = (view as? TextView)
+            ?: throw ClassCastException("View of type ${view.javaClass.simpleName} must be a TextView")
+        assertEquals(item.currentTextColor, Color.parseColor(colorHexCode))
+    }
+}
+
+class NotificationBadgeAssertion(@IdRes private val menuItemId: Int, private val expectedCount: Int) : ViewAssertion {
+    override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        val bottomNavigationView = (view as? BottomNavigationView)
+            ?: throw ClassCastException("View of type ${view.javaClass.simpleName} must be a BottomNavigationView")
+        val badgeCount = bottomNavigationView.getBadge(menuItemId)?.number ?: -1
+        assertEquals(badgeCount, expectedCount)
     }
 }

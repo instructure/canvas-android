@@ -38,18 +38,20 @@ import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.InboxFragment
+import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
 
-abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountInvalidated {
+abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountInvalidated, NotificationListFragment.OnNotificationCountInvalidated {
 
     private var loadInitialDataJob: Job? = null
 
     abstract fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?)
-    abstract fun updateUnreadCount(unreadCount: String)
+    abstract fun updateUnreadCount(unreadCount: Int)
+    abstract fun updateNotificationCount(notificationCount: Int)
     abstract fun initialCoreDataLoadingComplete()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,8 +62,6 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
 
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
-            val crashlytics = FirebaseCrashlytics.getInstance();
-
             // Determine if user can masquerade
             if (ApiPrefs.canBecomeUser == null) {
                 if (ApiPrefs.domain.startsWith("siteadmin", true)) {
@@ -117,18 +117,15 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
             }
 
             if (!ApiPrefs.isMasquerading) {
-                // Set logged user details
-                if (Logger.canLogUserDetails()) {
-                    Logger.d("User detail logging allowed. Setting values.")
-                    crashlytics.setUserId("UserID: ${ApiPrefs.user?.id.toString()} User Domain: ${ApiPrefs.domain}")
-                } else {
-                    Logger.d("User detail logging disallowed. Clearing values.")
-                    crashlytics.setUserId("")
-                }
+                // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
+                val crashlytics = FirebaseCrashlytics.getInstance();
+                crashlytics.setUserId("")
             }
 
             // get unread count of conversations
             getUnreadMessageCount()
+
+            getUnreadNotificationCount()
 
             initialCoreDataLoadingComplete()
         } catch {
@@ -139,8 +136,17 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
     private suspend fun getUnreadMessageCount() {
         val unreadCount = awaitApi<UnreadConversationCount> { UnreadCountManager.getUnreadConversationCount(it, true) }
         unreadCount.let {
-            updateUnreadCount(it.unreadCount!!)
+            val unreadCountInt = (it.unreadCount ?: "0").toInt()
+            updateUnreadCount(unreadCountInt)
         }
+    }
+
+    private fun getUnreadNotificationCount() {
+        UnreadCountManager.getUnreadNotificationCount(object : StatusCallback<List<UnreadNotificationCount>>() {
+            override fun onResponse(data: Call<List<UnreadNotificationCount>>, response: Response<List<UnreadNotificationCount>>) {
+                updateNotificationCount(response.body()?.sumOf { it.unreadCount.orDefault() }.orDefault())
+            }
+        }, true)
     }
 
     private val themeCallback = object : StatusCallback<CanvasTheme>() {
@@ -205,6 +211,10 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
         } catch {
 
         }
+    }
+
+    override fun invalidateNotificationCount() {
+        getUnreadNotificationCount()
     }
 
     /**

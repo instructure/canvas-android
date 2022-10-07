@@ -67,7 +67,7 @@ class SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
     }
 
     private fun createLoadedEvents(eventsResult: DataResult<List<ScheduleItem>>, context: Context, color: Int): EventsViewState.Loaded {
-        return EventsViewState.Loaded(eventsResult.dataOrThrow.map {
+        return EventsViewState.Loaded(eventsResult.dataOrThrow.filter { it.isHidden.not() }.map {
             ScheduleItemViewState(
                     it.itemId,
                     it.title ?: "",

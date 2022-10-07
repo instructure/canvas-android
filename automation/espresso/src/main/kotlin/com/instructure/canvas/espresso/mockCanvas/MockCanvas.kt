@@ -19,7 +19,6 @@
 package com.instructure.canvas.espresso.mockCanvas
 
 import android.util.Log
-import com.github.javafaker.Bool
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -1360,9 +1359,9 @@ fun MockCanvas.addDiscussionTopicToCourse(
     var topicHeader = prePopulatedTopicHeader
     if(topicHeader == null) {
         topicHeader = DiscussionTopicHeader(
-                title = topicTitle,
-                discussionType = "side_comment",
-                message = topicDescription
+            title = topicTitle,
+            discussionType = "side_comment",
+            message = topicDescription
         )
     }
 
@@ -1374,7 +1373,7 @@ fun MockCanvas.addDiscussionTopicToCourse(
     topicHeader.id = newItemId()
     topicHeader.postedDate = Calendar.getInstance().time
     if(attachment != null) {
-        topicHeader.attachments = mutableListOf<RemoteFile>(attachment)
+        topicHeader.attachments = mutableListOf(attachment)
     }
     topicHeader.announcement = isAnnouncement
     topicHeader.sections = sections
@@ -1383,7 +1382,7 @@ fun MockCanvas.addDiscussionTopicToCourse(
 
     var topicHeaderList = if(groupId != null) groupDiscussionTopicHeaders[groupId] else courseDiscussionTopicHeaders[course.id]
     if(topicHeaderList == null) {
-        topicHeaderList = mutableListOf<DiscussionTopicHeader>()
+        topicHeaderList = mutableListOf()
         if(groupId != null) {
             groupDiscussionTopicHeaders[groupId] = topicHeaderList
         }
@@ -1395,9 +1394,9 @@ fun MockCanvas.addDiscussionTopicToCourse(
     topicHeaderList.add(topicHeader)
 
     val topic = DiscussionTopic(
-            participants = mutableListOf<DiscussionParticipant>(
-                    DiscussionParticipant(id = user.id, displayName = user.name)
-            )
+        participants = mutableListOf(
+            DiscussionParticipant(id = user.id, displayName = user.name)
+        )
     )
     discussionTopics[topicHeader.id] = topic
 
@@ -1510,6 +1509,11 @@ fun MockCanvas.addItemToModule(
             itemType = ModuleItem.Type.ExternalUrl
             itemTitle = item
             itemUrl = item
+        }
+        is LTITool -> {
+            itemType = ModuleItem.Type.ExternalTool
+            itemTitle = item.name
+            itemUrl = item.url
         }
         else -> {
             throw Exception("Unknown item type: ${item::class.java.simpleName}")
@@ -1770,6 +1774,8 @@ fun MockCanvas.addGroupToCourse(
             courseId = course.id,
             isFavorite = isFavorite
     )
+
+    result.permissions = CanvasContextPermission(canCreateAnnouncement = true)
 
     groups[result.id] = result
 

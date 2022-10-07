@@ -48,15 +48,13 @@ import com.instructure.teacher.events.AssignmentDescriptionEvent
 import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.utils.getColorCompat
-import instructure.rceditor.RCEConst.HTML_RESULT
-import instructure.rceditor.RCEFragment
 import kotlinx.android.synthetic.main.activity_bottom_sheet.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.Unregistrar
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Response
 
-class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RCEFragment.RCEFragmentCallbacks {
+class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
 
     private var mRoute: Route? = null
     private var mWindowHeight = 0
@@ -241,24 +239,8 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
                  return
              else super.onBackPressed()
         } else {
-            //Captures back press to prevent accidental exiting of assignment editing.
-            if(supportFragmentManager.findFragmentById(R.id.bottom) is RCEFragment) {
-                (supportFragmentManager.findFragmentById(R.id.bottom) as RCEFragment).showExitDialog()
-                return
-            }
             super.onBackPressed()
         }
-    }
-
-    /**
-     * Handles RCEFragment results and passes them along
-     */
-    override fun onResult(activityResult: Int, data: Intent?) {
-        val htmlResult = data?.getStringExtra(HTML_RESULT)
-        if (activityResult == Activity.RESULT_OK && htmlResult != null) {
-            EventBus.getDefault().postSticky(AssignmentDescriptionEvent(htmlResult))
-        }
-        super.onBackPressed()
     }
 
     private fun keyboardHidden() {

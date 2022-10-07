@@ -130,7 +130,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                RouteMatcher.openMedia(activity, url)
+                RouteMatcher.openMedia(activity, url, filename)
             }
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
@@ -189,7 +189,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
     fun loadUrl(targetUrl: String) {
         if (html.isNotEmpty()) {
-            loadHtml(html)
+            canvasWebView?.loadHtml(html, title)
             return
         }
 
@@ -261,6 +261,7 @@ open class InternalWebViewFragment : BaseFragment() {
         fun newInstance(args: Bundle) = InternalWebViewFragment().apply {
             url = args.getString(URL)!!
             title = args.getString(TITLE)!!
+            html = args.getString(HTML) ?: ""
             darkToolbar = args.getBoolean(DARK_TOOLBAR)
         }
 

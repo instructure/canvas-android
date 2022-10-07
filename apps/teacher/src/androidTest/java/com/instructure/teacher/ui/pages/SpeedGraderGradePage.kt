@@ -18,14 +18,13 @@ package com.instructure.teacher.ui.pages
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.not
 import java.text.DecimalFormat
-import java.util.Locale
+import java.util.*
 
 class SpeedGraderGradePage : BasePage() {
 

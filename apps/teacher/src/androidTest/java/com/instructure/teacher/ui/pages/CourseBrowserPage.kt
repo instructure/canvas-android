@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.ui.pages
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.PerformException
@@ -24,7 +23,6 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
-import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -32,8 +30,6 @@ import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import com.instructure.teacher.holders.CourseBrowserViewHolder
-import org.hamcrest.Description
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
 class CourseBrowserPage : BasePage() {
@@ -73,7 +69,7 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openPeopleTab() {
-        scrollOpen("People", scrollPosition = 4)
+        scrollOpen("People", scrollPosition = 3)
     }
 
     fun clickSettingsButton() {
@@ -126,5 +122,9 @@ class CourseBrowserPage : BasePage() {
 
     fun assertCourseTitle(courseTitle: String) {
         onView(withId(R.id.courseBrowserTitle) + withText(courseTitle)).assertDisplayed()
+    }
+
+    fun assertTabLabelTextColor(tabTitle: String, expectedColor: String) {
+        onView(ViewMatchers.withText(tabTitle)).check(TextViewColorAssertion(expectedColor))
     }
 }

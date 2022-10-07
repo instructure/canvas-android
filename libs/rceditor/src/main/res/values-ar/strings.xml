@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">قم بالتمرير لكافة أدوات التحرير</string>
     <string name="rce_emptyUrlError">يتعذر ترك عنوان URL فارغًا</string>
     <string name="rce_httpNotAllowed">يتم قبول عناوين https url فقط</string>
+    <string name="rce_dialogAltText">إضافة نص بديل لقارئات الشاشة</string>
 </resources>

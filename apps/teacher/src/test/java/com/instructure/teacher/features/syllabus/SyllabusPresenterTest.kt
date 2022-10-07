@@ -79,6 +79,14 @@ class SyllabusPresenterTest {
                     assignment = Assignment(id = 125L, submissionTypesRaw = listOf("discussion_topic")),
                     startAt = null,
                     itemType = ScheduleItem.Type.TYPE_ASSIGNMENT
+            ),
+            ScheduleItem(
+                    itemId = "4",
+                    title = "discussion",
+                    assignment = Assignment(id = 126L, submissionTypesRaw = listOf("discussion_topic")),
+                    startAt = null,
+                    itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+                    isHidden = true
             )
     )
 

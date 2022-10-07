@@ -23,7 +23,7 @@
     android:paddingStart="12dp"
     android:paddingEnd="12dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/recipientAvatar"
         android:layout_width="28dp"
         android:layout_height="28dp"

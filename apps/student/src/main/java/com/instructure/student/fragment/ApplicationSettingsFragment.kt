@@ -23,13 +23,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
@@ -95,7 +95,11 @@ class ApplicationSettingsFragment : ParentFragment() {
         }
 
         pushNotifications.onClick {
-            addFragment(NotificationPreferencesFragment.newInstance())
+            addFragment(PushNotificationPreferencesFragment.newInstance())
+        }
+
+        emailNotifications.onClick {
+            addFragment(EmailNotificationPreferencesFragment.newInstance())
         }
 
         about.onClick {
@@ -117,6 +121,11 @@ class ApplicationSettingsFragment : ParentFragment() {
             ViewStyler.themeSwitch(requireContext(), elementaryViewSwitch, ThemePrefs.brandColor)
             elementaryViewSwitch.setOnCheckedChangeListener { _, isChecked ->
                 ApiPrefs.elementaryDashboardEnabledOverride = isChecked
+
+                val analyticsBundle = Bundle().apply {
+                    putBoolean(AnalyticsParamConstants.MANUAL_C4E_STATE, isChecked)
+                }
+                Analytics.logEvent(AnalyticsEventConstants.CHANGED_C4E_MODE, analyticsBundle)
             }
         }
 

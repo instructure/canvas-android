@@ -20,13 +20,17 @@ package com.instructure.student.fragment
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -44,6 +48,7 @@ import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.adapter.assignment.AssignmentListByDateRecyclerAdapter
 import com.instructure.student.adapter.assignment.AssignmentListByTypeRecyclerAdapter
+import com.instructure.student.adapter.assignment.AssignmentListFilter
 import com.instructure.student.adapter.assignment.AssignmentListRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
@@ -51,6 +56,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.assignment_list_layout.*
 
+@com.google.android.material.badge.ExperimentalBadgeUtils
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 @PageView(url = "{canvasContext}/assignments")
 class AssignmentListFragment : ParentFragment(), Bookmarkable {
@@ -59,6 +65,11 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private lateinit var recyclerAdapter: AssignmentListRecyclerAdapter
     private var termAdapter: TermSpinnerAdapter? = null
+
+    private var filterPosition = 0
+    private var filter = AssignmentListFilter.ALL
+
+    private var badgeDrawable: BadgeDrawable? = null
 
     private var sortOrder: AssignmentsSortOrder
         get() {
@@ -91,7 +102,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
         override fun onRefreshFinished() {
-            if(!isAdded) return // Refresh can finish after user has left screen, causing emptyView to be null
+            if (!isAdded) return // Refresh can finish after user has left screen, causing emptyView to be null
             setRefreshing(false)
             if (recyclerAdapter.size() == 0) {
                 setEmptyView(emptyView, R.drawable.ic_panda_space, R.string.noAssignments, R.string.noAssignmentsSubtext)
@@ -116,12 +127,12 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         sortByButton.contentDescription = getString(sortOrder.contentDescriptionRes)
 
         configureRecyclerView(
-            view,
-            requireContext(),
-            recyclerAdapter,
-            R.id.swipeRefreshLayout,
-            R.id.emptyView,
-            R.id.listView
+                view,
+                requireContext(),
+                recyclerAdapter,
+                R.id.swipeRefreshLayout,
+                R.id.emptyView,
+                R.id.listView
         )
 
         appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, i ->
@@ -136,11 +147,23 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         setupSortByButton()
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            updateBadge()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateBadge()
+    }
+
     private fun createRecyclerAdapter(): AssignmentListRecyclerAdapter {
         return if (sortOrder == AssignmentsSortOrder.SORT_BY_TIME) {
-            AssignmentListByDateRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+            AssignmentListByDateRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback, filter = filter)
         } else {
-            AssignmentListByTypeRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+            AssignmentListByTypeRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback, filter = filter)
         }
     }
 
@@ -148,10 +171,10 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         sortByButton.onClick {
             val checkedItemIndex = sortOrder.index
             AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
-                .setTitle(R.string.sortByDialogTitle)
-                .setSingleChoiceItems(R.array.assignmentsSortByOptions, checkedItemIndex, this@AssignmentListFragment::sortOrderSelected)
-                .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
-                .show()
+                    .setTitle(R.string.sortByDialogTitle)
+                    .setSingleChoiceItems(R.array.assignmentsSortByOptions, checkedItemIndex, this@AssignmentListFragment::sortOrderSelected)
+                    .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
+                    .show()
         }
     }
 
@@ -169,8 +192,40 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
+    private fun showAssignmentFilterDialog() {
+        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
+                .setTitle(R.string.filterAssignmentDialogTitle)
+                .setSingleChoiceItems(R.array.assignmentsFilterOptions, filterPosition, this@AssignmentListFragment::filterSelected)
+                .setNegativeButton(R.string.filterAssignmentsDialogCancel) { dialog, _ -> dialog.dismiss() }
+                .show()
+    }
+
+    private fun filterSelected(dialog: DialogInterface, index: Int) {
+        dialog.dismiss()
+        filterPosition = index
+        filter = AssignmentListFilter.values()[index]
+        recyclerAdapter.filter = filter
+        updateBadge()
+    }
+
+    private fun updateBadge() {
+        Handler().postDelayed({
+            if (badgeDrawable == null) {
+                badgeDrawable = BadgeDrawable.create(requireContext()).apply {
+                    backgroundColor = ThemePrefs.accentColor
+                }
+            }
+            if (filterPosition == 0) {
+                BadgeUtils.detachBadgeDrawable(badgeDrawable, toolbar, R.id.menu_filter_assignments)
+            } else {
+                BadgeUtils.attachBadgeDrawable(badgeDrawable!!, toolbar, R.id.menu_filter_assignments)
+            }
+        }, 100)
+    }
+
+
     override fun applyTheme() {
-        setupToolbarMenu(toolbar)
+        setupToolbarMenu(toolbar, R.menu.menu_assignment_list)
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
         toolbar.addSearch(getString(R.string.searchAssignmentsHint)) { query ->
@@ -184,13 +239,22 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_filter_assignments -> {
+                showAssignmentFilterDialog()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun setupGradingPeriods(periods: List<GradingPeriod>) {
         val hasGradingPeriods = periods.isNotEmpty()
         val adapter = TermSpinnerAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            periods + allTermsGradingPeriod,
-            hasGradingPeriods
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                periods + allTermsGradingPeriod,
+                hasGradingPeriods
         )
         termSpinner.isEnabled = hasGradingPeriods
         termAdapter = adapter
@@ -227,12 +291,12 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(
-            requireView(),
-            requireContext(),
-            recyclerAdapter,
-            R.id.swipeRefreshLayout,
-            R.id.emptyView,
-            R.id.listView,
+                requireView(),
+                requireContext(),
+                recyclerAdapter,
+                R.id.swipeRefreshLayout,
+                R.id.emptyView,
+                R.id.listView,
                 R.string.noAssignments
         )
         if (recyclerAdapter.size() == 0) {
@@ -274,18 +338,18 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 }
 
 enum class AssignmentsSortOrder(
-    val index: Int,
-    val preferenceKey: String,
-    @StringRes val buttonTextRes: Int,
-    @StringRes val contentDescriptionRes: Int,
-    @StringRes val orderSelectedAnnouncement: Int,
-    val analyticsKey: String) {
+        val index: Int,
+        val preferenceKey: String,
+        @StringRes val buttonTextRes: Int,
+        @StringRes val contentDescriptionRes: Int,
+        @StringRes val orderSelectedAnnouncement: Int,
+        val analyticsKey: String) {
 
     SORT_BY_TIME(0, "time", R.string.sortByTime, R.string.a11y_sortByTimeButton,
-        R.string.a11y_assignmentsSortedByTime, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TIME_SELECTED),
+            R.string.a11y_assignmentsSortedByTime, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TIME_SELECTED),
 
     SORT_BY_TYPE(1, "type", R.string.sortByType, R.string.a11y_sortByTypeButton,
-        R.string.a11y_assignmentsSortedByType, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TYPE_SELECTED);
+            R.string.a11y_assignmentsSortedByType, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TYPE_SELECTED);
 
     companion object {
         fun fromPreferenceKey(key: String?): AssignmentsSortOrder {

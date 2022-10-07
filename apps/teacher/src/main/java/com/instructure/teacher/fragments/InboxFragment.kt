@@ -45,6 +45,7 @@ import com.instructure.teacher.presenters.InboxPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.getColorCompat
+import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.InboxView
 import kotlinx.android.synthetic.main.fragment_inbox.*
@@ -157,7 +158,14 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
 
     private fun setupToolbar() {
         toolbar.setupMenu(R.menu.menu_filter_inbox, menuItemCallback)
-        (activity as? InitActivity)?.attachNavigationDrawer(toolbar)
+        val activity = requireActivity()
+        if (activity is InitActivity) {
+            activity.attachNavigationDrawer(toolbar)
+        } else {
+            toolbar.setupBackButtonAsBackPressedOnly(this)
+        }
+
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
         toolbar.requestAccessibilityFocus()
     }
@@ -237,6 +245,13 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
 
             popup.show()
         })
+    }
+
+    override fun unreadCountUpdated(unreadCount: Int) {
+        val activity = requireActivity()
+        if (activity is InitActivity) {
+            activity.updateInboxUnreadCount(unreadCount)
+        }
     }
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->

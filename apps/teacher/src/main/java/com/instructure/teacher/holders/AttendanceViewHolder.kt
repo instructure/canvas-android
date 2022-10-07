@@ -44,7 +44,7 @@ class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         basicUser.name = attendance.student?.name
         basicUser.pronouns = attendance.student?.pronouns
         basicUser.avatarUrl = attendance.student?.avatarUrl
-        ProfileUtils.loadAvatarForUser(studentAvatar, basicUser)
+        ProfileUtils.loadAvatarForUser(studentAvatar, basicUser.name, basicUser.avatarUrl)
 
         // Set student name
         userName.text = attendance.student?.let { Pronouns.span(it.name, it.pronouns) }

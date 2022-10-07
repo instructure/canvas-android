@@ -420,7 +420,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun loadHTMLTopic(html: String, contentDescription: String?) {
-        discussionTopicHeaderWebView.loadHtml(html, contentDescription)
+        discussionTopicHeaderWebView.loadHtml(html, contentDescription, baseUrl = mDiscussionTopicHeader.htmlUrl)
     }
 
     private fun loadHTMLReplies(html: String, contentDescription: String? = null) {
@@ -528,7 +528,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                 // It won't work exactl when the page starts to load, because the html document is not yet created,
                 // so we add a little delay to make sure the script can modify the document.
                 if (addDarkTheme) {
-                    webView.postDelayed({ webView.addDarkThemeToHtmlDocument() }, 50)
+                    webView.postDelayed({ webView.addDarkThemeToHtmlDocument() }, 100)
                 }
             }
             override fun onPageFinishedCallback(webView: WebView, url: String) {

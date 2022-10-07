@@ -21,7 +21,6 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.text.Html
 import android.view.View
 import android.widget.RemoteViews
@@ -89,6 +88,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
             if (!BaseRemoteViewsService.shouldHideDetails(appWidgetId)) {
                 if (streamItem.getMessage(ContextKeeper.appContext) != null) {
                     row.setTextViewText(R.id.message, StringUtilities.simplifyHTML(Html.fromHtml(streamItem.getMessage(ContextKeeper.appContext), Html.FROM_HTML_MODE_LEGACY)))
+                    row.setTextColor(R.id.message, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
                 } else {
                     row.setTextViewText(R.id.message, "")
                     row.setViewVisibility(R.id.message, View.GONE)
@@ -101,6 +101,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
             }
             courseAndDate += DateHelper.getDateTimeString(ContextKeeper.appContext, streamItem.updatedDate)
             row.setTextViewText(R.id.course_and_date, courseAndDate)
+            row.setTextColor(R.id.course_and_date, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
 
             row.setOnClickFillInIntent(R.id.widget_root, createIntent(streamItem))
 
@@ -140,7 +141,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
                     val courses = CourseManager.getCoursesSynchronous(true)
                             .filter { it.isFavorite && !it.accessRestrictedByDate && !it.isInvited() }
                     val groups = GroupManager.getFavoriteGroupsSynchronous(false)
-                    val userStream = StreamManager.getUserStreamSynchronous(25, false).toMutableList()
+                    val userStream = StreamManager.getUserStreamSynchronous(25, true).toMutableList()
 
                     userStream.sort()
                     userStream.reverse()

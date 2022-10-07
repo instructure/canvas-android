@@ -958,7 +958,6 @@
     <string name="latePenalty">Straf for sen aflevering (-%s)</string>
     <string name="finalGrade">Endelig karakter</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Åbner i webvisning</string>
@@ -1261,6 +1260,26 @@
     <string name="appThemeSettingsTitle">App-tema</string>
     <string name="appThemeLight">Lys</string>
     <string name="appThemeDark">Mørk</string>
-    <string name="appThemeSystem">Systemstandard</string>
+    <string name="appThemeSystem">Samme som enhed</string>
+    <string name="themeSelectorTitle">Canvas er nu tilgængelig i mørkt tema</string>
+    <string name="themeSelectorDescription">Vælg app-tema</string>
+    <string name="themeSelectorLightTheme">Lyst tema</string>
+    <string name="themeSelectorDarkTheme">Mørkt tema</string>
+    <string name="themeSelectorDeviceTheme">Samme tema som på enhed</string>
+    <string name="themeSelectorSave">Gem</string>
+    <string name="themeSelectorChangeLater">Du kan ændre det senere i app-indstillinger</string>
+    <string name="grabAnnotationTool">Tag fat</string>
+    <string name="fileUpload">Filoverførsel</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s ulæst besked</item>
+        <item quantity="other">%s ulæste beskeder</item>
+    </plurals>
+    <string name="noAnnotationSelected">Der er ikke valgt nogen anmærkning</string>
+    <string name="emailNotifications">E-mail-meddelelser</string>
+    <string name="emailNotificationsImmediately">Straks</string>
+    <string name="emailNotificationsDaily">Dagligt</string>
+    <string name="emailNotificationsWeekly">Ugentlig</string>
+    <string name="emailNotificationsNever">Aldrig</string>
+    <string name="selectFrequency">Vælg frekvens</string>
 </resources>

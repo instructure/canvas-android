@@ -958,7 +958,6 @@
     <string name="latePenalty">Sanctie indien te laat (-%s)</string>
     <string name="finalGrade">Eindcijfer</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Wordt geopend in webview</string>
@@ -1261,6 +1260,26 @@
     <string name="appThemeSettingsTitle">Appthema</string>
     <string name="appThemeLight">Licht</string>
     <string name="appThemeDark">Donker</string>
-    <string name="appThemeSystem">Systeemstandaard</string>
+    <string name="appThemeSystem">Hetzelfde als apparaat</string>
+    <string name="themeSelectorTitle">Canvas is niet beschikbaar in donker thema</string>
+    <string name="themeSelectorDescription">Kies app-thema</string>
+    <string name="themeSelectorLightTheme">Licht thema</string>
+    <string name="themeSelectorDarkTheme">Donker thema</string>
+    <string name="themeSelectorDeviceTheme">Hetzelfde als apparaatthema</string>
+    <string name="themeSelectorSave">Opslaan</string>
+    <string name="themeSelectorChangeLater">Je kunt dit later wijzigen in de app-instellingen.</string>
+    <string name="grabAnnotationTool">Pakken</string>
+    <string name="fileUpload">Bestand uploaden</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s ongelezen bericht</item>
+        <item quantity="other">%s ongelezen berichten</item>
+    </plurals>
+    <string name="noAnnotationSelected">Geen aantekening geselecteerd</string>
+    <string name="emailNotifications">E-mail meldingen</string>
+    <string name="emailNotificationsImmediately">Onmiddellijk</string>
+    <string name="emailNotificationsDaily">Dagelijks</string>
+    <string name="emailNotificationsWeekly">Wekelijks</string>
+    <string name="emailNotificationsNever">Nooit</string>
+    <string name="selectFrequency">Frequentie selecteren</string>
 </resources>

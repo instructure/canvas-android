@@ -958,7 +958,6 @@
     <string name="latePenalty">Late penalty (-%s)</string>
     <string name="finalGrade">Final Grade</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Opens in webview</string>
@@ -1277,5 +1276,50 @@
     <string name="themeSelectorChangeLater">You can change it later in app settings</string>
 
     <string name="grabAnnotationTool">Grab</string>
+    <string name="fileUpload">File Upload</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s unread message</item>
+        <item quantity="other">%s unread messages</item>
+    </plurals>
+
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s unread notification</item>
+        <item quantity="other">%s unread notifications</item>
+    </plurals>
+
+    <string name="noAnnotationSelected">No annotation selected</string>
+
+    <string name="emailNotifications">Email Notifications</string>
+    <string name="emailNotificationsImmediately">Immediately</string>
+    <string name="emailNotificationsDaily">Daily</string>
+    <string name="emailNotificationsWeekly">Weekly</string>
+    <string name="emailNotificationsNever">Never</string>
+    <string name="selectFrequency">Select frequency</string>
+    <string name="a11y_closeProgress">Close progress dialog</string>
+    <string name="fileUploadProgress">%1$s of %2$s</string>
+    <string name="fileUploadProgressSubtitle">Uploading to Files</string>
+    <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
+
+    <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
+    <string name="cancelSubmissionDialogTitle">Cancel Submission</string>
+    <string name="cancelSubmissionDialogMessage">This will cancel and delete your submission.</string>
+    <string name="fileUploadError">File Upload Failed</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Upload to Canvas for %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Upload to My Files</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Submit assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choose a course</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choose an assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Cancel Upload?</string>
+    <string name="cancelFileUploadMessage">This will cancel your upload.</string>
+    <string name="menuTitleFilterAssignments">Filter assignments</string>
+    <string name="filterAssignmentDialogTitle">Filter Assignments</string>
+    <string name="filterAssignmentsDialogCancel">Cancel</string>
+    <string name="filterAssignmentAll">All</string>
+    <string name="filterAssignmentLate">Late</string>
+    <string name="filterAssignmentMissing">Missing</string>
+    <string name="filterAssignmentGraded">Graded</string>
+    <string name="filterAssignmentUpcoming">Upcoming</string>
 </resources>

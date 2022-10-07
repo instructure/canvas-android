@@ -949,7 +949,6 @@
     <string name="latePenalty">遅延ペナルティ (-%s)</string>
     <string name="finalGrade">最終的な評定</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">ウェブビューで開く</string>
@@ -1247,6 +1246,25 @@
     <string name="appThemeSettingsTitle">アプリのテーマ</string>
     <string name="appThemeLight">明るい</string>
     <string name="appThemeDark">暗い</string>
-    <string name="appThemeSystem">システムデフォルト</string>
+    <string name="appThemeSystem">デバイスと同じ</string>
+    <string name="themeSelectorTitle">Canvasがダークテーマで利用可能に</string>
+    <string name="themeSelectorDescription">アプリのテーマを選ぶ</string>
+    <string name="themeSelectorLightTheme">ライトテーマ</string>
+    <string name="themeSelectorDarkTheme">ダークテーマ</string>
+    <string name="themeSelectorDeviceTheme">デバイスのテーマと同じ</string>
+    <string name="themeSelectorSave">保存</string>
+    <string name="themeSelectorChangeLater">後でアプリの設定から変更可能</string>
+    <string name="grabAnnotationTool">捕捉</string>
+    <string name="fileUpload">ファイルのアップロード</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="other">%sの未読メッセージ</item>
+    </plurals>
+    <string name="noAnnotationSelected">注釈が選択されていません</string>
+    <string name="emailNotifications">メール通知</string>
+    <string name="emailNotificationsImmediately">ただちに</string>
+    <string name="emailNotificationsDaily">毎日</string>
+    <string name="emailNotificationsWeekly">毎週</string>
+    <string name="emailNotificationsNever">今後実行しない</string>
+    <string name="selectFrequency">頻度を選択する</string>
 </resources>

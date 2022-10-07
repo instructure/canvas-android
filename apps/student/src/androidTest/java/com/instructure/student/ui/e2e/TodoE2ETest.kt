@@ -16,7 +16,6 @@ import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
-import java.util.Calendar
 
 @HiltAndroidTest
 class TodoE2ETest: StudentTest() {
@@ -33,28 +32,28 @@ class TodoE2ETest: StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.TODOS, TestCategory.E2E)
     fun testTodoE2E() {
 
-        // Don't attempt this test on a Friday, Saturday or Sunday.
-        // The TODO tab doesn't seem to behave correctly on Fridays (or presumably weekends).
-        val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-        if(dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-            println("We don't run the TODO E2E test on weekends")
-            return
-        }
-
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course.")
+        Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course with tomorrow due date.")
         val seededAssignments = seedAssignments(
                 courseId = course.id,
                 teacherToken = teacher.token,
                 dueAt = 1.days.fromNow.iso8601
         )
 
+        Log.d(PREPARATION_TAG,"Seed another assignment for ${course.name} course with 7 days from now due date.")
+        val seededAssignments2 = seedAssignments(
+            courseId = course.id,
+            teacherToken = teacher.token,
+            dueAt = 7.days.fromNow.iso8601
+        )
+
         val testAssignment = seededAssignments[0]
+        val borderDateAssignment = seededAssignments2[0] //We show items in the to do section which are within 7 days.
 
         Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course with tomorrow due date.")
         val quiz = QuizzesApi.createQuiz(
@@ -66,17 +65,29 @@ class TodoE2ETest: StudentTest() {
                         dueAt = 1.days.fromNow.iso8601)
         )
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(PREPARATION_TAG,"Seed another quiz for ${course.name} course with 8 days from now due date..")
+        val tooFarAwayQuiz = QuizzesApi.createQuiz(
+            QuizzesApi.CreateQuizRequest(
+                courseId = course.id,
+                withDescription = true,
+                published = true,
+                token = teacher.token,
+                dueAt = 8.days.fromNow.iso8601)
+        )
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG,"Navigate to 'To Do' page via bottom-menu.")
         dashboardPage.clickTodoTab()
 
-        Log.d(STEP_TAG,"Assert that ${testAssignment.name} assignment is displayed.")
+        Log.d(STEP_TAG,"Assert that ${testAssignment.name} assignment is displayed and ${borderDateAssignment.name} is displayed because it's 7 days away from now..")
         todoPage.assertAssignmentDisplayed(testAssignment)
+        todoPage.assertAssignmentDisplayed(borderDateAssignment)
 
-        Log.d(STEP_TAG,"Assert that ${quiz.title} quiz is displayed.")
+        Log.d(STEP_TAG,"Assert that ${quiz.title} quiz is displayed and ${tooFarAwayQuiz.title} quiz is not displayed because it's end date is more than a week away..")
         todoPage.assertQuizDisplayed(quiz)
+        todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
     }
 }

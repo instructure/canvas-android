@@ -111,14 +111,13 @@ object MediaUploadUtils {
             takeNewPhotoBecausePermissionsAlreadyGranted(fragment, activity)
         } else {
             val permissions = PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA)
-            fragment?.requestPermissions(permissions, REQUEST_CODE_PERMISSIONS_TAKE_PHOTO)
-                ?: activity.requestPermissions(permissions.toSet()) { results ->
-                    if (results.isNotEmpty() && results.all { it.value }) {
-                        takeNewPhotoBecausePermissionsAlreadyGranted(fragment, activity)
-                    } else {
-                        Toast.makeText(activity, R.string.permissionDenied, Toast.LENGTH_LONG).show()
-                    }
+            (fragment?.activity ?: activity).requestPermissions(permissions.toSet()) { results ->
+                if (results.isNotEmpty() && results.all { it.value }) {
+                    takeNewPhotoBecausePermissionsAlreadyGranted(fragment, activity)
+                } else {
+                    Toast.makeText(activity, R.string.permissionDenied, Toast.LENGTH_LONG).show()
                 }
+            }
         }
     }
 
@@ -143,7 +142,7 @@ object MediaUploadUtils {
             ?: activity.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
     }
 
-    fun uploadRceImageJob(uri: Uri, canvasContext: CanvasContext, activity: Activity, insertImageCallback: (text: String, altText: String) -> Unit): WeaveCoroutine {
+    fun uploadRceImageJob(uri: Uri, canvasContext: CanvasContext, activity: Activity, insertImageCallback: (imageUrl: String) -> Unit): WeaveCoroutine {
         val isTeacher = (canvasContext as? Course)?.isTeacher == true
         val tempFile = File(activity.externalCacheDir, "tmp-rce-image")
         var progressDialog: AlertDialog? = null
@@ -213,7 +212,7 @@ object MediaUploadUtils {
                 file = awaitApi { FileFolderManager.updateFile(file.id, updateFileFolder, it) }
             }
 
-            insertImageCallback(file.url ?: "", "")
+            insertImageCallback(file.url ?: "")
 
             // Delete temporary image
             tempFile.delete()

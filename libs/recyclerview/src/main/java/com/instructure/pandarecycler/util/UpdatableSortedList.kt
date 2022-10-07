@@ -54,6 +54,18 @@ class UpdatableSortedList<MODEL>(
         endBatchedUpdates()
     }
 
+    fun removeDistinctItems(items: List<MODEL>) {
+        val ids = items.map { getItemId(it) }.toSet()
+        beginBatchedUpdates()
+        for (i in size() - 1 downTo 0) {
+            val item = get(i)
+            if (!ids.contains(getItemId(item))) {
+                removeItemAt(i)
+            }
+        }
+        endBatchedUpdates()
+    }
+
     companion object {
         var NOT_IN_LIST = -2
         var ITEM_UPDATED = -3

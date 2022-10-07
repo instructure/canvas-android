@@ -6,7 +6,8 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.argsWithContext
@@ -19,7 +20,6 @@ import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
-import instructure.rceditor.RCEFragment
 
 object RouteResolver {
 
@@ -96,8 +96,6 @@ object RouteResolver {
             fragment = getModuleListFragment(canvasContext, route)
         } else if (QuizDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = getQuizDetailsFragment(canvasContext, route)
-        } else if (RCEFragment::class.java.isAssignableFrom(cls)) {
-            fragment = RCEFragment.newInstance(route.arguments)
         } else if (EditQuizDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = EditQuizDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
         } else if (QuizPreviewWebviewFragment::class.java.isAssignableFrom(cls)) {
@@ -149,8 +147,10 @@ object RouteResolver {
             fragment = ProfileEditFragment.newInstance(route.arguments)
         } else if (FeatureFlagsFragment::class.java.isAssignableFrom(cls)) {
             fragment = FeatureFlagsFragment()
-        } else if (NotificationPreferencesFragment::class.java.isAssignableFrom(cls)) {
-            fragment = NotificationPreferencesFragment()
+        } else if (PushNotificationPreferencesFragment::class.java.isAssignableFrom(cls)) {
+            fragment = PushNotificationPreferencesFragment()
+        } else if (EmailNotificationPreferencesFragment::class.java.isAssignableFrom(cls)) {
+            fragment = EmailNotificationPreferencesFragment()
         } else if (RemoteConfigParamsFragment::class.java.isAssignableFrom(cls)) {
             fragment = RemoteConfigParamsFragment()
         } else if (LtiLaunchFragment::class.java.isAssignableFrom(cls)) {

@@ -131,6 +131,8 @@ class InboxFragment : ParentFragment() {
                 }
             }
         })
+
+        applyTheme()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

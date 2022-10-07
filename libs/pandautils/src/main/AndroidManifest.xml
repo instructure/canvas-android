@@ -24,7 +24,6 @@
             android:name="com.instructure.pandautils.utils.AvatarCropActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
-        <service android:name=".services.FileUploadService"/>
         <!--Push Notifications-->
 
         <receiver android:name=".receivers.PushDeleteReceiver"/>

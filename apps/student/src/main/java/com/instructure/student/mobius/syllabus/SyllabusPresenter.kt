@@ -29,7 +29,7 @@ import com.instructure.student.mobius.syllabus.ui.EventsViewState
 import com.instructure.student.mobius.syllabus.ui.ScheduleItemViewState
 import com.instructure.student.mobius.syllabus.ui.SyllabusViewState
 import com.instructure.student.util.toDueAtString
-import java.util.Date
+import java.util.*
 
 object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
     override fun present(model: SyllabusModel, context: Context): SyllabusViewState {
@@ -56,7 +56,7 @@ object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
             eventsResult.isFail -> EventsViewState.Error
             eventsResult.dataOrNull.isNullOrEmpty() -> EventsViewState.Empty
             else -> {
-                EventsViewState.Loaded(eventsResult.dataOrThrow.map {
+                EventsViewState.Loaded(eventsResult.dataOrThrow.filter { it.isHidden.not() }.map {
                     ScheduleItemViewState(
                         it.itemId,
                         it.title ?: "",

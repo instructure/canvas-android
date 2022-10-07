@@ -682,7 +682,7 @@
                             android:visibility="gone"
                             tools:visibility="visible">
 
-                            <de.hdodenhof.circleimageview.CircleImageView
+                            <ImageView
                                 android:id="@+id/authorAvatar"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"

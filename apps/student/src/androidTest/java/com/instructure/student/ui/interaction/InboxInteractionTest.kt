@@ -394,7 +394,7 @@ class InboxInteractionTest : StudentTest() {
         inboxConversationPage.toggleStarred()
         inboxConversationPage.assertStarred()
         Espresso.pressBack() // To main inbox page
-        inboxPage.assertConversationStarred(conversation)
+        inboxPage.assertConversationStarred(conversation.subject!!)
     }
 
     @Test

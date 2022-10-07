@@ -52,7 +52,7 @@ class AnnouncementsE2ETest : StudentTest() {
         val announcement = data.announcementsList[0]
         val secondAnnouncement = data.announcementsList[1]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 

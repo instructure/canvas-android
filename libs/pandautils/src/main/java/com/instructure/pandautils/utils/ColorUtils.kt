@@ -19,6 +19,7 @@ package com.instructure.pandautils.utils
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.core.graphics.drawable.DrawableCompat
 
 object ColorUtils {
@@ -46,7 +47,7 @@ object ColorUtils {
 
     @JvmStatic
     @JvmOverloads
-    fun parseColor(colorCode: String?, defaultColorCode: String = ColorApiHelper.K5_DEFAULT_COLOR): Int {
+    fun parseColor(colorCode: String?, @ColorInt defaultColor: Int? = null): Int {
         return try {
             val fullColorCode = if (colorCode?.length == 4 && colorCode[0].toString() == "#") {
                 "#${colorCode[1]}${colorCode[1]}${colorCode[2]}${colorCode[2]}${colorCode[3]}${colorCode[3]}"
@@ -55,7 +56,11 @@ object ColorUtils {
             }
             Color.parseColor(fullColorCode)
         } catch (e: Exception) {
-            Color.parseColor(defaultColorCode)
+            if (defaultColor != null) {
+                defaultColor
+            } else {
+                Color.parseColor(ColorApiHelper.K5_DEFAULT_COLOR)
+            }
         }
     }
 }

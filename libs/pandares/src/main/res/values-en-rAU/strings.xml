@@ -958,7 +958,6 @@
     <string name="latePenalty">Late penalty (-%s)</string>
     <string name="finalGrade">Final Grade</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Opens in webview</string>
@@ -1261,6 +1260,26 @@
     <string name="appThemeSettingsTitle">App Theme</string>
     <string name="appThemeLight">Light</string>
     <string name="appThemeDark">Dark</string>
-    <string name="appThemeSystem">System default</string>
+    <string name="appThemeSystem">Same as device</string>
+    <string name="themeSelectorTitle">Canvas is now available in dark theme</string>
+    <string name="themeSelectorDescription">Choose app theme</string>
+    <string name="themeSelectorLightTheme">Light theme</string>
+    <string name="themeSelectorDarkTheme">Dark theme</string>
+    <string name="themeSelectorDeviceTheme">Same as device theme</string>
+    <string name="themeSelectorSave">Save</string>
+    <string name="themeSelectorChangeLater">You can change it later in app settings</string>
+    <string name="grabAnnotationTool">Grab</string>
+    <string name="fileUpload">File Upload</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s unread message</item>
+        <item quantity="other">%s unread messages</item>
+    </plurals>
+    <string name="noAnnotationSelected">No annotation selected</string>
+    <string name="emailNotifications">Email Notifications</string>
+    <string name="emailNotificationsImmediately">Immediately</string>
+    <string name="emailNotificationsDaily">Daily</string>
+    <string name="emailNotificationsWeekly">Weekly</string>
+    <string name="emailNotificationsNever">Never</string>
+    <string name="selectFrequency">Select frequency</string>
 </resources>

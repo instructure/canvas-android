@@ -79,6 +79,7 @@ class GradesViewWidgetService : BaseRemoteViewsService(), Serializable {
 
             if (!BaseRemoteViewsService.shouldHideDetails(appWidgetId)) {
                 row.setTextViewText(R.id.courseTerm, streamItem.term?.name)
+                row.setTextColor(R.id.courseTerm, BaseRemoteViewsService.getWidgetSecondaryTextColor(appWidgetId, applicationContext))
             }
 
             if (streamItem.isTeacher || streamItem.isTA) {

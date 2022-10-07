@@ -17,9 +17,14 @@
 package com.instructure.teacher.ui.pages
 
 import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import com.instructure.canvasapi2.models.User
+import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
@@ -41,6 +46,7 @@ class DashboardPage : BasePage() {
     private val coursesTab by WaitForViewWithId(R.id.tab_courses)
     private val todoTab by WaitForViewWithId(R.id.tab_todo)
     private val inboxTab by WaitForViewWithId(R.id.tab_inbox)
+    private val previousLoginTitleText by OnViewWithId(R.id.previousLoginTitleText, autoAssert = false)
 
     private val hamburgerButtonMatcher =
         allOf(withContentDescription(R.string.navigation_drawer_open), isDisplayed())
@@ -104,4 +110,46 @@ class DashboardPage : BasePage() {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_files).click()
     }
+
+    fun assertCourseLabelTextColor(expectedTextColor: String) {
+        onView(withId(R.id.courseLabel)).check(TextViewColorAssertion(expectedTextColor))
+    }
+
+    fun logOut() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
+        onViewWithText(android.R.string.yes).click()
+        // It can potentially take a long time for the sign-out to take effect, especially on
+        // slow FTL devices.  So let's pause for a bit until we see the canvas logo.
+        waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 10000).check(matches(isDisplayed()))
+    }
+
+    fun assertUserLoggedIn(user: CanvasUserApiModel) {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithText(user.shortName).assertDisplayed()
+        Espresso.pressBack()
+    }
+
+    fun assertUserLoggedIn(user: User) {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithText(user.shortName!!).assertDisplayed()
+        Espresso.pressBack()
+    }
+
+    fun assertUserLoggedIn(userName: String) {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithText(userName).assertDisplayed()
+        Espresso.pressBack()
+    }
+
+    fun pressChangeUser() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_changeUser).scrollTo().click()
+    }
+
+    fun selectCourse(course: CourseApiModel) {
+        assertDisplaysCourse(course)
+        onView(withText(course.name)).click()
+    }
+
 }

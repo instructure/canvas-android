@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Rulla för alla redigeringsverktyg</string>
     <string name="rce_emptyUrlError">URL får inte vara tom</string>
     <string name="rce_httpNotAllowed">Endast HTTP-URL:er är godkända</string>
+    <string name="rce_dialogAltText">Lägg till alternativ text för skärmläsare</string>
 </resources>

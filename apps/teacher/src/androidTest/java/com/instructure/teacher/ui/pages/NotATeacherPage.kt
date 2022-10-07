@@ -16,13 +16,20 @@
 package com.instructure.teacher.ui.pages
 
 import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
 
 class NotATeacherPage : BasePage() {
 
     private val notATeacherTitle by WaitForViewWithId(R.id.not_a_teacher_header, autoAssert = true)
-    private val explanation by WaitForViewWithId(R.id.explanation)
+    private val explanation by WaitForViewWithId(R.id.explanation, autoAssert = true)
     private val studentLink by WaitForViewWithId(R.id.studentLink)
     private val parentLink by WaitForViewWithId(R.id.parentLink)
+    private val loginButton by WaitForViewWithId(R.id.login)
+
+
+    fun clickOnLoginButton() {
+        loginButton.click()
+    }
 }

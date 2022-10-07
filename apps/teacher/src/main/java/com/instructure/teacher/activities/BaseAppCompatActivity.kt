@@ -19,19 +19,25 @@ package com.instructure.teacher.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import com.instructure.pandautils.dialogs.UploadFilesDialog
+import androidx.core.app.ActivityCompat
 import com.instructure.pandautils.utils.ActivityResult
 import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.PermissionReceiver
+import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
+import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
+import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.pandautils.utils.postSticky
 
-abstract class BaseAppCompatActivity : AppCompatActivity() {
+@Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
+abstract class BaseAppCompatActivity : AppCompatActivity(),
+    ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == UploadFilesDialog.CAMERA_PIC_REQUEST ||
-            requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
-            requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY) {
+        if (requestCode == CAMERA_PIC_REQUEST ||
+            requestCode == PICK_FILE_FROM_DEVICE ||
+            requestCode == PICK_IMAGE_GALLERY) {
             //File Dialog Fragment will not be notified of onActivityResult(), alert manually
             OnActivityResults(ActivityResult(requestCode, resultCode, data), null).postSticky()
         }

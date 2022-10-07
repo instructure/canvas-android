@@ -20,8 +20,9 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.TextViewColorAssertion
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.*
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
@@ -33,6 +34,8 @@ class SettingsPage : BasePage(R.id.settingsPage) {
     private val legalLabel by OnViewWithId(R.id.legalButton)
     private val featureFlagLabel by OnViewWithId(R.id.featureFlagButton)
     private val remoteConfigLabel by OnViewWithId(R.id.remoteConfigButton)
+    private val appThemeTitle by OnViewWithId(R.id.appThemeTitle)
+    private val appThemeStatus by OnViewWithId(R.id.appThemeStatus)
 
     fun openProfileSettingsPage() {
         profileSettingLabel.scrollTo().click()
@@ -63,5 +66,22 @@ class SettingsPage : BasePage(R.id.settingsPage) {
             Espresso.onView(ViewMatchers.withId(R.id.star + i))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         }
+    }
+
+    fun openAppThemeSettings() {
+        appThemeTitle.scrollTo().click()
+    }
+
+    fun selectAppTheme(appTheme: String)
+    {
+            onView(withText(appTheme) + withParent(R.id.select_dialog_listview)).click()
+    }
+
+    fun assertAppThemeTitleTextColor(expectedTextColor: String) {
+        appThemeTitle.check(TextViewColorAssertion(expectedTextColor))
+    }
+
+    fun assertAppThemeStatusTextColor(expectedTextColor: String) {
+        appThemeStatus.check(TextViewColorAssertion(expectedTextColor))
     }
 }

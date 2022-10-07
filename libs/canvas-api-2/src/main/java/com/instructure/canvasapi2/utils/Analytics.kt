@@ -18,7 +18,6 @@
 package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants.ASSIGNMENT_ID
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants.CANVAS_CONTEXT_ID
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants.DOMAIN_PARAM
@@ -27,18 +26,16 @@ import com.instructure.canvasapi2.utils.AnalyticsParamConstants.USER_CONTEXT_ID
 
 object Analytics {
 
-    lateinit var firebase: FirebaseAnalytics
-
     fun logEvent(eventName: String, bundle: Bundle? = null) {
-        firebase.logEvent(eventName, bundle)
+
     }
 
     fun logEvent(eventName: String) {
-        firebase.logEvent(eventName, null)
+
     }
 
     fun setUserProperty(propertyName: String, propertyValue: String) {
-        firebase.setUserProperty(propertyName, propertyValue)
+
     }
 
     fun createOriginBundle(origin: String): Bundle {
@@ -103,6 +100,8 @@ object AnalyticsEventConstants {
 
     const val WHAT_IF_GRADES = "what_if_grades_used"
 
+    const val CHANGED_C4E_MODE = "c4e_changed"
+
     /* QR Code Login */
     const val QR_CODE_LOGIN_CLICKED = "qr_code_login_clicked"
     const val QR_CODE_LOGIN_SUCCESS = "qr_code_login_success"
@@ -114,23 +113,15 @@ object AnalyticsEventConstants {
 }
 
 /**
- * PARAMS
- * Due to the limits on custom params, we will mostly be using a mapping of the pre-defined params,
- * mappings will be recorded below. Make sure we are only using params where the data is relevant.
- *
- * [DOMAIN_PARAM] -> AFFILIATION
- * [USER_CONTEXT_ID] -> CHARACTER
- * [CANVAS_CONTEXT_ID] -> GROUP_ID
- * [ASSIGNMENT_ID]/DISCUSSION/ETC ID -> ITEM_ID
- * There is also ITEM_CATEGORY if the event is vague regarding the type of item
- * [SCREEN_OF_ORIGIN] -> ORIGIN
- * Used when events can originate from multiple locations
- *
+ * If other analytics platforms support custom params we can use these with any name, if not we can have a similiar soultion as before.
  */
 object AnalyticsParamConstants {
-    const val DOMAIN_PARAM = FirebaseAnalytics.Param.AFFILIATION
-    const val USER_CONTEXT_ID = FirebaseAnalytics.Param.CHARACTER
-    const val CANVAS_CONTEXT_ID = FirebaseAnalytics.Param.GROUP_ID
-    const val ASSIGNMENT_ID = FirebaseAnalytics.Param.ITEM_ID
-    const val SCREEN_OF_ORIGIN = FirebaseAnalytics.Param.ORIGIN
+    const val DOMAIN_PARAM = ""
+    const val USER_CONTEXT_ID = ""
+    const val CANVAS_CONTEXT_ID = ""
+    const val ASSIGNMENT_ID = ""
+    const val SCREEN_OF_ORIGIN = ""
+
+    //custom
+    const val MANUAL_C4E_STATE = "manual_c4e_state"
 }

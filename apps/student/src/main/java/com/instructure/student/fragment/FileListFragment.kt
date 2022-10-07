@@ -29,6 +29,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -44,7 +46,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.FileFolderCallback
@@ -58,10 +61,11 @@ import kotlinx.android.synthetic.main.fragment_file_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 @ScreenView(SCREEN_VIEW_FILE_LIST)
 @PageView
-class FileListFragment : ParentFragment(), Bookmarkable {
+class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -406,8 +410,19 @@ class FileListFragment : ParentFragment(), Bookmarkable {
 
     private fun uploadFile() {
         folder?.let {
-            val bundle = UploadFilesDialog.createContextBundle(null, canvasContext, it.id)
-            UploadFilesDialog.show(fragmentManager, bundle) { _ -> }
+            val bundle = FileUploadDialogFragment.createContextBundle(null, canvasContext, it.id)
+            FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
+        }
+    }
+
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(viewLifecycleOwner) {
+            if (it.state == WorkInfo.State.SUCCEEDED) {
+                recyclerAdapter?.refresh()
+                folder?.let {
+                    StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + it.id
+                }
+            }
         }
     }
 

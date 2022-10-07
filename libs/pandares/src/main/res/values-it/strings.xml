@@ -958,7 +958,6 @@
     <string name="latePenalty">Penale ritardo (-%s)</string>
     <string name="finalGrade">Voto finale</string>
 
-    <string name="moreThan99">Più di 99</string>
     <string name="max_count">Più di 99</string>
 
     <string name="opensInWebView">Si apre in visualizzazione web</string>
@@ -1261,6 +1260,26 @@
     <string name="appThemeSettingsTitle">Tema app</string>
     <string name="appThemeLight">Chiaro</string>
     <string name="appThemeDark">Scuro</string>
-    <string name="appThemeSystem">Impostazione predefinita sistema</string>
+    <string name="appThemeSystem">Come il dispositivo</string>
+    <string name="themeSelectorTitle">Canvas è ora disponibile in tema scuso</string>
+    <string name="themeSelectorDescription">Scegli tema app</string>
+    <string name="themeSelectorLightTheme">Tema chiaro</string>
+    <string name="themeSelectorDarkTheme">Tema scuro</string>
+    <string name="themeSelectorDeviceTheme">Come il tema dispositivo</string>
+    <string name="themeSelectorSave">Salva</string>
+    <string name="themeSelectorChangeLater">Puoi modificarlo successivamente nelle impostazioni dell’app</string>
+    <string name="grabAnnotationTool">Afferra</string>
+    <string name="fileUpload">Caricamento file</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s messaggio non letto</item>
+        <item quantity="other">%s messaggi non letti</item>
+    </plurals>
+    <string name="noAnnotationSelected">Nessuna annotazione selezionata</string>
+    <string name="emailNotifications">Notifiche email</string>
+    <string name="emailNotificationsImmediately">Immediatamente</string>
+    <string name="emailNotificationsDaily">Ogni giorno</string>
+    <string name="emailNotificationsWeekly">Ogni settimana</string>
+    <string name="emailNotificationsNever">Mai</string>
+    <string name="selectFrequency">Seleziona frequenza</string>
 </resources>

@@ -958,7 +958,6 @@
     <string name="latePenalty">Hình phạt trễ (-%s)</string>
     <string name="finalGrade">Điểm Cuối Cùng</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Mở trong dạng xem web</string>
@@ -1262,6 +1261,26 @@
     <string name="appThemeSettingsTitle">Chủ Đề Ứng Dụng</string>
     <string name="appThemeLight">Sáng</string>
     <string name="appThemeDark">Tối</string>
-    <string name="appThemeSystem">Cài đặt mặc định hệ thống</string>
+    <string name="appThemeSystem">Tương tự như thiết bị</string>
+    <string name="themeSelectorTitle">Canvas hiện nay đã có sẵn ở chủ đề tối</string>
+    <string name="themeSelectorDescription">Lựa chọn chủ đề ứng dụng</string>
+    <string name="themeSelectorLightTheme">Chủ đề sáng</string>
+    <string name="themeSelectorDarkTheme">Chủ đề tối</string>
+    <string name="themeSelectorDeviceTheme">Tương tự như chủ đề thiết bị</string>
+    <string name="themeSelectorSave">Lưu</string>
+    <string name="themeSelectorChangeLater">Bạn có thể thay đổi sau trong cài đặt ứng dụng</string>
+    <string name="grabAnnotationTool">Nắm lấy</string>
+    <string name="fileUpload">Tải Lên Tập Tin</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s tin nhắn chưa đọc</item>
+        <item quantity="other">%s tin nhắn chưa đọc</item>
+    </plurals>
+    <string name="noAnnotationSelected">Không có chú thích nào được chọn</string>
+    <string name="emailNotifications">Thông Báo Email</string>
+    <string name="emailNotificationsImmediately">Ngay Lập Tức</string>
+    <string name="emailNotificationsDaily">Hằng Ngày</string>
+    <string name="emailNotificationsWeekly">Hằng Tuần</string>
+    <string name="emailNotificationsNever">Không Bao Giờ</string>
+    <string name="selectFrequency">Chọn tần số</string>
 </resources>

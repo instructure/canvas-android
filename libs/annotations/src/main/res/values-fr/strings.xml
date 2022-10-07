@@ -38,5 +38,6 @@
     <string name="pspdf__annotation_type_stamp">Couleur de la note</string>
 
     <string name="removedComment">Supprimé %1$s par %2$s</string>
+    <string name="pspdf__stamp_standard_section"></string>
 
 </resources>

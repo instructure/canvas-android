@@ -88,7 +88,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         super.onCreate(savedInstanceState)
         checkForPermission()
         checkFeatureFlags()
-        retainInstance = true
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -122,10 +121,12 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 // Show the FAB.
                 if(canPost) createNewDiscussion?.show()
                 if (recyclerAdapter.size() == 0) {
-                    if (isAnnouncement) {
-                        setEmptyView(emptyView, R.drawable.ic_panda_noannouncements, R.string.noAnnouncements, R.string.noAnnouncementsSubtext)
-                    } else {
-                        setEmptyView(emptyView, R.drawable.ic_panda_nodiscussions, R.string.noDiscussions, R.string.noDiscussionsSubtext)
+                    emptyView?.let {
+                        if (isAnnouncement) {
+                            setEmptyView(it, R.drawable.ic_panda_noannouncements, R.string.noAnnouncements, R.string.noAnnouncementsSubtext)
+                        } else {
+                            setEmptyView(it, R.drawable.ic_panda_nodiscussions, R.string.noDiscussions, R.string.noDiscussionsSubtext)
+                        }
                     }
                 }
             }
@@ -235,6 +236,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         super.onDestroyView()
         permissionJob?.cancel()
         featureFlagsJob?.cancel()
+        groupsJob?.cancel()
         recyclerAdapter.cancel()
     }
     //endregion
@@ -333,6 +335,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onDiscussionTopicCountChange(event: DiscussionTopicHeaderEvent) {
+        if (isAnnouncement) return
         event.get {
             // Gets written over on phones - added also to {@link #onRefreshFinished()}
             when {

@@ -16,7 +16,7 @@ internal object UnreadCountAPI {
         @GET("conversations/unread_count")
         fun getUnreadConversationCount(): Call<UnreadConversationCount>
 
-        @GET("users/self/activity_stream/summary")
+        @GET("users/self/activity_stream/summary?only_active_courses=true")
         fun getNotificationsCount(): Call<List<UnreadNotificationCount>>
 
         @GET("users/self/observer_alerts/unread_count")

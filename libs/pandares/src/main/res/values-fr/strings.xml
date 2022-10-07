@@ -958,7 +958,6 @@
     <string name="latePenalty">Pénalité de retard (-%s)</string>
     <string name="finalGrade">Note Finale</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">S\'ouvre dans une vue web.</string>
@@ -1114,8 +1113,8 @@
     <string name="discussions_unknown_date">Date inconnue</string>
     <string name="a11y_gradeLetterMinusContentDescription">%s. moins</string>
     <string name="a11y_letterGrade">%s.</string>
-    <string name="a11y_gradeCellContentDescription">%s %s</string>
-    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <string name="a11y_gradeCellContentDescription">%1$s %2$s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%1$s %2$s, %3$s</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
@@ -1127,8 +1126,8 @@
     <string name="noConferencesMessage">Il n’y a aucune conférence à afficher pour le moment</string>
     <string name="noConferenceDescription">Il n\'y a aucune description pour cette conférence</string>
     <string name="conferenceListError">Une erreur est survenue lors du chargement de vos conférences</string>
-    <string name="conferenceConcludedDateAtTime">Terminé le %s à %s</string>
-    <string name="conferenceStartedDateAtTime">A démarré le %s à %s</string>
+    <string name="conferenceConcludedDateAtTime">Terminé le %1$s à %2$s</string>
+    <string name="conferenceStartedDateAtTime">A démarré le %1$s à %2$s</string>
     <string name="notStarted">Non commencé</string>
     <string name="inProgress">En cours</string>
     <string name="join">Rejoindre</string>
@@ -1139,7 +1138,7 @@
     <string name="conferenceInProgress">Conférence en cours</string>
 
     <string name="a11y_criterion_content_description">Notes du critère %s</string>
-    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_description_content_description">%1$s, %2$s</string>
     <string name="a11y_criterion_button_click_description">Plus d\'informations</string>
     <string name="a11y_create_file_folder_visible">Boutons de création de fichier et de répertoire visibles</string>
     <string name="a11y_create_file_folder_gone">Boutons de création de fichier et de répertoire invisibles</string>
@@ -1261,6 +1260,26 @@
     <string name="appThemeSettingsTitle">Thème d\'application</string>
     <string name="appThemeLight">Clair</string>
     <string name="appThemeDark">Foncé</string>
-    <string name="appThemeSystem">Valeur par défaut du système</string>
+    <string name="appThemeSystem">Identique à l’appareil</string>
+    <string name="themeSelectorTitle">Canvas est désormais disponible en thème sombre</string>
+    <string name="themeSelectorDescription">Sélectionnez le thème de l’application</string>
+    <string name="themeSelectorLightTheme">Thème clair</string>
+    <string name="themeSelectorDarkTheme">Thème sombre</string>
+    <string name="themeSelectorDeviceTheme">Identique au thème de l’appareil</string>
+    <string name="themeSelectorSave">Enregistrer</string>
+    <string name="themeSelectorChangeLater">Vous pourrez modifier le thème ultérieurement dans les paramètres de l’application</string>
+    <string name="grabAnnotationTool">Attraper</string>
+    <string name="fileUpload">Importation de fichier</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s message non lu</item>
+        <item quantity="other">%s Messages non lus</item>
+    </plurals>
+    <string name="noAnnotationSelected">Aucune annotation sélectionnée</string>
+    <string name="emailNotifications">Notifications par courriel</string>
+    <string name="emailNotificationsImmediately">Immédiatement</string>
+    <string name="emailNotificationsDaily">Tous les jours</string>
+    <string name="emailNotificationsWeekly">Toutes les semaines</string>
+    <string name="emailNotificationsNever">Jamais</string>
+    <string name="selectFrequency">Sélectionnez la fréquence</string>
 </resources>

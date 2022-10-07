@@ -875,7 +875,6 @@
         <item quantity="one">-%s point</item>
         <item quantity="other">-%s points</item>
     </plurals>
-    <string name="todoUnreadCount">To do %d unread</string>
     <string name="profileSettings">Profile Settings</string>
     <string name="downloadingFile">Downloading file&#8230;</string>
     <string name="fileDownloadedSuccessfully">File downloaded successfully.</string>

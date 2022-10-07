@@ -15,12 +15,10 @@
  */
 package com.instructure.teacher.holders
 
-import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.util.TypedValue
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Group
@@ -28,15 +26,12 @@ import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.ProfileUtils
-import com.instructure.pandautils.utils.TextDrawable
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.models.EveryoneAssignee
 import com.instructure.teacher.presenters.AssigneeListPresenter
-import com.instructure.teacher.utils.getColorCompat
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.adapter_assignee.view.*
 import kotlinx.android.synthetic.main.adapter_assignee_header.view.*
 
@@ -76,7 +71,7 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
                 if (presenter.isEveryone) {
                     setChecked(true)
                 } else {
-                    setItemAvatar(context, itemName, assigneeAvatarImageView)
+                    setItemAvatar(itemName, assigneeAvatarImageView)
                 }
                 setOnClickListener { presenter.toggleIsEveryone(adapterPosition) }
             }
@@ -97,7 +92,7 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
                 if (item.id in presenter.selectedSections) {
                     setChecked(true)
                 } else {
-                    setItemAvatar(context, item.name, assigneeAvatarImageView)
+                    setItemAvatar(item.name, assigneeAvatarImageView)
                 }
                 setOnClickListener { presenter.toggleSection(item.id, adapterPosition) }
             }
@@ -107,30 +102,16 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
                 if (item.id in presenter.selectedGroups) {
                     setChecked(true)
                 } else {
-                    setItemAvatar(context, item.name ?: "", assigneeAvatarImageView)
+                    setItemAvatar(item.name.orEmpty(), assigneeAvatarImageView)
                 }
                 setOnClickListener { presenter.toggleGroup(item.id, adapterPosition) }
             }
         }
     }
 
-    private fun setItemAvatar(context: Context, itemName: String, circleImageView: CircleImageView) {
-        val initials = ProfileUtils.getUserInitials(itemName)
-        val color = context.getColorCompat(R.color.textDark)
-        val drawable = TextDrawable.builder()
-                .beginConfig()
-                .height(context.resources.getDimensionPixelSize(com.instructure.pandautils.R.dimen.avatar_size))
-                .width(context.resources.getDimensionPixelSize(com.instructure.pandautils.R.dimen.avatar_size))
-                .toUpperCase()
-                .useFont(Typeface.DEFAULT_BOLD)
-                .textColor(color)
-                .endConfig()
-                .buildRound(initials, Color.TRANSPARENT)
-        circleImageView.borderColor = color
-        circleImageView.borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0.5f, context.resources.displayMetrics).toInt()
-        circleImageView.setImageDrawable(drawable)
+    private fun setItemAvatar(itemName: String, imageView: ImageView) {
+        ProfileUtils.loadAvatarForUser(imageView, itemName, null, 0)
     }
-
 }
 
 class AssigneeTypeViewHolder(view: View) : AssigneeViewHolder(view) {

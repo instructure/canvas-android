@@ -958,7 +958,6 @@
     <string name="latePenalty">Sanció per endarreriment (-%s)</string>
     <string name="finalGrade">Nota final</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">S\'obre en vista web</string>
@@ -1262,6 +1261,26 @@
     <string name="appThemeSettingsTitle">Tema de l’aplicació</string>
     <string name="appThemeLight">Clar</string>
     <string name="appThemeDark">Fosc</string>
-    <string name="appThemeSystem">Valor predeterminat del sistema</string>
+    <string name="appThemeSystem">El mateix que el dispositiu</string>
+    <string name="themeSelectorTitle">Ara, el Canvas està disponible en tema fosc</string>
+    <string name="themeSelectorDescription">Trieu el tema de l’aplicació</string>
+    <string name="themeSelectorLightTheme">Tema clar</string>
+    <string name="themeSelectorDarkTheme">Tema fosc</string>
+    <string name="themeSelectorDeviceTheme">El mateix tema que el del dispositiu</string>
+    <string name="themeSelectorSave">Desa</string>
+    <string name="themeSelectorChangeLater">Podeu canviar-lo més endavant a la configuració de l’aplicació</string>
+    <string name="grabAnnotationTool">Agafa</string>
+    <string name="fileUpload">Penjada de fitxer</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s missatge sense llegir</item>
+        <item quantity="other">%s missatges sense llegir</item>
+    </plurals>
+    <string name="noAnnotationSelected">No hi ha cap anotació seleccionada</string>
+    <string name="emailNotifications">Notificacions per correu electrònic</string>
+    <string name="emailNotificationsImmediately">Immediatament</string>
+    <string name="emailNotificationsDaily">Diari</string>
+    <string name="emailNotificationsWeekly">Setmanal</string>
+    <string name="emailNotificationsNever">Mai</string>
+    <string name="selectFrequency">Seleccioneu la freqüència</string>
 </resources>

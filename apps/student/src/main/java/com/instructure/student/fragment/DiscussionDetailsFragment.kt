@@ -387,7 +387,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 // It won't work exactl when the page starts to load, because the html document is not yet created,
                 // so we add a little delay to make sure the script can modify the document.
                 if (addDarkTheme) {
-                    webView.postDelayed({ webView.addDarkThemeToHtmlDocument() }, 50)
+                    webView.postDelayed({ webView.addDarkThemeToHtmlDocument() }, 100)
                 }
             }
             override fun onPageFinishedCallback(webView: WebView, url: String) {
@@ -405,6 +405,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun setupHeaderWebView() {
         setupWebView(discussionTopicHeaderWebView)
         discussionTopicHeaderWebView.addJavascriptInterface(JSDiscussionHeaderInterface(), "accessor")
+        DiscussionManager.markDiscussionTopicRead(canvasContext, getTopicId(), object : StatusCallback<Void>() {})
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -544,7 +545,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region Loading
     private fun loadHTMLTopic(html: String, contentDescription: String?) {
         setupHeaderWebView()
-        discussionTopicHeaderWebView.loadHtml(html, contentDescription)
+        discussionTopicHeaderWebView.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
     }
 
     private fun loadHTMLReplies(html: String, contentDescription: String? = null) {

@@ -94,7 +94,9 @@ dependencies {
     api project(path: ':blueprint')
     api project(path: ':interactions')
 
-    implementation Libs.WONDERKILN_CAMERA_KIT
+    implementation Libs.CAMERA_VIEW
+
+    implementation Libs.LOTTIE
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
@@ -107,6 +109,8 @@ dependencies {
     testImplementation Libs.ANDROIDX_CORE_TESTING
     testImplementation Libs.THREETEN_BP
 
+    testImplementation project(path: ':pandautils')
+
     /* Media handling */
     api(Libs.GLIDE) {
         exclude group: "com.android.support"
@@ -118,20 +122,15 @@ dependencies {
 
     api Libs.ANDROID_SVG
 
-    // TODO These should be replaced in the future with Glide.
-    api 'com.squareup.picasso:picasso:2.5.2'
-    api 'de.hdodenhof:circleimageview:3.0.0'
-
     api Libs.EXOPLAYER
     api (Libs.SCALE_IMAGE_VIEW) {
         exclude group: "androidx.exifinterface"
     }
 
-    implementation platform(Libs.FIREBASE_BOM)
-    implementation Libs.FIREBASE_MESSAGING
-    implementation (Libs.FIREBASE_ANALYTICS) {
-        transitive = true
+    implementation platform(Libs.FIREBASE_BOM) {
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
     }
+    implementation Libs.FIREBASE_MESSAGING
     implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }

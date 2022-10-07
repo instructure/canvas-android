@@ -897,7 +897,7 @@
     <string name="editDashboardDescriptor">Selecciona las asignaturas que quieres ver en el panel de control</string>
     <string name="a11y_editYourCourseList">Editar tu lista de asignaturas</string>
 
-    <string name="dashboard">Cuadro de mando</string>
+    <string name="dashboard">Panel de control</string>
     <string name="previous">Anterior</string>
     <string name="pageNum" formatted="false">Página %d de %d</string>
     <string name="language">Idioma</string>
@@ -958,7 +958,6 @@
     <string name="latePenalty">Sanción por entrega con retraso (-%s)</string>
     <string name="finalGrade">Nota final</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Se abre en WebView</string>
@@ -1263,6 +1262,26 @@
     <string name="appThemeSettingsTitle">Tema de la aplicación</string>
     <string name="appThemeLight">Iluminado</string>
     <string name="appThemeDark">Oscuro</string>
-    <string name="appThemeSystem">Predeterminado del sistema</string>
+    <string name="appThemeSystem">Coincidir con el dispositivo</string>
+    <string name="themeSelectorTitle">Canvas está ahora disponible en tema oscuro</string>
+    <string name="themeSelectorDescription">Elegir el tema de la aplicación</string>
+    <string name="themeSelectorLightTheme">Tema claro</string>
+    <string name="themeSelectorDarkTheme">Tema oscuro</string>
+    <string name="themeSelectorDeviceTheme">Coincidir con el tema del dispositivo</string>
+    <string name="themeSelectorSave">Guardar</string>
+    <string name="themeSelectorChangeLater">Se puede cambiar después en los ajustes de la aplicación</string>
+    <string name="grabAnnotationTool">Captar</string>
+    <string name="fileUpload">Carga del archivo</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s mensaje sin leer</item>
+        <item quantity="other">%s mensajes sin leer</item>
+    </plurals>
+    <string name="noAnnotationSelected">No se ha seleccionado ninguna anotación</string>
+    <string name="emailNotifications">Notificaciones por correo electrónico</string>
+    <string name="emailNotificationsImmediately">Inmediatamente</string>
+    <string name="emailNotificationsDaily">Diariamente</string>
+    <string name="emailNotificationsWeekly">Semanalmente</string>
+    <string name="emailNotificationsNever">Nunca</string>
+    <string name="selectFrequency">Seleccionar frecuencia</string>
 </resources>

@@ -30,7 +30,6 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.ui.utils.*
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
-import java.util.*
 
 @HiltAndroidTest
 class TodoE2ETest : TeacherTest() {
@@ -44,14 +43,6 @@ class TodoE2ETest : TeacherTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.TODOS, TestCategory.E2E)
     fun testTodoE2E() {
-        // Inherited from student todo tests, may check this out later
-        // Don't attempt this test on a Friday, Saturday or Sunday.
-        // The TODO tab doesn't seem to behave correctly on Fridays (or presumably weekends).
-        val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-        if(dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-            println("We don't run the TODO E2E test on weekends")
-            return
-        }
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
@@ -79,7 +70,7 @@ class TodoE2ETest : TeacherTest() {
                 studentToken = student.token
         )
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 

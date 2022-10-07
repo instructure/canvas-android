@@ -15,7 +15,6 @@
  */
 package com.instructure.student.test.settings.pairobserver
 
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.PairingCode
 import com.instructure.canvasapi2.models.TermsOfService
@@ -44,12 +43,10 @@ class PairObserverEffectHandlerTest : Assert() {
             .apply { view = this@PairObserverEffectHandlerTest.view }
     private val eventConsumer: Consumer<PairObserverEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
-    private val firebase: FirebaseAnalytics = mockk(relaxed = true)
 
     @ExperimentalCoroutinesApi
     @Before
     fun setup() {
-        Analytics.firebase = firebase
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
     }
 
@@ -103,16 +100,5 @@ class PairObserverEffectHandlerTest : Assert() {
         }
 
         confirmVerified(eventConsumer)
-    }
-
-    @Test
-    fun `LogRefresh results in analytics call`() {
-        connection.accept(PairObserverEffect.LogRefresh)
-
-        verify {
-            firebase.logEvent(AnalyticsEventConstants.REFRESH_PAIRING_CODE, null)
-        }
-
-        confirmVerified(firebase)
     }
 }

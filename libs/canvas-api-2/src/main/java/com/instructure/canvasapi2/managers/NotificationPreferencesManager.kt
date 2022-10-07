@@ -15,6 +15,8 @@
  */
 package com.instructure.canvasapi2.managers
 
+import androidx.annotation.StringRes
+import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
 import com.instructure.canvasapi2.builders.RestBuilder
@@ -22,10 +24,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.NotificationPreferenceResponse
 import com.instructure.canvasapi2.utils.weave.apiAsync
 
-object NotificationPreferencesManager {
-
-    const val IMMEDIATELY = "immediately"
-    const val NEVER = "never"
+class NotificationPreferencesManager(private val notificationPreferencesApi: NotificationPreferencesAPI) {
 
     fun getNotificationPreferences(
         userId: Long,
@@ -35,7 +34,7 @@ object NotificationPreferencesManager {
     ) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        NotificationPreferencesAPI.getNotificationPreferences(
+        notificationPreferencesApi.getNotificationPreferences(
             userId,
             commChannelId,
             adapter,
@@ -58,7 +57,7 @@ object NotificationPreferencesManager {
     ) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
-        NotificationPreferencesAPI.updatePreferenceCategory(
+        notificationPreferencesApi.updatePreferenceCategory(
             categoryName,
             channelId,
             frequency,
@@ -73,5 +72,15 @@ object NotificationPreferencesManager {
             channelId: Long,
             frequency: String
     ) = apiAsync<NotificationPreferenceResponse> { updatePreferenceCategory(categoryName, channelId, frequency, it) }
+}
 
+enum class NotificationPreferencesFrequency(val apiString: String, @StringRes val stringRes: Int) {
+    IMMEDIATELY("immediately", R.string.emailNotificationsImmediately),
+    DAILY("daily", R.string.emailNotificationsDaily),
+    WEEKLY("weekly", R.string.emailNotificationsWeekly),
+    NEVER("never", R.string.emailNotificationsNever);
+
+    companion object {
+        fun fromApiString(apiString: String) = values().find { apiString == it.apiString } ?: IMMEDIATELY
+    }
 }

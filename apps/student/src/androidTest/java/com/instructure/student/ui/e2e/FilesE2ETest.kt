@@ -35,11 +35,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.student.ui.utils.StudentTest
-import com.instructure.student.ui.utils.ViewUtils
-import com.instructure.student.ui.utils.seedData
-import com.instructure.student.ui.utils.tokenLogin
-import com.instructure.student.ui.utils.uploadTextFile
+import com.instructure.student.ui.utils.*
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.io.File
@@ -113,7 +109,7 @@ class FilesE2ETest: StudentTest() {
                 token = student.token
         )
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -196,7 +192,7 @@ class FilesE2ETest: StudentTest() {
         submissionDetailsPage.assertCommentAttachmentDisplayed(commentUploadInfo.fileName, student)
 
         Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
-        ViewUtils.pressBackButton(5)
+        ViewUtils.pressBackButton(4)
 
         Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
         dashboardPage.gotoGlobalFiles()
@@ -217,7 +213,6 @@ class FilesE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Delete $newFileName file.")
         fileListPage.deleteFile(newFileName)
-        fileListPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Assert that empty view is displayed after deletion.")
         fileListPage.assertViewEmpty()

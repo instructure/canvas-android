@@ -85,7 +85,7 @@ class GradesE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Publish the previously made quiz.")
         val quiz = QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 

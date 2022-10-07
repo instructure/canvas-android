@@ -17,10 +17,14 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import android.content.Context
-import android.view.accessibility.AccessibilityManager
 import androidx.core.content.ContextCompat
+import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.isRtl
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.student.R
 import com.instructure.student.Submission
@@ -31,8 +35,7 @@ import com.instructure.student.mobius.assignmentDetails.ui.QuizDescriptionViewSt
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
 import java.text.DateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, AssignmentDetailsViewState> {
     override fun present(model: AssignmentDetailsModel, context: Context): AssignmentDetailsViewState {
@@ -55,8 +58,17 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
 
         val quiz = model.quizResult?.dataOrNull
 
+        markSubmissionAsRead(assignment)
+
         // Loaded state
         return presentLoadedState(assignment, quiz, model.databaseSubmission, context, model.isObserver, model.course)
+    }
+
+    private fun markSubmissionAsRead(assignment: Assignment) {
+        SubmissionManager.markSubmissionAsRead(
+            assignment.courseId,
+            assignment.id,
+            object : StatusCallback<Void>() {})
     }
 
     private fun presentLoadedState(
@@ -248,7 +260,8 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             discussionHeaderViewState = discussionHeaderViewState,
             allowedAttempts = assignment.allowedAttempts,
             usedAttempts = assignment.submission?.attempt ?: 0,
-            showSubmissionsAndRubric = showSubmissionsAndRubric
+            showSubmissionsAndRubric = showSubmissionsAndRubric,
+            htmlUrl = assignment.htmlUrl
         )
     }
 

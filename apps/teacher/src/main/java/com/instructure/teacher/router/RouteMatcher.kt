@@ -48,10 +48,10 @@ import com.instructure.teacher.activities.*
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
+import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.fragments.FileListFragment
-import instructure.rceditor.RCEFragment
 import java.util.Locale
 
 object RouteMatcher : BaseRouteMatcher() {
@@ -128,7 +128,6 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(AssigneeListFragment::class.java)
         bottomSheetFragments.add(EditFavoritesFragment::class.java)
         bottomSheetFragments.add(CourseSettingsFragment::class.java)
-        bottomSheetFragments.add(RCEFragment::class.java)
         bottomSheetFragments.add(EditQuizDetailsFragment::class.java)
         bottomSheetFragments.add(QuizPreviewWebviewFragment::class.java)
         bottomSheetFragments.add(AddMessageFragment::class.java)
@@ -144,6 +143,7 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(AttendanceListFragment::class.java)
         bottomSheetFragments.add(EditFileFolderFragment::class.java)
         bottomSheetFragments.add(CreateOrEditPageDetailsFragment::class.java)
+        bottomSheetFragments.add(EditSyllabusFragment::class.java)
     }
 
     private fun routeUrl(context: Context, url: String) {
@@ -337,7 +337,6 @@ object RouteMatcher : BaseRouteMatcher() {
             CourseSettingsFragment::class.java.isAssignableFrom(cls) -> fragment = CourseSettingsFragment.newInstance((canvasContext as Course?)!!)
             QuizListFragment::class.java.isAssignableFrom(cls) -> fragment = QuizListFragment.newInstance(canvasContext!!)
             QuizDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getQuizDetailsFragment(canvasContext, route)
-            RCEFragment::class.java.isAssignableFrom(cls) -> fragment = RCEFragment.newInstance(route.arguments)
             EditQuizDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = EditQuizDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
             QuizPreviewWebviewFragment::class.java.isAssignableFrom(cls) -> fragment = QuizPreviewWebviewFragment.newInstance(route.arguments)
             EditQuizDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = EditQuizDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
@@ -502,10 +501,10 @@ object RouteMatcher : BaseRouteMatcher() {
         return openMediaCallbacks!!
     }
 
-    fun openMedia(activity: FragmentActivity?, url: String?) {
+    fun openMedia(activity: FragmentActivity?, url: String?, fileName: String? = null) {
         if (activity != null) {
             openMediaCallbacks = null
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, fileName)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
                 LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID)
         }

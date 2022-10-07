@@ -958,7 +958,6 @@
     <string name="latePenalty">Förseningsbestraffning (-%s)</string>
     <string name="finalGrade">Totalt omdöme</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Öppnas i webbvy</string>
@@ -1261,6 +1260,26 @@
     <string name="appThemeSettingsTitle">Apptema</string>
     <string name="appThemeLight">Ljus</string>
     <string name="appThemeDark">Mörk</string>
-    <string name="appThemeSystem">Systemstandard</string>
+    <string name="appThemeSystem">Samma som enhet</string>
+    <string name="themeSelectorTitle">Canvas finns inte tillgängligt med ett mörkt tema</string>
+    <string name="themeSelectorDescription">Välj apptema</string>
+    <string name="themeSelectorLightTheme">Ljust tema</string>
+    <string name="themeSelectorDarkTheme">Mörkt tema</string>
+    <string name="themeSelectorDeviceTheme">Samma tema som enheten</string>
+    <string name="themeSelectorSave">Spara</string>
+    <string name="themeSelectorChangeLater">Du kan ändra det sedan i appinställningarna</string>
+    <string name="grabAnnotationTool">Ta tag i</string>
+    <string name="fileUpload">Filuppladdning</string>
 
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s oläst meddelande</item>
+        <item quantity="other">%s olästa meddelanden</item>
+    </plurals>
+    <string name="noAnnotationSelected">Inga noteringar har valts</string>
+    <string name="emailNotifications">E-postaviseringar</string>
+    <string name="emailNotificationsImmediately">Omedelbart</string>
+    <string name="emailNotificationsDaily">Varje dag</string>
+    <string name="emailNotificationsWeekly">Varje vecka</string>
+    <string name="emailNotificationsNever">Aldrig</string>
+    <string name="selectFrequency">Välj frekvens</string>
 </resources>
