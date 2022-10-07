@@ -41,7 +41,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
@@ -58,7 +57,6 @@ import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
-import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
@@ -769,16 +767,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     private fun addFragment(fragment: Fragment?, route: Route) {
-        if (RouteType.DIALOG == route.routeType && fragment is DialogFragment && isTablet) {
-            val ft = supportFragmentManager.beginTransaction()
-            ft.addToBackStack(fragment::class.java.name)
-            fragment.show(ft, fragment::class.java.name)
+        if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
+            selectBottomNavFragment(fragment::class.java)
         } else {
-            if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
-                selectBottomNavFragment(fragment::class.java)
-            } else {
-                addFullScreenFragment(fragment, route.removePreviousScreen)
-            }
+            addFullScreenFragment(fragment, route.removePreviousScreen)
         }
     }
 

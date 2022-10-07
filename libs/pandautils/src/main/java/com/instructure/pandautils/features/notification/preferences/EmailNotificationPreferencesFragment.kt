@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -83,7 +84,7 @@ class EmailNotificationPreferencesFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        binding.toolbar.setupAsBackButton { requireActivity().onBackPressed() }
+        if (!isTablet) binding.toolbar.setupAsBackButton { requireActivity().onBackPressed() }
         ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
     }
 

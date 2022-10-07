@@ -23,14 +23,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setupAsBackButton
 import kotlinx.android.synthetic.main.adapter_remote_config_param.view.*
 import kotlinx.android.synthetic.main.fragment_remote_config_params.*
@@ -44,7 +42,7 @@ class RemoteConfigParamsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.adapter = RemoteConfigParamAdapter()
-        toolbar.setupAsBackButton(this)
+        if (!isTablet) toolbar.setupAsBackButton(this)
     }
 }
 

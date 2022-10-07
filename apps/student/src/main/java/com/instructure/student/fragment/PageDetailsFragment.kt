@@ -36,7 +36,6 @@ import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
-import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
@@ -289,7 +288,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     private fun openEditPage(page: Page) {
         if (APIHelper.hasNetworkConnection()) {
-            val route = EditPageDetailsFragment.makeRoute(canvasContext, page).apply { routeType = RouteType.DIALOG }
+            val route = EditPageDetailsFragment.makeRoute(canvasContext, page)
             RouteMatcher.route(requireContext(), route)
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
