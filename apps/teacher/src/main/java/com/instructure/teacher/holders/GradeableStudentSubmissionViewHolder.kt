@@ -39,7 +39,7 @@ import com.instructure.teacher.utils.getResForSubmission
 import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.setAnonymousAvatar
 import kotlinx.android.synthetic.main.adapter_gradeable_student_submission.view.*
-import java.util.Locale
+import java.util.*
 
 class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -55,14 +55,14 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
         callback: (GradeableStudentSubmission) -> Unit
     ) = with(itemView) {
         // Set item a11y action to "view submission details"
-        setAccessibilityDelegate(object : View.AccessibilityDelegate() {
+        accessibilityDelegate = object : View.AccessibilityDelegate() {
             override fun onInitializeAccessibilityNodeInfo(v: View, info: AccessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(v, info)
                 val description = context.getString(R.string.a11y_viewSubmissionAction)
                 val customClick = AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id, description)
                 info.addAction(customClick)
             }
-        })
+        }
 
         hiddenIcon.setGone()
         val assignee = gradeableStudentSubmission.assignee
@@ -79,6 +79,7 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                     val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)
                     RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
                 }
+                //TODO indicate fake student by assignee.student.isFakeStudent
             }
             assignee is GroupAssignee -> {
                 studentAvatar.setImageResource(assignee.iconRes)
