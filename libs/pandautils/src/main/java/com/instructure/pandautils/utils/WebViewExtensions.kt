@@ -98,9 +98,13 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
             newHTML = newHTML.replace("__LTI_BUTTON_MARGIN__", if (isTablet) "0px" else "auto")
 
             // Add the JS interface
-            if ((hasLtiTool || hasGoogleDoc) && jsCallback != null) {
+            if (hasLtiTool && jsCallback != null) {
                 // Its possible, i.e. for discussions, that the js interface is already configured
-                this@loadHtmlWithIframes.addJavascriptInterface(JsExternalToolInterface(jsCallback, context), "accessor")
+                this@loadHtmlWithIframes.addJavascriptInterface(JsExternalToolInterface(jsCallback), "accessor")
+            }
+
+            if (hasGoogleDoc) {
+                this@loadHtmlWithIframes.addJavascriptInterface(JsGoogleDocsInterface(context), "accessor")
             }
 
             loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML), contentDescription)
@@ -162,12 +166,15 @@ suspend fun authenticateLTIUrl(ltiUrl: String): String {
 data class Placeholder(val iframeHtml: String, val placeHolderHtml: String)
 
 @Suppress("UNUSED_PARAMETER")
-class JsExternalToolInterface(private val callback: (ltiUrl: String) -> Unit, private val context: Context) {
+class JsExternalToolInterface(private val callback: (ltiUrl: String) -> Unit) {
     @JavascriptInterface
     fun onLtiToolButtonPressed(ltiUrl: String) {
         callback(ltiUrl)
     }
+}
 
+@Suppress("UNUSED_PARAMETER")
+class JsGoogleDocsInterface(private val context: Context) {
     @JavascriptInterface
     fun onGoogleDocsButtonPressed(url: String) {
         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
