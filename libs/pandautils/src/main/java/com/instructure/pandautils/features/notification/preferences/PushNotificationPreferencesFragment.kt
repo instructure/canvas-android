@@ -29,7 +29,6 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_notification_preferences.*
@@ -68,7 +67,7 @@ class PushNotificationPreferencesFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        if (!isTablet) toolbar.setupAsBackButton { requireActivity().onBackPressed() }
+        toolbar.setupAsBackButton { requireActivity().onBackPressed() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 

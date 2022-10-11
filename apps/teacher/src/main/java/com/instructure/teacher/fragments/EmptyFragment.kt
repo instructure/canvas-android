@@ -21,10 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.NullableParcelableArg
-import com.instructure.pandautils.utils.StringArg
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import kotlinx.android.synthetic.main.fragment_empty.*
 
@@ -46,9 +43,7 @@ class EmptyFragment: Fragment() {
         toolbar.title = ""
         emptyTitle.text = mTitle
         emptyMessage.text = getString(R.string.emptyDetailsMessage)
-        val backgroundColor = mCourse?.color ?: requireContext().getColor(R.color.backgroundLightestElevated)
-        val contentColor = requireContext().getColor(if (mCourse?.color != null) R.color.white else R.color.textDarkest)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, backgroundColor, contentColor)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse?.color ?: ThemePrefs.primaryColor, requireContext().getColor(R.color.white))
     }
 
     companion object {

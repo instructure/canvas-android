@@ -47,36 +47,16 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         super.onActivityCreated(savedInstanceState)
         versionTextView.text = getString(R.string.fullVersion, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
         profileButton.onClick { RouteMatcher.route(requireContext(), Route(ProfileFragment::class.java, null)) }
-        rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), AppType.TEACHER) }
+        rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), com.instructure.pandautils.utils.AppType.TEACHER) }
         legalButton.onClick { LegalDialog().show(requireFragmentManager(), LegalDialog.TAG) }
-        notificationPreferenesButton.onClick {
-            RouteMatcher.route(
-                requireContext(),
-                Route(null, PushNotificationPreferencesFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
-            )
-        }
-        emailNotifications.onClick {
-            RouteMatcher.route(
-                requireContext(),
-                Route(null, EmailNotificationPreferencesFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
-            )
-        }
+        notificationPreferenesButton.onClick { RouteMatcher.route(requireContext(), Route(PushNotificationPreferencesFragment::class.java, null)) }
+        emailNotifications.onClick { RouteMatcher.route(requireContext(), Route(EmailNotificationPreferencesFragment::class.java, null)) }
         if (BuildConfig.DEBUG) {
             featureFlagButton.setVisible()
-            featureFlagButton.onClick {
-                RouteMatcher.route(
-                    requireContext(),
-                    Route(null, FeatureFlagsFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
-                )
-            }
+            featureFlagButton.onClick { RouteMatcher.route(requireContext(), Route(FeatureFlagsFragment::class.java, null)) }
 
             remoteConfigButton.setVisible()
-            remoteConfigButton.onClick {
-                RouteMatcher.route(
-                    requireContext(),
-                    Route(null, RemoteConfigParamsFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
-                )
-            }
+            remoteConfigButton.onClick { RouteMatcher.route(requireContext(), Route(RemoteConfigParamsFragment::class.java, null))}
         }
     }
 
