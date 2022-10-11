@@ -174,7 +174,7 @@ class SplashActivity : AppCompatActivity() {
                     val themeFetch = GlobalScope.async(start = CoroutineStart.LAZY) {
                         try {
                             val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, true) }
-                            ThemePrefs.applyCanvasTheme(theme)
+                            ThemePrefs.applyCanvasTheme(theme, this@SplashActivity)
                         } catch (e: Throwable) {
                             LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load themeFetch")
                             Logger.e(e.message)

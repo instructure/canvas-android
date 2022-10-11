@@ -35,10 +35,11 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private const val SELECTION_TRANSPARENCY_MASK = 0x08FFFFFF
     }
 
-    fun bind(context: Context, holder: RecipientViewHolder, recipient: Recipient, adapterCallback: RecipientAdapterCallback, selectionColor: Int, isSelected: Boolean) = with(itemView) {
+    fun bind(context: Context, holder: RecipientViewHolder, recipient: Recipient, adapterCallback: RecipientAdapterCallback, isSelected: Boolean) = with(itemView) {
 
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
+                val selectionColor = context.getColor(R.color.backgroundInfo)
                 setBackgroundColor(selectionColor and SELECTION_TRANSPARENCY_MASK)
                 avatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_circle)?.apply {
                     mutate().setTintList(ColorStateList.valueOf(selectionColor))
@@ -90,7 +91,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         // Set checked if recipient is selected
         checkBox.isChecked = isSelected
-        ViewStyler.themeCheckBox(context, checkBox, selectionColor)
+        ViewStyler.themeCheckBox(context, checkBox, ThemePrefs.brandColor)
         title.contentDescription = if (isSelected) context.getString(R.string.selectedListItem, recipient.name) else recipient.name
 
         // Set whole item listener

@@ -91,7 +91,7 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
             if (ThemePrefs.isThemeApplied) {
                 ThemeManager.getTheme(themeCallback, true)
             } else {
-                ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) })
+                ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) }, this@CallbackActivity)
             }
 
             // Refresh pandata info if null or expired
@@ -152,7 +152,7 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
     private val themeCallback = object : StatusCallback<CanvasTheme>() {
         override fun onResponse(response: Response<CanvasTheme>, linkHeaders: LinkHeaders, type: ApiType) {
             //store the theme
-            response.body()?.let { ThemePrefs.applyCanvasTheme(it) }
+            response.body()?.let { ThemePrefs.applyCanvasTheme(it, this@CallbackActivity) }
 
             // Update Flutter with the theme
             FlutterComm.sendUpdatedTheme()

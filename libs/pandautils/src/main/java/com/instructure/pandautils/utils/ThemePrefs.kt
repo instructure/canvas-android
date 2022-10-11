@@ -17,14 +17,23 @@
 
 package com.instructure.pandautils.utils
 
+import android.content.Context
 import android.graphics.Color
-import androidx.core.graphics.drawable.DrawableCompat
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.EditText
+import androidx.core.graphics.drawable.DrawableCompat
 import com.instructure.canvasapi2.models.CanvasTheme
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.BooleanPref
+import com.instructure.canvasapi2.utils.ColorPref
+import com.instructure.canvasapi2.utils.IntPref
+import com.instructure.canvasapi2.utils.PrefManager
+import com.instructure.canvasapi2.utils.StringPref
 import com.instructure.pandautils.R
+import androidx.core.graphics.ColorUtils as AndroidColorUtils
+
+const val MIN_CONTRAST_FOR_BUTTONS = 3.0
+const val MIN_CONTRAST_FOR_TEXT = 4.5
 
 object ThemePrefs : PrefManager("CanvasTheme") {
 
@@ -111,15 +120,97 @@ object ThemePrefs : PrefManager("CanvasTheme") {
         themeViewBackground(editText, color)
     }
 
-    fun applyCanvasTheme(theme: CanvasTheme) {
-        brandColor = parseColor(theme.brand, brandColor)
-        primaryColor = parseColor(theme.primary, primaryColor)
-        primaryTextColor = parseColor(theme.primaryText, primaryTextColor)
-        accentColor = parseColor(theme.accent, accentColor)
-        buttonColor = parseColor(theme.button, buttonColor)
-        buttonTextColor = parseColor(theme.buttonText, buttonTextColor)
+    fun applyCanvasTheme(theme: CanvasTheme, context: Context) {
+        val tempBrandColor = parseColor(theme.brand, brandColor) // ic-brand-primary - Primary Brand Color
+        val newBrandColor = correctContrastForText(tempBrandColor, context.getColor(R.color.backgroundLightestElevated))
+        brandColor = newBrandColor
+
+        primaryColor = parseColor(theme.primary, primaryColor)  // ic-brand-global-nav-bgd - Nav Background
+        primaryTextColor = parseColor(theme.primaryText, primaryTextColor) // ic-brand-global-nav-menu-item__text-color - Nav Text
+
+        accentColor = parseColor(theme.accent, accentColor) // ic-brand-global-nav-menu-item__text-color--active - Nav Text Active
+
+        val tempButtonColor = parseColor(theme.button, buttonColor) // ic-brand-button--primary-bgd - Primary Button
+        val newButtonColor = correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightest), context.getColor(R.color.white))
+        buttonColor = newButtonColor
+
+        buttonTextColor = parseColor(theme.buttonText, buttonTextColor) // ic-brand-button--primary-text - Primary Button Text
+
         logoUrl = theme.logoUrl
         isThemeApplied = true
+    }
+
+    private fun correctContrastForButtonBackground(buttonColor: Int, backgroundColor: Int, insideTextColor: Int): Int {
+        var backgroundContrast = AndroidColorUtils.calculateContrast(buttonColor, backgroundColor)
+        val textContrast = AndroidColorUtils.calculateContrast(insideTextColor, buttonColor)
+
+        if (backgroundContrast >= MIN_CONTRAST_FOR_BUTTONS && textContrast >= MIN_CONTRAST_FOR_TEXT) return buttonColor
+
+        var newColor = buttonColor
+
+        if (textContrast < MIN_CONTRAST_FOR_TEXT) {
+            newColor = correctContrastForText(buttonColor, insideTextColor)
+        }
+
+        backgroundContrast = AndroidColorUtils.calculateContrast(newColor, backgroundColor)
+
+        if (backgroundContrast < MIN_CONTRAST_FOR_BUTTONS) {
+            // Correct contrast for background, but don't go under 4.5:1 for text contrast
+            val backgroundLuminance = AndroidColorUtils.calculateLuminance(backgroundColor)
+            val delta = if (backgroundLuminance > 0.5) -0.01f else 0.01f
+
+            var hslArray = FloatArray(3)
+            AndroidColorUtils.colorToHSL(buttonColor, hslArray)
+
+            var saturation = hslArray[1]
+            var lightness = hslArray[2]
+
+            // The main logic is the same as for the text, but we need an extra exit condition if the contrast with the text would go too low.
+            while (AndroidColorUtils.calculateContrast(newColor, backgroundColor) < MIN_CONTRAST_FOR_BUTTONS && saturation >= 0) {
+                if (lightness < 1 || lightness > 0) {
+                    lightness += delta
+                } else if (delta == 0.01f) {
+                    saturation -= 0.01f
+                }
+                val tempNewColor = AndroidColorUtils.HSLToColor(floatArrayOf(hslArray[0], saturation, lightness))
+                if (AndroidColorUtils.calculateContrast(insideTextColor, tempNewColor) > MIN_CONTRAST_FOR_TEXT) {
+                    newColor = tempNewColor
+                } else {
+                    break
+                }
+            }
+        }
+
+        return newColor
+    }
+
+    private fun correctContrastForText(color: Int, colorAgainst: Int): Int {
+        val contrast = AndroidColorUtils.calculateContrast(color, colorAgainst)
+
+        if (contrast >= MIN_CONTRAST_FOR_TEXT) return color
+
+        var newColor = color
+
+        var hslArray = FloatArray(3)
+        AndroidColorUtils.colorToHSL(color, hslArray)
+
+        // If the background is light we need to decrease the lightness and increase if the background is dark
+        val colorAgainstLuminance = AndroidColorUtils.calculateLuminance(colorAgainst)
+        val delta = if (colorAgainstLuminance > 0.5) -0.01f else 0.01f
+
+        var saturation = hslArray[1]
+        var lightness = hslArray[2]
+        while (AndroidColorUtils.calculateContrast(newColor, colorAgainst) < MIN_CONTRAST_FOR_TEXT && saturation >= 0) {
+            if (lightness < 1 || lightness > 0) {
+                lightness += delta
+            } else if (delta == 0.01f) {
+                // if the color is not light enough and we are going for lighter color we desaturate it.
+                // Adding saturation for darkening is not necessary, because if lightness is 0, color is already black.
+                saturation -= 0.01f
+            }
+            newColor = AndroidColorUtils.HSLToColor(floatArrayOf(hslArray[0], saturation, lightness))
+        }
+        return newColor
     }
 
     private fun parseColor(hexColor: String, defaultColor: Int): Int {

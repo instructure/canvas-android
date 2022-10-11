@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 
+// TODO We need to dynamically change this color as well
 val CanvasContext.color: Int get() = ColorKeeper.getOrGenerateColor(this)
 
 val CanvasContext.isCourse: Boolean get() = this.type == CanvasContext.Type.COURSE
