@@ -413,7 +413,7 @@
     </string-array>
 
   <string name="not_a_teacher">Não é professor?</string>
-    <string name="not_a_teacher_tap_to_visit_play_store">Um dos nossos outros aplicativos pode ser um ajuste melhor. Toque em um para visitar a App Store.</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">Um dos nossos outros aplicativos pode ser um ajuste melhor. Toque em um para visitar a Play Store.</string>
     <string name="sg_tab_grade">Nota</string>
     <string name="sg_tab_comments">Comentários</string>
     <string name="sg_tab_files">Ficheiros</string>
@@ -715,7 +715,6 @@
     <string name="changeUser">Mudar utilizador</string>
     <string name="general">Geral</string>
     <string name="sendFeedback">Enviar Comentários</string>
-    <string name="rateOnTheAppStore">Taxa na App Store</string>
     <string name="privacyPolicy">Política de Privacidade</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Termos de uso</string>
