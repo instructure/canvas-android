@@ -28,11 +28,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.ToolbarSetup
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.adapter_remote_config_param.view.*
 import kotlinx.android.synthetic.main.fragment_remote_config_params.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RemoteConfigParamsFragment : Fragment() {
+
+    @Inject
+    lateinit var toolbarSetup: ToolbarSetup
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_remote_config_params, container, false)
@@ -40,8 +46,8 @@ class RemoteConfigParamsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toolbarSetup.setupToolbar(requireActivity(), toolbar)
         recyclerView.adapter = RemoteConfigParamAdapter()
-        toolbar.setupAsBackButton(this)
     }
 }
 
@@ -88,6 +94,4 @@ private class RemoteConfigParamAdapter : RecyclerView.Adapter<RecyclerView.ViewH
             param_value.addTextChangedListener(param_value.tag as TextWatcher)
         }
     }
-
-
 }

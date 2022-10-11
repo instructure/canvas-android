@@ -106,11 +106,9 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
 
         if (mRoute?.canvasContext is Course) {
             val course = mRoute?.canvasContext as Course
-            middleTopDivider.setBackgroundColor(course.color)
             fakeToolbarMaster.setBackgroundColor(course.color)
             fakeToolbarDetail.setBackgroundColor(course.color)
         } else {
-            middleTopDivider.setBackgroundColor(ThemePrefs.primaryColor)
             fakeToolbarMaster.setBackgroundColor(ThemePrefs.primaryColor)
             fakeToolbarDetail.setBackgroundColor(ThemePrefs.primaryColor)
         }
