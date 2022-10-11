@@ -110,7 +110,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
             fakeToolbarMaster.setBackgroundColor(course.color)
             fakeToolbarDetail.setBackgroundColor(course.color)
         } else {
-            middleTopDivider.setBackgroundColor(getColor(R.color.backgroundMedium))
+            middleTopDivider.setBackgroundColor(ThemePrefs.primaryColor)
             fakeToolbarMaster.setBackgroundColor(ThemePrefs.primaryColor)
             fakeToolbarDetail.setBackgroundColor(ThemePrefs.primaryColor)
         }
