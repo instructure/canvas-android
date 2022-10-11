@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.FeatureFlagPref
-import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.FeatureFlags
@@ -39,7 +38,7 @@ class FeatureFlagsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.adapter = FeatureFlagAdapter()
-        if (!isTablet) toolbar.setupAsBackButton(this)
+        toolbar.setupAsBackButton(this)
     }
 }
 
