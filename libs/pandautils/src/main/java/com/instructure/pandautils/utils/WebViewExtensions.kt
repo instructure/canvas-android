@@ -16,7 +16,9 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -49,6 +51,7 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
     if(html.contains("<iframe")) {
         return this.tryWeave {
             var hasLtiTool = false
+            var hasGoogleDoc = false
             var newHTML: String = html
 
             // First we need to find LTIs by looking for iframes
@@ -80,6 +83,12 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
                         val newIframe = iframeWithLink(srcUrl, iframe, context)
                         newHTML = newHTML.replace(iframe, newIframe)
                     }
+
+                    if (isGoogleDocsUrl(srcUrl)) {
+                        hasGoogleDoc = true
+                        val newIframe = iframeWithGoogleDocsButton(srcUrl, iframe, context.getString(R.string.openLtiInExternalApp))
+                        newHTML = newHTML.replace(iframe, newIframe)
+                    }
                 }
             }
 
@@ -89,9 +98,13 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
             newHTML = newHTML.replace("__LTI_BUTTON_MARGIN__", if (isTablet) "0px" else "auto")
 
             // Add the JS interface
-            if(hasLtiTool && jsCallback != null) {
+            if (hasLtiTool && jsCallback != null) {
                 // Its possible, i.e. for discussions, that the js interface is already configured
                 this@loadHtmlWithIframes.addJavascriptInterface(JsExternalToolInterface(jsCallback), "accessor")
+            }
+
+            if (hasGoogleDoc) {
+                this@loadHtmlWithIframes.addJavascriptInterface(JsGoogleDocsInterface(context), "accessor")
             }
 
             loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML), contentDescription)
@@ -129,6 +142,12 @@ private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): St
     return iframe + htmlButton
 }
 
+private fun iframeWithGoogleDocsButton(srcUrl: String, iframe: String, buttonText: String): String {
+    val button = "</br><p><div class=\"lti_button\" onClick=\"accessor.onGoogleDocsButtonPressed('%s')\">%s</div></p>"
+    val htmlButton = String.format(button, srcUrl, buttonText)
+    return iframe + htmlButton
+}
+
 fun handleLTIPlaceHolders(placeHolderList: ArrayList<Placeholder>, html: String): String {
     var newHtml = html
     for (holder in placeHolderList) {
@@ -146,11 +165,19 @@ suspend fun authenticateLTIUrl(ltiUrl: String): String {
 
 data class Placeholder(val iframeHtml: String, val placeHolderHtml: String)
 
-class JsExternalToolInterface(val callback: (ltiUrl: String) -> Unit) {
-    @Suppress("UNUSED_PARAMETER")
+@Suppress("UNUSED_PARAMETER")
+class JsExternalToolInterface(private val callback: (ltiUrl: String) -> Unit) {
     @JavascriptInterface
     fun onLtiToolButtonPressed(ltiUrl: String) {
         callback(ltiUrl)
+    }
+}
+
+@Suppress("UNUSED_PARAMETER")
+class JsGoogleDocsInterface(private val context: Context) {
+    @JavascriptInterface
+    fun onGoogleDocsButtonPressed(url: String) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 }
 
@@ -195,3 +222,5 @@ fun WebView.addDarkThemeToHtmlDocument() {
                 """
     evaluateJavascript(js, {})
 }
+
+private fun isGoogleDocsUrl(url: String) = url.contains("docs.google.com")
