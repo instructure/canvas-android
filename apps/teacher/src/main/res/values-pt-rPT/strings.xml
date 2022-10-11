@@ -413,7 +413,7 @@
     </string-array>
 
   <string name="not_a_teacher">Não é professor?</string>
-    <string name="not_a_teacher_tap_to_visit_play_store">Um dos nossos outros aplicativos pode ser um ajuste melhor. Toque em um para visitar a Play Store.</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">Um dos nossos outros aplicativos pode ser um ajuste melhor. Toque em um para visitar a App Store.</string>
     <string name="sg_tab_grade">Nota</string>
     <string name="sg_tab_comments">Comentários</string>
     <string name="sg_tab_files">Ficheiros</string>
