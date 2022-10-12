@@ -317,7 +317,7 @@ object RouteMatcher : BaseRouteMatcher() {
             handleMediaRoute(context, route)
         } else if (route.routeContext == RouteContext.SPEED_GRADER) {
             //handleSpeedGraderRoute(context, route) //Annotations for student maybe?
-        } else if (context.resources.getBoolean(R.bool.is_device_tablet)) {
+        } else if (context.resources.getBoolean(R.bool.isDeviceTablet)) {
             handleTabletRoute(context, route)
         } else {
             handleFullscreenRoute(context, route)
