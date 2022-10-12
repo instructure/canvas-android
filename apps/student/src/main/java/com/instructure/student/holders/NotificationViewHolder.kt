@@ -156,7 +156,6 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         } else {
             title.setTypeface(null, Typeface.BOLD)
             unreadMark.setVisible()
-            unreadMark.setImageDrawable(ColorUtils.colorIt(ThemePrefs.accentColor, unreadMark.drawable))
         }
     }
 

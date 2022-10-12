@@ -51,8 +51,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     // Used for text color in Toolbars
     var primaryTextColor by ColorPref(R.color.white)
 
-    var accentColor by ColorPref(R.color.textInfo)
-
     var buttonColor by ColorPref(R.color.backgroundInfo)
 
     var buttonTextColor by ColorPref(R.color.white)
@@ -127,8 +125,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
         primaryColor = parseColor(theme.primary, primaryColor)  // ic-brand-global-nav-bgd - Nav Background
         primaryTextColor = parseColor(theme.primaryText, primaryTextColor) // ic-brand-global-nav-menu-item__text-color - Nav Text
-
-        accentColor = parseColor(theme.accent, accentColor) // ic-brand-global-nav-menu-item__text-color--active - Nav Text Active
 
         val tempButtonColor = parseColor(theme.button, buttonColor) // ic-brand-button--primary-bgd - Primary Button
         val newButtonColor = correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightest), context.getColor(R.color.white))
