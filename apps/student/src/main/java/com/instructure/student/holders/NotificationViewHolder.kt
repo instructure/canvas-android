@@ -144,7 +144,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         val courseColor: Int = if (item.canvasContext != null) {
             ColorKeeper.getOrGenerateColor(item.canvasContext)
         } else
-            ThemePrefs.primaryColor
+            ThemePrefs.brandColor
 
         val drawable = ColorKeeper.getColoredDrawable(context, drawableResId, courseColor)
         icon.setImageDrawable(drawable)
