@@ -142,7 +142,7 @@ class EditFileFolderFragment : BasePresenterFragment<
 
 
 
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun setupViews() {
@@ -195,7 +195,7 @@ class EditFileFolderFragment : BasePresenterFragment<
             it.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL))
         }
 
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun showUsageRights(show: Boolean) {

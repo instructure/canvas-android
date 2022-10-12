@@ -51,9 +51,14 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     // Used for text color in Toolbars
     var primaryTextColor by ColorPref(R.color.white)
 
+    // Used for button background where we have a filled button and a text/icon inside.
     var buttonColor by ColorPref(R.color.backgroundInfo)
 
+    // Button text color for filled button.
     var buttonTextColor by ColorPref(R.color.white)
+
+    // Used for text buttons (for example dialog buttons) and small image buttons.
+    var textButtonColor by ColorPref(R.color.textInfo)
 
     var logoUrl by StringPref()
 
@@ -120,17 +125,16 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     fun applyCanvasTheme(theme: CanvasTheme, context: Context) {
         val tempBrandColor = parseColor(theme.brand, brandColor) // ic-brand-primary - Primary Brand Color
-        val newBrandColor = correctContrastForText(tempBrandColor, context.getColor(R.color.backgroundLightestElevated))
-        brandColor = newBrandColor
+        brandColor = correctContrastForText(tempBrandColor, context.getColor(R.color.backgroundLightestElevated))
 
         primaryColor = parseColor(theme.primary, primaryColor)  // ic-brand-global-nav-bgd - Nav Background
         primaryTextColor = parseColor(theme.primaryText, primaryTextColor) // ic-brand-global-nav-menu-item__text-color - Nav Text
 
         val tempButtonColor = parseColor(theme.button, buttonColor) // ic-brand-button--primary-bgd - Primary Button
-        val newButtonColor = correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightest), context.getColor(R.color.white))
-        buttonColor = newButtonColor
 
-        buttonTextColor = parseColor(theme.buttonText, buttonTextColor) // ic-brand-button--primary-text - Primary Button Text
+        buttonColor = correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightest), context.getColor(R.color.white))
+        buttonTextColor = context.getColor(R.color.white)
+        textButtonColor = correctContrastForText(tempButtonColor, context.getColor(R.color.backgroundLightestElevated))
 
         logoUrl = theme.logoUrl
         isThemeApplied = true

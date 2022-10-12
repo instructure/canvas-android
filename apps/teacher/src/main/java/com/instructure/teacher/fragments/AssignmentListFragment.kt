@@ -234,7 +234,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
                 clearGradingPeriodText.visibility = View.INVISIBLE
             }
 
-            clearGradingPeriodText.setTextColor(ThemePrefs.buttonColor)
+            clearGradingPeriodText.setTextColor(ThemePrefs.textButtonColor)
 
         } else {
             gradingPeriodContainer.visibility = View.GONE

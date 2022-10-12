@@ -179,7 +179,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         toolbar.setupMenu(R.menu.menu_save_generic) { saveQuiz() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun setupPublishSwitch() = with(presenter.mQuiz) {
@@ -333,12 +333,12 @@ class EditQuizDetailsFragment : BasePresenterFragment<
             },
                     getString(R.string.quizDescriptionContentDescription),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor)
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         } else {
             descriptionWebView.setHtml(description,
                     getString(R.string.quizDescriptionContentDescription),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor)
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         }
 
 
@@ -475,8 +475,8 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         updateOverridesForQuizType()
 
         // Theme add button and plus image
-        addOverrideText.setTextColor(ThemePrefs.buttonColor)
-        plus.setColorFilter(ThemePrefs.buttonColor)
+        addOverrideText.setTextColor(ThemePrefs.textButtonColor)
+        plus.setColorFilter(ThemePrefs.textButtonColor)
 
         addOverride.setOnClickListener {
             presenter.mEditDateGroups.add(DueDateGroup())

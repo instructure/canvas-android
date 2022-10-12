@@ -88,10 +88,10 @@ class ShareExtensionTargetFragment : DialogFragment() {
         alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setOnShowListener {
             val positive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-            positive.setTextColor(ThemePrefs.buttonColor)
+            positive.setTextColor(ThemePrefs.textButtonColor)
             positive.setOnClickListener { validateAndShowNext() }
             val negative = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-            negative.setTextColor(ThemePrefs.buttonColor)
+            negative.setTextColor(ThemePrefs.textButtonColor)
             negative.setOnClickListener {
                 dismissAllowingStateLoss()
                 shareExtensionViewModel.finish()

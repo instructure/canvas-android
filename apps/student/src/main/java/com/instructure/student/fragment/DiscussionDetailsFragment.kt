@@ -265,8 +265,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             builder.setNegativeButton(android.R.string.no) { _, _ -> }
             val dialog = builder.create()
             dialog.setOnShowListener {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
             }
             dialog.show()
         } else NoInternetConnectionDialog.show(requireFragmentManager())
@@ -705,7 +705,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionSection?.text = getString(R.string.announcementSections, discussionTopicHeader.sections?.joinToString { it.name })
         discussionSection?.setVisible(discussionTopicHeader.sections?.isNotEmpty() == true)
 
-        replyToDiscussionTopic.setTextColor(ThemePrefs.buttonColor)
+        replyToDiscussionTopic.setTextColor(ThemePrefs.textButtonColor)
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 

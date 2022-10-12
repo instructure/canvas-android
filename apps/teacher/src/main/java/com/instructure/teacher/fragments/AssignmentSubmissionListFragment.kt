@@ -114,7 +114,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         mNeedToForceNetwork = false
 
         updateFilterTitle()
-        clearFilterTextView.setTextColor(ThemePrefs.buttonColor)
+        clearFilterTextView.setTextColor(ThemePrefs.textButtonColor)
     }
 
     override fun onStart() {
@@ -176,7 +176,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             assignmentSubmissionListToolbar.subtitle = mCourse.name
         }
         ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
-        ViewStyler.themeFAB(addMessage, ThemePrefs.buttonColor)
+        ViewStyler.themeFAB(addMessage)
     }
 
     private fun setupListeners() {

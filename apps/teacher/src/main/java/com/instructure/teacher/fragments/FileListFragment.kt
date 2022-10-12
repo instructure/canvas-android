@@ -228,9 +228,9 @@ class FileListFragment : BaseSyncFragment<
     }
 
     private fun setupViews() {
-        ViewStyler.themeFAB(addFab, ThemePrefs.buttonColor)
-        ViewStyler.themeFAB(addFileFab, ThemePrefs.buttonColor)
-        ViewStyler.themeFAB(addFolderFab, ThemePrefs.buttonColor)
+        ViewStyler.themeFAB(addFab)
+        ViewStyler.themeFAB(addFileFab)
+        ViewStyler.themeFAB(addFolderFab)
 
         addFab.setOnClickListener { animateFabs() }
         addFileFab.setOnClickListener {

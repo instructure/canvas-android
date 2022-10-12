@@ -45,7 +45,7 @@ class AnnotationErrorDialog : AppCompatDialogFragment() {
 
         val dialog = builder.create()
         dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
         }
 
         return dialog

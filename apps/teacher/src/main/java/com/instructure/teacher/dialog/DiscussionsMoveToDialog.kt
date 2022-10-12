@@ -107,8 +107,8 @@ class DiscussionsMoveToDialog : DialogFragment() {
             .create()
 
         dialog.setOnShowListener { _ ->
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                 val selected = radioGroup.findViewById<AppCompatRadioButton>(radioGroup.checkedRadioButtonId)
                 if(selected.tag != null) {

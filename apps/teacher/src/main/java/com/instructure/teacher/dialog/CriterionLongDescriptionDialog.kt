@@ -103,7 +103,7 @@ class CriterionLongDescriptionDialog : DialogFragment() {
                 .create()
                 .apply {
                     setOnShowListener {
-                        getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
+                        getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
                     }
                 }
     }

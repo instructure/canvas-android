@@ -133,7 +133,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
 
         // Message FAB
         messageButton.setVisible()
-        ViewStyler.themeFAB(messageButton, ThemePrefs.buttonColor)
+        ViewStyler.themeFAB(messageButton)
         messageButton.setOnClickListener {
             val recipient = Recipient(
                 stringId = student.id,

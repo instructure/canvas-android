@@ -155,7 +155,7 @@ class InboxFragment : ParentFragment() {
     }
 
     private fun setupFilterText() {
-        clearFilterTextView.setTextColor(ThemePrefs.buttonColor)
+        clearFilterTextView.setTextColor(ThemePrefs.textButtonColor)
         adapter.canvasContext?.let {
             courseFilter.text = it.name
             clearFilterTextView.setVisible()
@@ -245,6 +245,7 @@ class InboxFragment : ParentFragment() {
         setupToolbarMenu(toolbar, R.menu.menu_filter_inbox)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+        addMessage.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, addMessage.drawable))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -164,6 +164,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     private fun setupViews() {
         createNewPage.setGone()
         createNewPage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+        createNewPage.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewPage.drawable))
         createNewPage.onClickWithRequireNetwork {
             val args = CreateOrEditPageDetailsFragment.newInstanceCreate(mCanvasContext).nonNullArgs
             RouteMatcher.route(requireContext(), Route(CreateOrEditPageDetailsFragment::class.java, null, args))
