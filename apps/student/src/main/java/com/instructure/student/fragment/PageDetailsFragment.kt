@@ -36,7 +36,6 @@ import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
-import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
@@ -205,8 +204,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
             // Load the html with the helper function to handle iframe cases
             loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, body, ::loadPageHtml, {
-                val args = LtiLaunchFragment.makeLTIBundle(
-                        URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+                val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
                 RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
             }, page.title)
         } else if (page.body == null || page.body?.endsWith("") == true) {
@@ -289,7 +287,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     private fun openEditPage(page: Page) {
         if (APIHelper.hasNetworkConnection()) {
-            val route = EditPageDetailsFragment.makeRoute(canvasContext, page).apply { routeType = RouteType.DIALOG }
+            val route = EditPageDetailsFragment.makeRoute(canvasContext, page)
             RouteMatcher.route(requireContext(), route)
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
