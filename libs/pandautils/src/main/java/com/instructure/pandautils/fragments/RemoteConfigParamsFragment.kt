@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.ToolbarSetup
+import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.adapter_remote_config_param.view.*
 import kotlinx.android.synthetic.main.fragment_remote_config_params.*
@@ -38,7 +38,7 @@ import javax.inject.Inject
 class RemoteConfigParamsFragment : Fragment() {
 
     @Inject
-    lateinit var toolbarSetup: ToolbarSetup
+    lateinit var toolbarSetupBehavior: ToolbarSetupBehavior
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_remote_config_params, container, false)
@@ -46,7 +46,7 @@ class RemoteConfigParamsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarSetup.setupToolbar(requireActivity(), toolbar)
+        toolbarSetupBehavior.setupToolbar(toolbar)
         recyclerView.adapter = RemoteConfigParamAdapter()
     }
 }

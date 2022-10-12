@@ -17,8 +17,9 @@
 
 package com.instructure.teacher.di
 
-import com.instructure.pandautils.utils.ToolbarSetup
-import com.instructure.teacher.utils.TeacherToolbarSetup
+import android.app.Activity
+import com.instructure.pandautils.utils.ToolbarSetupBehavior
+import com.instructure.teacher.utils.TeacherToolbarSetupBehavior
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +29,7 @@ import dagger.hilt.android.components.FragmentComponent
 @InstallIn(FragmentComponent::class)
 class ToolbarSetupModule {
     @Provides
-    fun provideToolbarSetup(): ToolbarSetup {
-        return TeacherToolbarSetup()
+    fun provideToolbarSetup(activity: Activity): ToolbarSetupBehavior {
+        return TeacherToolbarSetupBehavior(activity)
     }
 }

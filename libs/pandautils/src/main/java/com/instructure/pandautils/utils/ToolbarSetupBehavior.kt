@@ -15,17 +15,10 @@
  *
  */
 
-package com.instructure.student.util
+package com.instructure.pandautils.utils
 
-import android.app.Activity
 import androidx.appcompat.widget.Toolbar
-import com.instructure.pandautils.utils.ToolbarSetup
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setupAsBackButton
 
-class StudentToolbarSetup : ToolbarSetup {
-    override fun setupToolbar(activity: Activity, toolbar: Toolbar) {
-        toolbar.setupAsBackButton { activity.onBackPressed() }
-        ViewStyler.themeToolbarLight(activity, toolbar)
-    }
+interface ToolbarSetupBehavior {
+    fun setupToolbar(toolbar: Toolbar)
 }

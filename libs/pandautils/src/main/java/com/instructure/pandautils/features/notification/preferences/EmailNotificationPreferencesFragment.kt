@@ -28,7 +28,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
-import com.instructure.pandautils.utils.ToolbarSetup
+import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_notification_preferences.*
 import javax.inject.Inject
@@ -37,7 +37,7 @@ import javax.inject.Inject
 class EmailNotificationPreferencesFragment : Fragment() {
 
     @Inject
-    lateinit var toolbarSetup: ToolbarSetup
+    lateinit var toolbarSetupBehavior: ToolbarSetupBehavior
 
     private val viewModel: EmailNotificationPreferencesViewModel by viewModels()
 
@@ -54,7 +54,7 @@ class EmailNotificationPreferencesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarSetup.setupToolbar(requireActivity(), toolbar)
+        toolbarSetupBehavior.setupToolbar(toolbar)
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
