@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
@@ -33,6 +34,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_file_search.*
+import com.instructure.pandautils.utils.ColorUtils as PandaColorUtils
 
 @ScreenView(SCREEN_VIEW_FILE_SEARCH)
 class FileSearchFragment : ParentFragment(), FileSearchView {
@@ -68,7 +70,7 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
     }
 
     private fun setupViews() {
-        ViewStyler.themeStatusBar(requireActivity())
+        themeSearchBar()
 
         // Set up empty state
         emptyPandaView.getEmptyViewImage()?.setImageResource(R.drawable.ic_panda_nofiles)
@@ -94,6 +96,17 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
         // Manually request focus and show keyboard after a delay...because Student app
         queryInput.requestFocus()
         queryInput.postDelayed({ queryInput.showKeyboard() }, 500)
+    }
+
+    private fun themeSearchBar() {
+        val primaryColor = ColorKeeper.getOrGenerateColor(canvasContext)
+        val primaryTextColor = if (canvasContext.isCourse) requireContext().getColor(R.color.white) else ThemePrefs.primaryTextColor
+        ViewStyler.setStatusBarDark(requireActivity(), primaryColor)
+        searchHeader.setBackgroundColor(primaryColor)
+        queryInput.setTextColor(primaryTextColor)
+        queryInput.setHintTextColor(ColorUtils.setAlphaComponent(primaryTextColor, 0x66))
+        PandaColorUtils.colorIt(primaryTextColor, backButton)
+        PandaColorUtils.colorIt(primaryTextColor, clearButton)
     }
 
     override fun checkIfEmpty() {
