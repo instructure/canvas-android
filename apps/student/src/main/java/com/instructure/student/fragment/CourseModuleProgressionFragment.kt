@@ -104,8 +104,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        prev_item.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext)
-        next_item.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext)
+        prev_item.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext.textAndIconColor)
+        next_item.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext.textAndIconColor)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -144,7 +144,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     //region Fragment Interaction Overrides
     override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.color)
+        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
     }
 
     override fun title(): String = getString(R.string.modules)

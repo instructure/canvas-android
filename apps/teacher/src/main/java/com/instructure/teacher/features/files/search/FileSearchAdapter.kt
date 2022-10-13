@@ -24,7 +24,7 @@ import instructure.androidblueprint.SyncRecyclerAdapter
 
 class FileSearchAdapter(
     context: Context,
-    private val courseColor: Int,
+    private val courseTextColor: Int,
     presenter: FileSearchPresenter,
     private val callback: (FileFolder) -> Unit
 ) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder, FileSearchView>(context, presenter) {
@@ -34,7 +34,7 @@ class FileSearchAdapter(
     override fun createViewHolder(v: View, viewType: Int) = FileFolderViewHolder(v)
 
     override fun bindHolder(model: FileFolder, holder: FileFolderViewHolder, position: Int) {
-        holder.bind(model, courseColor, context!!, callback)
+        holder.bind(model, courseTextColor, context!!, callback)
     }
 
 }

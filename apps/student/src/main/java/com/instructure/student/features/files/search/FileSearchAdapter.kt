@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.adapter.BaseListRecyclerAdapter
 import com.instructure.student.adapter.FileFolderCallback
 import com.instructure.student.holders.FileViewHolder
@@ -36,8 +36,6 @@ class FileSearchAdapter(
     private val canvasContext: CanvasContext,
     private val viewCallback: FileSearchView
 ) : BaseListRecyclerAdapter<FileFolder, FileViewHolder>(context, FileFolder::class.java) {
-
-    private val contextColor = canvasContext.color
 
     private var apiCall: WeaveJob? = null
 
@@ -73,7 +71,7 @@ class FileSearchAdapter(
     }
 
     override fun bindHolder(item: FileFolder, holder: FileViewHolder, position: Int) {
-        holder.bind(item, contextColor, context, emptyList(), callback)
+        holder.bind(item, canvasContext.textAndIconColor, context, emptyList(), callback)
     }
 
     override fun createViewHolder(v: View, viewType: Int) = FileViewHolder(v)

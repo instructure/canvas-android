@@ -40,12 +40,10 @@ class FileSearchFragment : BaseSyncFragment<
         FileFolderViewHolder,
         FileSearchAdapter>(), FileSearchView {
 
-    private val courseColor by lazy { ColorKeeper.getOrGenerateColor(canvasContext) }
-
     private val searchAdapter by lazy {
-        FileSearchAdapter(requireContext(), courseColor, presenter) {
-            val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.canvasContext, R.drawable.ic_document)
-            viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, courseColor, editableFile)
+        FileSearchAdapter(requireContext(), canvasContext.textAndIconColor, presenter) {
+            val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.backgroundColor, presenter.canvasContext, R.drawable.ic_document)
+            viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.backgroundColor, editableFile)
         }
     }
 

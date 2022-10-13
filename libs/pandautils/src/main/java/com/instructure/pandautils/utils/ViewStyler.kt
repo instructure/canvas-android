@@ -114,8 +114,8 @@ object ViewStyler {
 
     fun themeToolbarColored(activity: Activity, toolbar: Toolbar?, canvasContext: CanvasContext?) {
         if(toolbar == null || canvasContext == null) return
-        themeToolbar(activity, toolbar, canvasContext.color, activity.getColor(R.color.white))
-        setStatusBarDark(activity, canvasContext.color)
+        themeToolbar(activity, toolbar, canvasContext.backgroundColor, activity.getColor(R.color.white))
+        setStatusBarDark(activity, canvasContext.backgroundColor)
     }
 
     fun themeToolbarColored(activity: Activity, toolbar: Toolbar, @ColorInt backgroundColor: Int, @ColorInt contentColor: Int) {

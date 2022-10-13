@@ -709,8 +709,8 @@ class SubmissionContentView(
         })
 
         bottomTabLayout.setupWithViewPager(mBottomViewPager)
-        bottomTabLayout.setSelectedTabIndicatorColor(course.color)
-        bottomTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.textDarkest), course.color)
+        bottomTabLayout.setSelectedTabIndicatorColor(course.textAndIconColor)
+        bottomTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.textDarkest), course.textAndIconColor)
         bottomTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {

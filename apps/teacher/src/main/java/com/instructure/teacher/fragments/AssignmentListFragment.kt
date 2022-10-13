@@ -63,7 +63,6 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     private var mPairedWithSubmissions: Boolean = false
     private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
-    private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCanvasContext) }
 
     private var mGradingPeriodMenu: PopupMenu? = null
     private var mNeedToForceNetwork = false
@@ -119,7 +118,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     }
 
     override fun createAdapter(): AssignmentAdapter {
-        return AssignmentAdapter(requireContext(), presenter, mCourseColor) { assignment ->
+        return AssignmentAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor) { assignment ->
             if (mPairedWithSubmissions) {
                 val args = AssignmentSubmissionListFragment.makeBundle(assignment)
                 RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, mCanvasContext, args))
@@ -214,7 +213,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         assignmentListToolbar.subtitle = mCanvasContext.name
         assignmentListToolbar.setupBackButton(this)
 
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, mCourseColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     override fun adjustGradingPeriodHeader(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) {

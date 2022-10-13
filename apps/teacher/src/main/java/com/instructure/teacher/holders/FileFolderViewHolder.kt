@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.adapter_file_folder.view.*
 
 class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(item: FileFolder, courseColor: Int, context: Context, callback: (FileFolder) -> Unit) = with(itemView){
+    fun bind(item: FileFolder, iconColor: Int, context: Context, callback: (FileFolder) -> Unit) = with(itemView){
         fileFolderLayout.onClick { callback(item) }
         fileIconOrImage.setPublishedStatus(item) // Locked files are "unpublished"
 
@@ -59,20 +59,20 @@ class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             } else {
                 val contentType = item.contentType.orEmpty()
                 when {
-                    contentType.contains("pdf") -> fileIconOrImage.setIcon(R.drawable.ic_pdf, courseColor)
-                    contentType.contains("presentation") -> fileIconOrImage.setIcon(R.drawable.ic_ppt, courseColor)
-                    contentType.contains("spreadsheet") -> fileIconOrImage.setIcon(R.drawable.ic_spreadsheet, courseColor)
-                    contentType.contains("wordprocessing") -> fileIconOrImage.setIcon(R.drawable.ic_word_doc, courseColor)
-                    contentType.contains("zip") -> fileIconOrImage.setIcon(R.drawable.ic_zip, courseColor)
-                    contentType.contains("image") -> fileIconOrImage.setIcon(R.drawable.ic_image, courseColor)
-                    else -> fileIconOrImage.setIcon(R.drawable.ic_document, courseColor)
+                    contentType.contains("pdf") -> fileIconOrImage.setIcon(R.drawable.ic_pdf, iconColor)
+                    contentType.contains("presentation") -> fileIconOrImage.setIcon(R.drawable.ic_ppt, iconColor)
+                    contentType.contains("spreadsheet") -> fileIconOrImage.setIcon(R.drawable.ic_spreadsheet, iconColor)
+                    contentType.contains("wordprocessing") -> fileIconOrImage.setIcon(R.drawable.ic_word_doc, iconColor)
+                    contentType.contains("zip") -> fileIconOrImage.setIcon(R.drawable.ic_zip, iconColor)
+                    contentType.contains("image") -> fileIconOrImage.setIcon(R.drawable.ic_image, iconColor)
+                    else -> fileIconOrImage.setIcon(R.drawable.ic_document, iconColor)
                 }
             }
         } else { // This is a folder
             fileName.text = item.name
             fileName.contentDescription = itemView.resources.getString(R.string.folderTalkBack, item.name)
             fileSize.text = ""
-            fileIconOrImage.setIcon(R.drawable.ic_folder_solid, courseColor)
+            fileIconOrImage.setIcon(R.drawable.ic_folder_solid, iconColor)
         }
     }
 

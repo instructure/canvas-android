@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -100,7 +99,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         swipeRefreshLayout.isRefreshing = false
         setupViews(assignment)
         setupListeners(assignment)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     override fun getPresenterFactory() = AssignmentDetailPresenterFactory(mAssignment)
@@ -110,7 +109,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -118,7 +117,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         if(!isTablet) {
             toolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews(assignment: Assignment) {

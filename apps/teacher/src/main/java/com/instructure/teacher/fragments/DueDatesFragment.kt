@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -75,7 +74,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
         if(!isTablet) {
             toolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     override fun showMenu(assignment: Assignment) {

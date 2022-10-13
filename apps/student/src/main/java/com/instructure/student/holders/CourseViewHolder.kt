@@ -45,15 +45,15 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 
-        titleTextView.setTextColor(course.color)
+        titleTextView.setTextColor(course.textAndIconColor)
 
         courseImageView.setCourseImage(
             course = course,
-            courseColor = course.color,
+            courseColor = course.backgroundColor,
             applyColor = !StudentPrefs.hideCourseColorOverlay
         )
 
-        courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.color)
+        courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.backgroundColor)
         courseColorIndicator.setVisible(StudentPrefs.hideCourseColorOverlay)
 
         cardView.setOnClickListener { callback.onCourseSelected(course)}
@@ -85,11 +85,11 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             if(courseGrade.isLocked) {
                 gradeTextView.setGone()
                 lockedGradeImage.setVisible()
-                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_lock, course.color))
+                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_lock, course.textAndIconColor))
             } else {
                 gradeTextView.setVisible()
                 lockedGradeImage.setGone()
-                setGradeView(gradeTextView, courseGrade, course.color, context)
+                setGradeView(gradeTextView, courseGrade, course.textAndIconColor, context)
             }
         } else {
             gradeLayout.setGone()

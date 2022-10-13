@@ -34,6 +34,7 @@ import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
 import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.backgroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -80,7 +81,7 @@ class DashboardNotificationsFragment : Fragment() {
         when (action) {
             is DashboardNotificationsActions.LaunchConference -> {
                 val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-                    .setToolbarColor(ColorKeeper.getOrGenerateColor(action.canvasContext))
+                    .setToolbarColor(action.canvasContext.backgroundColor)
                     .build()
 
                 var intent = CustomTabsIntent.Builder()

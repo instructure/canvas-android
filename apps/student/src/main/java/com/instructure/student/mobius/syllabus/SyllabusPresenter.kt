@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandares.R
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.mobius.common.ui.Presenter
 import com.instructure.student.mobius.syllabus.ui.EventsViewState
 import com.instructure.student.mobius.syllabus.ui.ScheduleItemViewState
@@ -40,7 +40,7 @@ object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
         }
 
         val course = model.course?.dataOrNull
-        val events = mapEventsResultToViewState(course?.color ?: 0, model.events, context)
+        val events = mapEventsResultToViewState(course?.textAndIconColor ?: 0, model.events, context)
         val body = model.syllabus?.description?.takeIf { it.isValid() }
 
         return SyllabusViewState.Loaded(

@@ -60,7 +60,7 @@ class MasteryPathOptionsFragment : ParentFragment() {
         mRecyclerAdapter = MasteryPathOptionsRecyclerAdapter(
             requireContext(),
             assignments.toTypedArray(),
-            canvasContext.color,
+            canvasContext.textAndIconColor,
             object : AdapterToFragmentCallback<Assignment> {
                 override fun onRowClicked(assignment: Assignment, position: Int, isOpenDetail: Boolean) {
                     val route = AssignmentBasicFragment.makeRoute(canvasContext, assignment)

@@ -71,7 +71,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.fragment_people_details, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val color = ColorKeeper.getOrGenerateColor(canvasContext)
+        val color = canvasContext.textAndIconColor
         compose.backgroundTintList = ColorStateList.valueOf(color)
         compose.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, Color.WHITE))
         compose.setOnClickListener {
@@ -111,7 +111,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), ColorKeeper.getOrGenerateColor(canvasContext))
+        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
     }
 
     private fun setupUserViews() {
@@ -119,7 +119,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
             ProfileUtils.loadAvatarForUser(avatar, u.name, u.avatarUrl)
             userName.text = Pronouns.span(u.name, u.pronouns)
             userRole.text = u.enrollments.distinctBy { it.displayType }.joinToString { it.displayType }
-            userBackground.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
+            userBackground.setBackgroundColor(canvasContext.backgroundColor)
             bioText.setVisible(u.bio.isValid() && u.bio != null).text = u.bio
             checkMessagePermission()
         }

@@ -34,6 +34,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.HashMap
 
 private const val PREFERENCE_FILE_NAME = "color_keeper_prefs"
 
@@ -46,12 +47,10 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
     /** The currently cached colors **/
     var cachedColors: Map<String, Int> by NonNullGsonPref(HashMap())
 
+    var cachedThemedColors: Map<String, ThemedColor> by NonNullGsonPref(HashMap())
+
     /** Whether or not colors have been synced from the API before **/
     var hasPreviouslySynced by BooleanPref()
-
-    /** Gets the color associated with the given key if it exists, otherwise gets the [defaultColor] **/
-    @JvmStatic fun getColorOrDefault(keyName: String)
-            = cachedColors[keyName] ?: defaultColor
 
     /** Gets the color associated with the given [CanvasContext] if it exists, otherwise generates a new color **/
     @JvmStatic @JvmOverloads
@@ -68,9 +67,8 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
         }
     }
 
-    fun colorFromCourseId(courseId: Long) = getOrGenerateColor(CanvasContext.emptyCourseContext(courseId))
-
     /** Gets the color associated with the given contextId if it exists, otherwise generates a new color **/
+    // TODO We need to handle this as well
     @JvmStatic fun getOrGenerateColor(contextId: String)
             = cachedColors.getOrElse(contextId) { generateColor(Course()) }
 
@@ -102,16 +100,6 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
             .getDrawable(context, resource)!!
             .mutate()
             .apply { setColorFilter(color, PorterDuff.Mode.SRC_ATOP) }
-
-    /**
-     * Generates a colored drawable
-     * @param context An Android Context
-     * @param resource The resource ID of the drawable to be colored
-     * @param canvasContext A CanvasContext whose associated color will be used to tint the drawable
-     * @return The colored drawable
-     */
-    @JvmStatic fun getColoredDrawable(context: Context, @DrawableRes resource: Int, canvasContext: CanvasContext?)
-            = getColoredDrawable(context, resource, getOrGenerateColor(canvasContext))
 
     /**
      * Returns a color string in hex format with no alpha
@@ -191,20 +179,6 @@ object ColorApiHelper {
     const val K5_DEFAULT_COLOR = "#394B58"
 
     /**
-     * Returns a color via a callback, if no color is in the cache it will pull from canvas via the api
-     * If nothing is found in the cache or api a color is generated
-     * @param canvasContext canvasContext
-     * @param gotColor
-     */
-    @JvmStatic fun getColor(canvasContext: CanvasContext, gotColor: (color: Int) -> Unit) {
-        if (canvasContext.contextId in ColorKeeper.cachedColors) {
-            gotColor(ColorKeeper.cachedColors[canvasContext.contextId]!!)
-        } else {
-            performSync { gotColor(ColorKeeper.getOrGenerateColor(canvasContext)) }
-        }
-    }
-
-    /**
      * Sets a new color to the api and caches the result
      * @param canvasContext canvasContext
      * @param newColor the new color to set
@@ -240,3 +214,9 @@ object ColorApiHelper {
 
     suspend fun awaitSync(): Boolean = suspendCancellableCoroutine { cr -> performSync { cr.resumeSafely(it) } }
 }
+
+data class ThemedColor(
+    val light: Int,
+    val darkBackgroundColor: Int,
+    val darkTextAndIconColor: Int
+)

@@ -16,7 +16,6 @@
 package com.instructure.teacher.fragments
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
@@ -467,7 +466,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
         toolbar.setupMenu(R.menu.menu_edit_generic, menuItemCallback)
@@ -475,7 +474,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if(!isTablet) {
             toolbar.subtitle = mCanvasContext.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->

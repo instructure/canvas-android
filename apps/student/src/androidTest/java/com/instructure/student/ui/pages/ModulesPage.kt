@@ -39,6 +39,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.scrollTo
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 
@@ -75,7 +76,7 @@ class ModulesPage : BasePage(R.id.modulesPage) {
         scrollRecyclerView(R.id.listView, matcher)
 
         // Make sure that the lock icon is showing, in the proper course color
-        val courseColor = ColorKeeper.getOrGenerateColor(course)
+        val courseColor = course.textAndIconColor
         onView(matcher).check(matches(ImageViewDrawableMatcher(R.drawable.ic_lock, courseColor)))
 
         // Make sure that clicking on the (locked) assignment does nothing

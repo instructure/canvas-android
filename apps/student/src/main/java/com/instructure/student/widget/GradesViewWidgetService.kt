@@ -32,6 +32,8 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.textAndIconColor
 
 import java.io.Serializable
 
@@ -94,7 +96,7 @@ class GradesViewWidgetService : BaseRemoteViewsService(), Serializable {
                 } else {
                     row.setViewVisibility(R.id.courseGrade, View.VISIBLE)
                     row.setViewVisibility(R.id.lockedGradeImage, View.GONE)
-                    row.setTextColor(R.id.courseGrade, ColorKeeper.getOrGenerateColor(streamItem))
+                    row.setTextColor(R.id.courseGrade, streamItem.textAndIconColor)
                     if (courseGrade.noCurrentGrade) {
                         row.setTextViewText(R.id.courseGrade, applicationContext.getString(R.string.noGradeText))
                     } else {
@@ -104,7 +106,7 @@ class GradesViewWidgetService : BaseRemoteViewsService(), Serializable {
             }
             row.setOnClickFillInIntent(R.id.widget_root, createIntent(streamItem))
 
-            row.setInt(R.id.courseIndicator, "setColorFilter", ColorKeeper.getOrGenerateColor(streamItem))
+            row.setInt(R.id.courseIndicator, "setColorFilter", streamItem.backgroundColor)
         }
         
         override fun clearViewData(row: RemoteViews) {

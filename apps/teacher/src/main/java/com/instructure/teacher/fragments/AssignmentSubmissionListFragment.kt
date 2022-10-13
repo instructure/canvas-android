@@ -66,7 +66,6 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     private var mAssignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
     private var mCourse: Course by ParcelableArg(Course())
     private lateinit var mRecyclerView: RecyclerView
-    private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCourse) }
     private var mFilter by SerializableArg(SubmissionListFilter.ALL, FILTER_TYPE)
     private var mCanvasContextsSelected = ArrayList<CanvasContext>()
 
@@ -150,7 +149,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         swipeRefreshLayout.isRefreshing = false
 
         // Theme the toolbar again since visibilities may have changed
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
 
         updateStatuses() // Muted is now also set by not being in the new gradebook
     }
@@ -175,7 +174,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             assignmentSubmissionListToolbar.title = getString(R.string.submissions)
             assignmentSubmissionListToolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
         ViewStyler.themeFAB(addMessage)
     }
 

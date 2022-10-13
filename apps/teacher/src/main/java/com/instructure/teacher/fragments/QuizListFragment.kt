@@ -56,7 +56,6 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
-    private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCanvasContext) }
 
     private var mGradingPeriodMenu: PopupMenu? = null
 
@@ -112,7 +111,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
     }
 
     override fun createAdapter(): QuizListAdapter {
-        return QuizListAdapter(requireContext(), presenter, mCourseColor) { quiz ->
+        return QuizListAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor) { quiz ->
             if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl, ApiPrefs.domain, false)) {
                 RouteMatcher.routeUrl(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain)
             } else {
@@ -155,7 +154,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbarColored(requireActivity(), quizListToolbar, mCourseColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), quizListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     override fun displayLoadingError() = toast(R.string.errorOccurred)

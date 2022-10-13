@@ -52,7 +52,8 @@ class PostGradePresenterTest : Assert() {
         )
 
         mockkObject(ColorKeeper)
-        every { ColorKeeper.colorFromCourseId(assignment.courseId) } returns assignment.courseId.toInt()
+        // TODO Fix test
+//        every { ColorKeeper.colorFromCourseId(assignment.courseId) } returns assignment.courseId.toInt()
     }
 
     private fun postedSubmissionList() = listOf(Submission(postedAt = Date()))
