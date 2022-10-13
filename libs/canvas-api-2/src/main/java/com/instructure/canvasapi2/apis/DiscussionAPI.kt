@@ -139,6 +139,9 @@ object DiscussionAPI {
                 @Path("contextId") contextId: Long,
                 @Path("topicId") topicId: Long,
                 @Body body: DiscussionTopicPostBody): Call<DiscussionTopicHeader>
+
+        @GET("{contextType}/{contextId}/discussion_topics/{topicId}")
+        fun getDiscussionTopicHeader(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<DiscussionTopicHeader>
     }
 
     fun createDiscussion(adapter: RestBuilder,
@@ -313,5 +316,9 @@ object DiscussionAPI {
 
     fun deleteDiscussionEntry(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, callback: StatusCallback<Void>, params: RestParams) {
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).deleteDiscussionEntry(CanvasContext.getApiContext(canvasContext), canvasContext.id, topicId, entryId)).enqueue(callback)
+    }
+
+    fun getDiscussionTopicHeader(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<DiscussionTopicHeader>, params: RestParams) {
+        callback.addCall(adapter.build(DiscussionInterface::class.java, params).getDiscussionTopicHeader(CanvasContext.getApiContext(canvasContext), canvasContext.id, topicId))
     }
 }
