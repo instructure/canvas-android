@@ -101,7 +101,7 @@ class FileSearchFragment : BaseSyncFragment<
     }
 
     private fun themeSearchBar() {
-        val primaryTextColor = if (canvasContext?.isCourse.orDefault()) requireContext().getColor(R.color.white) else ThemePrefs.primaryTextColor
+        val primaryTextColor = if (canvasContext?.isUser.orDefault()) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.white)
         ViewStyler.setStatusBarDark(requireActivity(), courseColor)
         searchHeader.setBackgroundColor(courseColor)
         queryInput.setTextColor(primaryTextColor)
