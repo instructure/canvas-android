@@ -8,7 +8,6 @@ class StudentDiscussionRouter : DiscussionRouter {
     override fun routeToDiscussion(
         canvasContext: CanvasContext,
         isRedesign: Boolean,
-        isAnnouncement: Boolean,
         discussionTopicHeader: DiscussionTopicHeader
     ) {
 

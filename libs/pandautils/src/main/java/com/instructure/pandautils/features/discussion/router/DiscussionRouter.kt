@@ -5,5 +5,5 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 
 interface DiscussionRouter {
 
-    fun routeToDiscussion(canvasContext: CanvasContext, isRedesign: Boolean, isAnnouncement: Boolean, discussionTopicHeader: DiscussionTopicHeader)
+    fun routeToDiscussion(canvasContext: CanvasContext, isRedesign: Boolean, discussionTopicHeader: DiscussionTopicHeader)
 }

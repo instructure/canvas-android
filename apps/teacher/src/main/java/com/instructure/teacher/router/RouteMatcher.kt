@@ -40,6 +40,7 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
@@ -52,7 +53,7 @@ import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.fragments.FileListFragment
-import java.util.Locale
+import java.util.*
 
 object RouteMatcher : BaseRouteMatcher() {
 
@@ -85,8 +86,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:course_id/quizzes/:quiz_id"), QuizListFragment::class.java, QuizDetailsFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/discussion_topics"), DiscussionsListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionsListFragment::class.java, DiscussionsDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionsListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
+        routes.add(Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionRouterFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/files"), FileListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/files/:file_id/download"), RouteContext.FILE))
@@ -108,9 +108,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:course_id/wiki/:page_id/"), PageListFragment::class.java, PageDetailsFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/announcements"), AnnouncementListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionsDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionDetailsWebViewFragment::class.java))
-
+        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionRouterFragment::class.java))
     }
 
     private fun initClassMap() {
@@ -186,6 +184,10 @@ object RouteMatcher : BaseRouteMatcher() {
         } else if (context.resources.getBoolean(R.bool.isDeviceTablet)) {
             handleTabletRoute(context, route)
         } else {
+            if (route.removePreviousScreen) {
+                val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
+                fragmentManager?.popBackStackImmediate()
+            }
             handleFullscreenRoute(context, route)
         }
     }
@@ -344,6 +346,7 @@ object RouteMatcher : BaseRouteMatcher() {
             DiscussionsListFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionsListFragment.newInstance(canvasContext!!)
             DiscussionsDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getDiscussionDetailsFragment(canvasContext, route)
             DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionDetailsWebViewFragment.newInstance(route)
+            DiscussionRouterFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionRouterFragment.newInstance(canvasContext!!, route)
             InboxFragment::class.java.isAssignableFrom(cls) -> fragment = InboxFragment()
             AddMessageFragment::class.java.isAssignableFrom(cls) -> fragment = AddMessageFragment.newInstance(route.arguments)
             MessageThreadFragment::class.java.isAssignableFrom(cls) -> fragment = getMessageThreadFragment(route)

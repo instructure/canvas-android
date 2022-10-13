@@ -1,5 +1,7 @@
 package com.instructure.pandautils.features.discussion.router
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.DiscussionManager
@@ -7,6 +9,7 @@ import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isGroup
@@ -18,15 +21,17 @@ import javax.inject.Inject
 class DiscussionRouterViewModel @Inject constructor(
     private val featuresManager: FeaturesManager,
     private val featureFlagProvider: FeatureFlagProvider,
-    private val discussionRouter: DiscussionRouter,
     private val discussionManager: DiscussionManager
 ) : ViewModel() {
+
+    val events: LiveData<Event<DiscussionRouterAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<DiscussionRouterAction>>()
 
     fun route(
         canvasContext: CanvasContext,
         discussionTopicHeader: DiscussionTopicHeader?,
-        discussionTopicHeaderId: Long,
-        isAnnouncement: Boolean
+        discussionTopicHeaderId: Long
     ) {
         viewModelScope.launch {
             val discussionRedesignEnabled = if (canvasContext.isCourse) {
@@ -45,7 +50,14 @@ class DiscussionRouterViewModel @Inject constructor(
             val header: DiscussionTopicHeader = discussionTopicHeader
                 ?: discussionManager.getDiscussionTopicHeaderAsync(canvasContext, discussionTopicHeaderId, false).await().dataOrThrow
 
-            discussionRouter.routeToDiscussion(canvasContext, discussionRedesignEnabled, isAnnouncement, header)
+
+            _events.postValue(Event(
+                DiscussionRouterAction.RouteToDiscussion(
+                    canvasContext,
+                    discussionRedesignEnabled,
+                    header
+                )
+            ))
         }
     }
 }

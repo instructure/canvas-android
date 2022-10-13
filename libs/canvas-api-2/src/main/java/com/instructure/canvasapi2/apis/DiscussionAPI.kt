@@ -319,6 +319,6 @@ object DiscussionAPI {
     }
 
     fun getDiscussionTopicHeader(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<DiscussionTopicHeader>, params: RestParams) {
-        callback.addCall(adapter.build(DiscussionInterface::class.java, params).getDiscussionTopicHeader(CanvasContext.getApiContext(canvasContext), canvasContext.id, topicId))
+        callback.addCall(adapter.build(DiscussionInterface::class.java, params).getDiscussionTopicHeader(CanvasContext.getApiContext(canvasContext), canvasContext.id, topicId)).enqueue(callback)
     }
 }

@@ -12,20 +12,24 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.databinding.FragmentDiscussionRouterBinding
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.LongArg
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DiscussionRouterFragment : Fragment() {
 
+    @Inject
+    lateinit var discussionRouter: DiscussionRouter
+
     private val viewModel: DiscussionRouterViewModel by viewModels()
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
-    private var discussionTopicHeader: DiscussionTopicHeader by ParcelableArg(default = DiscussionTopicHeader(), key = DiscussionDetailsWebViewFragment.DISCUSSION_TOPIC_HEADER)
-    private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DiscussionDetailsWebViewFragment.DISCUSSION_TOPIC_HEADER_ID)
+    private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DiscussionDetailsWebViewFragment.DISCUSSION_TOPIC_HEADER)
+    private var discussionTopicHeaderId: Long by LongArg(
+        default = 0L,
+        key = DiscussionDetailsWebViewFragment.DISCUSSION_TOPIC_HEADER_ID
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +38,30 @@ class DiscussionRouterFragment : Fragment() {
         val binding = FragmentDiscussionRouterBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.route(canvasContext, discussionTopicHeader, discussionTopicHeaderId)
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
+    }
+
+    private fun handleAction(action: DiscussionRouterAction) {
+        when (action) {
+            is DiscussionRouterAction.RouteToDiscussion -> {
+                discussionRouter.routeToDiscussion(
+                    action.canvasContext,
+                    action.isRedesignEnabled,
+                    action.discussionTopicHeader
+                )
+            }
+        }
     }
 
     companion object {
@@ -50,9 +78,9 @@ class DiscussionRouterFragment : Fragment() {
             return Route(null, DiscussionRouterFragment::class.java, canvasContext, bundle)
         }
 
-        fun newInstance(route: Route) = if (validRoute(route)) {
+        fun newInstance(canvasContext: CanvasContext, route: Route) = if (validRoute(route)) {
             DiscussionRouterFragment().apply {
-                arguments = route.canvasContext!!.makeBundle(route.arguments)
+                arguments = canvasContext.makeBundle(route.arguments)
 
                 // For routing
                 if (route.paramsHash.containsKey(RouterParams.MESSAGE_ID))
@@ -60,9 +88,8 @@ class DiscussionRouterFragment : Fragment() {
             }
         } else null
 
-        fun validRoute(route: Route) = route.canvasContext != null &&
-                (route.arguments.containsKey(DISCUSSION_TOPIC_HEADER) ||
-                        route.arguments.containsKey(DISCUSSION_TOPIC_HEADER_ID) ||
-                        route.paramsHash.containsKey(RouterParams.MESSAGE_ID))
+        fun validRoute(route: Route) = route.arguments.containsKey(DISCUSSION_TOPIC_HEADER) ||
+                route.arguments.containsKey(DISCUSSION_TOPIC_HEADER_ID) ||
+                route.paramsHash.containsKey(RouterParams.MESSAGE_ID)
     }
 }

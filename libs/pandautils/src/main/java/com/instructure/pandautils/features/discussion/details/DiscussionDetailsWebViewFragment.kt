@@ -106,12 +106,13 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         const val DISCUSSION_TOPIC_HEADER_ID = "discussion_topic_header_id"
         const val DISCUSSION_TOPIC = "discussion_topic"
 
-        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Route {
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader, popStack: Boolean = false): Route {
             val bundle = Bundle().apply {
                 putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
             }
 
             return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)
+                .apply { removePreviousScreen = popStack }
         }
 
         fun newInstance(route: Route) = if (validRoute(route)) {
