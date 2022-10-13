@@ -74,12 +74,12 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
             assignee is StudentAssignee -> {
                 ProfileUtils.loadAvatarForUser(studentAvatar, assignee.student.name, assignee.student.avatarUrl)
                 studentName.text = Pronouns.span(assignee.student.name, assignee.student.pronouns)
+                testStudentDescription.setVisible(assignee.student.isFakeStudent)
                 studentAvatar.setupAvatarA11y(assignee.name)
                 studentAvatar.onClick {
                     val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)
                     RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
                 }
-                //TODO indicate fake student by assignee.student.isFakeStudent
             }
             assignee is GroupAssignee -> {
                 studentAvatar.setImageResource(assignee.iconRes)
