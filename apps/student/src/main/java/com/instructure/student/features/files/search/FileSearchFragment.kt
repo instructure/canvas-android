@@ -99,7 +99,7 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
     }
 
     private fun themeSearchBar() {
-        val primaryColor = ColorKeeper.getOrGenerateColor(canvasContext)
+        val primaryColor = canvasContext.backgroundColor
         val primaryTextColor = if (canvasContext.isUser) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.white)
         ViewStyler.setStatusBarDark(requireActivity(), primaryColor)
         searchHeader.setBackgroundColor(primaryColor)

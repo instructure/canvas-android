@@ -100,8 +100,9 @@ class FileSearchFragment : BaseSyncFragment<
 
     private fun themeSearchBar() {
         val primaryTextColor = if (canvasContext?.isUser.orDefault()) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.white)
-        ViewStyler.setStatusBarDark(requireActivity(), courseColor)
-        searchHeader.setBackgroundColor(courseColor)
+        val primaryColor = canvasContext.backgroundColor
+        ViewStyler.setStatusBarDark(requireActivity(), primaryColor)
+        searchHeader.setBackgroundColor(primaryColor)
         queryInput.setTextColor(primaryTextColor)
         queryInput.setHintTextColor(ColorUtils.setAlphaComponent(primaryTextColor, 0x66))
         PandaColorUtils.colorIt(primaryTextColor, backButton)
