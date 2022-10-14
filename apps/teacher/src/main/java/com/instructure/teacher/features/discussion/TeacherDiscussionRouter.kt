@@ -33,6 +33,8 @@ class TeacherDiscussionRouter(private val activity: FragmentActivity) : Discussi
         }
 
         RouteMatcher.route(activity, route)
+
+        activity.finish()
     }
 
     override fun routeToGroupDiscussion(group: Group, id: Long, header: DiscussionTopicHeader, isRedesign: Boolean) = Unit
