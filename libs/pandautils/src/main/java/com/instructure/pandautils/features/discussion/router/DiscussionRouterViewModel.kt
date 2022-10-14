@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.isCourse
@@ -21,7 +23,8 @@ import javax.inject.Inject
 class DiscussionRouterViewModel @Inject constructor(
     private val featuresManager: FeaturesManager,
     private val featureFlagProvider: FeatureFlagProvider,
-    private val discussionManager: DiscussionManager
+    private val discussionManager: DiscussionManager,
+    private val groupManager: GroupManager
 ) : ViewModel() {
 
     val events: LiveData<Event<DiscussionRouterAction>>
@@ -50,14 +53,40 @@ class DiscussionRouterViewModel @Inject constructor(
             val header: DiscussionTopicHeader = discussionTopicHeader
                 ?: discussionManager.getDiscussionTopicHeaderAsync(canvasContext, discussionTopicHeaderId, false).await().dataOrThrow
 
-
-            _events.postValue(Event(
-                DiscussionRouterAction.RouteToDiscussion(
-                    canvasContext,
-                    discussionRedesignEnabled,
-                    header
-                )
-            ))
+            if (header.groupTopicChildren.isNotEmpty() && !discussionRedesignEnabled) {
+                val discussionGroup = getDiscussionGroup(header)
+                discussionGroup?.let {
+                    routeToDiscussionGroup(it)
+                } ?: routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
+            } else {
+                routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
+            }
         }
+    }
+
+    private fun routeToDiscussionGroup(discussionGroup: Pair<Group, Long>) {
+        _events.postValue(Event(DiscussionRouterAction.RouteToGroupDiscussion(discussionGroup.first, discussionGroup.second)))
+    }
+
+    private fun routeToDiscussion(canvasContext: CanvasContext, header: DiscussionTopicHeader, discussionRedesignEnabled: Boolean) {
+        _events.postValue(Event(DiscussionRouterAction.RouteToDiscussion(canvasContext, discussionRedesignEnabled, header)))
+    }
+
+    private suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader): Pair<Group, Long>? {
+        val groups = awaitApi<List<Group>> {
+            groupManager.getAllGroups(it, false)
+        }
+        for (group in groups) {
+            val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({it.groupId}, {it.id})
+            if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {
+                groupsMap[group.id]?.let { topicHeaderId ->
+                    return Pair(group, topicHeaderId)
+                }
+
+                return null // There is a group, but not a matching topic header id
+            }
+        }
+        // If we made it to here, there are no groups that match this
+        return null
     }
 }

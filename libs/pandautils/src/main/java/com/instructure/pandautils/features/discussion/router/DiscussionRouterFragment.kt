@@ -61,6 +61,9 @@ class DiscussionRouterFragment : Fragment() {
                     action.discussionTopicHeader
                 )
             }
+            is DiscussionRouterAction.RouteToGroupDiscussion -> {
+                discussionRouter.routeToGroupDiscussion(action.group, action.id)
+            }
         }
     }
 

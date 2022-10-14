@@ -1,5 +1,6 @@
 package com.instructure.student.di
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.student.features.discussion.StudentDiscussionRouter
 import dagger.Module
@@ -12,7 +13,7 @@ import dagger.hilt.android.components.FragmentComponent
 class DiscussionModule {
 
     @Provides
-    fun provideDiscussionRouter(): DiscussionRouter {
-        return StudentDiscussionRouter()
+    fun provideDiscussionRouter(fragmentActivity: FragmentActivity): DiscussionRouter {
+        return StudentDiscussionRouter(fragmentActivity)
     }
 }

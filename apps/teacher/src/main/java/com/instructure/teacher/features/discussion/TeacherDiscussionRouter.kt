@@ -3,6 +3,7 @@ package com.instructure.teacher.features.discussion
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
@@ -16,18 +17,25 @@ class TeacherDiscussionRouter(private val activity: FragmentActivity) : Discussi
         discussionTopicHeader: DiscussionTopicHeader
     ) {
         val route = when {
-            isRedesign -> DiscussionDetailsWebViewFragment.makeRoute(canvasContext, discussionTopicHeader, popStack = true)
+            isRedesign -> DiscussionDetailsWebViewFragment.makeRoute(canvasContext, discussionTopicHeader)
             discussionTopicHeader.announcement -> {
                 val bundle = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, true)
                 Route(null, DiscussionsDetailsFragment::class.java, canvasContext, bundle)
-                    .apply { removePreviousScreen = true }
             }
             else -> {
                 val bundle = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader)
                 Route(null, DiscussionsDetailsFragment::class.java, canvasContext, bundle)
-                    .apply { removePreviousScreen = true }
             }
         }
+
+        route.apply {
+            removePreviousScreen = true
+        }
+
         RouteMatcher.route(activity, route)
+    }
+
+    override fun routeToGroupDiscussion(group: Group, id: Long) {
+
     }
 }

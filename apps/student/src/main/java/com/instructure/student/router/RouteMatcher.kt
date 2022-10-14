@@ -38,6 +38,7 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
@@ -137,8 +138,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Discussions
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics"), DiscussionListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, CourseModuleProgressionFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, DiscussionRouterFragment::class.java))
 
         // Pages
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages"), PageListFragment::class.java))
@@ -150,11 +150,9 @@ object RouteMatcher : BaseRouteMatcher() {
         // Announcements
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements"), AnnouncementListFragment::class.java))
         // :message_id because it shares with discussions
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), AnnouncementListFragment::class.java, DiscussionDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), AnnouncementListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), AnnouncementListFragment::class.java, DiscussionRouterFragment::class.java))
         // Announcements from the notifications tab
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), NotificationListFragment::class.java, DiscussionDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), NotificationListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), NotificationListFragment::class.java, DiscussionRouterFragment::class.java))
 
         // Quiz
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes"), QuizListFragment::class.java))
