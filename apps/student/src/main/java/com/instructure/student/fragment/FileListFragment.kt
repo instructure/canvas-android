@@ -239,8 +239,8 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
     private fun themeToolbar() {
         // We style the toolbar white for user files
         if (canvasContext.type == CanvasContext.Type.USER) {
-            ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.textDarkest))
-            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+            ViewStyler.themeProgressBar(fileLoadingProgressBar, ThemePrefs.primaryTextColor)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         } else {
             ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.white))
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)

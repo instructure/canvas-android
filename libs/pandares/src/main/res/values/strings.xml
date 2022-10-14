@@ -1323,4 +1323,5 @@
     <string name="filterAssignmentMissing">Missing</string>
     <string name="filterAssignmentGraded">Graded</string>
     <string name="filterAssignmentUpcoming">Upcoming</string>
+    <string name="createdByStudentView">Created by Student View</string>
 </resources>

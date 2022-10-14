@@ -58,7 +58,7 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     override fun applyTheme() {
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     @SuppressLint("SetTextI18n")
