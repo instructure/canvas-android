@@ -17,13 +17,22 @@
 package com.instructure.pandautils.utils
 
 import android.os.Bundle
+import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 
-// TODO We need to dynamically change this color as well
-val CanvasContext?.backgroundColor: Int get() = ColorKeeper.getOrGenerateColor(this)
-val CanvasContext?.textAndIconColor: Int get() = ColorKeeper.getOrGenerateColor(this)
+@get:ColorInt
+val CanvasContext?.backgroundColor: Int get() {
+    val themedColor = ColorKeeper.getOrGenerateColor(this)
+    return if (ColorKeeper.darkTheme) themedColor.darkBackgroundColor else themedColor.light
+}
+
+@get:ColorInt
+val CanvasContext?.textAndIconColor: Int get() {
+    val themedColor = ColorKeeper.getOrGenerateColor(this)
+    return if (ColorKeeper.darkTheme) themedColor.darkTextAndIconColor else themedColor.light
+}
 
 val CanvasContext.isCourse: Boolean get() = this.type == CanvasContext.Type.COURSE
 val CanvasContext.isGroup: Boolean get() = this.type == CanvasContext.Type.GROUP

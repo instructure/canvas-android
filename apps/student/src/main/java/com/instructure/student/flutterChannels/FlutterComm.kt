@@ -110,8 +110,9 @@ object FlutterComm {
         data["accentColor"] = Integer.toHexString(ThemePrefs.brandColor)
         data["buttonColor"] = Integer.toHexString(ThemePrefs.buttonColor)
         data["primaryTextColor"] = Integer.toHexString(ThemePrefs.primaryTextColor)
-        data["contextColors"] = ColorKeeper.cachedColors.map {
-            it.key.lowercase(Locale.US) to Integer.toHexString(it.value)
+        data["contextColors"] = ColorKeeper.cachedThemedColors.map {
+            val color = if (ColorKeeper.darkTheme) it.value.darkTextAndIconColor else it.value.light
+            it.key.lowercase(Locale.US) to Integer.toHexString(color)
         }.toMap()
         channel.invokeMethod(METHOD_UPDATE_THEME_DATA, data)
     }

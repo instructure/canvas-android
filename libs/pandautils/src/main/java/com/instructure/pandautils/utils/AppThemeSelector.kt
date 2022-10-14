@@ -2,6 +2,7 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -20,6 +21,9 @@ object AppThemeSelector {
             val newAppTheme = AppTheme.fromIndex(itemIndex)
             appThemeStatusText.setText(newAppTheme.themeNameRes)
             setAppTheme(newAppTheme, dialog)
+
+            val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
         }
 
         val dialog = builder.create()

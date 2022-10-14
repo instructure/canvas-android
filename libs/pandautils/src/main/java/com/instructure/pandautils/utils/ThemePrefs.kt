@@ -140,7 +140,7 @@ object ThemePrefs : PrefManager("CanvasTheme") {
         isThemeApplied = true
     }
 
-    private fun correctContrastForButtonBackground(buttonColor: Int, backgroundColor: Int, insideTextColor: Int): Int {
+    fun correctContrastForButtonBackground(buttonColor: Int, backgroundColor: Int, insideTextColor: Int): Int {
         var backgroundContrast = AndroidColorUtils.calculateContrast(buttonColor, backgroundColor)
         val textContrast = AndroidColorUtils.calculateContrast(insideTextColor, buttonColor)
 
@@ -184,7 +184,7 @@ object ThemePrefs : PrefManager("CanvasTheme") {
         return newColor
     }
 
-    private fun correctContrastForText(color: Int, colorAgainst: Int): Int {
+    fun correctContrastForText(color: Int, colorAgainst: Int): Int {
         val contrast = AndroidColorUtils.calculateContrast(color, colorAgainst)
 
         if (contrast >= MIN_CONTRAST_FOR_TEXT) return color

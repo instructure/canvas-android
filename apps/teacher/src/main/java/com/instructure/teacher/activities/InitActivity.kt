@@ -19,6 +19,7 @@ package com.instructure.teacher.activities
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -142,6 +143,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
         typefaceBehaviour.overrideFont(FontFamily.REGULAR.fontPath)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
 
