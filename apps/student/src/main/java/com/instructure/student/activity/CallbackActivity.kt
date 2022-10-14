@@ -18,6 +18,7 @@
 package com.instructure.student.activity
 
 import android.os.Bundle
+import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
@@ -80,11 +81,12 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
                 || termsOfService.selfRegistrationType == SelfRegistration.OBSERVER
 
             // Grab colors
-            if (ColorKeeper.hasPreviouslySynced) {
+            Log.d("asdasd", "previously Synced: ${ColorKeeper.previouslySynced}")
+            if (ColorKeeper.previouslySynced) {
                 UserManager.getColors(userColorsCallback, true)
             } else {
                 ColorKeeper.addToCache(awaitApi<CanvasColor> { UserManager.getColors(it, true) })
-                ColorKeeper.hasPreviouslySynced = true
+                ColorKeeper.previouslySynced = true
             }
 
             // Grab theme
@@ -163,7 +165,7 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
         override fun onResponse(response: Response<CanvasColor>, linkHeaders: LinkHeaders, type: ApiType) {
             if (type == ApiType.API) {
                 ColorKeeper.addToCache(response.body())
-                ColorKeeper.hasPreviouslySynced = true
+                ColorKeeper.previouslySynced = true
             }
         }
     }

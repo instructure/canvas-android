@@ -49,7 +49,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
     var cachedThemedColors: Map<String, ThemedColor> by NonNullGsonPref(HashMap())
 
     /** Whether or not colors have been synced from the API before **/
-    var hasPreviouslySynced by BooleanPref()
+    var previouslySynced by BooleanPref()
 
     var darkTheme = false
 
