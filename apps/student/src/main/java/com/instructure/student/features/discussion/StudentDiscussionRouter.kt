@@ -26,8 +26,12 @@ class StudentDiscussionRouter(private val fragmentActivity: FragmentActivity) : 
         RouteMatcher.route(fragmentActivity, route)
     }
 
-    override fun routeToGroupDiscussion(group: Group, id: Long) {
-        val route = DiscussionDetailsFragment.makeRoute(group, id)
+    override fun routeToGroupDiscussion(group: Group, id: Long, header: DiscussionTopicHeader, isRedesign: Boolean) {
+        val route = if (isRedesign) {
+            DiscussionDetailsWebViewFragment.makeRoute(group, header)
+        } else {
+            DiscussionDetailsFragment.makeRoute(group, id)
+        }
         route.apply {
             removePreviousScreen = true
         }

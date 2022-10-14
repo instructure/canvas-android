@@ -5,6 +5,16 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 
 sealed class DiscussionRouterAction {
-    data class RouteToDiscussion(val canvasContext: CanvasContext, val isRedesignEnabled: Boolean, val discussionTopicHeader: DiscussionTopicHeader): DiscussionRouterAction()
-    data class RouteToGroupDiscussion(val group: Group, val id: Long): DiscussionRouterAction()
+    data class RouteToDiscussion(
+        val canvasContext: CanvasContext,
+        val isRedesignEnabled: Boolean,
+        val discussionTopicHeader: DiscussionTopicHeader
+    ) : DiscussionRouterAction()
+
+    data class RouteToGroupDiscussion(
+        val group: Group,
+        val id: Long,
+        val header: DiscussionTopicHeader,
+        val isRedesignEnabled: Boolean
+    ) : DiscussionRouterAction()
 }

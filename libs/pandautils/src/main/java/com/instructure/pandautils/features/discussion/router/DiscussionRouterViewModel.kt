@@ -53,10 +53,11 @@ class DiscussionRouterViewModel @Inject constructor(
             val header: DiscussionTopicHeader = discussionTopicHeader
                 ?: discussionManager.getDiscussionTopicHeaderAsync(canvasContext, discussionTopicHeaderId, false).await().dataOrThrow
 
-            if (header.groupTopicChildren.isNotEmpty() && !discussionRedesignEnabled) {
+            if (header.groupTopicChildren.isNotEmpty()) {
                 val discussionGroup = getDiscussionGroup(header)
                 discussionGroup?.let {
-                    routeToDiscussionGroup(it)
+                    val groupDiscussionHeader = discussionManager.getDiscussionTopicHeaderAsync(it.first, it.second, false).await().dataOrThrow
+                    routeToDiscussionGroup(it.first, it.second, groupDiscussionHeader, discussionRedesignEnabled)
                 } ?: routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
             } else {
                 routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
@@ -64,8 +65,8 @@ class DiscussionRouterViewModel @Inject constructor(
         }
     }
 
-    private fun routeToDiscussionGroup(discussionGroup: Pair<Group, Long>) {
-        _events.postValue(Event(DiscussionRouterAction.RouteToGroupDiscussion(discussionGroup.first, discussionGroup.second)))
+    private fun routeToDiscussionGroup(group: Group, discussionTopicHeaderId: Long, discussionTopicHeader: DiscussionTopicHeader, isRedesignEnabled: Boolean) {
+        _events.postValue(Event(DiscussionRouterAction.RouteToGroupDiscussion(group, discussionTopicHeaderId, discussionTopicHeader, isRedesignEnabled)))
     }
 
     private fun routeToDiscussion(canvasContext: CanvasContext, header: DiscussionTopicHeader, discussionRedesignEnabled: Boolean) {

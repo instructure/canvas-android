@@ -62,7 +62,7 @@ class DiscussionRouterFragment : Fragment() {
                 )
             }
             is DiscussionRouterAction.RouteToGroupDiscussion -> {
-                discussionRouter.routeToGroupDiscussion(action.group, action.id)
+                discussionRouter.routeToGroupDiscussion(action.group, action.id, action.header, action.isRedesignEnabled)
             }
         }
     }

@@ -8,5 +8,5 @@ interface DiscussionRouter {
 
     fun routeToDiscussion(canvasContext: CanvasContext, isRedesign: Boolean, discussionTopicHeader: DiscussionTopicHeader)
 
-    fun routeToGroupDiscussion(group: Group, id: Long)
+    fun routeToGroupDiscussion(group: Group, id: Long, header: DiscussionTopicHeader, isRedesign: Boolean)
 }

@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.discussion.details
 
 import android.content.res.Resources
-import android.webkit.WebView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,7 +27,6 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*

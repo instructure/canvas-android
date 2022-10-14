@@ -130,7 +130,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun createAdapter(): DiscussionListAdapter {
         return DiscussionListAdapter(requireContext(), presenter, mCourseColor, mIsAnnouncements,
             { discussionTopicHeader ->
-                val route = presenter.getDetailsRoute(discussionTopicHeader, mIsAnnouncements)
+                val route = presenter.getDetailsRoute(discussionTopicHeader)
                 RouteMatcher.route(
                     requireContext(),
                     route
