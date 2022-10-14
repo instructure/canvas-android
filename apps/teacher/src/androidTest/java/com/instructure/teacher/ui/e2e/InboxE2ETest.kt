@@ -152,7 +152,7 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Click on the conversation.")
         inboxPage.clickConversation(seedConversation[0])
 
-        Log.d(STEP_TAG, "Star the conversation and navigate back to Inbox Page.")
+        Log.d(STEP_TAG, "Remove star from the conversation and navigate back to Inbox Page.")
         inboxMessagePage.clickOnStarConversation()
         Espresso.pressBack()
 
