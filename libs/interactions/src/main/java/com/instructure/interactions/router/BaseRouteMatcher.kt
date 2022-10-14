@@ -45,14 +45,9 @@ open class BaseRouteMatcher {
         }?.copy()
     }
 
-    /**
-     * Gets a course id from a url, if url is invalid or could not be parsed a 0 will return an empty string.
-     * @param url a Url String
-     * @return a CanvasContext context_id (group_12345, course_12345)
-     */
-    fun getContextIdFromURL(url: String?, routes: List<Route>): String? {
+    fun getContextFromURL(url: String?, routes: List<Route>): CanvasContext? {
         if (url.isNullOrEmpty()) {
-            return ""
+            return null
         }
 
         try {
@@ -68,13 +63,13 @@ open class BaseRouteMatcher {
             }
 
             return when {
-                route == null -> ""
-                params.containsKey(RouterParams.COURSE_ID) -> return CanvasContext.makeContextId(route.getContextType(), params[RouterParams.COURSE_ID]!!.toLong())
-                else -> return ""
+                route == null -> null
+                params.containsKey(RouterParams.COURSE_ID) -> return CanvasContext.getGenericContext(route.getContextType(), params[RouterParams.COURSE_ID]!!.toLong())
+                else -> return null
             }
 
         } catch (e: Throwable) {
-            return ""
+            return null
         }
     }
 

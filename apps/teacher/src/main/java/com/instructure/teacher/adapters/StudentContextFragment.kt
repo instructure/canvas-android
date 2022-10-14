@@ -15,11 +15,11 @@
  */
 package com.instructure.teacher.adapters
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
 import com.instructure.canvasapi2.StudentContextCardQuery.*
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.StudentAssignee
@@ -113,7 +113,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     }
 
     override fun setData(course: AsCourse, student: User, summary: Analytics?, isStudent: Boolean) {
-        val courseColor = ColorKeeper.getOrGenerateColor("course_${course.id}")
+        val courseBackgroundColor = CanvasContext.emptyCourseContext(course.id.toLong()).backgroundColor
 
         setupScrollListener()
 
@@ -121,7 +121,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         if (activity is MasterDetailInteractions) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
                 toolbar.updateToolbarExpandCollapseIcon(this)
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseColor, requireContext().getColor(R.color.white))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.white))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
         } else {
@@ -129,7 +129,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         }
         toolbar.title = Pronouns.span(student.shortName, student.pronouns)
         toolbar.subtitle = course.name
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.white))
 
         // Message FAB
         messageButton.setVisible()
@@ -210,8 +210,8 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             } else {
                 // Set color of last grade item
                 visibleGradeItems.lastOrNull()?.apply {
-                    backgroundTintList = courseColor.asStateList()
-                    children<TextView>().onEach { it.setTextColor(requireContext().getColor(R.color.backgroundLightest)) }
+                    backgroundTintList = courseBackgroundColor.asStateList()
+                    children<TextView>().onEach { it.setTextColor(requireContext().getColor(R.color.white)) }
                 }
             }
 
@@ -261,7 +261,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     }
 
     override fun addSubmissions(submissions: List<Submission>, course: AsCourse, student: User) {
-        val courseColor = ColorKeeper.getOrGenerateColor("course_${course.id}")
+        val courseColor = CanvasContext.emptyCourseContext(course.id.toLong()).textAndIconColor
         submissions.forEach { submission ->
             val view = StudentContextSubmissionView(requireContext(), submission, courseColor)
             if (mLaunchSubmissions) view.onClick {

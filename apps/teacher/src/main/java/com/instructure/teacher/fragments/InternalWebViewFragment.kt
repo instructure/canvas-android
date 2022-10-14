@@ -24,6 +24,7 @@ import android.webkit.WebView
 import androidx.appcompat.widget.Toolbar
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.isValid
@@ -96,9 +97,9 @@ open class InternalWebViewFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         val courseId: String? = RouteMatcher.getCourseIdFromUrl(url)
-        var courseColor = -1
+        var courseBackgroundColor = -1
         courseId?.let {
-            courseColor = ColorKeeper.getOrGenerateColor("course_$courseId")
+            courseBackgroundColor = CanvasContext.emptyCourseContext(courseId.toLong()).backgroundColor
         }
 
         toolbar?.title = title.validOrNull() ?: url
@@ -117,7 +118,7 @@ open class InternalWebViewFragment : BaseFragment() {
             }
         }
 
-        setupToolbar(courseColor)
+        setupToolbar(courseBackgroundColor)
 
         canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
         canvasWebView.settings.loadWithOverviewMode = true

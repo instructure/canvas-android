@@ -72,11 +72,6 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
         }
     }
 
-    /** Gets the color associated with the given contextId if it exists, otherwise generates a new color **/
-    // TODO We need to handle this as well
-    @JvmStatic fun getOrGenerateColor(contextId: String)
-            = cachedThemedColors.getOrElse(contextId) { generateColor(Course()) }.light
-
     /** Adds all colors in the given [CanvasColor] object to the color cache **/
     @JvmStatic fun addToCache(canvasColor: CanvasColor?) {
         canvasColor?.colors?.let { colors ->

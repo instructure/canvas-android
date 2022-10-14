@@ -34,6 +34,12 @@ val CanvasContext?.textAndIconColor: Int get() {
     return if (ColorKeeper.darkTheme) themedColor.darkTextAndIconColor else themedColor.light
 }
 
+@get:ColorInt
+val CanvasContext?.lightColor: Int get() {
+    val themedColor = ColorKeeper.getOrGenerateColor(this)
+    return themedColor.light
+}
+
 val CanvasContext.isCourse: Boolean get() = this.type == CanvasContext.Type.COURSE
 val CanvasContext.isGroup: Boolean get() = this.type == CanvasContext.Type.GROUP
 val CanvasContext.isCourseOrGroup: Boolean get() = this.type == CanvasContext.Type.GROUP || this.type == CanvasContext.Type.COURSE
