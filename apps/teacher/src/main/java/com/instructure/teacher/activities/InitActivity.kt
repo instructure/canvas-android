@@ -36,10 +36,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.managers.CourseNicknameManager
+import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
@@ -84,6 +86,7 @@ import kotlinx.android.synthetic.main.activity_init.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -147,6 +150,11 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
 
+        if (!ThemePrefs.isThemeApplied) {
+            // This will be only called when we change dark/light mode, because the Theme is already applied before in the SplashActivity.
+            updateTheme()
+        }
+
         typefaceBehaviour.overrideFont(FontFamily.REGULAR.fontPath)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
 
@@ -173,6 +181,14 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             val themeSelector = ThemeSelectorBottomSheet()
             themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
             ThemePrefs.themeSelectionShown = true
+        }
+    }
+
+    private fun updateTheme() {
+        lifecycleScope.launch {
+            val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, false) }
+            ThemePrefs.applyCanvasTheme(theme, this@InitActivity)
+            bottomBar?.applyTheme(ThemePrefs.brandColor, getColor(R.color.textDarkest))
         }
     }
 

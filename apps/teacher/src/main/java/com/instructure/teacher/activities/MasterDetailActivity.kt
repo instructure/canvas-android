@@ -67,9 +67,6 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
-
         setContentView(R.layout.activity_master_detail)
 
         mRoute = intent.extras!!.getParcelable<Route>(Route.ROUTE)

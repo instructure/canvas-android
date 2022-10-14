@@ -20,19 +20,21 @@ object AppThemeSelector {
         builder.setSingleChoiceItems(appThemes, currentAppTheme.ordinal) { dialog, itemIndex ->
             val newAppTheme = AppTheme.fromIndex(itemIndex)
             appThemeStatusText.setText(newAppTheme.themeNameRes)
-            setAppTheme(newAppTheme, dialog)
-
-            val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+            setAppTheme(newAppTheme, dialog, context)
         }
 
         val dialog = builder.create()
         dialog.show()
     }
 
-    private fun setAppTheme(appTheme: AppTheme, dialog: DialogInterface) {
+    private fun setAppTheme(appTheme: AppTheme, dialog: DialogInterface, context: Context) {
         AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
         ThemePrefs.appTheme = appTheme.ordinal
+
+        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+        ThemePrefs.isThemeApplied = false
+
         dialog.dismiss()
     }
 }
