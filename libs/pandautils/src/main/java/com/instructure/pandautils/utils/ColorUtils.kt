@@ -21,6 +21,7 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.core.graphics.drawable.DrawableCompat
+import com.instructure.canvasapi2.models.CanvasContext
 
 object ColorUtils {
     fun tintIt(color: Int, drawable: Drawable): Drawable {
@@ -45,8 +46,9 @@ object ColorUtils {
         return mutableBitmap
     }
 
-    @JvmStatic
-    @JvmOverloads
+    /**
+     * Do not use this directly for parsing course colors. Use [CanvasContext.textAndIconColor] or [CanvasContext.backgroundColor].
+     */
     fun parseColor(colorCode: String?, @ColorInt defaultColor: Int? = null): Int {
         return try {
             val fullColorCode = if (colorCode?.length == 4 && colorCode[0].toString() == "#") {

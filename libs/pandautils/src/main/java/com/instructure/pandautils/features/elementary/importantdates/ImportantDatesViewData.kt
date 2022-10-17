@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.elementary.importantdates
 
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -31,11 +32,11 @@ data class ImportantDatesViewData(
 data class ImportantDatesHeaderViewData(val title: String)
 
 data class ImportantDatesItemViewData(
-        val scheduleItemId: Long,
-        val title: String,
-        val courseName: String,
-        @DrawableRes val icon: Int,
-        val courseColor: String,
+    val scheduleItemId: Long,
+    val title: String,
+    val courseName: String,
+    @DrawableRes val icon: Int,
+    @ColorInt val courseColor: Int,
 )
 
 sealed class ImportantDatesAction {

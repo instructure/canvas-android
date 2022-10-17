@@ -27,6 +27,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.textAndIconColor
 import kotlinx.coroutines.awaitAll
 import org.threeten.bp.LocalDate
 
@@ -63,7 +64,7 @@ class CourseCardCreator(
                     assignmentsDueTexts[course.id] ?: "",
                     assignmentsMissingTexts[course.id] ?: "",
                     announcements[index]?.title ?: "",
-                    getCourseColor(course),
+                    course.textAndIconColor,
                     course.imageUrl ?: "")
 
                 CourseCardItemViewModel(

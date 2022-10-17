@@ -57,8 +57,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
      * Gets the themed color associated with the given [CanvasContext] if it exists, otherwise generates a new color
      * DO NOT USE THIS DIRECTLY. To get course color use [CanvasContext.textAndIconColor] or [CanvasContext.backgroundColor]
      * **/
-    @JvmStatic @JvmOverloads
-    fun getOrGenerateColor(canvasContext: CanvasContext?, @ColorInt defaultColor: Int = ThemePrefs.primaryColor): ThemedColor {
+    fun getOrGenerateColor(canvasContext: CanvasContext?): ThemedColor {
         return when (canvasContext) {
             is Course -> cachedThemedColors.getOrElse(canvasContext.contextId) { generateColor(canvasContext) }
             is Group -> {
@@ -68,7 +67,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
                     cachedThemedColors.getOrElse(courseContextId) { ThemedColor(groupDefaultColor) }
                 }
             }
-            else -> ThemedColor(defaultColor) // defaultColor is already themed so we don't need 3 different colors
+            else -> ThemedColor(ThemePrefs.primaryColor) // defaultColor is already themed so we don't need 3 different colors
         }
     }
 

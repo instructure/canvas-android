@@ -32,6 +32,8 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.textAndIconColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,7 +45,8 @@ private const val CURRENT_GRADING_PERIOD_ID = -1L
 class GradesViewModel @Inject constructor(
     private val courseManager: CourseManager,
     private val resources: Resources,
-    private val enrollmentManager: EnrollmentManager
+    private val enrollmentManager: EnrollmentManager,
+    private val colorKeeper: ColorKeeper
 ) : ViewModel() {
 
 
@@ -77,6 +80,10 @@ class GradesViewModel @Inject constructor(
                 val coursesWithGrades = courseManager.getCoursesWithGradesAsync(forceNetwork).await().dataOrThrow
                 courses = coursesWithGrades
                     .filter { !it.homeroomCourse }
+
+                courses.forEach {
+                    colorKeeper.addToCache(it.contextId, getCourseColor(it))
+                }
 
                 gradingPeriodsViewModel = createGradingPeriodsViewModel(courses)
                 val gradeRowViewModels = createGradeRowViewModels(courses)
@@ -129,7 +136,7 @@ class GradesViewModel @Inject constructor(
                     GradeRowViewData(
                         it.id,
                         it.name,
-                        getCourseColor(it),
+                        it.textAndIconColor,
                         it.imageUrl ?: "",
                         if (it.hideFinalGrades) 0.0 else grades?.currentScore,
                         createGradeText(grades?.currentScore, grades?.currentGrade, it.hideFinalGrades, enrollment?.currentGradingPeriodId ?: 0L != 0L))
@@ -232,7 +239,7 @@ class GradesViewModel @Inject constructor(
         val gradeRowViewData = GradeRowViewData(
             course.id,
             course.name,
-            getCourseColor(course),
+            course.textAndIconColor,
             course.imageUrl ?: "",
             enrollment?.grades?.currentScore,
             createGradeText(enrollment?.grades?.currentScore, enrollment?.grades?.currentGrade, course.hideFinalGrades))

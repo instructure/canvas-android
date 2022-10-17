@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
+import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -32,7 +33,7 @@ data class CourseCardViewData(
     val assignmentsDueText: String,
     val assignmentsMissingText: String,
     val announcementText: String,
-    val courseColor: String,
+    @ColorInt val color: Int,
     val imageUrl: String)
 
 sealed class HomeroomAction {

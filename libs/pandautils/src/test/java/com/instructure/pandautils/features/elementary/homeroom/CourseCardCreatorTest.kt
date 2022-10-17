@@ -103,7 +103,7 @@ class CourseCardCreatorTest {
         // Then
         assertEquals(1, courseCards.size)
         assertEquals("Test course", courseCards[0].data.courseName)
-        assertEquals("#123456", courseCards[0].data.courseColor)
+        assertEquals("#123456", courseCards[0].data.color)
         assertEquals("www.imageurl.com", courseCards[0].data.imageUrl)
     }
 
@@ -239,7 +239,7 @@ class CourseCardCreatorTest {
 
         // Then
         assertEquals(1, courseCards.size)
-        assertEquals("#394B58", courseCards[0].data.courseColor)
+        assertEquals("#394B58", courseCards[0].data.color)
     }
 
     private fun createPlannerItem(courseId: Long, plannableType: PlannableType, submitted: Boolean, missing: Boolean): PlannerItem {

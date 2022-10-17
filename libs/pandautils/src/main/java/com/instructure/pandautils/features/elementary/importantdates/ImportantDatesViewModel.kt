@@ -34,13 +34,12 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.textAndIconColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-
-const val TODO_COLOR = "#0081BD"
 
 @HiltViewModel
 class ImportantDatesViewModel @Inject constructor(
@@ -136,12 +135,13 @@ class ImportantDatesViewModel @Inject constructor(
 
     private fun createImportantDateItems(items: List<ScheduleItem>): List<ImportantDatesItemViewModel> {
         return items.map {
+            val color = if (courseMap.containsKey(it.courseId)) courseMap[it.courseId].textAndIconColor else resources.getColor(R.color.textInfo)
             ImportantDatesItemViewModel(
                     ImportantDatesItemViewData(
                             scheduleItemId = it.id,
                             title = it.title ?: "",
                             courseName = courseMap[it.courseId]?.name ?: "",
-                            courseColor = getCourseColor(courseMap[it.courseId]),
+                            courseColor = color,
                             icon = getIcon(it)
                     ),
                     this@ImportantDatesViewModel::open
@@ -166,8 +166,7 @@ class ImportantDatesViewModel @Inject constructor(
     private fun getCourseColor(course: Course?): String {
         return when {
             !course?.courseColor.isNullOrEmpty() -> course?.courseColor!!
-            !course?.name.isNullOrEmpty() -> ColorApiHelper.K5_DEFAULT_COLOR
-            else -> TODO_COLOR
+            else -> ColorApiHelper.K5_DEFAULT_COLOR
         }
     }
 

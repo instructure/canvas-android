@@ -18,7 +18,6 @@
 package com.instructure.student.activity
 
 import android.os.Bundle
-import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
@@ -81,12 +80,14 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
                 || termsOfService.selfRegistrationType == SelfRegistration.OBSERVER
 
             // Grab colors
-            Log.d("asdasd", "previously Synced: ${ColorKeeper.previouslySynced}")
-            if (ColorKeeper.previouslySynced) {
-                UserManager.getColors(userColorsCallback, true)
-            } else {
-                ColorKeeper.addToCache(awaitApi<CanvasColor> { UserManager.getColors(it, true) })
-                ColorKeeper.previouslySynced = true
+            // We don't show custom course colors for K5 view so we need to skip this so we don't overwrite course colors.
+            if (!ApiPrefs.showElementaryView) {
+                if (ColorKeeper.previouslySynced) {
+                    UserManager.getColors(userColorsCallback, true)
+                } else {
+                    ColorKeeper.addToCache(awaitApi<CanvasColor> { UserManager.getColors(it, true) })
+                    ColorKeeper.previouslySynced = true
+                }
             }
 
             // Grab theme
