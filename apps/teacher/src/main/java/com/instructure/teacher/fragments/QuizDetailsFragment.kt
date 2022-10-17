@@ -55,7 +55,6 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URL
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
@@ -371,8 +370,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), quiz.description, {
             instructionsWebView.loadHtml(it, quiz.title, baseUrl = mQuiz.htmlUrl)
         }) {
-            val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
         }
     }
 

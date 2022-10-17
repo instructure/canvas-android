@@ -53,7 +53,6 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLDecoder
 
 @ScreenView(SCREEN_VIEW_PAGE_DETAILS)
 class PageDetailsFragment : BasePresenterFragment<
@@ -176,8 +175,7 @@ class PageDetailsFragment : BasePresenterFragment<
         loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), page.body, {
             canvasWebView.loadHtml(it, page.title, baseUrl = mPage.htmlUrl)
         }) {
-            val args = LtiLaunchFragment.makeBundle(mCanvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCanvasContext, it)
         }
         setupToolbar()
     }

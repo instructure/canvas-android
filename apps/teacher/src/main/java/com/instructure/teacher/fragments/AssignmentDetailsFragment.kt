@@ -54,7 +54,6 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
@@ -288,13 +287,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), description, {
             descriptionWebView.loadHtml(it, name, baseUrl = mAssignment.htmlUrl)
         }) {
-            val args = LtiLaunchFragment.makeBundle(
-                mCourse,
-                URLDecoder.decode(it, "utf-8"),
-                requireContext().getString(R.string.utils_externalToolTitle),
-                true
-            )
-            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCourse, it)
         }
     }
 

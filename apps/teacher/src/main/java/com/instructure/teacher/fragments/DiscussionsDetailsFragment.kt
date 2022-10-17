@@ -64,7 +64,6 @@ import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
@@ -256,13 +255,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), html, {
                 discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
             }) {
-                val args = LtiLaunchFragment.makeBundle(
-                    canvasContext,
-                    URLDecoder.decode(it, "utf-8"),
-                    this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle),
-                    true
-                )
-                RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
+                LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
             }
 
             delay(300)
@@ -416,8 +409,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
             discussionTopicHeaderWebView.loadHtml(it, discussionTopicHeader.title, baseUrl = mDiscussionTopicHeader.htmlUrl)
         }) {
-            val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
         }
 
         discussionRepliesWebView.loadHtml("", "")

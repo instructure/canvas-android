@@ -36,7 +36,6 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.Navigation
-import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -60,7 +59,6 @@ import kotlinx.android.synthetic.main.dialog_submission_picker.*
 import kotlinx.android.synthetic.main.dialog_submission_picker_media.*
 import kotlinx.android.synthetic.main.fragment_assignment_details.*
 import kotlinx.coroutines.Job
-import java.net.URLDecoder
 
 class AssignmentDetailsView(
         val canvasContext: CanvasContext,
@@ -220,8 +218,7 @@ class AssignmentDetailsView(
             loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, state.description, {
                 loadDescriptionHtml(it, state.assignmentName, state.htmlUrl)
             }) {
-                val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+                LtiLaunchFragment.routeLtiLaunchFragment(context, canvasContext, it)
             }
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)

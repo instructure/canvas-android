@@ -50,7 +50,6 @@ import kotlinx.android.synthetic.main.fragment_webview.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.Subscribe
 import retrofit2.Response
-import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
 
@@ -206,8 +205,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), body, {
                 canvasWebView.loadHtml(it, page.title, baseUrl = page.htmlUrl)
             }) {
-                val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
+                LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
             }
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)

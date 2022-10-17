@@ -48,7 +48,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Response
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
@@ -229,8 +228,7 @@ class CalendarEventFragment : ParentFragment() {
                     calendarEventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
                     calendarEventWebView.loadHtml(html, it.title, baseUrl = scheduleItem?.htmlUrl)
                 }) { url ->
-                    val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
+                    LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, url)
                 }
             }
         }
