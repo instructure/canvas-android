@@ -86,7 +86,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:course_id/quizzes/:quiz_id"), QuizListFragment::class.java, QuizDetailsFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/discussion_topics"), DiscussionsListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionRouterFragment::class.java))
+        routes.add(Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionsListFragment::class.java, DiscussionRouterFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/files"), FileListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/files/:file_id/download"), RouteContext.FILE))
@@ -108,7 +108,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:course_id/wiki/:page_id/"), PageListFragment::class.java, PageDetailsFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/announcements"), AnnouncementListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionRouterFragment::class.java))
+        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), AnnouncementListFragment::class.java, DiscussionRouterFragment::class.java))
     }
 
     private fun initClassMap() {
@@ -184,10 +184,6 @@ object RouteMatcher : BaseRouteMatcher() {
         } else if (context.resources.getBoolean(R.bool.isDeviceTablet)) {
             handleTabletRoute(context, route)
         } else {
-            if (route.removePreviousScreen) {
-                val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
-                fragmentManager?.popBackStackImmediate()
-            }
             handleFullscreenRoute(context, route)
         }
     }
@@ -237,6 +233,7 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     private fun handleDetailRoute(context: Context, route: Route) {
+        if (route.removePreviousScreen) (context as? FragmentActivity)?.supportFragmentManager?.popBackStackImmediate()
         if (context is MasterDetailInteractions) {
             Logger.i("RouteMatcher:handleDetailRoute() - MasterDetailInteractions")
             (context as MasterDetailInteractions).addFragment(route)

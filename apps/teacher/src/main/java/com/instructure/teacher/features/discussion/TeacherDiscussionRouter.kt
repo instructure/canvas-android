@@ -7,6 +7,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
+import com.instructure.teacher.activities.FullscreenActivity
 import com.instructure.teacher.fragments.DiscussionsDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
 
@@ -34,7 +35,7 @@ class TeacherDiscussionRouter(private val activity: FragmentActivity) : Discussi
 
         RouteMatcher.route(activity, route)
 
-        activity.finish()
+        if (activity is FullscreenActivity) activity.finish()
     }
 
     override fun routeToGroupDiscussion(group: Group, id: Long, header: DiscussionTopicHeader, isRedesign: Boolean) = Unit
