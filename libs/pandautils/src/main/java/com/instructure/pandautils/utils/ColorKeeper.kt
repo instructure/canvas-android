@@ -87,7 +87,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
     }
 
     /** Associates a new color with a contextId **/
-    @JvmStatic fun addToCache(contextId: String, colorCode: String) {
+    fun addToCache(contextId: String, colorCode: String) {
         val color = parseColor(colorCode)
         cachedThemedColors += contextId to createThemedColor(color)
     }

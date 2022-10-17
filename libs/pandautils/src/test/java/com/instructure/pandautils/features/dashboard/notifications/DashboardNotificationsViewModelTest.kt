@@ -158,28 +158,28 @@ class DashboardNotificationsViewModelTest {
                         1,
                         "AC1",
                         "AC1",
-                        color = "#${resources.getColor(R.color.backgroundDanger).toHexString()}",
+                        color = 0,
                         icon = R.drawable.ic_warning
                 ),
                 AnnouncementViewData(
                         2,
                         "AC2",
                         "AC2",
-                        color = "#${resources.getColor(R.color.textDarkest).toHexString()}",
+                        color = 0,
                         icon = R.drawable.ic_calendar
                 ),
                 AnnouncementViewData(
                         3,
                         "AC3",
                         "AC3",
-                        color = "#${resources.getColor(R.color.textDarkest).toHexString()}",
+                        color = 0,
                         icon = R.drawable.ic_question_mark
                 ),
                 AnnouncementViewData(
                         4,
                         "AC4",
                         "AC4",
-                        color = "#${resources.getColor(R.color.backgroundWarning).toHexString()}",
+                        color = 0,
                         icon = R.drawable.ic_warning
                 ),
         )
@@ -447,7 +447,7 @@ class DashboardNotificationsViewModelTest {
             UploadViewData(
                 title,
                 subTitle,
-                "#${resources.getColor(R.color.backgroundInfo).toHexString()}"
+                0
             )
         )
 

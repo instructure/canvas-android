@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.utils.BooleanPref
 import com.instructure.canvasapi2.utils.ColorPref
 import com.instructure.canvasapi2.utils.IntPref
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.canvasapi2.utils.StringPref
 import com.instructure.pandautils.R
@@ -141,76 +142,86 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     }
 
     fun correctContrastForButtonBackground(buttonColor: Int, backgroundColor: Int, insideTextColor: Int): Int {
-        var backgroundContrast = AndroidColorUtils.calculateContrast(buttonColor, backgroundColor)
-        val textContrast = AndroidColorUtils.calculateContrast(insideTextColor, buttonColor)
+        try {
+            var backgroundContrast = AndroidColorUtils.calculateContrast(buttonColor, backgroundColor)
+            val textContrast = AndroidColorUtils.calculateContrast(insideTextColor, buttonColor)
 
-        if (backgroundContrast >= MIN_CONTRAST_FOR_BUTTONS && textContrast >= MIN_CONTRAST_FOR_TEXT) return buttonColor
+            if (backgroundContrast >= MIN_CONTRAST_FOR_BUTTONS && textContrast >= MIN_CONTRAST_FOR_TEXT) return buttonColor
 
-        var newColor = buttonColor
+            var newColor = buttonColor
 
-        if (textContrast < MIN_CONTRAST_FOR_TEXT) {
-            newColor = correctContrastForText(buttonColor, insideTextColor)
-        }
+            if (textContrast < MIN_CONTRAST_FOR_TEXT) {
+                newColor = correctContrastForText(buttonColor, insideTextColor)
+            }
 
-        backgroundContrast = AndroidColorUtils.calculateContrast(newColor, backgroundColor)
+            backgroundContrast = AndroidColorUtils.calculateContrast(newColor, backgroundColor)
 
-        if (backgroundContrast < MIN_CONTRAST_FOR_BUTTONS) {
-            // Correct contrast for background, but don't go under 4.5:1 for text contrast
-            val backgroundLuminance = AndroidColorUtils.calculateLuminance(backgroundColor)
-            val delta = if (backgroundLuminance > 0.5) -0.01f else 0.01f
+            if (backgroundContrast < MIN_CONTRAST_FOR_BUTTONS) {
+                // Correct contrast for background, but don't go under 4.5:1 for text contrast
+                val backgroundLuminance = AndroidColorUtils.calculateLuminance(backgroundColor)
+                val delta = if (backgroundLuminance > 0.5) -0.01f else 0.01f
 
-            var hslArray = FloatArray(3)
-            AndroidColorUtils.colorToHSL(buttonColor, hslArray)
+                var hslArray = FloatArray(3)
+                AndroidColorUtils.colorToHSL(buttonColor, hslArray)
 
-            var saturation = hslArray[1]
-            var lightness = hslArray[2]
+                var saturation = hslArray[1]
+                var lightness = hslArray[2]
 
-            // The main logic is the same as for the text, but we need an extra exit condition if the contrast with the text would go too low.
-            while (AndroidColorUtils.calculateContrast(newColor, backgroundColor) < MIN_CONTRAST_FOR_BUTTONS && saturation >= 0) {
-                if (lightness < 1 || lightness > 0) {
-                    lightness += delta
-                } else if (delta == 0.01f) {
-                    saturation -= 0.01f
-                }
-                val tempNewColor = AndroidColorUtils.HSLToColor(floatArrayOf(hslArray[0], saturation, lightness))
-                if (AndroidColorUtils.calculateContrast(insideTextColor, tempNewColor) > MIN_CONTRAST_FOR_TEXT) {
-                    newColor = tempNewColor
-                } else {
-                    break
+                // The main logic is the same as for the text, but we need an extra exit condition if the contrast with the text would go too low.
+                while (AndroidColorUtils.calculateContrast(newColor, backgroundColor) < MIN_CONTRAST_FOR_BUTTONS && saturation >= 0) {
+                    if (lightness < 1 || lightness > 0) {
+                        lightness += delta
+                    } else if (delta == 0.01f) {
+                        saturation -= 0.01f
+                    }
+                    val tempNewColor = AndroidColorUtils.HSLToColor(floatArrayOf(hslArray[0], saturation, lightness))
+                    if (AndroidColorUtils.calculateContrast(insideTextColor, tempNewColor) > MIN_CONTRAST_FOR_TEXT) {
+                        newColor = tempNewColor
+                    } else {
+                        break
+                    }
                 }
             }
-        }
 
-        return newColor
+            return newColor
+        } catch (e: Exception) {
+            Logger.e("Failed to fix contrast for #${Integer.toHexString(buttonColor)}: ${e.message}")
+            return buttonColor
+        }
     }
 
     fun correctContrastForText(color: Int, colorAgainst: Int): Int {
-        val contrast = AndroidColorUtils.calculateContrast(color, colorAgainst)
+        try {
+            val contrast = AndroidColorUtils.calculateContrast(color, colorAgainst)
 
-        if (contrast >= MIN_CONTRAST_FOR_TEXT) return color
+            if (contrast >= MIN_CONTRAST_FOR_TEXT) return color
 
-        var newColor = color
+            var newColor = color
 
-        var hslArray = FloatArray(3)
-        AndroidColorUtils.colorToHSL(color, hslArray)
+            var hslArray = FloatArray(3)
+            AndroidColorUtils.colorToHSL(color, hslArray)
 
-        // If the background is light we need to decrease the lightness and increase if the background is dark
-        val colorAgainstLuminance = AndroidColorUtils.calculateLuminance(colorAgainst)
-        val delta = if (colorAgainstLuminance > 0.5) -0.01f else 0.01f
+            // If the background is light we need to decrease the lightness and increase if the background is dark
+            val colorAgainstLuminance = AndroidColorUtils.calculateLuminance(colorAgainst)
+            val delta = if (colorAgainstLuminance > 0.5) -0.01f else 0.01f
 
-        var saturation = hslArray[1]
-        var lightness = hslArray[2]
-        while (AndroidColorUtils.calculateContrast(newColor, colorAgainst) < MIN_CONTRAST_FOR_TEXT && saturation >= 0) {
-            if (lightness < 1 || lightness > 0) {
-                lightness += delta
-            } else if (delta == 0.01f) {
-                // if the color is not light enough and we are going for lighter color we desaturate it.
-                // Adding saturation for darkening is not necessary, because if lightness is 0, color is already black.
-                saturation -= 0.01f
+            var saturation = hslArray[1]
+            var lightness = hslArray[2]
+            while (AndroidColorUtils.calculateContrast(newColor, colorAgainst) < MIN_CONTRAST_FOR_TEXT && saturation >= 0) {
+                if (lightness < 1 || lightness > 0) {
+                    lightness += delta
+                } else if (delta == 0.01f) {
+                    // if the color is not light enough and we are going for lighter color we desaturate it.
+                    // Adding saturation for darkening is not necessary, because if lightness is 0, color is already black.
+                    saturation -= 0.01f
+                }
+                newColor = AndroidColorUtils.HSLToColor(floatArrayOf(hslArray[0], saturation, lightness))
             }
-            newColor = AndroidColorUtils.HSLToColor(floatArrayOf(hslArray[0], saturation, lightness))
+            return newColor
+        } catch (e: Exception) {
+            Logger.e("Failed to fix contrast for #${Integer.toHexString(color)}: ${e.message}")
+            return color
         }
-        return newColor
     }
 
     private fun parseColor(hexColor: String, defaultColor: Int): Int {

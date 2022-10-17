@@ -23,6 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -32,6 +33,9 @@ import com.instructure.pandautils.features.elementary.grades.itemviewmodels.Grad
 import com.instructure.pandautils.features.elementary.grades.itemviewmodels.GradingPeriodSelectorItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.textAndIconColor
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -60,6 +64,7 @@ class GradesViewModelTest {
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val enrollmentManager: EnrollmentManager = mockk(relaxed = true)
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true, relaxUnitFun = true)
 
     private lateinit var viewModel: GradesViewModel
 
@@ -68,12 +73,17 @@ class GradesViewModelTest {
         every { resources.getString(R.string.currentGradingPeriod) } returns "Current"
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
+        every { ColorKeeper.darkTheme } returns false
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
+        unmockkAll()
     }
 
     @Test
@@ -131,10 +141,10 @@ class GradesViewModelTest {
 
         val gradeRows = viewModel.data.value!!.items.map { it as GradeRowItemViewModel }
 
-        val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", ColorApiHelper.K5_DEFAULT_COLOR, "www.1.com", 90.0, "A")
-        val expectedGradeRow2 = GradeRowViewData(2, "Course with Score", "#123456", "www.1.com", 75.6, "76%")
-        val expectedGradeRow3 = GradeRowViewData(3, "Course without scores", "#456789", "www.1.com", null, "--")
-        val expectedGradeRow4 = GradeRowViewData(4, "Hide Final Grades", "#456789", "www.1.com", 0.0, "--")
+        val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", 0, "www.1.com", 90.0, "A")
+        val expectedGradeRow2 = GradeRowViewData(2, "Course with Score", 0, "www.1.com", 75.6, "76%")
+        val expectedGradeRow3 = GradeRowViewData(3, "Course without scores", 0, "www.1.com", null, "--")
+        val expectedGradeRow4 = GradeRowViewData(4, "Hide Final Grades", 0, "www.1.com", 0.0, "--")
 
         assertEquals(expectedGradeRow1, gradeRows[0].data)
         assertEquals(expectedGradeRow2, gradeRows[1].data)
@@ -339,7 +349,7 @@ class GradesViewModelTest {
         assertEquals(GradesAction.OpenGradingPeriodsDialog(expectedGradingPeriods, 0), viewModel.events.value!!.getContentIfNotHandled())
     }
 
-    private fun createViewModel() = GradesViewModel(courseManager, resources, enrollmentManager)
+    private fun createViewModel() = GradesViewModel(courseManager, resources, enrollmentManager, colorKeeper)
 
     private fun createCourseWithGrades(
         id: Long,

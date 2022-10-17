@@ -59,7 +59,7 @@ class SubmissionFilesPresenterTest : Assert() {
             icon = 0,
             thumbnailUrl = null,
             isSelected = false,
-            iconColor = baseModel.canvasContext.color,
+            iconColor = baseModel.canvasContext.backgroundColor,
             selectionColor = testCourse.backgroundColor
         )
     }

@@ -135,14 +135,6 @@ class CourseCardCreator(
         }
     }
 
-    private fun getCourseColor(course: Course): String {
-        return if (!course.courseColor.isNullOrEmpty()) {
-            course.courseColor!!
-        } else {
-            ColorApiHelper.K5_DEFAULT_COLOR
-        }
-    }
-
     private fun openAnnouncementDetails(events: MutableLiveData<Event<HomeroomAction>>, course: Course, announcement: DiscussionTopicHeader?) {
         if (announcement != null) {
             events.postValue(Event(HomeroomAction.OpenAnnouncementDetails(course, announcement)))

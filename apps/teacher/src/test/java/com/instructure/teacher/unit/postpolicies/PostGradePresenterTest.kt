@@ -19,9 +19,11 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.teacher.R
 import com.instructure.teacher.features.postpolicies.PostGradeModel
 import com.instructure.teacher.features.postpolicies.PostGradePresenter
@@ -52,8 +54,7 @@ class PostGradePresenterTest : Assert() {
         )
 
         mockkObject(ColorKeeper)
-        // TODO Fix test
-//        every { ColorKeeper.colorFromCourseId(assignment.courseId) } returns assignment.courseId.toInt()
+        every { ColorKeeper.getOrGenerateColor(CanvasContext.emptyCourseContext(assignment.courseId)) } returns ThemedColor(assignment.courseId.toInt())
     }
 
     private fun postedSubmissionList() = listOf(Submission(postedAt = Date()))
