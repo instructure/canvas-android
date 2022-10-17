@@ -224,20 +224,16 @@ class CalendarEventFragment : ParentFragment() {
             }
 
             if (content?.isNotEmpty() == true) {
-                loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, content,
-                        ::loadCalendarHtml, { url ->
-                    val args = LtiLaunchFragment.makeLTIBundle(
-                            URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+                loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), content, { html ->
+                    calendarEventWebView.setVisible()
+                    calendarEventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+                    calendarEventWebView.loadHtml(html, it.title, baseUrl = scheduleItem?.htmlUrl)
+                }) { url ->
+                    val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
                     RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-                }, it.title)
+                }
             }
         }
-    }
-
-    private fun loadCalendarHtml(html: String, contentDescription: String?) {
-        calendarEventWebView.setVisible()
-        calendarEventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-        calendarEventWebView.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
     }
 
     private fun setUpCallback() {

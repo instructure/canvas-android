@@ -28,7 +28,10 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.loadHtmlWithIframes
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
@@ -119,16 +122,14 @@ class CalendarEventFragment : BaseFragment() {
         locationSubtitle.text = viewState.locationSubtitle
 
         if (viewState.htmlContent.isNotEmpty()) {
-            loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, viewState.htmlContent, ::loadCalendarHtml, { url ->
-                val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), viewState.htmlContent, {
+                calendarEventWebView?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+                calendarEventWebView?.loadHtml(it, viewState.eventTitle, baseUrl = scheduleItem?.htmlUrl)
+            }) {
+                val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
                 RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-            }, viewState.eventTitle)
+            }
         }
-    }
-
-    private fun loadCalendarHtml(html: String, contentDescription: String?) {
-        calendarEventWebView?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-        calendarEventWebView?.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
     }
 
     companion object {

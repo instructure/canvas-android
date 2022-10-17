@@ -16,7 +16,6 @@
 package com.instructure.teacher.fragments
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
@@ -254,10 +253,17 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
             discussionRepliesWebView.setInvisible()
 
-            repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies, {
-                val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
+            repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), html, {
+                discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
+            }) {
+                val args = LtiLaunchFragment.makeBundle(
+                    canvasContext,
+                    URLDecoder.decode(it, "utf-8"),
+                    this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle),
+                    true
+                )
                 RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-            })
+            }
 
             delay(300)
             discussionsScrollView.post {
@@ -407,24 +413,14 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             showReplyView(presenter.discussionTopicHeader.id)
         }
 
-        headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic, {
-            val args = LtiLaunchFragment.makeBundle(
-                    canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(
-                    this@DiscussionsDetailsFragment.requireContext(),
-                    Route(LtiLaunchFragment::class.java, canvasContext, args))
-        }, discussionTopicHeader.title)
+        headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
+            discussionTopicHeaderWebView.loadHtml(it, discussionTopicHeader.title, baseUrl = mDiscussionTopicHeader.htmlUrl)
+        }) {
+            val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
+        }
 
         discussionRepliesWebView.loadHtml("", "")
-    }
-
-    private fun loadHTMLTopic(html: String, contentDescription: String?) {
-        discussionTopicHeaderWebView.loadHtml(html, contentDescription, baseUrl = mDiscussionTopicHeader.htmlUrl)
-    }
-
-    private fun loadHTMLReplies(html: String, contentDescription: String? = null) {
-        discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
     }
 
     override fun onPause() {

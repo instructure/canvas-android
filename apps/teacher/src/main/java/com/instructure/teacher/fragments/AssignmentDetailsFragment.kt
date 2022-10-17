@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -286,19 +285,17 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         descriptionWebView.setBackgroundResource(android.R.color.transparent)
 
         // Load description
-        loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(),
-                ::loadAssignmentHTML, {
+        loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), description, {
+            descriptionWebView.loadHtml(it, name, baseUrl = mAssignment.htmlUrl)
+        }) {
             val args = LtiLaunchFragment.makeBundle(
-                    mCourse,
-                    URLDecoder.decode(it, "utf-8"),
-                    requireContext().getString(R.string.utils_externalToolTitle),
-                    true)
+                mCourse,
+                URLDecoder.decode(it, "utf-8"),
+                requireContext().getString(R.string.utils_externalToolTitle),
+                true
+            )
             RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
-        }, name)
-    }
-
-    private fun loadAssignmentHTML(html: String, contentDescription: String?) {
-        descriptionWebView.loadHtml(html, contentDescription, baseUrl = mAssignment.htmlUrl)
+        }
     }
 
     private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(assignment) {

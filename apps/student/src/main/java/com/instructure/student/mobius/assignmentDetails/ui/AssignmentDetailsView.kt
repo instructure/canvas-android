@@ -217,14 +217,12 @@ class AssignmentDetailsView(
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
-            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description,
-                { html, contentDescription -> loadDescriptionHtml(html, contentDescription, state.htmlUrl) }, {
-                    val args = LtiLaunchFragment.makeLTIBundle(
-                        URLDecoder.decode(it, "utf-8"), context.getString(R.string.utils_externalToolTitle), true
-                    )
-                    RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
-                }, state.assignmentName
-            )
+            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, state.description, {
+                loadDescriptionHtml(it, state.assignmentName, state.htmlUrl)
+            }) {
+                val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
+                RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+            }
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
         if(state.visibilities.discussionTopicHeader) renderDiscussionTopicHeader(state.discussionHeaderViewState!!)

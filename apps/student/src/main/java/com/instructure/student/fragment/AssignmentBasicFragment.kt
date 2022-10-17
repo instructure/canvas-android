@@ -137,17 +137,14 @@ class AssignmentBasicFragment : ParentFragment() {
             description = "<p>" + getString(R.string.noDescription) + "</p>"
         }
 
-        loadHtmlJob = assignmentWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(),
-                ::loadDescriptionHtml, {
-            val args = LtiLaunchFragment.makeLTIBundle(
-                    URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+        loadHtmlJob = assignmentWebView.loadHtmlWithIframes(requireContext(), description, {
+            assignmentWebView.loadHtml(it, assignment.name)
+        }, {
+            val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
             RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-        }, assignment.name)
+        })
     }
 
-    private fun loadDescriptionHtml(html: String, contentDescription: String?) {
-        assignmentWebView.loadHtml(html, contentDescription)
-    }
     //endregion
 
     //region Bus Events

@@ -543,15 +543,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //endregion
 
     //region Loading
-    private fun loadHTMLTopic(html: String, contentDescription: String?) {
-        setupHeaderWebView()
-        discussionTopicHeaderWebView.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
-    }
-
-    private fun loadHTMLReplies(html: String, contentDescription: String? = null) {
-        discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
-    }
-
     private fun populateDiscussionData(forceRefresh: Boolean = false, topLevelReplyPosted: Boolean = false) {
         discussionsLoadingJob = tryWeave {
             discussionProgressBar.setVisible()
@@ -709,11 +700,13 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
-        loadHeaderHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                discussionTopicHeader.message.orEmpty(), ::loadHTMLTopic, null, discussionTopicHeader.title)
+        loadHeaderHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
+            setupHeaderWebView()
+            discussionTopicHeaderWebView.loadHtml(it, discussionTopicHeader.title, baseUrl = discussionTopicHeader.htmlUrl)
+        })
 
-        attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
-        attachmentIcon.onClick { _ ->
+        attachmentIcon.setVisible(discussionTopicHeader.attachments.isNotEmpty())
+        attachmentIcon.onClick {
             viewAttachments(discussionTopicHeader.attachments)
         }
     }
@@ -722,8 +715,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionRepliesWebView.setVisible()
         discussionProgressBar.setGone()
 
-        loadRepliesHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                html, ::loadHTMLReplies)
+        loadHeaderHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), html, {
+            discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
+        })
 
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)

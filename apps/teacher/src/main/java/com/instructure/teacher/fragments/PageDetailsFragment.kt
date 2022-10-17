@@ -173,15 +173,13 @@ class PageDetailsFragment : BasePresenterFragment<
 
     override fun populatePageDetails(page: Page) {
         mPage = page
-        loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, {
+        loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), page.body, {
+            canvasWebView.loadHtml(it, page.title, baseUrl = mPage.htmlUrl)
+        }) {
             val args = LtiLaunchFragment.makeBundle(mCanvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
             RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-        }, page.title)
+        }
         setupToolbar()
-    }
-
-    private fun loadPageHtml(html: String, contentDescription: String?) {
-        canvasWebView.loadHtml(html, contentDescription, baseUrl = mPage.htmlUrl)
     }
 
     override fun onError(stringId: Int) {
