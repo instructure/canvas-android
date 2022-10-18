@@ -1,5 +1,6 @@
 package com.instructure.pandautils.features.discussion.router
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.isCourse
@@ -24,7 +26,8 @@ class DiscussionRouterViewModel @Inject constructor(
     private val featuresManager: FeaturesManager,
     private val featureFlagProvider: FeatureFlagProvider,
     private val discussionManager: DiscussionManager,
-    private val groupManager: GroupManager
+    private val groupManager: GroupManager,
+    private val resources: Resources
 ) : ViewModel() {
 
     val events: LiveData<Event<DiscussionRouterAction>>
@@ -37,30 +40,38 @@ class DiscussionRouterViewModel @Inject constructor(
         discussionTopicHeaderId: Long
     ) {
         viewModelScope.launch {
-            val discussionRedesignEnabled = if (canvasContext.isCourse) {
-                val featureFlags =
-                    featuresManager.getEnabledFeaturesForCourseAsync(canvasContext.id, true).await().dataOrNull
-                featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
-            } else if (canvasContext.isGroup) {
-                val featureFlags =
-                    featuresManager.getEnabledFeaturesForCourseAsync((canvasContext as Group).courseId, true)
-                        .await().dataOrNull
-                featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
-            } else {
-                false
-            }
+            try {
+                val discussionRedesignEnabled = if (canvasContext.isCourse) {
+                    val featureFlags =
+                        featuresManager.getEnabledFeaturesForCourseAsync(canvasContext.id, true).await().dataOrNull
+                    featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
+                } else if (canvasContext.isGroup) {
+                    val featureFlags =
+                        featuresManager.getEnabledFeaturesForCourseAsync((canvasContext as Group).courseId, true)
+                            .await().dataOrNull
+                    featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
+                } else {
+                    false
+                }
 
-            val header: DiscussionTopicHeader = discussionTopicHeader
-                ?: discussionManager.getDiscussionTopicHeaderAsync(canvasContext, discussionTopicHeaderId, false).await().dataOrThrow
+                val header: DiscussionTopicHeader = discussionTopicHeader
+                    ?: discussionManager.getDiscussionTopicHeaderAsync(canvasContext, discussionTopicHeaderId, false)
+                        .await().dataOrThrow
 
-            if (header.groupTopicChildren.isNotEmpty()) {
-                val discussionGroup = getDiscussionGroup(header)
-                discussionGroup?.let {
-                    val groupDiscussionHeader = discussionManager.getDiscussionTopicHeaderAsync(it.first, it.second, false).await().dataOrThrow
-                    routeToDiscussionGroup(it.first, it.second, groupDiscussionHeader, discussionRedesignEnabled)
-                } ?: routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
-            } else {
-                routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
+                if (header.groupTopicChildren.isNotEmpty()) {
+                    val discussionGroup = getDiscussionGroup(header)
+                    discussionGroup?.let {
+                        val groupDiscussionHeader =
+                            discussionManager.getDiscussionTopicHeaderAsync(it.first, it.second, false)
+                                .await().dataOrThrow
+                        routeToDiscussionGroup(it.first, it.second, groupDiscussionHeader, discussionRedesignEnabled)
+                    } ?: routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
+                } else {
+                    routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _events.postValue(Event(DiscussionRouterAction.ShowToast(resources.getString(R.string.discussionErrorToast))))
             }
         }
     }

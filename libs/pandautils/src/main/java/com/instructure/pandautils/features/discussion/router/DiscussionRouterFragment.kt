@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
@@ -63,6 +64,10 @@ class DiscussionRouterFragment : Fragment() {
             }
             is DiscussionRouterAction.RouteToGroupDiscussion -> {
                 discussionRouter.routeToGroupDiscussion(action.group, action.id, action.header, action.isRedesignEnabled)
+            }
+            is DiscussionRouterAction.ShowToast -> {
+                toast(action.toast, Toast.LENGTH_SHORT)
+                requireActivity().onBackPressed()
             }
         }
     }

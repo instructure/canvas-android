@@ -17,4 +17,6 @@ sealed class DiscussionRouterAction {
         val header: DiscussionTopicHeader,
         val isRedesignEnabled: Boolean
     ) : DiscussionRouterAction()
+
+    data class ShowToast(val toast: String) : DiscussionRouterAction()
 }
