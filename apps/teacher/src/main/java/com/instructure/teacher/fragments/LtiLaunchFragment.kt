@@ -17,6 +17,7 @@
 package com.instructure.teacher.fragments
 
 import android.app.Activity
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -29,13 +30,16 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_lti_launch.*
 import kotlinx.coroutines.Job
+import java.net.URLDecoder
 
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 class LtiLaunchFragment : BaseFragment() {
@@ -176,5 +180,10 @@ class LtiLaunchFragment : BaseFragment() {
         }
 
         fun newInstance(args: Bundle) = LtiLaunchFragment().apply { arguments = args }
+
+        fun routeLtiLaunchFragment(context: Context, canvasContext: CanvasContext?, url: String) {
+            val args = makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+        }
     }
 }

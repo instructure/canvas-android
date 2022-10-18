@@ -50,7 +50,6 @@ import kotlinx.android.synthetic.main.fragment_webview.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.Subscribe
 import retrofit2.Response
-import java.net.URLDecoder
 import java.util.*
 import java.util.regex.Pattern
 
@@ -203,10 +202,11 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             val body = """<script>window.ENV = { COURSE: { id: "${canvasContext.id}" } };</script>""" + page.body.orEmpty()
 
             // Load the html with the helper function to handle iframe cases
-            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, body, ::loadPageHtml, {
-                val args = LtiLaunchFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-            }, page.title)
+            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), body, {
+                canvasWebView.loadHtml(it, page.title, baseUrl = page.htmlUrl)
+            }) {
+                LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+            }
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
         }
@@ -214,10 +214,6 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         toolbar.title = title()
 
         checkCanEdit()
-    }
-
-    private fun loadPageHtml(html: String, contentDescription: String?) {
-        canvasWebView.loadHtml(html, contentDescription, baseUrl = page.htmlUrl)
     }
 
     /**
