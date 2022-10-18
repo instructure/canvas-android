@@ -34,7 +34,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.activity.NotificationWidgetRouter
 import com.instructure.student.util.StringUtilities
@@ -75,13 +74,13 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
             row.setTextColor(R.id.title, BaseRemoteViewsService.getWidgetTextColor(appWidgetId, applicationContext))
 
             if (streamItem.canvasContext != null && streamItem.canvasContext?.type != CanvasContext.Type.USER) {
-                row.setInt(R.id.icon, "setColorFilter", streamItem.canvasContext.textAndIconColor)
+                row.setInt(R.id.icon, "setColorFilter", getCanvasContextTextColor(appWidgetId, streamItem.canvasContext))
             } else if (streamItem.getStreamItemType() == StreamItem.Type.CONVERSATION) {
-                val color = if(streamItem.canvasContext != null) streamItem.canvasContext.textAndIconColor
+                val color = if(streamItem.canvasContext != null) getCanvasContextTextColor(appWidgetId, streamItem.canvasContext)
                             else BaseRemoteViewsService.getWidgetTextColor(appWidgetId, ContextKeeper.appContext)
                 row.setInt(R.id.icon, "setColorFilter", color)
             } else {
-                val color = if(streamItem.canvasContext != null) streamItem.canvasContext.textAndIconColor
+                val color = if(streamItem.canvasContext != null) getCanvasContextTextColor(appWidgetId, streamItem.canvasContext)
                             else ContextCompat.getColor(applicationContext, R.color.textDanger)
                 row.setInt(R.id.icon, "setColorFilter", color)
             }

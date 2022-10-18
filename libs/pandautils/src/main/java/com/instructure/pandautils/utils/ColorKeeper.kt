@@ -53,6 +53,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
     /**
      * Gets the themed color associated with the given [CanvasContext] if it exists, otherwise generates a new color
      * DO NOT USE THIS DIRECTLY. To get course color use [CanvasContext.textAndIconColor] or [CanvasContext.backgroundColor]
+     * Only direct usage is in widgets, because there we handle light/dark theme differently
      * **/
     fun getOrGenerateColor(canvasContext: CanvasContext?): ThemedColor {
         return when (canvasContext) {

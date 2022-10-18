@@ -36,7 +36,6 @@ import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.textAndIconColor
 import java.io.Serializable
 import java.util.*
 
@@ -72,7 +71,8 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
             }
 
             if (streamItem.canvasContext != null && streamItem.canvasContext!!.type != CanvasContext.Type.USER) {
-                row.setInt(R.id.icon, "setColorFilter", streamItem.canvasContext.textAndIconColor)
+                val appWidgetId = BaseRemoteViewsService.getAppWidgetId(intent)
+                row.setInt(R.id.icon, "setColorFilter", getCanvasContextTextColor(appWidgetId, streamItem.canvasContext))
             } else {
                 row.setInt(R.id.icon, "setColorFilter", R.color.textDanger)
             }
