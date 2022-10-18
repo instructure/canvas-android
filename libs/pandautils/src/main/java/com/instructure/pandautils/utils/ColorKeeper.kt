@@ -43,10 +43,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
     /** The default color **/
     @JvmStatic var defaultColor: Int = 0
 
-    /** The currently cached colors **/
-    var cachedColors: Map<String, Int> by NonNullGsonPref(HashMap())
-
-    var cachedThemedColors: Map<String, ThemedColor> by NonNullGsonPref(HashMap())
+    var cachedThemedColors: Map<String, ThemedColor> by GsonMapPref(String::class.java, ThemedColor::class.java)
 
     /** Whether or not colors have been synced from the API before **/
     var previouslySynced by BooleanPref()
