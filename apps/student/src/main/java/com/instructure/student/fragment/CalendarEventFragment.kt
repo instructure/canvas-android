@@ -224,14 +224,18 @@ class CalendarEventFragment : ParentFragment() {
 
             if (content?.isNotEmpty() == true) {
                 loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), content, { html ->
-                    calendarEventWebView.setVisible()
-                    calendarEventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-                    calendarEventWebView.loadHtml(html, it.title, baseUrl = scheduleItem?.htmlUrl)
+                    loadCalendarHtml(html, it.title)
                 }) { url ->
                     LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, url)
                 }
             }
         }
+    }
+
+    private fun loadCalendarHtml(html: String, contentDescription: String?) {
+        calendarEventWebView.setVisible()
+        calendarEventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+        calendarEventWebView.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
     }
 
     private fun setUpCallback() {

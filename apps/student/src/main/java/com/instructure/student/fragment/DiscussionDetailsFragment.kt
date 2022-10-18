@@ -701,14 +701,18 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
         loadHeaderHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
-            setupHeaderWebView()
-            discussionTopicHeaderWebView.loadHtml(it, discussionTopicHeader.title, baseUrl = discussionTopicHeader.htmlUrl)
+            loadHTMLTopic(it, discussionTopicHeader.title)
         })
 
         attachmentIcon.setVisible(discussionTopicHeader.attachments.isNotEmpty())
         attachmentIcon.onClick {
             viewAttachments(discussionTopicHeader.attachments)
         }
+    }
+
+    private fun loadHTMLTopic(html: String, contentDescription: String?) {
+        setupHeaderWebView()
+        discussionTopicHeaderWebView.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
     }
 
     private fun loadDiscussionTopicViews(html: String) {

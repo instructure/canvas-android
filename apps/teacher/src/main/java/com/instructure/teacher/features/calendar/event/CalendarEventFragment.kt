@@ -121,12 +121,16 @@ class CalendarEventFragment : BaseFragment() {
 
         if (viewState.htmlContent.isNotEmpty()) {
             loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), viewState.htmlContent, {
-                calendarEventWebView?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-                calendarEventWebView?.loadHtml(it, viewState.eventTitle, baseUrl = scheduleItem?.htmlUrl)
+                loadCalendarHtml(it, viewState.eventTitle)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
             }
         }
+    }
+
+    private fun loadCalendarHtml(html: String, contentDescription: String) {
+        calendarEventWebView?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+        calendarEventWebView?.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
     }
 
     companion object {
