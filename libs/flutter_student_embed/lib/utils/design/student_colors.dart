@@ -97,6 +97,8 @@ class StudentColors {
 
   static Color buttonColor = defaultButton;
 
+  static Color textButtonColor = defaultButton;
+
   static Color primaryTextColor = defaultPrimaryText;
 
   static Color generateContextColor(String contextCode) {
