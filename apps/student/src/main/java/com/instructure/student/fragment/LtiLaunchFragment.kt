@@ -17,6 +17,7 @@
 
 package com.instructure.student.fragment
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -38,8 +39,10 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_lti_launch.*
 import kotlinx.coroutines.Job
+import java.net.URLDecoder
 
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 @PageView
@@ -214,6 +217,11 @@ class LtiLaunchFragment : ParentFragment() {
         fun newInstance(route: Route): LtiLaunchFragment? {
             if (!validateRoute(route)) return null
             return LtiLaunchFragment().withArgs(route.argsWithContext)
+        }
+
+        fun routeLtiLaunchFragment(context: Context, canvasContext: CanvasContext?, url: String) {
+            val args = makeLTIBundle(URLDecoder.decode(url, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
         }
     }
 }

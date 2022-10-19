@@ -55,7 +55,6 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URL
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
@@ -357,7 +356,8 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
 
         instructionsWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-            override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
+            override fun launchInternalWebViewFragment(url: String) =
+                requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
@@ -367,16 +367,11 @@ class QuizDetailsFragment : BasePresenterFragment<
         instructionsWebView.setBackgroundResource(android.R.color.transparent)
 
         // Load instructions
-        loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                quiz.description.orEmpty(), ::loadQuizHTML, {
-            val args = LtiLaunchFragment.makeBundle(
-                    canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-        }, quiz.title)
-    }
-
-    private fun loadQuizHTML(html: String, contentDescription: String?) {
-        instructionsWebView.loadHtml(html, contentDescription, baseUrl = mQuiz.htmlUrl)
+        loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), quiz.description, {
+            instructionsWebView.loadHtml(it, quiz.title, baseUrl = mQuiz.htmlUrl)
+        }) {
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+        }
     }
 
     private fun setupListeners(quiz: Quiz) {

@@ -54,7 +54,6 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
@@ -285,19 +284,11 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         descriptionWebView.setBackgroundResource(android.R.color.transparent)
 
         // Load description
-        loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(),
-                ::loadAssignmentHTML, {
-            val args = LtiLaunchFragment.makeBundle(
-                    mCourse,
-                    URLDecoder.decode(it, "utf-8"),
-                    requireContext().getString(R.string.utils_externalToolTitle),
-                    true)
-            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
-        }, name)
-    }
-
-    private fun loadAssignmentHTML(html: String, contentDescription: String?) {
-        descriptionWebView.loadHtml(html, contentDescription, baseUrl = mAssignment.htmlUrl)
+        loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), description, {
+            descriptionWebView.loadHtml(it, name, baseUrl = mAssignment.htmlUrl)
+        }) {
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCourse, it)
+        }
     }
 
     private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(assignment) {

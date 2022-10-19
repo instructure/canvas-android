@@ -25,7 +25,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.Spinner
 import androidx.annotation.ColorInt
@@ -109,9 +108,13 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
 
 @BindingAdapter(value = ["htmlContent", "htmlTitle", "onLtiButtonPressed"], requireAll = false)
 fun bindHtmlContent(webView: CanvasWebView, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
-    webView.loadHtml(html ?: "", title ?: "")
+    webView.loadHtml(html.orEmpty(), title.orEmpty())
     if (onLtiButtonPressed != null) {
         webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "accessor")
+    }
+
+    if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
+        webView.addJavascriptInterface(JsGoogleDocsInterface(webView.context), "accessor")
     }
 }
 

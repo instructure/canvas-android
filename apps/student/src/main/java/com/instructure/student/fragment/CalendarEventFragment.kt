@@ -48,7 +48,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Response
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
@@ -224,12 +223,11 @@ class CalendarEventFragment : ParentFragment() {
             }
 
             if (content?.isNotEmpty() == true) {
-                loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, content,
-                        ::loadCalendarHtml, { url ->
-                    val args = LtiLaunchFragment.makeLTIBundle(
-                            URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-                }, it.title)
+                loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), content, { html ->
+                    loadCalendarHtml(html, it.title)
+                }) { url ->
+                    LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, url)
+                }
             }
         }
     }
