@@ -31,6 +31,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.features.elementary.course.ElementaryCourseAction
 import com.instructure.student.features.elementary.course.ElementaryCourseTab
 import com.instructure.student.features.elementary.course.ElementaryCourseViewData
@@ -38,7 +40,9 @@ import com.instructure.student.features.elementary.course.ElementaryCourseViewMo
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -86,6 +90,14 @@ class ElementaryCourseViewModelTest {
         setupStrings()
 
         viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager, courseManager)
+
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.darkTheme } returns false
+        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
+    }
+
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
