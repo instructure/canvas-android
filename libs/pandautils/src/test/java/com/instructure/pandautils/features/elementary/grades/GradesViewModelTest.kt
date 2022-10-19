@@ -74,9 +74,7 @@ class GradesViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
 
-        mockkObject(ColorKeeper)
-        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
-        every { ColorKeeper.darkTheme } returns false
+        every { colorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
     }
 
     @After
@@ -141,10 +139,10 @@ class GradesViewModelTest {
 
         val gradeRows = viewModel.data.value!!.items.map { it as GradeRowItemViewModel }
 
-        val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", 0, "www.1.com", 90.0, "A")
-        val expectedGradeRow2 = GradeRowViewData(2, "Course with Score", 0, "www.1.com", 75.6, "76%")
-        val expectedGradeRow3 = GradeRowViewData(3, "Course without scores", 0, "www.1.com", null, "--")
-        val expectedGradeRow4 = GradeRowViewData(4, "Hide Final Grades", 0, "www.1.com", 0.0, "--")
+        val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", ThemedColor(0), "www.1.com", 90.0, "A")
+        val expectedGradeRow2 = GradeRowViewData(2, "Course with Score", ThemedColor(0), "www.1.com", 75.6, "76%")
+        val expectedGradeRow3 = GradeRowViewData(3, "Course without scores", ThemedColor(0), "www.1.com", null, "--")
+        val expectedGradeRow4 = GradeRowViewData(4, "Hide Final Grades", ThemedColor(0), "www.1.com", 0.0, "--")
 
         assertEquals(expectedGradeRow1, gradeRows[0].data)
         assertEquals(expectedGradeRow2, gradeRows[1].data)

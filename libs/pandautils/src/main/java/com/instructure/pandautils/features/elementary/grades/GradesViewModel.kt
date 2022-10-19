@@ -136,7 +136,7 @@ class GradesViewModel @Inject constructor(
                     GradeRowViewData(
                         it.id,
                         it.name,
-                        it.textAndIconColor,
+                        colorKeeper.getOrGenerateColor(it),
                         it.imageUrl ?: "",
                         if (it.hideFinalGrades) 0.0 else grades?.currentScore,
                         createGradeText(grades?.currentScore, grades?.currentGrade, it.hideFinalGrades, enrollment?.currentGradingPeriodId ?: 0L != 0L))
@@ -239,7 +239,7 @@ class GradesViewModel @Inject constructor(
         val gradeRowViewData = GradeRowViewData(
             course.id,
             course.name,
-            course.textAndIconColor,
+            colorKeeper.getOrGenerateColor(course),
             course.imageUrl ?: "",
             enrollment?.grades?.currentScore,
             createGradeText(enrollment?.grades?.currentScore, enrollment?.grades?.currentGrade, course.hideFinalGrades))

@@ -34,6 +34,8 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.textAndIconColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -45,7 +47,8 @@ import javax.inject.Inject
 class ImportantDatesViewModel @Inject constructor(
         private val courseManager: CourseManager,
         private val calendarEventManager: CalendarEventManager,
-        private val resources: Resources
+        private val resources: Resources,
+        private val colorKeeper: ColorKeeper
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -135,7 +138,7 @@ class ImportantDatesViewModel @Inject constructor(
 
     private fun createImportantDateItems(items: List<ScheduleItem>): List<ImportantDatesItemViewModel> {
         return items.map {
-            val color = if (courseMap.containsKey(it.courseId)) courseMap[it.courseId].textAndIconColor else resources.getColor(R.color.textInfo)
+            val color = if (courseMap.containsKey(it.courseId)) colorKeeper.getOrGenerateColor(courseMap[it.courseId]) else ThemedColor(resources.getColor(R.color.textInfo))
             ImportantDatesItemViewModel(
                     ImportantDatesItemViewData(
                             scheduleItemId = it.id,

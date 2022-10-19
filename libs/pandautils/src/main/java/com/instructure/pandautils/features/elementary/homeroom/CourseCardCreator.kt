@@ -27,7 +27,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.ColorApiHelper
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.ColorKeeper
 import kotlinx.coroutines.awaitAll
 import org.threeten.bp.LocalDate
 
@@ -35,7 +35,8 @@ class CourseCardCreator(
     private val plannerManager: PlannerManager,
     private val userManager: UserManager,
     private val announcementManager: AnnouncementManager,
-    private val resources: Resources
+    private val resources: Resources,
+    private val colorKeeper: ColorKeeper
 ) {
 
     suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean,
@@ -64,7 +65,7 @@ class CourseCardCreator(
                     assignmentsDueTexts[course.id] ?: "",
                     assignmentsMissingTexts[course.id] ?: "",
                     announcements[index]?.title ?: "",
-                    course.textAndIconColor,
+                    ColorKeeper.getOrGenerateColor(course),
                     course.imageUrl ?: "")
 
                 CourseCardItemViewModel(

@@ -48,8 +48,9 @@ class CourseCardCreatorTest {
     private val announcementManager: AnnouncementManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val events: MutableLiveData<Event<HomeroomAction>> = mockk(relaxed = true)
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
-    private val courseCardCreator = CourseCardCreator(plannerManager, userManager, announcementManager, resources)
+    private val courseCardCreator = CourseCardCreator(plannerManager, userManager, announcementManager, resources, colorKeeper)
 
     @Before
     fun setUp() {

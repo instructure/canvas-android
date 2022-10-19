@@ -69,6 +69,7 @@ class ImportantDatesViewModelTest {
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val calendarEventManager: CalendarEventManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
     private val now = OffsetDateTime.now()
 
@@ -88,8 +89,7 @@ class ImportantDatesViewModelTest {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
-        mockkObject(ColorKeeper)
-        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(123)
+        every { colorKeeper.getOrGenerateColor(any()) } returns ThemedColor(123)
 
         setupString()
     }
@@ -168,13 +168,13 @@ class ImportantDatesViewModelTest {
                         title = "Assignment 1",
                         courseName = "Course 1",
                         icon = R.drawable.ic_assignment,
-                        courseColor = 123
+                        courseColor = ThemedColor(123)
                 ),
                 ImportantDatesItemViewData(
                         scheduleItemId = 1L,
                         title = "Event 1",
                         courseName = "Course 1",
-                        courseColor = 123,
+                        courseColor = ThemedColor(123),
                         icon = R.drawable.ic_calendar
                 )
         )
@@ -192,13 +192,13 @@ class ImportantDatesViewModelTest {
                         title = "Quiz 2",
                         courseName = "Course 2",
                         icon = R.drawable.ic_quiz,
-                        courseColor = 123
+                        courseColor = ThemedColor(123)
                 ),
                 ImportantDatesItemViewData(
                         scheduleItemId = 2L,
                         title = "Event 2",
                         courseName = "Course 2",
-                        courseColor = 123,
+                        courseColor = ThemedColor(123),
                         icon = R.drawable.ic_calendar
                 )
         )
@@ -439,7 +439,8 @@ class ImportantDatesViewModelTest {
         return ImportantDatesViewModel(
                 courseManager,
                 calendarEventManager,
-                resources
+                resources,
+                colorKeeper
         )
     }
 

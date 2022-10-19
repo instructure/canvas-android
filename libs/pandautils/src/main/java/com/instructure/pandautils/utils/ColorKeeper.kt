@@ -52,7 +52,8 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
 
     /**
      * Gets the themed color associated with the given [CanvasContext] if it exists, otherwise generates a new color
-     * DO NOT USE THIS DIRECTLY. To get course color use [CanvasContext.textAndIconColor] or [CanvasContext.backgroundColor]
+     * This should be used directly  only in special cases where we need a [ThemedColor] object instead of a specific color.
+     * To get course color use [CanvasContext.textAndIconColor] or [CanvasContext.backgroundColor]
      * Only direct usage is in widgets, because there we handle light/dark theme differently
      * **/
     fun getOrGenerateColor(canvasContext: CanvasContext?): ThemedColor {
@@ -229,4 +230,10 @@ data class ThemedColor(
     @ColorInt val light: Int,
     @ColorInt val darkBackgroundColor: Int = light,
     @ColorInt val darkTextAndIconColor: Int = light
-)
+) {
+    @ColorInt
+    fun textAndIconColor() = if (ColorKeeper.darkTheme) darkTextAndIconColor else light
+
+    @ColorInt
+    fun backgroundColor() = if (ColorKeeper.darkTheme) darkBackgroundColor else light
+}

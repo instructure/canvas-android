@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.features.elementary.importantdates.itemviewmodels.ImportantDatesHeaderItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.utils.ThemedColor
 import java.util.*
 
 data class ImportantDatesViewData(
@@ -36,7 +37,7 @@ data class ImportantDatesItemViewData(
     val title: String,
     val courseName: String,
     @DrawableRes val icon: Int,
-    @ColorInt val courseColor: Int,
+    val courseColor: ThemedColor,
 )
 
 sealed class ImportantDatesAction {
