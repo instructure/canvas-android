@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -41,6 +42,7 @@ import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import kotlinx.coroutines.Job
+import java.lang.NumberFormatException
 
 open class InternalWebViewFragment : BaseFragment() {
 
@@ -97,9 +99,13 @@ open class InternalWebViewFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         val courseId: String? = RouteMatcher.getCourseIdFromUrl(url)
-        var courseBackgroundColor = -1
+        var courseBackgroundColor = ThemePrefs.primaryColor
         courseId?.let {
-            courseBackgroundColor = CanvasContext.emptyCourseContext(courseId.toLong()).backgroundColor
+            try {
+                courseBackgroundColor = CanvasContext.emptyCourseContext(courseId.toLong()).backgroundColor
+            } catch (e: NumberFormatException) {
+                Logger.e(e.message)
+            }
         }
 
         toolbar?.title = title.validOrNull() ?: url
