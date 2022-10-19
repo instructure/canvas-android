@@ -220,10 +220,11 @@ object ColorApiHelper {
 }
 
 private fun createThemedColor(@ColorInt color: Int): ThemedColor {
+    val light = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.white))
     val darkBackgroundColor = ColorUtils.correctContrastForButtonBackground(color, ContextKeeper.appContext.getColor(R.color.backgroundDarkMode), ContextKeeper.appContext.getColor(R.color.white))
     val darkTextAndIconColor = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.elevatedDarkColor))
 
-    return ThemedColor(color, darkBackgroundColor, darkTextAndIconColor)
+    return ThemedColor(light, darkBackgroundColor, darkTextAndIconColor)
 }
 
 data class ThemedColor(
