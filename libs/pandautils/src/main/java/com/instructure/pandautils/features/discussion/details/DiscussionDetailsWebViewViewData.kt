@@ -16,4 +16,7 @@
 
 package com.instructure.pandautils.features.discussion.details
 
-data class DiscussionDetailsWebViewViewData(val url: String)
+data class DiscussionDetailsWebViewViewData(
+    val url: String,
+    val title: String
+)

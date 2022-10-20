@@ -29,13 +29,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.ModuleManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
-import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
@@ -43,6 +40,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_MODULE_PROGRESSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.events.ModuleUpdatedEvent
@@ -61,6 +60,13 @@ import java.util.*
 
 @ScreenView(SCREEN_VIEW_COURSE_MODULE_PROGRESSION)
 class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
+
+    private val discussionRouteHelper = DiscussionRouteHelper(
+        FeaturesManager,
+        FeatureFlagProvider(UserManager, ApiPrefs),
+        DiscussionManager,
+        GroupManager
+    )
 
     private var routeModuleProgressionJob: Job? = null
     private var moduleItemsJob: Job? = null
@@ -88,6 +94,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     // This will keep track of where we need to be.
     private var currentPos = 0
 
+    private var isDiscussionRedesignEnabled = false
+
     val tabId: String
         get() = Tab.MODULES_ID
 
@@ -110,7 +118,12 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        loadModuleProgression(savedInstanceState)
+        weave {
+            isDiscussionRedesignEnabled = discussionRouteHelper.isDiscussionRedesignEnabled(canvasContext)
+            onUI {
+                loadModuleProgression(savedInstanceState)
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -629,7 +642,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             // so we need to find the correct one overall
             val moduleItem = getCurrentModuleItem(position) ?: getCurrentModuleItem(0) // Default to the first item, band-aid for NPE
 
-            val fragment = ModuleUtility.getFragment(moduleItem!!, canvasContext as Course, modules[groupPos])
+            val fragment = ModuleUtility.getFragment(moduleItem!!, canvasContext as Course, modules[groupPos], isDiscussionRedesignEnabled)
             var args: Bundle? = fragment!!.arguments
             if (args == null) {
                 args = Bundle()
@@ -835,7 +848,7 @@ enum class ModuleItemAsset(val assetType: String, val assetIdParamName: String, 
     MODULE_ITEM("ModuleItem", RouterParams.MODULE_ITEM_ID),
     PAGE("Page", RouterParams.PAGE_ID, PageDetailsFragment::class.java),
     QUIZ("Quiz", RouterParams.QUIZ_ID, BasicQuizViewFragment::class.java),
-    DISCUSSION("Discussion", RouterParams.MESSAGE_ID, DiscussionDetailsFragment::class.java),
+    DISCUSSION("Discussion", RouterParams.MESSAGE_ID, DiscussionRouterFragment::class.java),
     ASSIGNMENT("Assignment", RouterParams.ASSIGNMENT_ID, AssignmentDetailsFragment::class.java),
     FILE("File", RouterParams.FILE_ID, FileDetailsFragment::class.java);
 

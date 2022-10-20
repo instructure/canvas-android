@@ -138,7 +138,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Discussions
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics"), DiscussionListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, DiscussionRouterFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, CourseModuleProgressionFragment::class.java))
 
         // Pages
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages"), PageListFragment::class.java))
