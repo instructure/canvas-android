@@ -289,7 +289,7 @@ class RouterUtilsTest : TestCase() {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/discussion_topics/1234")
         assertNotNull(route)
         assertEquals(DiscussionListFragment::class.java, route!!.primaryClass)
-        assertEquals(DiscussionRouterFragment::class.java, route.secondaryClass)
+        assertEquals(CourseModuleProgressionFragment::class.java, route.secondaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
