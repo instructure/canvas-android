@@ -43,7 +43,7 @@ class EmptyFragment: Fragment() {
         toolbar.title = ""
         emptyTitle.text = mTitle
         emptyMessage.text = getString(R.string.emptyDetailsMessage)
-        val toolbarBackgroundColor = if (mCourse?.backgroundColor != null) mCourse?.backgroundColor!! else ThemePrefs.primaryColor
+        val toolbarBackgroundColor = mCourse?.backgroundColor ?: ThemePrefs.primaryColor
         val toolbarTextColor = if (mCourse?.backgroundColor != null) requireContext().getColor(R.color.white) else ThemePrefs.primaryTextColor
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarBackgroundColor, toolbarTextColor)
     }
