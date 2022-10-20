@@ -1,14 +1,14 @@
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.WaitForToolbarTitle
+import org.hamcrest.CoreMatchers.allOf
 
 class InboxPage: BasePage() {
 
@@ -62,4 +62,15 @@ class InboxPage: BasePage() {
         onView(withId(R.id.filterButton)).click()
         waitForViewWithText(filterFor).click()
     }
+
+    fun assertThereIsAnUnreadMessage(unread: Boolean) {
+        if(unread) onView(withId(R.id.unreadMark)).assertDisplayed()
+        else onView(withId(R.id.unreadMark) + ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE))
+    }
+
+    fun assertConversationStarred(recipients: String) {
+        onView(allOf(withId(R.id.star) + hasSibling(withId(R.id.userName) + withText(recipients))))
+    }
+
+
 }

@@ -16,7 +16,6 @@
  */
 package com.instructure.student.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -73,7 +72,7 @@ class AccountPreferencesFragment : ParentFragment() {
     override fun applyTheme() {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     private fun setupViews() {

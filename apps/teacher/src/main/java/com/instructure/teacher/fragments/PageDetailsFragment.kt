@@ -53,7 +53,6 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLDecoder
 
 @ScreenView(SCREEN_VIEW_PAGE_DETAILS)
 class PageDetailsFragment : BasePresenterFragment<
@@ -173,15 +172,12 @@ class PageDetailsFragment : BasePresenterFragment<
 
     override fun populatePageDetails(page: Page) {
         mPage = page
-        loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, {
-            val args = LtiLaunchFragment.makeBundle(mCanvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-        }, page.title)
+        loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), page.body, {
+            canvasWebView.loadHtml(it, page.title, baseUrl = mPage.htmlUrl)
+        }) {
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCanvasContext, it)
+        }
         setupToolbar()
-    }
-
-    private fun loadPageHtml(html: String, contentDescription: String?) {
-        canvasWebView.loadHtml(html, contentDescription, baseUrl = mPage.htmlUrl)
     }
 
     override fun onError(stringId: Int) {

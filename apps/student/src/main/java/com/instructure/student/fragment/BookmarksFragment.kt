@@ -96,7 +96,7 @@ class BookmarksFragment : ParentFragment() {
             }
         }
 
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     private fun applyEmptyImage() {

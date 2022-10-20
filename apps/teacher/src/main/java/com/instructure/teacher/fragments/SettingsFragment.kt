@@ -46,7 +46,12 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         versionTextView.text = getString(R.string.fullVersion, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
-        profileButton.onClick { RouteMatcher.route(requireContext(), Route(ProfileFragment::class.java, null)) }
+        profileButton.onClick {
+            RouteMatcher.route(
+                requireContext(),
+                Route(null, ProfileFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
+            )
+        }
         rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), AppType.TEACHER) }
         legalButton.onClick { LegalDialog().show(requireFragmentManager(), LegalDialog.TAG) }
         notificationPreferenesButton.onClick {
@@ -103,8 +108,7 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
     fun setupToolbar() {
         toolbar.setupBackButton(this)
         toolbar.title = getString(R.string.settings)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
-        ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     override fun onRefreshStarted() {}

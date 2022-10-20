@@ -3,6 +3,7 @@ package com.instructure.teacher.ui.e2e
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -57,9 +58,10 @@ class InboxE2ETest : TeacherTest() {
             recipients = listOf(teacher.id.toString())
         )
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that the previously seeded Inbox conversation is displayed.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that the previously seeded Inbox conversation is displayed. Assert that the message is unread yet.")
         inboxPage.refresh()
         inboxPage.assertHasConversation()
+        inboxPage.assertThereIsAnUnreadMessage(true)
 
         val replyMessage = "Hello there"
         Log.d(STEP_TAG,"Click on the conversation. Write a reply with the message: '$replyMessage'.")
@@ -72,6 +74,9 @@ class InboxE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Navigate back to Inbox Page.")
         Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Assert that the message is not unread anymore.")
+        inboxPage.assertThereIsAnUnreadMessage(false)
 
         Log.d(STEP_TAG,"Add a new conversation message manually via UI. Click on 'New Message' ('+') button.")
         inboxPage.clickAddMessageFAB()
@@ -107,6 +112,66 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Navigate back after it has opened. Assert that the conversation is still displayed on the Inbox Page after opening it.")
         Espresso.pressBack()
         inboxPage.assertHasConversation()
+
+        Log.d(STEP_TAG,"Filter the Inbox by selecting 'All' category from the spinner on Inbox Page.")
+        inboxPage.filterInbox("All")
+
+        Log.d(STEP_TAG,"Refresh the page. Assert that the previously seeded Inbox conversation is displayed.")
+        inboxPage.refresh()
+        inboxPage.assertHasConversation()
+
+        Log.d(STEP_TAG,"Click on the conversation. Write a reply with the message: '$replyMessage'.")
+        inboxPage.clickConversation(seedConversation[0])
+
+        Log.d(STEP_TAG, "Star the conversation and navigate back to Inbox Page.")
+        inboxMessagePage.clickOnStarConversation()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Assert that the '${seedConversation[0]}' conversation has been starred.")
+        inboxPage.assertConversationStarred(student1.name + ", " + student2.name)
+
+        Log.d(STEP_TAG,"Click on the conversation. Write a reply with the message: '$replyMessage'.")
+        inboxPage.clickConversation(seedConversation[0])
+
+        Log.d(STEP_TAG, "Archive the '${seedConversation[0]}' conversation and assert that it has disappeared from the list," +
+                "because archived conversations does not displayed within the 'All' section.")
+        inboxMessagePage.openOptionMenuFor("Archive")
+        dashboardPage.assertPageObjects()
+        inboxPage.assertInboxEmpty()
+
+        Log.d(STEP_TAG,"Filter the Inbox by selecting 'Archived' category from the spinner on Inbox Page." +
+                "Assert that the previously archived conversation is displayed.")
+        inboxPage.filterInbox("Archived")
+        inboxPage.assertHasConversation()
+
+        Log.d(STEP_TAG,"Filter the Inbox by selecting 'Starred' category from the spinner on Inbox Page." +
+                "Assert that the '${seedConversation[0]}' conversation is displayed because it's still starred.")
+        inboxPage.filterInbox("Starred")
+        inboxPage.assertHasConversation()
+
+        Log.d(STEP_TAG,"Click on the conversation.")
+        inboxPage.clickConversation(seedConversation[0])
+
+        Log.d(STEP_TAG, "Remove star from the conversation and navigate back to Inbox Page.")
+        inboxMessagePage.clickOnStarConversation()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Assert that the '${seedConversation[0]}' conversation is disappeared because it's not starred yet.")
+        dashboardPage.assertPageObjects()
+        inboxPage.assertInboxEmpty()
+
+        Log.d(STEP_TAG,"Filter the Inbox by selecting 'Archived' category from the spinner on Inbox Page. Assert that the '${seedConversation[0]}' conversation is displayed.")
+        inboxPage.filterInbox("Archived")
+        inboxPage.assertHasConversation()
+
+        Log.d(STEP_TAG,"Click on the conversation.")
+        inboxPage.clickConversation(seedConversation[0])
+
+        Log.d(STEP_TAG, "Delete the '${seedConversation[0]}' conversation and assert that it has disappeared from the list.")
+        inboxMessagePage.deleteConversation()
+        refresh() //This is needed because Archive list (and the other 'specific' ones) does not refreshing automatically like the 'All'.
+        inboxPage.assertPageObjects()
+        inboxPage.assertInboxEmpty()
 
     }
 

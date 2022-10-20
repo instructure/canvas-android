@@ -16,7 +16,9 @@
  */
 package com.instructure.student.mobius.settings.pairobserver.ui
 
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAIR_OBSERVER
@@ -40,6 +42,11 @@ class PairObserverFragment : MobiusFragment<PairObserverModel, PairObserverEvent
 
     override fun makeInitModel() =
         PairObserverModel(domain = ApiPrefs.domain)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        applyTheme()
+    }
 
     companion object {
         fun newInstance() = PairObserverFragment()

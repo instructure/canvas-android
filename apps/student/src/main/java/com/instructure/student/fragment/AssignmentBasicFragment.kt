@@ -38,7 +38,6 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_BASIC)
@@ -137,17 +136,13 @@ class AssignmentBasicFragment : ParentFragment() {
             description = "<p>" + getString(R.string.noDescription) + "</p>"
         }
 
-        loadHtmlJob = assignmentWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(),
-                ::loadDescriptionHtml, {
-            val args = LtiLaunchFragment.makeLTIBundle(
-                    URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-        }, assignment.name)
+        loadHtmlJob = assignmentWebView.loadHtmlWithIframes(requireContext(), description, {
+            assignmentWebView.loadHtml(it, assignment.name)
+        }, {
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+        })
     }
 
-    private fun loadDescriptionHtml(html: String, contentDescription: String?) {
-        assignmentWebView.loadHtml(html, contentDescription)
-    }
     //endregion
 
     //region Bus Events
