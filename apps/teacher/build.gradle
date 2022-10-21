@@ -24,6 +24,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.heapanalytics.android'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -104,6 +105,12 @@ android {
                 // you can speed up your build by disabling mapping file uploading.
                 mappingFileUploadEnabled false
             }
+
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+
+            ext {
+                heapEnabled = true
+            }
         }
         release {
             minifyEnabled true
@@ -119,6 +126,11 @@ android {
             buildConfigField "boolean", "POINT_EIGHT", "false"
             buildConfigField "boolean", "POINT_NINE", "false"
 
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
+
+            ext {
+                heapEnabled = true
+            }
         }
     }
 
@@ -279,6 +291,8 @@ dependencies {
     /* WorkManager */
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
+
+    implementation Libs.HEAP
 }
 
 apply plugin: 'com.google.gms.google-services'
