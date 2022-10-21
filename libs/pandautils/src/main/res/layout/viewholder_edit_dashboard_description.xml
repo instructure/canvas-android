@@ -13,7 +13,6 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -21,27 +20,15 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardEnrollmentItemViewModel" />
+            type="com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardDescriptionItemViewModel" />
     </data>
 
-    <RelativeLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@{itemViewModel.title}"
-            android:textColor="@color/textDark"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="Current enrollments" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/backgroundMedium" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@{itemViewModel.description}"
+        android:textColor="@color/textDarkest"
+        android:textSize="17sp"
+        tools:text="Select courses for Dashboard or navigate to course details." />
 </layout>

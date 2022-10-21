@@ -15,16 +15,20 @@
  */
 package com.instructure.teacher.fragments
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.view.MenuItem
 import android.view.View
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
@@ -32,7 +36,6 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.CoursesAdapter
 import com.instructure.teacher.decorations.VerticalGridSpacingDecoration
-import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.CourseColorOverlayToggledEvent
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CoursesPresenterFactory
@@ -40,18 +43,23 @@ import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.CoursesPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.TeacherPrefs
-import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.CoursesView
-import kotlinx.android.synthetic.main.fragment_courses.*
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 private const val LIST_SPAN_COUNT = 1
 
 @ScreenView(SCREEN_VIEW_DASHBOARD)
-class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
+@AndroidEntryPoint
+class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
+
+    @Inject
+    lateinit var editDashboardRouter: EditDashboardRouter
 
     private lateinit var mGridLayoutManager: GridLayoutManager
     private lateinit var mDecorator: VerticalGridSpacingDecoration
@@ -61,7 +69,16 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     private var mCourseBrowserCallback: AllCoursesFragment.CourseBrowserCallback? = null
     private var mNeedToForceNetwork = false
 
-    override fun layoutResId() = R.layout.fragment_courses
+    private val somethingChangedReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent?) {
+            if (intent?.extras?.getBoolean(Const.COURSE_FAVORITES) == true) {
+                swipeRefreshLayout?.isRefreshing = true
+                presenter.refresh(true)
+            }
+        }
+    }
+
+    override fun layoutResId() = R.layout.fragment_dashboard
     override val recyclerView: RecyclerView get() = courseRecyclerView
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun withPagination() = false
@@ -82,11 +99,13 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
 
     override fun onStart() {
         super.onStart()
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(somethingChangedReceiver, IntentFilter(Const.COURSE_THING_CHANGED))
         EventBus.getDefault().register(this)
     }
 
     override fun onStop() {
         super.onStop()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(somethingChangedReceiver)
         EventBus.getDefault().unregister(this)
     }
 
@@ -118,7 +137,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         courseRecyclerView.setPaddingRelative(padding, paddingTop, padding, padding)
         courseRecyclerView.clipToPadding = false
 
-        emptyCoursesView.onClickAddCourses { editFavorites() }
+        emptyCoursesView.onClickAddCourses { mCourseListCallback?.onShowAllCoursesList() }
         setupHeader()
 
         setupToolbar()
@@ -126,20 +145,12 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
             courseRecyclerView.adapter = adapter
         }
         presenter.loadData(mNeedToForceNetwork)
-        mNeedToForceNetwork  = false
-    }
-
-    private fun editFavorites() {
-        if(APIHelper.hasNetworkConnection()) {
-            mCourseListCallback?.onShowEditFavoritesList()
-        } else {
-            NoInternetConnectionDialog.show(requireFragmentManager())
-        }
+        mNeedToForceNetwork = false
     }
 
     private fun setupHeader() {
-        seeAllTextView.setTextColor(ThemePrefs.buttonColor)
-        seeAllTextView.setOnClickListener { mCourseListCallback?.onShowAllCoursesList() }
+        editDashboardTextView.setTextColor(ThemePrefs.buttonColor)
+        editDashboardTextView.setOnClickListener { mCourseListCallback?.onShowAllCoursesList() }
     }
 
     private fun setupToolbar() {
@@ -166,7 +177,6 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
-            R.id.menu_edit_favorite_courses -> editFavorites()
             R.id.menu_dashboard_cards -> changeDashboardLayout(item)
         }
     }
@@ -228,7 +238,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     companion object {
-        fun getInstance() = CoursesFragment()
+        fun getInstance() = DashboardFragment()
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")

@@ -14,15 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.edit.itemviewmodels
+package com.instructure.pandautils.features.dashboard.edit
 
-import androidx.annotation.StringRes
-import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.student.R
-import com.instructure.student.features.dashboard.edit.EditDashboardItemViewType
+import com.instructure.canvasapi2.models.CanvasContext
 
-class EditDashboardEnrollmentItemViewModel(@get:StringRes val title: Int) : ItemViewModel {
-    override val layoutId: Int = R.layout.viewholder_edit_dashboard_enrollment
-
-    override val viewType: Int = EditDashboardItemViewType.ENROLLMENT.viewType
+interface EditDashboardRouter {
+    fun routeCourse(canvasContext: CanvasContext?)
 }

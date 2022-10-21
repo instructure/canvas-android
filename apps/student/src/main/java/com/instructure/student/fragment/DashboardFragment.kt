@@ -42,6 +42,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -52,7 +53,6 @@ import com.instructure.student.dialog.EditCourseNicknameDialog
 import com.instructure.student.events.CoreDataFinishedLoading
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
-import com.instructure.student.features.dashboard.edit.EditDashboardFragment
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher

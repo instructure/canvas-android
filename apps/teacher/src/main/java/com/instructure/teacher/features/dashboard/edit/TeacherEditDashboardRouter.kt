@@ -14,29 +14,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.di
+package com.instructure.teacher.features.dashboard.edit
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
-import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
-import com.instructure.student.features.dashboard.edit.StudentEditDashboardRouter
-import com.instructure.student.features.dashboard.notifications.StudentDashboardRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import com.instructure.teacher.fragments.CourseBrowserFragment
+import com.instructure.teacher.router.RouteMatcher
 
-@Module
-@InstallIn(FragmentComponent::class)
-class DashboardModule {
-
-    @Provides
-    fun provideDashboardRouter(activity: FragmentActivity): DashboardRouter {
-        return StudentDashboardRouter(activity)
-    }
-
-    @Provides
-    fun provideEditDashboardRouter(activity: FragmentActivity): EditDashboardRouter {
-        return StudentEditDashboardRouter(activity)
+class TeacherEditDashboardRouter(private val activity: FragmentActivity) : EditDashboardRouter {
+    override fun routeCourse(canvasContext: CanvasContext?) {
+        RouteMatcher.route(activity, CourseBrowserFragment.makeRoute(canvasContext))
     }
 }

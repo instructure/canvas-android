@@ -21,7 +21,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardHeaderViewModel" />
+            type="com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardHeaderViewModel" />
     </data>
 
     <RelativeLayout

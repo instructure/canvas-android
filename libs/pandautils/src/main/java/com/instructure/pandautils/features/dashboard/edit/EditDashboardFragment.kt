@@ -15,7 +15,7 @@
  */
 
 
-package com.instructure.student.features.dashboard.edit
+package com.instructure.pandautils.features.dashboard.edit
 
 import android.content.Intent
 import android.os.Bundle
@@ -28,21 +28,23 @@ import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.databinding.FragmentEditDashboardBinding
 import com.instructure.pandautils.utils.*
-import com.instructure.student.R
-import com.instructure.student.databinding.FragmentEditDashboardBinding
-import com.instructure.student.fragment.CourseBrowserFragment
-import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_edit_dashboard.*
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_EDIT_DASHBOARD)
 @AndroidEntryPoint
 class EditDashboardFragment : Fragment() {
 
     private val viewModel: EditDashboardViewModel by viewModels()
+
+    @Inject
+    lateinit var editDashboardRouter: EditDashboardRouter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -91,7 +93,7 @@ class EditDashboardFragment : Fragment() {
     private fun handleAction(action: EditDashboardItemAction) {
         when (action) {
             is EditDashboardItemAction.OpenItem -> {
-                RouteMatcher.route(requireContext(), CourseBrowserFragment.makeRoute(action.canvasContext))
+                editDashboardRouter.routeCourse(action.canvasContext)
             }
             is EditDashboardItemAction.ShowSnackBar -> {
                 Snackbar.make(requireView(), action.res, Snackbar.LENGTH_LONG).show()

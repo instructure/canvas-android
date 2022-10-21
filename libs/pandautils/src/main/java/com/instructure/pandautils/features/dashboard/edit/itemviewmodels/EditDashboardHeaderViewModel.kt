@@ -14,14 +14,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.edit.itemviewmodels
+package com.instructure.pandautils.features.dashboard.edit.itemviewmodels
 
 import androidx.annotation.StringRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardItemViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.student.R
-import com.instructure.student.features.dashboard.edit.EditDashboardItemViewType
 
 class EditDashboardHeaderViewModel(
         @get:StringRes val title: Int,

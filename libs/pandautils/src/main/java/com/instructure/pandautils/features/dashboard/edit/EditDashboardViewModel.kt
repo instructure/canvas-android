@@ -15,28 +15,28 @@
  */
 
 
-package com.instructure.student.features.dashboard.edit
+package com.instructure.pandautils.features.dashboard.edit
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.*
-import com.instructure.canvasapi2.utils.weave.awaitApis
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.isNotDeleted
+import com.instructure.canvasapi2.utils.isPublished
+import com.instructure.canvasapi2.utils.isValidTerm
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.*
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.student.R
-import com.instructure.student.features.dashboard.edit.itemviewmodels.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel

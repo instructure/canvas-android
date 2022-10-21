@@ -21,7 +21,7 @@
 
         <variable
             name="viewModel"
-            type="com.instructure.student.features.dashboard.edit.EditDashboardViewModel" />
+            type="com.instructure.pandautils.features.dashboard.edit.EditDashboardViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

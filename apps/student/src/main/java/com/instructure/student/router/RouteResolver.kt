@@ -3,13 +3,13 @@ package com.instructure.student.router
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.dashboard.edit.EditDashboardFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*

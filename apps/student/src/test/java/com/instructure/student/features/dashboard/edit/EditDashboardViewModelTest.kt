@@ -24,18 +24,25 @@ import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Favorite
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.canvasapi2.utils.weave.awaitApis
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardItemAction
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.*
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.R
-import com.instructure.student.features.dashboard.edit.itemviewmodels.*
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -47,7 +54,6 @@ import org.junit.Test
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
-import java.util.*
 
 @ExperimentalCoroutinesApi
 class EditDashboardViewModelTest {

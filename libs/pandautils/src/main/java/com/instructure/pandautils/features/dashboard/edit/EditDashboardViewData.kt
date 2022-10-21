@@ -14,12 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.edit
+package com.instructure.pandautils.features.dashboard.edit
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardCourseItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardCourseItemViewModel
-import com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel
 
 data class EditDashboardViewData(val items: List<ItemViewModel>)
 

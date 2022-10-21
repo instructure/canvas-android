@@ -52,7 +52,7 @@ import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.fragments.FileListFragment
-import java.util.Locale
+import java.util.*
 
 object RouteMatcher : BaseRouteMatcher() {
 
@@ -65,14 +65,14 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     private fun initRoutes() {
-        routes.add(Route("/", CoursesFragment::class.java))
+        routes.add(Route("/", DashboardFragment::class.java))
 
         routes.add(Route("/login.*", RouteContext.DO_NOT_ROUTE))//FIXME: we know about this
 
         routes.add(Route("/conversations", InboxFragment::class.java))
         routes.add(Route("/conversations/:conversation_id", MessageThreadFragment::class.java))
 
-        routes.add(Route(courseOrGroup("/"), CoursesFragment::class.java))
+        routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id"), CourseBrowserFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusFragment::class.java))
@@ -115,7 +115,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
     private fun initClassMap() {
         // Fullscreen Fragments
-        fullscreenFragments.add(CoursesFragment::class.java)
+        fullscreenFragments.add(DashboardFragment::class.java)
         fullscreenFragments.add(AllCoursesFragment::class.java)
         fullscreenFragments.add(ProfileFragment::class.java)
         fullscreenFragments.add(ViewImageFragment::class.java)
@@ -325,7 +325,7 @@ object RouteMatcher : BaseRouteMatcher() {
             ProfileFragment::class.java.isAssignableFrom(cls) -> fragment = ProfileFragment()
             CourseBrowserFragment::class.java.isAssignableFrom(cls) -> fragment = CourseBrowserFragment.newInstance((canvasContext as Course?)!!)
             CourseBrowserEmptyFragment::class.java.isAssignableFrom(cls) -> fragment = CourseBrowserEmptyFragment.newInstance((canvasContext as Course?)!!)
-            CoursesFragment::class.java.isAssignableFrom(cls) -> fragment = CoursesFragment.getInstance()
+            DashboardFragment::class.java.isAssignableFrom(cls) -> fragment = DashboardFragment.getInstance()
             AssignmentListFragment::class.java.isAssignableFrom(cls) -> fragment = AssignmentListFragment.getInstance(canvasContext!!, route.arguments)
             AssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getAssignmentDetailsFragment(canvasContext, route)
             DueDatesFragment::class.java.isAssignableFrom(cls) -> fragment = DueDatesFragment.getInstance((canvasContext as Course?)!!, route.arguments)

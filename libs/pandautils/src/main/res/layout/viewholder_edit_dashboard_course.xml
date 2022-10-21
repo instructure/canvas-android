@@ -21,7 +21,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel" />
+            type="com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardCourseItemViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:contentDescription="@{itemViewModel.favorite ? @string/groupFavorited(itemViewModel.name) : @string/groupNotFavorited(itemViewModel.name)}"
+            android:contentDescription="@{itemViewModel.favorite ? @string/courseFavorited(itemViewModel.name) : @string/courseNotFavorited(itemViewModel.name)}"
             android:onClick="@{() -> itemViewModel.onClick()}"
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
@@ -43,12 +43,13 @@
                 android:id="@+id/favoriteButton"
                 android:layout_width="56dp"
                 android:layout_height="48dp"
+                android:alpha="@{itemViewModel.favoriteable ? 1.0f : 0.5f}"
                 android:contentDescription="@{itemViewModel.favorite ? @string/a11y_content_description_remove_from_dashboard : @string/a11y_content_description_add_to_dashboard}"
                 android:onClick="@{() -> itemViewModel.onFavoriteClick()}"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:src="@{itemViewModel.favorite ? @drawable/ic_star_filled : @drawable/ic_star_outline}"
-                android:tint="@color/textInfo"
+                android:tint="@{itemViewModel.favoriteable ? @color/textInfo : @color/textDarkest}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -61,24 +62,11 @@
                 android:text="@{itemViewModel.name}"
                 android:textColor="@color/textDarkest"
                 android:textSize="17sp"
+                app:layout_constraintBottom_toTopOf="@+id/termTitle"
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
                 app:layout_constraintStart_toEndOf="@id/favoriteButton"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Course name" />
-
-            <TextView
-                android:id="@+id/subtitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:importantForAccessibility="no"
-                android:text="@{itemViewModel.subtitle}"
-                android:textColor="@color/textDark"
-                android:textSize="15sp"
-                android:visibility="@{itemViewModel.subtitle == null ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toStartOf="@+id/openButton"
-                app:layout_constraintStart_toEndOf="@id/favoriteButton"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                tools:text="Interaction Design for Usability" />
 
             <TextView
                 android:id="@+id/termTitle"
@@ -90,9 +78,10 @@
                 android:textColor="@color/textDark"
                 android:textSize="12sp"
                 android:visibility="@{itemViewModel.termTitle == null ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/openButton"
                 app:layout_constraintStart_toEndOf="@id/favoriteButton"
-                app:layout_constraintTop_toBottomOf="@id/subtitle"
+                app:layout_constraintTop_toBottomOf="@id/title"
                 tools:text="DEFAULT TERM | STUDENT" />
 
             <ImageView
@@ -101,6 +90,8 @@
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_open_arrow"
+                android:visibility="@{itemViewModel.openable ? View.VISIBLE : View.GONE}"
+                android:tint="@color/textDark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
