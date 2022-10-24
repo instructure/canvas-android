@@ -66,7 +66,7 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
 
     // Activity callbacks
     private var mCourseListCallback: CourseListCallback? = null
-    private var mCourseBrowserCallback: AllCoursesFragment.CourseBrowserCallback? = null
+    private var mCourseBrowserCallback: CourseBrowserCallback? = null
     private var mNeedToForceNetwork = false
 
     private val somethingChangedReceiver = object : BroadcastReceiver() {
@@ -88,7 +88,7 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is CourseListCallback) mCourseListCallback = context
-        if (context is AllCoursesFragment.CourseBrowserCallback) mCourseBrowserCallback = context
+        if (context is CourseBrowserCallback) mCourseBrowserCallback = context
     }
 
     override fun onDetach() {
@@ -137,7 +137,7 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
         courseRecyclerView.setPaddingRelative(padding, paddingTop, padding, padding)
         courseRecyclerView.clipToPadding = false
 
-        emptyCoursesView.onClickAddCourses { mCourseListCallback?.onShowAllCoursesList() }
+        emptyCoursesView.onClickAddCourses { mCourseListCallback?.onEditDashboard() }
         setupHeader()
 
         setupToolbar()
@@ -150,7 +150,7 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
 
     private fun setupHeader() {
         editDashboardTextView.setTextColor(ThemePrefs.buttonColor)
-        editDashboardTextView.setOnClickListener { mCourseListCallback?.onShowAllCoursesList() }
+        editDashboardTextView.setOnClickListener { mCourseListCallback?.onEditDashboard() }
     }
 
     private fun setupToolbar() {
@@ -233,8 +233,7 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
     }
 
     interface CourseListCallback {
-        fun onShowAllCoursesList()
-        fun onShowEditFavoritesList()
+        fun onEditDashboard()
     }
 
     companion object {
@@ -260,5 +259,11 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
                 mNeedToForceNetwork = true
             }
         }
+    }
+
+    interface CourseBrowserCallback {
+        fun onShowCourseDetails(course: Course)
+        fun onPickCourseColor(course: Course)
+        fun onEditCourseNickname(course: Course)
     }
 }

@@ -66,7 +66,6 @@ import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.tasks.TeacherLogoutTask
-import com.instructure.teacher.utils.AppType
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.isTablet
@@ -83,7 +82,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(), InitActivityView,
-    DashboardFragment.CourseListCallback, AllCoursesFragment.CourseBrowserCallback, InitActivityInteractions,
+    DashboardFragment.CourseListCallback, DashboardFragment.CourseBrowserCallback, InitActivityInteractions,
     MasqueradingDialog.OnMasqueradingSet, ErrorReportDialog.ErrorReportDialogResultListener {
 
     @Inject
@@ -481,13 +480,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         ft.commit()
     }
 
-    override fun onShowAllCoursesList() {
+    override fun onEditDashboard() {
         RouteMatcher.route(this, EditDashboardFragment.makeRoute())
-    }
-
-    override fun onShowEditFavoritesList() {
-        val args = EditFavoritesFragment.makeBundle(AppType.TEACHER)
-        RouteMatcher.route(this, Route(EditFavoritesFragment::class.java, null, args))
     }
 
     override fun onEditCourseNickname(course: Course) {

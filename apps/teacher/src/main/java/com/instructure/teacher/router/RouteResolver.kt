@@ -89,8 +89,6 @@ object RouteResolver {
             fragment = EditAssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
         } else if (AssigneeListFragment::class.java.isAssignableFrom(cls)) {
             fragment = AssigneeListFragment.newInstance(route.arguments)
-        } else if (EditFavoritesFragment::class.java.isAssignableFrom(cls)) {
-            fragment = EditFavoritesFragment.newInstance(route.arguments)
         } else if (CourseSettingsFragment::class.java.isAssignableFrom(cls)) {
             fragment = CourseSettingsFragment.newInstance((canvasContext as Course?)!!)
         } else if (QuizListFragment::class.java.isAssignableFrom(cls)) {

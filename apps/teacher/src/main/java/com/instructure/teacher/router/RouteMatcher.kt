@@ -116,7 +116,6 @@ object RouteMatcher : BaseRouteMatcher() {
     private fun initClassMap() {
         // Fullscreen Fragments
         fullscreenFragments.add(DashboardFragment::class.java)
-        fullscreenFragments.add(AllCoursesFragment::class.java)
         fullscreenFragments.add(ProfileFragment::class.java)
         fullscreenFragments.add(ViewImageFragment::class.java)
         fullscreenFragments.add(FullscreenInternalWebViewFragment::class.java)
@@ -126,7 +125,6 @@ object RouteMatcher : BaseRouteMatcher() {
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)
         bottomSheetFragments.add(AssigneeListFragment::class.java)
-        bottomSheetFragments.add(EditFavoritesFragment::class.java)
         bottomSheetFragments.add(CourseSettingsFragment::class.java)
         bottomSheetFragments.add(EditQuizDetailsFragment::class.java)
         bottomSheetFragments.add(QuizPreviewWebviewFragment::class.java)
@@ -333,7 +331,6 @@ object RouteMatcher : BaseRouteMatcher() {
             PostPolicyFragment::class.java.isAssignableFrom(cls) -> fragment = PostPolicyFragment.newInstance(route.argsWithContext)
             EditAssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = EditAssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
             AssigneeListFragment::class.java.isAssignableFrom(cls) -> fragment = AssigneeListFragment.newInstance(route.arguments)
-            EditFavoritesFragment::class.java.isAssignableFrom(cls) -> fragment = EditFavoritesFragment.newInstance(route.arguments)
             CourseSettingsFragment::class.java.isAssignableFrom(cls) -> fragment = CourseSettingsFragment.newInstance((canvasContext as Course?)!!)
             QuizListFragment::class.java.isAssignableFrom(cls) -> fragment = QuizListFragment.newInstance(canvasContext!!)
             QuizDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getQuizDetailsFragment(canvasContext, route)

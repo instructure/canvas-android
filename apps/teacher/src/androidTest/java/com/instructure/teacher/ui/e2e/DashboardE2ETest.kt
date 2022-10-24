@@ -19,7 +19,6 @@ package com.instructure.teacher.ui.e2e
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.refresh
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -59,24 +58,7 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.assertDisplaysCourse(course2)
 
         Log.d(STEP_TAG,"Click on 'See All' button.")
-        dashboardPage.clickSeeAll()
-
-        Log.d(STEP_TAG,"Refresh the page. Assert that both of the courses, ${course1.name} and ${course2.name} are displayed.")
-        refresh()
-        for (course in data.coursesList) {
-            allCoursesListPage.assertDisplaysCourse(course)
-        }
-
-        Log.d(STEP_TAG,"Navigate back to the Dashboard Page.")
-        allCoursesListPage.navigateBack()
-
-        Log.d(STEP_TAG,"Click on 'Edit Courses' and toggle 'Favourite' icon of ${course2.name} course")
-        dashboardPage.openEditCoursesListPage()
-        editCoursesListPage.toggleFavoritingCourse(course2.name)
-
-        Log.d(STEP_TAG,"Navigate back to Dashboard Page and refresh it.")
-        editCoursesListPage.navigateBack()
-        refresh()
+        dashboardPage.clickEditDashboard()
 
         Log.d(STEP_TAG,"Assert that only the favourited course (${course2.name} is displayed.")
         dashboardPage.assertDisplaysCourse(course2)
@@ -84,14 +66,6 @@ class DashboardE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Opens ${course2.name} course and assert if Course Details Page has been opened. Navigate back to Dashboard Page.")
         dashboardPage.assertOpensCourse(course2)
         Espresso.pressBack()
-
-        Log.d(STEP_TAG,"Click on 'Edit Courses' and untoggle 'Favourite' icon of ${course2.name} course.")
-        dashboardPage.openEditCoursesListPage()
-        editCoursesListPage.toggleFavoritingCourse(course2.name)
-
-        Log.d(STEP_TAG,"Navigate back to Dashboard Page and refresh it.")
-        editCoursesListPage.navigateBack()
-        refresh()
 
         Log.d(STEP_TAG,"Assert that both of the courses, ${course1.name} and ${course2.name} are displayed.")
         dashboardPage.assertDisplaysCourse(course1)
