@@ -51,6 +51,7 @@ abstract class TeacherTest : CanvasTest() {
     val assignmentDueDatesPage = AssignmentDueDatesPage()
     val assignmentListPage = AssignmentListPage()
     val assignmentSubmissionListPage = AssignmentSubmissionListPage()
+    val postSettingsPage = PostSettingsPage()
     val calendarEventPage = CalendarEventPage()
     val chooseRecipientsPage = ChooseRecipientsPage()
     val commentLibraryPage = CommentLibraryPage()
