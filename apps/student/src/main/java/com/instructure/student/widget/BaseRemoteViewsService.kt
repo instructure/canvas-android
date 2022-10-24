@@ -21,6 +21,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import android.widget.RemoteViewsService
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
 import com.instructure.student.activity.WidgetSetupActivity
 import com.instructure.student.util.StudentPrefs
@@ -33,6 +35,13 @@ abstract class BaseRemoteViewsService : RemoteViewsService() {
             val widgetBackgroundPref = getWidgetBackgroundPref(widgetId)
             return if (widgetBackgroundPref.equals(WidgetSetupActivity.WIDGET_BACKGROUND_COLOR_LIGHT, ignoreCase = true))
                 ContextCompat.getColor(context, R.color.licorice) else ContextCompat.getColor(context, R.color.white)
+        }
+
+        fun getCanvasContextTextColor(widgetId: Int, canvasContext: CanvasContext?): Int {
+            val widgetBackgroundPref = getWidgetBackgroundPref(widgetId)
+            val widgetBackgroundLight = widgetBackgroundPref.equals(WidgetSetupActivity.WIDGET_BACKGROUND_COLOR_LIGHT, ignoreCase = true)
+            val themedColor = ColorKeeper.getOrGenerateColor(canvasContext)
+            return if (widgetBackgroundLight) themedColor.light else themedColor.darkTextAndIconColor
         }
 
         fun getWidgetBackgroundResourceId(widgetId: Int): Int {

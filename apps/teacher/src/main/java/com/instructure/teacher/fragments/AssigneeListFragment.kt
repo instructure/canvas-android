@@ -125,7 +125,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         toolbar.setupMenu(R.menu.menu_save_generic) { performSave() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     override fun onRefreshStarted() {

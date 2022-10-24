@@ -43,9 +43,7 @@ import org.junit.Test
 class SpeedGraderE2ETest : TeacherTest() {
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -160,5 +158,33 @@ class SpeedGraderE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Assert that there is one submission displayed.")
         assignmentSubmissionListPage.assertHasSubmission(1)
+
+        Log.d(STEP_TAG, "Navigate back assignment's details page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of ${student.name} student is displayed.")
+        assignmentDetailsPage.openSubmissionsPage()
+        
+        Log.d(STEP_TAG, "Click on 'Post Policies' (eye) icon.")
+        assignmentSubmissionListPage.clickOnPostPolicies()
+
+        Log.d(STEP_TAG, "Assert that there is 1 grade which is hidden at this moment.")
+        postSettingsPage.assertPostPolicyStatusCount(1, true)
+
+        Log.d(STEP_TAG, "Click on 'Post Grades' button, navigate back to the Post Policies page." +
+                "Assert that the empty view is displayed on the 'Post Grades' tab.")
+        postSettingsPage.clickOnPostGradesButton()
+        assignmentSubmissionListPage.clickOnPostPolicies()
+        postSettingsPage.assertEmptyView()
+
+        Log.d(STEP_TAG, "Click on 'Hide Grades' tab. Assert that there are 3 posted grades at this moment.")
+        postSettingsPage.clickOnTab(R.string.hideGradesTab)
+        postSettingsPage.assertPostPolicyStatusCount(3, false)
+
+        Log.d(STEP_TAG, "Click on 'Hide Grades' button. It will navigate back to the Assignment Submission List Page." +
+                "Assert that the hide grades (eye) icon is displayed next to the corresponding (graded) students.")
+        postSettingsPage.clickOnHideGradesButton()
+        assignmentSubmissionListPage.assertGradesHidden(gradedStudent.name)
+        assignmentSubmissionListPage.assertGradesHidden(student.name)
     }
 }

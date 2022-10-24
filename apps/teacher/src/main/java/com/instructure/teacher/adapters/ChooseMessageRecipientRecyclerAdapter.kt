@@ -36,7 +36,7 @@ class ChooseMessageRecipientRecyclerAdapter(
 ) : SyncRecyclerAdapter<Recipient, RecipientViewHolder, ChooseRecipientsView>(context, presenter) {
 
     override fun bindHolder(recipient: Recipient, holder: RecipientViewHolder, position: Int) {
-        holder.bind(context!!, holder, recipient, mAdapterCallback, ThemePrefs.brandColor, mAdapterCallback.isRecipientSelected(recipient))
+        holder.bind(context!!, holder, recipient, mAdapterCallback, mAdapterCallback.isRecipientSelected(recipient))
     }
 
     override fun createViewHolder(v: View, viewType: Int): RecipientViewHolder = RecipientViewHolder(v)

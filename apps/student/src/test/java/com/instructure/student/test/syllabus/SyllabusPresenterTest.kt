@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.student.R
 import com.instructure.student.mobius.syllabus.SyllabusModel
 import com.instructure.student.mobius.syllabus.SyllabusPresenter
@@ -101,28 +101,28 @@ class SyllabusPresenterTest : Assert() {
                 title = "",
                 date = "Apr 2 at 1:59 PM",
                 iconRes = R.drawable.ic_calendar,
-                color = baseCourse.color
+                color = baseCourse.backgroundColor
             ),
             ScheduleItemViewState(
                 id = "1",
                 title = "assignment",
                 date = "Due Apr 3 at 1:59 pm",
                 iconRes = R.drawable.ic_assignment,
-                color = baseCourse.color
+                color = baseCourse.backgroundColor
             ),
             ScheduleItemViewState(
                 id = "2",
                 title = "quiz",
                 date = "Due Apr 4 at 2:00 am",
                 iconRes = R.drawable.ic_quiz,
-                color = baseCourse.color
+                color = baseCourse.backgroundColor
             ),
             ScheduleItemViewState(
                 id = "3",
                 title = "discussion",
                 date = "No Due Date",
                 iconRes = R.drawable.ic_discussion,
-                color = baseCourse.color
+                color = baseCourse.backgroundColor
             )
         )
     }
@@ -235,9 +235,9 @@ class SyllabusPresenterTest : Assert() {
             )
         )
         val eventsViewState = listOf(
-            ScheduleItemViewState("", "", "No Due Date", R.drawable.ic_lock_lined, baseCourse.color),
-            ScheduleItemViewState("", "", "No Due Date", R.drawable.ic_lock_lined, baseCourse.color),
-            ScheduleItemViewState("", "", "No Due Date", R.drawable.ic_assignment, baseCourse.color)
+            ScheduleItemViewState("", "", "No Due Date", R.drawable.ic_lock_lined, baseCourse.backgroundColor),
+            ScheduleItemViewState("", "", "No Due Date", R.drawable.ic_lock_lined, baseCourse.backgroundColor),
+            ScheduleItemViewState("", "", "No Due Date", R.drawable.ic_assignment, baseCourse.backgroundColor)
         )
 
         val expectedState =

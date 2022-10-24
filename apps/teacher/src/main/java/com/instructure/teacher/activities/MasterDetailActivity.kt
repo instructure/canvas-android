@@ -20,6 +20,7 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
@@ -35,8 +36,9 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
@@ -64,6 +66,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_master_detail)
 
         mRoute = intent.extras!!.getParcelable<Route>(Route.ROUTE)
@@ -106,8 +109,8 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
 
         if (mRoute?.canvasContext is Course) {
             val course = mRoute?.canvasContext as Course
-            fakeToolbarMaster.setBackgroundColor(course.color)
-            fakeToolbarDetail.setBackgroundColor(course.color)
+            fakeToolbarMaster.setBackgroundColor(course.backgroundColor)
+            fakeToolbarDetail.setBackgroundColor(course.backgroundColor)
         } else {
             fakeToolbarMaster.setBackgroundColor(ThemePrefs.primaryColor)
             fakeToolbarDetail.setBackgroundColor(ThemePrefs.primaryColor)

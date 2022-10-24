@@ -94,7 +94,7 @@ class GradesViewWidgetService : BaseRemoteViewsService(), Serializable {
                 } else {
                     row.setViewVisibility(R.id.courseGrade, View.VISIBLE)
                     row.setViewVisibility(R.id.lockedGradeImage, View.GONE)
-                    row.setTextColor(R.id.courseGrade, ColorKeeper.getOrGenerateColor(streamItem))
+                    row.setTextColor(R.id.courseGrade, getCanvasContextTextColor(appWidgetId, streamItem))
                     if (courseGrade.noCurrentGrade) {
                         row.setTextViewText(R.id.courseGrade, applicationContext.getString(R.string.noGradeText))
                     } else {
@@ -104,7 +104,7 @@ class GradesViewWidgetService : BaseRemoteViewsService(), Serializable {
             }
             row.setOnClickFillInIntent(R.id.widget_root, createIntent(streamItem))
 
-            row.setInt(R.id.courseIndicator, "setColorFilter", ColorKeeper.getOrGenerateColor(streamItem))
+            row.setInt(R.id.courseIndicator, "setColorFilter", getCanvasContextTextColor(appWidgetId, streamItem))
         }
         
         override fun clearViewData(row: RemoteViews) {

@@ -67,8 +67,8 @@ class AnnotationCommentListFragment : BaseListFragment<
             builder.setNegativeButton(getString(R.string.cancel).uppercase(Locale.getDefault()), null)
             val dialog = builder.create()
             dialog.setOnShowListener {
-                dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-                dialog.getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+                dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+                dialog.getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
             }
             dialog.show()
         })
@@ -111,7 +111,7 @@ class AnnotationCommentListFragment : BaseListFragment<
             commentInputContainer.setVisible(true)
             sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
                     intArrayOf(-android.R.attr.state_enabled) to requireContext().getColorCompat(R.color.textDark),
-                    intArrayOf() to ThemePrefs.buttonColor
+                    intArrayOf() to ThemePrefs.textButtonColor
             )
 
             sendCommentButton.isEnabled = false

@@ -516,9 +516,8 @@ object RouteMatcher : BaseRouteMatcher() {
         return null
     }
 
-
-    fun getContextIdFromURL(url: String?): String? {
-        return getContextIdFromURL(url, routes)
+    fun getContextFromUrl(url: String?): CanvasContext? {
+        return getContextFromURL(url, routes)
     }
 
     fun resetRoutes() {

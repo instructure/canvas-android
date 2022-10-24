@@ -19,20 +19,12 @@ package com.instructure.teacher.ui.pages
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.dataseeding.model.FavoriteApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.callOnClick
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withText
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.WaitForToolbarTitle
 import org.hamcrest.CoreMatchers

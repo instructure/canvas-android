@@ -29,7 +29,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.utils.TeacherPrefs
 import kotlinx.android.synthetic.main.adapter_course_browser.view.*
 
-class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHolder(view) {
+class CourseBrowserViewHolder(view: View, val iconTint: Int) : RecyclerView.ViewHolder(view) {
 
     // For instrumentation testing
     lateinit var labelText: TextView
@@ -63,7 +63,7 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
 
         var d = VectorDrawableCompat.create(itemView.context.resources, res, null)
         d = DrawableCompat.wrap(d!!) as VectorDrawableCompat?
-        DrawableCompat.setTint(d!!, color)
+        DrawableCompat.setTint(d!!, iconTint)
 
         setupTab(tab, d, clickedCallback)
     }

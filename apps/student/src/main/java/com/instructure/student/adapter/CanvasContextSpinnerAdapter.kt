@@ -31,6 +31,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.util.BinderUtils
 import java.util.*
@@ -67,7 +69,7 @@ class CanvasContextSpinnerAdapter(context: Context, private val mData: ArrayList
         if (item != null) {
             viewHolder.title!!.text = item.name
             viewHolder.indicator!!.visibility = View.VISIBLE
-            viewHolder.indicator!!.background = createIndicatorBackground(ColorKeeper.getOrGenerateColor(item))
+            viewHolder.indicator!!.background = createIndicatorBackground(item.backgroundColor)
         } else {
             viewHolder.indicator!!.visibility = View.GONE
             viewHolder.title!!.text = ""
@@ -101,7 +103,7 @@ class CanvasContextSpinnerAdapter(context: Context, private val mData: ArrayList
             } else {
                 viewHolder.title!!.setTypeface(null, Typeface.NORMAL)
                 viewHolder.indicator!!.visibility = View.VISIBLE
-                viewHolder.indicator!!.background = createIndicatorBackground(ColorKeeper.getOrGenerateColor(item))
+                viewHolder.indicator!!.background = createIndicatorBackground(item.backgroundColor)
             }
         }
 

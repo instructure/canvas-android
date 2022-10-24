@@ -36,7 +36,7 @@ class NoInternetConnectionDialog : AppCompatDialogFragment() {
         builder.setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
         val dialog = builder.create()
         dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
         }
         return dialog
     }

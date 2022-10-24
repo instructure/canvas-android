@@ -66,7 +66,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         }
 
         course.text = courseName
-        course.setTextColor(ColorKeeper.getOrGenerateColor(item.canvasContext))
+        course.setTextColor(item.canvasContext.textAndIconColor)
 
         // Description
         if (!TextUtils.isEmpty(item.getMessage(context))) {
@@ -142,9 +142,9 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         }
 
         val courseColor: Int = if (item.canvasContext != null) {
-            ColorKeeper.getOrGenerateColor(item.canvasContext)
+            item.canvasContext.textAndIconColor
         } else
-            ThemePrefs.primaryColor
+            ThemePrefs.brandColor
 
         val drawable = ColorKeeper.getColoredDrawable(context, drawableResId, courseColor)
         icon.setImageDrawable(drawable)
@@ -156,7 +156,6 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         } else {
             title.setTypeface(null, Typeface.BOLD)
             unreadMark.setVisible()
-            unreadMark.setImageDrawable(ColorUtils.colorIt(ThemePrefs.accentColor, unreadMark.drawable))
         }
     }
 

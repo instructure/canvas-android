@@ -89,10 +89,10 @@ class AssignmentDetailsView(
             toolbar.setMenu(R.menu.bookmark_menu) { consumer?.accept(AssignmentDetailsEvent.AddBookmarkClicked) }
         }
 
-        submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
-        submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
-        draftAvailableSubtitle.setTextColor(ThemePrefs.buttonColor)
-        submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
+        submissionStatusFailedSubtitle.setTextColor(ThemePrefs.textButtonColor)
+        submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.textButtonColor)
+        draftAvailableSubtitle.setTextColor(ThemePrefs.textButtonColor)
+        submissionAndRubricLabel.setTextColor(ThemePrefs.textButtonColor)
         submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
 

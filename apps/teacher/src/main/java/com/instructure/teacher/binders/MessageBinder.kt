@@ -100,7 +100,7 @@ object MessageBinder {
         }
 
         with(holder.itemView.reply) {
-            setTextColor(ThemePrefs.buttonColor)
+            setTextColor(ThemePrefs.textButtonColor)
             setVisible(position == 0)
             setOnClickListener { callback.onMessageAction(MessageAdapterCallback.MessageClickAction.REPLY, message) }
         }

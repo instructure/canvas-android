@@ -110,7 +110,7 @@ class LoginActivity : BaseLoginInitActivity() {
         if (skipSplash) {
             TeacherPrefs.isConfirmedTeacher = true
             ThemePrefs.isThemeApplied = true
-            ColorKeeper.hasPreviouslySynced = true
+            ColorKeeper.previouslySynced = true
         }
         finish()
         startActivity(SplashActivity.createIntent(this, intent?.extras))

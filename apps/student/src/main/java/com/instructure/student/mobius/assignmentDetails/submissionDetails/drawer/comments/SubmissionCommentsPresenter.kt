@@ -17,9 +17,11 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
 import android.content.Context
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
@@ -36,7 +38,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
     override fun present(model: SubmissionCommentsModel, context: Context): SubmissionCommentsViewState {
         val self = ApiPrefs.user ?: return SubmissionCommentsViewState(false, listOf(CommentItemState.Empty))
 
-        val tint = ColorKeeper.colorFromCourseId(model.assignment.courseId)
+        val tint = CanvasContext.emptyCourseContext(model.assignment.courseId).textAndIconColor
 
         val comments = model.comments.map { comment ->
             val date = comment.createdAt ?: Date(0)

@@ -28,12 +28,16 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.MissingItemsPrefs
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.date.RealDateTimeProvider
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +45,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -66,6 +71,7 @@ class ScheduleViewModelTest {
     private val assignmentManager: AssignmentManager = mockk(relaxed = true)
     private val missingItemsPrefs: MissingItemsPrefs = mockk(relaxed = true)
     private val dateTimeProvider = RealDateTimeProvider()
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true, relaxUnitFun = true)
 
     private lateinit var viewModel: ScheduleViewModel
 
@@ -91,6 +97,15 @@ class ScheduleViewModelTest {
         }
 
         every { missingItemsPrefs.itemsCollapsed } returns false
+
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
+        every { ColorKeeper.darkTheme } returns false
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
@@ -909,7 +924,8 @@ class ScheduleViewModelTest {
             calendarEventManager,
             assignmentManager,
             missingItemsPrefs,
-            dateTimeProvider
+            dateTimeProvider,
+            colorKeeper
         )
     }
 

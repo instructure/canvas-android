@@ -60,7 +60,7 @@ class PostPolicyFragment : Fragment() {
 
         ViewStyler.themeToolbarLight(requireActivity(), postPolicyToolbar)
 
-        val courseColor = ColorKeeper.getOrGenerateColor(course)
+        val courseColor = course.textAndIconColor
         postPolicyTabLayout.setSelectedTabIndicatorColor(courseColor)
         postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.textDark), courseColor)
     }

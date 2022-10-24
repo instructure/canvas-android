@@ -97,7 +97,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     override fun title(): String = getString(R.string.composeMessage)
 
     override fun applyTheme() {
-        ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
+        ColorUtils.colorIt(ThemePrefs.textButtonColor, contactsImageButton)
         ViewStyler.themeSwitch(requireContext(), sendIndividualSwitch, ThemePrefs.brandColor)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.themeProgressBar(savingProgressBar, requireContext().getColor(R.color.textDarkest))

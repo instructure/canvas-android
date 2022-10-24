@@ -35,7 +35,7 @@ import java.util.*
 
 class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(item: Quiz, adapterToFragmentCallback: AdapterToFragmentCallback<Quiz>?, context: Context, courseColor: Int) = with(itemView) {
+    fun bind(item: Quiz, adapterToFragmentCallback: AdapterToFragmentCallback<Quiz>?, context: Context, iconAndTextColor: Int) = with(itemView) {
         setOnClickListener { adapterToFragmentCallback?.onRowClicked(item, adapterPosition, true) }
 
         // Title
@@ -47,11 +47,11 @@ class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         description.setVisible(!desc.isNullOrBlank())
 
         // Icon
-        val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.ic_quiz, courseColor)
+        val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.ic_quiz, iconAndTextColor)
         icon.setImageDrawable(drawable)
 
         // Status and Date
-        status.setTextColor(courseColor)
+        status.setTextColor(iconAndTextColor)
         status.setVisible(item.lockDate?.let { Date().after(it) } == true || item.requireLockdownBrowserForResults)
         val dateText: String? =
             item.dueDate?.let { DateHelper.createPrefixedDateTimeString(context, R.string.toDoDue, it) }

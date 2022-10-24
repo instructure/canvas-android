@@ -15,11 +15,13 @@
  */
 package com.instructure.teacher.holders
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
@@ -53,7 +55,9 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
                 setBackgroundColor(selectionColor and SELECTION_TRANSPARENCY_MASK)
-                assigneeAvatarImageView.setImageDrawable(ColorDrawable(selectionColor))
+                assigneeAvatarImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_circle)?.apply {
+                    mutate().setTintList(ColorStateList.valueOf(selectionColor))
+                })
                 checkMarkImageView.setVisible()
             } else {
                 setBackgroundColor(Color.TRANSPARENT)
