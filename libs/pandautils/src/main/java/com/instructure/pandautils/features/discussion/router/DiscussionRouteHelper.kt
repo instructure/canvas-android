@@ -6,7 +6,6 @@ import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isGroup
@@ -42,10 +41,8 @@ class DiscussionRouteHelper(
     }
 
     suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader): Pair<Group, Long>? {
-        val groups = awaitApi<List<Group>> {
-            groupManager.getAllGroups(it, false)
-        }
-        for (group in groups) {
+        val groups = groupManager.getAllGroupsAsync(false).await().dataOrNull
+        for (group in groups ?: emptyList()) {
             val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({ it.groupId }, { it.id })
             if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {
                 groupsMap[group.id]?.let { topicHeaderId ->
