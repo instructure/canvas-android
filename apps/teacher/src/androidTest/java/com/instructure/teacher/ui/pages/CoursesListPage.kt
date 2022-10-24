@@ -33,7 +33,7 @@ import org.hamcrest.Matcher
 @Suppress("unused")
 class CoursesListPage : BasePage() {
 
-    private val toolbarTitle by WaitForToolbarTitle(R.string.courses)
+    private val toolbarTitle by WaitForToolbarTitle(R.string.dashboard)
 
     private val coursesTab by OnViewWithId(R.id.tab_courses)
 

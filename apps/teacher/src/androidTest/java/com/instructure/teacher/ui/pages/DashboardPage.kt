@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages
 
 import android.view.View
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -35,7 +36,7 @@ import org.hamcrest.Matcher
 class DashboardPage : BasePage() {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
-    private val coursesPageLabel by WaitForViewWithStringText("Courses")
+    private val coursesPageLabel by WaitForViewWithText(R.string.dashboard)
     private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
     private val coursesView by OnViewWithId(R.id.swipeRefreshLayout, autoAssert = false)
     private val coursesHeaderWrapper by OnViewWithId(R.id.coursesHeaderWrapper, autoAssert = false)
@@ -59,9 +60,18 @@ class DashboardPage : BasePage() {
         scrollAndAssertDisplayed(matcher)
     }
 
+    fun assertCourseNotDisplayed(course: CourseApiModel) {
+        val matcher = allOf(
+            withText(course.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
     fun assertDisplaysCourses() {
         emptyView.assertNotDisplayed()
-        onView(withParent(R.id.toolbar) + withText(R.string.courses)).assertDisplayed()
+        onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
         coursesView.assertDisplayed()
         editDashboardButton.assertDisplayed()
     }
