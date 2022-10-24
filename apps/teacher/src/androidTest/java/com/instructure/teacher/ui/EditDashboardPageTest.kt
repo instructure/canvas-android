@@ -47,7 +47,7 @@ class EditDashboardPageTest : TeacherTest() {
 
     @Test
     @TestRail(ID = "C3109574")
-    fun favourCourse() {
+    fun addCourseToFavourites() {
         val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
         val courses = data.courses.values.toList()
 
@@ -58,7 +58,7 @@ class EditDashboardPageTest : TeacherTest() {
 
     @Test
     @TestRail(ID = "C3109575")
-    fun unFavourCourse() {
+    fun removeCourseFromFavourites() {
         val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 1)
         val courses = data.courses.values.toList()
 

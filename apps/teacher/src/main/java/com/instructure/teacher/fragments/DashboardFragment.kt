@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
@@ -41,31 +41,25 @@ import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CoursesPresenterFactory
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.CoursesPresenter
+import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.CoursesView
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import javax.inject.Inject
 
 private const val LIST_SPAN_COUNT = 1
 
 @ScreenView(SCREEN_VIEW_DASHBOARD)
-@AndroidEntryPoint
 class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
-
-    @Inject
-    lateinit var editDashboardRouter: EditDashboardRouter
 
     private lateinit var mGridLayoutManager: GridLayoutManager
     private lateinit var mDecorator: VerticalGridSpacingDecoration
 
     // Activity callbacks
-    private var mCourseListCallback: CourseListCallback? = null
     private var mCourseBrowserCallback: CourseBrowserCallback? = null
     private var mNeedToForceNetwork = false
 
@@ -87,13 +81,11 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is CourseListCallback) mCourseListCallback = context
         if (context is CourseBrowserCallback) mCourseBrowserCallback = context
     }
 
     override fun onDetach() {
         super.onDetach()
-        mCourseListCallback = null
         mCourseBrowserCallback = null
     }
 
@@ -137,7 +129,7 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
         courseRecyclerView.setPaddingRelative(padding, paddingTop, padding, padding)
         courseRecyclerView.clipToPadding = false
 
-        emptyCoursesView.onClickAddCourses { mCourseListCallback?.onEditDashboard() }
+        emptyCoursesView.onClickAddCourses { routeEditDashboard() }
         setupHeader()
 
         setupToolbar()
@@ -150,7 +142,11 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
 
     private fun setupHeader() {
         editDashboardTextView.setTextColor(ThemePrefs.buttonColor)
-        editDashboardTextView.setOnClickListener { mCourseListCallback?.onEditDashboard() }
+        editDashboardTextView.setOnClickListener { routeEditDashboard() }
+    }
+
+    private fun routeEditDashboard() {
+        RouteMatcher.route(requireActivity(), EditDashboardFragment.makeRoute())
     }
 
     private fun setupToolbar() {
@@ -230,10 +226,6 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
     override fun checkIfEmpty() {
         emptyCoursesView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_super))
         RecyclerViewUtils.checkIfEmpty(emptyCoursesView, courseRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
-    }
-
-    interface CourseListCallback {
-        fun onEditDashboard()
     }
 
     companion object {

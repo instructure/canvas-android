@@ -46,7 +46,6 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.dialogs.RatingDialog
-import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
@@ -81,8 +80,8 @@ import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(), InitActivityView,
-    DashboardFragment.CourseListCallback, DashboardFragment.CourseBrowserCallback, InitActivityInteractions,
+class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(),
+    InitActivityView, DashboardFragment.CourseBrowserCallback, InitActivityInteractions,
     MasqueradingDialog.OnMasqueradingSet, ErrorReportDialog.ErrorReportDialogResultListener {
 
     @Inject
@@ -478,10 +477,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         ft.replace(R.id.master, fragment, fragment::class.java.simpleName)
         ft.replace(R.id.detail, detailFragment, detailFragment.javaClass.simpleName)
         ft.commit()
-    }
-
-    override fun onEditDashboard() {
-        RouteMatcher.route(this, EditDashboardFragment.makeRoute())
     }
 
     override fun onEditCourseNickname(course: Course) {
