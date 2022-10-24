@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
@@ -163,9 +164,9 @@ class ToDoListFragment : ParentFragment() {
                 if (toDo.assignment!!.discussionTopicHeader != null) {
                     val groupTopic = toDo.assignment!!.discussionTopicHeader!!.groupTopicChildren.firstOrNull()
                     if (groupTopic == null) { // Launch discussion details fragment
-                        RouteMatcher.route(requireContext(), DiscussionDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!))
+                        RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!))
                     } else { // Launch discussion details fragment with the group
-                        RouteMatcher.route(requireContext(), DiscussionDetailsFragment.makeRoute(CanvasContext.emptyGroupContext(groupTopic.groupId), groupTopic.id))
+                        RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(CanvasContext.emptyGroupContext(groupTopic.groupId), groupTopic.id))
                     }
                 } else {
                     // Launch assignment details fragment.

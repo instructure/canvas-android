@@ -12,7 +12,6 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.databinding.FragmentDiscussionRouterBinding
-import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,10 +25,10 @@ class DiscussionRouterFragment : Fragment() {
     private val viewModel: DiscussionRouterViewModel by viewModels()
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
-    private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DiscussionDetailsWebViewFragment.DISCUSSION_TOPIC_HEADER)
+    private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DISCUSSION_TOPIC_HEADER)
     private var discussionTopicHeaderId: Long by LongArg(
         default = 0L,
-        key = DiscussionDetailsWebViewFragment.DISCUSSION_TOPIC_HEADER_ID
+        key = DISCUSSION_TOPIC_HEADER_ID
     )
 
     override fun onCreateView(
@@ -81,6 +80,14 @@ class DiscussionRouterFragment : Fragment() {
         fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Route {
             val bundle = Bundle().apply {
                 putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
+            }
+
+            return Route(null, DiscussionRouterFragment::class.java, canvasContext, bundle)
+        }
+
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long): Route {
+            val bundle = Bundle().apply {
+                putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
             }
 
             return Route(null, DiscussionRouterFragment::class.java, canvasContext, bundle)

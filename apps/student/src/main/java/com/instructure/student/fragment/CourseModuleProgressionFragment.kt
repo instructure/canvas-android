@@ -26,13 +26,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.utils.weave.WeaveJob
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
@@ -54,6 +58,7 @@ import com.instructure.student.util.ModuleProgressionUtility
 import com.instructure.student.util.ModuleUtility
 import kotlinx.android.synthetic.main.course_module_progression.*
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Response
 import java.util.*
@@ -118,11 +123,9 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        weave {
+        lifecycleScope.launch {
             isDiscussionRedesignEnabled = discussionRouteHelper.isDiscussionRedesignEnabled(canvasContext)
-            onUI {
-                loadModuleProgression(savedInstanceState)
-            }
+            loadModuleProgression(savedInstanceState)
         }
     }
 

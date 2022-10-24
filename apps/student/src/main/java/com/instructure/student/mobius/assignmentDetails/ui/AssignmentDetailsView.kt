@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.Navigation
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -43,7 +44,10 @@ import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
@@ -338,7 +342,7 @@ class AssignmentDetailsView(
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
         logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
-        RouteMatcher.route(context, DiscussionDetailsFragment.makeRoute(canvasContext, discussionTopicHeaderId))
+        RouteMatcher.route(context, DiscussionRouterFragment.makeRoute(canvasContext, discussionTopicHeaderId))
     }
 
     fun showDiscussionAttachment(canvasContext: CanvasContext, discussionAttachment: Attachment) {

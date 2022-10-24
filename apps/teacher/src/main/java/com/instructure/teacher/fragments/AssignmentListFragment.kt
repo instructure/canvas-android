@@ -16,7 +16,6 @@
 
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
@@ -32,6 +31,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.BuildConfig
@@ -132,8 +132,8 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
 
                     assignment.discussionTopicHeader = null
                     discussionTopicHeader.assignment = assignment
-                    val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader)
-                    RouteMatcher.route(requireContext(), Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args))
+                    val route = DiscussionRouterFragment.makeRoute(mCanvasContext, discussionTopicHeader)
+                    RouteMatcher.route(requireContext(), route)
                 } else {
                     val args = AssignmentDetailsFragment.makeBundle(assignment)
                     RouteMatcher.route(requireContext(), Route(null, AssignmentDetailsFragment::class.java, mCanvasContext, args))
