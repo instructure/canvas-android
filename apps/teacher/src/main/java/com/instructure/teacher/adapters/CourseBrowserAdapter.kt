@@ -22,14 +22,13 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import com.instructure.teacher.presenters.CourseBrowserPresenter
 import com.instructure.teacher.viewinterface.CourseBrowserView
-import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class CourseBrowserAdapter(
-        context: Context,
-        presenter: CourseBrowserPresenter,
-        val courseColor: Int,
-        val mCallback: (Tab) -> Unit) : SyncRecyclerAdapter<Tab, CourseBrowserViewHolder, CourseBrowserView>(context, presenter) {
+    context: Context,
+    presenter: CourseBrowserPresenter,
+    val iconTint: Int,
+    val mCallback: (Tab) -> Unit) : SyncRecyclerAdapter<Tab, CourseBrowserViewHolder, CourseBrowserView>(context, presenter) {
 
     override fun bindHolder(tab: Tab, holder: CourseBrowserViewHolder, position: Int) {
         context?.let {
@@ -37,6 +36,6 @@ class CourseBrowserAdapter(
         }
     }
 
-    override fun createViewHolder(v: View, viewType: Int): CourseBrowserViewHolder = CourseBrowserViewHolder(v, courseColor)
+    override fun createViewHolder(v: View, viewType: Int): CourseBrowserViewHolder = CourseBrowserViewHolder(v, iconTint)
     override fun itemLayoutResId(viewType: Int) = CourseBrowserViewHolder.HOLDER_RES_ID
 }

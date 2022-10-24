@@ -45,7 +45,7 @@ class SpeedGraderUrlSubmissionFragment : Fragment() {
         super.onStart()
         Glide.with(requireContext()).load(mPreviewUrl).into(urlPreviewImageView)
         urlTextView.text = mUrl
-        urlTextView.setTextColor(ThemePrefs.buttonColor)
+        urlTextView.setTextColor(ThemePrefs.textButtonColor)
         urlTextView.onClick {
             requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), mUrl, "", true))
         }

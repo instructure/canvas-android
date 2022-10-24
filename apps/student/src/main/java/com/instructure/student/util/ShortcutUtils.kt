@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.lightColor
 
 object ShortcutUtils {
 
@@ -53,7 +54,7 @@ object ShortcutUtils {
             launchIntent.putExtra(Const.BOOKMARK, bookmark.name)
             launchIntent.putExtra(Const.URL, bookmark.url)
 
-            val color = ColorKeeper.getOrGenerateColor(RouteMatcher.getContextIdFromURL(bookmark.url) ?: "")
+            val color = RouteMatcher.getContextFromUrl(bookmark.url).lightColor
 
             val pinShortcutInfo = ShortcutInfo.Builder(context, bookmark.url)
                     .setShortLabel(bookmark.name!!)

@@ -19,8 +19,6 @@ package com.instructure.student.holders
 
 import android.content.Context
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.DateHelper
@@ -34,15 +32,15 @@ class PageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(
         context: Context,
         page: Page,
-        courseColor: Int,
+        iconColor: Int,
         adapterToFragmentCallback: AdapterToFragmentCallback<Page>
     ) = with(itemView) {
         title.text = page.title
 
         if (page.frontPage) {
-            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_pages, courseColor))
+            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_pages, iconColor))
         } else {
-            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_document, courseColor))
+            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_document, iconColor))
         }
 
         modified.text = String.format(

@@ -89,7 +89,7 @@ class ProfileEditFragment : BasePresenterFragment<
         usersName.hint = user?.shortName
 
         ViewStyler.themeEditText(requireContext(), usersName, ThemePrefs.brandColor)
-        ViewStyler.colorImageView(profileCameraIcon, ThemePrefs.buttonColor)
+        ViewStyler.colorImageView(profileCameraIcon, ThemePrefs.textButtonColor)
         ViewStyler.themeProgressBar(profileCameraLoadingIndicator, ThemePrefs.brandColor)
 
         //Restore loader if necessary
@@ -113,7 +113,7 @@ class ProfileEditFragment : BasePresenterFragment<
         toolbar.setupMenu(R.menu.menu_save_generic) { saveProfile() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     override fun readyToLoadUI(user: User?) {

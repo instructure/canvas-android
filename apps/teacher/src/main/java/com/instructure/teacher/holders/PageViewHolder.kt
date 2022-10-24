@@ -33,10 +33,10 @@ class PageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
 
-    fun bind(context: Context, page: Page, courseColor: Int, callback: (Page) -> Unit) = with(itemView) {
+    fun bind(context: Context, page: Page, iconColor: Int, callback: (Page) -> Unit) = with(itemView) {
         pageLayout.setOnClickListener { callback(page) }
         pageTitle.text = page.title
-        pageIcon.setIcon(R.drawable.ic_pages, courseColor)
+        pageIcon.setIcon(R.drawable.ic_pages, iconColor)
         pageIcon.setPublishedStatus(page.published)
         publishedBar.visibility = if (page.published) View.VISIBLE else View.INVISIBLE
 

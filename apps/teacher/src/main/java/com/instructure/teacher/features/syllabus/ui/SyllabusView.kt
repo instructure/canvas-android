@@ -72,7 +72,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         setEditVisibility(false)
         ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
 
-        syllabusTabLayout.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
+        syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
 
         if (context !is MasterDetailActivity) {
             toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }

@@ -27,6 +27,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.lightColor
 import com.instructure.student.R
 import com.instructure.student.fragment.BookmarksFragment
 import com.instructure.student.router.RouteMatcher
@@ -64,7 +65,7 @@ class BookmarkShortcutActivity : AppCompatActivity() {
         launchIntent.putExtra(Const.BOOKMARK, bookmark.name)
         launchIntent.putExtra(Const.URL, bookmark.url)
 
-        val color = ColorKeeper.getOrGenerateColor(RouteMatcher.getContextIdFromURL(bookmark.url) ?: "")
+        val color = RouteMatcher.getContextFromUrl(bookmark.url).lightColor
         val options = BitmapFactory.Options()
         options.inMutable = true
         val bitIcon = BitmapFactory.decodeResource(resources, R.drawable.ic_bookmark, options)

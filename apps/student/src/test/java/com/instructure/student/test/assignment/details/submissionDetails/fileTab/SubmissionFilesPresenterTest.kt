@@ -21,7 +21,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFileData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesModel
@@ -59,8 +59,8 @@ class SubmissionFilesPresenterTest : Assert() {
             icon = 0,
             thumbnailUrl = null,
             isSelected = false,
-            iconColor = baseModel.canvasContext.color,
-            selectionColor = testCourse.color
+            iconColor = baseModel.canvasContext.backgroundColor,
+            selectionColor = testCourse.backgroundColor
         )
     }
 

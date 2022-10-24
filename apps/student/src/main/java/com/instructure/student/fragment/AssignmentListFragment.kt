@@ -212,7 +212,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         Handler().postDelayed({
             if (badgeDrawable == null) {
                 badgeDrawable = BadgeDrawable.create(requireContext()).apply {
-                    backgroundColor = ThemePrefs.accentColor
+                    backgroundColor = requireContext().getColor(R.color.backgroundInfo)
                 }
             }
             if (filterPosition == 0) {

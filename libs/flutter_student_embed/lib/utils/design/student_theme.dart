@@ -62,11 +62,12 @@ class _StudentThemeState extends State<StudentTheme> {
         StudentColors.accentColor,
         StudentColors.buttonColor,
         StudentColors.primaryTextColor,
+        StudentColors.textButtonColor
       );
 
   ThemeData getCanvasContextTheme(String contextCode) {
     var contextColor = getCanvasContextColor(contextCode);
-    return _buildTheme(contextColor, contextColor, StudentColors.buttonColor, Colors.white);
+    return _buildTheme(contextColor, contextColor, StudentColors.buttonColor, Colors.white, StudentColors.textButtonColor);
   }
 
   Color getCanvasContextColor(String contextCode) {
@@ -99,16 +100,16 @@ class _StudentThemeState extends State<StudentTheme> {
   /// sharply with the [onSurfaceColor]. Examples are chip backgrounds, progressbar backgrounds, avatar backgrounds, etc.
   Color get nearSurfaceColor => StudentColors.backgroundLight;
 
-  ThemeData _buildTheme(Color primaryColor, Color accentColor, Color buttonColor, Color primaryTextColor) {
+  ThemeData _buildTheme(Color primaryColor, Color accentColor, Color buttonColor, Color primaryTextColor, Color textButtonColor) {
     var textTheme = _buildTextTheme(onSurfaceColor, StudentColors.textDark);
 
     var primarySwatch = StudentColors.makeSwatch(primaryColor);
 
     var buttonColorScheme = ColorScheme.light().copyWith(
-      primary: buttonColor,
-      primaryVariant: buttonColor,
-      secondary: buttonColor,
-      secondaryVariant: buttonColor,
+      primary: textButtonColor,
+      primaryVariant: textButtonColor,
+      secondary: textButtonColor,
+      secondaryVariant: textButtonColor,
     );
 
     return ThemeData(
@@ -131,7 +132,7 @@ class _StudentThemeState extends State<StudentTheme> {
         foregroundColor: Colors.white,
       ),
       dividerColor: StudentColors.tiara,
-      buttonColor: buttonColor,
+      buttonColor: textButtonColor,
       hintColor: StudentColors.textDark,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120, colorScheme: buttonColorScheme),
       fontFamily: 'Lato',

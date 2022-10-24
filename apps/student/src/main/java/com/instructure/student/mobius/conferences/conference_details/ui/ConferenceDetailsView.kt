@@ -103,7 +103,7 @@ class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutIn
 
     fun launchUrl(url: String) {
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(canvasContext.color)
+            .setToolbarColor(canvasContext.backgroundColor)
             .build()
 
         var intent = CustomTabsIntent.Builder()

@@ -80,18 +80,21 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
                 || termsOfService.selfRegistrationType == SelfRegistration.OBSERVER
 
             // Grab colors
-            if (ColorKeeper.hasPreviouslySynced) {
-                UserManager.getColors(userColorsCallback, true)
-            } else {
-                ColorKeeper.addToCache(awaitApi<CanvasColor> { UserManager.getColors(it, true) })
-                ColorKeeper.hasPreviouslySynced = true
+            // We don't show custom course colors for K5 view so we need to skip this so we don't overwrite course colors.
+            if (!ApiPrefs.showElementaryView) {
+                if (ColorKeeper.previouslySynced) {
+                    UserManager.getColors(userColorsCallback, true)
+                } else {
+                    ColorKeeper.addToCache(awaitApi<CanvasColor> { UserManager.getColors(it, true) })
+                    ColorKeeper.previouslySynced = true
+                }
             }
 
             // Grab theme
             if (ThemePrefs.isThemeApplied) {
                 ThemeManager.getTheme(themeCallback, true)
             } else {
-                ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) })
+                ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) }, this@CallbackActivity)
             }
 
             // Refresh pandata info if null or expired
@@ -152,7 +155,7 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
     private val themeCallback = object : StatusCallback<CanvasTheme>() {
         override fun onResponse(response: Response<CanvasTheme>, linkHeaders: LinkHeaders, type: ApiType) {
             //store the theme
-            response.body()?.let { ThemePrefs.applyCanvasTheme(it) }
+            response.body()?.let { ThemePrefs.applyCanvasTheme(it, this@CallbackActivity) }
 
             // Update Flutter with the theme
             FlutterComm.sendUpdatedTheme()
@@ -163,7 +166,7 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
         override fun onResponse(response: Response<CanvasColor>, linkHeaders: LinkHeaders, type: ApiType) {
             if (type == ApiType.API) {
                 ColorKeeper.addToCache(response.body())
-                ColorKeeper.hasPreviouslySynced = true
+                ColorKeeper.previouslySynced = true
             }
         }
     }

@@ -99,7 +99,7 @@ void main() {
     expect(tester.widget<Container>(container).decoration, isNull);
   });
 
-  testWidgetsWithAccessibilityChecks('Uses accent text color and accent border for selected day', (tester) async {
+  testWidgetsWithAccessibilityChecks('Uses text button color for selected day', (tester) async {
     await tester.pumpWidget(_appWithFetcher(CalendarDay(
       date: selectedDate,
       selectedDay: selectedDate,
@@ -107,17 +107,16 @@ void main() {
     )));
     await tester.pump();
 
-    final theme = Theme.of(tester.element(find.byType(CalendarDay)));
     final textStyle = tester.widget<AnimatedDefaultTextStyle>(find.byType(AnimatedDefaultTextStyle).last).style;
-    expect(textStyle.color, theme.accentColor);
+    expect(textStyle.color, StudentColors.textButtonColor);
 
     final container = find.ancestor(of: find.text('2'), matching: find.byType(Container)).first;
     final decoration = tester.widget<Container>(container).decoration as BoxDecoration;
     expect(decoration.borderRadius, BorderRadius.circular(16));
-    expect(decoration.border, Border.all(color: theme.accentColor, width: 2));
+    expect(decoration.border, Border.all(color: StudentColors.textButtonColor, width: 2));
   });
 
-  testWidgetsWithAccessibilityChecks('Uses white text color and accent background for today', (tester) async {
+  testWidgetsWithAccessibilityChecks('Uses white text color and button background for today', (tester) async {
     final date = DateTime.now();
     await tester.pumpWidget(_appWithFetcher(CalendarDay(
       date: date,
@@ -126,13 +125,12 @@ void main() {
     )));
     await tester.pump();
 
-    final theme = Theme.of(tester.element(find.byType(CalendarDay)));
     final textStyle = tester.widget<AnimatedDefaultTextStyle>(find.byType(AnimatedDefaultTextStyle).last).style;
     expect(textStyle.color, Colors.white);
 
     final container = find.ancestor(of: find.text(date.day.toString()), matching: find.byType(Container)).first;
     final decoration = tester.widget<Container>(container).decoration;
-    expect(decoration, BoxDecoration(color: theme.accentColor, shape: BoxShape.circle));
+    expect(decoration, BoxDecoration(color: StudentColors.buttonColor, shape: BoxShape.circle));
   });
 
   testWidgetsWithAccessibilityChecks('Displays activity dots', (tester) async {

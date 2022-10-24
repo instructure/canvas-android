@@ -63,7 +63,6 @@ class InboxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         if (conversation.workflowState == Conversation.WorkflowState.UNREAD) {
             unreadMark.setVisible()
-            unreadMark.setImageDrawable(ColorUtils.colorIt(ThemePrefs.accentColor, unreadMark.drawable))
         } else {
             unreadMark.setGone()
         }

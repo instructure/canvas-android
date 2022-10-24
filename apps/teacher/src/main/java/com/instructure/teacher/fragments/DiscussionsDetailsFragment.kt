@@ -400,7 +400,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         authoredDate?.text = DateHelper.getMonthDayAtTime(requireContext(), discussionTopicHeader.postedDate, getString(R.string.at))
         discussionTopicTitle?.text = discussionTopicHeader.title
 
-        replyToDiscussionTopic.setTextColor(ThemePrefs.buttonColor)
+        replyToDiscussionTopic.setTextColor(ThemePrefs.textButtonColor)
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
         replyToDiscussionTopic.onClick {
             showReplyView(presenter.discussionTopicHeader.id)
@@ -455,7 +455,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
         toolbar.setupMenu(R.menu.menu_edit_generic, menuItemCallback)
@@ -463,7 +463,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if(!isTablet) {
             toolbar.subtitle = mCanvasContext.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
@@ -681,8 +681,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             builder.setNegativeButton(android.R.string.no) { _, _ -> }
             val dialog = builder.create()
             dialog.setOnShowListener {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
             }
             dialog.show()
         } else {

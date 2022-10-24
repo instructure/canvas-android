@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.dashboard.notifications
 
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -49,14 +50,14 @@ data class AnnouncementViewData(
     val id: Long,
     val subject: String,
     val message: String,
-    val color: String,
+    @ColorInt val color: Int,
     @DrawableRes val icon: Int
 )
 
 data class UploadViewData(
     var title: String = "",
     var subTitle: String = "",
-    var color: String = ""
+    @ColorInt var color: Int = 0
 )
 
 sealed class DashboardNotificationsActions {

@@ -71,7 +71,8 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
             }
 
             if (streamItem.canvasContext != null && streamItem.canvasContext!!.type != CanvasContext.Type.USER) {
-                row.setInt(R.id.icon, "setColorFilter", ColorKeeper.getOrGenerateColor(streamItem.canvasContext))
+                val appWidgetId = BaseRemoteViewsService.getAppWidgetId(intent)
+                row.setInt(R.id.icon, "setColorFilter", getCanvasContextTextColor(appWidgetId, streamItem.canvasContext))
             } else {
                 row.setInt(R.id.icon, "setColorFilter", R.color.textDanger)
             }

@@ -37,7 +37,7 @@
         android:minHeight="55dp"
         android:onClick="@{() -> itemViewModel.open()}"
         android:orientation="horizontal"
-        app:borderColor="@{ColorUtils.parseColor(itemViewModel.data.color)}"
+        app:borderColor="@{itemViewModel.data.color}"
         tools:backgroundTint="#00ACEC">
 
         <FrameLayout
@@ -45,7 +45,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="@drawable/announcement_card_icon_background"
-            android:backgroundTint="@{ColorUtils.parseColor(itemViewModel.data.color)}"
+            android:backgroundTint="@{itemViewModel.data.color}"
             tools:backgroundTint="#00ACEC">
 
             <ImageView

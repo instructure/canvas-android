@@ -141,7 +141,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     private fun setupCommentInput() {
         sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
                 intArrayOf(-android.R.attr.state_enabled) to requireContext().getColorCompat(R.color.textDark),
-                intArrayOf() to ThemePrefs.buttonColor
+                intArrayOf() to ThemePrefs.textButtonColor
         )
         sendCommentButton.isEnabled = false
         sendCommentButton.setGone()

@@ -132,7 +132,7 @@ class CourseBrowserFragment : BaseSyncFragment<
         super.onResume()
         EventBus.getDefault().register(this)
         (presenter.canvasContext as? Course)?.let {
-            courseImage.setCourseImage(it, it.color, !TeacherPrefs.hideCourseColorOverlay)
+            courseImage.setCourseImage(it, it.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
         }
         courseBrowserTitle.text = presenter.canvasContext.name
         courseBrowserSubtitle.text = (presenter.canvasContext as? Course)?.term?.name ?: ""
@@ -166,7 +166,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             courseHeader.setGone()
             noOverlayToolbar.title = presenter.canvasContext.name
             (presenter.canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
-            noOverlayToolbar.setBackgroundColor(presenter.canvasContext.color)
+            noOverlayToolbar.setBackgroundColor(presenter.canvasContext.backgroundColor)
             noOverlayToolbar
         } else {
             noOverlayToolbar.setGone()
@@ -176,9 +176,9 @@ class CourseBrowserFragment : BaseSyncFragment<
         toolbar.setupBackButton(this)
         toolbar.setupMenu(R.menu.menu_course_browser, menuItemCallback)
         ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, requireContext().getColor(R.color.white))
-        ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.color)
+        ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.backgroundColor)
 
-        collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.color)
+        collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.backgroundColor)
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (presenter.canvasContext as? Course)?.imageUrl?.isValid() == true
@@ -204,7 +204,7 @@ class CourseBrowserFragment : BaseSyncFragment<
     }
 
     override fun createAdapter(): CourseBrowserAdapter {
-        return CourseBrowserAdapter(requireActivity(), presenter, presenter.canvasContext.color) { tab ->
+        return CourseBrowserAdapter(requireActivity(), presenter, presenter.canvasContext.textAndIconColor) { tab ->
             when (tab.tabId) {
                 Tab.ASSIGNMENTS_ID -> RouteMatcher.route(
                     requireContext(),

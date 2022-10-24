@@ -42,7 +42,7 @@ class UrlSubmissionViewFragment : Fragment() {
         super.onStart()
         Glide.with(requireContext()).load(previewUrl).into(urlPreviewImageView)
         urlTextView.text = url
-        urlTextView.setTextColor(ThemePrefs.buttonColor)
+        urlTextView.setTextColor(ThemePrefs.textButtonColor)
         val launchUrl = { _: View ->
             val title = getString(R.string.urlSubmission)
             val intent = InternalWebViewActivity.createIntent(requireActivity(), url, title, true)

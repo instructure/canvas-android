@@ -99,7 +99,7 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
         val view = inflater.inflate(layoutResId(), container, false)
 
         setupToolbar(view)
-        view.findViewById<TextView>(R.id.menuDone).setTextColor(ThemePrefs.buttonColor)
+        view.findViewById<TextView>(R.id.menuDone).setTextColor(ThemePrefs.textButtonColor)
         return view
     }
 

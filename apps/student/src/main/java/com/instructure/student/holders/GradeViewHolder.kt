@@ -22,6 +22,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -35,7 +36,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(
         context: Context,
-        courseColor: Int,
+        canvasContext: CanvasContext?,
         assignment: Assignment,
         isEdit: Boolean,
         whatIfDialogCallback: WhatIfDialogStyled.WhatIfDialogCallback,
@@ -50,7 +51,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         title.text = assignment.name
 
-        icon.setIcon(BinderUtils.getAssignmentIcon(assignment), courseColor)
+        icon.setIcon(BinderUtils.getAssignmentIcon(assignment), canvasContext.textAndIconColor)
         icon.hideNestedIcon()
 
         points.setTextColor(ThemePrefs.brandColor)
@@ -63,7 +64,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val submission = assignment.submission
             if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
                 points.setGone()
-                icon.setNestedIcon(R.drawable.ic_complete_solid, courseColor)
+                icon.setNestedIcon(R.drawable.ic_complete_solid, canvasContext.backgroundColor)
             } else {
                 points.setVisible()
                 val (grade, contentDescription) = BinderUtils.getGrade(assignment, submission, context)

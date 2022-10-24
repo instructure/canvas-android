@@ -31,12 +31,12 @@ class MasteryAssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(item
     fun bind(
         context: Context,
         masteryPathAssignment: MasteryPathAssignment,
-        courseColor: Int,
+        iconColor: Int,
         adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>
     ) = with(itemView) {
         title.text = masteryPathAssignment.model!!.name
         val drawable = BinderUtils.getAssignmentIcon(masteryPathAssignment.model)
-        icon.setImageDrawable(getColoredDrawable(context, drawable, courseColor))
+        icon.setImageDrawable(getColoredDrawable(context, drawable, iconColor))
         rootView.setOnClickListener {
             adapterToFragmentCallback.onRowClicked(masteryPathAssignment.model!!, 0, true)
         }
