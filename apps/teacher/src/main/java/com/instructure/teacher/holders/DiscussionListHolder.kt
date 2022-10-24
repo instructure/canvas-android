@@ -32,7 +32,7 @@ import java.util.*
 
 class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    fun bind(context: Context, discussionTopicHeader: DiscussionTopicHeader, group: String?, courseColor: Int, isAnnouncement: Boolean,
+    fun bind(context: Context, discussionTopicHeader: DiscussionTopicHeader, group: String?, iconColor: Int, isAnnouncement: Boolean,
              callback: (DiscussionTopicHeader) -> Unit,
              overflowCallback: (String?, DiscussionTopicHeader) -> Unit) = with(itemView) {
         discussionLayout.onClick { callback(discussionTopicHeader) }
@@ -50,10 +50,10 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
         val isAssignmentType = discussionTopicHeader.assignment != null
 
         if(isAnnouncement) {
-            discussionIcon.setIcon(R.drawable.ic_announcement, courseColor)
+            discussionIcon.setIcon(R.drawable.ic_announcement, iconColor)
             discussionIcon.setPublishedStatus(true)
         } else {
-            discussionIcon.setIcon(if (isAssignmentType) R.drawable.ic_assignment else R.drawable.ic_discussion, courseColor)
+            discussionIcon.setIcon(if (isAssignmentType) R.drawable.ic_assignment else R.drawable.ic_discussion, iconColor)
             discussionIcon.setPublishedStatus(discussionTopicHeader.published)
         }
         publishedBar.visibility = if (discussionTopicHeader.published) View.VISIBLE else View.INVISIBLE

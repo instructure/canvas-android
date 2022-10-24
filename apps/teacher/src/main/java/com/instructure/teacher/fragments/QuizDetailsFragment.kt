@@ -110,7 +110,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         swipeRefreshLayout.isRefreshing = false
         setupViews(quiz)
         setupListeners(quiz)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
 
         fullDateDetailsButton.setVisible(quiz._assignment != null)
     }
@@ -118,7 +118,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -126,7 +126,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         if (!isTablet) {
             toolbar.subtitle = presenter.mCourse.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews(quiz: Quiz) = with(quiz) {

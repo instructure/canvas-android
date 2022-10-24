@@ -17,14 +17,16 @@
 package com.instructure.teacher.features.postpolicies
 
 import android.content.Context
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.teacher.R
 import com.instructure.teacher.features.postpolicies.ui.PostGradeViewState
 import com.instructure.teacher.mobius.common.ui.Presenter
 
 object PostGradePresenter : Presenter<PostGradeModel, PostGradeViewState> {
     override fun present(model: PostGradeModel, context: Context): PostGradeViewState {
-        val courseColor = ColorKeeper.colorFromCourseId(model.assignment.courseId)
+        val courseColor = CanvasContext.emptyCourseContext(model.assignment.courseId).textAndIconColor
         if (model.isLoading) {
             return PostGradeViewState.Loading(courseColor)
         }

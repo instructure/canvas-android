@@ -70,7 +70,7 @@ class SubmissionCommentsView(
         // Set up send button
         sendCommentButton.imageTintList = ViewStyler.generateColorStateList(
             intArrayOf(-android.R.attr.state_enabled) to ContextCompat.getColor(context, R.color.textDark),
-            intArrayOf() to ThemePrefs.buttonColor
+            intArrayOf() to ThemePrefs.textButtonColor
         )
         sendCommentButton.isEnabled = false
         sendCommentButton.setGone()

@@ -154,10 +154,10 @@ class FileUploadDialogFragment : DialogFragment() {
 
         dialog.setOnShowListener {
             val positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-            positive.setTextColor(ThemePrefs.buttonColor)
+            positive.setTextColor(ThemePrefs.textButtonColor)
             positive.setOnClickListener { uploadClicked() }
             val negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-            negative.setTextColor(ThemePrefs.buttonColor)
+            negative.setTextColor(ThemePrefs.textButtonColor)
             negative.setOnClickListener {
                 cancelClicked()
             }

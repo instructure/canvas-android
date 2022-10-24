@@ -46,7 +46,8 @@
             android:layout_marginStart="-4dp"
             android:layout_marginTop="-4dp"
             android:background="@drawable/ic_circle"
-            android:contentDescription="@string/unread" />
+            android:contentDescription="@string/unread"
+            android:backgroundTint="@color/backgroundInfo"/>
 
     </FrameLayout>
 

@@ -119,7 +119,7 @@ class CriterionRatingButton @JvmOverloads constructor(
         // Set text color to handle selected vs unselected states
         if (!isInEditMode) setTextColor(ViewStyler.generateColorStateList(
                 intArrayOf(android.R.attr.state_selected) to Color.WHITE,
-                intArrayOf(android.R.attr.state_pressed) to ThemePrefs.brandColor,
+                intArrayOf(android.R.attr.state_pressed) to context.getColor(R.color.backgroundInfo),
                 intArrayOf() to context.getColorCompat(R.color.textDark)
         ))
     }
@@ -173,8 +173,9 @@ class CriterionRatingButton @JvmOverloads constructor(
             selectedState.setColorFilter(context.getColorCompat(R.color.backgroundDarkest), PorterDuff.Mode.SRC_ATOP)
             pressedState.setColorFilter(context.getColorCompat(R.color.backgroundDarkest), PorterDuff.Mode.SRC_ATOP)
         } else {
-            selectedState.setColorFilter(ThemePrefs.brandColor, PorterDuff.Mode.SRC_ATOP)
-            pressedState.setColorFilter(ThemePrefs.brandColor, PorterDuff.Mode.SRC_ATOP)
+            val backgroundColor = context.getColor(R.color.backgroundInfo)
+            selectedState.setColorFilter(backgroundColor, PorterDuff.Mode.SRC_ATOP)
+            pressedState.setColorFilter(backgroundColor, PorterDuff.Mode.SRC_ATOP)
         }
         addState(intArrayOf(android.R.attr.state_selected), selectedState)
         addState(intArrayOf(android.R.attr.state_pressed), pressedState)

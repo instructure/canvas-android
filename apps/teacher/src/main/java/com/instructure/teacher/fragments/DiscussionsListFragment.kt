@@ -60,7 +60,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
 
     private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
-    private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCanvasContext) }
 
     private var mNeedToForceNetwork = false
     private var mForceRefresh = false
@@ -129,7 +128,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun createAdapter(): DiscussionListAdapter {
-        return DiscussionListAdapter(requireContext(), presenter, mCourseColor, mIsAnnouncements,
+        return DiscussionListAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor, mIsAnnouncements,
             { discussionTopicHeader ->
                 val route = presenter.getDetailsRoute(discussionTopicHeader, mIsAnnouncements)
                 RouteMatcher.route(
@@ -203,7 +202,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews() {

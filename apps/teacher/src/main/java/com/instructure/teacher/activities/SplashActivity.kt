@@ -18,7 +18,6 @@ package com.instructure.teacher.activities
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -161,20 +160,20 @@ class SplashActivity : AppCompatActivity() {
                         try {
                             val canvasColor = awaitApi<CanvasColor> { UserManager.getColors(it, true) }
                             ColorKeeper.addToCache(canvasColor)
-                            ColorKeeper.hasPreviouslySynced = true
+                            ColorKeeper.previouslySynced = true
                         } catch (e: Throwable) {
                             LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load colorFetch")
                             Logger.e(e.message)
                         }
                     }
-                    if (!ColorKeeper.hasPreviouslySynced) colorFetch.await() else colorFetch.start()
+                    if (!ColorKeeper.previouslySynced) colorFetch.await() else colorFetch.start()
 
                     // Grab theme
                     // Use GlobalScope since this can continue executing after SplashActivity is destroyed
                     val themeFetch = GlobalScope.async(start = CoroutineStart.LAZY) {
                         try {
                             val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, true) }
-                            ThemePrefs.applyCanvasTheme(theme)
+                            ThemePrefs.applyCanvasTheme(theme, this@SplashActivity)
                         } catch (e: Throwable) {
                             LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load themeFetch")
                             Logger.e(e.message)

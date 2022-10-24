@@ -164,7 +164,7 @@ class CreateOrEditAnnouncementFragment :
             setTitle(R.string.save)
         }
 
-        mSaveButtonTextView?.setTextColor(ThemePrefs.buttonColor)
+        mSaveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun setupViews() {
@@ -199,14 +199,14 @@ class CreateOrEditAnnouncementFragment :
                     },
                     getString(R.string.announcementDetails),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor
             )
         } else {
             announcementRCEView.setHtml(
                     presenter.announcement.message,
                     getString(R.string.announcementDetails),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor
             )
         }
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality

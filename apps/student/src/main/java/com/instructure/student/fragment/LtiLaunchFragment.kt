@@ -76,7 +76,7 @@ class LtiLaunchFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadingView.setOverrideColor(canvasContext.color)
+        loadingView.setOverrideColor(canvasContext.backgroundColor)
         toolName.setTextForVisibility(title().validOrNull())
     }
 
@@ -134,7 +134,7 @@ class LtiLaunchFragment : ParentFragment() {
             .build()
 
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(canvasContext.color)
+            .setToolbarColor(canvasContext.backgroundColor)
             .build()
 
         var intent = CustomTabsIntent.Builder()

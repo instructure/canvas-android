@@ -41,10 +41,10 @@ class AssignmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         DrawableCompat.setTint(itemView.ungradedCount.background, ThemePrefs.brandColor)
     }
 
-    fun bind(context: Context, assignment: Assignment, courseColor: Int, callback: (Assignment) -> Unit) = with(itemView){
+    fun bind(context: Context, assignment: Assignment, iconColor: Int, callback: (Assignment) -> Unit) = with(itemView){
         assignmentLayout.setOnClickListener { callback(assignment) }
         assignmentTitle.text = assignment.name
-        assignmentIcon.setIcon(assignment.getAssignmentIcon(), courseColor)
+        assignmentIcon.setIcon(assignment.getAssignmentIcon(), iconColor)
         assignmentIcon.setPublishedStatus(assignment.published)
         publishedBar.visibility = if (assignment.published) View.VISIBLE else View.INVISIBLE
 

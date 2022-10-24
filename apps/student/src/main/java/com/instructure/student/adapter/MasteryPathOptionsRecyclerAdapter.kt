@@ -19,16 +19,14 @@ package com.instructure.student.adapter
 import android.content.Context
 import android.view.View
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.MasteryPathAssignment
-import com.instructure.pandautils.utils.ColorKeeper.getOrGenerateColor
 import com.instructure.student.holders.MasteryAssignmentViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 
 class MasteryPathOptionsRecyclerAdapter(
     context: Context,
     assignments: Array<MasteryPathAssignment>,
-    private val courseColor: Int,
+    private val iconColor: Int,
     private val mAdapterToFragmentCallback: AdapterToFragmentCallback<Assignment>
 ) : BaseListRecyclerAdapter<MasteryPathAssignment, MasteryAssignmentViewHolder>(
     context,
@@ -42,7 +40,7 @@ class MasteryPathOptionsRecyclerAdapter(
     override fun createViewHolder(v: View, viewType: Int) = MasteryAssignmentViewHolder(v)
 
     override fun bindHolder(assignment: MasteryPathAssignment, holder: MasteryAssignmentViewHolder, position: Int) {
-        holder.bind(context, assignment, courseColor, mAdapterToFragmentCallback)
+        holder.bind(context, assignment, iconColor, mAdapterToFragmentCallback)
     }
 
     override fun itemLayoutResId(viewType: Int) = MasteryAssignmentViewHolder.HOLDER_RES_ID

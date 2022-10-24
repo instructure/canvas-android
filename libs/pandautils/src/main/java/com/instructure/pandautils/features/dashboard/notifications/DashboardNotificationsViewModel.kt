@@ -151,7 +151,7 @@ class DashboardNotificationsViewModel @Inject constructor(
                     id = it.id,
                     subject = it.subject,
                     message = it.message,
-                    color = "#${color.toHexString()}",
+                    color = color,
                     icon = icon
                 ),
                 this@DashboardNotificationsViewModel::dismissAnnouncement,
@@ -225,7 +225,7 @@ class DashboardNotificationsViewModel @Inject constructor(
         val uploadViewData = UploadViewData(
             workInfo.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
             workInfo.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
-            "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
+            resources.getColor(R.color.backgroundInfo),
         )
         UploadItemViewModel(it, workManager, uploadViewData) { uuid ->
             _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))

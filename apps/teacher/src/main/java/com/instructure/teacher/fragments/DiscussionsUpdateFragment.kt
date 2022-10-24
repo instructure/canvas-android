@@ -79,9 +79,9 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         if (CanvasWebView.containsLTI(presenter.discussionEntry.message.orEmpty(), "UTF-8")) {
             rceTextEditor.setHtml(DiscussionUtils.createLTIPlaceHolders(requireContext(), presenter.discussionEntry.message.orEmpty()) { _, placeholder ->
                 placeHolderList.add(placeholder)
-            }, "", "", ThemePrefs.brandColor, ThemePrefs.buttonColor)
+            }, "", "", ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         } else {
-            rceTextEditor.setHtml(presenter.discussionEntry.message, "", "", ThemePrefs.brandColor, ThemePrefs.buttonColor)
+            rceTextEditor.setHtml(presenter.discussionEntry.message, "", "", ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         }
 
 

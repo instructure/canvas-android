@@ -214,7 +214,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             courseWasSelected()
         }
 
-        ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
+        ColorUtils.colorIt(ThemePrefs.textButtonColor, contactsImageButton)
 
         // Don't show the contacts button if there is no selected course and there is no context_code from the conversation (shouldn't happen, but it does)
         if (selectedCourse == null && presenter.course != null && presenter.course!!.id == 0L) {

@@ -141,7 +141,7 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
     }
 
     private fun setupHeader() {
-        editDashboardTextView.setTextColor(ThemePrefs.buttonColor)
+        editDashboardTextView.setTextColor(ThemePrefs.textButtonColor)
         editDashboardTextView.setOnClickListener { routeEditDashboard() }
     }
 

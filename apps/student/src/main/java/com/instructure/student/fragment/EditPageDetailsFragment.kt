@@ -119,7 +119,7 @@ class EditPageDetailsFragment : ParentFragment() {
                 page.body,
                 getString(R.string.pageDetails),
                 getString(R.string.rce_empty_description),
-                ThemePrefs.brandColor, ThemePrefs.buttonColor
+                ThemePrefs.brandColor, ThemePrefs.textButtonColor
         )
         // when the RCE editor has focus we want the label to be darker so it matches the title's functionality
         pageRCEView.setLabel(pageDescLabel, R.color.textDarkest, R.color.textDark)
@@ -180,7 +180,7 @@ class EditPageDetailsFragment : ParentFragment() {
             setIcon(0)
             setTitle(R.string.save)
         }
-        saveButtonTextView?.setTextColor(ThemePrefs.buttonColor)
+        saveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
     }
     //endregion
 

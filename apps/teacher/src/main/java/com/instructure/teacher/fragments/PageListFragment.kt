@@ -53,7 +53,6 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
 
     private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
-    private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCanvasContext) }
 
     private var mNeedToForceNetwork = false
 
@@ -113,7 +112,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     }
 
     override fun createAdapter(): PageListAdapter {
-        return PageListAdapter(requireContext(), presenter, mCourseColor) { page ->
+        return PageListAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor) { page ->
             val args = PageDetailsFragment.makeBundle(page)
             RouteMatcher.route(requireContext(), Route(null, PageDetailsFragment::class.java, mCanvasContext, args))
         }
@@ -158,12 +157,13 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbarColored(requireActivity(), pageListToolbar, mCourseColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), pageListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews() {
         createNewPage.setGone()
         createNewPage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+        createNewPage.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewPage.drawable))
         createNewPage.onClickWithRequireNetwork {
             val args = CreateOrEditPageDetailsFragment.newInstanceCreate(mCanvasContext).nonNullArgs
             RouteMatcher.route(requireContext(), Route(CreateOrEditPageDetailsFragment::class.java, null, args))
