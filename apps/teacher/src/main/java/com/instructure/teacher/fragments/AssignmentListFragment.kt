@@ -31,10 +31,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssignmentAdapter
 import com.instructure.teacher.events.AssignmentUpdatedEvent
@@ -126,13 +124,6 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
                 if (assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString)) {
                     val args = QuizDetailsFragment.makeBundle(assignment.quizId)
                     RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
-                } else if (BuildConfig.POINT_FIVE && assignment.submissionTypesRaw.contains(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString) && assignment.discussionTopicHeader != null) {
-                    val discussionTopicHeader = assignment.discussionTopicHeader!!
-
-                    assignment.discussionTopicHeader = null
-                    discussionTopicHeader.assignment = assignment
-                    val route = DiscussionRouterFragment.makeRoute(mCanvasContext, discussionTopicHeader)
-                    RouteMatcher.route(requireContext(), route)
                 } else {
                     val args = AssignmentDetailsFragment.makeBundle(assignment)
                     RouteMatcher.route(requireContext(), Route(null, AssignmentDetailsFragment::class.java, mCanvasContext, args))
