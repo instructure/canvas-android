@@ -1324,4 +1324,5 @@
     <string name="filterAssignmentGraded">Graded</string>
     <string name="filterAssignmentUpcoming">Upcoming</string>
     <string name="createdByStudentView">Created by Student View</string>
+    <string name="cameraPermissionPermanentlyDenied">Camera permission was permanently denied. Go to app settings to allow it.</string>
 </resources>
