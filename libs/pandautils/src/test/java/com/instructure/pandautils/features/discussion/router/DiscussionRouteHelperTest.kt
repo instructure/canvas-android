@@ -17,7 +17,6 @@ import io.mockk.mockkStatic
 import junit.framework.Assert.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
@@ -49,7 +48,8 @@ class DiscussionRouteHelperTest {
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
-        discussionRouteHelper = DiscussionRouteHelper(featuresManager, featureFlagProvider, discussionManager, groupManager)
+        discussionRouteHelper =
+            DiscussionRouteHelper(featuresManager, featureFlagProvider, discussionManager, groupManager)
 
         every { featureFlagProvider.getDiscussionRedesignFeatureFlag() } returns true
     }
@@ -61,14 +61,11 @@ class DiscussionRouteHelperTest {
         every { featuresManager.getEnabledFeaturesForCourseAsync(any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(listOf("react_discussions_post"))
         }
-        launch {
-            assert(discussionRouteHelper.isDiscussionRedesignEnabled(course))
-        }
+
+        assert(discussionRouteHelper.isDiscussionRedesignEnabled(course))
 
         every { featureFlagProvider.getDiscussionRedesignFeatureFlag() } returns false
-        launch {
-            assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(course))
-        }
+        assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(course))
     }
 
     @Test
@@ -77,9 +74,7 @@ class DiscussionRouteHelperTest {
         every { featuresManager.getEnabledFeaturesForCourseAsync(any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(listOf("react_discussions_post"))
         }
-        launch {
-            assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(user))
-        }
+        assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(user))
     }
 
     @Test
@@ -88,9 +83,7 @@ class DiscussionRouteHelperTest {
         every { featuresManager.getEnabledFeaturesForCourseAsync(any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(listOf("react_discussions_post"))
         }
-        launch {
-            assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(section))
-        }
+        assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(section))
     }
 
     @Test
@@ -100,9 +93,7 @@ class DiscussionRouteHelperTest {
             coEvery { await() } returns DataResult.Success(listOf("react_discussions_post"))
         }
 
-        launch {
-            assert(discussionRouteHelper.isDiscussionRedesignEnabled(course))
-        }
+        assert(discussionRouteHelper.isDiscussionRedesignEnabled(course))
     }
 
     @Test
@@ -112,9 +103,7 @@ class DiscussionRouteHelperTest {
             coEvery { await() } returns DataResult.Success(listOf())
         }
 
-        launch {
-            assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(course))
-        }
+        assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(course))
     }
 
     @Test
@@ -124,9 +113,7 @@ class DiscussionRouteHelperTest {
             coEvery { await() } returns DataResult.Success(listOf("react_discussions_post"))
         }
 
-        launch {
-            assert(discussionRouteHelper.isDiscussionRedesignEnabled(group))
-        }
+        assert(discussionRouteHelper.isDiscussionRedesignEnabled(group))
     }
 
     @Test
@@ -136,9 +123,7 @@ class DiscussionRouteHelperTest {
             coEvery { await() } returns DataResult.Success(listOf())
         }
 
-        launch {
-            assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(group))
-        }
+        assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(group))
     }
 
     @Test
@@ -148,9 +133,7 @@ class DiscussionRouteHelperTest {
             coEvery { await() } returns DataResult.Fail()
         }
 
-        launch {
-            assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(context))
-        }
+        assertFalse(discussionRouteHelper.isDiscussionRedesignEnabled(context))
     }
 
     @Test
@@ -163,9 +146,7 @@ class DiscussionRouteHelperTest {
             coEvery { await() } returns DataResult.Success(listOf(group1, group2))
         }
 
-        launch {
-            assertEquals(Pair(group2, 0L), discussionRouteHelper.getDiscussionGroup(discussionTopicHeader))
-        }
+        assertEquals(Pair(group2, 0L), discussionRouteHelper.getDiscussionGroup(discussionTopicHeader))
     }
 
     @Test
@@ -178,8 +159,6 @@ class DiscussionRouteHelperTest {
             coEvery { await() } returns DataResult.Success(listOf(group1, group2))
         }
 
-        launch {
-            assertNull(discussionRouteHelper.getDiscussionGroup(discussionTopicHeader))
-        }
+        assertNull(discussionRouteHelper.getDiscussionGroup(discussionTopicHeader))
     }
 }
