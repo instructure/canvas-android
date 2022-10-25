@@ -26,22 +26,21 @@ import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.isNotDeleted
-import com.instructure.canvasapi2.utils.isPublished
-import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.*
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditDashboardViewModel @Inject constructor(private val courseManager: CourseManager,
-                                                 private val groupManager: GroupManager) : ViewModel() {
+class EditDashboardViewModel @Inject constructor(
+    private val courseManager: CourseManager,
+    private val groupManager: GroupManager,
+    private val repository: EditDashboardRepository
+) : ViewModel() {
 
     val state: LiveData<ViewState>
         get() = _state
@@ -84,20 +83,14 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     fun loadItems() {
         viewModelScope.launch {
             try {
-                val (currentCoursesDeferred, pastCoursesDeferred, futureCoursesDeferred) = listOf(
-                        courseManager.getCoursesByEnrollmentStateAsync("active", true),
-                        courseManager.getCoursesByEnrollmentStateAsync("completed", true),
-                        courseManager.getCoursesByEnrollmentStateAsync("invited_or_pending", true)
-                )
-                        .awaitAll()
-
-                currentCourses = currentCoursesDeferred.dataOrThrow
-                pastCourses = pastCoursesDeferred.dataOrThrow
-                futureCourses = futureCoursesDeferred.dataOrThrow
+                val courses = repository.getCurses()
+                currentCourses = courses.getOrNull(0).orEmpty()
+                pastCourses = courses.getOrNull(1).orEmpty()
+                futureCourses = courses.getOrNull(2).orEmpty()
 
                 courseMap = (currentCourses + pastCourses + futureCourses).associateBy { it.id }
 
-                groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow
+                groups = repository.getGroups()
                 groups = groups.filter { it.isActive(courseMap?.get(it.courseId)) }
                 groupMap = groups.associateBy { it.id }
 
@@ -338,8 +331,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     id = it.id,
                     name = it.name,
                     isFavorite = it.isFavorite,
-                    favoriteable = it.isValidTerm() && it.isNotDeleted() && it.isPublished(),
-                    openable = it.isNotDeleted() && it.isPublished(),
+                    favoriteable = repository.isFavoriteable(it),
+                    openable = repository.isOpenable(it),
                     termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
                     actionHandler = ::handleAction
             )
@@ -353,7 +346,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     name = it.name,
                     isFavorite = false,
                     favoriteable = false,
-                    openable = it.isNotDeleted() && it.isPublished(),
+                    openable = repository.isOpenable(it),
                     termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
                     actionHandler = ::handleAction
             )
@@ -367,8 +360,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     id = it.id,
                     name = it.name,
                     isFavorite = it.isFavorite,
-                    favoriteable = it.isValidTerm() && it.isNotDeleted() && it.isPublished(),
-                    openable = it.isNotDeleted() && it.isPublished(),
+                    favoriteable = repository.isFavoriteable(it),
+                    openable = repository.isOpenable(it),
                     termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
                     actionHandler = ::handleAction
             )
