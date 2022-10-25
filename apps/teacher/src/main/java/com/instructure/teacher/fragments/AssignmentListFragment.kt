@@ -16,7 +16,6 @@
 
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
@@ -34,7 +33,6 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssignmentAdapter
 import com.instructure.teacher.events.AssignmentUpdatedEvent
@@ -126,13 +124,6 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
                 if (assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString)) {
                     val args = QuizDetailsFragment.makeBundle(assignment.quizId)
                     RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
-                } else if (BuildConfig.POINT_FIVE && assignment.submissionTypesRaw.contains(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString) && assignment.discussionTopicHeader != null) {
-                    val discussionTopicHeader = assignment.discussionTopicHeader!!
-
-                    assignment.discussionTopicHeader = null
-                    discussionTopicHeader.assignment = assignment
-                    val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader)
-                    RouteMatcher.route(requireContext(), Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args))
                 } else {
                     val args = AssignmentDetailsFragment.makeBundle(assignment)
                     RouteMatcher.route(requireContext(), Route(null, AssignmentDetailsFragment::class.java, mCanvasContext, args))

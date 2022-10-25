@@ -101,6 +101,9 @@ dependencies {
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
     implementation Libs.ANDROIDX_BROWSER
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT

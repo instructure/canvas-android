@@ -21,10 +21,10 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.APIHelper.expandTildeId
 import com.instructure.canvasapi2.utils.findWithPrevious
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.fragment.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
@@ -36,10 +36,16 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFrag
 import java.util.*
 
 object ModuleUtility {
-    fun getFragment(item: ModuleItem, course: Course, moduleObject: ModuleObject?): Fragment? = when (item.type) {
+    fun getFragment(item: ModuleItem, course: Course, moduleObject: ModuleObject?, isDiscussionRedesignEnabled: Boolean): Fragment? = when (item.type) {
         "Page" -> PageDetailsFragment.newInstance(makeRoute(course, item.title, item.pageUrl))
         "Assignment" -> AssignmentDetailsFragment.newInstance(makeRoute(course, getAssignmentId(item)))
-        "Discussion" -> DiscussionDetailsFragment.newInstance(getDiscussionRoute(item, course))
+        "Discussion" -> {
+            if (isDiscussionRedesignEnabled) {
+                DiscussionDetailsWebViewFragment.newInstance(getDiscussionRedesignRoute(item, course))
+            } else {
+                DiscussionDetailsFragment.newInstance(getDiscussionRoute(item, course))
+            }
+        }
         "Locked" -> MasteryPathLockedFragment.newInstance(makeRoute(item.title!!))
         "SubHeader" -> null // Don't do anything with headers, they're just dividers so we don't show them here.
         "Quiz" -> {
@@ -90,6 +96,15 @@ object ModuleUtility {
             ?.let { expandTildeId(it) }
             ?.toLongOrNull() ?: 0
         return makeRoute(course, topicId, null)
+    }
+
+    private fun getDiscussionRedesignRoute(moduleItem: ModuleItem, course: Course): Route {
+        // Get the topic id from the url
+        val topicId = Uri.parse(moduleItem.url).pathSegments
+            .findWithPrevious { previous, _ -> previous == "discussion_topics" }
+            ?.let { expandTildeId(it) }
+            ?.toLongOrNull() ?: 0
+        return DiscussionDetailsWebViewFragment.makeRoute(course, topicId)
     }
 
     /** Strips off the domain and protocol */

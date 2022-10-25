@@ -18,12 +18,10 @@ package com.instructure.pandautils.utils
 
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.pandautils.BuildConfig
 
 class FeatureFlagProvider(
     private val userManager: UserManager,
-    private val remoteConfigUtils: RemoteConfigUtils,
     private val apiPrefs: ApiPrefs
 ) {
 
@@ -39,6 +37,6 @@ class FeatureFlagProvider(
     }
 
     fun getDiscussionRedesignFeatureFlag(): Boolean {
-        return remoteConfigUtils.getBoolean(RemoteConfigParam.DISCUSSION_REDESIGN)
+        return BuildConfig.IS_DEBUG
     }
 }
