@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.interactions.router.Route
 import com.instructure.pandarecycler.PaginatedScrollListener
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.backgroundColor
@@ -106,8 +107,7 @@ class ModuleListView(
                 Route(null, AssignmentDetailsFragment::class.java, canvasContext, args)
             }
             ModuleItem.Type.Discussion -> {
-                val args = DiscussionsDetailsFragment.makeBundle(item.contentId)
-                Route(null, DiscussionsDetailsFragment::class.java, canvasContext, args)
+                DiscussionRouterFragment.makeRoute(canvasContext, item.contentId)
             }
             ModuleItem.Type.Page -> {
                 val args = PageDetailsFragment.makeBundle(item.pageUrl!!)
