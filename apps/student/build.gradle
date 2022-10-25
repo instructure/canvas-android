@@ -24,6 +24,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.heapanalytics.android'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -124,6 +125,12 @@ android {
                 // Filter for architectures supported by Flutter. Include x86 in debug builds so we don't crash on FTL.
                 abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64', 'x86'
             }
+
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+
+            ext {
+                heapEnabled = true
+            }
         }
 
         release {
@@ -141,6 +148,12 @@ android {
             ndk {
                 // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
                 abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            }
+
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
+
+            ext {
+                heapEnabled = true
             }
         }
     }
@@ -329,6 +342,8 @@ dependencies {
     /* WorkManager */
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
+
+    implementation Libs.HEAP
 }
 
 // Comment out this line if the reporting logic starts going wonky.
