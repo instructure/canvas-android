@@ -63,6 +63,7 @@ class EditDashboardViewModelTest {
 
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val groupManager: GroupManager = mockk(relaxed = true)
+    private val repository = StudentEditDashboardRepository(courseManager, groupManager)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
@@ -99,7 +100,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
 
         //Then
@@ -120,7 +121,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
 
         //Then
@@ -141,7 +142,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -170,7 +171,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -202,7 +203,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -236,7 +237,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -269,7 +270,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -302,7 +303,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -338,7 +339,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -378,7 +379,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
         viewModel.events.observe(lifecycleOwner, Observer {})
@@ -419,7 +420,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -459,7 +460,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -498,7 +499,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -532,7 +533,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -566,7 +567,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -597,7 +598,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -659,7 +660,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
         viewModel.events.observe(lifecycleOwner, Observer {})
@@ -700,7 +701,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
         viewModel.events.observe(lifecycleOwner, Observer {})
@@ -746,7 +747,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
         viewModel.events.observe(lifecycleOwner, Observer {})
@@ -782,7 +783,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
         viewModel.events.observe(lifecycleOwner, Observer {})
@@ -819,7 +820,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
         viewModel.events.observe(lifecycleOwner, Observer {})
@@ -856,7 +857,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
         viewModel.events.observe(lifecycleOwner, Observer {})
