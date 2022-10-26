@@ -24,6 +24,7 @@ import androidx.lifecycle.*
 import androidx.work.Data
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.google.common.util.concurrent.Futures
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
@@ -44,7 +45,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
-import okhttp3.internal.toHexString
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -147,41 +147,41 @@ class DashboardNotificationsViewModelTest {
     fun `Announcements map correctly`() {
 
         val accountNotifications = listOf(
-                AccountNotification(1, "AC1", "AC1", icon = AccountNotification.ACCOUNT_NOTIFICATION_ERROR),
-                AccountNotification(2, "AC2", "AC2", icon = AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR),
-                AccountNotification(3, "AC3", "AC3", icon = AccountNotification.ACCOUNT_NOTIFICATION_QUESTION),
-                AccountNotification(4, "AC4", "AC4", icon = AccountNotification.ACCOUNT_NOTIFICATION_WARNING)
+            AccountNotification(1, "AC1", "AC1", icon = AccountNotification.ACCOUNT_NOTIFICATION_ERROR),
+            AccountNotification(2, "AC2", "AC2", icon = AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR),
+            AccountNotification(3, "AC3", "AC3", icon = AccountNotification.ACCOUNT_NOTIFICATION_QUESTION),
+            AccountNotification(4, "AC4", "AC4", icon = AccountNotification.ACCOUNT_NOTIFICATION_WARNING)
         )
 
         val expectedItems = listOf(
-                AnnouncementViewData(
-                        1,
-                        "AC1",
-                        "AC1",
-                        color = 0,
-                        icon = R.drawable.ic_warning
-                ),
-                AnnouncementViewData(
-                        2,
-                        "AC2",
-                        "AC2",
-                        color = 0,
-                        icon = R.drawable.ic_calendar
-                ),
-                AnnouncementViewData(
-                        3,
-                        "AC3",
-                        "AC3",
-                        color = 0,
-                        icon = R.drawable.ic_question_mark
-                ),
-                AnnouncementViewData(
-                        4,
-                        "AC4",
-                        "AC4",
-                        color = 0,
-                        icon = R.drawable.ic_warning
-                ),
+            AnnouncementViewData(
+                1,
+                "AC1",
+                "AC1",
+                color = 0,
+                icon = R.drawable.ic_warning
+            ),
+            AnnouncementViewData(
+                2,
+                "AC2",
+                "AC2",
+                color = 0,
+                icon = R.drawable.ic_calendar
+            ),
+            AnnouncementViewData(
+                3,
+                "AC3",
+                "AC3",
+                color = 0,
+                icon = R.drawable.ic_question_mark
+            ),
+            AnnouncementViewData(
+                4,
+                "AC4",
+                "AC4",
+                color = 0,
+                icon = R.drawable.ic_warning
+            ),
         )
 
         every { accountNotificationManager.getAllAccountNotificationsAsync(any()) } returns mockk {
@@ -202,7 +202,7 @@ class DashboardNotificationsViewModelTest {
     @Test
     fun `Open announcement`() {
         val accountNotifications = listOf(
-                AccountNotification(1, "AC1 subject", "AC1 message", icon = AccountNotification.ACCOUNT_NOTIFICATION_ERROR)
+            AccountNotification(1, "AC1 subject", "AC1 message", icon = AccountNotification.ACCOUNT_NOTIFICATION_ERROR)
         )
 
         val expectedData = DashboardNotificationsActions.OpenAnnouncement("AC1 subject", "AC1 message")
@@ -229,17 +229,27 @@ class DashboardNotificationsViewModelTest {
     @Test
     fun `Invitations map correctly`() {
         val courses = listOf(
-                Course(id = 1, name = "Invited course"),
-                Course(id = 2, name = "Invited course with section", sections = listOf(Section(id = 1, name = "Section")))
+            Course(id = 1, name = "Invited course"),
+            Course(id = 2, name = "Invited course with section", sections = listOf(Section(id = 1, name = "Section")))
         )
         val enrolments = listOf(
-                Enrollment(id = 1, courseId = 1, enrollmentState = EnrollmentAPI.STATE_INVITED),
-                Enrollment(id = 2, courseId = 2, enrollmentState = EnrollmentAPI.STATE_INVITED, courseSectionId = 1)
+            Enrollment(id = 1, courseId = 1, enrollmentState = EnrollmentAPI.STATE_INVITED),
+            Enrollment(id = 2, courseId = 2, enrollmentState = EnrollmentAPI.STATE_INVITED, courseSectionId = 1)
         )
 
         val expectedData = listOf(
-                InvitationViewData(title = "You have been invited", description = "Invited course", enrollmentId = 1, courseId = 1),
-                InvitationViewData(title = "You have been invited", description = "Invited course with section, Section", enrollmentId = 2, courseId = 2)
+            InvitationViewData(
+                title = "You have been invited",
+                description = "Invited course",
+                enrollmentId = 1,
+                courseId = 1
+            ),
+            InvitationViewData(
+                title = "You have been invited",
+                description = "Invited course with section, Section",
+                enrollmentId = 2,
+                courseId = 2
+            )
         )
 
         every { courseManager.getCoursesAsync(any()) } returns mockk {
@@ -399,11 +409,17 @@ class DashboardNotificationsViewModelTest {
         val courses = listOf(Course(id = 1, name = "Invited course"))
 
         val conferences = listOf(
-                Conference(id = 1, title = "Conference", joinUrl = "https://notAuthenticatedSession.com", contextId = 1, contextType = "course"),
+            Conference(
+                id = 1,
+                title = "Conference",
+                joinUrl = "https://notAuthenticatedSession.com",
+                contextId = 1,
+                contextType = "course"
+            ),
         )
 
         val expectedData = listOf(
-                ConferenceViewData(subtitle = "Invited course", conference = conferences[0]),
+            ConferenceViewData(subtitle = "Invited course", conference = conferences[0]),
         )
 
         every { conferenceManager.getLiveConferencesAsync(any()) } returns mockk {
@@ -465,14 +481,14 @@ class DashboardNotificationsViewModelTest {
 
         every { FileUploadPreferences.getRunningWorkerIds() } returns listOf(workerId)
         every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(listOf(workerId))
-        every { workManager.getWorkInfoById(workerId).get() } returns WorkInfo(
+        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(WorkInfo(
             workerId,
             WorkInfo.State.RUNNING,
             Data.EMPTY,
             emptyList(),
             Data.EMPTY,
             1
-        )
+        ))
 
         viewModel.loadData()
         assertEquals(false, viewModel.data.value?.uploadItems?.isEmpty())
@@ -490,13 +506,15 @@ class DashboardNotificationsViewModelTest {
 
         every { FileUploadPreferences.getRunningWorkerIds() } returns listOf(workerId)
         every { FileUploadPreferences.getRunningWorkersLiveData() } returns MutableLiveData(listOf(workerId))
-        every { workManager.getWorkInfoById(workerId).get() } returns WorkInfo(
-            workerId,
-            WorkInfo.State.RUNNING,
-            Data.EMPTY,
-            emptyList(),
-            Data.EMPTY,
-            1
+        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+            WorkInfo(
+                workerId,
+                WorkInfo.State.RUNNING,
+                Data.EMPTY,
+                emptyList(),
+                Data.EMPTY,
+                1
+            )
         )
 
         viewModel.loadData()
