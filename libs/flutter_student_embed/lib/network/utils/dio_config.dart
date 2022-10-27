@@ -14,7 +14,6 @@
 
 import 'dart:io';
 
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter/widgets.dart';
@@ -103,24 +102,7 @@ class DioConfig {
       error: debug,
     ));
 
-    // if (DebugFlags.isDebug) {
-      _configureDebugProxy(dio);
-    // }
-
     return dio;
-  }
-
-  // To use proxy add the following run args to run configuration: --dart-define=PROXY={your proxy io}:{proxy port}
-  void _configureDebugProxy(Dio dio) {
-    // const proxy = String.fromEnvironment('PROXY', defaultValue: null);
-    // if (proxy == null) return;
-
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (client) {
-      client.findProxy = (uri) => "PROXY 192.168.1.58:8888;";
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-    };
   }
 
   Interceptor _cacheInterceptor() {
