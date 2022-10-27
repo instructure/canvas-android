@@ -46,7 +46,6 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
-import de.hdodenhof.circleimageview.CircleImageView
 import java.net.URLDecoder
 
 @BindingAdapter(value = ["itemViewModels", "onItemsAdded", "shouldUpdate"], requireAll = false)
@@ -212,7 +211,7 @@ fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: Strin
 }
 
 @BindingAdapter("avatar")
-fun bindUserAvatar(imageView: CircleImageView, avatar: AvatarViewData) {
+fun bindUserAvatar(imageView: ImageView, avatar: AvatarViewData) {
     if (avatar.group) {
         imageView.setImageResource(R.drawable.ic_group)
     } else {

@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/avatar_size"
                     android:layout_height="@dimen/avatar_size"
@@ -79,7 +79,7 @@
                 android:layout_marginTop="-4dp"
                 android:contentDescription="@string/unread"
                 android:src="@drawable/ic_circle"
-                app:imageTint="@{ThemePrefs.INSTANCE.accentColor}"
+                app:imageTint="@{@color/backgroundInfo}"
                 app:visible="@{itemViewModel.data.unread}"/>
 
         </FrameLayout>
