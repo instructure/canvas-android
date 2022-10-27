@@ -24,6 +24,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.NumberHelper
@@ -86,7 +87,7 @@ class RubricEditView @JvmOverloads constructor(
         // Set save button colors
         saveRubricButton.setTextColor(ColorStateList(
                 arrayOf(intArrayOf(-android.R.attr.state_enabled), intArrayOf()),
-                intArrayOf(context.getColorCompat(R.color.textDark), ThemePrefs.buttonColor)
+                intArrayOf(context.getColorCompat(R.color.textDark), ThemePrefs.textButtonColor)
         ))
 
         saveRubricButton.onClickWithRequireNetwork { saveRubricAssessment() }
@@ -171,6 +172,8 @@ class RubricEditView @JvmOverloads constructor(
                 // Post update event
                 AssignmentGradedEvent(mAssignment.id).post()
                 SubmissionUpdatedEvent(updatedSubmission).post()
+                CanvasRestAdapter.clearCacheUrls("courses/${mAssignment.courseId}/assignment_groups")
+                CanvasRestAdapter.clearCacheUrls("courses/${mAssignment.courseId}/assignments/${mAssignment.id}")
 
                 // Show success toast
                 this@RubricEditView.toast(R.string.success_saving_rubric_assessment)

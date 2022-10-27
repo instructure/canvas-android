@@ -28,7 +28,6 @@ import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
-import junit.framework.Assert.assertEquals
 import org.junit.Test
 
 @HiltAndroidTest
@@ -64,7 +63,7 @@ class DashboardE2ETest : StudentTest() {
         Log.d(PREPARATION_TAG,"Create group membership for ${student.name} student.")
         GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 

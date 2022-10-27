@@ -16,7 +16,6 @@
 
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
@@ -34,7 +33,6 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssignmentAdapter
 import com.instructure.teacher.events.AssignmentUpdatedEvent
@@ -63,7 +61,6 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     private var mPairedWithSubmissions: Boolean = false
     private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
-    private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCanvasContext) }
 
     private var mGradingPeriodMenu: PopupMenu? = null
     private var mNeedToForceNetwork = false
@@ -119,7 +116,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     }
 
     override fun createAdapter(): AssignmentAdapter {
-        return AssignmentAdapter(requireContext(), presenter, mCourseColor) { assignment ->
+        return AssignmentAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor) { assignment ->
             if (mPairedWithSubmissions) {
                 val args = AssignmentSubmissionListFragment.makeBundle(assignment)
                 RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, mCanvasContext, args))
@@ -127,13 +124,6 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
                 if (assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString)) {
                     val args = QuizDetailsFragment.makeBundle(assignment.quizId)
                     RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
-                } else if (BuildConfig.POINT_FIVE && assignment.submissionTypesRaw.contains(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString) && assignment.discussionTopicHeader != null) {
-                    val discussionTopicHeader = assignment.discussionTopicHeader!!
-
-                    assignment.discussionTopicHeader = null
-                    discussionTopicHeader.assignment = assignment
-                    val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader)
-                    RouteMatcher.route(requireContext(), Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args))
                 } else {
                     val args = AssignmentDetailsFragment.makeBundle(assignment)
                     RouteMatcher.route(requireContext(), Route(null, AssignmentDetailsFragment::class.java, mCanvasContext, args))
@@ -214,7 +204,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         assignmentListToolbar.subtitle = mCanvasContext.name
         assignmentListToolbar.setupBackButton(this)
 
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, mCourseColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     override fun adjustGradingPeriodHeader(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) {
@@ -234,7 +224,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
                 clearGradingPeriodText.visibility = View.INVISIBLE
             }
 
-            clearGradingPeriodText.setTextColor(ThemePrefs.buttonColor)
+            clearGradingPeriodText.setTextColor(ThemePrefs.textButtonColor)
 
         } else {
             gradingPeriodContainer.visibility = View.GONE

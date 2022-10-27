@@ -35,7 +35,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="24dp"
         android:padding="2dp"
-        app:borderColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}">
+        app:borderColor="@{itemViewModel.data.courseColor}">
 
         <TextView
             android:id="@+id/scheduleCourseHeaderText"
@@ -54,7 +54,7 @@
             android:paddingEnd="0dp"
             android:text="@{itemViewModel.data.courseName}"
             android:textAllCaps="true"
-            android:textColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+            android:textColor="@{itemViewModel.data.courseColor}"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

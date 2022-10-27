@@ -41,7 +41,6 @@ import kotlinx.android.synthetic.main.adapter_inbox.view.*
 class InboxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     init {
-        itemView.unreadMark.backgroundTintList = ColorStateList.valueOf(ThemePrefs.accentColor)
         itemView.star.imageTintList = ColorStateList.valueOf(ThemePrefs.brandColor)
         itemView.message.maxLines = 1
     }

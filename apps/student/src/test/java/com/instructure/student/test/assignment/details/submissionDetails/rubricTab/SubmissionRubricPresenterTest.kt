@@ -21,7 +21,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.*
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import org.junit.Assert
@@ -43,7 +43,7 @@ class SubmissionRubricPresenterTest : Assert() {
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
-        val courseColor = course.color // Define here so the color gets cached properly for all tests
+        val courseColor = course.backgroundColor // Define here so the color gets cached properly for all tests
 
         assignmentTemplate = Assignment(
             courseId = course.id,
@@ -159,7 +159,7 @@ class SubmissionRubricPresenterTest : Assert() {
                     criterionId = "123",
                     showDescriptionButton = true,
                     comment = null,
-                    tint = course.color
+                    tint = course.backgroundColor
                 )
             )
         )

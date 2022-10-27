@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.files.search
 
 import android.view.View
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
@@ -31,6 +32,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.holders.FileFolderViewHolder
 import com.instructure.teacher.utils.viewMedia
 import kotlinx.android.synthetic.main.fragment_file_search.*
+import com.instructure.pandautils.utils.ColorUtils as PandaColorUtils
 
 @ScreenView(SCREEN_VIEW_FILE_SEARCH)
 class FileSearchFragment : BaseSyncFragment<
@@ -40,12 +42,10 @@ class FileSearchFragment : BaseSyncFragment<
         FileFolderViewHolder,
         FileSearchAdapter>(), FileSearchView {
 
-    private val courseColor by lazy { ColorKeeper.getOrGenerateColor(canvasContext) }
-
     private val searchAdapter by lazy {
-        FileSearchAdapter(requireContext(), courseColor, presenter) {
-            val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.canvasContext, R.drawable.ic_document)
-            viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, courseColor, editableFile)
+        FileSearchAdapter(requireContext(), canvasContext.textAndIconColor, presenter) {
+            val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.backgroundColor, presenter.canvasContext, R.drawable.ic_document)
+            viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.backgroundColor, editableFile)
         }
     }
 
@@ -74,7 +74,7 @@ class FileSearchFragment : BaseSyncFragment<
     }
 
     private fun setupViews() {
-        ViewStyler.themeStatusBar(requireActivity())
+        themeSearchBar()
 
         // Set up empty state
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nofiles))
@@ -96,6 +96,17 @@ class FileSearchFragment : BaseSyncFragment<
         queryInput.onChangeDebounce(FileSearchPresenter.MIN_QUERY_LENGTH, FileSearchPresenter.QUERY_DEBOUNCE) {
             presenter.searchQuery = it
         }
+    }
+
+    private fun themeSearchBar() {
+        val primaryTextColor = if (canvasContext?.isUser.orDefault()) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.white)
+        val primaryColor = canvasContext.backgroundColor
+        ViewStyler.setStatusBarDark(requireActivity(), primaryColor)
+        searchHeader.setBackgroundColor(primaryColor)
+        queryInput.setTextColor(primaryTextColor)
+        queryInput.setHintTextColor(ColorUtils.setAlphaComponent(primaryTextColor, 0x66))
+        PandaColorUtils.colorIt(primaryTextColor, backButton)
+        PandaColorUtils.colorIt(primaryTextColor, clearButton)
     }
 
     override fun checkIfEmpty() {

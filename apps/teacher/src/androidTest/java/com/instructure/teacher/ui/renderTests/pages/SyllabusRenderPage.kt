@@ -17,14 +17,10 @@
 package com.instructure.teacher.ui.renderTests.pages
 
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.web.assertion.WebViewAssertions
-import androidx.test.espresso.web.sugar.Web
-import androidx.test.espresso.web.webdriver.DriverAtoms
-import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
-import com.instructure.teacher.ui.pages.SyllabusPage
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.pages.SyllabusPage
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
 

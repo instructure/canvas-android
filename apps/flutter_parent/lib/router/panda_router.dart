@@ -115,10 +115,11 @@ class PandaRouter {
 
   static String loginWeb(
     String domain, {
+    String accountName = '',
     String authenticationProvider = null,
     LoginFlow loginFlow = LoginFlow.normal,
   }) =>
-      '$_loginWeb?${_RouterKeys.domain}=${Uri.encodeQueryComponent(domain)}&${_RouterKeys.authenticationProvider}=$authenticationProvider&${_RouterKeys.loginFlow}=${loginFlow.toString()}';
+      '$_loginWeb?${_RouterKeys.domain}=${Uri.encodeQueryComponent(domain)}&${_RouterKeys.accountName}=${Uri.encodeQueryComponent(accountName)}&${_RouterKeys.authenticationProvider}=$authenticationProvider&${_RouterKeys.loginFlow}=${loginFlow.toString()}';
 
   static String notParent() => '/not_parent';
 
@@ -325,6 +326,7 @@ class PandaRouter {
 
     return WebLoginScreen(
       params[_RouterKeys.domain][0],
+      accountName: params[_RouterKeys.accountName][0],
       authenticationProvider: authProvider,
       loginFlow: loginFlow,
     );
@@ -507,6 +509,7 @@ class _RouterKeys {
   static final calendarView = 'view_name';
   static final courseId = 'courseId';
   static final domain = 'domain';
+  static final accountName = 'accountName';
   static final eventId = 'eventId';
   static final infoText = 'infoText';
   static final isCreatingAccount = 'isCreatingAccount';

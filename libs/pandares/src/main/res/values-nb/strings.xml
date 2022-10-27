@@ -958,7 +958,6 @@
     <string name="latePenalty">Forsinkelsesstraff (-%s)</string>
     <string name="finalGrade">Sluttvurdering</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Åpne i nettvisning</string>
@@ -1271,4 +1270,17 @@
     <string name="themeSelectorSave">Lagre</string>
     <string name="themeSelectorChangeLater">Du kan endre det senere i appinnstillinger</string>
     <string name="grabAnnotationTool">Grip</string>
+    <string name="fileUpload">Filopplasting</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s uleste melding</item>
+        <item quantity="other">%s uleste meldinger</item>
+    </plurals>
+    <string name="noAnnotationSelected">Ingen merknad valgt</string>
+    <string name="emailNotifications">E-post varslinger</string>
+    <string name="emailNotificationsImmediately">Umiddelbart</string>
+    <string name="emailNotificationsDaily">Daglig</string>
+    <string name="emailNotificationsWeekly">Ukentlig</string>
+    <string name="emailNotificationsNever">Aldri</string>
+    <string name="selectFrequency">Velg frekvens</string>
 </resources>

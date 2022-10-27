@@ -49,14 +49,13 @@
                 android:paddingEnd="20dp"
                 android:paddingBottom="12dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/navigationDrawerProfileImage"
                     android:layout_width="@dimen/profileAvatarSize"
                     android:layout_height="@dimen/profileAvatarSize"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:importantForAccessibility="no"
-                    app:civ_circle_background_color="@color/backgroundDark" />
+                    android:importantForAccessibility="no" />
 
             </RelativeLayout>
 

@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.modules.list.ui.binders
 
 import android.content.res.ColorStateList
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
@@ -30,6 +31,7 @@ class ModuleListInlineErrorBinder : ListItemBinder<ModuleListItemData.InlineErro
     override val bindBehavior = Item { item, view, callback ->
         with(view.retryButton) {
             backgroundTintList = ColorStateList.valueOf(item.buttonColor)
+            setTextColor(ThemePrefs.buttonTextColor)
             setOnClickListener { callback.retryNextPage() }
         }
     }

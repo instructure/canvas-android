@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.activities
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -23,6 +24,7 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.BundleSaver
+import com.instructure.pandautils.utils.ColorKeeper
 
 abstract class BaseActionBarActivity : AppCompatActivity() {
 
@@ -33,6 +35,10 @@ abstract class BaseActionBarActivity : AppCompatActivity() {
         BundleSaver.restoreBundleFromDisk(savedInstanceState)
         super.onCreate(savedInstanceState)
         overrideFont()
+
+        val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
         if (contentResId() != 0) {
             setContentView(contentResId())
         }

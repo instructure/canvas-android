@@ -2,9 +2,9 @@
 
 object Versions {
     /* SDK Versions */
-    const val COMPILE_SDK = 30
+    const val COMPILE_SDK = 31
     const val MIN_SDK = 26
-    const val TARGET_SDK = 30
+    const val TARGET_SDK = 31
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "3.5.1"
@@ -30,18 +30,18 @@ object Versions {
     /* Others */
     const val APOLLO = "2.5.9"
     const val CRASHLYTICS = "17.2.1"
-    const val FIREBASE_ANALYTICS = "17.4.1"
-    const val PSPDFKIT = "8.1.0"
+    const val PSPDFKIT = "8.3.0"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.4.3"
     const val HILT = "2.38.1"
     const val LIFECYCLE = "2.3.1"
     const val FRAGMENT = "1.3.6"
-    const val WORK_MANAGER = "2.6.0"
+    const val WORK_MANAGER = "2.7.1"
     const val GLIDE_VERSION = "4.12.0"
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.9.1"
+    const val HEAP = "1.10.5"
 }
 
 object Libs {
@@ -78,7 +78,6 @@ object Libs {
 
     /* Firebase */
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:29.3.0"
-    const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging"
     const val FIREBASE_CORE = "com.google.firebase:firebase-core"
@@ -86,7 +85,6 @@ object Libs {
     const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk"
 
     /* Play Services */
-    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:18.0.1"
     const val PLAY_CORE = "com.google.android.play:core:${Versions.PLAY_CORE}"
     const val PLAY_CORE_KTX = "com.google.android.play:core-ktx:${Versions.PLAY_CORE_KTX}"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
@@ -155,6 +153,8 @@ object Libs {
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.6"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
+
+    const val HEAP = "com.heapanalytics.android:heap-android-client:${Versions.HEAP}"
 }
 
 object Plugins {
@@ -167,6 +167,7 @@ object Plugins {
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
+    const val HEAP = "com.heapanalytics.android:heap-android-gradle:${Versions.HEAP}"
 }
 
 object BuildScan {

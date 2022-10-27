@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2022 - present Instructure, Inc.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.instructure.pandautils.features.shareextension.progress.ShareExtensionProgressDialogViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.data == null ? View.GONE : View.VISIBLE}">
+
+            <ImageView
+                android:id="@+id/closeButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/a11y_closeProgress"
+                android:onClick="@{() -> viewModel.onCloseClicked()}"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/textDarkest" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@{viewModel.data.dialogTitle}"
+                android:textColor="@color/textDarkest"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@id/closeButton"
+                app:layout_constraintStart_toEndOf="@id/closeButton"
+                app:layout_constraintTop_toTopOf="@id/closeButton"
+                tools:text="Submission" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/backgroundMedium"
+                app:layout_constraintTop_toBottomOf="@id/closeButton" />
+
+            <TextView
+                android:id="@+id/subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{viewModel.data.subtitle}"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                tools:text="Uploading submission for Assignment Name" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:max="100"
+                android:progress="@{viewModel.data.progressInt}"
+                android:progressTint="@color/backgroundInfo"
+                app:layout_constraintTop_toBottomOf="@id/subtitle"
+                tools:progress="25" />
+
+            <TextView
+                android:id="@+id/percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{viewModel.data.percentage}"
+                android:textColor="@color/textDarkest"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@id/progressBar"
+                app:layout_constraintTop_toBottomOf="@id/progressBar"
+                tools:text="32.7%" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12sp"
+                android:text="@{@string/fileUploadProgress(viewModel.data.currentSize, viewModel.data.maxSize)}"
+                android:textColor="@color/textDark"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@id/percentage"
+                app:layout_constraintTop_toTopOf="@id/percentage"
+                tools:text="16 MB of 49.3 MB" />
+
+            <View
+                android:id="@+id/itemsDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/backgroundMedium"
+                app:layout_constraintTop_toBottomOf="@id/percentage" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:itemViewModels="@{viewModel.data.items}"
+                app:layout_constraintTop_toBottomOf="@id/itemsDivider" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.instructure.pandautils.views.EmptyView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:emptyViewState="@{viewModel.state}" />
+    </FrameLayout>
+</layout>

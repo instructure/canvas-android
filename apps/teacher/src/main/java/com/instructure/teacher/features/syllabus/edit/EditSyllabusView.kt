@@ -64,7 +64,7 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
             }
         }
         ViewStyler.themeToolbarLight(activity!!, toolbar)
-        saveMenuView?.setTextColor(ThemePrefs.buttonColor)
+        saveMenuView?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun savePage() {
@@ -85,7 +85,7 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
     private fun renderLoadedContent(state: EditSyllabusViewState.Loaded) {
         savingProgressBar.setGone()
         saveMenuButton.isVisible = true
-        saveMenuView?.setTextColor(ThemePrefs.buttonColor)
+        saveMenuView?.setTextColor(ThemePrefs.textButtonColor)
         renderContent(state.content ?: "")
         showSummarySwitch.isChecked = state.showSummary
     }
@@ -107,14 +107,14 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
             },
                 context.getString(R.string.editSyllabusContentAccessibilityLabel),
                 context.getString(R.string.rce_empty_description),
-                ThemePrefs.brandColor, ThemePrefs.buttonColor
+                ThemePrefs.brandColor, ThemePrefs.textButtonColor
             )
         } else {
             contentRCEView?.setHtml(
                 content,
                 context.getString(R.string.editSyllabusContentAccessibilityLabel),
                 context.getString(R.string.rce_empty_description),
-                ThemePrefs.brandColor, ThemePrefs.buttonColor
+                ThemePrefs.brandColor, ThemePrefs.textButtonColor
             )
         }
     }

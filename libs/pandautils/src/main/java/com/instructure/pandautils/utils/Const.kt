@@ -87,6 +87,7 @@ object Const {
     const val UNREAD = "unread"
     const val UPLOAD_TYPE = "uploadType"
     const val URI = "uri"
+    const val URIS = "uris"
     const val URL = "url"
     const val USER = "user"
     const val USER_ID = "userId"

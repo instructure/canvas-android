@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.StreamItem.Type.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -34,6 +35,7 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.ParentActivity
@@ -47,7 +49,7 @@ import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 
 @ScreenView(SCREEN_VIEW_NOTIFICATION_LIST)
 @PageView
-class NotificationListFragment : ParentFragment(), Bookmarkable {
+class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager.OnBackStackChangedListener {
 
     @PageViewUrl
     @Suppress("unused")
@@ -79,6 +81,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
                         emptyView.setGuidelines(.28f,.6f,.73f,.12f,.88f)
                     }
                 }
+                (activity as? OnNotificationCountInvalidated)?.invalidateNotificationCount()
             }
 
             override fun onShowEditView(isVisible: Boolean) {
@@ -88,11 +91,14 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
             override fun onShowErrorCrouton(message: Int) {
                 showToast(message)
             }
+
+            override fun onItemRemoved() {
+                (activity as? OnNotificationCountInvalidated)?.invalidateNotificationCount()
+            }
         }
 
     // Used to help determine if the bottom bar should be highlighted
     fun isCourseOrGroup(): Boolean = canvasContext.isCourseOrGroup
-
 
     override fun title(): String = getString(if (canvasContext.isCourse || canvasContext.isGroup) R.string.homePageIdForNotifications else R.string.notifications)
 
@@ -119,10 +125,25 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
         cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
 
         applyTheme()
+
+        activity?.supportFragmentManager?.addOnBackStackChangedListener(this)
+    }
+
+    private var shouldRefreshOnResume = false
+
+    override fun onBackStackChanged() {
+        if (activity?.supportFragmentManager?.fragments?.lastOrNull()?.javaClass == this.javaClass) {
+            if (shouldRefreshOnResume) {
+                swipeRefreshLayout.isRefreshing = true
+                recyclerAdapter.refresh()
+                shouldRefreshOnResume = false
+            }
+        }
     }
 
     override fun onDestroyView() {
         recyclerAdapter.cancel()
+        activity?.supportFragmentManager?.removeOnBackStackChangedListener(this)
         super.onDestroyView()
     }
 
@@ -184,11 +205,16 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
             return false
         }
         addFragmentForStreamItem(streamItem, activity as ParentActivity, false)
+        shouldRefreshOnResume = !streamItem.isReadState
         return true
     }
 
     override val bookmark: Bookmarker
         get() = Bookmarker(canvasContext.isCourseOrGroup, canvasContext)
+
+    interface OnNotificationCountInvalidated {
+        fun invalidateNotificationCount()
+    }
 
     companion object {
         fun addFragmentForStreamItem(streamItem: StreamItem, context: Context, fromWidget: Boolean) {
@@ -226,7 +252,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
                     null
                 }
                 ANNOUNCEMENT, DISCUSSION_TOPIC -> {
-                    val route = DiscussionDetailsFragment.makeRoute(canvasContext, streamItem.discussionTopicId)
+                    val route = DiscussionRouterFragment.makeRoute(canvasContext, streamItem.discussionTopicId)
                     RouteMatcher.route(context, route)
                     null
                 }

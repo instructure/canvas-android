@@ -958,7 +958,6 @@
     <string name="latePenalty">Viðurlög vegna of seinna skila(-%s)</string>
     <string name="finalGrade">Lokaeinkunn:</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Opnast í vefglugga</string>
@@ -1270,4 +1269,17 @@
     <string name="themeSelectorSave">Vista</string>
     <string name="themeSelectorChangeLater">Þú getur breytt því síðar í stillingum smáforrits</string>
     <string name="grabAnnotationTool">Grípa</string>
+    <string name="fileUpload">Hlaða upp skrá</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s ólesin skilaboð</item>
+        <item quantity="other">%s ólesin skilaboð</item>
+    </plurals>
+    <string name="noAnnotationSelected">Engin athugasemd valin</string>
+    <string name="emailNotifications">Tilkynningar í tölvupósti</string>
+    <string name="emailNotificationsImmediately">Tafarlaust</string>
+    <string name="emailNotificationsDaily">Daglega</string>
+    <string name="emailNotificationsWeekly">Vikulega</string>
+    <string name="emailNotificationsNever">Aldrei</string>
+    <string name="selectFrequency">Veldu tíðni</string>
 </resources>

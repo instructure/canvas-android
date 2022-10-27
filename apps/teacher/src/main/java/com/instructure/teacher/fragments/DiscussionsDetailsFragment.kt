@@ -16,7 +16,6 @@
 package com.instructure.teacher.fragments
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
@@ -65,7 +64,6 @@ import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
@@ -254,10 +252,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
             discussionRepliesWebView.setInvisible()
 
-            repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies, {
-                val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-            })
+            repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), html, {
+                discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
+            }) {
+                LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+            }
 
             delay(300)
             discussionsScrollView.post {
@@ -401,30 +400,19 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         authoredDate?.text = DateHelper.getMonthDayAtTime(requireContext(), discussionTopicHeader.postedDate, getString(R.string.at))
         discussionTopicTitle?.text = discussionTopicHeader.title
 
-        replyToDiscussionTopic.setTextColor(ThemePrefs.buttonColor)
+        replyToDiscussionTopic.setTextColor(ThemePrefs.textButtonColor)
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
         replyToDiscussionTopic.onClick {
             showReplyView(presenter.discussionTopicHeader.id)
         }
 
-        headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic, {
-            val args = LtiLaunchFragment.makeBundle(
-                    canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(
-                    this@DiscussionsDetailsFragment.requireContext(),
-                    Route(LtiLaunchFragment::class.java, canvasContext, args))
-        }, discussionTopicHeader.title)
+        headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
+            discussionTopicHeaderWebView.loadHtml(it, discussionTopicHeader.title, baseUrl = mDiscussionTopicHeader.htmlUrl)
+        }) {
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+        }
 
         discussionRepliesWebView.loadHtml("", "")
-    }
-
-    private fun loadHTMLTopic(html: String, contentDescription: String?) {
-        discussionTopicHeaderWebView.loadHtml(html, contentDescription)
-    }
-
-    private fun loadHTMLReplies(html: String, contentDescription: String? = null) {
-        discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
     }
 
     override fun onPause() {
@@ -467,7 +455,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
         toolbar.setupMenu(R.menu.menu_edit_generic, menuItemCallback)
@@ -475,7 +463,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if(!isTablet) {
             toolbar.subtitle = mCanvasContext.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
@@ -693,8 +681,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             builder.setNegativeButton(android.R.string.no) { _, _ -> }
             val dialog = builder.create()
             dialog.setOnShowListener {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
             }
             dialog.show()
         } else {

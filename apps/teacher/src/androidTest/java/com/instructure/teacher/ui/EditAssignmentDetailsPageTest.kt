@@ -61,6 +61,7 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
         editAssignmentDetailsPage.clickAssignmentNameEditText()
         val newAssignmentName = randomString()
         editAssignmentDetailsPage.editAssignmentName(newAssignmentName)
+        editAssignmentDetailsPage.saveAssignment()
         assignmentDetailsPage.assertAssignmentNameChanged(newAssignmentName)
     }
 
@@ -71,6 +72,7 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
         editAssignmentDetailsPage.clickPointsPossibleEditText()
         val newPoints = randomDouble()
         editAssignmentDetailsPage.editAssignmentPoints(newPoints)
+        editAssignmentDetailsPage.saveAssignment()
         val stringPoints = NumberHelper.formatDecimal(newPoints, 1, true)
         assignmentDetailsPage.assertAssignmentPointsChanged(stringPoints)
     }

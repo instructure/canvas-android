@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.isCourse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -94,7 +95,7 @@ class ElementaryCourseViewModel @Inject constructor(
         }
 
         val tabViewData = createTabs(canvasContext, filteredTabs)
-        _data.postValue(ElementaryCourseViewData(tabViewData))
+        _data.postValue(ElementaryCourseViewData(tabViewData, canvasContext.backgroundColor))
         _state.postValue(ViewState.Success)
     }
 

@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.activities.MasterDetailActivity
 import com.instructure.teacher.events.SyllabusUpdatedEvent
 import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.syllabus.SyllabusEvent
@@ -71,9 +72,12 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         setEditVisibility(false)
         ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
 
-        syllabusTabLayout.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
+        syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
 
-        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        if (context !is MasterDetailActivity) {
+            toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        }
+
         toolbar.title = context.getString(com.instructure.pandares.R.string.syllabus)
         toolbar.subtitle = canvasContext.name
 
@@ -170,7 +174,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
-        val route = Route(CalendarEventFragment::class.java, canvasContext, CalendarEventFragment.createArgs(canvasContext, scheduleItem))
+        val route = Route(null, CalendarEventFragment::class.java, canvasContext, CalendarEventFragment.createArgs(canvasContext, scheduleItem))
         RouteMatcher.route(context, route)
     }
 

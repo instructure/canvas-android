@@ -16,11 +16,9 @@
 package com.instructure.teacher.ui.pages
 
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.*
 
 
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.onViewWithText
 import com.instructure.teacher.R
 
 @Suppress("unused")
@@ -41,12 +39,28 @@ class AssignmentDueDatesPage : BasePage(pageResId = R.id.dueDatesPage) {
         onViewWithId(R.id.dueDateTextView).assertDisplayed().assertHasText(R.string.no_due_date)
     }
 
+    fun assertDueDatesCount(expectedCount: Int) {
+        recyclerView.check(RecyclerViewItemCountAssertion(expectedCount))
+    }
+
     fun assertDisplaysSingleDueDate() {
         recyclerView.check(RecyclerViewItemCountAssertion(1))
         assertLabelsDisplayedOnce()
         assertNoAvailabilityDates()
         onViewWithId(R.id.dueForTextView).assertDisplayed().assertHasText(R.string.everyone)
         onViewWithId(R.id.dueDateTextView).assertDisplayed().assertNotHasText(R.string.no_due_date)
+    }
+
+    fun assertDueFor(dueForString: Int) {
+        onView(withId(R.id.dueForTextView) + withText(dueForString)).assertDisplayed()
+    }
+
+    fun assertDueFor(dueForString: String) {
+        onView(withId(R.id.dueForTextView) + withText(dueForString)).assertDisplayed()
+    }
+
+    fun assertDueDateTime(dueDateString: String) {
+        onView(withId(R.id.dueDateTextView) + withText(dueDateString))
     }
 
     fun assertDisplaysAvailabilityDates() {

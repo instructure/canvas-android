@@ -182,7 +182,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         toolbar.setupMenu(R.menu.menu_save_generic) { saveAssignment() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun setupPublishSwitch() = with(mAssignment) {
@@ -323,8 +323,8 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         addOverride.setVisible(true)
 
         // Theme add button and plus image
-        addOverrideText.setTextColor(ThemePrefs.buttonColor)
-        plus.setColorFilter(ThemePrefs.buttonColor)
+        addOverrideText.setTextColor(ThemePrefs.textButtonColor)
+        plus.setColorFilter(ThemePrefs.textButtonColor)
 
         addOverride.setOnClickListener {
             mEditDateGroups.add(DueDateGroup())
@@ -387,13 +387,13 @@ class EditAssignmentDetailsFragment : BaseFragment() {
             },
                     getString(R.string.assignmentDescriptionContentDescription),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor)
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor)
 
         } else {
             descriptionEditor.setHtml(mAssignment.description,
                     getString(R.string.assignmentDescriptionContentDescription),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor)
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         }
         // when the RCE editor has focus we want the label to be darker so it matches the title's functionality
         descriptionEditor.setLabel(assignmentDescLabel, R.color.textDarkest, R.color.textDark)

@@ -35,7 +35,7 @@
         android:layout_marginBottom="24dp"
         android:orientation="horizontal"
         android:weightSum="4"
-        app:borderColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}">
+        app:borderColor="@{itemViewModel.data.courseColor}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/titleLayout"
@@ -63,7 +63,7 @@
                 android:paddingBottom="4dp"
                 android:text="@{itemViewModel.data.courseName}"
                 android:textAllCaps="true"
-                android:textColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                android:textColor="@{itemViewModel.data.courseColor}"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,7 +76,7 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="1.5dp"
                 android:layout_marginBottom="1.5dp"
-                android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                android:background="@{itemViewModel.data.courseColor}"
                 android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{itemViewModel.data.imageUrl}"
@@ -84,14 +84,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/courseName"
-                app:overlayColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}" />
+                app:overlayColor="@{itemViewModel.data.courseColor}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}" />
+            android:background="@{itemViewModel.data.courseColor}" />
 
         <LinearLayout
             android:id="@+id/plannerItems"

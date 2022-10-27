@@ -22,7 +22,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.RatingDialog
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
@@ -45,16 +46,42 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         versionTextView.text = getString(R.string.fullVersion, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
-        profileButton.onClick { RouteMatcher.route(requireContext(), Route(ProfileFragment::class.java, null)) }
-        rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), com.instructure.pandautils.utils.AppType.TEACHER) }
+        profileButton.onClick {
+            RouteMatcher.route(
+                requireContext(),
+                Route(null, ProfileFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
+            )
+        }
+        rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), AppType.TEACHER) }
         legalButton.onClick { LegalDialog().show(requireFragmentManager(), LegalDialog.TAG) }
-        notificationPreferenesButton.onClick { RouteMatcher.route(requireContext(), Route(NotificationPreferencesFragment::class.java, null)) }
+        notificationPreferenesButton.onClick {
+            RouteMatcher.route(
+                requireContext(),
+                Route(null, PushNotificationPreferencesFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
+            )
+        }
+        emailNotifications.onClick {
+            RouteMatcher.route(
+                requireContext(),
+                Route(null, EmailNotificationPreferencesFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
+            )
+        }
         if (BuildConfig.DEBUG) {
             featureFlagButton.setVisible()
-            featureFlagButton.onClick { RouteMatcher.route(requireContext(), Route(FeatureFlagsFragment::class.java, null)) }
+            featureFlagButton.onClick {
+                RouteMatcher.route(
+                    requireContext(),
+                    Route(null, FeatureFlagsFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
+                )
+            }
 
             remoteConfigButton.setVisible()
-            remoteConfigButton.onClick { RouteMatcher.route(requireContext(), Route(RemoteConfigParamsFragment::class.java, null))}
+            remoteConfigButton.onClick {
+                RouteMatcher.route(
+                    requireContext(),
+                    Route(null, RemoteConfigParamsFragment::class.java, canvasContext, canvasContext?.makeBundle() ?: Bundle())
+                )
+            }
         }
     }
 
@@ -81,8 +108,7 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
     fun setupToolbar() {
         toolbar.setupBackButton(this)
         toolbar.title = getString(R.string.settings)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
-        ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     override fun onRefreshStarted() {}

@@ -48,17 +48,7 @@ class LoginE2ETest : TeacherTest() {
         val teacher2 = data.teachersList[1]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
-
-        Log.d(STEP_TAG,"Enter domain: ${teacher1.domain}.")
-        loginFindSchoolPage.enterDomain(teacher1.domain)
-
-        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
-        loginFindSchoolPage.clickToolbarNextMenuItem()
-
-        Log.d(STEP_TAG,"Login with user: ${teacher1.name}, login id: ${teacher1.loginId} , password: ${teacher1.password}")
-        loginSignInPage.loginAs(teacher1)
+        loginWithUser(teacher1)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         verifyDashboardPage(teacher1)
@@ -69,17 +59,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Log out with ${teacher1.name} student.")
         dashboardPage.logOut()
 
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
-
-        Log.d(STEP_TAG,"Enter domain: ${teacher2.domain}.")
-        loginFindSchoolPage.enterDomain(teacher2.domain)
-
-        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
-        loginFindSchoolPage.clickToolbarNextMenuItem()
-
-        Log.d(STEP_TAG,"Login with user: ${teacher2.name}, login id: ${teacher2.loginId} , password: ${teacher2.password}")
-        loginSignInPage.loginAs(teacher2)
+        loginWithUser(teacher2, true)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         verifyDashboardPage(teacher2)
@@ -90,17 +70,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
 
-        Log.d(STEP_TAG,"Login MANUALLY. Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
-
-        Log.d(STEP_TAG,"Enter domain: ${teacher1.domain}.")
-        loginFindSchoolPage.enterDomain(teacher1.domain)
-
-        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
-        loginFindSchoolPage.clickToolbarNextMenuItem()
-
-        Log.d(STEP_TAG,"Login with user: ${teacher1.name}, login id: ${teacher1.loginId} , password: ${teacher1.password}")
-        loginSignInPage.loginAs(teacher1)
+        loginWithUser(teacher1, true)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         verifyDashboardPage(teacher1)
@@ -133,17 +103,7 @@ class LoginE2ETest : TeacherTest() {
         val student = data.studentsList[0]
         val parent = parentData.parentsList[0]
 
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
-
-        Log.d(STEP_TAG,"Enter domain: ${parent.domain}.")
-        loginFindSchoolPage.enterDomain(parent.domain)
-
-        Log.d(STEP_TAG,"Enter domain: ${parent.domain}.")
-        loginFindSchoolPage.clickToolbarNextMenuItem()
-
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
-        loginSignInPage.loginAs(student)
+        loginWithUser(student)
 
         Log.d(STEP_TAG,"Assert that the user has been landed on 'Not a teacher?' Page.")
         notATeacherPage.assertPageObjects()
@@ -154,20 +114,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert the Teacher app's Login Landing Page's screen is displayed.")
         loginLandingPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Click 'Find My School' button.")
-        loginLandingPage.clickFindMySchoolButton()
-
-        Log.d(STEP_TAG,"Enter domain: ${parent.domain}.")
-        loginFindSchoolPage.enterDomain(parent.domain)
-
-        Log.d(STEP_TAG,"Enter domain: ${parent.domain}.")
-        loginFindSchoolPage.clickToolbarNextMenuItem()
-
-        Log.d(STEP_TAG,"Assert that the Login page has been displayed.")
-        loginSignInPage.assertPageObjects()
-
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId} , password: ${parent.password}")
-        loginSignInPage.loginAs(parent)
+        loginWithUser(parent, true)
 
         Log.d(STEP_TAG,"Assert that the user has been landed on 'Not a teacher?' Page.")
         notATeacherPage.assertPageObjects()
@@ -177,6 +124,62 @@ class LoginE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Assert that the user has landed on Teacher app's Login Landing Page's screen.")
         loginLandingPage.assertPageObjects()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testLoginE2EWithLastSavedSchool() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 2, courses = 1)
+        val teacher1 = data.teachersList[0]
+        val teacher2 = data.teachersList[1]
+
+        Log.d(STEP_TAG, "Login with user: ${teacher1.name}, login id: ${teacher1.loginId}.")
+        loginWithUser(teacher1)
+
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        verifyDashboardPage(teacher1)
+
+        Log.d(STEP_TAG, "Log out with ${teacher1.name} student.")
+        dashboardPage.logOut()
+
+        loginWithLastSavedSchool(teacher2)
+
+        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        verifyDashboardPage(teacher2)
+
+    }
+
+    private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
+
+        if(lastSchoolSaved) {
+            Log.d(STEP_TAG, "Click 'Find another school' button.")
+            loginLandingPage.clickFindAnotherSchoolButton()
+        }
+        else {
+            Log.d(STEP_TAG, "Click 'Find My School' button.")
+            loginLandingPage.clickFindMySchoolButton()
+        }
+
+        Log.d(STEP_TAG, "Enter domain: ${user.domain}.")
+        loginFindSchoolPage.enterDomain(user.domain)
+
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(STEP_TAG, "Login with user: ${user.name}, login id: ${user.loginId}.")
+        loginSignInPage.loginAs(user)
+    }
+
+    private fun loginWithLastSavedSchool(user: CanvasUserApiModel) {
+
+        Log.d(STEP_TAG, "Click on last saved school's button.")
+        loginLandingPage.clickOnLastSavedSchoolButton()
+
+        Log.d(STEP_TAG, "Login with ${user.name} user.")
+        loginSignInPage.loginAs(user)
     }
 
     private fun validateUserRole(user: CanvasUserApiModel, course: CourseApiModel, role: String) {

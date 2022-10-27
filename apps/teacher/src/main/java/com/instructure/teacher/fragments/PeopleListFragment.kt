@@ -115,7 +115,7 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         }
 
         setupTitle(presenter.canvasContextList)
-        ViewStyler.themeToolbarColored(requireActivity(), peopleListToolbar, ColorKeeper.getOrGenerateColor(canvasContext), requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), peopleListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
         peopleListToolbar.setupBackButton(this)
     }
 

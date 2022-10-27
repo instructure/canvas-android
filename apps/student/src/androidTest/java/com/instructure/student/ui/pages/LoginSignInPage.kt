@@ -18,13 +18,15 @@ package com.instructure.student.ui.pages
 
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.*
+import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
+import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
+import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.student.R
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
+import com.instructure.student.R
 
 @Suppress("unused")
 class LoginSignInPage: BasePage() {
@@ -78,15 +80,15 @@ class LoginSignInPage: BasePage() {
 
     //region UI Action Helpers
 
-    fun enterEmail(email: String) {
+    private fun enterEmail(email: String) {
         emailField().perform(webKeys(email))
     }
 
-    fun enterPassword(password: String) {
+    private fun enterPassword(password: String) {
         passwordField().perform(webKeys(password))
     }
 
-    fun clickLoginButton() {
+    private fun clickLoginButton() {
         loginButton().perform(webClick())
     }
 
@@ -98,7 +100,7 @@ class LoginSignInPage: BasePage() {
         loginAs(user.loginId, user.password)
     }
 
-    fun loginAs(loginId: String, password: String) {
+    private fun loginAs(loginId: String, password: String) {
         enterEmail(loginId)
         enterPassword(password)
         clickLoginButton()

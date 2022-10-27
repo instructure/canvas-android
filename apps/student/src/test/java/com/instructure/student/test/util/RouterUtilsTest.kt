@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
@@ -323,7 +324,7 @@ class RouterUtilsTest : TestCase() {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/announcements/12345")
         assertNotNull(route)
         assertEquals(AnnouncementListFragment::class.java, route!!.primaryClass)
-        assertEquals(DiscussionDetailsFragment::class.java, route.secondaryClass)
+        assertEquals(DiscussionRouterFragment::class.java, route.secondaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"

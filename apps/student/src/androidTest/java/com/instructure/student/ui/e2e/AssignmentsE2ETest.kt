@@ -77,7 +77,7 @@ class AssignmentsE2ETest: StudentTest() {
                 dueAt = 1.days.fromNow.iso8601
         ))
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -166,7 +166,7 @@ class AssignmentsE2ETest: StudentTest() {
                 excused = false
         )
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -200,7 +200,7 @@ class AssignmentsE2ETest: StudentTest() {
                 allowedExtensions = listOf("txt", "pdf", "jpg")
         ))
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -342,7 +342,7 @@ class AssignmentsE2ETest: StudentTest() {
                 excused = false
         )
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -389,7 +389,7 @@ class AssignmentsE2ETest: StudentTest() {
                 ))
         ))
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -404,13 +404,9 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
 
-        // MBL-13604: This does not work on FTL, so we're commenting it out for now.
-        // You could also break this out to a separate E2E test and annotate it with
-        // @Stub, so that we can run it locally but it doesn't run as part of our CI suite.
-        // send video comment
-        //submissionDetailsPage.addAndSendVideoComment()
-        //sleep(3000) // wait for video comment submission to propagate
-        //submissionDetailsPage.assertVideoCommentDisplayed()
+        submissionDetailsPage.addAndSendVideoComment()
+        sleep(3000) // wait for video comment submission to propagate
+        submissionDetailsPage.assertVideoCommentDisplayed()
 
         Log.d(STEP_TAG,"Send an audio comment.")
         submissionDetailsPage.addAndSendAudioComment()

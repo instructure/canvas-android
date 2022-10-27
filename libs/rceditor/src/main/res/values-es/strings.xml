@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Deslizarse para ver todas las herramientas de edición</string>
     <string name="rce_emptyUrlError">La url no puede estar en blanco</string>
     <string name="rce_httpNotAllowed">Solo se aceptan url https</string>
+    <string name="rce_dialogAltText">Agregar texto alternativo para los lectores de pantalla</string>
 </resources>

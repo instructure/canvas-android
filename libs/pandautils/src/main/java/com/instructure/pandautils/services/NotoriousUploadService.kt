@@ -39,7 +39,6 @@ import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
-import com.instructure.pandautils.services.FileUploadService.Companion.CHANNEL_ID
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NotoriousUploader
 import org.greenrobot.eventbus.EventBus
@@ -255,7 +254,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
         val successIntent = Intent(Const.UPLOAD_SUCCESS)
         LocalBroadcastManager.getInstance(context).sendBroadcast(successIntent)
 
-        val uploadCompleteIntent = Intent(FileUploadService.ALL_UPLOADS_COMPLETED)
+        val uploadCompleteIntent = Intent(ALL_UPLOADS_COMPLETED)
         uploadCompleteIntent.putExtra(Const.SUBMISSION_ID, notificationId.toLong())
         assignment?.name?.let { uploadCompleteIntent.putExtra(Const.ASSIGNMENT_NAME, it)}
         sendBroadcast(uploadCompleteIntent)
@@ -341,5 +340,14 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
 
     companion object {
         private const val NOTIFICATION_ID = 777
+
+        // Upload broadcasts, extended string to ensure unique strings across the device
+        private const val BROADCAST_BASE = "com.instructure.pandautils.services"
+        const val ALL_UPLOADS_COMPLETED = "$BROADCAST_BASE.ALL_UPLOADS_COMPLETED"
+        const val QUIZ_UPLOAD_COMPLETE = "$BROADCAST_BASE.QUIZ_UPLOAD_COMPLETE"
+        const val UPLOAD_COMPLETED = "$BROADCAST_BASE.UPLOAD_COMPLETED"
+        const val UPLOAD_ERROR = "$BROADCAST_BASE.UPLOAD_ERROR"
+
+        const val CHANNEL_ID = "uploadChannel"
     }
 }

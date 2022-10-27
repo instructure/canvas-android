@@ -150,6 +150,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
         mNextActionButton!!.isEnabled = false
         mNextActionButton!!.setTextColor(ContextCompat.getColor(this@BaseLoginFindSchoolActivity, R.color.backgroundMedium))
 
+        domainInput.requestFocus()
         domainInput.setOnEditorActionListener { _, _, _ ->
             validateDomain(AccountDomain(domainInput!!.text.toString()))
             true

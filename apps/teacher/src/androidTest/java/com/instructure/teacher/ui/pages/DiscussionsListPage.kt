@@ -17,13 +17,11 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 
 class DiscussionsListPage : BasePage() {
@@ -38,8 +36,20 @@ class DiscussionsListPage : BasePage() {
         waitForViewWithText(discussion.title).click()
     }
 
+    fun clickDiscussion(discussionTitle: String) {
+        waitForViewWithText(discussionTitle).click()
+    }
+
     fun assertHasDiscussion(discussion: DiscussionApiModel) {
         waitForViewWithText(discussion.title).assertDisplayed()
+    }
+
+    fun assertHasDiscussion(discussionTitle: String) {
+        waitForViewWithText(discussionTitle).assertDisplayed()
+    }
+
+    fun assertDiscussionDoesNotExist(discussionTitle: String) {
+        onView(withText(discussionTitle)).check(doesNotExist())
     }
 
     fun assertNoDiscussion() {
@@ -64,5 +74,13 @@ class DiscussionsListPage : BasePage() {
 
     fun refresh() {
         onView(withId(R.id.swipeRefreshLayout)).swipeDown()
+    }
+
+    fun createNewDiscussion() {
+        onView(withId(R.id.createNewDiscussion)).click()
+    }
+
+    fun toggleCollapseExpandIcon() {
+        onView(withId(R.id.collapseIcon)).click()
     }
 }

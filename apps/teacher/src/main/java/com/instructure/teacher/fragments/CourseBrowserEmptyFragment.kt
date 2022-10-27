@@ -15,14 +15,13 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER_EMPTY
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.teacher.R
 import com.instructure.teacher.factory.CourseBrowserEmptyViewFactory
 import com.instructure.teacher.presenters.CourseBrowserEmptyPresenter
@@ -53,7 +52,7 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
     override fun onReadySetGo(presenter: CourseBrowserEmptyPresenter) {
         textCourseName.text = presenter.course.name
         textCourseTerm.text = presenter.course.term?.name
-        setupToolbar(presenter.course.color)
+        setupToolbar(presenter.course.backgroundColor)
     }
 
     override fun getPresenterFactory() = CourseBrowserEmptyViewFactory(mCourse)

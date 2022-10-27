@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -54,13 +53,12 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         RecyclerView.ViewHolder,
         DiscussionListAdapter>(), DiscussionListView {
 
-    val featureFlagProvider: FeatureFlagProvider = FeatureFlagProvider(UserManager, RemoteConfigUtils, ApiPrefs)
+    val featureFlagProvider: FeatureFlagProvider = FeatureFlagProvider(UserManager, ApiPrefs)
 
     protected var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
     private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
-    private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCanvasContext) }
 
     private var mNeedToForceNetwork = false
     private var mForceRefresh = false
@@ -129,9 +127,9 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun createAdapter(): DiscussionListAdapter {
-        return DiscussionListAdapter(requireContext(), presenter, mCourseColor, mIsAnnouncements,
+        return DiscussionListAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor, mIsAnnouncements,
             { discussionTopicHeader ->
-                val route = presenter.getDetailsRoute(discussionTopicHeader, mIsAnnouncements)
+                val route = presenter.getDetailsRoute(discussionTopicHeader)
                 RouteMatcher.route(
                     requireContext(),
                     route
@@ -203,7 +201,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, mCourseColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews() {

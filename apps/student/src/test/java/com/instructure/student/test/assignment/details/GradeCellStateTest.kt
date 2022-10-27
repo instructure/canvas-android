@@ -22,13 +22,14 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentScoreStatistics
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import io.mockk.every
 import io.mockk.mockkObject
-import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import org.junit.*
 import org.junit.runner.RunWith
@@ -46,7 +47,7 @@ class GradeCellStateTest : Assert() {
     @Before
     fun setup() {
         mockkObject(ColorKeeper)
-        every { ColorKeeper.getOrGenerateColor("course_123") } returns courseColor
+        every { ColorKeeper.getOrGenerateColor(CanvasContext.emptyCourseContext(123)) } returns ThemedColor(courseColor)
         context = ApplicationProvider.getApplicationContext()
         baseAssignment = Assignment(
             courseId = 123,

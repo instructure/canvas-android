@@ -40,8 +40,8 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARK_CREATION
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isCourseOrGroup
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Analytics
@@ -66,7 +66,7 @@ class BookmarkCreationDialog : AppCompatDialogFragment() {
         builder.setCancelable(true)
         builder.setPositiveButton(R.string.save, null)
         builder.setNegativeButton(android.R.string.cancel, null)
-        val buttonColor = arguments?.getParcelable<CanvasContext>(BOOKMARK_CANVAS_CONTEXT)?.color ?: ThemePrefs.brandColor
+        val buttonColor = arguments?.getParcelable<CanvasContext>(BOOKMARK_CANVAS_CONTEXT)?.textAndIconColor ?: ThemePrefs.brandColor
         val dialog = builder.create()
         dialog.setOnShowListener { _ ->
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
@@ -85,7 +85,7 @@ class BookmarkCreationDialog : AppCompatDialogFragment() {
         bookmarkEditText?.let {
             ViewStyler.themeEditText(
                 requireContext(), it,
-                arguments?.getParcelable<CanvasContext>(BOOKMARK_CANVAS_CONTEXT)?.color ?: ThemePrefs.brandColor
+                arguments?.getParcelable<CanvasContext>(BOOKMARK_CANVAS_CONTEXT)?.textAndIconColor ?: ThemePrefs.brandColor
             )
             it.setText(arguments?.getString(BOOKMARK_LABEL, "").orEmpty())
             it.setSelection(it.text?.length ?: 0)

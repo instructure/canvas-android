@@ -14,6 +14,8 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -49,6 +51,8 @@ void main() async {
     ]);
     PandaRouter.init();
 
+    await FlutterDownloader.registerCallback(downloadCallback);
+
     // This completer waits for the app to be built before allowing the notificationUtil to handle notifications
     final Completer<void> _appCompleter = Completer<void>();
     NotificationUtil.init(_appCompleter);
@@ -67,4 +71,11 @@ void main() async {
 
     runApp(ParentApp(_appCompleter));
   }, FirebaseCrashlytics.instance.recordError);
+}
+
+@pragma('vm:entry-point')
+void downloadCallback(String id, DownloadTaskStatus status, int progress) {
+  final SendPort send =
+      IsolateNameServer.lookupPortByName('downloader_send_port');
+  send.send([id, status, progress]);
 }

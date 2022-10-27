@@ -18,7 +18,8 @@ package com.instructure.teacher.ui.pages
 import android.view.View
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.models.Page
 import com.instructure.espresso.*
@@ -37,6 +38,10 @@ class PageListPage : BasePage() {
     private val pageRecyclerView by OnViewWithId(R.id.pageRecyclerView)
 
     private val toolbar by OnViewWithId(R.id.pageListToolbar)
+
+    fun clickOnCreateNewPage() {
+        onView(withId(R.id.createNewPage)).click()
+    }
 
     fun assertHasPage(page: Page) {
         waitForViewWithText(page.title!!).assertDisplayed()

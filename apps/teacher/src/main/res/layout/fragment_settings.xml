@@ -103,6 +103,18 @@
                 android:textSize="16sp"/>
 
             <TextView
+                android:id="@+id/emailNotifications"
+                style="@style/TextFont.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/emailNotifications"
+                android:textSize="16sp"/>
+
+            <TextView
                 android:id="@+id/rateButton"
                 style="@style/TextFont.Medium"
                 android:layout_width="match_parent"
@@ -112,7 +124,7 @@
                 android:minHeight="?android:listPreferredItemHeight"
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
-                android:text="@string/rateOnTheAppStore"
+                android:text="@string/rateOnThePlayStore"
                 android:textColor="@color/textDarkest"
                 android:textSize="16sp"/>
 

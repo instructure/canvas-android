@@ -20,16 +20,14 @@ import android.os.Build
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import com.google.android.gms.analytics.GoogleAnalytics
-import com.google.android.gms.analytics.HitBuilders
-import com.google.android.gms.analytics.Tracker
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.canvasapi2.utils.*
+import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
-import com.instructure.loginapi.login.tasks.LogoutTask
-import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
@@ -37,27 +35,15 @@ import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.service.StudentPageViewService
-import com.instructure.student.tasks.StudentLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 import com.zynksoftware.documentscanner.ui.DocumentScanner
-import dagger.hilt.EntryPoint
-import dagger.hilt.EntryPoints
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
-import javax.inject.Inject
 
 open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
-
-    // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-    private val defaultTracker: Tracker by lazy {
-        val analytics = GoogleAnalytics.getInstance(this)
-        analytics.newTracker(R.xml.analytics)
-    }
 
     override fun onCreate() {
         if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
@@ -101,6 +87,8 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
         PageViewUploadService.schedule(this, StudentPageViewService::class.java)
 
         initFlutterEngine()
+
+        Heap.init(this, BuildConfig.HEAP_APP_ID)
     }
 
     private fun initFlutterEngine() {
@@ -118,94 +106,31 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
     override fun onCanvasTokenRefreshed() = FlutterComm.sendUpdatedLogin()
 
     override fun trackButtonPressed(buttonName: String?, buttonValue: Long?) {
-        if (buttonName == null) return
 
-        if (buttonValue == null) {
-            defaultTracker.send(
-                    HitBuilders.EventBuilder()
-                            .setCategory("UI Actions")
-                            .setAction("Button Pressed")
-                            .setLabel(buttonName)
-                            .build()
-            )
-        } else {
-            defaultTracker.send(
-                    HitBuilders.EventBuilder()
-                            .setCategory("UI Actions")
-                            .setAction("Button Pressed")
-                            .setLabel(buttonName)
-                            .setValue(buttonValue)
-                            .build()
-            )
-        }
     }
 
     override fun trackScreen(screenName: String?) {
-        if (screenName == null) return
 
-        val tracker = defaultTracker
-        tracker.setScreenName(screenName)
-        tracker.send(HitBuilders.ScreenViewBuilder().build())
     }
 
     override fun trackEnrollment(enrollmentType: String?) {
-        if (enrollmentType == null) return
 
-        defaultTracker.send(
-                HitBuilders.AppViewBuilder()
-                        .setCustomDimension(1, enrollmentType)
-                        .build()
-        )
     }
 
     override fun trackDomain(domain: String?) {
-        if (domain == null) return
 
-        defaultTracker.send(
-                HitBuilders.AppViewBuilder()
-                        .setCustomDimension(2, domain)
-                        .build()
-        )
     }
 
     override fun trackEvent(category: String?, action: String?, label: String?, value: Long) {
-        if (category == null || action == null || label == null) return
 
-        val tracker = defaultTracker
-        tracker.send(
-                HitBuilders.EventBuilder()
-                        .setCategory(category)
-                        .setAction(action)
-                        .setLabel(label)
-                        .setValue(value)
-                        .build()
-        )
     }
 
     override fun trackUIEvent(action: String?, label: String?, value: Long) {
-        if (action == null || label == null) return
 
-        defaultTracker.send(
-                HitBuilders.EventBuilder()
-                        .setAction(action)
-                        .setLabel(label)
-                        .setValue(value)
-                        .build()
-        )
     }
 
     override fun trackTiming(category: String?, name: String?, label: String?, duration: Long) {
-        if (category == null || name == null || label == null) return
 
-        val tracker = defaultTracker
-        tracker.send(
-                HitBuilders.TimingBuilder()
-                        .setCategory(category)
-                        .setLabel(label)
-                        .setVariable(name)
-                        .setValue(duration)
-                        .build()
-        )
     }
 
     private fun initPSPDFKit() {

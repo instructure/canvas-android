@@ -25,14 +25,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.StreamItem
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
-import com.instructure.student.util.BinderUtils
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
+import com.instructure.student.util.BinderUtils
 import kotlinx.android.synthetic.main.viewholder_notification.view.*
 
 class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -69,7 +66,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         }
 
         course.text = courseName
-        course.setTextColor(ColorKeeper.getOrGenerateColor(item.canvasContext))
+        course.setTextColor(item.canvasContext.textAndIconColor)
 
         // Description
         if (!TextUtils.isEmpty(item.getMessage(context))) {
@@ -145,9 +142,9 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         }
 
         val courseColor: Int = if (item.canvasContext != null) {
-            ColorKeeper.getOrGenerateColor(item.canvasContext)
+            item.canvasContext.textAndIconColor
         } else
-            ThemePrefs.primaryColor
+            ThemePrefs.brandColor
 
         val drawable = ColorKeeper.getColoredDrawable(context, drawableResId, courseColor)
         icon.setImageDrawable(drawable)
@@ -155,8 +152,10 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         // Read/Unread
         if (item.isReadState) {
             title.setTypeface(null, Typeface.NORMAL)
+            unreadMark.setInvisible()
         } else {
             title.setTypeface(null, Typeface.BOLD)
+            unreadMark.setVisible()
         }
     }
 

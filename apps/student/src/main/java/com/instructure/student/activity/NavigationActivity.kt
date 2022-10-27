@@ -23,10 +23,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -43,13 +41,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
-import com.bumptech.glide.Glide
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.CourseManager
@@ -63,21 +57,22 @@ import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
-import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
-import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.NewInboxFragment
-import com.instructure.pandautils.features.notification.preferences.NotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
+import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
+import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
 import com.instructure.student.events.*
@@ -106,7 +101,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 private const val BOTTOM_NAV_SCREEN = "bottomNavScreen"
 private const val BOTTOM_SCREENS_BUNDLE_KEY = "bottomScreens"
@@ -343,9 +337,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == UploadFilesDialog.CAMERA_PIC_REQUEST ||
-            requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
-            requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY ||
+        if (requestCode == CAMERA_PIC_REQUEST ||
+            requestCode == PICK_FILE_FROM_DEVICE ||
+            requestCode == PICK_IMAGE_GALLERY ||
             PickerSubmissionUploadEffectHandler.isPickerRequest(requestCode) ||
             AssignmentDetailsFragment.isFileRequest(requestCode) ||
             SubmissionDetailsEmptyContentFragment.isFileRequest(requestCode)
@@ -422,23 +416,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (user != null) {
             navigationDrawerUserName.text = Pronouns.span(user.shortName, user.pronouns)
             navigationDrawerUserEmail.text = user.primaryEmail
-
-            if(ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
-                val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = ContextCompat.getColor(context, R.color.textDark)
-                val drawable = TextDrawable.builder()
-                        .beginConfig()
-                        .height(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                        .width(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                        .toUpperCase()
-                        .useFont(Typeface.DEFAULT_BOLD)
-                        .textColor(color)
-                        .endConfig()
-                        .buildRound(initials, Color.WHITE)
-                navigationDrawerProfileImage.setImageDrawable(drawable)
-            } else {
-                Glide.with(context).load(user.avatarUrl).into(navigationDrawerProfileImage)
-            }
+            ProfileUtils.loadAvatarForUser(navigationDrawerProfileImage, user.shortName, user.avatarUrl)
         }
     }
 
@@ -760,8 +738,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }
                         }
                         RouteContext.NOTIFICATION_PREFERENCES == route.routeContext -> {
-                            Analytics.trackAppFlow(this@NavigationActivity, NotificationPreferencesFragment::class.java)
-                            RouteMatcher.route(this@NavigationActivity, Route(NotificationPreferencesFragment::class.java, null))
+                            Analytics.trackAppFlow(this@NavigationActivity, PushNotificationPreferencesFragment::class.java)
+                            RouteMatcher.route(this@NavigationActivity, Route(PushNotificationPreferencesFragment::class.java, null))
                         }
                         else -> {
                             //fetch the CanvasContext
@@ -798,16 +776,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     private fun addFragment(fragment: Fragment?, route: Route) {
-        if (RouteType.DIALOG == route.routeType && fragment is DialogFragment && isTablet) {
-            val ft = supportFragmentManager.beginTransaction()
-            ft.addToBackStack(fragment::class.java.name)
-            fragment.show(ft, fragment::class.java.name)
+        if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
+            selectBottomNavFragment(fragment::class.java)
         } else {
-            if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
-                selectBottomNavFragment(fragment::class.java)
-            } else {
-                addFullScreenFragment(fragment, route.removePreviousScreen)
-            }
+            addFullScreenFragment(fragment, route.removePreviousScreen)
         }
     }
 
@@ -1066,6 +1038,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun updateUnreadCount(unreadCount: Int) {
         updateBottomBarBadge(R.id.bottomNavigationInbox, unreadCount, R.plurals.a11y_inboxUnreadCount)
+    }
+
+    override fun updateNotificationCount(notificationCount: Int) {
+        updateBottomBarBadge(R.id.bottomNavigationNotifications, notificationCount, R.plurals.a11y_notificationsUnreadCount)
     }
 
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) {

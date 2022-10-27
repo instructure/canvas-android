@@ -121,7 +121,7 @@ class ExoAgent private constructor(val uri: Uri) {
         /* Seek to the current position + 1 to work around an issue where frames aren't
         rendered into the new surface until the next keyframe. This isn't ideal as it triggers a
         brief buffer cycle, but it's better than having no video at all. */
-        if (!mIsAudioOnly) seekTo(currentPosition + 1)
+        seekTo(currentPosition + 1)
 
         playerView.player = this
     }

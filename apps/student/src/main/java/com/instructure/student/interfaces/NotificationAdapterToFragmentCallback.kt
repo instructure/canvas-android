@@ -21,4 +21,5 @@ interface NotificationAdapterToFragmentCallback<MODEL> {
     fun onRefreshFinished()
     fun onShowEditView(isVisible: Boolean)
     fun onShowErrorCrouton(message: Int)
+    fun onItemRemoved() = Unit
 }

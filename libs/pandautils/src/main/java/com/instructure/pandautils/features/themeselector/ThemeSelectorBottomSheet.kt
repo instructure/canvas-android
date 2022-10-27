@@ -16,17 +16,19 @@
  */
 package com.instructure.pandautils.features.themeselector
 
-import android.content.DialogInterface
+import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.CompoundButtonCompat
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
@@ -56,11 +58,18 @@ class ThemeSelectorBottomSheet : BottomSheetDialogFragment() {
             }
             setAppTheme(appTheme)
         }
+
+        (dialog as? BottomSheetDialog)?.behavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun setAppTheme(appTheme: AppTheme) {
         AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
         ThemePrefs.appTheme = appTheme.ordinal
+
+        val nightModeFlags: Int = requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+        ThemePrefs.isThemeApplied = false
+
         dismiss()
     }
 

@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.view.MenuItem
 import android.view.View
@@ -28,7 +27,10 @@ import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
@@ -130,7 +132,7 @@ class CourseBrowserFragment : BaseSyncFragment<
         super.onResume()
         EventBus.getDefault().register(this)
         (presenter.canvasContext as? Course)?.let {
-            courseImage.setCourseImage(it, it.color, !TeacherPrefs.hideCourseColorOverlay)
+            courseImage.setCourseImage(it, it.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
         }
         courseBrowserTitle.text = presenter.canvasContext.name
         courseBrowserSubtitle.text = (presenter.canvasContext as? Course)?.term?.name ?: ""
@@ -164,7 +166,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             courseHeader.setGone()
             noOverlayToolbar.title = presenter.canvasContext.name
             (presenter.canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
-            noOverlayToolbar.setBackgroundColor(presenter.canvasContext.color)
+            noOverlayToolbar.setBackgroundColor(presenter.canvasContext.backgroundColor)
             noOverlayToolbar
         } else {
             noOverlayToolbar.setGone()
@@ -174,9 +176,9 @@ class CourseBrowserFragment : BaseSyncFragment<
         toolbar.setupBackButton(this)
         toolbar.setupMenu(R.menu.menu_course_browser, menuItemCallback)
         ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, requireContext().getColor(R.color.white))
-        ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.color)
+        ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.backgroundColor)
 
-        collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.color)
+        collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.backgroundColor)
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (presenter.canvasContext as? Course)?.imageUrl?.isValid() == true
@@ -202,7 +204,7 @@ class CourseBrowserFragment : BaseSyncFragment<
     }
 
     override fun createAdapter(): CourseBrowserAdapter {
-        return CourseBrowserAdapter(requireActivity(), presenter, presenter.canvasContext.color) { tab ->
+        return CourseBrowserAdapter(requireActivity(), presenter, presenter.canvasContext.textAndIconColor) { tab ->
             when (tab.tabId) {
                 Tab.ASSIGNMENTS_ID -> RouteMatcher.route(
                     requireContext(),
@@ -244,7 +246,7 @@ class CourseBrowserFragment : BaseSyncFragment<
                     presenter.handleStudentViewClick()
                 }
                 Tab.SYLLABUS_ID -> {
-                    RouteMatcher.route(requireContext(), Route(SyllabusFragment::class.java, presenter.canvasContext))
+                    RouteMatcher.route(requireContext(), Route(null, SyllabusFragment::class.java, presenter.canvasContext, presenter.canvasContext.makeBundle()))
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {

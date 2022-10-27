@@ -17,10 +17,12 @@
 package com.instructure.student.features.elementary.course
 
 import android.graphics.drawable.Drawable
+import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.CanvasContext
 
 data class ElementaryCourseViewData(
-    val tabs: List<ElementaryCourseTab>
+    val tabs: List<ElementaryCourseTab>,
+    @ColorInt val color: Int
 )
 
 data class ElementaryCourseTab(

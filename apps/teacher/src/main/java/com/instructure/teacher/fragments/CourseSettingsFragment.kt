@@ -57,14 +57,12 @@ class CourseSettingsFragment : BasePresenterFragment<
         )
     }
 
-    private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCourse) }
-
     override fun layoutResId() = R.layout.fragment_course_settings
     override fun getPresenterFactory() = CourseSettingsFragmentPresenterFactory()
 
     override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter) {
         setupToolbar()
-        courseImage.setCourseImage(mCourse, mCourseColor, !TeacherPrefs.hideCourseColorOverlay)
+        courseImage.setCourseImage(mCourse, mCourse.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -91,7 +89,7 @@ class CourseSettingsFragment : BasePresenterFragment<
         toolbar.setupBackButton(this)
         toolbar.title = getString(R.string.course_settings)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
-        toolbar.setSubtitleTextColor(mCourseColor)
+        toolbar.setSubtitleTextColor(mCourse.textAndIconColor)
     }
 
     override fun showEditCourseNameDialog() {

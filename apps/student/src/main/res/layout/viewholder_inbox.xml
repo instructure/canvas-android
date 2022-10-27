@@ -29,7 +29,7 @@
         android:clipToPadding="false"
         android:padding="8dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_size"
             android:layout_height="@dimen/avatar_size"
@@ -44,7 +44,8 @@
             android:layout_marginStart="-4dp"
             android:layout_marginTop="-4dp"
             android:contentDescription="@string/unread"
-            android:src="@drawable/ic_circle"/>
+            android:src="@drawable/ic_circle"
+            app:tint="@color/backgroundInfo"/>
 
     </FrameLayout>
 

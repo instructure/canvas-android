@@ -68,7 +68,9 @@ class ToDoPresenter : SyncPresenter<ToDo, ToDoView>(ToDo::class.java) {
                             // Set the context info for each to do
                             ToDo.setContextInfo(it, courses, groups)
                         }
+
                     data.addOrUpdate(toDos)
+                    data.removeDistinctItems(toDos)
 
                     // We want the count of the assignments that need grading. If there are more than 100 we will just show 99+
                     val todoCount = toDos.sumOf { it.needsGradingCount }

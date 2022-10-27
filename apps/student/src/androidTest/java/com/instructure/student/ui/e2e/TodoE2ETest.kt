@@ -75,7 +75,7 @@ class TodoE2ETest: StudentTest() {
                 dueAt = 8.days.fromNow.iso8601)
         )
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 

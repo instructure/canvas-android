@@ -66,7 +66,9 @@ import com.instructure.loginapi.login.util.Const.CANVAS_LOGIN_FLOW
 import com.instructure.loginapi.login.util.Const.MASQUERADE_FLOW
 import com.instructure.loginapi.login.util.Const.MOBILE_VERIFY_FLOW
 import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
+import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
+import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.*
@@ -452,6 +454,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                             )
                             add(this@BaseLoginSignInActivity, user)
                             refreshWidgets()
+                            LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
                             handleLaunchApplicationMainActivityIntent()
                         }
                     }

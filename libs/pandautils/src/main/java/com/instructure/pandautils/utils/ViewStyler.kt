@@ -114,8 +114,8 @@ object ViewStyler {
 
     fun themeToolbarColored(activity: Activity, toolbar: Toolbar?, canvasContext: CanvasContext?) {
         if(toolbar == null || canvasContext == null) return
-        themeToolbar(activity, toolbar, canvasContext.color, activity.getColor(R.color.white))
-        setStatusBarDark(activity, canvasContext.color)
+        themeToolbar(activity, toolbar, canvasContext.backgroundColor, activity.getColor(R.color.white))
+        setStatusBarDark(activity, canvasContext.backgroundColor)
     }
 
     fun themeToolbarColored(activity: Activity, toolbar: Toolbar, @ColorInt backgroundColor: Int, @ColorInt contentColor: Int) {
@@ -167,9 +167,10 @@ object ViewStyler {
         checkBox.highlightColor = ThemePrefs.increaseAlpha(defaultColor)
     }
 
-    fun themeFAB(fab: FloatingActionButton, @ColorInt brand: Int) {
-        fab.backgroundTintList = makeColorStateList(brand, ThemePrefs.darker(brand))
-        fab.setImageDrawable(ColorUtils.colorIt(Color.WHITE, fab.drawable))
+    fun themeFAB(fab: FloatingActionButton) {
+        val color = ThemePrefs.buttonColor
+        fab.backgroundTintList = makeColorStateList(color, ThemePrefs.darker(color))
+        fab.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, fab.drawable))
     }
 
     fun themeButton(button: Button) {
@@ -252,9 +253,9 @@ fun SwitchCompat.applyTheme(@ColorInt color: Int = ThemePrefs.brandColor) {
 fun AlertDialog.Builder.showThemed() {
     val dialog = create()
     dialog.setOnShowListener {
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(ThemePrefs.buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(ThemePrefs.buttonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(ThemePrefs.buttonColor)
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(ThemePrefs.textButtonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(ThemePrefs.textButtonColor)
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(ThemePrefs.textButtonColor)
     }
     dialog.show()
 }

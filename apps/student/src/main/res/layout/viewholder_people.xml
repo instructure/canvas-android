@@ -25,12 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/icon"
             style="@style/AdapterItemIcon"
             android:layout_width="@dimen/avatar_size"
             android:layout_height="@dimen/avatar_size"
-            android:padding="4dp"
+            android:padding="@dimen/avatar_border_width_thin"
+            android:background="@drawable/avatar_circular_border_thin"
             android:importantForAccessibility="no"/>
 
         <LinearLayout

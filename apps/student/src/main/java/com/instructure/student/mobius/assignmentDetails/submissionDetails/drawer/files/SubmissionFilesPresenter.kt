@@ -18,7 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.content.Context
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.mobius.common.ui.Presenter
 
@@ -27,7 +27,7 @@ object SubmissionFilesPresenter : Presenter<SubmissionFilesModel, SubmissionFile
         return if (model.files.isEmpty()) {
             SubmissionFilesViewState.Empty
         } else {
-            val tintColor = model.canvasContext.color
+            val tintColor = model.canvasContext.textAndIconColor
             SubmissionFilesViewState.FileList(model.files.map { mapData(it, model, tintColor) })
         }
     }

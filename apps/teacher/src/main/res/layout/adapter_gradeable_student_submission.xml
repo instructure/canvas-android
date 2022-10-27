@@ -24,10 +24,11 @@
     android:minHeight="?android:listPreferredItemHeight"
     android:padding="16dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/studentAvatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_centerVertical="true"
         android:padding="4dp"
         tools:src="@mipmap/ic_launcher" />
 
@@ -75,11 +76,21 @@
             tools:text="Student Name" />
 
         <TextView
+            android:id="@+id/testStudentDescription"
+            style="@style/TextFont.Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/createdByStudentView"
+            android:textColor="@color/textDark"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <TextView
             style="@style/TextFont.Regular"
             android:id="@+id/submissionStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-2dp"
             android:paddingBottom="1dp"
             android:textColor="@color/textDarkest"
             android:textSize="14sp"

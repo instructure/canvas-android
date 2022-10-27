@@ -16,10 +16,12 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
+import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.utils.ThemedColor
 
 data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>) {
     fun isEmpty() = announcements.isEmpty() && courseCards.isEmpty()
@@ -32,7 +34,7 @@ data class CourseCardViewData(
     val assignmentsDueText: String,
     val assignmentsMissingText: String,
     val announcementText: String,
-    val courseColor: String,
+    val color: ThemedColor,
     val imageUrl: String)
 
 sealed class HomeroomAction {

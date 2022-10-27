@@ -167,6 +167,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
 
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+        addMessage.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, addMessage.drawable))
         toolbar.requestAccessibilityFocus()
     }
 
@@ -216,7 +217,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
     }
 
     private fun setFilterText() {
-        clearFilterTextView.setTextColor(ThemePrefs.buttonColor)
+        clearFilterTextView.setTextColor(ThemePrefs.textButtonColor)
         if (presenter.canvasContext != null) {
             courseFilter.text = (presenter.canvasContext as CanvasContext).name
             clearFilterTextView.setVisible()

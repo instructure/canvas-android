@@ -100,11 +100,10 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@{ColorUtils.parseColor(course.courseColor)}"
+                        android:background="@{viewModel.data.color}"
                         android:importantForAccessibility="no"
                         android:scaleType="centerCrop"
-                        app:imageUrl="@{course.imageUrl}"
-                        app:overlayColor="@{ColorUtils.parseColor(course.courseColor)}"
+                        app:imageUrl="@{course.bannerImageUrl != null ? course.bannerImageUrl : course.imageUrl}"
                         tools:background="@color/backgroundWarning" />
 
                     <TextView

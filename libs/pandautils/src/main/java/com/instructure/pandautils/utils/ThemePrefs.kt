@@ -17,14 +17,23 @@
 
 package com.instructure.pandautils.utils
 
+import android.content.Context
 import android.graphics.Color
-import androidx.core.graphics.drawable.DrawableCompat
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.EditText
+import androidx.core.graphics.drawable.DrawableCompat
 import com.instructure.canvasapi2.models.CanvasTheme
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.BooleanPref
+import com.instructure.canvasapi2.utils.ColorPref
+import com.instructure.canvasapi2.utils.IntPref
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.PrefManager
+import com.instructure.canvasapi2.utils.StringPref
 import com.instructure.pandautils.R
+
+const val MIN_CONTRAST_FOR_BUTTONS = 3.0
+const val MIN_CONTRAST_FOR_TEXT = 4.5
 
 object ThemePrefs : PrefManager("CanvasTheme") {
 
@@ -42,11 +51,14 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     // Used for text color in Toolbars
     var primaryTextColor by ColorPref(R.color.white)
 
-    var accentColor by ColorPref(R.color.textInfo)
-
+    // Used for button background where we have a filled button and a text/icon inside.
     var buttonColor by ColorPref(R.color.backgroundInfo)
 
+    // Button text color for filled button.
     var buttonTextColor by ColorPref(R.color.white)
+
+    // Used for text buttons (for example dialog buttons) and small image buttons.
+    var textButtonColor by ColorPref(R.color.textInfo)
 
     var logoUrl by StringPref()
 
@@ -65,7 +77,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
      * Returns darker version of specified `color`.
      * StatusBar color example would be 0.85F
      */
-    @JvmOverloads
     fun darker(color: Int, factor: Float = DARK_MULTIPLIER): Int {
         val a = Color.alpha(color)
         val r = Color.red(color)
@@ -82,7 +93,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
      * Returns darker version of specified `color`.
      * StatusBar color example would be 0.85F
      */
-    @JvmOverloads
     fun increaseAlpha(color: Int, factor: Int = ALPHA_VALUE): Int {
         val a = factor
         val r = Color.red(color)
@@ -92,32 +102,19 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     }
 
-    fun themeViewBackground(view: View, color: Int) {
-        val viewTreeObserver = view.viewTreeObserver
-        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                val wrappedDrawable = DrawableCompat.wrap(view.background)
-                if (wrappedDrawable != null) {
-                    DrawableCompat.setTint(wrappedDrawable.mutate(), color)
-                    view.background = wrappedDrawable
-                }
-            }
-        })
-    }
+    fun applyCanvasTheme(theme: CanvasTheme, context: Context) {
+        val tempBrandColor = parseColor(theme.brand, brandColor) // ic-brand-primary - Primary Brand Color
+        brandColor = ColorUtils.correctContrastForText(tempBrandColor, context.getColor(R.color.backgroundLightestElevated))
 
-    fun themeEditTextBackground(editText: EditText, color: Int) {
-        editText.setTextColor(color)
-        themeViewBackground(editText, color)
-    }
+        primaryColor = parseColor(theme.primary, primaryColor)  // ic-brand-global-nav-bgd - Nav Background
+        primaryTextColor = parseColor(theme.primaryText, primaryTextColor) // ic-brand-global-nav-menu-item__text-color - Nav Text
 
-    fun applyCanvasTheme(theme: CanvasTheme) {
-        brandColor = parseColor(theme.brand, brandColor)
-        primaryColor = parseColor(theme.primary, primaryColor)
-        primaryTextColor = parseColor(theme.primaryText, primaryTextColor)
-        accentColor = parseColor(theme.accent, accentColor)
-        buttonColor = parseColor(theme.button, buttonColor)
-        buttonTextColor = parseColor(theme.buttonText, buttonTextColor)
+        val tempButtonColor = parseColor(theme.button, buttonColor) // ic-brand-button--primary-bgd - Primary Button
+
+        buttonColor = ColorUtils.correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightest), context.getColor(R.color.white))
+        buttonTextColor = context.getColor(R.color.white)
+        textButtonColor = ColorUtils.correctContrastForText(tempButtonColor, context.getColor(R.color.backgroundLightestElevated))
+
         logoUrl = theme.logoUrl
         isThemeApplied = true
     }

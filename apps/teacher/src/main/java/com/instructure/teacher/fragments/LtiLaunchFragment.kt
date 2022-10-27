@@ -17,6 +17,7 @@
 package com.instructure.teacher.fragments
 
 import android.app.Activity
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -29,13 +30,16 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_lti_launch.*
 import kotlinx.coroutines.Job
+import java.net.URLDecoder
 
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 class LtiLaunchFragment : BaseFragment() {
@@ -54,11 +58,21 @@ class LtiLaunchFragment : BaseFragment() {
 
     override fun layoutResId(): Int = R.layout.fragment_lti_launch
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        customTabLaunched = savedInstanceState?.getBoolean(CUSTOM_TAB_LAUNCHED_STATE) ?: false
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(CUSTOM_TAB_LAUNCHED_STATE, customTabLaunched)
+    }
+
     override fun onCreateView(view: View) = Unit
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val color = canvasContext?.color ?: ThemePrefs.primaryColor
+        val color = canvasContext?.backgroundColor ?: ThemePrefs.primaryColor
         ViewStyler.setStatusBarDark(requireActivity(), color)
         loadingView.setOverrideColor(color)
         toolName.setTextForVisibility(title.validOrNull() ?: ltiTab?.label?.validOrNull() ?: ltiUrl.validOrNull())
@@ -116,7 +130,7 @@ class LtiLaunchFragment : BaseFragment() {
             .build()
 
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(canvasContext?.color ?: ThemePrefs.primaryColor)
+            .setToolbarColor(canvasContext?.backgroundColor ?: ThemePrefs.primaryColor)
             .build()
 
         var intent = CustomTabsIntent.Builder()
@@ -149,6 +163,7 @@ class LtiLaunchFragment : BaseFragment() {
         private const val TAB = "tab"
         private const val LTI_URL = "lti_url"
         private const val SESSION_LESS = "session_less"
+        private const val CUSTOM_TAB_LAUNCHED_STATE = "custom_tab_launched_state"
 
         fun makeTabBundle(canvasContext: CanvasContext, ltiTab: Tab): Bundle {
             val args = createBundle(canvasContext)
@@ -165,5 +180,10 @@ class LtiLaunchFragment : BaseFragment() {
         }
 
         fun newInstance(args: Bundle) = LtiLaunchFragment().apply { arguments = args }
+
+        fun routeLtiLaunchFragment(context: Context, canvasContext: CanvasContext?, url: String) {
+            val args = makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+        }
     }
 }

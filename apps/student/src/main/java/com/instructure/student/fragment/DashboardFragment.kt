@@ -177,6 +177,8 @@ class DashboardFragment : ParentFragment() {
 
         val menuTitleRes = if (StudentPrefs.listDashboard) R.string.dashboardSwitchToGridView else R.string.dashboardSwitchToListView
         dashboardLayoutMenuItem.setTitle(menuTitleRes)
+
+        recyclerAdapter?.notifyDataSetChanged()
     }
 
     private fun changeDashboardLayout(item: MenuItem) {

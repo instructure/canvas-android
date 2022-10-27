@@ -48,7 +48,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Response
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
@@ -224,12 +223,11 @@ class CalendarEventFragment : ParentFragment() {
             }
 
             if (content?.isNotEmpty() == true) {
-                loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, content,
-                        ::loadCalendarHtml, { url ->
-                    val args = LtiLaunchFragment.makeLTIBundle(
-                            URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-                }, it.title)
+                loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), content, { html ->
+                    loadCalendarHtml(html, it.title)
+                }) { url ->
+                    LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, url)
+                }
             }
         }
     }
@@ -237,7 +235,7 @@ class CalendarEventFragment : ParentFragment() {
     private fun loadCalendarHtml(html: String, contentDescription: String?) {
         calendarEventWebView.setVisible()
         calendarEventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-        calendarEventWebView.loadHtml(html, contentDescription)
+        calendarEventWebView.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
     }
 
     private fun setUpCallback() {
@@ -288,8 +286,8 @@ class CalendarEventFragment : ParentFragment() {
             }
             .create()
         dialog.setOnShowListener {
-            dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-            dialog.getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+            dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            dialog.getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
         }
         dialog.show()
     }

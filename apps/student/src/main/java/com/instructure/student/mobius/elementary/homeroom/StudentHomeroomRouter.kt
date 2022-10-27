@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import com.instructure.student.BuildConfig
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
@@ -43,7 +44,7 @@ class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRo
     }
 
     override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) {
-        RouteMatcher.route(activity, DiscussionDetailsFragment.makeRoute(course, announcement))
+        RouteMatcher.route(activity, DiscussionRouterFragment.makeRoute(course, announcement))
     }
 
     override fun updateColors() {

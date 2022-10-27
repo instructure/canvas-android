@@ -54,7 +54,7 @@ class HtmlContentFormatter(
                         // Snag that src
                         val srcUrl = matcher.group(1)
 
-                        if (srcUrl.contains("external_tools")) {
+                        if (hasExternalTools(srcUrl)) {
                             // Handle the LTI case
                             val newIframe = externalToolIframe(srcUrl, iframe, context)
                             newHTML = newHTML.replace(iframe, newIframe)
@@ -68,6 +68,11 @@ class HtmlContentFormatter(
 
                         if (iframe.contains("overflow: scroll")) {
                             val newIframe = iframeWithLink(srcUrl, iframe, context)
+                            newHTML = newHTML.replace(iframe, newIframe)
+                        }
+
+                        if (hasGoogleDocsUrl(srcUrl)) {
+                            val newIframe = iframeWithGoogleDocsButton(srcUrl, iframe, context.getString(R.string.openLtiInExternalApp))
                             newHTML = newHTML.replace(iframe, newIframe)
                         }
                     }
@@ -118,6 +123,12 @@ class HtmlContentFormatter(
         return iframe + htmlButton
     }
 
+    private fun iframeWithGoogleDocsButton(srcUrl: String, iframe: String, buttonText: String): String {
+        val button = "</br><p><div class=\"lti_button\" onClick=\"accessor.onGoogleDocsButtonPressed('%s')\">%s</div></p>"
+        val htmlButton = String.format(button, srcUrl, buttonText)
+        return iframe + htmlButton
+    }
+
     fun createAuthenticatedLtiUrl(html: String, authenticatedSessionUrl: String?): String {
         if (authenticatedSessionUrl == null) return html
         // Now we need to swap out part of the old url for this new authenticated url
@@ -133,5 +144,10 @@ class HtmlContentFormatter(
             }
         }
         return newHTML
+    }
+
+    companion object {
+        fun hasGoogleDocsUrl(text: String?) = text?.contains("docs.google.com").orDefault()
+        fun hasExternalTools(text: String?) = text?.contains("external_tools").orDefault()
     }
 }
