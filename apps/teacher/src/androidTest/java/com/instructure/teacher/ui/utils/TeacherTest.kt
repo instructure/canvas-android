@@ -92,6 +92,7 @@ abstract class TeacherTest : CanvasTest() {
     val speedGraderGradePage = SpeedGraderGradePage()
     val speedGraderPage = SpeedGraderPage()
     val speedGraderQuizSubmissionPage = SpeedGraderQuizSubmissionPage()
+    val personContextPage = PersonContextPage()
     val studentContextPage = StudentContextPage()
     val syllabusPage = SyllabusPage()
     val todoPage = TodoPage()
