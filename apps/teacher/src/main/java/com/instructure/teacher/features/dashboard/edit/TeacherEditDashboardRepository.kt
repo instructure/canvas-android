@@ -44,5 +44,5 @@ class TeacherEditDashboardRepository(val courseManager: CourseManager) : EditDas
 
     override fun isOpenable(course: Course) = course.isNotDeleted()
 
-    override fun isFavoriteable(course: Course) = course.isValidTerm() && course.isNotDeleted()
+    override fun isFavoriteable(course: Course) = course.isValidTerm() && course.isNotDeleted() && !course.isPastEnrolment()
 }
