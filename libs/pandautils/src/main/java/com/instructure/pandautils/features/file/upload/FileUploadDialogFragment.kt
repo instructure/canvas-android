@@ -70,7 +70,11 @@ class FileUploadDialogFragment : DialogFragment() {
     private var dialogCallback: ((Int) -> Unit)? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
-        if (isPermissionGranted) takePicture()
+        if (isPermissionGranted) {
+            takePicture()
+        } else if (!requireActivity().shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+            toast(R.string.cameraPermissionPermanentlyDenied, Toast.LENGTH_LONG)
+        }
     }
 
     private val takePictureContract = registerForActivityResult(ActivityResultContracts.TakePicture()) { imageSaved ->
