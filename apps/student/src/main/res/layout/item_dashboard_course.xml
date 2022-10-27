@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.student.features.dashboard.main.itemviewmodels.DashboardCourseItemViewModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/courseCard"
+        android:layout_width="156dp"
+        android:layout_height="match_parent"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardCornerRadius="3dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="0dp"
+        android:onClick="@{() -> itemViewModel.open.invoke()}">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/courseImage"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                app:backgroundColor="@{itemViewModel.data.courseColor.backgroundColor()}"
+                app:imageUrl="@{itemViewModel.data.imageUrl}"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <FrameLayout
+                android:id="@+id/gradeContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/pill_white"
+                android:paddingStart="8dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/gradeTextView"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{itemViewModel.data.grade}"
+                    android:textColor="@color/textDarkest"
+                    android:textSize="16sp"
+                    tools:text="98.6%" />
+
+                <ImageView
+                    android:id="@+id/lockedGradeImage"
+                    android:layout_width="22sp"
+                    android:layout_height="22sp"
+                    android:contentDescription="@string/locked"
+                    android:padding="2sp"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/courseName"
+                style="@style/TextFont.Medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:ellipsize="end"
+                android:labelFor="@id/courseCard"
+                android:maxLines="2"
+                android:text="@{itemViewModel.data.courseName}"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseImage"
+                tools:text="American Literature 401"
+                tools:textColor="@color/textDarkest" />
+
+            <TextView
+                style="@style/TextFont.Medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@{itemViewModel.data.courseCode}"
+                android:textColor="@color/textDark"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseName"
+                tools:ignore="Deprecated"
+                tools:text="LIT 401" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

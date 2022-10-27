@@ -21,8 +21,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.FontFamily
 import com.instructure.student.R
+import com.instructure.student.features.dashboard.main.NewDashboardFragment
 import com.instructure.student.fragment.CalendarFragment
-import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.fragment.ToDoListFragment
@@ -30,14 +30,14 @@ import com.instructure.student.fragment.ToDoListFragment
 class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBehavior {
 
     override val bottomNavBarFragments: List<Class<out ParentFragment>> = listOf(
-        DashboardFragment::class.java,
+        NewDashboardFragment::class.java,
         CalendarFragment::class.java,
         ToDoListFragment::class.java,
         NotificationListFragment::class.java,
         getInboxBottomBarFragment(apiPrefs)
     )
 
-    override val homeFragmentClass: Class<out ParentFragment> = DashboardFragment::class.java
+    override val homeFragmentClass: Class<out ParentFragment> = NewDashboardFragment::class.java
 
     override val visibleNavigationMenuItems: Set<NavigationMenuItem> = setOf(NavigationMenuItem.FILES, NavigationMenuItem.BOOKMARKS, NavigationMenuItem.SETTINGS)
 
@@ -51,10 +51,10 @@ class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBeha
     override val bottomBarMenu: Int = R.menu.bottom_bar_menu
 
     override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
-        return DashboardFragment.makeRoute(ApiPrefs.user)
+        return NewDashboardFragment.makeRoute(ApiPrefs.user)
     }
 
     override fun createHomeFragment(route: Route): ParentFragment {
-        return DashboardFragment.newInstance(route)
+        return NewDashboardFragment.newInstance(route)
     }
 }

@@ -10,6 +10,7 @@ import com.instructure.pandautils.features.notification.preferences.PushNotifica
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.student.features.dashboard.main.NewDashboardFragment
 import com.instructure.student.features.dashboard.edit.EditDashboardFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.search.FileSearchFragment
@@ -64,6 +65,7 @@ object RouteResolver {
 
         return when {
             cls.isA<DashboardFragment>() -> DashboardFragment.newInstance(route)
+            cls.isA<NewDashboardFragment>() -> NewDashboardFragment.newInstance(route)
             cls.isA<ElementaryDashboardFragment>() -> ElementaryDashboardFragment.newInstance(route)
             cls.isA<ToDoListFragment>() -> ToDoListFragment.newInstance(route)
             cls.isA<NotificationListFragment>() -> NotificationListFragment.newInstance(route)
