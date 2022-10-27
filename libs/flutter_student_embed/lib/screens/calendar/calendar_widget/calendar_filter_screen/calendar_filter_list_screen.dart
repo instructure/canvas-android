@@ -88,6 +88,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
           } else if (snapshot.hasData) {
             _courses = snapshot.data;
             courseLength = _courses.length;
+            if (ApiPrefs.getUser() != null) courseLength++;
             if (selectedContextIds.isEmpty && selectAllIfEmpty) {
               // We only want to do this the first time we load, otherwise if the user ever deselects all the
               // contexts, then they will all automatically be put into the selected list
