@@ -18,6 +18,7 @@ package com.instructure.teacher.presenters
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.teacher.viewinterface.CoursesView
@@ -61,12 +62,10 @@ class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) 
         apiAsync<List<DashboardCard>> { CourseManager.getDashboardCourses(forceNetwork, it) }.await()
             .onFailure { notifyRefreshFinished() }
             .onSuccess { dashboardCourses ->
-                val courseMap = courses.associateBy { it.id }
-                val validCourses = dashboardCourses
-                    .mapNotNull { courseMap[it.id] }
-                    .filter { (it.isTeacher || it.isTA || it.isDesigner) }
-
-                data.addOrUpdate(validCourses)
+                val filteredCourses = courses.filter { (it.isTeacher || it.isTA || it.isDesigner) && it.hasActiveEnrollment() }
+                val courseMap = filteredCourses.associateBy { it.id }
+                val validCourses = dashboardCourses.mapNotNull { courseMap[it.id] }
+                data.addOrUpdate(validCourses.ifEmpty { filteredCourses })
                 notifyRefreshFinished()
             }
     }

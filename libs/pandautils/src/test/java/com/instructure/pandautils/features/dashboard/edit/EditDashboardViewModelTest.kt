@@ -14,13 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.edit
+package com.instructure.pandautils.features.dashboard.edit
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -30,19 +29,14 @@ import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.pandautils.features.dashboard.edit.EditDashboardItemAction
-import com.instructure.pandautils.features.dashboard.edit.EditDashboardViewModel
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.*
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.student.R
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -63,7 +57,7 @@ class EditDashboardViewModelTest {
 
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val groupManager: GroupManager = mockk(relaxed = true)
-    private val repository = StudentEditDashboardRepository(courseManager, groupManager)
+    private val repository: EditDashboardRepository = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
@@ -74,8 +68,6 @@ class EditDashboardViewModelTest {
 
     @Before
     fun setUp() {
-        mockkStatic("kotlinx.coroutines.AwaitKt")
-
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
     }
@@ -89,19 +81,15 @@ class EditDashboardViewModelTest {
     @Test
     fun `Show error state if fetching courses fails`() {
         //Given
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Fail(), DataResult.Fail(), DataResult.Fail())
-
         val groups = listOf(createGroup(id = 1L, name = "Group1"))
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getCurses() } throws IllegalStateException()
+
+        coEvery { repository.getGroups() } returns groups
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Error)
@@ -112,17 +100,13 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(Course(id = 1L, name = "Course"))
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail()
-        }
+        coEvery { repository.getGroups() } throws IllegalStateException()
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Error)
@@ -133,18 +117,14 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current Course"))
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        coEvery { repository.getGroups() } returns emptyList()
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -160,20 +140,16 @@ class EditDashboardViewModelTest {
     @Test
     fun `Correct headers for groups`() {
         //Given
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(Group(id = 1L, name = "Group1"))
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -190,13 +166,11 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current course"))
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        every { repository.isFavoriteable(any()) } returns true
+
+        coEvery { repository.getGroups() } returns emptyList()
 
         every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -204,8 +178,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -224,13 +198,11 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current course", true))
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        every { repository.isFavoriteable(any()) } returns true
+
+        coEvery { repository.getGroups() } returns emptyList()
 
         every { courseManager.removeCourseFromFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -238,8 +210,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -256,14 +228,10 @@ class EditDashboardViewModelTest {
     @Test
     fun `Add group to favorites`() {
         //Given
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(createGroup(1L, "Group"))
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         every { groupManager.addGroupToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -271,8 +239,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -289,14 +257,10 @@ class EditDashboardViewModelTest {
     @Test
     fun `Remove group from favorites`() {
         //Given
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(createGroup(1L, "Group", true))
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         every { groupManager.removeGroupFromFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -304,8 +268,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -326,13 +290,11 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Current course 2")
         )
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        every { repository.isFavoriteable(any()) } returns true
+
+        coEvery { repository.getGroups() } returns emptyList()
 
         every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -340,8 +302,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -366,13 +328,9 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Current course 2", false)
         )
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        coEvery { repository.getGroups() } returns emptyList()
 
         every { courseManager.removeCourseFromFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -380,9 +338,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
-        viewModel.events.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -403,17 +361,13 @@ class EditDashboardViewModelTest {
     @Test
     fun `Add all groups to favorites`() {
         //Given
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(
                 createGroup(1L, "Group"),
                 createGroup(2L, "Group 2")
         )
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         every { groupManager.addGroupToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -421,8 +375,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -443,17 +397,13 @@ class EditDashboardViewModelTest {
     @Test
     fun `Remove all groups from favorites`() {
         //Given
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(
                 createGroup(1L, "Group", true),
                 createGroup(2L, "Group 2")
         )
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         every { groupManager.removeGroupFromFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -461,8 +411,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -490,18 +440,14 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         viewModel.queryItems("course")
         val data = viewModel.data.value?.items ?: emptyList()
@@ -524,18 +470,14 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         viewModel.queryItems("group")
         val data = viewModel.data.value?.items ?: emptyList()
@@ -558,18 +500,14 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         viewModel.queryItems("No match")
         val data = viewModel.data.value?.items ?: emptyList()
@@ -585,22 +523,18 @@ class EditDashboardViewModelTest {
         val futureCourse = createCourse(2L, "Future course", false, OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1))
         val currentCourse = createCourse(3L, "Current course", false)
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(listOf(currentCourse)), DataResult.Success(listOf(pastCourse)), DataResult.Success(listOf(futureCourse)))
+        coEvery { repository.getCurses() } returns listOf(listOf(currentCourse), listOf(pastCourse), listOf(futureCourse))
 
         val groups = listOf(
                 createGroup(4L, "Group", true),
         )
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -647,13 +581,11 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Past course"))
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(courses), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), courses, emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        every { repository.isFavoriteable(any()) } returns false
+
+        coEvery { repository.getGroups() } returns emptyList()
 
         every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -661,9 +593,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
-        viewModel.events.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -688,13 +620,13 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Unpublished future course", workflowState = Course.WorkflowState.UNPUBLISHED)
         )
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(courses))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), courses)
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        every { repository.isFavoriteable(courses.first()) } returns true
+
+        every { repository.isFavoriteable(courses.last()) } returns false
+
+        coEvery { repository.getGroups() } returns emptyList()
 
         every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -702,9 +634,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
-        viewModel.events.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -734,13 +666,11 @@ class EditDashboardViewModelTest {
     fun `Open course`() {
         val courses = listOf(createCourse(1L, "Current course"))
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(courses), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(courses, emptyList(), emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        every { repository.isOpenable(any()) } returns true
+
+        coEvery { repository.getGroups() } returns emptyList()
 
         every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -748,9 +678,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
-        viewModel.events.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -769,14 +699,10 @@ class EditDashboardViewModelTest {
 
     @Test
     fun `Open group`() {
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), emptyList())
 
         val groups = listOf(createGroup(1L, "Group"))
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(groups)
-        }
+        coEvery { repository.getGroups() } returns groups
 
         every { groupManager.addGroupToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -784,9 +710,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
-        viewModel.events.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -807,13 +733,11 @@ class EditDashboardViewModelTest {
     fun `Unpublished courses cannot be opened`() {
         val courses = listOf(createCourse(1L, "Unpublished course", workflowState = Course.WorkflowState.UNPUBLISHED))
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(emptyList()), DataResult.Success(courses))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), courses)
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        every { repository.isOpenable(any()) } returns false
+
+        coEvery { repository.getGroups() } returns emptyList()
 
         every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -821,9 +745,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
-        viewModel.events.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -844,13 +768,11 @@ class EditDashboardViewModelTest {
     fun `Deleted courses cannot be opened`() {
         val courses = listOf(createCourse(1L, "Deleted course", workflowState = Course.WorkflowState.DELETED))
 
-        val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
-        every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred
-        coEvery { listOf(coursesDeferred, coursesDeferred, coursesDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()), DataResult.Success(courses), DataResult.Success(emptyList()))
+        coEvery { repository.getCurses() } returns listOf(emptyList(), courses, emptyList())
 
-        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(emptyList())
-        }
+        coEvery { repository.getGroups() } returns emptyList()
+
+        every { repository.isOpenable(any()) } returns false
 
         every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
@@ -858,9 +780,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
-        viewModel.events.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 

@@ -282,7 +282,7 @@ class EditDashboardViewModel @Inject constructor(
     }
 
     private fun selectAllCourses() {
-        val coursesToFavorite = (currentCoursesViewData + futureCoursesViewData).filter { !it.isFavorite && it.favoriteable }
+        val coursesToFavorite = (currentCoursesViewData + pastCoursesViewData + futureCoursesViewData).filter { !it.isFavorite && it.favoriteable }
         var counter = 0
         coursesToFavorite.forEach {
             viewModelScope.launch {
@@ -303,7 +303,7 @@ class EditDashboardViewModel @Inject constructor(
     }
 
     private fun deselectAllCourses() {
-        val coursesToUnfavorite = (currentCoursesViewData + futureCoursesViewData).filter { it.isFavorite }
+        val coursesToUnfavorite = (currentCoursesViewData + pastCoursesViewData + futureCoursesViewData).filter { it.isFavorite }
         var counter = 0
         coursesToUnfavorite.forEach {
             viewModelScope.launch {
@@ -344,8 +344,8 @@ class EditDashboardViewModel @Inject constructor(
             EditDashboardCourseItemViewModel(
                     id = it.id,
                     name = it.name,
-                    isFavorite = false,
-                    favoriteable = false,
+                    isFavorite = it.isFavorite,
+                    favoriteable = repository.isFavoriteable(it),
                     openable = repository.isOpenable(it),
                     termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
                     actionHandler = ::handleAction

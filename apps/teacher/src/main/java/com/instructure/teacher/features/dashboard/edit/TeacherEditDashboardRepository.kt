@@ -20,23 +20,22 @@ package com.instructure.teacher.features.dashboard.edit
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
-import kotlinx.coroutines.awaitAll
 
 class TeacherEditDashboardRepository(val courseManager: CourseManager) : EditDashboardRepository {
 
     override suspend fun getCurses(): List<List<Course>> {
-        val (currentCoursesDeferred, pastCoursesDeferred, futureCoursesDeferred) = listOf(
-            courseManager.getCoursesByEnrollmentStateAsync("active", true),
-            courseManager.getCoursesByEnrollmentStateAsync("completed", true),
-            courseManager.getCoursesByEnrollmentStateAsync("invited_or_pending", true)
-        ).awaitAll()
+        val courses = courseManager.getCoursesTeacherAsync(true).await().dataOrThrow
+        val filter: (Course, Boolean) -> Boolean = { course, enrollment ->
+            (course.isTeacher || course.isTA || course.isDesigner) && course.hasActiveEnrollment() && enrollment
+        }
 
-        val currentCourses = currentCoursesDeferred.dataOrThrow.filter { it.isTeacher || it.isTA || it.isDesigner }
-        val pastCourses = pastCoursesDeferred.dataOrThrow.filter { it.isTeacher || it.isTA || it.isDesigner }
-        val futureCourses = futureCoursesDeferred.dataOrThrow.filter { it.isTeacher || it.isTA || it.isDesigner }
+        val currentCourses = courses.filter { filter(it, it.isCurrentEnrolment()) }
+        val pastCourses = courses.filter { filter(it, it.isPastEnrolment()) }
+        val futureCourses = courses.filter { filter(it, it.isFutureEnrolment()) }
 
         return listOf(currentCourses, pastCourses, futureCourses)
     }

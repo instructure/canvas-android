@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.isPublished
 import com.instructure.canvasapi2.utils.isValidTerm
@@ -50,5 +51,5 @@ class StudentEditDashboardRepository(
 
     override fun isOpenable(course: Course) = course.isNotDeleted() && course.isPublished()
 
-    override fun isFavoriteable(course: Course) = course.isValidTerm() && course.isNotDeleted() && course.isPublished()
+    override fun isFavoriteable(course: Course) = course.isValidTerm() && course.isNotDeleted() && course.isPublished() && course.hasActiveEnrollment()
 }
