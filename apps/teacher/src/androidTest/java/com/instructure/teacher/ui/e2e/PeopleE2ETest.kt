@@ -95,13 +95,13 @@ class PeopleE2ETest: TeacherTest() {
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.TEACHER)
 
-        Log.d(STEP_TAG,"Navigate back and click on '${parent.name}', the parent (observer) person and assert the that the observer course info and the corresponding section name is displayed on Context Page.")
+        Log.d(STEP_TAG,"Navigate back and click on '${parent.name}', the parent (observer) person and assert the that the observer course info and the corresponding section name are displayed on Context Page.")
         Espresso.pressBack()
         peopleListPage.clickPerson(parent)
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.OBSERVER)
 
-        Log.d(STEP_TAG,"Navigate back and click on ${notGradedStudent.name} student and assert that the NOT GRADED student course info is displayed properly on Context Page.")
+        Log.d(STEP_TAG,"Navigate back and click on ${notGradedStudent.name} student and assert that the NOT GRADED student course info and the corresponding section name is displayed are displayed properly on Context Page.")
         Espresso.pressBack()
         peopleListPage.clickPerson(notGradedStudent)
         studentContextPage.assertDisplaysStudentInfo(notGradedStudent)
