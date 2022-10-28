@@ -45,7 +45,6 @@ abstract class TeacherTest : CanvasTest() {
      * Required for auto complete of page objects within tests
      */
     val addMessagePage = AddMessagePage()
-    val allCoursesListPage = AllCoursesListPage()
     val announcementsListPage = AnnouncementsListPage()
     val assigneeListPage = AssigneeListPage()
     val assignmentDetailsPage = AssignmentDetailsPage()
@@ -60,6 +59,7 @@ abstract class TeacherTest : CanvasTest() {
     val courseSettingsPage = CourseSettingsPage()
     val coursesListPage = CoursesListPage()
     val dashboardPage = DashboardPage()
+    val editDashboardPage = EditDashboardPage()
     val settingsPage = SettingsPage()
     val legalPage = LegalPage()
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
@@ -69,7 +69,6 @@ abstract class TeacherTest : CanvasTest() {
     val discussionsListPage = DiscussionsListPage()
     val editAnnouncementPage = EditAnnouncementPage()
     val editAssignmentDetailsPage = EditAssignmentDetailsPage()
-    val editCoursesListPage = EditCoursesListPage()
     val editDiscussionsDetailsPage = EditDiscussionsDetailsPage()
     val editPageDetailsPage = EditPageDetailsPage()
     val editQuizDetailsPage = EditQuizDetailsPage()

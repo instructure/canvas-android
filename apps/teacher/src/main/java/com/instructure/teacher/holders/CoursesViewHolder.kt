@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.utils.Const.COURSE_EDIT_COLOR_ID
 import com.instructure.teacher.utils.Const.COURSE_EDIT_NAME_ID
 import com.instructure.teacher.utils.TeacherPrefs
@@ -36,7 +37,7 @@ class CoursesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         const val HOLDER_RES_ID = R.layout.adapter_courses
     }
 
-    fun bind(course: Course, callback: com.instructure.teacher.fragments.AllCoursesFragment.CourseBrowserCallback?) = with(itemView) {
+    fun bind(course: Course, callback: DashboardFragment.CourseBrowserCallback?) = with(itemView) {
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 

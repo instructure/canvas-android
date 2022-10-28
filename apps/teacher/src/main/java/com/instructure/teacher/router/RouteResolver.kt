@@ -5,6 +5,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
@@ -71,8 +72,10 @@ object RouteResolver {
             fragment = CourseBrowserFragment.newInstance(canvasContext!!)
         } else if (CourseBrowserEmptyFragment::class.java.isAssignableFrom(cls)) {
             fragment = CourseBrowserEmptyFragment.newInstance((canvasContext as Course?)!!)
-        } else if (CoursesFragment::class.java.isAssignableFrom(cls)) {
-            fragment = CoursesFragment.getInstance()
+        } else if (DashboardFragment::class.java.isAssignableFrom(cls)) {
+            fragment = DashboardFragment.getInstance()
+        } else if (EditDashboardFragment::class.java.isAssignableFrom(cls)) {
+            fragment = EditDashboardFragment.newInstance(route)
         } else if (AssignmentListFragment::class.java.isAssignableFrom(cls)) {
             fragment = AssignmentListFragment.getInstance(canvasContext!!, route.arguments)
         } else if (AssignmentDetailsFragment::class.java.isAssignableFrom(cls)) {
@@ -87,8 +90,6 @@ object RouteResolver {
             fragment = EditAssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
         } else if (AssigneeListFragment::class.java.isAssignableFrom(cls)) {
             fragment = AssigneeListFragment.newInstance(route.arguments)
-        } else if (EditFavoritesFragment::class.java.isAssignableFrom(cls)) {
-            fragment = EditFavoritesFragment.newInstance(route.arguments)
         } else if (CourseSettingsFragment::class.java.isAssignableFrom(cls)) {
             fragment = CourseSettingsFragment.newInstance((canvasContext as Course?)!!)
         } else if (QuizListFragment::class.java.isAssignableFrom(cls)) {

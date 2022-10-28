@@ -33,9 +33,7 @@ import org.hamcrest.Matcher
 @Suppress("unused")
 class CoursesListPage : BasePage() {
 
-    private val toolbarTitle by WaitForToolbarTitle(R.string.courses)
-
-    private val menuEditFavoritesButton by WaitForViewWithId(R.id.menu_edit_favorite_courses)
+    private val toolbarTitle by WaitForToolbarTitle(R.string.dashboard)
 
     private val coursesTab by OnViewWithId(R.id.tab_courses)
 
@@ -45,7 +43,7 @@ class CoursesListPage : BasePage() {
     private val coursesLabel by WaitForViewWithId(R.id.courseLabel)
 
     // Only displays if the user has favorite courses
-    private val seeAllCoursesLabel by WaitForViewWithId(R.id.seeAllTextView)
+    private val editDashboardLabel by WaitForViewWithId(R.id.editDashboardTextView)
 
     // Only displays if the user has no favorite courses
     private val emptyMessageLayout by WaitForViewWithId(R.id.emptyCoursesView)
@@ -58,7 +56,7 @@ class CoursesListPage : BasePage() {
 
     fun assertHasCourses(mCourses: List<Course>) {
         coursesLabel.assertDisplayed()
-        seeAllCoursesLabel.assertDisplayed()
+        editDashboardLabel.assertDisplayed()
 
         // Check that the recyclerview count matches course count
         coursesRecyclerView.check(RecyclerViewItemCountAssertion(mCourses.size))
@@ -79,8 +77,8 @@ class CoursesListPage : BasePage() {
         onView(matcher).assertDisplayed()
     }
 
-    fun openAllCoursesList() {
-        seeAllCoursesLabel.click()
+    fun openEditDashboard() {
+        editDashboardLabel.click()
     }
 
     fun openCourse(course: CourseApiModel) {
@@ -94,9 +92,5 @@ class CoursesListPage : BasePage() {
     fun openCourseAtPosition(position: Int) {
         // Add one to the position to account for the header in list
         coursesRecyclerView.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, click()))
-    }
-
-    fun openEditFavorites() {
-        menuEditFavoritesButton.click()
     }
 }

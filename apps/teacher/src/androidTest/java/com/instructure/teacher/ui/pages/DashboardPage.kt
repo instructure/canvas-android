@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages
 
 import android.view.View
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -35,13 +36,12 @@ import org.hamcrest.Matcher
 class DashboardPage : BasePage() {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
-    private val editFavoriteCourses by WaitForViewWithId(R.id.menu_edit_favorite_courses)
-    private val coursesPageLabel by WaitForViewWithStringText("Courses")
+    private val coursesPageLabel by WaitForViewWithText(R.string.dashboard)
     private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
     private val coursesView by OnViewWithId(R.id.swipeRefreshLayout, autoAssert = false)
     private val coursesHeaderWrapper by OnViewWithId(R.id.coursesHeaderWrapper, autoAssert = false)
     private val courseLabel by WaitForViewWithId(R.id.courseLabel)
-    private val seeAllCoursesButton by WaitForViewWithId(R.id.seeAllTextView)
+    private val editDashboardButton by WaitForViewWithId(R.id.editDashboardTextView)
     private val bottomBar by OnViewWithId(R.id.bottomBar)
     private val coursesTab by WaitForViewWithId(R.id.tab_courses)
     private val todoTab by WaitForViewWithId(R.id.tab_todo)
@@ -60,11 +60,20 @@ class DashboardPage : BasePage() {
         scrollAndAssertDisplayed(matcher)
     }
 
+    fun assertCourseNotDisplayed(course: CourseApiModel) {
+        val matcher = allOf(
+            withText(course.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
     fun assertDisplaysCourses() {
         emptyView.assertNotDisplayed()
-        onView(withParent(R.id.toolbar) + withText(R.string.courses)).assertDisplayed()
+        onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
         coursesView.assertDisplayed()
-        seeAllCoursesButton.assertDisplayed()
+        editDashboardButton.assertDisplayed()
     }
 
     fun assertOpensCourse(course: CourseApiModel) {
@@ -73,12 +82,8 @@ class DashboardPage : BasePage() {
         onView(withId(R.id.courseBrowserTitle)).assertContainsText(course.name)
     }
 
-    fun clickSeeAll() {
-        onView(withId(R.id.seeAllTextView)).click()
-    }
-
-    fun openEditCoursesListPage() {
-        onView(withId(R.id.menu_edit_favorite_courses)).click()
+    fun clickEditDashboard() {
+        onView(withId(R.id.editDashboardTextView)).click()
     }
 
     fun openCourse(courseName: String) {

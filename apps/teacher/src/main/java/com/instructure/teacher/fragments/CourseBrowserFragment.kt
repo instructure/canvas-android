@@ -73,6 +73,8 @@ class CourseBrowserFragment : BaseSyncFragment<
         fun newInstance(context: CanvasContext) = CourseBrowserFragment().apply {
             mCanvasContext = context
         }
+
+        fun makeRoute(canvasContext: CanvasContext?) = Route(CourseBrowserFragment::class.java, canvasContext)
     }
 
     private lateinit var mRecyclerView: RecyclerView
