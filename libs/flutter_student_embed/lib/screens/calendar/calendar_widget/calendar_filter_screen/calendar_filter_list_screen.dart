@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/course.dart';
+import 'package:flutter_student_embed/network/utils/api_prefs.dart';
 import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
 import 'package:flutter_student_embed/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_student_embed/utils/common_widgets/error_panda_widget.dart';
@@ -66,7 +67,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
             SizedBox(height: 16.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(L10n(context).calendarTapToFavoriteDesc, style: Theme.of(context).textTheme.bodyText2),
+              child: Text(L10n(context).calendarSelectFavoriteCalendars, style: Theme.of(context).textTheme.bodyText2),
             ),
             SizedBox(height: 24.0),
             Expanded(child: _body())
@@ -87,6 +88,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
           } else if (snapshot.hasData) {
             _courses = snapshot.data;
             courseLength = _courses.length;
+            if (ApiPrefs.getUser() != null) courseLength++;
             if (selectedContextIds.isEmpty && selectAllIfEmpty) {
               // We only want to do this the first time we load, otherwise if the user ever deselects all the
               // contexts, then they will all automatically be put into the selected list
@@ -94,6 +96,9 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
 
               // List will be empty when all courses are selected (on first load)
               selectedContextIds.addAll(_courses.map((c) => 'course_${c.id}').toList());
+              if (ApiPrefs.getUser() != null) {
+                selectedContextIds.add('user_${ApiPrefs.getUser().id}');
+              }
               selectAllIfEmpty = false;
             }
             _body = (_courses == null || _courses.isEmpty)
@@ -102,7 +107,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                     title: L10n(context).noCoursesTitle,
                     subtitle: L10n(context).noCoursesMessage,
                   )
-                : _courseList(_courses);
+                : _calendarList(_courses);
           } else {
             selectedContextIds.addAll(widget._selectedCourses);
             if (selectedContextIds.isNotEmpty) {
@@ -126,9 +131,20 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
         });
   }
 
-  ListView _courseList(List<Course> courses) {
+  ListView _calendarList(List<Course> courses) {
+    final user = ApiPrefs.getUser();
     List<Widget> _listItems = [
-      _listHeader(L10n(context).coursesLabel),
+      if (user != null) LabeledCheckbox(
+          label: user.name,
+          padding: const EdgeInsets.only(left: 2.0, right: 16.0),
+          value: selectedContextIds.contains('user_${user.id}'),
+          onChanged: (bool newValue) {
+            setState(() {
+              newValue
+                  ? selectedContextIds.add('user_${user.id}')
+                  : selectedContextIds.remove('user_${user.id}');
+            });
+          }),
       ...courses.map((c) => MergeSemantics(
             child: LabeledCheckbox(
                 label: c.name,
@@ -150,14 +166,6 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
           return _listItems[index];
         });
   }
-
-  Widget _listHeader(String title) => Padding(
-        padding: const EdgeInsets.only(left: 16.0),
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.overline,
-        ),
-      );
 }
 
 // Custom checkbox to better control the padding at the start

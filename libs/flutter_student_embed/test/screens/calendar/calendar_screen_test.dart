@@ -282,6 +282,7 @@ void main() {
     // Tap on unselected context items
     await tester.tap(find.text('Course2'));
     await tester.tap(find.text('Course3'));
+    await tester.tap(find.text(ApiPrefs.getUser().name));
     await tester.pumpAndSettle();
 
     // Tap on the back button
