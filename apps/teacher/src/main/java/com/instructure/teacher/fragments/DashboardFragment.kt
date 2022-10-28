@@ -38,9 +38,9 @@ import com.instructure.teacher.adapters.CoursesAdapter
 import com.instructure.teacher.decorations.VerticalGridSpacingDecoration
 import com.instructure.teacher.events.CourseColorOverlayToggledEvent
 import com.instructure.teacher.events.CourseUpdatedEvent
-import com.instructure.teacher.factory.CoursesPresenterFactory
+import com.instructure.teacher.factory.DashboardPresenterFactory
 import com.instructure.teacher.holders.CoursesViewHolder
-import com.instructure.teacher.presenters.CoursesPresenter
+import com.instructure.teacher.presenters.DashboardPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.TeacherPrefs
@@ -54,7 +54,7 @@ import org.greenrobot.eventbus.ThreadMode
 private const val LIST_SPAN_COUNT = 1
 
 @ScreenView(SCREEN_VIEW_DASHBOARD)
-class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
+class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
 
     private lateinit var mGridLayoutManager: GridLayoutManager
     private lateinit var mDecorator: VerticalGridSpacingDecoration
@@ -77,7 +77,7 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun withPagination() = false
 
-    override fun getPresenterFactory() = CoursesPresenterFactory()
+    override fun getPresenterFactory() = DashboardPresenterFactory()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -107,9 +107,9 @@ class DashboardFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView
         mDecorator = VerticalGridSpacingDecoration(requireContext(), mGridLayoutManager)
     }
 
-    override fun onPresenterPrepared(presenter: CoursesPresenter) {}
+    override fun onPresenterPrepared(presenter: DashboardPresenter) {}
 
-    override fun onReadySetGo(presenter: CoursesPresenter) {
+    override fun onReadySetGo(presenter: DashboardPresenter) {
         swipeRefreshLayout.setOnRefreshListener {
             if (!Utils.isNetworkAvailable(requireContext())) {
                 swipeRefreshLayout.isRefreshing = false

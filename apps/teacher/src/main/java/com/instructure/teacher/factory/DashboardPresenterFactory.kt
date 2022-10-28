@@ -17,10 +17,10 @@
 package com.instructure.teacher.factory
 
 
-import com.instructure.teacher.presenters.CoursesPresenter
+import com.instructure.teacher.presenters.DashboardPresenter
 import com.instructure.teacher.viewinterface.CoursesView
 import instructure.androidblueprint.PresenterFactory
 
-class CoursesPresenterFactory : PresenterFactory<CoursesView, CoursesPresenter> {
-    override fun create() = CoursesPresenter()
+class DashboardPresenterFactory : PresenterFactory<CoursesView, DashboardPresenter> {
+    override fun create() = DashboardPresenter()
 }

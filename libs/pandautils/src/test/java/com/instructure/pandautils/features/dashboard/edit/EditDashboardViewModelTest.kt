@@ -730,7 +730,7 @@ class EditDashboardViewModelTest {
     }
 
     @Test
-    fun `Unpublished courses cannot be opened`() {
+    fun `Not isOpenable courses cannot be opened`() {
         val courses = listOf(createCourse(1L, "Unpublished course", workflowState = Course.WorkflowState.UNPUBLISHED))
 
         coEvery { repository.getCurses() } returns listOf(emptyList(), emptyList(), courses)
@@ -738,41 +738,6 @@ class EditDashboardViewModelTest {
         every { repository.isOpenable(any()) } returns false
 
         coEvery { repository.getGroups() } returns emptyList()
-
-        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(Favorite(1L))
-        }
-
-        //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
-
-        val data = viewModel.data.value?.items ?: emptyList()
-
-        //Then
-        assertTrue(viewModel.state.value is ViewState.Success)
-        assertEquals(4, data.size)
-        assertTrue(data[3] is EditDashboardCourseItemViewModel)
-
-        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
-        itemViewModel.onClick()
-
-        val openEvent = viewModel.events.value?.getContentIfNotHandled()
-        assert(openEvent is EditDashboardItemAction.ShowSnackBar)
-        assertEquals(R.string.unauthorized, (openEvent as EditDashboardItemAction.ShowSnackBar).res)
-    }
-
-    @Test
-    fun `Deleted courses cannot be opened`() {
-        val courses = listOf(createCourse(1L, "Deleted course", workflowState = Course.WorkflowState.DELETED))
-
-        coEvery { repository.getCurses() } returns listOf(emptyList(), courses, emptyList())
-
-        coEvery { repository.getGroups() } returns emptyList()
-
-        every { repository.isOpenable(any()) } returns false
 
         every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(Favorite(1L))
