@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.DiscussionEntryPostBody
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import okhttp3.MultipartBody
 import java.io.File
 
@@ -335,5 +336,22 @@ object DiscussionManager {
             callback
         )
     }
+
+    fun getDiscussionTopicHeader(
+        canvasContext: CanvasContext,
+        topicId: Long,
+        forceNetwork: Boolean,
+        callback: StatusCallback<DiscussionTopicHeader>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        DiscussionAPI.getDiscussionTopicHeader(adapter, canvasContext, topicId, callback, params)
+    }
+
+    fun getDiscussionTopicHeaderAsync(
+        canvasContext: CanvasContext,
+        topicId: Long,
+        forceNetwork: Boolean
+    ) = apiAsync<DiscussionTopicHeader> { getDiscussionTopicHeader(canvasContext, topicId, forceNetwork, it) }
 
 }

@@ -17,18 +17,17 @@
 package com.instructure.pandautils.features.discussion.details
 
 import android.content.res.Resources
-import android.webkit.WebView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -38,6 +37,7 @@ import javax.inject.Inject
 class DiscussionDetailsWebViewViewModel @Inject constructor(
         private val oauthManager: OAuthManager,
         private val apiPrefs: ApiPrefs,
+        private val discussionManager: DiscussionManager,
         private val resources: Resources
 ) : ViewModel() {
 
@@ -49,17 +49,18 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
         get() = _state
     private val _state = MutableLiveData<ViewState>()
 
-    fun loadData(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader) {
+    fun loadData(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader?, id: Long) {
         viewModelScope.launch {
             try {
+                val header = discussionTopicHeader ?: discussionManager.getDiscussionTopicHeaderAsync(canvasContext, id, false).await().dataOrNull
                 _state.postValue(ViewState.Loading)
                 val locale = Locale.getDefault().language
                 val timezone = TimeZone.getDefault().id
-                val url = "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/${discussionTopicHeader.id}"
+                val url = "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/$id"
                 val sessionUrl = oauthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
                 val authenticatedUrl = "$sessionUrl&embed=true&session_locale=$locale&session_timezone=$timezone"
 
-                _data.postValue(DiscussionDetailsWebViewViewData(authenticatedUrl))
+                _data.postValue(DiscussionDetailsWebViewViewData(authenticatedUrl, header?.title ?: resources.getString(R.string.discussion)))
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))

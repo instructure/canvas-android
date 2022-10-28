@@ -133,4 +133,9 @@ class ApiModule {
     fun provideNotificationPreferencesManager(): NotificationPreferencesManager {
         return NotificationPreferencesManager(NotificationPreferencesAPI)
     }
+
+    @Provides
+    fun provideDiscussionManager(): DiscussionManager {
+        return DiscussionManager
+    }
 }

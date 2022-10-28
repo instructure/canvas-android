@@ -40,6 +40,7 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
@@ -85,8 +86,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:course_id/quizzes/:quiz_id"), QuizListFragment::class.java, QuizDetailsFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/discussion_topics"), DiscussionsListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionsListFragment::class.java, DiscussionsDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionsListFragment::class.java, DiscussionDetailsWebViewFragment::class.java))
+        routes.add(Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionsListFragment::class.java, DiscussionRouterFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/files"), FileListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/files/:file_id/download"), RouteContext.FILE))
@@ -108,9 +108,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:course_id/wiki/:page_id/"), PageListFragment::class.java, PageDetailsFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/announcements"), AnnouncementListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionsDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), DiscussionDetailsWebViewFragment::class.java))
-
+        routes.add(Route(courseOrGroup("/:course_id/announcements/:message_id"), AnnouncementListFragment::class.java, DiscussionRouterFragment::class.java))
     }
 
     private fun initClassMap() {
@@ -233,6 +231,7 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     private fun handleDetailRoute(context: Context, route: Route) {
+        if (route.removePreviousScreen) (context as? FragmentActivity)?.supportFragmentManager?.popBackStackImmediate()
         if (context is MasterDetailInteractions) {
             Logger.i("RouteMatcher:handleDetailRoute() - MasterDetailInteractions")
             (context as MasterDetailInteractions).addFragment(route)
@@ -341,6 +340,7 @@ object RouteMatcher : BaseRouteMatcher() {
             DiscussionsListFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionsListFragment.newInstance(canvasContext!!)
             DiscussionsDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getDiscussionDetailsFragment(canvasContext, route)
             DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionDetailsWebViewFragment.newInstance(route)
+            DiscussionRouterFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionRouterFragment.newInstance(canvasContext!!, route)
             InboxFragment::class.java.isAssignableFrom(cls) -> fragment = InboxFragment()
             AddMessageFragment::class.java.isAssignableFrom(cls) -> fragment = AddMessageFragment.newInstance(route.arguments)
             MessageThreadFragment::class.java.isAssignableFrom(cls) -> fragment = getMessageThreadFragment(route)

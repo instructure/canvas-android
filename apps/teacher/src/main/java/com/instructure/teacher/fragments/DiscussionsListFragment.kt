@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -54,7 +53,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         RecyclerView.ViewHolder,
         DiscussionListAdapter>(), DiscussionListView {
 
-    val featureFlagProvider: FeatureFlagProvider = FeatureFlagProvider(UserManager, RemoteConfigUtils, ApiPrefs)
+    val featureFlagProvider: FeatureFlagProvider = FeatureFlagProvider(UserManager, ApiPrefs)
 
     protected var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
@@ -130,7 +129,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun createAdapter(): DiscussionListAdapter {
         return DiscussionListAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor, mIsAnnouncements,
             { discussionTopicHeader ->
-                val route = presenter.getDetailsRoute(discussionTopicHeader, mIsAnnouncements)
+                val route = presenter.getDetailsRoute(discussionTopicHeader)
                 RouteMatcher.route(
                     requireContext(),
                     route

@@ -35,6 +35,7 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.ParentActivity
@@ -251,7 +252,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                     null
                 }
                 ANNOUNCEMENT, DISCUSSION_TOPIC -> {
-                    val route = DiscussionDetailsFragment.makeRoute(canvasContext, streamItem.discussionTopicId)
+                    val route = DiscussionRouterFragment.makeRoute(canvasContext, streamItem.discussionTopicId)
                     RouteMatcher.route(context, route)
                     null
                 }

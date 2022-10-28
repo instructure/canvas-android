@@ -31,10 +31,9 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isGroup
-import com.instructure.teacher.fragments.DiscussionsDetailsFragment
 import com.instructure.teacher.viewinterface.DiscussionListView
 import instructure.androidblueprint.SyncExpandablePresenter
 import kotlinx.coroutines.Job
@@ -226,12 +225,7 @@ class DiscussionListPresenter(
         return item.id
     }
 
-    fun getDetailsRoute(discussionTopicHeader: DiscussionTopicHeader, mIsAnnouncements: Boolean): Route {
-        val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, mIsAnnouncements)
-        return if (discussionRedesignEnabled) {
-            Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, args)
-        } else {
-            Route(null, DiscussionsDetailsFragment::class.java, canvasContext, args)
-        }
+    fun getDetailsRoute(discussionTopicHeader: DiscussionTopicHeader): Route {
+        return DiscussionRouterFragment.makeRoute(canvasContext, discussionTopicHeader)
     }
 }

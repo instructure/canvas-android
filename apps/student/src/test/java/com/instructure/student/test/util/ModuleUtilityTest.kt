@@ -246,6 +246,6 @@ class ModuleUtilityTest : TestCase() {
     }
 
     private fun callGetFragment(moduleItem: ModuleItem, course: Course, moduleObject: ModuleObject?): Fragment? {
-        return ModuleUtility.getFragment(moduleItem, course, moduleObject)
+        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false)
     }
 }

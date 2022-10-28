@@ -29,6 +29,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -146,6 +147,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         configureSubmissionTypes(assignment)
         configureDescription(assignment)
         configureSubmissionDonuts(assignment)
+        configureViewDiscussionButton(assignment)
     }
 
     // region Configure Assignment
@@ -303,6 +305,16 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             assigneesWithoutGradesTextView.setVisible()
         }
     }
+
+    private fun configureViewDiscussionButton(assignment: Assignment) {
+        if (assignment.discussionTopicHeader != null) {
+            viewDiscussionButton.setBackgroundColor(ThemePrefs.buttonColor)
+            viewDiscussionButton.setTextColor(ThemePrefs.buttonTextColor)
+            viewDiscussionButton.setVisible()
+        } else {
+            viewDiscussionButton.setGone()
+        }
+    }
     //endregion
 
     override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) {
@@ -349,6 +361,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         notSubmittedWrapper.setOnClickListener {}
         noDescriptionTextView.setOnClickListener {}
         assigneesWithoutGradesTextView.setOnClickListener {}
+        viewDiscussionButton.setOnClickListener {}
     }
 
     private fun setupListeners(assignment: Assignment) {
@@ -375,6 +388,13 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         assigneesWithoutGradesTextView.setOnClickListener {
             submissionsLayout.performClick()
         }
+
+        assignment.discussionTopicHeader?.let { discussionTopicHeader ->
+            viewDiscussionButton.setOnClickListener {
+                RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(mCourse, discussionTopicHeader))
+            }
+        } ?: viewDiscussionButton.setGone()
+
     }
 
     private fun openEditPage(assignment: Assignment) {
