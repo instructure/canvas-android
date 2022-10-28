@@ -40,14 +40,13 @@ class PersonContextPageTest : TeacherTest() {
         val (teacher, course) = getToPersonContextPage()
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.TEACHER)
-        personContextPage.assertPersonNameIsDisplayed(teacher.name)
+        personContextPage.assertPersonNameIsDisplayed(teacher.shortName)
     }
 
     private fun getToPersonContextPage(assignmentCount: Int = 1): Triple<CanvasUserApiModel, CourseApiModel, List<AssignmentApiModel>> {
         val data = seedData(teachers = 1, courses = 1, favoriteCourses = 1, students = 1)
         val course = data.coursesList[0]
         val teacher = data.teachersList[0]
-        val student = data.studentsList[0]
         val assignments = seedAssignments(
             courseId = course.id,
             assignments = assignmentCount,
@@ -56,7 +55,7 @@ class PersonContextPageTest : TeacherTest() {
         tokenLogin(teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openPeopleTab()
-        peopleListPage.clickPerson(student)
+        peopleListPage.clickPerson(teacher)
         return Triple(teacher, course, assignments)
     }
 
