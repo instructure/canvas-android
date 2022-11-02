@@ -50,4 +50,5 @@ sealed class InboxAction {
     data class ItemSelectionChanged(val view: View, val selected: Boolean) : InboxAction()
     data class ShowConfirmationSnackbar(val text: String) : InboxAction()
     object CreateNewMessage : InboxAction()
+    object FailedToLoadNextPage : InboxAction()
 }

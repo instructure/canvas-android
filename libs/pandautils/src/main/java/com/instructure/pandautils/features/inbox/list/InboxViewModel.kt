@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.localized
@@ -66,6 +67,30 @@ class InboxViewModel @Inject constructor(
 
     private var scope = InboxApi.Scope.ALL
 
+    private var nextPageLink: String? = null
+
+    val bottomReachedCallback: () -> Unit = {
+        viewModelScope.launch {
+            if (_state.value != ViewState.Loading && _state.value != ViewState.LoadingNextPage && nextPageLink != null) {
+                loadNextPage()
+            }
+        }
+    }
+
+    private suspend fun loadNextPage() {
+        _state.postValue(ViewState.LoadingNextPage)
+        val dataResult = inboxManager.getConversationsAsync(scope, true, nextPageLink).await()
+        if (dataResult is DataResult.Success) {
+            nextPageLink = dataResult.linkHeaders.nextUrl
+            val conversations = dataResult.data
+            val itemViewModels = createInboxEntriesFromResponse(conversations)
+            _itemViewModels.postValue(_itemViewModels.value?.plus(itemViewModels))
+        } else {
+            _events.postValue(Event(InboxAction.FailedToLoadNextPage))
+        }
+        _state.postValue(ViewState.Success) // We always need to finish with success state because we already have data and we send only an error event.
+    }
+
     init {
         _state.postValue(ViewState.Loading)
         fetchData()
@@ -74,7 +99,11 @@ class InboxViewModel @Inject constructor(
     private fun fetchData() {
         viewModelScope.launch {
             try {
-                val conversations = inboxManager.getConversationsAsync(scope, true).await().dataOrThrow
+                val dataResult = inboxManager.getConversationsAsync(scope, true).await()
+                val conversations = dataResult.dataOrThrow
+                if (dataResult is DataResult.Success) {
+                    nextPageLink = dataResult.linkHeaders.nextUrl
+                }
                 val itemViewModels = createInboxEntriesFromResponse(conversations)
                 _state.postValue(ViewState.Success)
                 _data.postValue(InboxViewData(getTextForScope(scope)))

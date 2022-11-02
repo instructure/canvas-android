@@ -101,6 +101,16 @@ open class BindableRecyclerViewAdapter : RecyclerView.Adapter<BindableViewHolder
         }
     }
 
+    fun addLoadingView() {
+        itemViewModels.add(LoadingItemViewModel())
+        notifyDataSetChanged()
+    }
+
+    fun removeLoadingView() {
+        itemViewModels.removeAll { it is LoadingItemViewModel }
+        notifyDataSetChanged()
+    }
+
 }
 
 class BindableViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {

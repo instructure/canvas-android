@@ -20,7 +20,7 @@ import retrofit2.Call
 
 sealed class DataResult<out A> {
 
-    data class Success<A>(val data: A) : DataResult<A>()
+    data class Success<A>(val data: A, val linkHeaders: LinkHeaders = LinkHeaders()) : DataResult<A>()
 
     data class Fail(
             val failure: Failure? = null

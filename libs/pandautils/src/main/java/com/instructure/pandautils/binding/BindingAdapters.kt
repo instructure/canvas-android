@@ -35,6 +35,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
@@ -78,6 +79,7 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
             emptyView.setListEmpty()
         }
         is ViewState.Error -> handleErrorState(emptyView, state)
+        else -> emptyView.setGone()
     }
 }
 
@@ -97,6 +99,32 @@ fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemView
         recyclerView.adapter = adapter
     }
     adapter.updateItems(itemViewModels, useDiffUtil ?: false)
+}
+
+@BindingAdapter("loadingState")
+fun bindLoadingState(recyclerView: RecyclerView, loadingState: ViewState?) {
+    val adapter = getOrCreateAdapter(recyclerView)
+    if (recyclerView.adapter == null) {
+        recyclerView.adapter = adapter
+    }
+    if (loadingState == ViewState.LoadingNextPage) adapter.addLoadingView() else adapter.removeLoadingView()
+}
+
+@BindingAdapter("onBottomReached")
+fun bindBottomReachedCallback(recyclerView: RecyclerView, onBottomReached: () -> Unit) {
+    val bottomReachedOffset = 5
+
+    recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            val layoutManager = recyclerView.layoutManager
+            val lastVisibleItemPosition = ((layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition() ?: 0) + recyclerView.childCount
+            val totalItemCount = layoutManager?.itemCount ?: 0
+
+            if (lastVisibleItemPosition >= totalItemCount - bottomReachedOffset) {
+                onBottomReached()
+            }
+        }
+    })
 }
 
 @BindingAdapter("refreshState")

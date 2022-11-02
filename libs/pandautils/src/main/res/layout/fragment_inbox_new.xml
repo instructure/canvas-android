@@ -196,7 +196,9 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     app:recyclerViewItemViewModels="@{viewModel.itemViewModels}"
-                    app:useDiffUtil="@{true}"/>
+                    app:useDiffUtil="@{true}"
+                    app:onBottomReached="@{viewModel.bottomReachedCallback}"
+                    app:loadingState="@{viewModel.state}"/>
 
             </com.instructure.pandautils.views.SwipeRefreshLayoutAppBar>
 

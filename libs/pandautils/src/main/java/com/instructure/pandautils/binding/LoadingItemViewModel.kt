@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 - present Instructure, Inc.
+ * Copyright (C) 2022 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,16 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.mvvm
+package com.instructure.pandautils.binding
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+import com.instructure.pandautils.R
+import com.instructure.pandautils.mvvm.ItemViewModel
 
-sealed class ViewState {
-    object Loading : ViewState()
-    object Success : ViewState()
-    object Refresh : ViewState()
-    object LoadingNextPage : ViewState()
-    data class Empty(@StringRes val emptyTitle: Int? = null, @StringRes val emptyMessage: Int? = null, @DrawableRes val emptyImage: Int? = null) : ViewState()
-    data class Error(val errorMessage: String = "") : ViewState()
+private const val LOADING_ITEM_VIEW_TYPE = 1000
+
+class LoadingItemViewModel : ItemViewModel {
+
+    override val layoutId: Int = R.layout.item_loading
+
+    override val viewType: Int = LOADING_ITEM_VIEW_TYPE
 }

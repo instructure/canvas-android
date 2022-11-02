@@ -1342,4 +1342,5 @@
     <string name="inboxUnstarredConfirmation">%1$s unstarred</string>
 
     <string name="deleteConfirmation">Are you sure you want to delete these conversations? This action cannot be undone.</string>
+    <string name="failedToLoadNextPage">Failed to load next page. Check your internet connection.</string>
 </resources>
