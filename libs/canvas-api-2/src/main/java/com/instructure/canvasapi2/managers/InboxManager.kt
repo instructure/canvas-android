@@ -52,13 +52,6 @@ object InboxManager {
         )
     }
 
-    fun getConversationsAsync(scope: InboxApi.Scope, forceNetwork: Boolean, nextPageLink: String? = null) = apiAsync<List<Conversation>> {
-        if (nextPageLink != null) {
-            it.linkHeaders = LinkHeaders().apply { nextUrl = nextPageLink }
-        }
-        getConversations(scope, forceNetwork, it)
-    }
-
     fun getConversations(scope: InboxApi.Scope, forceNetwork: Boolean, callback: StatusCallback<List<Conversation>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -146,14 +139,6 @@ object InboxManager {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         InboxApi.markConversationAsUnread(adapter, callback, params, conversationId, conversationEvent)
-    }
-
-    fun batchUpdateConversationsAsync(conversationIds: List<Long>, conversationEvent: String) = apiAsync<Void> { batchUpdateConversations(conversationIds, conversationEvent, it) }
-
-    private fun batchUpdateConversations(conversationIds: List<Long>, conversationEvent: String, callback: StatusCallback<Void>) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams()
-        InboxApi.batchUpdateConversations(adapter, callback, params, conversationIds, conversationEvent)
     }
 
     fun getConversationSynchronous(conversationId: Long, forceNetwork: Boolean): Conversation? {

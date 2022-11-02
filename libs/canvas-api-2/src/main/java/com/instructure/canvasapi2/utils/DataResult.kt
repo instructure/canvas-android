@@ -20,7 +20,8 @@ import retrofit2.Call
 
 sealed class DataResult<out A> {
 
-    data class Success<A>(val data: A, val linkHeaders: LinkHeaders = LinkHeaders()) : DataResult<A>()
+    // Default api type is unknown because previusly we haven't stored this and would need to change evereywhere in the codebase.
+    data class Success<A>(val data: A, val linkHeaders: LinkHeaders = LinkHeaders(), val apiType: ApiType = ApiType.UNKNOWN) : DataResult<A>()
 
     data class Fail(
             val failure: Failure? = null

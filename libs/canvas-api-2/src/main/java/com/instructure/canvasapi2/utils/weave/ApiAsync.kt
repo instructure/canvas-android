@@ -42,7 +42,7 @@ fun <T> apiAsync(managerCall: ManagerCall<T>): Deferred<DataResult<T>> {
 
         override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
             @Suppress("UNCHECKED_CAST")
-            deferred.complete(DataResult.Success(response.body() as T, linkHeaders))
+            deferred.complete(DataResult.Success(response.body() as T, linkHeaders, type))
         }
 
         override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {

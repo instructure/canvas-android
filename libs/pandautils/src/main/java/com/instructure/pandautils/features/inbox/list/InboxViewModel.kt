@@ -43,7 +43,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InboxViewModel @Inject constructor(
-    private val inboxManager: InboxManager,
+    private val inboxRepository: InboxRepository,
     private val apiPrefs: ApiPrefs,
     @ApplicationContext private val context: Context,
     private val resources: Resources
@@ -79,7 +79,7 @@ class InboxViewModel @Inject constructor(
 
     private suspend fun loadNextPage() {
         _state.postValue(ViewState.LoadingNextPage)
-        val dataResult = inboxManager.getConversationsAsync(scope, true, nextPageLink).await()
+        val dataResult = inboxRepository.getConversations(scope, true, nextPageLink)
         if (dataResult is DataResult.Success) {
             nextPageLink = dataResult.linkHeaders.nextUrl
             val conversations = dataResult.data
@@ -96,10 +96,10 @@ class InboxViewModel @Inject constructor(
         fetchData()
     }
 
-    private fun fetchData() {
+    private fun fetchData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
             try {
-                val dataResult = inboxManager.getConversationsAsync(scope, true).await()
+                val dataResult = inboxRepository.getConversations(scope, forceNetwork)
                 val conversations = dataResult.dataOrThrow
                 if (dataResult is DataResult.Success) {
                     nextPageLink = dataResult.linkHeaders.nextUrl
@@ -192,7 +192,7 @@ class InboxViewModel @Inject constructor(
 
     fun refresh() {
         _state.postValue(ViewState.Refresh)
-        fetchData()
+        fetchData(true)
     }
 
     fun openScopeSelector() {
@@ -274,7 +274,7 @@ class InboxViewModel @Inject constructor(
                     ?.filter { it.selected }
                     ?.map { it.data.id } ?: emptyList()
 
-                val dataResult = inboxManager.batchUpdateConversationsAsync(ids, operation).await()
+                val dataResult = inboxRepository.batchUpdateConversations(ids, operation)
                 if (dataResult.isSuccess) {
                     onSuccess(ids.toSet())
                 } else {

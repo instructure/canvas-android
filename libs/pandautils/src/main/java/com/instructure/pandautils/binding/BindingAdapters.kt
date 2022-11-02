@@ -112,6 +112,7 @@ fun bindLoadingState(recyclerView: RecyclerView, loadingState: ViewState?) {
 
 @BindingAdapter("onBottomReached")
 fun bindBottomReachedCallback(recyclerView: RecyclerView, onBottomReached: () -> Unit) {
+    // TODO This can be more when we have 100 items per page, just made it this low for testing purposes
     val bottomReachedOffset = 5
 
     recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
