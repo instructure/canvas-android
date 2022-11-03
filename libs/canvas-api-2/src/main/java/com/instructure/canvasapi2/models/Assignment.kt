@@ -20,11 +20,9 @@ package com.instructure.canvasapi2.models
 import android.content.Context
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.Parcelize
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 @Parcelize
 data class Assignment(
@@ -112,6 +110,8 @@ data class Assignment(
         // For quizzes we need to use this field instead of anonymous_grading to determine if it's anonymous
         @SerializedName("anonymous_submissions")
         val anonymousSubmissions: Boolean = false,
+        @SerializedName("course")
+        val course: Course? = null
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt

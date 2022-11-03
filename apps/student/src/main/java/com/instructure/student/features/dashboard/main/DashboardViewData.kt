@@ -39,6 +39,7 @@ data class DashboardAssignmentItemViewData(
 sealed class DashboardAction {
     data class OpenCourse(val course: Course) : DashboardAction()
     data class OpenSubmission(val url: String) : DashboardAction()
+    data class OpenAssignment(val course: Course, val assignmentId: Long) : DashboardAction()
     data class ShowToast(val toast: String) : DashboardAction()
     object ExpandCourses : DashboardAction()
 }

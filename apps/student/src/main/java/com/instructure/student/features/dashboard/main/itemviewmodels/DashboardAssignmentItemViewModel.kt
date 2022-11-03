@@ -5,7 +5,8 @@ import com.instructure.student.R
 import com.instructure.student.features.dashboard.main.DashboardAssignmentItemViewData
 
 class DashboardAssignmentItemViewModel(
-    val data: DashboardAssignmentItemViewData
+    val data: DashboardAssignmentItemViewData,
+    val onClick: () -> Unit
 ) : ItemViewModel {
     override val layoutId: Int = R.layout.item_dashboard_assignment
 }

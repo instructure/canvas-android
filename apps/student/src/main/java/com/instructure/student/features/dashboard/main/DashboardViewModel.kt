@@ -111,7 +111,8 @@ class DashboardViewModel @Inject constructor(
 
             val upcomingAssignments = assignments
                 .filter { !it.isSubmitted && it.dueDate?.after(Date()) ?: false }
-                .subList(0, 10)
+
+            val upcomingItems = upcomingAssignments.subList(0, upcomingAssignments.size.coerceAtMost(10))
                 .map {
                     val course = courseMap[it.courseId]
                     DashboardAssignmentItemViewModel(
@@ -121,7 +122,23 @@ class DashboardViewModel @Inject constructor(
                             ColorKeeper.getOrGenerateColor(course),
                             it.dueDate?.let { SimpleDateFormat("MMM d", Locale.getDefault()).format(it) } ?: ""
                         )
-                    )
+                    ) {
+                        _events.postValue(Event(DashboardAction.OpenAssignment(course!!, it.id)))
+                    }
+                }
+
+            val missingSubmissions = userManager.getAllMissingSubmissionsAsync(forceNetwork).await().dataOrThrow
+                .map {
+                    DashboardAssignmentItemViewModel(
+                        DashboardAssignmentItemViewData(
+                            it.name ?: "Assignment",
+                            it.course?.name ?: "Course",
+                            ColorKeeper.getOrGenerateColor(it.course),
+                            it.dueDate?.let { SimpleDateFormat("MMM d", Locale.getDefault()).format(it) } ?: ""
+                        )
+                    ) {
+                        _events.postValue(Event(DashboardAction.OpenAssignment(it.course!!, it.id)))
+                    }
                 }
 
 
@@ -136,8 +153,13 @@ class DashboardViewModel @Inject constructor(
                         ),
                         DashboardWidgetItemViewModel(
                             data = DashboardWidgetItemData(resources.getString(R.string.upcomingAssignments)),
-                            collapsable = upcomingAssignments.size > 3,
-                            items = upcomingAssignments
+                            collapsable = upcomingItems.size > 3,
+                            items = upcomingItems
+                        ),
+                        DashboardWidgetItemViewModel(
+                            data = DashboardWidgetItemData(resources.getString(R.string.missingAssignments)),
+                            collapsable = missingSubmissions.size > 3,
+                            items = missingSubmissions
                         )
                     )
                 )

@@ -1328,4 +1328,5 @@
     <string name="cameraPermissionPermanentlyDenied">Camera permission was permanently denied. Go to app settings to allow it.</string>
     <string name="showMore">Show more</string>
     <string name="showLess">Show less</string>
+    <string name="missingAssignments">Missing Assignments</string>
 </resources>

@@ -17,6 +17,7 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentNewDashboardBinding
 import com.instructure.student.fragment.CourseBrowserFragment
 import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_new_dashboard.*
@@ -70,6 +71,9 @@ class NewDashboardFragment : ParentFragment() {
             }
             is DashboardAction.ShowToast -> {
                 toast(action.toast)
+            }
+            is DashboardAction.OpenAssignment -> {
+                RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(action.course, action.assignmentId))
             }
         }
     }
