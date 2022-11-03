@@ -51,7 +51,7 @@ object InboxApi {
         fun getConversations(@Query("scope") scope: String): Call<List<Conversation>>
 
         @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
-        suspend fun getConversationsSuspend(@Query("scope") scope: String, @Tag params: RestParams): DataResult<List<Conversation>>
+        suspend fun getConversations(@Query("scope") scope: String, @Tag params: RestParams): DataResult<List<Conversation>>
 
         @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
         fun getConversationsFiltered(@Query("scope") scope: String, @Query("filter") canvasContextFilter: String): Call<List<Conversation>>
@@ -60,7 +60,7 @@ object InboxApi {
         fun getNextPage(@Url nextURL: String): Call<List<Conversation>>
 
         @GET
-        suspend fun getNextPageSuspend(@Url nextURL: String, @Tag params: RestParams): DataResult<List<Conversation>>
+        suspend fun getNextPage(@Url nextURL: String, @Tag params: RestParams): DataResult<List<Conversation>>
 
         @FormUrlEncoded
         @POST("conversations?group_conversation=true")

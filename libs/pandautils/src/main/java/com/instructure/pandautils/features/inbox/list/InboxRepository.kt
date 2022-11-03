@@ -16,29 +16,20 @@
  */
 package com.instructure.pandautils.features.inbox.list
 
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.LinkHeaders
 
 class InboxRepository(private val inboxApi: InboxApi.InboxInterface) {
 
     suspend fun getConversations(scope: InboxApi.Scope, forceNetwork: Boolean, nextPageLink: String? = null): DataResult<List<Conversation>> {
         // TODO Change perPageCount to default at the end, this is only for testing purposes.
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork, perPageCount = 15)
-        val linkHeaders = if (nextPageLink != null) {
-            LinkHeaders().apply { nextUrl = nextPageLink }
-        } else null
-
-        return if (StatusCallback.isFirstPage(linkHeaders)) {
-            inboxApi.getConversationsSuspend(InboxApi.conversationScopeToString(scope), params)
-        } else if (linkHeaders != null && StatusCallback.moreCallsExist(linkHeaders)) {
-            inboxApi.getNextPageSuspend(linkHeaders.nextUrl!!, params)
+        return if (nextPageLink == null) {
+            inboxApi.getConversations(InboxApi.conversationScopeToString(scope), params)
         } else {
-            DataResult.Fail()
+            inboxApi.getNextPage(nextPageLink, params)
         }
     }
 
