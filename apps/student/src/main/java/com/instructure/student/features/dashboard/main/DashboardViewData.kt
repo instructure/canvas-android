@@ -33,7 +33,7 @@ data class DashboardAssignmentItemViewData(
     val assignmentName: String,
     val courseName: String,
     val courseColor: ThemedColor,
-    val dueData: String
+    val dueDate: String
 )
 
 sealed class DashboardAction {
