@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
@@ -97,7 +98,7 @@ object InboxApi {
         fun markConversationAsUnread(@Query("conversation_ids[]") conversationId: Long, @Query("event") conversationEvent: String): Call<Void>
 
         @PUT("conversations")
-        suspend fun batchUpdateConversations(@Query("conversation_ids[]") conversationIds: List<Long>, @Query("event") conversationEvent: String): DataResult<Void>
+        suspend fun batchUpdateConversations(@Query("conversation_ids[]") conversationIds: List<Long>, @Query("event") conversationEvent: String): DataResult<Progress>
     }
 
     fun getConversation(adapter: RestBuilder, callback: StatusCallback<Conversation>, params: RestParams, conversationId: Long, markAsRead: Boolean) {

@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.inbox.list
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.DataResult
 
 class InboxRepository(private val inboxApi: InboxApi.InboxInterface) {
@@ -33,7 +34,7 @@ class InboxRepository(private val inboxApi: InboxApi.InboxInterface) {
         }
     }
 
-    suspend fun batchUpdateConversations(conversationIds: List<Long>, conversationEvent: String): DataResult<Void> {
+    suspend fun batchUpdateConversations(conversationIds: List<Long>, conversationEvent: String): DataResult<Progress> {
         return inboxApi.batchUpdateConversations(conversationIds, conversationEvent)
     }
 }
