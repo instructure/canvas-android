@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.viewModels
+import androidx.transition.TransitionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentNewDashboardBinding
 import com.instructure.student.fragment.CourseBrowserFragment
@@ -59,7 +62,25 @@ class NewDashboardFragment : ParentFragment() {
             is DashboardAction.OpenCourse -> {
                 RouteMatcher.route(requireContext(), CourseBrowserFragment.makeRoute(action.course))
             }
+            is DashboardAction.ExpandCourses -> {
+                expandCourses()
+            }
+            is DashboardAction.OpenSubmission -> {
+                RouteMatcher.routeUrl(requireContext(), action.url)
+            }
+            is DashboardAction.ShowToast -> {
+                toast(action.toast)
+            }
         }
+    }
+
+    private fun expandCourses() {
+        TransitionManager.beginDelayedTransition(dashboardConstraintLayout)
+        val set = ConstraintSet()
+        set.clone(dashboardConstraintLayout)
+        set.setDimensionRatio(coursesRecyclerView.id, "0")
+
+        set.applyTo(dashboardConstraintLayout)
     }
 
     companion object {

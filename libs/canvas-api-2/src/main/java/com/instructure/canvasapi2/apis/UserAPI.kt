@@ -104,6 +104,9 @@ object UserAPI {
 
         @GET("courses/{courseId}/users?enrollment_type[]=teacher&enrollment_type[]=ta&include[]=avatar_url&include[]=bio&include[]=enrollments")
         fun getFirstPageTeacherListForCourse(@Path("courseId") courseId: Long): Call<List<User>>
+
+        @GET("users/{userId}/graded_submissions")
+        fun getGradedSubmissions(@Path("userId") userId: Long): Call<List<Submission>>
     }
 
     fun getColors(adapter: RestBuilder, callback: StatusCallback<CanvasColor>, params: RestParams) {
@@ -254,5 +257,10 @@ object UserAPI {
         } else if (callback.linkHeaders != null && StatusCallback.moreCallsExist(callback.linkHeaders)) {
             callback.addCall(adapter.build(UsersInterface::class.java, params).next(callback.linkHeaders!!.nextUrl!!)).enqueue(callback)
         }
+    }
+
+    fun getGradedSubmissions(userId: Long, forceNetwork: Boolean, adapter: RestBuilder, callback: StatusCallback<List<Submission>>) {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        callback.addCall(adapter.build(UsersInterface::class.java, params).getGradedSubmissions(userId)).enqueue(callback)
     }
 }

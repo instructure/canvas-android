@@ -1258,7 +1258,7 @@
 
     <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
     <string name="discussionOpenInBrowser">Open in browser</string>
-    
+
     <string name="dashboardSwitchToListView">Switch to list view</string>
     <string name="dashboardSwitchToGridView">Switch to grid view</string>
 
@@ -1326,4 +1326,6 @@
     <string name="createdByStudentView">Created by Student View</string>
     <string name="discussionErrorToast">Error occurred. The topic may no longer be available.</string>
     <string name="cameraPermissionPermanentlyDenied">Camera permission was permanently denied. Go to app settings to allow it.</string>
+    <string name="showMore">Show more</string>
+    <string name="showLess">Show less</string>
 </resources>

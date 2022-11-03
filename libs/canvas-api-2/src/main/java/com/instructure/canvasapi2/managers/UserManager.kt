@@ -168,10 +168,10 @@ object UserManager {
     }
 
     fun getFirstPagePeopleList(
-            canvasContext: CanvasContext,
-            enrollmentType: UserAPI.EnrollmentType,
-            forceNetwork: Boolean,
-            callback: StatusCallback<List<User>>
+        canvasContext: CanvasContext,
+        enrollmentType: UserAPI.EnrollmentType,
+        forceNetwork: Boolean,
+        callback: StatusCallback<List<User>>
     ) {
         val params = RestParams(
             usePerPageQueryParam = true,
@@ -266,7 +266,8 @@ object UserManager {
         return "${systemLocale.toLanguageTag()},${systemLocale.language}"
     }
 
-    fun getAllMissingSubmissionsAsync(forceNetwork: Boolean) = apiAsync<List<Assignment>> { getAllMissingSubmissions(forceNetwork, it) }
+    fun getAllMissingSubmissionsAsync(forceNetwork: Boolean) =
+        apiAsync<List<Assignment>> { getAllMissingSubmissions(forceNetwork, it) }
 
     private fun getAllMissingSubmissions(forceNetwork: Boolean, callback: StatusCallback<List<Assignment>>) {
         val adapter = RestBuilder(callback)
@@ -279,7 +280,8 @@ object UserManager {
         UserAPI.getMissingSubmissions(forceNetwork, adapter, depaginatedCallback)
     }
 
-    fun getTeacherListForCourseAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<List<User>> { getTeacherListForCourse(courseId, it, forceNetwork) }
+    fun getTeacherListForCourseAsync(courseId: Long, forceNetwork: Boolean) =
+        apiAsync<List<User>> { getTeacherListForCourse(courseId, it, forceNetwork) }
 
     private fun getTeacherListForCourse(courseId: Long, callback: StatusCallback<List<User>>, forceNetwork: Boolean) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -292,5 +294,13 @@ object UserManager {
         adapter.statusCallback = depaginatedCallback
         UserAPI.getTeacherListForCourse(adapter, params, courseId, depaginatedCallback)
     }
+
+    fun getGradedSubmissions(userId: Long, forceNetwork: Boolean, callback: StatusCallback<List<Submission>>) {
+        val adapter = RestBuilder(callback)
+        UserAPI.getGradedSubmissions(userId, forceNetwork, adapter, callback)
+    }
+
+    fun getGradedSubmissionsAsync(userId: Long, forceNetwork: Boolean) =
+        apiAsync<List<Submission>> { getGradedSubmissions(userId, forceNetwork, it) }
 
 }
