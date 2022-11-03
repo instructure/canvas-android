@@ -25,6 +25,17 @@ data class DashboardGradeItemViewData(
     val courseColor: ThemedColor
 )
 
+data class DashboardWidgetItemData(
+    val title: String
+)
+
+data class DashboardAssignmentItemViewData(
+    val assignmentName: String,
+    val courseName: String,
+    val courseColor: ThemedColor,
+    val dueData: String
+)
+
 sealed class DashboardAction {
     data class OpenCourse(val course: Course) : DashboardAction()
     data class OpenSubmission(val url: String) : DashboardAction()

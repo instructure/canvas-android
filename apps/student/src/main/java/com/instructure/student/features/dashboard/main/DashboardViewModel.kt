@@ -14,15 +14,19 @@ import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
+import com.instructure.student.features.dashboard.main.itemviewmodels.DashboardAssignmentItemViewModel
 import com.instructure.student.features.dashboard.main.itemviewmodels.DashboardCourseItemViewModel
 import com.instructure.student.features.dashboard.main.itemviewmodels.DashboardGradeItemViewModel
-import com.instructure.student.features.dashboard.main.itemviewmodels.DashboardGradeWidgetItemViewModel
+import com.instructure.student.features.dashboard.main.itemviewmodels.DashboardWidgetItemViewModel
 import com.instructure.student.util.getDisplayGrade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +37,11 @@ class DashboardViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val resources: Resources
 ) : ViewModel() {
+
+    val state: LiveData<ViewState>
+        get() = _state
+    private val _state = MutableLiveData<ViewState>()
+
     val data: LiveData<DashboardViewData>
         get() = _data
     private val _data = MutableLiveData<DashboardViewData>()
@@ -43,6 +52,11 @@ class DashboardViewModel @Inject constructor(
 
     private var courseMap: Map<Long, Course> = emptyMap()
     private var assignmentMap: Map<Long, Assignment> = emptyMap()
+
+    fun refresh() {
+        loadData(true)
+        _state.postValue(ViewState.Refresh)
+    }
 
     fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
@@ -61,18 +75,18 @@ class DashboardViewModel @Inject constructor(
                 .mapNotNull { courseMap[it.id] }
                 .filter { it.isCurrentEnrolment() || it.isFutureEnrolment() }
                 .map {
-                DashboardCourseItemViewModel(
-                    DashboardCourseItemViewData(
-                        it.imageUrl,
-                        it.name,
-                        it.courseCode,
-                        getCourseGrade(it.getCourseGrade(false)),
-                        ColorKeeper.getOrGenerateColor(it)
-                    )
-                ) {
-                    _events.postValue(Event(DashboardAction.OpenCourse(it)))
+                    DashboardCourseItemViewModel(
+                        DashboardCourseItemViewData(
+                            it.imageUrl,
+                            it.name,
+                            it.courseCode,
+                            getCourseGrade(it.getCourseGrade(false)),
+                            ColorKeeper.getOrGenerateColor(it)
+                        )
+                    ) {
+                        _events.postValue(Event(DashboardAction.OpenCourse(it)))
+                    }
                 }
-            }
 
             val grades = apiPrefs.user?.id?.let {
                 userManager.getGradedSubmissionsAsync(it, forceNetwork).await().dataOrNull
@@ -88,14 +102,48 @@ class DashboardViewModel @Inject constructor(
                         ) {
                             it.previewUrl?.let {
                                 _events.postValue(Event(DashboardAction.OpenSubmission(it)))
-                            } ?: _events.postValue(Event(DashboardAction.ShowToast(resources.getString(R.string.errorOccurred))))
+                            }
+                                ?: _events.postValue(Event(DashboardAction.ShowToast(resources.getString(R.string.errorOccurred))))
 
                         }
                     }
             } ?: emptyList()
 
+            val upcomingAssignments = assignments
+                .filter { !it.isSubmitted && it.dueDate?.after(Date()) ?: false }
+                .subList(0, 10)
+                .map {
+                    val course = courseMap[it.courseId]
+                    DashboardAssignmentItemViewModel(
+                        DashboardAssignmentItemViewData(
+                            it.name ?: "Assignment",
+                            course?.name ?: "Course",
+                            ColorKeeper.getOrGenerateColor(course),
+                            it.dueDate?.let { SimpleDateFormat("MMM d", Locale.getDefault()).format(it) } ?: ""
+                        )
+                    )
+                }
 
-            _data.postValue(DashboardViewData(courseItems, listOf(DashboardGradeWidgetItemViewModel(collapsable = true, items = grades))))
+
+            _data.postValue(
+                DashboardViewData(
+                    courseItems,
+                    listOf(
+                        DashboardWidgetItemViewModel(
+                            data = DashboardWidgetItemData(resources.getString(R.string.grades)),
+                            collapsable = grades.size > 3,
+                            items = grades
+                        ),
+                        DashboardWidgetItemViewModel(
+                            data = DashboardWidgetItemData(resources.getString(R.string.upcomingAssignments)),
+                            collapsable = upcomingAssignments.size > 3,
+                            items = upcomingAssignments
+                        )
+                    )
+                )
+            )
+
+            _state.postValue(ViewState.Success)
         }
     }
 

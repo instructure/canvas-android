@@ -9,12 +9,14 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.dashboard.main.itemviewmodels.DashboardGradeWidgetItemViewModel" />
+            type="com.instructure.student.features.dashboard.main.itemviewmodels.DashboardWidgetItemViewModel" />
     </data>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -22,29 +24,30 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/gradesTitle"
+                android:id="@+id/widgetTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/grades"
+                android:text="@{itemViewModel.data.title}"
                 android:textColor="@color/textDark"
                 android:textSize="22sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/grades"
+                android:id="@+id/items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical"
                 app:itemViewModels="@{itemViewModel.collapsed ? itemViewModel.topItems : itemViewModel.items}"
-                app:layout_constraintTop_toBottomOf="@id/gradesTitle" />
+                app:layout_constraintTop_toBottomOf="@id/widgetTitle" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/white_list_shader"
                 android:visibility="@{itemViewModel.collapsed ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@id/grades" />
+                app:layout_constraintBottom_toBottomOf="@id/items" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,10 +60,11 @@
                 android:onClick="@{() -> itemViewModel.toggleItems()}"
                 android:text="@{itemViewModel.collapsed ? @string/showMore : @string/showLess}"
                 android:textColor="@color/textInfo"
+                android:visibility="@{itemViewModel.collapsable ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/grades"
+                app:layout_constraintTop_toBottomOf="@id/items"
                 tools:text="Show more" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.student.features.dashboard.main.itemviewmodels.DashboardAssignmentItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/assignmentName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{itemViewModel.data.assignmentName}"
+            android:textColor="@color/textDark"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/dueDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Assignment name" />
+
+        <TextView
+            android:id="@+id/courseName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{itemViewModel.data.courseName}"
+            android:textColor="@{itemViewModel.data.courseColor.textAndIconColor()}"
+            app:layout_constraintEnd_toStartOf="@+id/dueDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/assignmentName"
+            tools:text="Course name" />
+
+        <TextView
+            android:id="@+id/dueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textDark"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dec 21." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
