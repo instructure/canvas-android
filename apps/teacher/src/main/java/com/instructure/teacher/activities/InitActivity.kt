@@ -18,27 +18,19 @@ package com.instructure.teacher.activities
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.PluralsRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.ThemeManager
@@ -64,8 +56,6 @@ import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.ColorPickerDialog
@@ -78,8 +68,10 @@ import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.tasks.TeacherLogoutTask
-import com.instructure.teacher.utils.*
 import com.instructure.teacher.utils.AppType
+import com.instructure.teacher.utils.LoggingUtility
+import com.instructure.teacher.utils.TeacherPrefs
+import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.viewinterface.InitActivityView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_init.*
@@ -90,7 +82,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -272,6 +263,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                     RouteMatcher.route(this@InitActivity, Route(LtiLaunchFragment::class.java, canvasContext, route))
                 }
                 R.id.navigationDrawerItem_help -> HelpDialogFragment.show(this@InitActivity)
+                R.id.navigationDrawerItem_bookmarks -> {
+                    RouteMatcher.route(this@InitActivity, Route(FileListFragment::class.java, ApiPrefs.user))
+                }
                 R.id.navigationDrawerItem_changeUser -> TeacherLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@InitActivity)
@@ -291,10 +285,76 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             }
         }
     }
+/*
+    private fun addFragment(fragment: Fragment?, route: Route) {
+        if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
+            selectBottomNavFragment(fragment::class.java)
+        } else {
+            addFullScreenFragment(fragment, route.removePreviousScreen)
+        }
+    }
+
+    private fun isBottomNavFragment(fragment: Fragment?) = fragment?.arguments?.getBoolean(BOTTOM_NAV_SCREEN) == true
+
+    private fun getBottomNavFragmentNames() = navigationBehavior.bottomNavBarFragments.map { it.name }
+
+    private fun selectBottomNavFragment(fragmentClass: Class<out Fragment>) {
+        val selectedFragment = supportFragmentManager.findFragmentByTag(fragmentClass.name)
+
+        if (selectedFragment == null) {
+            val fragment = createBottomNavFragment(fragmentClass.name)
+            val newArguments = if (fragment?.arguments != null) fragment.requireArguments() else Bundle()
+            newArguments.putBoolean(BOTTOM_NAV_SCREEN, true)
+            fragment?.arguments = newArguments
+            addFullScreenFragment(fragment)
+        } else {
+            showHiddenFragment(selectedFragment)
+        }
+
+        bottomNavScreensStack.remove(fragmentClass.name)
+        bottomNavScreensStack.push(fragmentClass.name)
+    }
+
+    private fun addFullScreenFragment(fragment: Fragment?, removePreviousFragment: Boolean = false) {
+        if (fragment == null) {
+            Logger.e("NavigationActivity:addFullScreenFragment() - Could not route null Fragment.")
+            return
+        }
+
+        val ft = supportFragmentManager.beginTransaction()
+        if (removePreviousFragment) {
+            supportFragmentManager.popBackStackImmediate()
+        } else {
+            ft.setCustomAnimations(R.anim.fade_in_quick, R.anim.fade_out_quick)
+        }
+
+        currentFragment?.let { ft.hide(it) }
+        ft.add(R.id.fullscreen, fragment, fragment::class.java.name)
+        ft.addToBackStack(fragment::class.java.name)
+        ft.commitAllowingStateLoss()
+    }
+
+    private fun showHiddenFragment(fragment: Fragment) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.fade_in_quick, R.anim.fade_out_quick)
+        val bottomBarFragments = getBottomBarFragments(fragment::class.java.name)
+        bottomBarFragments.forEach {
+            ft.hide(it)
+        }
+        ft.show(fragment)
+        ft.commitAllowingStateLoss()
+    }
+
+    private fun getBottomBarFragments(selectedFragmentName: String): List<Fragment> {
+        return getBottomNavFragmentNames()
+            .filter { it != selectedFragmentName }
+            .mapNotNull { supportFragmentManager.findFragmentByTag(it) }
+    }*/
 
     fun attachNavigationDrawer(toolbar: Toolbar) {
         // Navigation items
         navigationDrawerItem_files.setOnClickListener(navDrawerOnClick)
+        navigationDrawerItem_bookmarks.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_gauge.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_arc.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_changeUser.setOnClickListener(navDrawerOnClick)

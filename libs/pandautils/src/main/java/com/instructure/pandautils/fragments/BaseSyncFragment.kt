@@ -22,9 +22,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.interactions.Navigation
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
@@ -50,6 +52,23 @@ abstract class BaseSyncFragment<
         rootView = inflater.inflate(layoutResId(), container, false)
         onCreateView(rootView)
         return rootView
+    }
+
+    fun setupToolbarMenu(toolbar: Toolbar) {
+        addBookmarkMenuIfAllowed(toolbar)
+        addOnMenuItemClickListener(toolbar)
+    }
+
+    private fun addBookmarkMenuIfAllowed(toolbar: Toolbar) {
+        val navigation = activity as? Navigation
+        val bookmarkFeatureAllowed = navigation?.canBookmark() ?: false
+       // if (bookmarkFeatureAllowed && this is Bookmarkable && this.bookmark.canBookmark && toolbar.menu.findItem(R.id.bookmark) == null) {
+       //     toolbar.inflateMenu(R.menu.bookmark_menu)
+      //  }
+    }
+
+    private fun addOnMenuItemClickListener(toolbar: Toolbar) {
+        toolbar.setOnMenuItemClickListener { item -> onOptionsItemSelected(item) }
     }
 
     protected fun showToast(@StringRes s: Int) {

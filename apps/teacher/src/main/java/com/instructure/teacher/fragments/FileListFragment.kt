@@ -21,7 +21,6 @@ import android.os.Handler
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +30,8 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.interactions.bookmarks.Bookmarkable
+import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -65,7 +66,7 @@ class FileListFragment : BaseSyncFragment<
         FileListPresenter,
         FileListView,
         FileFolderViewHolder,
-        FileListAdapter>(), FileListView, FileUploadDialogParent {
+        FileListAdapter>(), FileListView, FileUploadDialogParent, Bookmarkable {
 
     private lateinit var mRecyclerView: RecyclerView
 
@@ -133,6 +134,9 @@ class FileListFragment : BaseSyncFragment<
             }
         }
     }
+
+    override val bookmark: Bookmarker
+        get() = Bookmarker(canvasContext!!.isCourseOrGroup, canvasContext)
 
     override fun layoutResId() = R.layout.fragment_file_list
     override fun onCreateView(view: View) = Unit

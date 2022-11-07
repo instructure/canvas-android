@@ -16,16 +16,18 @@
 
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.interactions.bookmarks.Bookmarkable
+import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PEOPLE_LIST
 import com.instructure.pandautils.analytics.ScreenView
@@ -46,16 +48,25 @@ import com.instructure.teacher.viewinterface.PeopleListView
 import kotlinx.android.synthetic.main.fragment_people_list_layout.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.recyclerView as peopleRecyclerView
-import java.util.*
 
 @ScreenView(SCREEN_VIEW_PEOPLE_LIST)
-class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleListView, UserViewHolder, PeopleListRecyclerAdapter>(), PeopleListView, SearchView.OnQueryTextListener {
+class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleListView, UserViewHolder, PeopleListRecyclerAdapter>(), PeopleListView, SearchView.OnQueryTextListener, Bookmarkable {
 
     private var mCanvasContextsSelected: ArrayList<CanvasContext>? = null
 
     override fun layoutResId(): Int = R.layout.fragment_people_list_layout
 
+    private fun setupToolbarMenu() {
+        addBookmarkMenuIfAllowed(peopleListToolbar)
+        addOnMenuItemClickListener(peopleListToolbar)
+    }
+
     override fun onCreateView(view: View) {}
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupToolbarMenu()
+    }
 
     override fun onReadySetGo(presenter: PeopleListPresenter) {
         recyclerView?.adapter = adapter
@@ -63,6 +74,21 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         setupViews()
         presenter.loadData(false)
     }
+
+    private fun addBookmarkMenuIfAllowed(toolbar: Toolbar) {
+        //val navigation = activity as? Navigation
+       // val bookmarkFeatureAllowed = navigation?.canBookmark() ?: false
+        if (this.bookmark.canBookmark && toolbar.menu.findItem(R.id.bookmark) == null) {
+            toolbar.inflateMenu(R.menu.bookmark_menu)
+        }
+    }
+
+    private fun addOnMenuItemClickListener(toolbar: Toolbar) {
+        toolbar.setOnMenuItemClickListener { item -> onOptionsItemSelected(item) }
+    }
+
+    override val bookmark: Bookmarker
+        get() = Bookmarker(true, canvasContext)
 
     override fun onHandleBackPressed() = peopleListToolbar.closeSearch()
 
@@ -209,4 +235,5 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
             return fragment
         }
     }
+
 }
