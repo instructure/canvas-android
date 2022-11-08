@@ -67,6 +67,8 @@ class ShareExtensionTargetViewModel @Inject constructor(
 
     private var uploadType: FileUploadType = FileUploadType.USER
 
+    var isAccessibilityEnabled = false
+
     init {
         fetchCourses()
     }

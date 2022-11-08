@@ -66,6 +66,8 @@ class ShareExtensionTargetFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.isAccessibilityEnabled = isAccessibilityEnabled(requireContext())
+
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
@@ -140,7 +142,7 @@ class ShareExtensionTargetFragment : DialogFragment() {
     }
 
     private fun toggleSpinners(visible: Boolean) {
-        if (isAccessibilityEnabled(requireContext())) {
+        if (viewModel.isAccessibilityEnabled) {
             binding.studentCourseSpinner.isEnabled = visible
             binding.assignmentSpinner.isEnabled = visible
             return
