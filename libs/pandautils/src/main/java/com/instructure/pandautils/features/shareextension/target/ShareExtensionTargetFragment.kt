@@ -29,7 +29,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.transition.TransitionManager
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentShareExtensionTargetBinding
@@ -37,6 +36,7 @@ import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
 import com.instructure.pandautils.utils.AnimationHelpers
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,17 +66,20 @@ class ShareExtensionTargetFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.events.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
-        })
+        }
 
         setRevealContentsListener()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentShareExtensionTargetBinding.inflate(layoutInflater, null, false)
+
+        binding.studentCourseSpinner.isEnabled = !isAccessibilityEnabled(requireContext())
+        binding.assignmentSpinner.isEnabled = !isAccessibilityEnabled(requireContext())
 
         val alertDialog = AlertDialog.Builder(requireContext())
                 .setView(binding.root)
@@ -137,6 +140,12 @@ class ShareExtensionTargetFragment : DialogFragment() {
     }
 
     private fun toggleSpinners(visible: Boolean) {
+        if (isAccessibilityEnabled(requireContext())) {
+            binding.studentCourseSpinner.isEnabled = visible
+            binding.assignmentSpinner.isEnabled = visible
+            return
+        }
+
         TransitionManager.beginDelayedTransition(binding.assignmentContainer)
 
         val set = ConstraintSet()
@@ -194,6 +203,10 @@ class ShareExtensionTargetFragment : DialogFragment() {
             is ShareExtensionTargetAction.ShowFileUpload -> {
                 shareExtensionViewModel.showUploadDialog(action.data.course, action.data.assignment, action.data.fileUploadType)
                 dismiss()
+            }
+            is ShareExtensionTargetAction.UpdateSpinnerContentDescriptions -> {
+                binding.studentCourseSpinner.contentDescription = action.courseContentDescription
+                binding.assignmentSpinner.contentDescription = action.assignmentContentDescription
             }
         }
     }

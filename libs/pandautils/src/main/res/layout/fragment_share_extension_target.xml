@@ -23,6 +23,8 @@
 
         <import type="com.instructure.pandautils.features.file.upload.FileUploadType" />
 
+        <import type="com.instructure.pandautils.utils.A11yUtilsKt" />
+
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetViewModel" />
@@ -159,7 +161,7 @@
                         android:importantForAccessibility="yes"
                         android:minHeight="48dp"
                         android:onItemSelected="@{(parent, view, position, id) -> viewModel.onCourseSelected(position)}"
-                        android:visibility="@{viewModel.data.uploadType == FileUploadType.ASSIGNMENT ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.data.uploadType == FileUploadType.ASSIGNMENT || A11yUtilsKt.isAccessibilityEnabled(context) ? View.VISIBLE : View.GONE}"
                         app:itemViewModels="@{viewModel.data.courses}"
                         app:layoutRes="@{@layout/item_canvas_context_spinner}"
                         app:layout_constraintTop_toBottomOf="@id/assignmentCheckBox"
@@ -177,7 +179,7 @@
                         android:importantForAccessibility="yes"
                         android:minHeight="48dp"
                         android:onItemSelected="@{(parent, view, position, id) -> viewModel.onAssignmentSelected(position)}"
-                        android:visibility="@{viewModel.data.uploadType == FileUploadType.ASSIGNMENT ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.data.uploadType == FileUploadType.ASSIGNMENT || A11yUtilsKt.isAccessibilityEnabled(context) ? View.VISIBLE : View.GONE}"
                         app:itemViewModels="@{viewModel.data.assignments}"
                         app:layoutRes="@{@layout/item_assignment_spinner}"
                         app:layout_constraintTop_toBottomOf="@id/studentCourseSpinner"
