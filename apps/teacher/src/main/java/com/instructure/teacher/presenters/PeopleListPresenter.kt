@@ -186,7 +186,7 @@ class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPres
         return User(
                 avatarUrl = recipient.avatarURL,
                 id = recipient.idAsLong,
-                name = recipient.name ?: "",
+                name = recipient.fullName ?: recipient.name ?: "",
                 pronouns = recipient.pronouns,
                 sortableName = recipient.name,
                 enrollments = enrollments
