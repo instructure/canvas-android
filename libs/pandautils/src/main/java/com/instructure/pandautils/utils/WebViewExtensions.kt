@@ -118,7 +118,7 @@ fun WebView.addDarkThemeToHtmlDocument() {
                         html {
                             filter: invert(100%) hue-rotate(180deg);
                         }
-                        img:not(.ignore-color-scheme), video:not(.ignore-color-scheme), .ignore-color-scheme {
+                        img:not(.ignore-color-scheme), video:not(.ignore-color-scheme), iframe:not(.ignore-color-scheme), .ignore-color-scheme {
                             filter: invert(100%) hue-rotate(180deg) !important;
                         }
                     }
