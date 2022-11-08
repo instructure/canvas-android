@@ -190,7 +190,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         // Publish status
         publishSwitch.applyTheme()
         publishSwitch.isChecked = published
-        publishSwitch.isEnabled = mAssignment.unpublishable
+        publishSwitch.isEnabled = !published || mAssignment.unpublishable
         mIsPublished = published
 
         publishSwitch.setOnCheckedChangeListener { _, isChecked -> mIsPublished = isChecked }
