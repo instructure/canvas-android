@@ -83,21 +83,31 @@ object ViewStyler {
     }
 
     fun themeSwitch(context: Context, switch: SwitchCompat, @ColorInt brand: Int = ThemePrefs.brandColor) {
-        val thumbColor = brand
-
         // trackColor is the thumbColor with 30% transparency (77)
-        val trackColor = Color.argb(77, Color.red(thumbColor), Color.green(thumbColor), Color.blue(thumbColor))
+        val trackColor = Color.argb(77, Color.red(brand), Color.green(brand), Color.blue(brand))
+        val disabledColor = Color.argb(160, Color.red(brand), Color.green(brand), Color.blue(brand))
+        val disabledTrackColor = Color.argb(60, Color.red(brand), Color.green(brand), Color.blue(brand))
 
-        // setting the thumb color
-        switch.thumbDrawable.setTintList(ColorStateList(
-                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.switchThumbColor)))
+        val states = arrayOf(
+            intArrayOf(-android.R.attr.state_enabled, android.R.attr.state_checked),
+            intArrayOf(android.R.attr.state_checked),
+            intArrayOf()
         )
 
-        // setting the track color
-        switch.trackDrawable.setTintList(ColorStateList(
-                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(trackColor, ContextCompat.getColor(context, R.color.switchTrackColor))))
+        val colors = intArrayOf(
+            disabledColor,
+            brand,
+            ContextCompat.getColor(context, R.color.switchThumbColor)
+        )
+
+        val trackColors = intArrayOf(
+            disabledTrackColor,
+            trackColor,
+            ContextCompat.getColor(context, R.color.switchTrackColor)
+        )
+
+        switch.thumbDrawable.setTintList(ColorStateList(states, colors))
+        switch.trackDrawable.setTintList(ColorStateList(states, trackColors))
     }
 
     fun themeInputTextLayout(textInputLayout: TextInputLayout, @ColorInt color: Int) {

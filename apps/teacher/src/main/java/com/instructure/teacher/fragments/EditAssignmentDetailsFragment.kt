@@ -72,7 +72,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.DecimalFormat
 import java.text.ParseException
-import java.util.Date
+import java.util.*
 
 @ScreenView(SCREEN_VIEW_EDIT_ASSIGNMENT_DETAILS)
 class EditAssignmentDetailsFragment : BaseFragment() {
@@ -187,14 +187,10 @@ class EditAssignmentDetailsFragment : BaseFragment() {
 
     private fun setupPublishSwitch() = with(mAssignment) {
         // If a student has submitted something, we can't let the teacher unpublish the assignment
-        if (!mAssignment.unpublishable) {
-            publishWrapper.setGone()
-            mIsPublished = true
-            return
-        }
         // Publish status
         publishSwitch.applyTheme()
         publishSwitch.isChecked = published
+        publishSwitch.isEnabled = mAssignment.unpublishable
         mIsPublished = published
 
         publishSwitch.setOnCheckedChangeListener { _, isChecked -> mIsPublished = isChecked }
