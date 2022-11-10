@@ -16,11 +16,13 @@
  */
 package com.instructure.teacher.fragments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -185,15 +187,21 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupPublishSwitch() = with(mAssignment) {
         // If a student has submitted something, we can't let the teacher unpublish the assignment
         // Publish status
         publishSwitch.applyTheme()
         publishSwitch.isChecked = published
-        publishSwitch.isEnabled = !published || mAssignment.unpublishable
         mIsPublished = published
-
         publishSwitch.setOnCheckedChangeListener { _, isChecked -> mIsPublished = isChecked }
+        if (published && !unpublishable) {
+            publishSwitch.alpha = 0.5f
+            publishSwitch.setOnTouchListener { _, motionEvent ->
+                if (motionEvent.action == MotionEvent.ACTION_UP) toast(getString(R.string.unpublish_assignment_error))
+                true
+            }
+        }
     }
 
     private fun setupDisplayGradeAs() {
