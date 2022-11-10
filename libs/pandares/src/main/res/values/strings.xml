@@ -1311,7 +1311,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Upload to My Files</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Submit assignment</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choose a course</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Choose a course, selected course is: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choose an assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Choose an assignment, selected assignment is: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Cancel Upload?</string>
     <string name="cancelFileUploadMessage">This will cancel your upload.</string>
