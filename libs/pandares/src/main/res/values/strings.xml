@@ -1327,6 +1327,6 @@
     <string name="discussionErrorToast">Error occurred. The topic may no longer be available.</string>
     <string name="cameraPermissionPermanentlyDenied">Camera permission was permanently denied. Go to app settings to allow it.</string>
     <string name="subscribeToCalendar">Subscribe to Calendar Feed</string>
-    <string name="subscribeToCalendarMessage">You can sync your Canvas calendar to your Google Calendar account by clicking the button below. After subscribing you can go to the Google Calendar app on your phone and enable sync in the settings for the new calendar.</string>
+    <string name="subscribeToCalendarMessage">You can sync your Canvas calendar to your Google Calendar account by clicking the Subscribe button in this dialog. Then, you’ll need to go to the Google Calendar app on your device and enable sync in the settings for the new calendar.</string>
     <string name="subscribeButton">Subscribe</string>
 </resources>
