@@ -31,6 +31,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_CRITERION_LONG_DESCRIPTI
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.HtmlFormatColors
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.router.RouteMatcher
@@ -92,7 +93,7 @@ class CriterionLongDescriptionDialog : DialogFragment() {
             setBackgroundResource(android.R.color.transparent)
 
             // Load description
-            webView.loadHtml(mLongDescription, mDescription, R.color.backgroundLightestElevated)
+            webView.loadHtml(mLongDescription, mDescription, htmlFormatColors = HtmlFormatColors(backgroundColorRes = R.color.backgroundLightestElevated))
         }
 
         return AlertDialog.Builder(requireContext())

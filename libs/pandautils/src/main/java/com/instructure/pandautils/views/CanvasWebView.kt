@@ -484,8 +484,12 @@ class CanvasWebView @JvmOverloads constructor(
      * @param title
      * @return
      */
-    fun loadHtml(html: String, title: String?, backgroundColorRes: Int = R.color.backgroundLightest, baseUrl: String? = null): String {
-        val result = formatHtml(html, title, backgroundColorRes)
+    fun loadHtml(html: String,
+                 title: String?,
+                 baseUrl: String? = null,
+                 htmlFormatColors: HtmlFormatColors = HtmlFormatColors()
+    ): String {
+        val result = formatHtml(html, title, htmlFormatColors)
         loadDataWithBaseURL(baseUrl ?: getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
         return result
     }
@@ -493,7 +497,7 @@ class CanvasWebView @JvmOverloads constructor(
     /**
      * Helper function that makes html content somewhat suitable for mobile
      */
-    fun formatHtml(html: String, title: String? = "", @ColorRes backgroundColorRes: Int = R.color.backgroundLightest): String {
+    fun formatHtml(html: String, title: String? = "", htmlFormatColors: HtmlFormatColors = HtmlFormatColors()): String {
         var formatted = applyWorkAroundForDoubleSlashesAsUrlSource(html)
         formatted = addProtocolToLinks(formatted)
         formatted = checkForMathTags(formatted)
@@ -502,10 +506,10 @@ class CanvasWebView @JvmOverloads constructor(
         return htmlWrapper
             .replace("{\$CONTENT$}", formatted)
             .replace("{\$TITLE$}", title ?: "")
-            .replace("{\$BACKGROUND$}", colorResToHexString(backgroundColorRes))
-            .replace("{\$COLOR$}", colorResToHexString(R.color.textDarkest))
-            .replace("{\$LINK_COLOR$}", colorResToHexString(R.color.textInfo))
-            .replace("{\$VISITED_LINK_COLOR\$}", colorResToHexString(R.color.textAlert))
+            .replace("{\$BACKGROUND$}", colorResToHexString(htmlFormatColors.backgroundColorRes))
+            .replace("{\$COLOR$}", colorResToHexString(htmlFormatColors.textColor))
+            .replace("{\$LINK_COLOR$}", colorResToHexString(htmlFormatColors.linkColor))
+            .replace("{\$VISITED_LINK_COLOR\$}", colorResToHexString(htmlFormatColors.visitedLinkColor))
     }
 
     private fun colorResToHexString(@ColorRes colorRes: Int): String {
@@ -789,3 +793,10 @@ class CanvasWebView @JvmOverloads constructor(
         }
     }
 }
+
+data class HtmlFormatColors(
+    @ColorRes val backgroundColorRes: Int = R.color.backgroundLightest,
+    @ColorRes val textColor: Int = R.color.textDarkest,
+    @ColorRes val linkColor: Int = R.color.textInfo,
+    @ColorRes val visitedLinkColor: Int = R.color.textAlert
+)
