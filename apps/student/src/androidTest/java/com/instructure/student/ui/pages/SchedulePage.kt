@@ -70,7 +70,7 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         recyclerView.perform(RecyclerViewActions.scrollToPosition<BindableViewHolder>(position))
     }
 
-     fun verifyIfCourseHeaderAndScheduleItemDisplayed(courseName: String, assignmentName: String) {
+     fun assertIfCourseHeaderAndScheduleItemDisplayed(courseName: String, assignmentName: String) {
         scrollToItem(R.id.scheduleCourseItemLayout, courseName)
         assertCourseHeaderDisplayed(courseName)
         scrollToItem(R.id.title, assignmentName, withAncestor(R.id.plannerItems))
