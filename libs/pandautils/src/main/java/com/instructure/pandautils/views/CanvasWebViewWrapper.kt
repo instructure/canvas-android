@@ -20,18 +20,20 @@ import android.content.Context
 import android.content.res.Configuration
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.FrameLayout
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.ViewCanvasWebViewWrapperBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toPx
 
 class CanvasWebViewWrapper @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : LinearLayout(context, attrs, defStyleAttr) {
 
     private var html: String? = null
     private var title: String? = null
@@ -41,9 +43,16 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
 
     private val binding: ViewCanvasWebViewWrapperBinding
 
+    val webView: CanvasWebView
+        get() = binding.contentWebView
+
     init {
-        binding = ViewCanvasWebViewWrapperBinding.inflate(LayoutInflater.from(context), null, false)
-        addView(binding.root)
+        orientation = VERTICAL
+        setPaddingRelative(8.toPx, paddingTop, 8.toPx, paddingBottom)
+        setBackgroundColor(context.getColor(R.color.backgroundLightest))
+        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        binding = ViewCanvasWebViewWrapperBinding.inflate(LayoutInflater.from(context), this)
 
         val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
@@ -67,7 +76,7 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
             visitedLinkColor = if (themeSwitched) R.color.barney else R.color.textAlert,
         )
 
-        binding.webviewWrapper.setBackgroundColor(context.getColor(background))
+        setBackgroundColor(context.getColor(background))
         binding.contentWebView.setBackgroundColor(context.getColor(background))
         binding.themeSwitchButton.background = ColorUtils.colorIt(context.getColor(textColor), binding.themeSwitchButton.background)
         ColorUtils.colorIt(context.getColor(textColor), binding.themeSwitchIcon)
@@ -78,14 +87,11 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
         binding.contentWebView.loadHtml(html, title, baseUrl, htmlFormatColors)
     }
 
-    fun getWebView() = binding.contentWebView
-
     fun loadHtml(html: String, title: String?, baseUrl: String? = null) {
         this.html = html
         this.title = title
         this.baseUrl = baseUrl
         binding.contentWebView.loadHtml(html, title, baseUrl)
     }
-
 
 }

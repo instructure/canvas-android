@@ -14,16 +14,16 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/webviewWrapper"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/backgroundLightest"
-    android:orientation="vertical"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp">
+    tools:parentTag="android.widget.LinearLayout"
+    tools:layout_width="match_parent"
+    tools:layout_height="wrap_content"
+    tools:background="@color/backgroundLightest"
+    tools:paddingStart="8dp"
+    tools:paddingEnd="8dp"
+    tools:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/themeSwitchButton"
@@ -66,4 +66,4 @@
         android:minHeight="48dp"
         android:scrollbars="none" />
 
-</LinearLayout>
+</merge>

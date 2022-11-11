@@ -133,7 +133,7 @@ class AssignmentDetailsView(
     }
 
     private fun setupDescriptionView() {
-        descriptionWebViewWrapper.getWebView().canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        descriptionWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(context as FragmentActivity, url)
             }
@@ -148,7 +148,7 @@ class AssignmentDetailsView(
             }
         }
 
-        descriptionWebViewWrapper.getWebView().canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        descriptionWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) {
                 InternalWebviewFragment.loadInternalWebView(
                     context,
@@ -219,7 +219,7 @@ class AssignmentDetailsView(
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
-            loadHtmlJob = descriptionWebViewWrapper.getWebView().loadHtmlWithIframes(context, state.description, {
+            loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(context, state.description, {
                 loadDescriptionHtml(it, state.assignmentName, state.htmlUrl)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(context, canvasContext, it)
@@ -259,7 +259,7 @@ class AssignmentDetailsView(
 
     override fun onDispose() {
         loadHtmlJob?.cancel()
-        descriptionWebViewWrapper.getWebView().stopLoading()
+        descriptionWebViewWrapper.webView.stopLoading()
     }
 
     fun showSubmitDialogView(assignment: Assignment, courseId: Long, visibilities: SubmissionTypesVisibilities, ltiToolUrl: String? = null, ltiToolName: String? = null) {
