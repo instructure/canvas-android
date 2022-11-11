@@ -735,7 +735,10 @@
                         <com.instructure.pandautils.views.CanvasWebViewWrapper
                             android:id="@+id/descriptionWebViewWrapper"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:background="@color/backgroundLightest"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"/>
 
                     </LinearLayout>
 

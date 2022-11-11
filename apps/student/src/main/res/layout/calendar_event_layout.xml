@@ -113,12 +113,13 @@
 
     </ScrollView>
 
-    <com.instructure.pandautils.views.CanvasWebView
-        android:id="@+id/calendarEventWebView"
+    <com.instructure.pandautils.views.CanvasWebViewWrapper
+        android:id="@+id/calendarEventWebViewWrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/calendarView"
-        android:padding="16dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:visibility="gone" />
 
     <View

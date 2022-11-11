@@ -20,14 +20,12 @@ import android.content.Context
 import android.content.res.Configuration
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.ViewCanvasWebViewWrapperBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toPx
 
 class CanvasWebViewWrapper @JvmOverloads constructor(
     context: Context,
@@ -39,18 +37,20 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
     private var title: String? = null
     private var baseUrl: String? = null
 
-    private var themeSwitched = false
+    var themeSwitched = false
+        private set
 
     private val binding: ViewCanvasWebViewWrapperBinding
 
     val webView: CanvasWebView
         get() = binding.contentWebView
 
+    var onThemeChanged: (Boolean, String) -> Unit = { _, html ->
+        changeContentTheme(html)
+    }
+
     init {
         orientation = VERTICAL
-        setPaddingRelative(8.toPx, paddingTop, 8.toPx, paddingBottom)
-        setBackgroundColor(context.getColor(R.color.backgroundLightest))
-        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
         binding = ViewCanvasWebViewWrapperBinding.inflate(LayoutInflater.from(context), this)
 
@@ -58,15 +58,28 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
         if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
             binding.themeSwitchButton.setVisible()
             binding.themeSwitchButton.onClick {
-                html?.let {
+                html?.let { html ->
                     themeSwitched = !themeSwitched
-                    changeContent(it)
+                    changeButtonTheme()
+                    onThemeChanged(themeSwitched, html)
                 }
             }
         }
     }
 
-    private fun changeContent(html: String) {
+    private fun changeButtonTheme() {
+        val background = if (themeSwitched) R.color.white else R.color.backgroundLightest
+        val textColor = if (themeSwitched) R.color.licorice else R.color.textDarkest
+
+        setBackgroundColor(context.getColor(background))
+        binding.themeSwitchButton.background = ColorUtils.colorIt(context.getColor(textColor), binding.themeSwitchButton.background)
+        ColorUtils.colorIt(context.getColor(textColor), binding.themeSwitchIcon)
+
+        binding.themeSwitchText.setTextColor(context.getColor(textColor))
+        binding.themeSwitchText.setText(if (themeSwitched) R.string.switchToDarkMode else R.string.switchToLightMode)
+    }
+
+    private fun changeContentTheme(html: String, extraFormatting: ((String) -> String)? = null) {
         val background = if (themeSwitched) R.color.white else R.color.backgroundLightest
         val textColor = if (themeSwitched) R.color.licorice else R.color.textDarkest
         val htmlFormatColors = HtmlFormatColors(
@@ -76,22 +89,22 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
             visitedLinkColor = if (themeSwitched) R.color.barney else R.color.textAlert,
         )
 
-        setBackgroundColor(context.getColor(background))
         binding.contentWebView.setBackgroundColor(context.getColor(background))
-        binding.themeSwitchButton.background = ColorUtils.colorIt(context.getColor(textColor), binding.themeSwitchButton.background)
-        ColorUtils.colorIt(context.getColor(textColor), binding.themeSwitchIcon)
-
-        binding.themeSwitchText.setTextColor(context.getColor(textColor))
-        binding.themeSwitchText.setText(if (themeSwitched) R.string.switchToDarkMode else R.string.switchToLightMode)
-
-        binding.contentWebView.loadHtml(html, title, baseUrl, htmlFormatColors)
+        binding.contentWebView.loadHtml(html, title, baseUrl, htmlFormatColors, extraFormatting)
     }
 
-    fun loadHtml(html: String, title: String?, baseUrl: String? = null) {
+    fun loadHtml(html: String, title: String?, baseUrl: String? = null, extraFormatting: ((String) -> String)? = null) {
         this.html = html
         this.title = title
         this.baseUrl = baseUrl
-        binding.contentWebView.loadHtml(html, title, baseUrl)
+
+        // We will change the content theme here also for pull to refresh cases.
+        changeContentTheme(html, extraFormatting)
+    }
+
+    fun loadDataWithBaseUrl(url: String?, data: String, mimeType: String?, encoding: String?, history: String?) {
+        html = data
+        binding.contentWebView.loadDataWithBaseURL(url, data, mimeType, encoding, history)
     }
 
 }

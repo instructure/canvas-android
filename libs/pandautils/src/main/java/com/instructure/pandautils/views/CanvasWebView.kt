@@ -487,9 +487,11 @@ class CanvasWebView @JvmOverloads constructor(
     fun loadHtml(html: String,
                  title: String?,
                  baseUrl: String? = null,
-                 htmlFormatColors: HtmlFormatColors = HtmlFormatColors()
+                 htmlFormatColors: HtmlFormatColors = HtmlFormatColors(),
+                 extraFormatting: ((String) -> String)? = null
     ): String {
-        val result = formatHtml(html, title, htmlFormatColors)
+        var result = formatHtml(html, title, htmlFormatColors)
+        if (extraFormatting != null) result = extraFormatting(result)
         loadDataWithBaseURL(baseUrl ?: getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
         return result
     }

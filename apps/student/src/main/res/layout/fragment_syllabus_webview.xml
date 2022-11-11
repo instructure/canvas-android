@@ -19,9 +19,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.instructure.pandautils.views.CanvasWebView
-        android:id="@+id/syllabusWebView"
+    <com.instructure.pandautils.views.CanvasWebViewWrapper
+        android:id="@+id/syllabusWebViewWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"/>
 
 </FrameLayout>

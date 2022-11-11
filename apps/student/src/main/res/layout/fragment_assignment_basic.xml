@@ -58,11 +58,14 @@
 
     </LinearLayout>
 
-    <com.instructure.pandautils.views.CanvasWebView
-        android:id="@+id/assignmentWebView"
+    <com.instructure.pandautils.views.CanvasWebViewWrapper
+        android:id="@+id/assignmentWebViewWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/med_padding"
-        android:scrollbars="none"/>
+        android:layout_marginTop="@dimen/med_padding"
+        android:layout_marginBottom="@dimen/med_padding"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="@color/backgroundLightest" />
 
 </LinearLayout>

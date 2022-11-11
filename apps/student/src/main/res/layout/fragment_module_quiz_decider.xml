@@ -70,10 +70,10 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="8dp"/>
 
-                    <com.instructure.pandautils.views.CanvasWebView
-                        android:id="@+id/quizDetails"
-                        style="@style/TextStyle.Primary"
-                        android:padding="-8dp"/>
+                    <com.instructure.pandautils.views.CanvasWebViewWrapper
+                        android:id="@+id/quizDetailsWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
