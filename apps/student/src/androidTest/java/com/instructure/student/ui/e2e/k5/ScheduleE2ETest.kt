@@ -46,7 +46,7 @@ class ScheduleE2ETest : StudentTest() {
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
-    @Test
+    @Test(timeout = 600000) //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
     @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun scheduleE2ETest() {
 

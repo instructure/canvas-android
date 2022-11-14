@@ -18,7 +18,9 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.Espresso
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withId
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
@@ -30,17 +32,17 @@ class EditAnnouncementPage : BasePage() {
     }
 
     fun editAnnouncementName(newName: String) {
-        onView(withId(R.id.announcementNameEditText)).replaceText(newName)
+        onView(withId(R.id.editDiscussionName)).replaceText(newName)
     }
 
     fun saveEditAnnouncement() {
-        onView(withId(R.id.menuSaveAnnouncement)).click()
+        onView(withId(R.id.menuSave)).click()
     }
 
     fun deleteAnnouncement() {
         Espresso.closeSoftKeyboard()
-        onView(withId(R.id.deleteAnnouncementButton)).scrollTo()
-        onView(withId(R.id.deleteAnnouncementButton)).click()
+        onView(withId(R.id.deleteText)).scrollTo()
+        onView(withId(R.id.deleteText)).click()
         onView(withId(android.R.id.button1)).click()
     }
 }

@@ -113,6 +113,7 @@ class ShareExtensionE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Assert that the File Upload page is displayed with the corresponding title.")
         fileUploadPage.assertPageObjects()
         fileUploadPage.assertDialogTitle("Submission")
+        device.waitForIdle()
 
         Log.d(STEP_TAG, "Click on 'Turn In' button to upload both of the files.")
         fileUploadPage.clickTurnIn()

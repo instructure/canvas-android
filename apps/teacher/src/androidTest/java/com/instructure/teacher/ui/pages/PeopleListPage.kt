@@ -40,7 +40,7 @@ class PeopleListPage : BasePage(R.id.peopleListPage) {
     {
         var matcher : Matcher<View>? = null
         if(role == null) {
-            matcher = Matchers.allOf(ViewMatchers.withText(person.shortName), withId(R.id.userName)) //TODO: should be discussed if we really want to show only the shortName here.
+            matcher = Matchers.allOf(ViewMatchers.withText(person.name), withId(R.id.userName))
         }
         else {
             matcher = Matchers.allOf(
