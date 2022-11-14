@@ -32,17 +32,17 @@ class EditAnnouncementPage : BasePage() {
     }
 
     fun editAnnouncementName(newName: String) {
-        onView(withId(R.id.editDiscussionName)).replaceText(newName)
+        onView(withId(R.id.announcementNameEditText)).replaceText(newName)
     }
 
     fun saveEditAnnouncement() {
-        onView(withId(R.id.menuSave)).click()
+        onView(withId(R.id.menuSaveAnnouncement)).click()
     }
 
     fun deleteAnnouncement() {
         Espresso.closeSoftKeyboard()
-        onView(withId(R.id.deleteText)).scrollTo()
-        onView(withId(R.id.deleteText)).click()
+        onView(withId(R.id.deleteAnnouncementButton)).scrollTo()
+        onView(withId(R.id.deleteAnnouncementButton)).click()
         onView(withId(android.R.id.button1)).click()
     }
 }
