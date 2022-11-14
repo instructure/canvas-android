@@ -15,9 +15,12 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/syllabusScrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none">
 
     <com.instructure.pandautils.views.CanvasWebViewWrapper
         android:id="@+id/syllabusWebViewWrapper"
@@ -26,4 +29,4 @@
         android:paddingStart="4dp"
         android:paddingEnd="4dp"/>
 
-</FrameLayout>
+</ScrollView>

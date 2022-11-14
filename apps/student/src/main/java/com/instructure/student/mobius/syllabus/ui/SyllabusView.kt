@@ -46,7 +46,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
             if (tab?.position == 0) {
-                swipeRefreshLayout.setSwipeableChildren(R.id.contentWebView)
+                swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
             } else {
                 swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
             }
@@ -104,7 +104,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         }
 
         if (syllabusPager.currentItem == 0) {
-            swipeRefreshLayout.setSwipeableChildren(R.id.contentWebView)
+            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
         } else {
             swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecycler, R.id.syllabusEmptyView)
         }
