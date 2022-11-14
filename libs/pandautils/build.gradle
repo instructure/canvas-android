@@ -164,6 +164,12 @@ dependencies {
     implementation Libs.FRAGMENT_KTX
     kapt Libs.LIFECYCLE_COMPILER
 
+    /* ROOM */
+    implementation Libs.ROOM
+    kapt Libs.ROOM_COMPILER
+    implementation Libs.ROOM_COROUTINES
+    testImplementation Libs.ROOM_TEST
+
     implementation Libs.FLEXBOX_LAYOUT
 
     // We need to add this dependency if we update ExoPlayer to 2.12.0

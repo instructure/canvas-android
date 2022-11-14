@@ -42,6 +42,7 @@ object Versions {
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.9.1"
     const val HEAP = "1.10.5"
+    const val ROOM = "2.4.0"
 }
 
 object Libs {
@@ -155,6 +156,11 @@ object Libs {
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 
     const val HEAP = "com.heapanalytics.android:heap-android-client:${Versions.HEAP}"
+
+    const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
+    const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
+    const val ROOM_COROUTINES = "androidx.room:room-ktx:${Versions.ROOM}"
+    const val ROOM_TEST = "androidx.room:room-testing:${Versions.ROOM}"
 }
 
 object Plugins {

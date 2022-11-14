@@ -344,6 +344,12 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     implementation Libs.HEAP
+
+    /* ROOM */
+    implementation Libs.ROOM
+    kapt Libs.ROOM_COMPILER
+    implementation Libs.ROOM_COROUTINES
+    testImplementation Libs.ROOM_TEST
 }
 
 // Comment out this line if the reporting logic starts going wonky.
