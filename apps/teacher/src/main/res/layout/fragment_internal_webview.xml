@@ -33,22 +33,13 @@
         app:theme="@style/ToolBarStyle"
         tools:ignore="UnusedAttribute" />
 
-    <ScrollView
+    <com.instructure.pandautils.views.CanvasWebView
+        android:id="@+id/canvasWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
         android:scrollbarStyle="outsideOverlay"
-        android:clipToPadding="false"
-        android:layout_below="@id/toolbar">
-
-        <com.instructure.pandautils.views.CanvasWebViewWrapper
-            android:id="@+id/canvasWebViewWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"/>
-
-    </ScrollView>
+        android:layout_below="@id/toolbar"
+        android:clipToPadding="false"/>
 
     <com.instructure.loginapi.login.view.CanvasLoadingView
         android:id="@+id/loading"

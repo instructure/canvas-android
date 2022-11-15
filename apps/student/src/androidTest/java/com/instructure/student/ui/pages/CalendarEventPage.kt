@@ -38,7 +38,7 @@ class CalendarEventPage : BasePage(R.id.calendarEventFragment) {
     }
 
     fun verifyDescription(description: String) {
-        onWebView(withId(R.id.calendarEventWebView))
+        onWebView(withId(R.id.contentWebView))
                 .withElement(findElement(Locator.ID,"content"))
                 .check(webMatches(getText(), Matchers.comparesEqualTo(description)))
     }

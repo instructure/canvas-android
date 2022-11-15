@@ -42,7 +42,7 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     val submissionTypes by OnViewWithId(R.id.submissionTypesTextView)
     val fileTypes by OnViewWithId(R.id.fileTypesTextView)
     val noDescription by OnViewWithId(R.id.noDescriptionContainer)
-    val descriptionWebView by OnViewWithId(R.id.descriptionWebView)
+    val descriptionWebView by OnViewWithId(R.id.contentWebView)
     val gradeContainer by OnViewWithId(R.id.gradeContainer)
     val submissionSuceeded by OnViewWithText(R.string.submissionStatusSuccessTitle)
     val submissionStatusUploading by OnViewWithId(R.id.submissionStatusUploading)

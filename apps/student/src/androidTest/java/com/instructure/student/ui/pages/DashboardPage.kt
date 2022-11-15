@@ -251,7 +251,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     // Assumes that a single announcement is showing
     fun assertAnnouncementDetailsDisplayed(announcement: AccountNotification) {
-        WaitForViewWithId(R.id.canvasWebView)
+        WaitForViewWithId(R.id.contentWebView)
         // Include isDisplayed() in the matcher to differentiate from other views with this text
         onView(withText(announcement.subject) + isDisplayed()).assertDisplayed()
     }
