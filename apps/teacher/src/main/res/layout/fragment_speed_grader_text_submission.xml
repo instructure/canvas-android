@@ -20,11 +20,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.instructure.pandautils.views.CanvasWebView
-        android:id="@+id/textSubmissionWebView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"/>
+        android:fillViewport="true">
+
+        <com.instructure.pandautils.views.CanvasWebViewWrapper
+            android:id="@+id/textSubmissionWebViewWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:visibility="invisible"/>
+
+    </ScrollView>
 
     <com.instructure.pandautils.views.ProgressiveCanvasLoadingView
         android:id="@+id/progressBar"

@@ -25,6 +25,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.ViewCanvasWebViewWrapperBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 
 class CanvasWebViewWrapper @JvmOverloads constructor(
@@ -53,16 +54,11 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
         orientation = VERTICAL
 
         binding = ViewCanvasWebViewWrapperBinding.inflate(LayoutInflater.from(context), this)
-
-        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
-            binding.themeSwitchButton.setVisible()
-            binding.themeSwitchButton.onClick {
-                html?.let { html ->
-                    themeSwitched = !themeSwitched
-                    changeButtonTheme()
-                    onThemeChanged(themeSwitched, html)
-                }
+        binding.themeSwitchButton.onClick {
+            html?.let { html ->
+                themeSwitched = !themeSwitched
+                changeButtonTheme()
+                onThemeChanged(themeSwitched, html)
             }
         }
     }
@@ -97,6 +93,13 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
         this.html = html
         this.title = title
         this.baseUrl = baseUrl
+
+        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES && html.isNotEmpty()) {
+            binding.themeSwitchButton.setVisible()
+        } else {
+            binding.themeSwitchButton.setGone()
+        }
 
         // We will change the content theme here also for pull to refresh cases.
         changeContentTheme(html, extraFormatting)
