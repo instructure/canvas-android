@@ -21,21 +21,22 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.work.Data
+import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
-import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.room.daos.FileUploadInputDao
+import com.instructure.pandautils.room.entities.FileUploadInput
 import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -44,7 +45,7 @@ class FileUploadDialogViewModel @Inject constructor(
         private val fileUploadUtils: FileUploadUtilsHelper,
         private val resources: Resources,
         private val workManager: WorkManager,
-        private val fileUploadBundleCreator: FileUploadBundleCreator
+        private val fileUploadInputDao: FileUploadInputDao
 ) : ViewModel() {
 
     val data: LiveData<FileUploadDialogViewData>
@@ -273,59 +274,7 @@ class FileUploadDialogViewModel @Inject constructor(
 
             val uris = filesToUpload.map { it.uri }
 
-            val data: Data = when (uploadType) {
-                FileUploadType.USER -> {
-                    fileUploadBundleCreator.getUserFilesBundle(uris, parentFolderId)
-                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_USER_FILE)
-                            .build()
-                }
-                FileUploadType.COURSE -> {
-                    fileUploadBundleCreator.getCourseFilesBundle(uris, canvasContext.id, parentFolderId)
-                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_COURSE_FILE)
-                            .build()
-                }
-                FileUploadType.GROUP -> {
-                    fileUploadBundleCreator.getCourseFilesBundle(uris, canvasContext.id, parentFolderId)
-                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_GROUP_FILE)
-                            .build()
-                }
-                FileUploadType.MESSAGE -> {
-                    fileUploadBundleCreator.getUserFilesBundle(uris, null)
-                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_MESSAGE_ATTACHMENTS)
-                            .build()
-                }
-                FileUploadType.DISCUSSION -> {
-                    fileUploadBundleCreator.getUserFilesBundle(uris, null)
-                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_DISCUSSION_ATTACHMENT)
-                            .build()
-                }
-                FileUploadType.QUIZ -> {
-                    fileUploadBundleCreator.getQuizFileBundle(uris, parentFolderId, quizQuestionId, position, canvasContext.id, quizId)
-                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_QUIZ_FILE)
-                            .build()
-                }
-                FileUploadType.SUBMISSION_COMMENT -> {
-                    fileUploadBundleCreator.getSubmissionCommentBundle(uris, canvasContext.id, assignment!!)
-                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_SUBMISSION_COMMENT)
-                            .build()
-                }
-                FileUploadType.TEACHER_SUBMISSION_COMMENT -> {
-                    fileUploadBundleCreator.getTeacherSubmissionCommentBundle(
-                        uris,
-                        assignment?.courseId.orDefault(),
-                        assignment?.id.orDefault(),
-                        userId.orDefault()
-                    ).build()
-                }
-                else -> {
-                    fileUploadBundleCreator.getAssignmentSubmissionBundle(uris, canvasContext.id, assignment!!)
-                            .putString(FileUploadWorker.FILE_SUBMIT_ACTION, FileUploadWorker.ACTION_ASSIGNMENT_SUBMISSION)
-                            .build()
-
-                }
-            }
-
-            startUpload(data)
+            startUpload(uris)
         }
     }
 
@@ -333,19 +282,109 @@ class FileUploadDialogViewModel @Inject constructor(
         return filesToUpload.firstOrNull()?.fileSubmitObject
     }
 
-    private fun startUpload(data: Data) {
-        if (uploadType == FileUploadType.DISCUSSION) {
-            _events.value = Event(FileUploadAction.AttachmentSelectedAction(FileUploadDialogFragment.EVENT_ON_FILE_SELECTED, getAttachmentUri()))
-        } else {
-            val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
-                    .setInputData(data)
+    private fun startUpload(uris: List<Uri>) {
+        viewModelScope.launch {
+            if (uploadType == FileUploadType.DISCUSSION) {
+                _events.value = Event(FileUploadAction.AttachmentSelectedAction(FileUploadDialogFragment.EVENT_ON_FILE_SELECTED, getAttachmentUri()))
+            } else {
+                val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
                     .build()
 
-            _events.value = Event(FileUploadAction.UploadStartedAction(worker.id, workManager.getWorkInfoByIdLiveData(worker.id), filesToUpload.map { it.uri.toString() }))
-            workManager.enqueue(worker)
-            dialogCallback?.invoke(FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN)
+                val input = getInputData(worker.id, uris)
+                fileUploadInputDao.insert(input)
+
+                _events.value = Event(FileUploadAction.UploadStartedAction(worker.id, workManager.getWorkInfoByIdLiveData(worker.id), filesToUpload.map { it.uri.toString() }))
+                workManager.enqueue(worker)
+                dialogCallback?.invoke(FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN)
+            }
+            _events.value = Event(FileUploadAction.UploadStarted)
         }
-        _events.value = Event(FileUploadAction.UploadStarted)
+    }
+
+    private fun getInputData(workerId: UUID, uris: List<Uri>): FileUploadInput {
+        return when (uploadType) {
+            FileUploadType.USER -> {
+                FileUploadInput(
+                    workerId = workerId.toString(),
+                    filePaths = uris.map { it.toString() },
+                    action = FileUploadWorker.ACTION_USER_FILE,
+                    parentFolderId = parentFolderId ?: FileUploadWorker.INVALID_ID
+                )
+            }
+            FileUploadType.COURSE -> {
+                FileUploadInput(
+                    workerId = workerId.toString(),
+                    filePaths = uris.map { it.toString() },
+                    action = FileUploadWorker.ACTION_COURSE_FILE,
+                    courseId = canvasContext.id,
+                    parentFolderId = parentFolderId ?: FileUploadWorker.INVALID_ID
+                )
+            }
+            FileUploadType.GROUP -> {
+                FileUploadInput(
+                    workerId = workerId.toString(),
+                    filePaths = uris.map { it.toString() },
+                    action = FileUploadWorker.ACTION_GROUP_FILE,
+                    courseId = canvasContext.id,
+                    parentFolderId = parentFolderId ?: FileUploadWorker.INVALID_ID
+                )
+            }
+            FileUploadType.MESSAGE -> {
+                FileUploadInput(
+                    workerId = workerId.toString(),
+                    filePaths = uris.map { it.toString() },
+                    action = FileUploadWorker.ACTION_MESSAGE_ATTACHMENTS
+                )
+            }
+            FileUploadType.DISCUSSION -> {
+                FileUploadInput(
+                    workerId = workerId.toString(),
+                    filePaths = uris.map { it.toString() },
+                    action = FileUploadWorker.ACTION_DISCUSSION_ATTACHMENT
+                )
+            }
+            FileUploadType.QUIZ -> {
+                FileUploadInput(
+                    workerId = workerId.toString(),
+                    filePaths = uris.map { it.toString() },
+                    action = FileUploadWorker.ACTION_QUIZ_FILE,
+                    quizId = quizId,
+                    quizQuestionId = quizQuestionId,
+                    position = position,
+                    courseId = canvasContext.id,
+                    parentFolderId = parentFolderId
+                )
+            }
+            FileUploadType.SUBMISSION_COMMENT -> {
+                FileUploadInput(
+                    workerId = workerId.toString(),
+                    filePaths = uris.map { it.toString() },
+                    action = FileUploadWorker.ACTION_SUBMISSION_COMMENT,
+                    courseId = canvasContext.id,
+                    assignmentId = assignment!!.id
+                )
+            }
+            FileUploadType.TEACHER_SUBMISSION_COMMENT -> {
+                FileUploadInput(
+                    workerId = workerId.toString(),
+                    filePaths = uris.map { it.toString() },
+                    action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
+                    courseId = assignment?.courseId.orDefault(),
+                    assignmentId = assignment?.id.orDefault(),
+                    userId = userId.orDefault()
+                )
+            }
+            else -> {
+                FileUploadInput(
+                    workerId = workerId.toString(),
+                    filePaths = uris.map { it.toString() },
+                    action = FileUploadWorker.ACTION_ASSIGNMENT_SUBMISSION,
+                    courseId = assignment?.courseId.orDefault(),
+                    assignmentId = assignment?.id.orDefault(),
+                    submissionId = null
+                )
+            }
+        }
     }
 
     fun onCancelClicked() {

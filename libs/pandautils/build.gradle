@@ -156,6 +156,8 @@ dependencies {
     /* DI */
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
+    implementation Libs.HILT_ANDROIDX_WORK
+    kapt Libs.HILT_ANDROIDX_COMPILER
 
     /* AAC */
     implementation Libs.VIEW_MODEL

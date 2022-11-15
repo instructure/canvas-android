@@ -285,6 +285,8 @@ dependencies {
     kapt Libs.HILT_COMPILER
     androidTestImplementation Libs.HILT_TESTING
     kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
+    implementation Libs.HILT_ANDROIDX_WORK
+    kapt Libs.HILT_ANDROIDX_COMPILER
 
     androidTestImplementation Libs.UI_AUTOMATOR
 

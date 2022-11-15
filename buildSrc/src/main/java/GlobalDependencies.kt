@@ -35,6 +35,7 @@ object Versions {
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.4.3"
     const val HILT = "2.38.1"
+    const val HILT_ANDROIDX = "1.0.0"
     const val LIFECYCLE = "2.3.1"
     const val FRAGMENT = "1.3.6"
     const val WORK_MANAGER = "2.7.1"
@@ -113,6 +114,8 @@ object Libs {
     const val HILT_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
     const val HILT_TESTING = "com.google.dagger:hilt-android-testing:${Versions.HILT}"
     const val HILT_TESTING_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
+    const val HILT_ANDROIDX_COMPILER = "androidx.hilt:hilt-compiler:${Versions.HILT_ANDROIDX}"
+    const val HILT_ANDROIDX_WORK = "androidx.hilt:hilt-work:${Versions.HILT_ANDROIDX}"
 
     /* Android Architecture Components */
     const val VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"
