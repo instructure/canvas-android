@@ -97,12 +97,7 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
         this.title = title
         this.baseUrl = baseUrl
 
-        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES && html.isNotEmpty()) {
-            binding.themeSwitchButton.setVisible()
-        } else {
-            binding.themeSwitchButton.setGone()
-        }
+        initVisibility(html)
 
         // We will change the content theme here also for pull to refresh cases.
         changeContentTheme(html, extraFormatting)
@@ -110,7 +105,17 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
 
     fun loadDataWithBaseUrl(url: String?, data: String, mimeType: String?, encoding: String?, history: String?) {
         html = data
+        initVisibility(data)
         binding.contentWebView.loadDataWithBaseURL(url, data, mimeType, encoding, history)
+    }
+
+    private fun initVisibility(html: String) {
+        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES && html.isNotEmpty()) {
+            binding.themeSwitchButton.setVisible()
+        } else {
+            binding.themeSwitchButton.setGone()
+        }
     }
 
 }
