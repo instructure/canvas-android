@@ -322,8 +322,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:paddingStart="4dp"
-                        android:paddingEnd="4dp"
                         android:background="@color/backgroundLightest"
                         android:minHeight="48dp" />
 
@@ -406,9 +404,7 @@
                             android:id="@+id/discussionRepliesWebViewWrapper"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"/>
+                            android:layout_marginTop="4dp" />
 
                         <ProgressBar
                             android:id="@+id/discussionProgressBar"

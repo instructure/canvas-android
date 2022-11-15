@@ -31,6 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/bg_button_full_rounded"
         android:foreground="?selectableItemBackground"
         android:gravity="center"
