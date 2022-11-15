@@ -87,6 +87,9 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
 
         binding.contentWebView.setBackgroundColor(context.getColor(background))
         binding.contentWebView.loadHtml(html, title, baseUrl, htmlFormatColors, extraFormatting)
+        postDelayed({
+            binding.contentWebView.clearHistory()
+        }, 100)
     }
 
     fun loadHtml(html: String, title: String?, baseUrl: String? = null, extraFormatting: ((String) -> String)? = null) {
