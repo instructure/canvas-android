@@ -18,7 +18,9 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.Espresso
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withId
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
