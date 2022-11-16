@@ -25,6 +25,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -39,8 +40,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
-import com.instructure.pandautils.utils.fromJson
+import com.instructure.pandautils.room.daos.AttachmentDao
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter
@@ -51,14 +51,17 @@ import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.view.AttachmentView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_inbox_compose_message.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
-import kotlin.collections.ArrayList
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
+@AndroidEntryPoint
 class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
     private val conversation by NullableParcelableArg<Conversation>(key = Const.CONVERSATION)
@@ -77,6 +80,9 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
     private var coursesCall: WeaveJob? = null
     private var sendCall: WeaveJob? = null
+
+    @Inject
+    lateinit var attachmentDao: AttachmentDao
 
     override fun onStart() {
         super.onStart()
@@ -446,12 +452,17 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
     override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
-                it.outputData.getStringArray(FileUploadWorker.RESULT_ATTACHMENTS)
-                    ?.map { it.fromJson<Attachment>() }
-                    ?.let {
-                        this.attachments.addAll(it)
-                        refreshAttachments()
+                lifecycleScope.launch {
+                    uuid?.let {
+                        val attachmentEntities = attachmentDao.findByParentId(it.toString())
+                        attachmentEntities?.let {
+                            attachments.addAll( it.map { Attachment(it) } )
+                            refreshAttachments()
+                            attachmentDao.deleteAll(it)
+                        } ?: toast(R.string.errorUploadingFile)
                     } ?: toast(R.string.errorUploadingFile)
+
+                }
             }
         }
     }

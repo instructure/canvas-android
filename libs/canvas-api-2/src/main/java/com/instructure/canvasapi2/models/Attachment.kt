@@ -23,21 +23,33 @@ import java.util.*
 
 @Parcelize
 data class Attachment(
-        override var id: Long = 0,
-        @SerializedName("content-type")
-        var contentType: String? = null,
-        var filename: String? = null,
-        @SerializedName("display_name")
-        var displayName: String? = null,
-        var url: String? = null,
-        @SerializedName("thumbnail_url")
-        var thumbnailUrl: String? = null,
-        @SerializedName("preview_url")
-        var previewUrl: String? = null,
-        @SerializedName("created_at")
-        var createdAt: Date? = null,
-        var size: Long = 0
+    override var id: Long = 0,
+    @SerializedName("content-type")
+    var contentType: String? = null,
+    var filename: String? = null,
+    @SerializedName("display_name")
+    var displayName: String? = null,
+    var url: String? = null,
+    @SerializedName("thumbnail_url")
+    var thumbnailUrl: String? = null,
+    @SerializedName("preview_url")
+    var previewUrl: String? = null,
+    @SerializedName("created_at")
+    var createdAt: Date? = null,
+    var size: Long = 0
 ) : CanvasModel<Attachment>() {
     override val comparisonDate get() = createdAt
     override val comparisonString get() = displayName
+
+    constructor(attachment: com.instructure.canvasapi2.db.entities.Attachment) : this(
+        attachment.id,
+        attachment.contentType,
+        attachment.filename,
+        attachment.displayName,
+        attachment.url,
+        attachment.thumbnailUrl,
+        attachment.previewUrl,
+        attachment.createdAt,
+        attachment.size
+    )
 }

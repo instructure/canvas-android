@@ -143,6 +143,9 @@ dependencies {
 
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
+
+    implementation Libs.ROOM
+    kapt Libs.ROOM_COMPILER
 }
 
 // Define our pact-publish object

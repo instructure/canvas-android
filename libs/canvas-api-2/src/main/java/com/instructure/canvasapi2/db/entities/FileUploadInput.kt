@@ -1,4 +1,4 @@
-package com.instructure.pandautils.room.entities
+package com.instructure.canvasapi2.db.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

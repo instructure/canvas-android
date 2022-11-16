@@ -1,6 +1,7 @@
 package com.instructure.pandautils.di
 
 import com.instructure.pandautils.room.AppDatabase
+import com.instructure.pandautils.room.daos.AttachmentDao
 import com.instructure.pandautils.room.daos.FileUploadInputDao
 import dagger.Module
 import dagger.Provides
@@ -16,5 +17,11 @@ class DatabaseModule {
     @Singleton
     fun provideFileUploadInputDao(appDatabase: AppDatabase): FileUploadInputDao {
         return appDatabase.fileUploadInputDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAttachmentDao(appDatabase: AppDatabase): AttachmentDao {
+        return appDatabase.attachmentDao()
     }
 }

@@ -32,7 +32,7 @@ import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemVi
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.daos.FileUploadInputDao
-import com.instructure.pandautils.room.entities.FileUploadInput
+import com.instructure.canvasapi2.db.entities.FileUploadInput
 import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
