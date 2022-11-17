@@ -23,7 +23,10 @@ import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
+import com.instructure.canvasapi2.db.entities.Author
 import com.instructure.canvasapi2.db.entities.FileUploadInput
+import com.instructure.canvasapi2.db.entities.MediaComment
+import com.instructure.canvasapi2.db.entities.SubmissionComment
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
@@ -35,8 +38,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
-import com.instructure.pandautils.room.daos.AttachmentDao
-import com.instructure.pandautils.room.daos.FileUploadInputDao
+import com.instructure.pandautils.room.daos.*
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.toJson
@@ -49,7 +51,10 @@ class FileUploadWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
     private val fileUploadInputDao: FileUploadInputDao,
-    private val attachmentDao: AttachmentDao
+    private val attachmentDao: AttachmentDao,
+    private val submissionCommentDao: SubmissionCommentDao,
+    private val mediaCommentDao: MediaCommentDao,
+    private val authorDao: AuthorDao
 ) :
     CoroutineWorker(context, workerParameters) {
 
@@ -125,14 +130,21 @@ class FileUploadWorker @AssistedInject constructor(
                 }
                 ACTION_MESSAGE_ATTACHMENTS -> {
                     updateNotificationComplete(notificationId)
-                    val attachmentEntities = attachments.map { com.instructure.canvasapi2.db.entities.Attachment(it, id.toString()) }
+                    val attachmentEntities =
+                        attachments.map { com.instructure.canvasapi2.db.entities.Attachment(it, id.toString()) }
                     attachmentDao.insertAll(attachmentEntities)
                     Result.success()
                 }
                 ACTION_TEACHER_SUBMISSION_COMMENT -> {
                     postSubmissionComment(attachmentsIds).let {
                         updateSubmissionComplete(notificationId)
-                        Result.success(workDataOf(RESULT_SUBMISSION_COMMENT to it.submissionComments.lastOrNull()?.toJson()))
+                        val submissionCommentId = insertSubmissionComment(it.submissionComments.last())
+
+                        Result.success(
+                            workDataOf(
+                                RESULT_SUBMISSION_COMMENT to submissionCommentId
+                            )
+                        )
                     }
                 }
                 else -> {
@@ -148,6 +160,36 @@ class FileUploadWorker @AssistedInject constructor(
             e.printStackTrace()
             return Result.failure()
         }
+    }
+
+    private suspend fun insertSubmissionComment(submissionComment: com.instructure.canvasapi2.models.SubmissionComment): Long {
+        val submissionCommentId = submissionCommentDao.insert(
+            SubmissionComment(submissionComment)
+        )
+
+        submissionComment.mediaComment?.let {
+            mediaCommentDao.insert(
+                MediaComment(
+                    it
+                )
+            )
+        }
+
+        submissionComment.author?.let {
+            authorDao.insert(
+                Author(it)
+            )
+        }
+
+        val attachmentEntities = submissionComment.attachments.map {
+            com.instructure.canvasapi2.db.entities.Attachment(
+                attachment = it,
+                submissionCommentId = submissionCommentId
+            )
+        }
+        attachmentDao.insertAll(attachmentEntities)
+
+        return submissionCommentId
     }
 
     private fun getArguments(inputData: FileUploadInput) {

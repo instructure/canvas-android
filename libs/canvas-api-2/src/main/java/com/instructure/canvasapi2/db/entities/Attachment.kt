@@ -15,9 +15,12 @@ data class Attachment(
     val previewUrl: String? = null,
     val createdAt: Date? = null,
     val size: Long = 0,
-    val parentId: String? = null
+    //Used for file upload result
+    val workerId: String? = null,
+    //Used for Submission comments
+    val submissionCommentId: Long? = null
 ) {
-    constructor(attachment: com.instructure.canvasapi2.models.Attachment, parentId: String?) : this(
+    constructor(attachment: com.instructure.canvasapi2.models.Attachment, workerId: String? = null, submissionCommentId: Long? = null) : this(
         attachment.id,
         attachment.contentType,
         attachment.filename,
@@ -27,6 +30,7 @@ data class Attachment(
         attachment.previewUrl,
         attachment.createdAt,
         attachment.size,
-        parentId
+        workerId,
+        submissionCommentId
     )
 }

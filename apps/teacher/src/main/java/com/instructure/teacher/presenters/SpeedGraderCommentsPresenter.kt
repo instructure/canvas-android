@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
-import com.instructure.pandautils.utils.fromJson
+import com.instructure.pandautils.room.daos.SubmissionCommentDao
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
@@ -48,7 +48,8 @@ class SpeedGraderCommentsPresenter(
         val assignee: Assignee,
         val courseId: Long,
         val assignmentId: Long,
-        val groupMessage: Boolean
+        val groupMessage: Boolean,
+        val submissionCommentDao: SubmissionCommentDao
 ) : ListPresenter<SubmissionCommentWrapper, SpeedGraderCommentsView>(SubmissionCommentWrapper::class.java) {
 
     val mPageId = "${ApiPrefs.domain}-$courseId-$assignmentId-${assignee.id}"
@@ -276,13 +277,22 @@ class SpeedGraderCommentsPresenter(
     }
 
     private fun handleFileUploadSuccess(workInfo: WorkInfo) {
-        TeacherPrefs.pendingSubmissionComments.find { it.workerId == workInfo.id }?.let { pending ->
-            TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
-            data.remove(PendingCommentWrapper(pending))
-            workInfo.outputData.getString(FileUploadWorker.RESULT_SUBMISSION_COMMENT)?.fromJson<SubmissionComment>()?.let {
-                data.add(CommentWrapper(it))
+        weave {
+            TeacherPrefs.pendingSubmissionComments.find { it.workerId == workInfo.id }?.let { pending ->
+                TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
+                data.remove(PendingCommentWrapper(pending))
+                val submissionCommentId = workInfo.outputData.getLong(FileUploadWorker.RESULT_SUBMISSION_COMMENT, 0L)
+                submissionCommentDao.findById(submissionCommentId)?.let {
+                    val submissionComment = SubmissionComment(
+                        it.submissionComment,
+                        it.author,
+                        it.mediaComment,
+                        it.attachments
+                    )
+                    data.add(CommentWrapper(submissionComment))
+                    SubmissionCommentsUpdated().post()
+                }
             }
-            SubmissionCommentsUpdated().post()
         }
     }
 

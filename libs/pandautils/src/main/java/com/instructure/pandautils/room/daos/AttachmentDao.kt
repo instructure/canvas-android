@@ -21,6 +21,6 @@ interface AttachmentDao {
     @Update
     suspend fun update(attachment: Attachment)
 
-    @Query("SELECT * FROM Attachment WHERE parentId=:parentId")
+    @Query("SELECT * FROM Attachment WHERE workerId=:parentId")
     suspend fun findByParentId(parentId: String): List<Attachment>?
 }

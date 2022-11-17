@@ -37,6 +37,14 @@ data class MediaComment(
         var contentType: String? = null
 ) : Parcelable {
 
+    constructor(mediaComment: com.instructure.canvasapi2.db.entities.MediaComment): this(
+        mediaComment.mediaId,
+        mediaComment.displayName,
+        mediaComment.url,
+        mediaComment.mediaType?.let { MediaType.valueOf(it) },
+        mediaComment.contentType
+    )
+
     enum class MediaType {
         @SerializedName("audio", alternate = ["audio/*"])
         AUDIO,

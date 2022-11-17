@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.instructure.canvasapi2.db.entities.FileUploadInput
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
@@ -38,7 +39,7 @@ import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.room.daos.FileUploadInputDao
-import com.instructure.canvasapi2.db.entities.FileUploadInput
+import com.instructure.pandautils.room.daos.SubmissionCommentDao
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -79,6 +80,9 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     @Inject
     lateinit var fileUploadInputDao: FileUploadInputDao
 
+    @Inject
+    lateinit var submissionCommentDao: SubmissionCommentDao
+
     var mRawComments by ParcelableArrayListArg<SubmissionComment>()
     var mSubmissionId by LongArg()
     var mSubmissionHistory by ParcelableArrayListArg<Submission>()
@@ -99,7 +103,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
 
     override fun layoutResId() = R.layout.fragment_speedgrader_comments
     override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
-    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage)
+    override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage, submissionCommentDao)
     override fun onCreateView(view: View) {
         commentLibraryViewModel.getCommentBySubmission(mSubmissionId).observe(viewLifecycleOwner) {
             if (commentEditText.text.toString() != it.comment) {

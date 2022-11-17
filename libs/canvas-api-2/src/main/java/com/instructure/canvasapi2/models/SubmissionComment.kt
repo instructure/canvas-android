@@ -20,26 +20,43 @@ package com.instructure.canvasapi2.models
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.util.Date
+import java.util.*
 
 @JvmSuppressWildcards
 @Parcelize
 data class SubmissionComment(
-        override val id: Long = 0,
-        @SerializedName("author_id")
-        val authorId: Long = 0,
-        @SerializedName("author_name")
-        val authorName: String? = null,
-        @SerializedName("author_pronouns")
-        val authorPronouns: String? = null,
-        var comment: String? = null,
-        @SerializedName("created_at")
-        val createdAt: Date? = null,
-        @SerializedName("media_comment")
-        val mediaComment: MediaComment? = null,
-        val attachments: ArrayList<Attachment> = ArrayList(),
-        val author: Author? = null
+    override val id: Long = 0,
+    @SerializedName("author_id")
+    val authorId: Long = 0,
+    @SerializedName("author_name")
+    val authorName: String? = null,
+    @SerializedName("author_pronouns")
+    val authorPronouns: String? = null,
+    var comment: String? = null,
+    @SerializedName("created_at")
+    val createdAt: Date? = null,
+    @SerializedName("media_comment")
+    val mediaComment: MediaComment? = null,
+    val attachments: ArrayList<Attachment> = ArrayList(),
+    val author: Author? = null
 ) : CanvasComparable<SubmissionComment>(), Parcelable {
+    constructor(
+        submissionComment: com.instructure.canvasapi2.db.entities.SubmissionComment,
+        author: com.instructure.canvasapi2.db.entities.Author?,
+        mediaComment: com.instructure.canvasapi2.db.entities.MediaComment?,
+        attachments: List<com.instructure.canvasapi2.db.entities.Attachment>?
+    ) : this(
+        submissionComment.id,
+        submissionComment.authorId,
+        submissionComment.authorName,
+        submissionComment.authorPronouns,
+        submissionComment.comment,
+        submissionComment.createdAt,
+        mediaComment?.let { MediaComment(it) },
+        attachments?.let { it.map { Attachment(it) } }?.let { ArrayList(it) } ?: ArrayList(),
+        author?.let { Author(it) }
+    )
+
     override val comparisonDate get() = createdAt
     override val comparisonString get() = authorName
 }
