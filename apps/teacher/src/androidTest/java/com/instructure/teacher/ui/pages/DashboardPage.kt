@@ -69,6 +69,10 @@ class DashboardPage : BasePage() {
         onView(matcher).check(doesNotExist())
     }
 
+    fun assertCourseTitle(courseTitle: String) {
+        onView(withId(R.id.titleTextView) + withText(courseTitle) + withAncestor(R.id.swipeRefreshLayout)).assertDisplayed()
+    }
+
     fun assertDisplaysCourses() {
         emptyView.assertNotDisplayed()
         onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
@@ -157,4 +161,18 @@ class DashboardPage : BasePage() {
         onView(withText(course.name)).click()
     }
 
+    fun switchCourseView() {
+        onView(withId(R.id.menu_dashboard_cards)).click()
+    }
+
+    fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
+        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(withId(R.id.cardView) + withDescendant(withId(R.id.titleTextView) + withText(courseTitle)))
+        onView(courseOverflowMatcher).click()
+        waitForView(withId(R.id.title) + withText(menuTitle)).click()
+    }
+
+    fun changeCourseNickname(changeTo: String) {
+        onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
+        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+    }
 }
