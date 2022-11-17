@@ -15,16 +15,13 @@ class TeacherDiscussionRouter(private val activity: FragmentActivity) : Discussi
     override fun routeToDiscussion(
         canvasContext: CanvasContext,
         isRedesign: Boolean,
-        discussionTopicHeader: DiscussionTopicHeader
+        discussionTopicHeader: DiscussionTopicHeader,
+        isAnnouncement: Boolean
     ) {
         val route = when {
             isRedesign -> DiscussionDetailsWebViewFragment.makeRoute(canvasContext, discussionTopicHeader)
-            discussionTopicHeader.announcement -> {
-                val bundle = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, true)
-                Route(null, DiscussionsDetailsFragment::class.java, canvasContext, bundle)
-            }
             else -> {
-                val bundle = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader)
+                val bundle = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, isAnnouncement || discussionTopicHeader.announcement)
                 Route(null, DiscussionsDetailsFragment::class.java, canvasContext, bundle)
             }
         }
