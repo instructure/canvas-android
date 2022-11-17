@@ -29,7 +29,11 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
+import com.instructure.pandautils.room.daos.AttachmentDao
+import com.instructure.pandautils.room.daos.AuthorDao
+import com.instructure.pandautils.room.daos.MediaCommentDao
 import com.instructure.pandautils.room.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.model.SubmissionCommentWithAttachments
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
@@ -49,7 +53,10 @@ class SpeedGraderCommentsPresenter(
         val courseId: Long,
         val assignmentId: Long,
         val groupMessage: Boolean,
-        val submissionCommentDao: SubmissionCommentDao
+        val submissionCommentDao: SubmissionCommentDao,
+        val attachmentDao: AttachmentDao,
+        val authorDao: AuthorDao,
+        val mediaCommentDao: MediaCommentDao
 ) : ListPresenter<SubmissionCommentWrapper, SpeedGraderCommentsView>(SubmissionCommentWrapper::class.java) {
 
     val mPageId = "${ApiPrefs.domain}-$courseId-$assignmentId-${assignee.id}"
@@ -289,11 +296,19 @@ class SpeedGraderCommentsPresenter(
                         it.mediaComment,
                         it.attachments
                     )
+                    dbCleanUp(it)
                     data.add(CommentWrapper(submissionComment))
                     SubmissionCommentsUpdated().post()
                 }
             }
         }
+    }
+
+    private suspend fun dbCleanUp(submissionComment: SubmissionCommentWithAttachments) {
+        submissionComment.author?.let { authorDao.delete(it) }
+        submissionComment.mediaComment?.let { mediaCommentDao.delete(it) }
+        submissionComment.attachments?.let { attachmentDao.deleteAll(it) }
+        submissionCommentDao.delete(submissionComment.submissionComment)
     }
 
     private fun handleFileUploadFailure(workInfo: WorkInfo) {

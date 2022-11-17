@@ -19,6 +19,9 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.Assignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.pandautils.room.daos.AttachmentDao
+import com.instructure.pandautils.room.daos.AuthorDao
+import com.instructure.pandautils.room.daos.MediaCommentDao
 import com.instructure.pandautils.room.daos.SubmissionCommentDao
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
@@ -31,7 +34,10 @@ class SpeedGraderCommentsPresenterFactory(
         val courseId: Long,
         val assignmentId: Long,
         val groupMessage: Boolean,
-        val submissionCommentDao: SubmissionCommentDao
+        val submissionCommentDao: SubmissionCommentDao,
+        val attachmentDao: AttachmentDao,
+        val authorDao: AuthorDao,
+        val mediaCommentDao: MediaCommentDao
 ) : PresenterFactory<SpeedGraderCommentsView, SpeedGraderCommentsPresenter> {
-    override fun create() = SpeedGraderCommentsPresenter(rawComments, submissionHistory, assignee, courseId, assignmentId, groupMessage, submissionCommentDao)
+    override fun create() = SpeedGraderCommentsPresenter(rawComments, submissionHistory, assignee, courseId, assignmentId, groupMessage, submissionCommentDao, attachmentDao, authorDao, mediaCommentDao)
 }
