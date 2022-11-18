@@ -250,10 +250,10 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                         mDiscussionEntryId)
             }
 
-            discussionRepliesWebView.setInvisible()
+            discussionRepliesWebViewWrapper.setInvisible()
 
-            repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), html, {
-                discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
+            repliesLoadHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
+                discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
             }
@@ -265,7 +265,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                 } else {
                     discussionsScrollView.scrollTo(0, presenter.scrollPosition)
                 }
-                discussionRepliesWebView.setVisible()
+                discussionRepliesWebViewWrapper.setVisible()
             }
         } catch { Logger.e("Error loading discussion " + it.message) }
     }
@@ -406,20 +406,20 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             showReplyView(presenter.discussionTopicHeader.id)
         }
 
-        headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
-            discussionTopicHeaderWebView.loadHtml(it, discussionTopicHeader.title, baseUrl = mDiscussionTopicHeader.htmlUrl)
+        headerLoadHtmlJob = discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
+            discussionTopicHeaderWebViewWrapper.loadHtml(it, discussionTopicHeader.title, baseUrl = mDiscussionTopicHeader.htmlUrl)
         }) {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
         }
 
-        discussionRepliesWebView.loadHtml("", "")
+        discussionRepliesWebViewWrapper.loadHtml("", "")
     }
 
     override fun onPause() {
         super.onPause()
         presenter.scrollPosition = discussionsScrollView.scrollY
-        discussionTopicHeaderWebView.onPause()
-        discussionRepliesWebView.onPause()
+        discussionTopicHeaderWebViewWrapper.webView.onPause()
+        discussionRepliesWebViewWrapper.webView.onPause()
     }
 
     override fun onResume() {
@@ -445,11 +445,15 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             }
         }
 
-        discussionTopicHeaderWebView.onResume()
-        discussionRepliesWebView.onResume()
+        discussionTopicHeaderWebViewWrapper.webView.onResume()
+        discussionRepliesWebViewWrapper.webView.onResume()
 
-        setupWebView(discussionTopicHeaderWebView, false)
-        setupWebView(discussionRepliesWebView, true, addDarkTheme = true)
+        setupWebView(discussionTopicHeaderWebViewWrapper.webView, false)
+        setupWebView(discussionRepliesWebViewWrapper.webView, true, addDarkTheme = true)
+        discussionRepliesWebViewWrapper.onThemeChanged = { themeChanged, html ->
+            setupWebView(discussionRepliesWebViewWrapper.webView, true, addDarkTheme = !themeChanged)
+            discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
+        }
     }
 
     private fun setupToolbar() {
@@ -489,7 +493,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(webView: CanvasWebView, addJSSupport: Boolean, addDarkTheme: Boolean = false) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
+        val backgroundColorRes = if (addDarkTheme) R.color.backgroundLightest else R.color.white
+        webView.setBackgroundColor(requireContext().getColor(backgroundColorRes))
         webView.settings.javaScriptEnabled = true
         if(addJSSupport) webView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
         webView.settings.useWideViewPort = true
@@ -626,16 +631,16 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountText(requireContext(), discussionEntry)
         val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.textDark))
         requireActivity().runOnUiThread {
-            discussionRepliesWebView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
-            discussionRepliesWebView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
+            discussionRepliesWebViewWrapper.webView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
+            discussionRepliesWebViewWrapper.webView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
         }
     }
 
     override fun updateDiscussionEntry(discussionEntry: DiscussionEntry) {
         requireActivity().runOnUiThread {
-            discussionRepliesWebView.loadUrl("javascript:updateEntry('${discussionEntry.id}', '${discussionEntry.message}')")
+            discussionRepliesWebViewWrapper.webView.loadUrl("javascript:updateEntry('${discussionEntry.id}', '${discussionEntry.message}')")
             if (discussionEntry.attachments == null && discussionEntry.attachments?.size!! < 1)
-                discussionRepliesWebView.loadUrl("javascript:hideAttachmentIcon('${discussionEntry.id}'")
+                discussionRepliesWebViewWrapper.webView.loadUrl("javascript:hideAttachmentIcon('${discussionEntry.id}'")
         }
     }
 
@@ -692,18 +697,18 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     override fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry) {
         val deletedText = DiscussionUtils.formatDeletedInfoText(requireContext(), discussionEntry)
-        discussionRepliesWebView.post { discussionRepliesWebView.loadUrl(
+        discussionRepliesWebViewWrapper.post { discussionRepliesWebViewWrapper.webView.loadUrl(
                 "javascript:markAsDeleted" + "('" + discussionEntry.id.toString() + "','" + deletedText + "')") }
     }
 
     override fun updateDiscussionsMarkedAsReadCompleted(markedAsReadIds: List<Long>) {
         markedAsReadIds.forEach {
-            discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsRead('$it')") }
+            discussionRepliesWebViewWrapper.post { discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead('$it')") }
         }
     }
 
     override fun updateDiscussionsMarkedAsUnreadCompleted(markedAsUnreadId: Long) {
-        discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsUnread('$markedAsUnreadId')") }
+        discussionRepliesWebViewWrapper.post { discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsUnread('$markedAsUnreadId')") }
     }
 
     override fun showAnonymousDiscussionView() {
@@ -725,7 +730,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if (discussionsScrollView == null) return false
         val scrollBounds = Rect().apply { discussionsScrollView.getDrawingRect(this) }
 
-        val discussionRepliesHeight = discussionRepliesWebView.height
+        val discussionRepliesHeight = discussionRepliesWebViewWrapper.height
         val discussionScrollViewContentHeight = discussionsScrollViewContentWrapper.height
         val otherContentHeight = discussionScrollViewContentHeight - discussionRepliesHeight
         val top = requireContext().DP(topOffset) + otherContentHeight

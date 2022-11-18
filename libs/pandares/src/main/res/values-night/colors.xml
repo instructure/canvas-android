@@ -32,7 +32,7 @@
     <color name="backgroundMedium">#394B58</color>
     <color name="backgroundSuccess">#0D884D</color>
     <color name="backgroundWarning">#E25C1D</color>
-    <color name="barney">#C340AA</color>
+    <color name="barney">#BF32A4</color>
     <color name="borderAlert">#C340AA</color>
     <color name="borderDanger">#E4263C</color>
     <color name="borderDark">#C7CDD1</color>
@@ -44,7 +44,7 @@
     <color name="borderSuccess">#0D884D</color>
     <color name="borderWarning">#E25C1D</color>
     <color name="crimson">#E4263C</color>
-    <color name="electric">#127CB9</color>
+    <color name="electric">#008EE2</color>
     <color name="fire">#E25C1D</color>
     <color name="licorice">#2D3B45</color>
     <color name="oxford">#394B58</color>

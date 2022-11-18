@@ -42,8 +42,12 @@ class HomeroomPage : BasePage(R.id.homeroomPage) {
     }
 
     fun assertAnnouncementDisplayed(courseName: String, title: String, content: String) {
-        onView(withAncestor(R.id.announcementsContainer) + withText(courseName)).assertDisplayed()
-        onView(withAncestor(R.id.announcementsContainer) + withText(title)).assertDisplayed()
+        onView(withAncestor(R.id.announcementsContainer) + withText(courseName))
+            .scrollTo()
+            .assertDisplayed()
+        onView(withAncestor(R.id.announcementsContainer) + withText(title))
+            .scrollTo()
+            .assertDisplayed()
 
         Web.onWebView()
                 .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "html"))

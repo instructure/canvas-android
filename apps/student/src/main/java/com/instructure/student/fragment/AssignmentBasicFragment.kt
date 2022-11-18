@@ -63,12 +63,12 @@ class AssignmentBasicFragment : ParentFragment() {
 
     override fun onResume() {
         super.onResume()
-        assignmentWebView?.onResume()
+        assignmentWebViewWrapper?.webView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        assignmentWebView?.onPause()
+        assignmentWebViewWrapper?.webView?.onPause()
     }
 
     override fun onStop() {
@@ -91,8 +91,8 @@ class AssignmentBasicFragment : ParentFragment() {
             dueDateWrapper.setGone()
         }
 
-        assignmentWebView.addVideoClient(requireActivity())
-        assignmentWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        assignmentWebViewWrapper.webView.addVideoClient(requireActivity())
+        assignmentWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) {
                 // Create and add the InternalWebviewFragment to deal with the link they clicked
                 val route = InternalWebviewFragment.makeRoute(url, "", false, "")
@@ -108,7 +108,7 @@ class AssignmentBasicFragment : ParentFragment() {
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
-        assignmentWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        assignmentWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(requireActivity(), url)
             }
@@ -136,8 +136,8 @@ class AssignmentBasicFragment : ParentFragment() {
             description = "<p>" + getString(R.string.noDescription) + "</p>"
         }
 
-        loadHtmlJob = assignmentWebView.loadHtmlWithIframes(requireContext(), description, {
-            assignmentWebView.loadHtml(it, assignment.name)
+        loadHtmlJob = assignmentWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
+            assignmentWebViewWrapper.loadHtml(it, assignment.name)
         }, {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
         })
@@ -151,9 +151,9 @@ class AssignmentBasicFragment : ParentFragment() {
     fun onBackStackChangedEvent(event: OnBackStackChangedEvent) {
         event.get { clazz ->
             if (clazz?.isAssignableFrom(AssignmentBasicFragment::class.java) == true) {
-                assignmentWebView?.onResume()
+                assignmentWebViewWrapper?.webView?.onResume()
             } else {
-                assignmentWebView?.onPause()
+                assignmentWebViewWrapper?.webView?.onPause()
             }
         }
     }
@@ -173,7 +173,7 @@ class AssignmentBasicFragment : ParentFragment() {
     //endregion
 
     //region Parent Fragment Overrides
-    override fun handleBackPressed(): Boolean = assignmentWebView?.handleGoBack() ?: super.handleBackPressed()
+    override fun handleBackPressed(): Boolean = assignmentWebViewWrapper?.webView?.handleGoBack() ?: super.handleBackPressed()
     //endregion
 
     private fun getLockedInfoHTML(lockInfo: LockInfo, explanationFirstLine: Int): String {

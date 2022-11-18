@@ -33,7 +33,7 @@ import org.hamcrest.CoreMatchers.containsString
 class TextSubmissionViewRenderPage : BasePage(R.id.textSubmission) {
 
     private val progressBar by OnViewWithId(R.id.progressBar)
-    private val webView by OnViewWithId(R.id.textSubmissionWebView)
+    private val webView by OnViewWithId(R.id.contentWebView)
 
     fun assertDisplaysProgressBar() {
         progressBar.assertDisplayed()

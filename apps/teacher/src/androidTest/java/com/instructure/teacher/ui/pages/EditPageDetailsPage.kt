@@ -23,12 +23,12 @@ class EditPageDetailsPage : BasePage() {
     fun runTextChecks(vararg checks : WebViewTextCheck) {
         for(check in checks) {
             if(check.repeatSecs != null) {
-                onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+                onWebView(allOf(withId(R.id.contentWebView), isDisplayed()))
                         .withElementRepeat(findElement(check.locatorType, check.locatorValue), check.repeatSecs)
                         .check(webMatches(getText(), containsString(check.textValue)))
             }
             else {
-                onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+                onWebView(allOf(withId(R.id.contentWebView), isDisplayed()))
                         .withElement(findElement(check.locatorType, check.locatorValue))
                         .check(webMatches(getText(), containsString(check.textValue)))
             }

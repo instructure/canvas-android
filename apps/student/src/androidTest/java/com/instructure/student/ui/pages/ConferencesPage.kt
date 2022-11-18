@@ -83,26 +83,26 @@ object ConferencesPage {
      */
     fun createConference(name: String, description: String) {
         // Bring up new conference screen
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.contentWebView), ViewMatchers.isDisplayed()))
                 .withElement(DriverAtoms.findElement(CLASS_NAME, "new-conference-btn"))
                 .perform(webClick())
 
         // Populate the title
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.contentWebView), ViewMatchers.isDisplayed()))
                 .withElement(DriverAtoms.findElement(ID, "web_conference_title"))
                 .perform(webScrollIntoView())
                 .perform(clearElement())
                 .perform(webKeys(name))
 
         // Populate the description
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.contentWebView), ViewMatchers.isDisplayed()))
                 .withElement(DriverAtoms.findElement(ID, "web_conference_description"))
                 .perform(webScrollIntoView())
                 .perform(clearElement())
                 .perform(webKeys(description))
 
         // Press the button that creates the conference
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.contentWebView), ViewMatchers.isDisplayed()))
                 .withElement(findUpdateButtonAtom)
                 .perform(webScrollIntoView())
                 .perform(webClick())
@@ -110,7 +110,7 @@ object ConferencesPage {
 
     /** Assert that a conference with the specified name/title is displayed on the screen. */
     fun assertConferenceTitlePresent(title: String) {
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.contentWebView), ViewMatchers.isDisplayed()))
                 .withElement(transform(findConferenceTitleAtom(title), {evaluation ->
                     evaluation.value as ElementReference}))
                 .perform(webScrollIntoView())
@@ -119,7 +119,7 @@ object ConferencesPage {
 
     /** Assert that a conference with the specified description is displayed on the screen. */
     fun assertConferenceDescriptionPresent(description: String) {
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.contentWebView), ViewMatchers.isDisplayed()))
                 .withElement(transform(findConferenceDescriptionAtom(description), { evaluation ->
                     evaluation.value as ElementReference}))
                 .perform(webScrollIntoView())

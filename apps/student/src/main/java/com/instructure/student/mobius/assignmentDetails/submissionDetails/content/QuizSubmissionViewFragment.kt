@@ -29,15 +29,16 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
 import kotlinx.android.synthetic.main.fragment_webview.*
+import kotlinx.android.synthetic.main.fragment_webview.view.*
 
 @ScreenView(SCREEN_VIEW_QUIZ_SUBMISSION_VIEW)
 class QuizSubmissionViewFragment : InternalWebviewFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         getCanvasLoading()?.setVisible() // Set visible so we can test it
-        canvasWebView?.setDarkModeSupport()
-        canvasWebView.setInitialScale(100)
-        canvasWebView.setInvisible() // Set invisible so we can test it
-        canvasWebView.webChromeClient = object : WebChromeClient() {
+        canvasWebViewWrapper.webView.setDarkModeSupport()
+        canvasWebViewWrapper.webView.setInitialScale(100)
+        canvasWebViewWrapper.setInvisible() // Set invisible so we can test it
+        canvasWebViewWrapper.webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (!isAdded) return
@@ -45,7 +46,7 @@ class QuizSubmissionViewFragment : InternalWebviewFragment() {
                 // Update visibilities
                 if (newProgress >= 100) {
                     getCanvasLoading()?.setGone()
-                    canvasWebView.setVisible()
+                    canvasWebViewWrapper.setVisible()
                 } else {
                     getCanvasLoading()?.announceForAccessibility(getString(R.string.loading))
                 }
