@@ -42,18 +42,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginActivity : BaseLoginInitActivity() {
 
-    override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationWorker.scheduleJob(this, ApiPrefs.isMasquerading)
-
-        CookieManager.getInstance().flush()
-
-        val intent = Intent(this, NavigationActivity.startActivityClass)
-        if (getIntent() != null && getIntent().extras != null) {
-            intent.putExtras(getIntent().extras!!)
-        }
-        return intent
-    }
-
     override fun beginLoginFlowIntent(): Intent {
         return LoginLandingPageActivity.createIntent(this);
     }
@@ -70,10 +58,6 @@ class LoginActivity : BaseLoginInitActivity() {
     }
 
     override val isTesting: Boolean = BuildConfig.IS_TESTING
-
-    override fun logout() {
-        StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

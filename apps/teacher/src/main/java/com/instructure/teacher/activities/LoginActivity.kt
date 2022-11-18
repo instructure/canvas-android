@@ -45,7 +45,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginActivity : BaseLoginInitActivity() {
 
     override fun beginLoginFlowIntent(): Intent = LoginLandingPageActivity.createIntent(this)
-    override fun launchApplicationMainActivityIntent(): Intent = createLaunchApplicationMainActivityIntent(this, intent?.extras)
     override fun themeColor(): Int = getColorCompat(R.color.login_teacherAppTheme)
 
     override fun finish() {
@@ -60,16 +59,6 @@ class LoginActivity : BaseLoginInitActivity() {
             startActivity(RouteValidatorActivity.createIntent(this, intent.data!!))
             finish()
         }
-    }
-
-    override fun startApp() {
-        val intent = launchApplicationMainActivityIntent()
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-    }
-
-    override fun logout() {
-        TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
 
     companion object {

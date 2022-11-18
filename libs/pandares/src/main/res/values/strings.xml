@@ -1326,4 +1326,9 @@
     <string name="createdByStudentView">Created by Student View</string>
     <string name="discussionErrorToast">Error occurred. The topic may no longer be available.</string>
     <string name="cameraPermissionPermanentlyDenied">Camera permission was permanently denied. Go to app settings to allow it.</string>
+    <string name="acceptableUsePolicyDescription">Either you\'re a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.</string>
+    <string name="acceptableUsePolicyTitle">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyButton">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyAgree">I agree to the Acceptable Use Policy.</string>
+    <string name="acceptableUsePolicySubmit">Submit</string>
 </resources>

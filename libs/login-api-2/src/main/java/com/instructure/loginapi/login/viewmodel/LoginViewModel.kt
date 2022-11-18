@@ -20,7 +20,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,11 +35,19 @@ import javax.inject.Inject
  * If we would have all the logic in MVVM we could have 3 separate ViewModels for both 3 Activities.
  */
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val featureFlagProvider: FeatureFlagProvider, private val userManager: UserManager) : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val userManager: UserManager,
+    private val oauthManager: OAuthManager,
+    private val apiPrefs: ApiPrefs) : ViewModel() {
 
     private val canvasForElementaryResult = MutableLiveData<Event<Boolean>>()
 
     private val tokenValidationResult = MutableLiveData<Event<Boolean>>()
+
+    private val shouldAcceptPolicy = MutableLiveData<Event<Boolean>>()
+
+    private val loginResultAction = MutableLiveData<Event<LoginResultAction>>()
 
     fun checkCanvasForElementaryFeature(): LiveData<Event<Boolean>> {
         viewModelScope.launch {
@@ -48,15 +58,47 @@ class LoginViewModel @Inject constructor(private val featureFlagProvider: Featur
         return canvasForElementaryResult
     }
 
-    fun checkIfTokenIsValid(): LiveData<Event<Boolean>> {
+    fun checkLogin(checkToken: Boolean, checkElementary: Boolean): LiveData<Event<LoginResultAction>> {
         viewModelScope.launch {
             try {
-                userManager.getSelfAsync(true).await().dataOrThrow
-                tokenValidationResult.postValue(Event(true))
+                if (checkToken) {
+                    val selfResult = userManager.getSelfAsync(true).await()
+                    if (selfResult.isSuccess) {
+                        val canvasForElementary = checkCanvasElementary(checkElementary)
+                        checkTermsAcceptance(canvasForElementary)
+                    } else {
+                        loginResultAction.value = Event(LoginResultAction.TokenNotValid)
+                    }
+                } else {
+                    val canvasForElementary = checkCanvasElementary(checkElementary)
+                    checkTermsAcceptance(canvasForElementary)
+                }
             } catch (e: Exception) {
-                tokenValidationResult.postValue(Event(false))
+                loginResultAction.value = Event(LoginResultAction.TokenNotValid)
             }
         }
-        return tokenValidationResult
+        return loginResultAction
     }
+
+    private suspend fun checkTermsAcceptance(canvasForElementary: Boolean) {
+        val authenticatedSession = oauthManager.getAuthenticatedSessionAsync("${apiPrefs.fullDomain}/users/self").await()
+        val requiresTermsAcceptance = authenticatedSession.dataOrNull?.requiresTermsAcceptance ?: false
+        if (requiresTermsAcceptance) {
+            loginResultAction.value = Event(LoginResultAction.ShouldAcceptPolicy(canvasForElementary))
+        } else {
+            loginResultAction.value = Event(LoginResultAction.Login(canvasForElementary))
+        }
+    }
+
+    private suspend fun checkCanvasElementary(shouldCheckElementary: Boolean): Boolean {
+        if (!shouldCheckElementary) return false
+
+        return featureFlagProvider.getCanvasForElementaryFlag()
+    }
+}
+
+sealed class LoginResultAction() {
+    object TokenNotValid : LoginResultAction()
+    data class ShouldAcceptPolicy(val elementary: Boolean) : LoginResultAction()
+    data class Login(val elementary: Boolean) : LoginResultAction()
 }
