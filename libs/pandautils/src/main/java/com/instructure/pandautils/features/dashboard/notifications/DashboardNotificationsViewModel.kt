@@ -26,7 +26,9 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.managers.AccountNotificationManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
@@ -53,10 +55,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardNotificationsViewModel @Inject constructor(
     private val resources: Resources,
-    private val courseManager: CourseManager,
-    private val groupManager: GroupManager,
     private val enrollmentManager: EnrollmentManager,
-    private val conferenceManager: ConferenceManager,
+    private val dashboardNotificationRepository: DashboardNotificationRepository,
     private val accountNotificationManager: AccountNotificationManager,
     private val oauthManager: OAuthManager,
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist,
@@ -103,8 +103,8 @@ class DashboardNotificationsViewModel @Inject constructor(
 
             val items = mutableListOf<ItemViewModel>()
 
-            val courses = courseManager.getCoursesAsync(forceNetwork).await().dataOrNull
-            val groups = groupManager.getAllGroupsAsync(forceNetwork).await().dataOrNull
+            val courses = dashboardNotificationRepository.getCourses(forceNetwork)
+            val groups = dashboardNotificationRepository.getGroups(forceNetwork)
 
             coursesMap = courses?.associateBy { it.id } ?: emptyMap()
 
@@ -126,8 +126,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     }
 
     private suspend fun getAccountNotifications(forceNetwork: Boolean): List<ItemViewModel> {
-        val accountNotifications =
-            accountNotificationManager.getAllAccountNotificationsAsync(forceNetwork).await().dataOrNull
+        val accountNotifications = dashboardNotificationRepository.getAccountNotifications(forceNetwork)
 
         return createAccountNotificationViewModels(accountNotifications)
     }
@@ -165,7 +164,7 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private suspend fun getConferences(forceNetwork: Boolean): List<ItemViewModel> {
         val blackList = conferenceDashboardBlacklist.conferenceDashboardBlacklist
-        val conferences = conferenceManager.getLiveConferencesAsync(forceNetwork).await().dataOrNull
+        val conferences = dashboardNotificationRepository.getConferences(forceNetwork)
             ?.filter { conference ->
                 // Remove blacklisted (i.e. 'dismissed') conferences
                 blackList.contains(conference.id.toString()).not()
@@ -196,12 +195,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     }
 
     private suspend fun getInvitations(forceNetwork: Boolean): List<ItemViewModel> {
-        val invites = enrollmentManager.getSelfEnrollmentsAsync(
-            null,
-            listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE),
-            forceNetwork
-        ).await()
-            .dataOrNull
+        val invites = dashboardNotificationRepository.getInvitations(forceNetwork)
             ?.filter { it.enrollmentState == EnrollmentAPI.STATE_INVITED && hasValidCourseForEnrollment(it) }
 
         return createInvitationViewModels(invites) ?: emptyList()
