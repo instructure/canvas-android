@@ -19,21 +19,16 @@ package com.instructure.teacher.presenters
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.DiscussionManager
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
-import com.instructure.pandautils.utils.isCourse
-import com.instructure.pandautils.utils.isGroup
 import com.instructure.teacher.viewinterface.DiscussionListView
 import instructure.androidblueprint.SyncExpandablePresenter
 import kotlinx.coroutines.Job
@@ -42,17 +37,13 @@ import java.util.*
 
 class DiscussionListPresenter(
         private val canvasContext: CanvasContext,
-        private val isAnnouncements: Boolean,
-        private val isRedesignEnabled: Boolean
+        private val isAnnouncements: Boolean
 ) : SyncExpandablePresenter<String, DiscussionTopicHeader, DiscussionListView>(
     String::class.java,
     DiscussionTopicHeader::class.java
 ) {
 
     private var discussionsListJob: Job? = null
-    private var featureFlagJob: Job? = null
-
-    private var discussionRedesignEnabled: Boolean = false
 
     private var discussions: List<DiscussionTopicHeader> = emptyList()
 
@@ -64,18 +55,6 @@ class DiscussionListPresenter(
         }
 
     override fun loadData(forceNetwork: Boolean) {
-        featureFlagJob = weave {
-            if (canvasContext.isCourse) {
-                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(canvasContext.id, true).await().dataOrNull
-                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && isRedesignEnabled
-            }
-
-            if (canvasContext.isGroup) {
-                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync((canvasContext as Group).courseId, true).await().dataOrNull
-                discussionRedesignEnabled = featureFlags?.contains("react_discussions_post") ?: false && isRedesignEnabled
-            }
-        }
-
         discussionsListJob = tryWeave {
             onRefreshStarted()
             discussions = awaitApi {
@@ -105,7 +84,6 @@ class DiscussionListPresenter(
 
     override fun refresh(forceNetwork: Boolean) {
         discussionsListJob?.cancel()
-        featureFlagJob?.cancel()
         onRefreshStarted()
         clearData()
         loadData(true)
@@ -114,7 +92,6 @@ class DiscussionListPresenter(
     override fun onDestroyed() {
         super.onDestroyed()
         discussionsListJob?.cancel()
-        featureFlagJob?.cancel()
     }
 
     private val mDiscussionTopicHeaderPinnedCallback = object : StatusCallback<DiscussionTopicHeader>() {
@@ -226,6 +203,6 @@ class DiscussionListPresenter(
     }
 
     fun getDetailsRoute(discussionTopicHeader: DiscussionTopicHeader): Route {
-        return DiscussionRouterFragment.makeRoute(canvasContext, discussionTopicHeader)
+        return DiscussionRouterFragment.makeRoute(canvasContext, discussionTopicHeader, isAnnouncements)
     }
 }
