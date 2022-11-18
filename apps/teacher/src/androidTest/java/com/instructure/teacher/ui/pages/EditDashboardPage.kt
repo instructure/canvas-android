@@ -60,4 +60,10 @@ class EditDashboardPage : BasePage() {
         if (someSelected) onView(withText(R.string.unselect_all)).assertDisplayed()
         else onView(withText(R.string.select_all)).assertDisplayed()
     }
+
+    fun clickOnMassSelectButton(someSelected: Boolean) {
+        assertMassSelectButtonIsDisplayed(someSelected)
+        if (someSelected) onView(withText(R.string.unselect_all) + withAncestor(R.id.selectButton)).click()
+        else onView(withText(R.string.select_all) + withAncestor(R.id.selectButton)).click()
+    }
 }
