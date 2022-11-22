@@ -36,7 +36,7 @@ import org.hamcrest.Matchers.containsString
 /**
  * An abstraction for operations on a full-screen (or mostly-full-screen) webpage.
  */
-open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
+open class CanvasWebViewPage : BasePage(R.id.contentWebView) {
 
     fun assertTitle(@StringRes title: Int) {
         onView(withAncestor(R.id.toolbar) + withText(title)).assertVisible()
@@ -49,11 +49,11 @@ open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
     fun runTextChecks(vararg checks: WebViewTextCheck) {
         for (check in checks) {
             if (check.repeatSecs != null) {
-                onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+                onWebView(allOf(withId(R.id.contentWebView), isDisplayed()))
                     .withElementRepeat(findElement(check.locatorType, check.locatorValue), check.repeatSecs)
                     .check(webMatches(getText(), containsString(check.textValue)))
             } else {
-                onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+                onWebView(allOf(withId(R.id.contentWebView), isDisplayed()))
                     .withElement(findElement(check.locatorType, check.locatorValue))
                         .check(webMatches(getText(), containsString(check.textValue)))
             }
@@ -61,13 +61,13 @@ open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
     }
 
     fun checkWebViewURL(expectedURL: String) {
-        onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+        onWebView(allOf(withId(R.id.contentWebView), isDisplayed()))
             .check(webMatches(getCurrentUrl(), containsString(expectedURL)))
     }
 
     fun acceptCookiePolicyIfNecessary() {
         try {
-            onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+            onWebView(allOf(withId(R.id.contentWebView), isDisplayed()))
                 .withElementRepeat(findElement(Locator.ID, "onetrust-accept-btn-handler"))
                 .perform(webClick())
         }
@@ -77,14 +77,14 @@ open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
     }
 
     fun pressButton(locatorType : Locator, locatorValue: String) {
-        onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+        onWebView(allOf(withId(R.id.contentWebView), isDisplayed()))
                 .withElement(findElement(locatorType, locatorValue))
                 .perform(webScrollIntoView())
                 .perform(webClick())
     }
 
     fun pressButton(locatorType : Locator, locatorValue: String, subElementType : Locator, subElementValue: String) {
-        onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+        onWebView(allOf(withId(R.id.contentWebView), isDisplayed()))
                 .withElement(findElement(locatorType, locatorValue))
                 .withContextualElement(findElement(subElementType, subElementValue))
                 .perform(webClick())

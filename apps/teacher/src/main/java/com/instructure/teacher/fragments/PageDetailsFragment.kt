@@ -103,7 +103,7 @@ class PageDetailsFragment : BasePresenterFragment<
         }
         setupToolbar()
 
-        canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        canvasWebViewWraper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(activity, url)
             }
@@ -123,7 +123,7 @@ class PageDetailsFragment : BasePresenterFragment<
             }
         }
 
-        canvasWebView.webChromeClient = (object : WebChromeClient() {
+        canvasWebViewWraper.webView.webChromeClient = (object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress >= 100) {
@@ -132,12 +132,12 @@ class PageDetailsFragment : BasePresenterFragment<
             }
         })
 
-        canvasWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        canvasWebViewWraper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, getString(R.string.utils_externalToolTitle), true))
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = !RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
         }
 
-        canvasWebView.setMediaDownloadCallback (object : CanvasWebView.MediaDownloadCallback{
+        canvasWebViewWraper.webView.setMediaDownloadCallback (object : CanvasWebView.MediaDownloadCallback{
             override fun downloadMedia(mime: String?, url: String?, filename: String?) {
                 downloadUrl = url
                 downloadFileName = filename
@@ -172,8 +172,8 @@ class PageDetailsFragment : BasePresenterFragment<
 
     override fun populatePageDetails(page: Page) {
         mPage = page
-        loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), page.body, {
-            canvasWebView.loadHtml(it, page.title, baseUrl = mPage.htmlUrl)
+        loadHtmlJob = canvasWebViewWraper.webView.loadHtmlWithIframes(requireContext(), page.body, {
+            canvasWebViewWraper.loadHtml(it, page.title, baseUrl = mPage.htmlUrl)
         }) {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCanvasContext, it)
         }

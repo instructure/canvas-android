@@ -20,19 +20,23 @@ package com.instructure.student.adapter
 import android.app.Activity
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.holders.*
+import com.instructure.student.holders.CourseHeaderViewHolder
+import com.instructure.student.holders.CourseViewHolder
+import com.instructure.student.holders.GroupHeaderViewHolder
+import com.instructure.student.holders.GroupViewHolder
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
-import com.instructure.student.util.StudentPrefs
 import org.threeten.bp.OffsetDateTime
-import java.util.*
 
 class DashboardRecyclerAdapter(
         context: Activity,
@@ -135,6 +139,7 @@ class DashboardRecyclerAdapter(
 
             // Map not null is needed because the dashboard api can return unpublished courses
             val visibleCourses = dashboardCards.mapNotNull { mCourseMap[it.id] }
+                    .filter { it.isStudent }
                     .filter { it.isCurrentEnrolment() || it.isFutureEnrolment() }
 
             // Filter groups

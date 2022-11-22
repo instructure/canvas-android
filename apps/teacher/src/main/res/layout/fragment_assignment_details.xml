@@ -455,13 +455,13 @@
                             android:visibility="gone"
                             tools:visibility="visible"/>
 
-                        <com.instructure.pandautils.views.CanvasWebView
-                            android:id="@+id/descriptionWebView"
+                        <com.instructure.pandautils.views.CanvasWebViewWrapper
+                            android:id="@+id/descriptionWebViewWrapper"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:minHeight="24dp"
-                            android:layout_marginTop="8dp"
-                            android:scrollbars="none"/>
+                            android:background="@color/backgroundLightest"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"/>
 
                     </FrameLayout>
 

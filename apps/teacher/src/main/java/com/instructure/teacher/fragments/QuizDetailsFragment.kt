@@ -331,7 +331,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         // Show progress bar while loading description
         instructionsProgressBar.announceForAccessibility(getString(R.string.loading))
         instructionsProgressBar.setVisible()
-        instructionsWebView.webChromeClient = object : WebChromeClient() {
+        instructionsWebViewWrapper.webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress >= 100) {
@@ -340,7 +340,7 @@ class QuizDetailsFragment : BasePresenterFragment<
             }
         }
 
-        instructionsWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        instructionsWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(requireActivity(), url)
             }
@@ -355,7 +355,7 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         }
 
-        instructionsWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        instructionsWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) =
                 requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
 
@@ -363,12 +363,12 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
 
         //make the WebView background transparent
-        instructionsWebView.setBackgroundColor(0)
-        instructionsWebView.setBackgroundResource(android.R.color.transparent)
+        instructionsWebViewWrapper.setBackgroundColor(0)
+        instructionsWebViewWrapper.setBackgroundResource(android.R.color.transparent)
 
         // Load instructions
-        loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), quiz.description, {
-            instructionsWebView.loadHtml(it, quiz.title, baseUrl = mQuiz.htmlUrl)
+        loadHtmlJob = instructionsWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), quiz.description, {
+            instructionsWebViewWrapper.loadHtml(it, quiz.title, baseUrl = mQuiz.htmlUrl)
         }) {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
         }

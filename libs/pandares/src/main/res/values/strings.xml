@@ -1332,4 +1332,6 @@
     <string name="subscribeToCalendar">Subscribe to Calendar Feed</string>
     <string name="subscribeToCalendarMessage">You can sync your Canvas calendar to your Google Calendar account by clicking the Subscribe button in this dialog. Then, you’ll need to go to the Google Calendar app on your device and enable sync in the settings for the new calendar.</string>
     <string name="subscribeButton">Subscribe</string>
+    <string name="switchToLightMode">Switch to Light Mode</string>
+    <string name="switchToDarkMode">Switch to Dark Mode</string>
 </resources>
