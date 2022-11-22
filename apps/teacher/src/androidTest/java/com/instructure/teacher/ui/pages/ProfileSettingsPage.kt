@@ -18,7 +18,6 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -31,7 +30,7 @@ open class ProfileSettingsPage : BasePage(R.id.profileSettingsPage) {
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val profileBanner by OnViewWithId(R.id.profileBanner)
     private val usersAvatar by OnViewWithId(R.id.usersAvatar)
-    private val usersName by WaitForViewWithId(R.id.usersName)
+    private val usersName by OnViewWithId(R.id.usersName)
     private val usersEmail by OnViewWithId(R.id.usersEmail)
     private val usersBio by OnViewWithId(R.id.usersBio)
 
