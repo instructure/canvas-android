@@ -29,13 +29,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AcceptableUsePolicyViewModel @Inject constructor(private val userManager: UserManager) : ViewModel() {
 
-    val policy: LiveData<String>
-        get() = _policy
-    private val _policy = MutableLiveData("")
-
-    val checked: LiveData<Boolean>
-        get() = _checked
-    private val _checked = MutableLiveData(false)
+    val data: LiveData<AcceptableUsePolicyViewData>
+        get() = _data
+    private val _data = MutableLiveData(AcceptableUsePolicyViewData(""))
 
     val events: LiveData<Event<AcceptableUsePolicyAction>>
         get() = _events
@@ -44,33 +40,37 @@ class AcceptableUsePolicyViewModel @Inject constructor(private val userManager: 
     init {
         viewModelScope.launch {
             try {
-                val termsOfService = userManager.getTermsOfServiceAsync(true).await().dataOrThrow.content ?: ""
-                _policy.value = termsOfService
+                val termsOfService =
+                    userManager.getTermsOfServiceAsync(true).await().dataOrThrow.content ?: ""
+                _data.value = _data.value?.copy(policy = termsOfService)
             } catch (e: Exception) {
-
             }
         }
     }
 
     fun checkedChanged(checked: Boolean) {
-        _checked.value = checked
+        _data.value = _data.value?.copy(checked = checked)
     }
 
     fun openPolicy() {
-        _events.value = Event(AcceptableUsePolicyAction.OpenPolicy(_policy.value ?: ""))
+        _events.value = Event(AcceptableUsePolicyAction.OpenPolicy(_data.value?.policy ?: ""))
     }
 
     fun acceptPolicy() {
+        _data.value = _data.value?.copy(loading = true)
         viewModelScope.launch {
-            val result = userManager.acceptUserTermsAsync().await()
-            if (result.isSuccess) {
-                _events.value = Event(AcceptableUsePolicyAction.PolicyAccepted)
+            try {
+                val result = userManager.acceptUserTermsAsync().await()
+                _data.value = _data.value?.copy(loading = false)
+                if (result.isSuccess) {
+                    _events.value = Event(AcceptableUsePolicyAction.PolicyAccepted)
+                } else {
+                    _events.value = Event(AcceptableUsePolicyAction.AcceptFailure)
+                }
+            } catch (e: Exception) {
+                _data.value = _data.value?.copy(loading = false)
+                _events.value = Event(AcceptableUsePolicyAction.AcceptFailure)
             }
         }
     }
-}
-
-sealed class AcceptableUsePolicyAction {
-    data class OpenPolicy(val content: String): AcceptableUsePolicyAction()
-    object PolicyAccepted: AcceptableUsePolicyAction()
 }

@@ -1339,4 +1339,5 @@
     <string name="acceptableUsePolicyButton">Acceptable Use Policy</string>
     <string name="acceptableUsePolicyAgree">I agree to the Acceptable Use Policy.</string>
     <string name="acceptableUsePolicySubmit">Submit</string>
+    <string name="acceptFail">Failed to submit terms acceptance.</string>
 </resources>

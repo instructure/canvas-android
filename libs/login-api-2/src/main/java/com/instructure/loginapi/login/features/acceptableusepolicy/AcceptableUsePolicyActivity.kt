@@ -20,12 +20,14 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.databinding.ActivityAcceptableUsePolicyBinding
 import com.instructure.pandautils.utils.ToolbarColorizeHelper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsCloseButton
+import com.instructure.pandautils.utils.withRequireNetwork
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,10 +39,13 @@ class AcceptableUsePolicyActivity : AppCompatActivity() {
     @Inject
     lateinit var router: AcceptableUsePolicyRouter
 
+    private lateinit var binding: ActivityAcceptableUsePolicyBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityAcceptableUsePolicyBinding.inflate(layoutInflater)
+        binding = ActivityAcceptableUsePolicyBinding.inflate(layoutInflater)
         binding.viewModel = viewModel
+        binding.lifecycleOwner = this
         setContentView(binding.root)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -50,7 +55,7 @@ class AcceptableUsePolicyActivity : AppCompatActivity() {
             finish()
         }
         toolbar.setMenu(R.menu.menu_acceptable_use_policy, {
-            if (it.itemId == R.id.submit) viewModel.acceptPolicy()
+            if (it.itemId == R.id.submit) withRequireNetwork { viewModel.acceptPolicy() }
         })
         ViewStyler.themeToolbarLight(this, toolbar)
         ViewStyler.themeSwitch(this, binding.acceptSwitch, getColor(R.color.textInfo))
@@ -62,9 +67,9 @@ class AcceptableUsePolicyActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.checked.observe(this, { checked ->
+        viewModel.data.observe(this, { data ->
             val submitItem = toolbar.menu.getItem(0)
-            submitItem.isEnabled = checked
+            submitItem.isEnabled = data.checked
         })
     }
 
@@ -75,6 +80,7 @@ class AcceptableUsePolicyActivity : AppCompatActivity() {
                 router.startApp()
                 finish()
             }
+            AcceptableUsePolicyAction.AcceptFailure -> Snackbar.make(binding.root, R.string.acceptFail, Snackbar.LENGTH_SHORT).show()
         }
     }
 
