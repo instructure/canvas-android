@@ -18,6 +18,10 @@ package com.instructure.student.ui.e2e
 
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.intent.matcher.IntentMatchers.toPackage
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -27,6 +31,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
+import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -36,13 +41,12 @@ import org.junit.Test
 
 @HiltAndroidTest
 class SettingsE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
+
+  //  @get:Rule
+  //  val intentsTestRule = IntentsTestRule(SettingsActivity::class.java)
 
     @E2E
     @Test
@@ -53,6 +57,7 @@ class SettingsE2ETest : StudentTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
 
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -257,5 +262,38 @@ class SettingsE2ETest : StudentTest() {
             remoteConfigSettingsPage.verifyRemoteConfigParamValue(param, initialValues.get(param.rc_name)!!)
         }
 
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testSubscribeToCalendar() {
+
+        Log.d(PREPARATION_TAG, "Initialize Intents.")
+        Intents.init()
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
+        dashboardPage.launchSettingsPage()
+        settingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on 'Subscribe to Calendar'.")
+        settingsPage.openSubscribeToCalendar()
+
+        Log.d(STEP_TAG, "Click on the 'SUBSCRIBE' button of the pop-up dialog.")
+        settingsPage.clickOnSubscribe()
+
+        Log.d(STEP_TAG, "Assert that the proper intents has launched, so the NavigationActivity has been launched with an Intent from SettingsActivity.")
+        intended(toPackage("org.chromium.webview_shell"))
+        intended(hasComponent(NavigationActivity::class.java.name))
+
+        Intents.release()
     }
 }
