@@ -136,7 +136,7 @@ class EditAssignmentDetailsPage : BasePage() {
     }
 
     fun clickOnDisplayGradeAsSpinner() {
-        onView(withId(R.id.displayGradeAsSpinner)).click()
+        onView(withId(R.id.displayGradeAsSpinner)).scrollTo().click()
     }
 
     fun selectGradeType(gradeType: String) {
