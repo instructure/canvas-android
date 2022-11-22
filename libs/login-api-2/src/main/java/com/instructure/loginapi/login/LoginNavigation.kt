@@ -22,6 +22,8 @@ import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUse
 import com.instructure.loginapi.login.viewmodel.LoginResultAction
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 
+private const val CANVAS_FOR_ELEMENTARY = "canvas_for_elementary"
+
 abstract class LoginNavigation(
     private val activity: FragmentActivity
 ) {
@@ -45,7 +47,7 @@ abstract class LoginNavigation(
     private fun startApp(elementary: Boolean) {
         val intent = initMainActivityIntent()
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        intent.putExtra("canvas_for_elementary", elementary)
+        intent.putExtra(CANVAS_FOR_ELEMENTARY, elementary)
         activity.startActivity(intent)
         activity.finish()
     }
@@ -54,8 +56,7 @@ abstract class LoginNavigation(
 
     private fun showPolicy(elementary: Boolean) {
         val intent = Intent(activity, AcceptableUsePolicyActivity::class.java)
-        intent.putExtra("canvas_for_elementary", elementary)
+        intent.putExtra(CANVAS_FOR_ELEMENTARY, elementary)
         activity.startActivity(intent)
-        activity.finish() // Might need to be changed
     }
 }
