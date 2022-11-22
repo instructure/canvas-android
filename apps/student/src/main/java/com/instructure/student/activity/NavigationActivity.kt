@@ -23,7 +23,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
@@ -42,11 +41,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
-import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.CourseManager
@@ -60,7 +57,6 @@ import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
-import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
@@ -419,23 +415,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (user != null) {
             navigationDrawerUserName.text = Pronouns.span(user.shortName, user.pronouns)
             navigationDrawerUserEmail.text = user.primaryEmail
-
-            if(ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
-                val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = ContextCompat.getColor(context, R.color.textDark)
-                val drawable = TextDrawable.builder()
-                        .beginConfig()
-                        .height(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                        .width(context.resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                        .toUpperCase()
-                        .useFont(Typeface.DEFAULT_BOLD)
-                        .textColor(color)
-                        .endConfig()
-                        .buildRound(initials, Color.WHITE)
-                navigationDrawerProfileImage.setImageDrawable(drawable)
-            } else {
-                Glide.with(context).load(user.avatarUrl).into(navigationDrawerProfileImage)
-            }
+            ProfileUtils.loadAvatarForUser(navigationDrawerProfileImage, user.shortName, user.avatarUrl)
         }
     }
 
@@ -787,16 +767,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     private fun addFragment(fragment: Fragment?, route: Route) {
-        if (RouteType.DIALOG == route.routeType && fragment is DialogFragment && isTablet) {
-            val ft = supportFragmentManager.beginTransaction()
-            ft.addToBackStack(fragment::class.java.name)
-            fragment.show(ft, fragment::class.java.name)
+        if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
+            selectBottomNavFragment(fragment::class.java)
         } else {
-            if (fragment != null && fragment::class.java.name in getBottomNavFragmentNames() && isBottomNavFragment(currentFragment)) {
-                selectBottomNavFragment(fragment::class.java)
-            } else {
-                addFullScreenFragment(fragment, route.removePreviousScreen)
-            }
+            addFullScreenFragment(fragment, route.removePreviousScreen)
         }
     }
 
@@ -1039,6 +1013,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun updateUnreadCount(unreadCount: Int) {
         updateBottomBarBadge(R.id.bottomNavigationInbox, unreadCount, R.plurals.a11y_inboxUnreadCount)
+    }
+
+    override fun updateNotificationCount(notificationCount: Int) {
+        updateBottomBarBadge(R.id.bottomNavigationNotifications, notificationCount, R.plurals.a11y_notificationsUnreadCount)
     }
 
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) {

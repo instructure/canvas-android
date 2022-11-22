@@ -111,14 +111,13 @@ object MediaUploadUtils {
             takeNewPhotoBecausePermissionsAlreadyGranted(fragment, activity)
         } else {
             val permissions = PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA)
-            fragment?.requestPermissions(permissions, REQUEST_CODE_PERMISSIONS_TAKE_PHOTO)
-                ?: activity.requestPermissions(permissions.toSet()) { results ->
-                    if (results.isNotEmpty() && results.all { it.value }) {
-                        takeNewPhotoBecausePermissionsAlreadyGranted(fragment, activity)
-                    } else {
-                        Toast.makeText(activity, R.string.permissionDenied, Toast.LENGTH_LONG).show()
-                    }
+            (fragment?.activity ?: activity).requestPermissions(permissions.toSet()) { results ->
+                if (results.isNotEmpty() && results.all { it.value }) {
+                    takeNewPhotoBecausePermissionsAlreadyGranted(fragment, activity)
+                } else {
+                    Toast.makeText(activity, R.string.permissionDenied, Toast.LENGTH_LONG).show()
                 }
+            }
         }
     }
 

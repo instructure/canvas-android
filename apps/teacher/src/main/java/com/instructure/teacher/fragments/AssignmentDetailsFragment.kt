@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -30,6 +29,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -55,7 +55,6 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
@@ -100,7 +99,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         swipeRefreshLayout.isRefreshing = false
         setupViews(assignment)
         setupListeners(assignment)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     override fun getPresenterFactory() = AssignmentDetailPresenterFactory(mAssignment)
@@ -110,7 +109,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -118,7 +117,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         if(!isTablet) {
             toolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews(assignment: Assignment) {
@@ -148,6 +147,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         configureSubmissionTypes(assignment)
         configureDescription(assignment)
         configureSubmissionDonuts(assignment)
+        configureViewDiscussionButton(assignment)
     }
 
     // region Configure Assignment
@@ -253,7 +253,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         noDescriptionTextView.setGone()
         descriptionProgressBar.announceForAccessibility(getString(R.string.loading))
         descriptionProgressBar.setVisible()
-        descriptionWebView.setWebChromeClient(object : WebChromeClient() {
+        descriptionWebViewWrapper.webView.setWebChromeClient(object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress >= 100) {
@@ -262,7 +262,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             }
         })
 
-        descriptionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        descriptionWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(requireActivity(), url)
             }
@@ -276,29 +276,17 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             override fun canRouteInternallyDelegate(url: String): Boolean = RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
         }
 
-        descriptionWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        descriptionWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
-        //make the WebView background transparent
-        descriptionWebView.setBackgroundColor(0)
-        descriptionWebView.setBackgroundResource(android.R.color.transparent)
-
         // Load description
-        loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(),
-                ::loadAssignmentHTML, {
-            val args = LtiLaunchFragment.makeBundle(
-                    mCourse,
-                    URLDecoder.decode(it, "utf-8"),
-                    requireContext().getString(R.string.utils_externalToolTitle),
-                    true)
-            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
-        }, name)
-    }
-
-    private fun loadAssignmentHTML(html: String, contentDescription: String?) {
-        descriptionWebView.loadHtml(html, contentDescription, baseUrl = mAssignment.htmlUrl)
+        loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
+            descriptionWebViewWrapper.loadHtml(it, name, baseUrl = mAssignment.htmlUrl)
+        }) {
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCourse, it)
+        }
     }
 
     private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(assignment) {
@@ -311,6 +299,16 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             notSubmittedWrapper.setGone()
             ungradedWrapper.setGone()
             assigneesWithoutGradesTextView.setVisible()
+        }
+    }
+
+    private fun configureViewDiscussionButton(assignment: Assignment) {
+        if (assignment.discussionTopicHeader != null) {
+            viewDiscussionButton.setBackgroundColor(ThemePrefs.buttonColor)
+            viewDiscussionButton.setTextColor(ThemePrefs.buttonTextColor)
+            viewDiscussionButton.setVisible()
+        } else {
+            viewDiscussionButton.setGone()
         }
     }
     //endregion
@@ -359,6 +357,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         notSubmittedWrapper.setOnClickListener {}
         noDescriptionTextView.setOnClickListener {}
         assigneesWithoutGradesTextView.setOnClickListener {}
+        viewDiscussionButton.setOnClickListener {}
     }
 
     private fun setupListeners(assignment: Assignment) {
@@ -385,6 +384,13 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         assigneesWithoutGradesTextView.setOnClickListener {
             submissionsLayout.performClick()
         }
+
+        assignment.discussionTopicHeader?.let { discussionTopicHeader ->
+            viewDiscussionButton.setOnClickListener {
+                RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(mCourse, discussionTopicHeader))
+            }
+        } ?: viewDiscussionButton.setGone()
+
     }
 
     private fun openEditPage(assignment: Assignment) {

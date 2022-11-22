@@ -19,21 +19,15 @@ package com.instructure.pandautils.features.dashboard.notifications
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.await
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.AccountNotificationManager
-import com.instructure.canvasapi2.managers.ConferenceManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.models.AccountNotification
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.BR
@@ -41,6 +35,10 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
+import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
+import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_ASSIGNMENT_NAME
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_TITLE
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -48,7 +46,6 @@ import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.toHexString
 import org.threeten.bp.OffsetDateTime
 import java.util.*
 import javax.inject.Inject
@@ -63,7 +60,9 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val accountNotificationManager: AccountNotificationManager,
     private val oauthManager: OAuthManager,
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val workManager: WorkManager,
+    private val fileUploadPreferences: FileUploadPreferences
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -80,6 +79,24 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private var coursesMap: Map<Long, Course> = emptyMap()
     private var groupMap: Map<Long, Group> = emptyMap()
+
+    private val runningWorkersObserver = Observer<List<UUID>> {
+        viewModelScope.launch {
+            _data.value?.uploadItems?.forEach { it.clear() }
+            _data.value?.uploadItems = getUploads(it).filterNotNull()
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+        }
+    }
+
+    init {
+        fileUploadPreferences.getRunningWorkersLiveData().observeForever(runningWorkersObserver)
+    }
+
+    override fun onCleared() {
+        _data.value?.uploadItems?.forEach { it.clear() }
+        fileUploadPreferences.getRunningWorkersLiveData().removeObserver(runningWorkersObserver)
+        super.onCleared()
+    }
 
     fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
@@ -102,7 +119,9 @@ class DashboardNotificationsViewModel @Inject constructor(
             val conferenceViewModels = getConferences(forceNetwork)
             items.addAll(conferenceViewModels)
 
-            _data.postValue(DashboardNotificationsViewData(items))
+            val uploadViewModels = getUploads(fileUploadPreferences.getRunningWorkerIds()).filterNotNull()
+
+            _data.postValue(DashboardNotificationsViewData(items, uploadViewModels))
         }
     }
 
@@ -135,7 +154,7 @@ class DashboardNotificationsViewModel @Inject constructor(
                     id = it.id,
                     subject = it.subject,
                     message = it.message,
-                    color = "#${color.toHexString()}",
+                    color = color,
                     icon = icon
                 ),
                 this@DashboardNotificationsViewModel::dismissAnnouncement,
@@ -201,6 +220,20 @@ class DashboardNotificationsViewModel @Inject constructor(
                 ),
                 this@DashboardNotificationsViewModel::handleInvitation
             )
+        }
+    }
+
+    private suspend fun getUploads(runningWorkerIds: List<UUID>) = runningWorkerIds.map { uuid ->
+        val workInfo: WorkInfo? = workManager.getWorkInfoById(uuid).await()
+        workInfo?.let {
+            val uploadViewData = UploadViewData(
+                it.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
+                it.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
+                resources.getColor(R.color.backgroundInfo),
+            )
+            UploadItemViewModel(uuid, workManager, uploadViewData) { uuid ->
+                _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
+            }
         }
     }
 

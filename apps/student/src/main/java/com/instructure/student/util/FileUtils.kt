@@ -84,6 +84,7 @@ object FileUtils {
             pspdfActivityConfiguration = PdfActivityConfiguration.Builder(context)
                 .scrollDirection(PageScrollDirection.HORIZONTAL)
                 .showThumbnailGrid()
+                .setDocumentInfoViewSeparated(false)
                 .setThumbnailBarMode(ThumbnailBarMode.THUMBNAIL_BAR_MODE_PINNED)
                 .enableDocumentEditor()
                 .enabledAnnotationTools(annotationCreationList)

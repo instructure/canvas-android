@@ -23,6 +23,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -31,7 +33,10 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.RESULT_ATTACHMENTS
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
@@ -48,9 +53,11 @@ import kotlinx.android.synthetic.main.fragment_add_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
+import kotlin.collections.ArrayList
 
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
-class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView {
+class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView, FileUploadDialogParent {
 
     private var currentMessage: Message? by NullableParcelableArg(null, Const.MESSAGE_TO_USER)
     private var selectedCourse: CanvasContext? = null
@@ -207,7 +214,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             courseWasSelected()
         }
 
-        ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
+        ColorUtils.colorIt(ThemePrefs.textButtonColor, contactsImageButton)
 
         // Don't show the contacts button if there is no selected course and there is no context_code from the conversation (shouldn't happen, but it does)
         if (selectedCourse == null && presenter.course != null && presenter.course!!.id == 0L) {
@@ -451,6 +458,19 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             EventBus.getDefault().removeStickyEvent(it)
             presenter.addAttachments(it.attachments)
             refreshAttachments()
+        }
+    }
+
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(viewLifecycleOwner) {
+            if (it.state == WorkInfo.State.SUCCEEDED) {
+                it.outputData.getStringArray(RESULT_ATTACHMENTS)
+                    ?.map { it.fromJson<Attachment>() }
+                    ?.let {
+                        presenter.addAttachments(it)
+                        refreshAttachments()
+                    } ?: toast(R.string.errorUploadingFile)
+            }
         }
     }
 

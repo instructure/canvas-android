@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.webkit.WebChromeClient
@@ -56,7 +55,6 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URL
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
@@ -112,7 +110,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         swipeRefreshLayout.isRefreshing = false
         setupViews(quiz)
         setupListeners(quiz)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
 
         fullDateDetailsButton.setVisible(quiz._assignment != null)
     }
@@ -120,7 +118,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     private fun setupToolbar() {
         toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
             toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -128,7 +126,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         if (!isTablet) {
             toolbar.subtitle = presenter.mCourse.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun setupViews(quiz: Quiz) = with(quiz) {
@@ -333,7 +331,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         // Show progress bar while loading description
         instructionsProgressBar.announceForAccessibility(getString(R.string.loading))
         instructionsProgressBar.setVisible()
-        instructionsWebView.webChromeClient = object : WebChromeClient() {
+        instructionsWebViewWrapper.webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress >= 100) {
@@ -342,7 +340,7 @@ class QuizDetailsFragment : BasePresenterFragment<
             }
         }
 
-        instructionsWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        instructionsWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(requireActivity(), url)
             }
@@ -357,27 +355,23 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         }
 
-        instructionsWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-            override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
+        instructionsWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+            override fun launchInternalWebViewFragment(url: String) =
+                requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
         //make the WebView background transparent
-        instructionsWebView.setBackgroundColor(0)
-        instructionsWebView.setBackgroundResource(android.R.color.transparent)
+        instructionsWebViewWrapper.setBackgroundColor(0)
+        instructionsWebViewWrapper.setBackgroundResource(android.R.color.transparent)
 
         // Load instructions
-        loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                quiz.description.orEmpty(), ::loadQuizHTML, {
-            val args = LtiLaunchFragment.makeBundle(
-                    canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-        }, quiz.title)
-    }
-
-    private fun loadQuizHTML(html: String, contentDescription: String?) {
-        instructionsWebView.loadHtml(html, contentDescription, baseUrl = mQuiz.htmlUrl)
+        loadHtmlJob = instructionsWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), quiz.description, {
+            instructionsWebViewWrapper.loadHtml(it, quiz.title, baseUrl = mQuiz.htmlUrl)
+        }) {
+            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+        }
     }
 
     private fun setupListeners(quiz: Quiz) {

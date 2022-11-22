@@ -32,7 +32,7 @@ class CourseHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     }
 
     fun bind(callback: CourseAdapterToFragmentCallback) = with(itemView) {
-        editDashboardTextView.setTextColor(ThemePrefs.buttonColor)
+        editDashboardTextView.setTextColor(ThemePrefs.textButtonColor)
         editDashboardTextView.onClick { callback.onSeeAllCourses() }
     }
 

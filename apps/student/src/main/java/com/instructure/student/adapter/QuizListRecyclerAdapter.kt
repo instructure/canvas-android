@@ -32,7 +32,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.holders.ExpandableViewHolder
@@ -120,7 +120,7 @@ class QuizListRecyclerAdapter(
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, s: String, quiz: Quiz) {
-        (holder as? QuizViewHolder)?.bind(quiz, adapterToFragmentCallback, context, canvasContext.color)
+        (holder as? QuizViewHolder)?.bind(quiz, adapterToFragmentCallback, context, canvasContext.textAndIconColor)
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, s: String, isExpanded: Boolean) {

@@ -338,9 +338,9 @@ open class GradesListRecyclerAdapter(
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, assignmentGroup: AssignmentGroup, assignment: Assignment) {
         val isEdit = adapterToGradesCallback?.isEdit ?: false
         if (isEdit) {
-            (holder as GradeViewHolder).bind(context, ColorKeeper.getOrGenerateColor(canvasContext), assignmentsHash[assignment.id]!!, adapterToGradesCallback!!.isEdit, whatIfDialogCallback!!, adapterToFragmentCallback!!, selectedItemCallback!!)
+            (holder as GradeViewHolder).bind(context, canvasContext, assignmentsHash[assignment.id]!!, adapterToGradesCallback!!.isEdit, whatIfDialogCallback!!, adapterToFragmentCallback!!, selectedItemCallback!!)
         } else {
-            (holder as GradeViewHolder).bind(context, ColorKeeper.getOrGenerateColor(canvasContext), assignment, adapterToGradesCallback!!.isEdit, whatIfDialogCallback!!, adapterToFragmentCallback!!, selectedItemCallback!!)
+            (holder as GradeViewHolder).bind(context, canvasContext, assignment, adapterToGradesCallback!!.isEdit, whatIfDialogCallback!!, adapterToFragmentCallback!!, selectedItemCallback!!)
         }
     }
 

@@ -27,9 +27,10 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.interactions.router.Route
 import com.instructure.pandarecycler.PaginatedScrollListener
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ModuleListEvent
 import com.instructure.teacher.fragments.*
@@ -106,8 +107,7 @@ class ModuleListView(
                 Route(null, AssignmentDetailsFragment::class.java, canvasContext, args)
             }
             ModuleItem.Type.Discussion -> {
-                val args = DiscussionsDetailsFragment.makeBundle(item.contentId)
-                Route(null, DiscussionsDetailsFragment::class.java, canvasContext, args)
+                DiscussionRouterFragment.makeRoute(canvasContext, item.contentId)
             }
             ModuleItem.Type.Page -> {
                 val args = PageDetailsFragment.makeBundle(item.pageUrl!!)
@@ -148,7 +148,7 @@ class ModuleListView(
             file = file,
             usageRights = requiresUsageRights,
             licenses = licenses,
-            courseColor = canvasContext.color,
+            courseColor = canvasContext.backgroundColor,
             canvasContext = canvasContext,
             iconRes = R.drawable.ic_document
         )
@@ -160,7 +160,7 @@ class ModuleListView(
             thumbnailUrl = file.thumbnailUrl,
             displayName = file.displayName,
             iconRes = R.drawable.ic_document,
-            toolbarColor = canvasContext.color,
+            toolbarColor = canvasContext.backgroundColor,
             editableFile = editableFile
         )
     }

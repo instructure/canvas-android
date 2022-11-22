@@ -16,8 +16,12 @@
 
 package com.instructure.pandautils.features.file.upload
 
-import android.os.Bundle
+import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
+import java.util.UUID
 
 data class FileUploadDialogViewData(
         val allowedExtensions: String?,
@@ -30,11 +34,20 @@ data class FileItemViewData(
         val fullPath: String
 )
 
+data class FileUploadData(
+        val uri: Uri,
+        val fileSubmitObject: FileSubmitObject
+)
+
 sealed class FileUploadAction {
     object TakePhoto : FileUploadAction()
-    object PickPhoto : FileUploadAction()
+    object PickImage : FileUploadAction()
     object PickFile : FileUploadAction()
-    data class ShowToast(val toast: String): FileUploadAction()
-    data class StartUpload(val bundle: Bundle, val action: String): FileUploadAction()
+    object PickMultipleImage : FileUploadAction()
+    object PickMultipleFile : FileUploadAction()
+    object UploadStarted : FileUploadAction()
+    data class ShowToast(val toast: String) : FileUploadAction()
+    data class AttachmentSelectedAction(val event: Int, val attachment: FileSubmitObject?) : FileUploadAction()
+    data class UploadStartedAction(val id: UUID, val liveData: LiveData<WorkInfo>, val selectedUris: List<String>) : FileUploadAction()
 }
 

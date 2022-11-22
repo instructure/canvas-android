@@ -98,7 +98,7 @@ class CreateOrEditPageDetailsFragment :
             setIcon(0)
             setTitle(R.string.save)
         }
-        mSaveButtonTextView?.setTextColor(ThemePrefs.buttonColor)
+        mSaveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun shouldAllowExit() : Boolean {
@@ -166,14 +166,14 @@ class CreateOrEditPageDetailsFragment :
             },
                     getString(R.string.pageDetails),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor
             )
         } else {
             pageRCEView.setHtml(
                     presenter.page.body,
                     getString(R.string.pageDetails),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor
             )
         }
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality

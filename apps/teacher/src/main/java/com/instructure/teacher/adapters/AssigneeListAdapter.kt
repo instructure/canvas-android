@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.teacher.R
 import com.instructure.teacher.holders.AssigneeItemViewHolder
 import com.instructure.teacher.holders.AssigneeTypeViewHolder
 import com.instructure.teacher.holders.AssigneeViewHolder
@@ -36,7 +37,7 @@ class AssigneeListAdapter(context: Context, val presenter: AssigneeListPresenter
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: AssigneeCategory, item: CanvasComparable<*>) {
-        (holder as? AssigneeItemViewHolder)?.bind(item, presenter, ThemePrefs.brandColor)
+        (holder as? AssigneeItemViewHolder)?.bind(item, presenter, context?.getColor(R.color.backgroundInfo) ?: ThemePrefs.brandColor)
     }
 
     override fun itemLayoutResId(viewType: Int)

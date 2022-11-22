@@ -241,6 +241,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     @Suppress("unused")
     @Subscribe
     fun onTabSelected(event: TabSelectedEvent) {
+        submissionContentPager.hideKeyboard()
         adapter.initialTabIdx = event.selectedTabIdx
     }
 

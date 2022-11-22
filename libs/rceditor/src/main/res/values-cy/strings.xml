@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">Sgrolio i weld yr holl adnoddau golygu</string>
     <string name="rce_emptyUrlError">Does dim modd i’r URL fod yn wag</string>
     <string name="rce_httpNotAllowed">Dim ond URL https sy’n cael eu derbyn</string>
+    <string name="rce_dialogAltText">Ychwanegu testun amgen ar gyfer darllenwyr sgrin</string>
 </resources>

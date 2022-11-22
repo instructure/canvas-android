@@ -25,7 +25,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.Spinner
 import androidx.annotation.ColorInt
@@ -44,6 +43,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.CanvasWebViewWrapper
 import com.instructure.pandautils.views.EmptyView
 import java.net.URLDecoder
 
@@ -108,10 +108,14 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
 }
 
 @BindingAdapter(value = ["htmlContent", "htmlTitle", "onLtiButtonPressed"], requireAll = false)
-fun bindHtmlContent(webView: CanvasWebView, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
-    webView.loadHtml(html ?: "", title ?: "")
+fun bindHtmlContent(webViewWrapper: CanvasWebViewWrapper, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
+    webViewWrapper.loadHtml(html.orEmpty(), title.orEmpty())
     if (onLtiButtonPressed != null) {
-        webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "accessor")
+        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "accessor")
+    }
+
+    if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
+        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), "accessor")
     }
 }
 
@@ -129,7 +133,7 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
 }
 
 @BindingAdapter(value = ["imageUrl", "overlayColor"], requireAll = false)
-fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: Int?) {
+fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, @ColorInt overlayColor: Int?) {
     if (overlayColor != null) {
         imageView.post {
             imageView.setCourseImage(imageUrl, overlayColor, true)
@@ -162,7 +166,9 @@ fun bindConstraintWidthPercentage(view: View, percentage: Float) {
 
 @BindingAdapter("imageRes")
 fun bindImageResource(imageView: ImageView, @DrawableRes imageRes: Int) {
-    imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
+    if (imageRes != 0) {
+        imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, imageRes))
+    }
 }
 
 @BindingAdapter("bitmap")

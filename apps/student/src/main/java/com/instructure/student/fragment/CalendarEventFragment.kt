@@ -48,7 +48,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Response
-import java.net.URLDecoder
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
@@ -91,12 +90,12 @@ class CalendarEventFragment : ParentFragment() {
 
     override fun onResume() {
         super.onResume()
-        calendarEventWebView?.onResume()
+        calendarEventWebViewWrapper?.webView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        calendarEventWebView?.onPause()
+        calendarEventWebViewWrapper?.webView?.onPause()
     }
 
     override fun onStop() {
@@ -125,7 +124,7 @@ class CalendarEventFragment : ParentFragment() {
     //endregion
 
     //region Parent Fragment Overrides
-    override fun handleBackPressed(): Boolean = calendarEventWebView?.handleGoBack()
+    override fun handleBackPressed(): Boolean = calendarEventWebViewWrapper?.webView?.handleGoBack()
             ?: super.handleBackPressed()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -148,9 +147,9 @@ class CalendarEventFragment : ParentFragment() {
     fun onBackStackChangedEvent(event: OnBackStackChangedEvent) {
         event.get { clazz ->
             if (clazz != null && clazz.isAssignableFrom(CalendarEventFragment::class.java)) {
-                calendarEventWebView?.onResume()
+                calendarEventWebViewWrapper?.webView?.onResume()
             } else {
-                calendarEventWebView?.onPause()
+                calendarEventWebViewWrapper?.webView?.onPause()
             }
         }
     }
@@ -158,7 +157,7 @@ class CalendarEventFragment : ParentFragment() {
 
     //region Setup
     private fun initViews() {
-        with (calendarEventWebView) {
+        with (calendarEventWebViewWrapper.webView) {
             addVideoClient(requireActivity())
             canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
                 override fun launchInternalWebViewFragment(url: String) = RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(canvasContext, url, false))
@@ -187,7 +186,7 @@ class CalendarEventFragment : ParentFragment() {
             val content: String? = it.description
 
             calendarView.setVisible()
-            calendarEventWebView.setGone()
+            calendarEventWebViewWrapper.setGone()
 
             if (it.isAllDay) {
                 date1.text = getString(R.string.allDayEvent)
@@ -224,20 +223,19 @@ class CalendarEventFragment : ParentFragment() {
             }
 
             if (content?.isNotEmpty() == true) {
-                loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, content,
-                        ::loadCalendarHtml, { url ->
-                    val args = LtiLaunchFragment.makeLTIBundle(
-                            URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-                }, it.title)
+                loadHtmlJob = calendarEventWebViewWrapper?.webView?.loadHtmlWithIframes(requireContext(), content, { html ->
+                    loadCalendarHtml(html, it.title)
+                }) { url ->
+                    LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, url)
+                }
             }
         }
     }
 
     private fun loadCalendarHtml(html: String, contentDescription: String?) {
-        calendarEventWebView.setVisible()
-        calendarEventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-        calendarEventWebView.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
+        calendarEventWebViewWrapper.setVisible()
+        calendarEventWebViewWrapper.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+        calendarEventWebViewWrapper.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
     }
 
     private fun setUpCallback() {
@@ -288,8 +286,8 @@ class CalendarEventFragment : ParentFragment() {
             }
             .create()
         dialog.setOnShowListener {
-            dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-            dialog.getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+            dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            dialog.getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
         }
         dialog.show()
     }

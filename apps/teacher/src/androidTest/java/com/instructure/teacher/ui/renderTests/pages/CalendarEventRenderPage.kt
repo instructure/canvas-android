@@ -34,7 +34,7 @@ class CalendarEventRenderPage : BasePage(R.id.fragmentCalendarEvent) {
     private val locationIcon by OnViewWithId(R.id.locationIcon)
     private val locationTitle by OnViewWithId(R.id.locationTitle)
     private val locationSubtitle by OnViewWithId(R.id.locationSubtitle)
-    private val webView by WaitForViewWithId(R.id.calendarEventWebView)
+    private val webView by WaitForViewWithId(R.id.contentWebView)
 
     fun assertDisplaysToolbarText(text: String) {
         findChildTextInToolbar(text).assertDisplayed()

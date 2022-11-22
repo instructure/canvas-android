@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="rce_contentDescription_undo">Hoàn tác</string>
     <string name="rce_contentDescription_redo">Làm lại</string>
     <string name="rce_contentDescription_bold">Định Dạng Đậm</string>
@@ -69,4 +70,5 @@
 
     <string name="rce_emptyUrlError">Không được để trống Url</string>
     <string name="rce_httpNotAllowed">Chỉ url https được chấp nhận</string>
+    <string name="rce_dialogAltText">Thêm văn bản thay thế cho trình đọc hình ảnh</string>
 </resources>

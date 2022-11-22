@@ -33,6 +33,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.toApiString
@@ -45,6 +46,7 @@ import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -72,7 +74,7 @@ import java.util.*
 @ScreenView(SCREEN_VIEW_CREATE_DISCUSSION)
 class CreateDiscussionFragment : BasePresenterFragment<
         CreateDiscussionPresenter,
-        CreateDiscussionView>(), CreateDiscussionView, Identity {
+        CreateDiscussionView>(), CreateDiscussionView, Identity, FileUploadDialogParent {
 
     private var mCanvasContext: CanvasContext by ParcelableArg(Course(), CANVAS_CONTEXT)
     private var mDiscussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(null, DISCUSSION_TOPIC_HEADER)
@@ -258,8 +260,8 @@ class CreateDiscussionFragment : BasePresenterFragment<
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
 
-        sendButton?.setTextColor(ThemePrefs.buttonColor)
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        sendButton?.setTextColor(ThemePrefs.textButtonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     fun setupViews() {
@@ -273,12 +275,12 @@ class CreateDiscussionFragment : BasePresenterFragment<
             },
                     getString(R.string.discussion_details),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor)
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         } else {
             descriptionRCEView.setHtml(mDescription ?: mDiscussionTopicHeader?.message,
                     getString(R.string.discussion_details),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor)
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         }
 
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality
@@ -544,12 +546,14 @@ class CreateDiscussionFragment : BasePresenterFragment<
         mDescription = descriptionRCEView.html
 
         val bundle = FileUploadDialogFragment.createDiscussionsBundle(ArrayList())
-        FileUploadDialogFragment.newInstance(bundle, pickerCallback = { event, attachment ->
-            if(event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
-                presenter.attachment = attachment
-                updateAttachmentUI()
-            }
-        }).show(childFragmentManager, FileUploadDialogFragment.TAG)
+        FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
+    }
+
+    override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
+        if(event == FileUploadDialogFragment.EVENT_ON_FILE_SELECTED) {
+            presenter.attachment = attachment
+            updateAttachmentUI()
+        }
     }
 
     override fun startSavingDiscussion() {

@@ -29,6 +29,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
 import com.airbnb.lottie.LottieAnimationView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -36,8 +38,11 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StorageQuotaExceededError
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.FileUploadType
-import com.instructure.pandautils.features.shareextension.success.ShareExtensionSuccessDialogFragment
+import com.instructure.pandautils.features.shareextension.progress.ShareExtensionProgressDialogFragment
+import com.instructure.pandautils.features.shareextension.status.ShareExtensionStatus
+import com.instructure.pandautils.features.shareextension.status.ShareExtensionStatusDialogFragment
 import com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetFragment
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,6 +52,9 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
+
+const val WORKER_ID = "workerId"
 
 @Parcelize
 data class ShareFileSubmissionTarget(
@@ -55,15 +63,19 @@ data class ShareFileSubmissionTarget(
 ) : Parcelable
 
 @AndroidEntryPoint
-abstract class ShareExtensionActivity : AppCompatActivity() {
+abstract class ShareExtensionActivity : AppCompatActivity(), FileUploadDialogParent {
 
     private val shareExtensionViewModel: ShareExtensionViewModel by viewModels()
 
     private var loadCoursesJob: Job? = null
-    private var uploadFileSourceFragment: DialogFragment? = null
+    private var currentFragment: DialogFragment? = null
 
     private val submissionTarget: ShareFileSubmissionTarget? by lazy {
         intent?.extras?.getParcelable(Const.SUBMISSION_TARGET)
+    }
+
+    private val workerId: UUID? by lazy {
+        intent?.extras?.getSerializable(WORKER_ID) as? UUID
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,11 +84,19 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
         ViewStyler.setStatusBarDark(this, ContextCompat.getColor(this, R.color.studentDocumentSharingColor))
         if (shareExtensionViewModel.checkIfLoggedIn()) {
             revealBackground()
-            shareExtensionViewModel.parseIntentType(intent)
-            if (submissionTarget != null) {
-                shareExtensionViewModel.showUploadDialog(submissionTarget!!.course, submissionTarget!!.assignment, FileUploadType.ASSIGNMENT)
+            if (workerId != null) {
+                showProgressDialog(workerId!!)
             } else {
-                showDestinationDialog()
+                shareExtensionViewModel.parseIntentType(intent)
+                if (submissionTarget != null) {
+                    shareExtensionViewModel.showUploadDialog(
+                        submissionTarget!!.course,
+                        submissionTarget!!.assignment,
+                        FileUploadType.ASSIGNMENT
+                    )
+                } else {
+                    showDestinationDialog()
+                }
             }
         } else {
             exitActivity()
@@ -92,11 +112,11 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
     private fun handleAction(action: ShareExtensionAction) {
         when (action) {
             is ShareExtensionAction.ShowAssignmentUploadDialog -> {
-                val bundle = FileUploadDialogFragment.createAssignmentBundle(action.fileUri, action.course as Course, action.assignment)
+                val bundle = FileUploadDialogFragment.createAssignmentBundle(action.fileUris, action.course as Course, action.assignment)
                 showUploadDialog(bundle, action.dialogCallback)
             }
             is ShareExtensionAction.ShowMyFilesUploadDialog -> {
-                val bundle = FileUploadDialogFragment.createFilesBundle(action.fileUri, null)
+                val bundle = FileUploadDialogFragment.createFilesBundle(action.fileUris, null)
                 showUploadDialog(bundle, action.dialogCallback)
             }
             is ShareExtensionAction.ShowToast -> {
@@ -109,21 +129,43 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
                 showConfetti()
             }
             is ShareExtensionAction.ShowSuccessDialog -> {
-                ShareExtensionSuccessDialogFragment.newInstance().show(supportFragmentManager, ShareExtensionSuccessDialogFragment.TAG)
+                rootView?.postDelayed({
+                    currentFragment = ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.SUCCEEDED, action.fileUploadType)
+                    currentFragment?.show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
+                }, 250)
+            }
+            is ShareExtensionAction.ShowProgressDialog -> {
+                showProgressDialog(action.uuid)
+            }
+            is ShareExtensionAction.ShowErrorDialog -> {
+                currentFragment = ShareExtensionStatusDialogFragment.newInstance(ShareExtensionStatus.FAILED, action.fileUploadType)
+                currentFragment?.show(supportFragmentManager, ShareExtensionStatusDialogFragment.TAG)
             }
         }
     }
 
+    private fun showProgressDialog(uuid: UUID) {
+        currentFragment = ShareExtensionProgressDialogFragment.newInstance(uuid)
+        currentFragment?.show(supportFragmentManager, ShareExtensionProgressDialogFragment.TAG)
+    }
+
     private fun showUploadDialog(bundle: Bundle, dialogCallback: (Int) -> Unit) {
-        ValueAnimator.ofObject(ArgbEvaluator(), ContextCompat.getColor(this, R.color.login_studentAppTheme), getColor(bundle)).let {
+        ValueAnimator.ofObject(ArgbEvaluator(), ContextCompat.getColor(this, R.color.studentDocumentSharingColor), getColor(bundle)).let {
             it.addUpdateListener { animation -> rootView!!.setBackgroundColor(animation.animatedValue as Int) }
             it.duration = 500
             it.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    FileUploadDialogFragment.newInstance(bundle, dialogCallback).show(supportFragmentManager, FileUploadDialogFragment.TAG)
+                    currentFragment = FileUploadDialogFragment.newInstance(bundle, callback = dialogCallback)
+                    currentFragment?.show(supportFragmentManager, FileUploadDialogFragment.TAG)
                 }
             })
             it.start()
+        }
+    }
+
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+        uuid?.let {
+            shareExtensionViewModel.workerCallback(it)
         }
     }
 
@@ -139,12 +181,12 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
     abstract fun exitActivity()
 
     override fun onBackPressed() {
-        uploadFileSourceFragment?.dismissAllowingStateLoss()
-        super.onBackPressed()
+        currentFragment?.dismissAllowingStateLoss()
+        finish()
     }
 
     override fun onDestroy() {
-        uploadFileSourceFragment?.dismissAllowingStateLoss()
+        currentFragment?.dismissAllowingStateLoss()
         loadCoursesJob?.cancel()
         super.onDestroy()
     }
@@ -160,8 +202,8 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
     }
 
     private fun showDestinationDialog() {
-        uploadFileSourceFragment = ShareExtensionTargetFragment()
-        uploadFileSourceFragment!!.show(supportFragmentManager, ShareExtensionTargetFragment.TAG)
+        currentFragment = ShareExtensionTargetFragment()
+        currentFragment?.show(supportFragmentManager, ShareExtensionTargetFragment.TAG)
     }
 
     private fun showConfetti() {
@@ -187,11 +229,11 @@ abstract class ShareExtensionActivity : AppCompatActivity() {
 
     private fun getColor(bundle: Bundle?): Int {
         return if (bundle != null && bundle.containsKey(Const.CANVAS_CONTEXT)) {
-            val color = ColorKeeper.getOrGenerateColor(bundle.getParcelable<Parcelable>(Const.CANVAS_CONTEXT) as CanvasContext)
+            val color = (bundle.getParcelable<Parcelable>(Const.CANVAS_CONTEXT) as CanvasContext).backgroundColor
             ViewStyler.setStatusBarDark(this, color)
             color
         } else {
-            val color = ContextCompat.getColor(this, R.color.login_studentAppTheme)
+            val color = ContextCompat.getColor(this, R.color.studentDocumentSharingColor)
             ViewStyler.setStatusBarDark(this, color)
             color
         }

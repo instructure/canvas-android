@@ -17,6 +17,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/course.dart';
+import 'package:flutter_student_embed/network/utils/api_prefs.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
 import 'package:flutter_student_embed/utils/common_widgets/empty_panda_widget.dart';
@@ -118,10 +119,10 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(find.text(AppLocalizations().calendarTapToFavoriteDesc), findsOneWidget);
+      expect(find.text(AppLocalizations().calendarSelectFavoriteCalendars), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('shows course list with header item', (tester) async {
+    testWidgetsWithAccessibilityChecks('shows course list', (tester) async {
       var interactor = MockCalendarFilterListInteractor();
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
@@ -134,7 +135,6 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(find.text(AppLocalizations().coursesLabel), findsOneWidget);
       expect(find.byType(LabeledCheckbox), findsNWidgets(3));
     });
 

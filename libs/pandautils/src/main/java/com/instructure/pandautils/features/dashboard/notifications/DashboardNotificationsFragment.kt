@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.dashboard.notifications
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,14 +30,20 @@ import androidx.fragment.app.viewModels
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD_NOTIFICATIONS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentDashboardNotificationsBinding
+import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
+import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.backgroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DASHBOARD_NOTIFICATIONS)
 @AndroidEntryPoint
 class DashboardNotificationsFragment : Fragment() {
+
+    @Inject
+    lateinit var shareExtensionRouter: ShareExtensionRouter
 
     @Inject
     lateinit var dashboardRouter: DashboardRouter
@@ -59,11 +66,11 @@ class DashboardNotificationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.events.observe(viewLifecycleOwner, { event ->
+        viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
-        })
+        }
     }
 
     fun refresh() {
@@ -74,14 +81,14 @@ class DashboardNotificationsFragment : Fragment() {
         when (action) {
             is DashboardNotificationsActions.LaunchConference -> {
                 val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-                        .setToolbarColor(ColorKeeper.getOrGenerateColor(action.canvasContext))
-                        .build()
+                    .setToolbarColor(action.canvasContext.backgroundColor)
+                    .build()
 
                 var intent = CustomTabsIntent.Builder()
-                        .setDefaultColorSchemeParams(colorSchemeParams)
-                        .setShowTitle(true)
-                        .build()
-                        .intent
+                    .setDefaultColorSchemeParams(colorSchemeParams)
+                    .setShowTitle(true)
+                    .build()
+                    .intent
 
                 intent.data = Uri.parse(action.url)
 
@@ -97,6 +104,9 @@ class DashboardNotificationsFragment : Fragment() {
                 action.subject,
                 action.message
             )
+            is DashboardNotificationsActions.OpenProgressDialog -> {
+                startActivity(shareExtensionRouter.routeToProgressScreen(requireActivity(), action.uuid))
+            }
         }
     }
 

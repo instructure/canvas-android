@@ -18,7 +18,6 @@ package com.instructure.student.fragment
 
 import android.animation.ObjectAnimator
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -80,23 +79,23 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         courseBrowserTitle.text = canvasContext.name
 
         (canvasContext as? Course)?.let {
-            courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay)
+            courseImage.setCourseImage(it, it.backgroundColor, !StudentPrefs.hideCourseColorOverlay)
             courseBrowserSubtitle.text = it.term?.name ?: ""
             courseBrowserHeader.setTitleAndSubtitle(it.name, it.term?.name ?: "")
         }
 
         (canvasContext as? Group)?.let {
-            courseImage.setImageDrawable(ColorDrawable(it.color))
+            courseImage.setImageDrawable(ColorDrawable(it.backgroundColor))
         }
 
-        collapsingToolbarLayout.setContentScrimColor(canvasContext.color)
+        collapsingToolbarLayout.setContentScrimColor(canvasContext.backgroundColor)
 
         // If course color overlay is disabled we show a static toolbar and hide the text overlay
         overlayToolbar.setupAsBackButton(this)
         noOverlayToolbar.setupAsBackButton(this)
         noOverlayToolbar.title = canvasContext.name
         (canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
-        noOverlayToolbar.setBackgroundColor(canvasContext.color)
+        noOverlayToolbar.setBackgroundColor(canvasContext.backgroundColor)
         updateToolbarVisibility()
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
@@ -131,7 +130,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     @Subscribe(sticky = true)
     fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
         (canvasContext as? Course)?.let {
-            courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay)
+            courseImage.setCourseImage(it, it.backgroundColor, !StudentPrefs.hideCourseColorOverlay)
         }
         updateToolbarVisibility()
     }
@@ -146,7 +145,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Set course image again after orientation change to ensure correct scale/crop
-        (canvasContext as? Course)?.let { courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay) }
+        (canvasContext as? Course)?.let { courseImage.setCourseImage(it, it.backgroundColor, !StudentPrefs.hideCourseColorOverlay) }
     }
 
     override fun onDestroyView() {
@@ -160,7 +159,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     override fun applyTheme() {
         ViewStyler.colorToolbarIconsAndText(requireActivity(), noOverlayToolbar, requireContext().getColor(R.color.white))
         ViewStyler.colorToolbarIconsAndText(requireActivity(), overlayToolbar, requireContext().getColor(R.color.white))
-        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.color)
+        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
     }
 
     override fun getFragment(): Fragment? = this

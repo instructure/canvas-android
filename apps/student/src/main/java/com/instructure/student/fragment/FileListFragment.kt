@@ -29,6 +29,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -45,6 +47,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.FileFolderCallback
@@ -58,10 +61,11 @@ import kotlinx.android.synthetic.main.fragment_file_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 @ScreenView(SCREEN_VIEW_FILE_LIST)
 @PageView
-class FileListFragment : ParentFragment(), Bookmarkable {
+class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -227,16 +231,16 @@ class FileListFragment : ParentFragment(), Bookmarkable {
         themeToolbar()
         if (canvasContext.type == CanvasContext.Type.USER) ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeFAB(addFab, ThemePrefs.buttonColor)
-        ViewStyler.themeFAB(addFileFab, ThemePrefs.buttonColor)
-        ViewStyler.themeFAB(addFolderFab, ThemePrefs.buttonColor)
+        ViewStyler.themeFAB(addFab)
+        ViewStyler.themeFAB(addFileFab)
+        ViewStyler.themeFAB(addFolderFab)
     }
 
     private fun themeToolbar() {
         // We style the toolbar white for user files
         if (canvasContext.type == CanvasContext.Type.USER) {
-            ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.textDarkest))
-            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+            ViewStyler.themeProgressBar(fileLoadingProgressBar, ThemePrefs.primaryTextColor)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         } else {
             ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.white))
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
@@ -371,8 +375,8 @@ class FileListFragment : ParentFragment(), Bookmarkable {
                 .create()
 
         dialog.setOnShowListener {
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
         }
 
         dialog.show()
@@ -408,6 +412,17 @@ class FileListFragment : ParentFragment(), Bookmarkable {
         folder?.let {
             val bundle = FileUploadDialogFragment.createContextBundle(null, canvasContext, it.id)
             FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
+        }
+    }
+
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(viewLifecycleOwner) {
+            if (it.state == WorkInfo.State.SUCCEEDED) {
+                recyclerAdapter?.refresh()
+                folder?.let {
+                    StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + it.id
+                }
+            }
         }
     }
 

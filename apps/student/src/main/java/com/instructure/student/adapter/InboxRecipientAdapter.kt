@@ -166,7 +166,6 @@ open class InboxRecipientAdapter(
             holder,
             recipient,
             adapterCallback,
-            ThemePrefs.brandColor,
             selectedRecipients.contains(recipient),
             canSendMessagesAll
         )

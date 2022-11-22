@@ -16,8 +16,10 @@
  */
 package com.instructure.pandautils.features.elementary.grades
 
+import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.utils.ThemedColor
 
 data class GradesViewData(val items: List<ItemViewModel>)
 
@@ -26,7 +28,7 @@ data class GradingPeriod(val id: Long, val name: String)
 data class GradeRowViewData(
     val courseId: Long,
     val courseName: String,
-    val courseColor: String,
+    val courseColor: ThemedColor,
     val courseImageUrl: String,
     val score: Double?,
     val gradeText: String)

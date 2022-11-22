@@ -296,6 +296,12 @@ class AppLocalizations {
         desc: 'Text for the find-my-school button',
       );
 
+  String get findAnotherSchool => Intl.message(
+    'Find another school',
+    name: 'findAnotherSchool',
+    desc: 'Text for the find-another-school button',
+  );
+
   /// Domain search screen
 
   String get domainSearchInputHint => Intl.message(

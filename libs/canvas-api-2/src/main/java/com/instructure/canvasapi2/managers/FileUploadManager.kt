@@ -103,6 +103,13 @@ data class FileUploadConfig(
             assignmentId: Long
         ) = fromSubmitObject(fso, "courses/$courseId/assignments/$assignmentId/submissions/self/comments")
 
+        fun forSubmissionCommentFromTeacher(
+            fso: FileSubmitObject,
+            courseId: Long,
+            assignmentId: Long,
+            assigneeId: Long
+        ) = fromSubmitObject(fso, "courses/$courseId/assignments/$assignmentId/submissions/$assigneeId/comments")
+
         fun forCourse(
             fso: FileSubmitObject,
             courseId: Long,

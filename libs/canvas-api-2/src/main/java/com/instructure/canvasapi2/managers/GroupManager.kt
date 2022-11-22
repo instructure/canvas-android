@@ -119,6 +119,8 @@ object GroupManager {
         GroupAPI.getGroupsForCourse(adapter, depaginatedCallback, params, courseId)
     }
 
+    fun getAllGroupsForCourseAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<List<Group>> { getAllGroupsForCourse(courseId, it, forceNetwork) }
+
     @Throws(IOException::class)
     fun getFavoriteGroupsSynchronous(forceNetwork: Boolean): List<Group> {
         val adapter = RestBuilder()

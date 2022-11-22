@@ -21,8 +21,8 @@
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:orientation="vertical"
-    android:paddingBottom="6dp"
-    android:paddingTop="6dp">
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,18 +38,18 @@
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp">
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp">
 
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginEnd="16dp"
                 android:importantForAccessibility="no"
-                android:tint="@color/textDarkest"
-                app:srcCompat="@drawable/ic_media" />
+                app:srcCompat="@drawable/ic_media"
+                app:tint="@color/textDarkest" />
 
             <TextView
                 android:id="@+id/videoText"
@@ -70,21 +70,53 @@
             android:contentDescription="@string/addAudioComment"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp">
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp">
 
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginEnd="16dp"
                 android:importantForAccessibility="no"
-                android:tint="@color/textDarkest"
-                app:srcCompat="@drawable/ic_audio" />
+                app:srcCompat="@drawable/ic_audio"
+                app:tint="@color/textDarkest" />
 
             <TextView
                 android:id="@+id/audioText"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textDarkest"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fileComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/addFile"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="16dp"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/ic_files"
+                app:tint="@color/textDarkest" />
+
+            <TextView
+                android:id="@+id/fileText"
                 style="@style/TextFont.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

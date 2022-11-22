@@ -45,7 +45,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     lateinit var webViewRouter: WebViewRouter
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
-    private var discussionTopicHeader: DiscussionTopicHeader by ParcelableArg(default = DiscussionTopicHeader(), key = DISCUSSION_TOPIC_HEADER)
+    private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DISCUSSION_TOPIC_HEADER)
     private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DISCUSSION_TOPIC_HEADER_ID)
 
     private val viewModel: DiscussionDetailsWebViewViewModel by viewModels()
@@ -56,13 +56,15 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel.loadData(canvasContext, discussionTopicHeader)
+        viewModel.loadData(canvasContext, discussionTopicHeader, discussionTopicHeaderId)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        applyTheme()
+        viewModel.data.observe(viewLifecycleOwner) {
+            applyTheme(it.title)
+        }
         discussionWebView.setDarkModeSupport()
         discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
@@ -94,8 +96,8 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         }
     }
 
-    private fun applyTheme() {
-        toolbar.title = discussionTopicHeader.title
+    private fun applyTheme(title: String) {
+        toolbar.title = title
         toolbar.setupAsBackButton(this)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
@@ -109,6 +111,15 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Route {
             val bundle = Bundle().apply {
                 putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
+                putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeader.id)
+            }
+
+            return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)
+        }
+
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long): Route {
+            val bundle = Bundle().apply {
+                putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
             }
 
             return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)

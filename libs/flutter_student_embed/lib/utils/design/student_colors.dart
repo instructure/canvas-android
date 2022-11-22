@@ -38,6 +38,8 @@ class StudentColors {
   /// The core 'dark' color used for text, icons, etc on light backgrounds
   static get textDarkest => darkMode ? DarkColors.textDarkest : LightColors.textDarkest;
 
+  static get textLightest => darkMode ? DarkColors.textLightest : LightColors.textLightest;
+
   static get backgroundLightest => darkMode ? DarkColors.backgroundLightest : LightColors.backgroundLightest;
 
   static get backgroundLightestElevated => darkMode ? DarkColors.backgroundLightestElevated : LightColors.backgroundLightest;
@@ -96,6 +98,8 @@ class StudentColors {
   static Color accentColor = defaultPrimary;
 
   static Color buttonColor = defaultButton;
+
+  static Color textButtonColor = defaultButton;
 
   static Color primaryTextColor = defaultPrimaryText;
 

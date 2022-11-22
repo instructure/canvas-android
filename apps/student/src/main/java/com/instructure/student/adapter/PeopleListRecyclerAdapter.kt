@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.holders.PeopleHeaderViewHolder
@@ -47,7 +48,7 @@ class PeopleListRecyclerAdapter(
         private val mAdapterToFragmentCallback: AdapterToFragmentCallback<User>
 ) : ExpandableRecyclerAdapter<EnrollmentType, User, RecyclerView.ViewHolder>(context, EnrollmentType::class.java, User::class.java) {
 
-    private val mCourseColor = ColorKeeper.getOrGenerateColor(mCanvasContext)
+    private val mCourseColor = mCanvasContext.backgroundColor
     private val mEnrollmentPriority = mapOf( EnrollmentType.Teacher to 4, EnrollmentType.Ta to 3, EnrollmentType.Student to 2, EnrollmentType.Observer to 1)
     private var mApiCalls: WeaveJob? = null
 

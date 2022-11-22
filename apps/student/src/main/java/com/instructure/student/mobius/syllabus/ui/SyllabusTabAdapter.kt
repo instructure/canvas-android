@@ -45,7 +45,7 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
         if (!isSyllabusPosition(position)) {
             view.syllabusEventsRecycler.layoutManager = LinearLayoutManager(container.context)
         } else {
-            setupWebView(view.syllabusWebView)
+            setupWebView(view.syllabusWebViewWrapper.webView)
         }
 
         return view

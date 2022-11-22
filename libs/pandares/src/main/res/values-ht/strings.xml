@@ -958,7 +958,6 @@
     <string name="latePenalty">Penalite pou reta (-%s)</string>
     <string name="finalGrade">Nòt Final</string>
 
-    <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
 
     <string name="opensInWebView">Li ouvè nan webview</string>
@@ -1270,4 +1269,17 @@
     <string name="themeSelectorSave">Anrejistre</string>
     <string name="themeSelectorChangeLater">Ou ka chanje l apre nan paramèt app la.</string>
     <string name="grabAnnotationTool">Sezi</string>
+    <string name="fileUpload">Transfè Fichye</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s mesaj poko li</item>
+        <item quantity="other">%s mesaj poko li</item>
+    </plurals>
+    <string name="noAnnotationSelected">Pa gen anotasyon ki seleksyone</string>
+    <string name="emailNotifications">Avètisman Imèl</string>
+    <string name="emailNotificationsImmediately">Kounye a menm</string>
+    <string name="emailNotificationsDaily">Chak jou</string>
+    <string name="emailNotificationsWeekly">Chak semenn</string>
+    <string name="emailNotificationsNever">Jamè</string>
+    <string name="selectFrequency">Seleksyone frekans</string>
 </resources>

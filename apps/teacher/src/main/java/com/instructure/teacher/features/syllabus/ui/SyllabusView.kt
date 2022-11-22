@@ -60,7 +60,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
             if (tab?.position == SYLLABUS_TAB_POSITION) {
-                swipeRefreshLayout.setSwipeableChildren(R.id.syllabusWebView)
+                swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
             } else {
                 swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecyclerView, R.id.syllabusEmptyView)
             }
@@ -72,7 +72,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         setEditVisibility(false)
         ViewStyler.themeToolbarColored(context as Activity, toolbar, canvasContext)
 
-        syllabusTabLayout.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
+        syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
 
         if (context !is MasterDetailActivity) {
             toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
@@ -119,7 +119,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         swipeRefreshLayout.isRefreshing = false
 
         if (syllabusPager.currentItem == SYLLABUS_TAB_POSITION) {
-            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusWebView)
+            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
         } else {
             swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecyclerView, R.id.syllabusEmptyView)
         }
@@ -135,7 +135,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         syllabusPager.setCurrentItem(if (state.syllabus == null) SUMMARY_TAB_POSITION else SYLLABUS_TAB_POSITION, false)
 
-        if (state.syllabus != null) syllabusWebView?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
+        if (state.syllabus != null) syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
         if (state.eventsState != null) renderEvents(state.eventsState)
     }
 

@@ -53,13 +53,13 @@
             android:text="@{itemViewModel.data.title}"
             tools:text="Announcement Title" />
 
-        <com.instructure.pandautils.views.CanvasWebView
-            android:id="@+id/announcementWebView"
+        <com.instructure.pandautils.views.CanvasWebViewWrapper
+            android:id="@+id/announcementWebViewWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:background="@color/backgroundLightest"
             app:htmlContent="@{itemViewModel.data.htmlContent}"
             app:htmlTitle="@{itemViewModel.data.title}"
             app:onLtiButtonPressed="@{(url) -> itemViewModel.onLtiButtonPressed(url)}"/>

@@ -506,7 +506,8 @@ fun MockCanvas.addCourse(
         isPublic = isPublic,
         homeroomCourse = isHomeroom,
         gradingPeriods = gradingPeriodList,
-        courseColor = "#008EE2"
+        courseColor = "#008EE2",
+        restrictEnrollmentsToCourseDate = concluded
     )
     courses += course.id to course
 
@@ -1509,6 +1510,11 @@ fun MockCanvas.addItemToModule(
             itemType = ModuleItem.Type.ExternalUrl
             itemTitle = item
             itemUrl = item
+        }
+        is LTITool -> {
+            itemType = ModuleItem.Type.ExternalTool
+            itemTitle = item.name
+            itemUrl = item.url
         }
         else -> {
             throw Exception("Unknown item type: ${item::class.java.simpleName}")

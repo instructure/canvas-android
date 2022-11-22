@@ -682,7 +682,7 @@
                             android:visibility="gone"
                             tools:visibility="visible">
 
-                            <de.hdodenhof.circleimageview.CircleImageView
+                            <ImageView
                                 android:id="@+id/authorAvatar"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
@@ -732,17 +732,13 @@
 
                         </LinearLayout>
 
-                        <com.instructure.pandautils.views.CanvasWebView
-                            android:id="@+id/descriptionWebView"
+                        <com.instructure.pandautils.views.CanvasWebViewWrapper
+                            android:id="@+id/descriptionWebViewWrapper"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:minHeight="48dp"
-                            android:scrollbars="none"
-                            android:background="@color/backgroundLightest" />
+                            android:background="@color/backgroundLightest"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"/>
 
                     </LinearLayout>
 

@@ -19,13 +19,14 @@ package com.instructure.pandautils.di
 import android.content.ContentResolver
 import android.content.Context
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
+import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
+import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
 import com.instructure.pandautils.utils.FileUploadUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -39,5 +40,15 @@ class FileUploadModule {
     @Provides
     fun provideFileUploadUtilsHelper(@ApplicationContext context: Context, contentResolver: ContentResolver, fileUploadUtils: FileUploadUtils): FileUploadUtilsHelper {
         return FileUploadUtilsHelper(fileUploadUtils, context, contentResolver)
+    }
+
+    @Provides
+    fun provideFileUploadBundleCreator(): FileUploadBundleCreator {
+        return FileUploadBundleCreator()
+    }
+
+    @Provides
+    fun provideFileUploadPreferences(): FileUploadPreferences {
+        return FileUploadPreferences
     }
 }

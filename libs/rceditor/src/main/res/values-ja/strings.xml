@@ -69,4 +69,5 @@
     <string name="rce_scrollInstructions">すべての編集ツールにスクロール</string>
     <string name="rce_emptyUrlError">URL を空にすることはできません</string>
     <string name="rce_httpNotAllowed">使用できるのは https URL のみです</string>
+    <string name="rce_dialogAltText">画像リーダーへ代替テキストを追加する</string>
 </resources>

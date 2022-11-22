@@ -127,8 +127,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     override fun onResume() {
         super.onResume()
-        discussionTopicHeaderWebView.onResume()
-        discussionRepliesWebView.onResume()
+        discussionTopicHeaderWebViewWrapper.webView.onResume()
+        discussionRepliesWebViewWrapper.webView.onResume()
         addAccessibilityButton()
 
         /* TODO - Comms - 868
@@ -147,8 +147,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     override fun onPause() {
         super.onPause()
         scrollPosition = discussionsScrollView.scrollY
-        discussionTopicHeaderWebView.onPause()
-        discussionRepliesWebView.onPause()
+        discussionTopicHeaderWebViewWrapper.webView.onPause()
+        discussionRepliesWebViewWrapper.webView.onPause()
     }
 
     override fun onStop() {
@@ -165,8 +165,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         loadHeaderHtmlJob?.cancel()
         loadRepliesHtmlJob?.cancel()
 
-        discussionTopicHeaderWebView?.destroy()
-        discussionRepliesWebView?.destroy()
+        discussionTopicHeaderWebViewWrapper?.webView?.destroy()
+        discussionRepliesWebViewWrapper?.webView?.destroy()
     }
     //endregion
 
@@ -242,9 +242,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             }
 
             successfullyMarkedAsReadIds.forEach {
-                discussionRepliesWebView.post {
+                discussionRepliesWebViewWrapper.post {
                     // Posting lets this escape Weave's lifecycle, so use a null-safe call on the webview here
-                    discussionRepliesWebView?.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
+                    discussionRepliesWebViewWrapper?.webView?.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')")
                 }
             }
             if (!groupDiscussion) {
@@ -265,8 +265,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             builder.setNegativeButton(android.R.string.no) { _, _ -> }
             val dialog = builder.create()
             dialog.setOnShowListener {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
             }
             dialog.show()
         } else NoInternetConnectionDialog.show(requireFragmentManager())
@@ -274,8 +274,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry) {
         val deletedText = DiscussionUtils.formatDeletedInfoText(requireContext(), discussionEntry)
-        discussionRepliesWebView.post {
-            discussionRepliesWebView.loadUrl(
+        discussionRepliesWebViewWrapper.post {
+            discussionRepliesWebViewWrapper.webView.loadUrl(
                     "javascript:markAsDeleted" + "('" + discussionEntry.id.toString() + "','" + deletedText + "')")
         }
     }
@@ -351,8 +351,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountText(requireContext(), discussionEntry)
         val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.textDark))
         activity?.runOnUiThread {
-            discussionRepliesWebView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
-            discussionRepliesWebView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
+            discussionRepliesWebViewWrapper.webView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
+            discussionRepliesWebViewWrapper.webView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
         }
     }
 
@@ -363,7 +363,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(webView: CanvasWebView, addDarkTheme: Boolean = false) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
+        val backgroundColorRes = if (addDarkTheme) R.color.backgroundLightest else R.color.white
+        webView.setBackgroundColor(requireContext().getColor(backgroundColorRes))
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
         webView.settings.allowFileAccess = true
@@ -403,14 +404,19 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupHeaderWebView() {
-        setupWebView(discussionTopicHeaderWebView)
-        discussionTopicHeaderWebView.addJavascriptInterface(JSDiscussionHeaderInterface(), "accessor")
+        setupWebView(discussionTopicHeaderWebViewWrapper.webView)
+        discussionTopicHeaderWebViewWrapper.webView.addJavascriptInterface(JSDiscussionHeaderInterface(), "accessor")
+        DiscussionManager.markDiscussionTopicRead(canvasContext, getTopicId(), object : StatusCallback<Void>() {})
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupRepliesWebView() {
-        setupWebView(discussionRepliesWebView, addDarkTheme = true)
-        discussionRepliesWebView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
+        setupWebView(discussionRepliesWebViewWrapper.webView, addDarkTheme = !discussionRepliesWebViewWrapper.themeSwitched)
+        discussionRepliesWebViewWrapper.onThemeChanged = { themeChanged, html ->
+            setupWebView(discussionRepliesWebViewWrapper.webView, addDarkTheme = !themeChanged)
+            discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
+        }
+        discussionRepliesWebViewWrapper.webView.addJavascriptInterface(JSDiscussionInterface(), "accessor")
     }
 
     @Suppress("unused")
@@ -504,7 +510,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             return DiscussionUtils.isElementInViewPortWithinScrollView(
                     requireContext(),
                     discussionsScrollView,
-                    discussionRepliesWebView.height,
+                    discussionRepliesWebViewWrapper.height,
                     discussionsScrollViewContentWrapper.height,
                     // Javascript passes us back a number, which could be either a float or an int, so we'll need to convert the string first to a float, then an int to avoid errors in conversion
                     elementHeight.toFloat().toInt(), elementTopOffset.toFloat().toInt())
@@ -542,20 +548,11 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //endregion
 
     //region Loading
-    private fun loadHTMLTopic(html: String, contentDescription: String?) {
-        setupHeaderWebView()
-        discussionTopicHeaderWebView.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
-    }
-
-    private fun loadHTMLReplies(html: String, contentDescription: String? = null) {
-        discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
-    }
-
     private fun populateDiscussionData(forceRefresh: Boolean = false, topLevelReplyPosted: Boolean = false) {
         discussionsLoadingJob = tryWeave {
             discussionProgressBar.setVisible()
-            discussionRepliesWebView.loadHtml("", "")
-            discussionRepliesWebView.setInvisible()
+            discussionRepliesWebViewWrapper.loadHtml("", "")
+            discussionRepliesWebViewWrapper.setInvisible()
             discussionTopicRepliesTitle.setInvisible()
             postBeforeViewingRepliesTextView.setGone()
 
@@ -704,25 +701,32 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionSection?.text = getString(R.string.announcementSections, discussionTopicHeader.sections?.joinToString { it.name })
         discussionSection?.setVisible(discussionTopicHeader.sections?.isNotEmpty() == true)
 
-        replyToDiscussionTopic.setTextColor(ThemePrefs.buttonColor)
+        replyToDiscussionTopic.setTextColor(ThemePrefs.textButtonColor)
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
-        loadHeaderHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                discussionTopicHeader.message.orEmpty(), ::loadHTMLTopic, null, discussionTopicHeader.title)
+        loadHeaderHtmlJob = discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
+            loadHTMLTopic(it, discussionTopicHeader.title)
+        })
 
-        attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
-        attachmentIcon.onClick { _ ->
+        attachmentIcon.setVisible(discussionTopicHeader.attachments.isNotEmpty())
+        attachmentIcon.onClick {
             viewAttachments(discussionTopicHeader.attachments)
         }
     }
 
+    private fun loadHTMLTopic(html: String, contentDescription: String?) {
+        setupHeaderWebView()
+        discussionTopicHeaderWebViewWrapper.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
+    }
+
     private fun loadDiscussionTopicViews(html: String) {
-        discussionRepliesWebView.setVisible()
+        discussionRepliesWebViewWrapper.setVisible()
         discussionProgressBar.setGone()
 
-        loadRepliesHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                html, ::loadHTMLReplies)
+        loadHeaderHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
+            discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
+        })
 
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)
@@ -814,11 +818,11 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     fun onBackStackChangedEvent(event: OnBackStackChangedEvent) {
         event.get { clazz ->
             if (clazz?.isAssignableFrom(DiscussionDetailsFragment::class.java) == true || clazz?.isAssignableFrom(CourseModuleProgressionFragment::class.java) == true) {
-                discussionRepliesWebView.onResume()
-                discussionTopicHeaderWebView.onResume()
+                discussionRepliesWebViewWrapper.webView.onResume()
+                discussionTopicHeaderWebViewWrapper.webView.onResume()
             } else {
-                discussionRepliesWebView.onPause()
-                discussionTopicHeaderWebView.onPause()
+                discussionRepliesWebViewWrapper.webView.onPause()
+                discussionTopicHeaderWebViewWrapper.webView.onPause()
             }
         }
     }

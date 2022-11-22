@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2022 - present Instructure, Inc.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.instructure.pandautils.utils.ColorUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/announcement_card_background"
+        android:contentDescription="@{@string/a11y_contentDescriptionUploadDashboardNotification(itemViewModel.data.title)}"
+        android:minHeight="55dp"
+        android:onClick="@{() -> itemViewModel.open()}"
+        app:borderColor="@{itemViewModel.data.color}"
+        tools:backgroundTint="#00ACEC">
+
+        <FrameLayout
+            android:id="@+id/uploadIconView"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:background="@drawable/announcement_card_icon_background"
+            android:backgroundTint="@{itemViewModel.data.color}"
+            android:importantForAccessibility="noHideDescendants"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:backgroundTint="#00ACEC">
+
+            <ImageView
+                android:id="@+id/uploadIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_upload"
+                app:tint="@color/white" />
+
+        </FrameLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/uploadIconView"
+            app:layout_constraintTop_toTopOf="@id/uploadIconView">
+
+            <TextView
+                android:id="@+id/uploadTitle"
+                style="@style/TextFont.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:ellipsize="end"
+                android:importantForAccessibility="no"
+                android:singleLine="true"
+                android:text="@{itemViewModel.data.title}"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Uploading Submission" />
+
+            <TextView
+                android:id="@+id/uploadSubtitle"
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{itemViewModel.data.subTitle}"
+                android:textColor="@color/textDark"
+                android:textSize="14sp"
+                android:visibility="@{itemViewModel.data.subTitle.empty ? View.GONE : View.VISIBLE}"
+                app:layout_constraintTop_toBottomOf="@id/uploadTitle" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:progress="@{itemViewModel.progress}"
+                android:progressTint="@color/backgroundInfo"
+                app:layout_constraintTop_toBottomOf="@id/uploadSubtitle"
+                tools:progress="25" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

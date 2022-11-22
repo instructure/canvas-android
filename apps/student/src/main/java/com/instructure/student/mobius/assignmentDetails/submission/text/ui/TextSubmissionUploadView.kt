@@ -100,7 +100,7 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
 
     fun setInitialSubmissionText(text: String?) {
         initialText = text
-        rce.setHtml(text ?: "", context.getString(R.string.textEntry), context.getString(R.string.submissionWrite), ThemePrefs.brandColor, ThemePrefs.buttonColor)
+        rce.setHtml(text ?: "", context.getString(R.string.textEntry), context.getString(R.string.submissionWrite), ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         toolbar.menu.findItem(R.id.menuSubmit).isEnabled = !text.isNullOrBlank()
     }
 

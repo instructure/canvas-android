@@ -50,7 +50,7 @@ class SettingsE2ETest : TeacherTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
@@ -103,7 +103,7 @@ class SettingsE2ETest : TeacherTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
@@ -152,7 +152,7 @@ class SettingsE2ETest : TeacherTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
@@ -174,7 +174,7 @@ class SettingsE2ETest : TeacherTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
@@ -199,7 +199,7 @@ class SettingsE2ETest : TeacherTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 

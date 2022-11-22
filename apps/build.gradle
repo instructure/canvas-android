@@ -35,6 +35,7 @@ buildscript {
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
         classpath Plugins.SQLDELIGHT
         classpath Plugins.HILT
+        classpath Plugins.HEAP
     }
 }
 

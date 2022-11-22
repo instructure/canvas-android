@@ -34,6 +34,8 @@ class LoginLandingPage : BasePage() {
 
     private val canvasLogoImageView by OnViewWithId(R.id.canvasLogo)
     private val findMySchoolButton by OnViewWithId(R.id.findMySchool)
+    private val findAnotherSchoolButton by OnViewWithId(R.id.findAnotherSchool, autoAssert = false)
+    private val lastSavedSchoolButton by OnViewWithId(R.id.openRecentSchool, autoAssert = false)
     private val canvasNetworkTextView by OnViewWithId(R.id.canvasNetwork)
     private val previousLoginWrapper by OnViewWithId(R.id.previousLoginWrapper, autoAssert = false)
     private val previousLoginTitleText by OnViewWithId(R.id.previousLoginTitleText, autoAssert = false)
@@ -45,6 +47,14 @@ class LoginLandingPage : BasePage() {
 
     fun clickFindMySchoolButton() {
         findMySchoolButton.click()
+    }
+
+    fun clickFindAnotherSchoolButton() {
+        findAnotherSchoolButton.click()
+    }
+
+    fun clickOnLastSavedSchoolButton() {
+        lastSavedSchoolButton.click()
     }
 
     fun clickCanvasNetworkButton() {

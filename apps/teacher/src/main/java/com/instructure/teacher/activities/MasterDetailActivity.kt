@@ -20,26 +20,31 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.percentlayout.widget.PercentLayoutHelper
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.fragment.app.Fragment
+import androidx.percentlayout.widget.PercentLayoutHelper
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
-import com.instructure.pandautils.utils.*
+import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.fragments.CourseBrowserEmptyFragment
 import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.EmptyFragment
-import com.instructure.interactions.Identity
-import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,6 +66,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_master_detail)
 
         mRoute = intent.extras!!.getParcelable<Route>(Route.ROUTE)
@@ -101,13 +107,11 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
             }
         }
 
-        if(mRoute?.canvasContext is Course) {
+        if (mRoute?.canvasContext is Course) {
             val course = mRoute?.canvasContext as Course
-            middleTopDivider.setBackgroundColor(course.color)
-            fakeToolbarMaster.setBackgroundColor(course.color)
-            fakeToolbarDetail.setBackgroundColor(course.color)
+            fakeToolbarMaster.setBackgroundColor(course.backgroundColor)
+            fakeToolbarDetail.setBackgroundColor(course.backgroundColor)
         } else {
-            middleTopDivider.setBackgroundColor(ThemePrefs.primaryColor)
             fakeToolbarMaster.setBackgroundColor(ThemePrefs.primaryColor)
             fakeToolbarDetail.setBackgroundColor(ThemePrefs.primaryColor)
         }

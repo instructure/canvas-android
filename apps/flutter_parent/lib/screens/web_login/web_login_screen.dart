@@ -18,6 +18,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
@@ -37,8 +38,8 @@ enum LoginFlow {
 }
 
 class WebLoginScreen extends StatefulWidget {
-  WebLoginScreen(
-    this.domain, {
+  WebLoginScreen(this.domain, {
+    this.accountName,
     this.user,
     this.pass,
     this.authenticationProvider,
@@ -47,6 +48,7 @@ class WebLoginScreen extends StatefulWidget {
   }) : super(key: key);
 
   final String user;
+  final String accountName;
   final String pass;
   final String domain;
   final String authenticationProvider;
@@ -200,7 +202,13 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
           AnalyticsEventConstants.LOGIN_SUCCESS,
           extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
         );
-        locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
+        final lastAccount = new SchoolDomain((builder) =>
+        builder
+          ..domain = widget.domain
+          ..name = widget.accountName);
+        ApiPrefs.setLastAccount(lastAccount, widget.loginFlow);
+        locator<QuickNav>().pushRouteAndClearStack(
+            context, PandaRouter.rootSplash());
       }).catchError((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_FAILURE,

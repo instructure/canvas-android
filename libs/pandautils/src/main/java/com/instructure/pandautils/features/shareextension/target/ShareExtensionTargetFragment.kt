@@ -18,12 +18,10 @@ package com.instructure.pandautils.features.shareextension.target
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
 import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
@@ -31,13 +29,14 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.transition.TransitionManager
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentShareExtensionTargetBinding
+import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
 import com.instructure.pandautils.utils.AnimationHelpers
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -67,17 +66,22 @@ class ShareExtensionTargetFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.events.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.isAccessibilityEnabled = isAccessibilityEnabled(requireContext())
+
+        viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
-        })
+        }
 
         setRevealContentsListener()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentShareExtensionTargetBinding.inflate(layoutInflater, null, false)
+
+        binding.studentCourseSpinner.isEnabled = !isAccessibilityEnabled(requireContext())
+        binding.assignmentSpinner.isEnabled = !isAccessibilityEnabled(requireContext())
 
         val alertDialog = AlertDialog.Builder(requireContext())
                 .setView(binding.root)
@@ -86,21 +90,43 @@ class ShareExtensionTargetFragment : DialogFragment() {
                 .setCancelable(true)
                 .create()
 
-        alertDialog.setCanceledOnTouchOutside(true)
-        alertDialog.setCancelable(true)
+        alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setOnShowListener {
             val positive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-            positive.setTextColor(ThemePrefs.buttonColor)
+            positive.setTextColor(ThemePrefs.textButtonColor)
             positive.setOnClickListener { validateAndShowNext() }
             val negative = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-            negative.setTextColor(ThemePrefs.buttonColor)
+            negative.setTextColor(ThemePrefs.textButtonColor)
             negative.setOnClickListener {
                 dismissAllowingStateLoss()
                 shareExtensionViewModel.finish()
             }
         }
 
+        alertDialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+
         return alertDialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        requireActivity().onBackPressed()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        when (viewModel.data.value?.uploadType) {
+            FileUploadType.ASSIGNMENT -> assignmentTargetSelected()
+            FileUploadType.USER -> filesTargetSelected()
+            else -> filesTargetSelected()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        TransitionManager.endTransitions(binding.assignmentContainer)
+        TransitionManager.endTransitions(binding.selectionWrapper)
     }
 
     private fun moveSelection(@IdRes viewId: Int) {
@@ -116,6 +142,12 @@ class ShareExtensionTargetFragment : DialogFragment() {
     }
 
     private fun toggleSpinners(visible: Boolean) {
+        if (viewModel.isAccessibilityEnabled) {
+            binding.studentCourseSpinner.isEnabled = visible
+            binding.assignmentSpinner.isEnabled = visible
+            return
+        }
+
         TransitionManager.beginDelayedTransition(binding.assignmentContainer)
 
         val set = ConstraintSet()
@@ -162,16 +194,10 @@ class ShareExtensionTargetFragment : DialogFragment() {
     private fun handleAction(action: ShareExtensionTargetAction) {
         when (action) {
             is ShareExtensionTargetAction.FilesTargetSelected -> {
-                binding.assignmentCheckBox.isChecked = false
-                binding.filesCheckBox.isChecked = true
-                toggleSpinners(false)
-                moveSelection(R.id.filesCheckBox)
+                filesTargetSelected()
             }
             is ShareExtensionTargetAction.AssignmentTargetSelected -> {
-                binding.assignmentCheckBox.isChecked = true
-                binding.filesCheckBox.isChecked = false
-                toggleSpinners(true)
-                moveSelection(R.id.assignmentContainer)
+                assignmentTargetSelected()
             }
             is ShareExtensionTargetAction.ShowToast -> {
                 toast(action.toast)
@@ -180,7 +206,25 @@ class ShareExtensionTargetFragment : DialogFragment() {
                 shareExtensionViewModel.showUploadDialog(action.data.course, action.data.assignment, action.data.fileUploadType)
                 dismiss()
             }
+            is ShareExtensionTargetAction.UpdateSpinnerContentDescriptions -> {
+                binding.studentCourseSpinner.contentDescription = action.courseContentDescription
+                binding.assignmentSpinner.contentDescription = action.assignmentContentDescription
+            }
         }
+    }
+
+    private fun filesTargetSelected() {
+        binding.assignmentCheckBox.isChecked = false
+        binding.filesCheckBox.isChecked = true
+        toggleSpinners(false)
+        moveSelection(R.id.filesCheckBox)
+    }
+
+    private fun assignmentTargetSelected() {
+        binding.assignmentCheckBox.isChecked = true
+        binding.filesCheckBox.isChecked = false
+        toggleSpinners(true)
+        moveSelection(R.id.assignmentContainer)
     }
 
 }

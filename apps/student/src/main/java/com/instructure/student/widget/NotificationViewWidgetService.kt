@@ -74,13 +74,13 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
             row.setTextColor(R.id.title, BaseRemoteViewsService.getWidgetTextColor(appWidgetId, applicationContext))
 
             if (streamItem.canvasContext != null && streamItem.canvasContext?.type != CanvasContext.Type.USER) {
-                row.setInt(R.id.icon, "setColorFilter", ColorKeeper.getOrGenerateColor(streamItem.canvasContext))
+                row.setInt(R.id.icon, "setColorFilter", getCanvasContextTextColor(appWidgetId, streamItem.canvasContext))
             } else if (streamItem.getStreamItemType() == StreamItem.Type.CONVERSATION) {
-                val color = if(streamItem.canvasContext != null) ColorKeeper.getOrGenerateColor(streamItem.canvasContext)
+                val color = if(streamItem.canvasContext != null) getCanvasContextTextColor(appWidgetId, streamItem.canvasContext)
                             else BaseRemoteViewsService.getWidgetTextColor(appWidgetId, ContextKeeper.appContext)
                 row.setInt(R.id.icon, "setColorFilter", color)
             } else {
-                val color = if(streamItem.canvasContext != null) ColorKeeper.getOrGenerateColor(streamItem.canvasContext)
+                val color = if(streamItem.canvasContext != null) getCanvasContextTextColor(appWidgetId, streamItem.canvasContext)
                             else ContextCompat.getColor(applicationContext, R.color.textDanger)
                 row.setInt(R.id.icon, "setColorFilter", color)
             }
@@ -141,7 +141,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
                     val courses = CourseManager.getCoursesSynchronous(true)
                             .filter { it.isFavorite && !it.accessRestrictedByDate && !it.isInvited() }
                     val groups = GroupManager.getFavoriteGroupsSynchronous(false)
-                    val userStream = StreamManager.getUserStreamSynchronous(25, false).toMutableList()
+                    val userStream = StreamManager.getUserStreamSynchronous(25, true).toMutableList()
 
                     userStream.sort()
                     userStream.reverse()

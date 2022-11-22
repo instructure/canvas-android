@@ -715,7 +715,6 @@
     <string name="changeUser">Mudar utilizador</string>
     <string name="general">Geral</string>
     <string name="sendFeedback">Enviar Comentários</string>
-    <string name="rateOnTheAppStore">Taxa na App Store</string>
     <string name="privacyPolicy">Política de Privacidade</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Termos de uso</string>
@@ -798,7 +797,7 @@
     <string name="deleteRecording">Eliminar gravação</string>
     <string name="videoCommentReplay">Repetir comentários de vídeos</string>
     <string name="addMediaComment">Adicionar comentário de mídia</string>
-    <string name="copyrightHolder">Detentor dos direitos autorais</string>
+    <string name="copyrightHolder">Detentor dos direitos de autor</string>
     <string name="access">Acesso</string>
     <string name="usageRights">Direitos de utilização</string>
     <string name="deleteFile">Eliminar Ficheiro</string>
