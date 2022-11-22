@@ -44,20 +44,20 @@ class TextSubmissionViewFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        textSubmissionWebView.webChromeClient = object : WebChromeClient() {
+        textSubmissionWebViewWrapper.webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (!isAdded) return
                 if (newProgress >= 100) {
                     progressBar?.setGone()
-                    textSubmissionWebView?.setVisible()
+                    textSubmissionWebViewWrapper?.setVisible()
                 } else {
                     progressBar.announceForAccessibility(getString(R.string.loading))
                 }
             }
         }
 
-        textSubmissionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        textSubmissionWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
             override fun onPageStartedCallback(webView: WebView, url: String) = Unit
             override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
@@ -69,7 +69,7 @@ class TextSubmissionViewFragment : Fragment() {
             }
         }
 
-        textSubmissionWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        textSubmissionWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(
                 InternalWebViewActivity.createIntent(requireActivity(), url, "", true)
             )
@@ -77,25 +77,19 @@ class TextSubmissionViewFragment : Fragment() {
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
-        textSubmissionWebView.loadRawHtml(formatHtml(submissionText))
-    }
-
-    private fun formatHtml(src: String): String {
-        /* Pre-format using CanvasWebView's formatter, which will wrap the source string in an HTML body to
-           set the viewport and apply basic CSS properties */
-        val formatted = textSubmissionWebView.formatHtml(src, getString(R.string.a11y_submissionText))
-
-        /* If the source content begins with a paragraph tag, the WebView automatically applies some vertical padding.
+        textSubmissionWebViewWrapper.loadHtml(submissionText, getString(R.string.a11y_submissionText)) { formatted ->
+            /* If the source content begins with a paragraph tag, the WebView automatically applies some vertical padding.
            For other content, we need to apply the padding ourselves. */
-        val verticalPadding = if (src.startsWith("<p")) "0px" else "16px"
+            val verticalPadding = if (submissionText.startsWith("<p")) "0px" else "16px"
 
-        // Set padding by updating the relevant CSS property
-        return formatted.replaceFirstAfter("#content", "padding: 0px 10px 10px;", "padding: $verticalPadding 16px;")
+            // Set padding by updating the relevant CSS property
+            formatted.replaceFirstAfter("#content", "padding: 0px 10px 10px;", "padding: $verticalPadding 16px;")
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        textSubmissionWebView.stopLoading()
+        textSubmissionWebViewWrapper.webView.stopLoading()
     }
 
     companion object {

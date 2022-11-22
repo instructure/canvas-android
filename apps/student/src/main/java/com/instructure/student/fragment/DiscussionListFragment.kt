@@ -94,7 +94,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         rootView = layoutInflater.inflate(R.layout.course_discussion_topic, container, false)
         recyclerAdapter = DiscussionListRecyclerAdapter(requireContext(), canvasContext, !isAnnouncement, object: DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback{
             override fun onRowClicked(model: DiscussionTopicHeader, position: Int, isOpenDetail: Boolean) {
-                RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(canvasContext, model))
+                RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(canvasContext, model, isAnnouncement))
             }
 
             override fun onRefreshFinished() {

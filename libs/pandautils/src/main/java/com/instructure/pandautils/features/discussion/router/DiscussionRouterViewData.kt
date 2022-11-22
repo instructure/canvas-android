@@ -8,7 +8,8 @@ sealed class DiscussionRouterAction {
     data class RouteToDiscussion(
         val canvasContext: CanvasContext,
         val isRedesignEnabled: Boolean,
-        val discussionTopicHeader: DiscussionTopicHeader
+        val discussionTopicHeader: DiscussionTopicHeader,
+        val isAnnouncement: Boolean
     ) : DiscussionRouterAction()
 
     data class RouteToGroupDiscussion(
