@@ -36,7 +36,6 @@ import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
-import org.junit.Test
 import org.junit.rules.Timeout
 import java.util.*
 
@@ -51,7 +50,6 @@ class ScheduleE2ETest : StudentTest() {
     var globalTimeout: Timeout = Timeout.millis(600000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
 
     @E2E
-    @Test(timeout = 600000) //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
     @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun scheduleE2ETest() {
 
