@@ -18,16 +18,16 @@
 
 package com.instructure.espresso.matchers
 
+import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
-import android.view.View
 import com.instructure.espresso.EspressoLog
 import org.hamcrest.Matcher
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.*
+import java.util.concurrent.atomic.*
 
 object WaitForViewMatcher {
     private val log = EspressoLog(WaitForViewMatcher::class.java)
@@ -41,9 +41,9 @@ object WaitForViewMatcher {
     // https://github.com/braintree/braintree_android/blob/25513d76da88fe2ce9f476c4dc51f24cf6e26104/TestUtils/src/main/java/com/braintreepayments/testutils/ui/ViewHelper.java#L30
 
     // The viewMatcher is called on every view to determine what matches. Must be fast!
-    fun waitForView(viewMatcher: Matcher<View>): ViewInteraction {
+    fun waitForView(viewMatcher: Matcher<View>, duration: Long): ViewInteraction {
         waiting.set(true)
-        val waitTime = TimeUnit.SECONDS.toMillis(10)
+        val waitTime = TimeUnit.SECONDS.toMillis(duration)
         val endTime = System.currentTimeMillis() + waitTime
 
         log.i("waitForView matching...")

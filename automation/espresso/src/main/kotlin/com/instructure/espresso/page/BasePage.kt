@@ -16,19 +16,19 @@
  */
 package com.instructure.espresso.page
 
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertVisible
 import androidx.annotation.IdRes
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertVisible
 import com.instructure.espresso.matchers.WaitForViewMatcher
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 abstract class BasePage(@IdRes val pageResId: Int? = null) {
 
-    open fun assertPageObjects() {
-        assertProperties()
+    open fun assertPageObjects(duration: Long = 10) {
+        assertProperties(duration)
     }
 
     private val assertPropertiesInfo = arrayListOf<Pair<ReadOnlyProperty<BasePage, ViewInteraction>, KProperty<*>>>()
@@ -41,8 +41,8 @@ abstract class BasePage(@IdRes val pageResId: Int? = null) {
         assertPropertiesInfo += info
     }
 
-    private fun assertProperties() {
-        pageResId?.let { WaitForViewMatcher.waitForView(ViewMatchers.withId(it)).assertDisplayed() }
+    private fun assertProperties(duration: Long) {
+        pageResId?.let { WaitForViewMatcher.waitForView(ViewMatchers.withId(it), duration).assertDisplayed() }
         getRegisteredProperties().forEach { it.assertVisible() }
     }
 
