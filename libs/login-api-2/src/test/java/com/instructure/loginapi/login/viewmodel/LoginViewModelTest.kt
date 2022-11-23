@@ -20,23 +20,25 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.AuthenticatedSession
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.help.HelpDialogViewModel
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -71,17 +73,114 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `Emit feature flag from feature flag provider`() {
+    fun `Do not check token if not needed`() {
         // Given
         coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
 
         // When
         viewModel = createViewModel()
-//        val canvasElementaryFeature = viewModel.checkCanvasForElementaryFeature()
-//        canvasElementaryFeature.observe(lifecycleOwner, Observer {})
+        val loginStatus = viewModel.checkLogin(false, true)
+        loginStatus.observe(lifecycleOwner, {})
 
         // Then
-//        assertTrue(canvasElementaryFeature.value!!.getContentIfNotHandled()!!)
+        assertEquals(LoginResultAction.Login(true), loginStatus.value!!.getContentIfNotHandled()!!)
+        verify(exactly = 0) { userManager.getSelfAsync(any()) }
+    }
+
+    @Test
+    fun `Do not check elementary if not needed`() {
+        // Given
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(false, false)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+        coVerify(exactly = 0) { featureFlagProvider.getCanvasForElementaryFlag() }
+    }
+
+    @Test
+    fun `Send token not valid event if token check fails`() {
+        // Given
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail()
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, true)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        assertEquals(LoginResultAction.TokenNotValid, loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Send login event when terms acceptance is not needed`() {
+        // Given
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, true)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Send login event with elementary when terms acceptance is not needed and elementary is turned on`() {
+        // Given
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, true)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        assertEquals(LoginResultAction.Login(true), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Send should accept event when terms acceptance is needed`() {
+        // Given
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = true))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, true)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        assertEquals(LoginResultAction.ShouldAcceptPolicy(false), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
     private fun createViewModel(): LoginViewModel {

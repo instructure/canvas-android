@@ -210,7 +210,7 @@ object UserManager {
 
     fun acceptUserTermsAsync() = apiAsync<User> { acceptUserTerms(it) }
 
-    fun acceptUserTerms(callback: StatusCallback<User>) {
+    private fun acceptUserTerms(callback: StatusCallback<User>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         UserAPI.updateUserTerms(adapter, params, callback)
