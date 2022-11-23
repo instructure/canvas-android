@@ -53,7 +53,22 @@ class AcceptableUsePolicyViewModel @Inject constructor(private val userManager: 
     }
 
     fun openPolicy() {
-        _events.value = Event(AcceptableUsePolicyAction.OpenPolicy(_data.value?.policy ?: ""))
+        val policy = _data.value?.policy ?: ""
+        if (policy.isNotEmpty()) {
+            _events.value = Event(AcceptableUsePolicyAction.OpenPolicy(_data.value?.policy ?: ""))
+        } else {
+            _data.value = _data.value?.copy(loading = true)
+            viewModelScope.launch {
+                try {
+                    val termsOfService = userManager.getTermsOfServiceAsync(true).await().dataOrThrow.content ?: ""
+                    _data.value = _data.value?.copy(policy = termsOfService, loading = false)
+                    _events.value = Event(AcceptableUsePolicyAction.OpenPolicy(termsOfService))
+                } catch (e: Exception) {
+                    _data.value = _data.value?.copy(loading = false)
+                    _events.value = Event(AcceptableUsePolicyAction.PolicyOpenFailed)
+                }
+            }
+        }
     }
 
     fun acceptPolicy() {

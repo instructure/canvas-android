@@ -26,4 +26,5 @@ sealed class AcceptableUsePolicyAction {
     data class OpenPolicy(val content: String): AcceptableUsePolicyAction()
     object PolicyAccepted : AcceptableUsePolicyAction()
     object AcceptFailure : AcceptableUsePolicyAction()
+    object PolicyOpenFailed : AcceptableUsePolicyAction()
 }
