@@ -61,8 +61,6 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
 
     protected abstract fun userAgent(): String
 
-    protected abstract val isTesting: Boolean
-
     private val viewModel: LoginViewModel by viewModels()
 
     @Inject

@@ -41,22 +41,7 @@ class LoginViewModel @Inject constructor(
     private val oauthManager: OAuthManager,
     private val apiPrefs: ApiPrefs) : ViewModel() {
 
-    private val canvasForElementaryResult = MutableLiveData<Event<Boolean>>()
-
-    private val tokenValidationResult = MutableLiveData<Event<Boolean>>()
-
-    private val shouldAcceptPolicy = MutableLiveData<Event<Boolean>>()
-
     private val loginResultAction = MutableLiveData<Event<LoginResultAction>>()
-
-    fun checkCanvasForElementaryFeature(): LiveData<Event<Boolean>> {
-        viewModelScope.launch {
-            val canvasForElementaryFlag = featureFlagProvider.getCanvasForElementaryFlag()
-            canvasForElementaryResult.postValue(Event(canvasForElementaryFlag))
-        }
-
-        return canvasForElementaryResult
-    }
 
     fun checkLogin(checkToken: Boolean, checkElementary: Boolean): LiveData<Event<LoginResultAction>> {
         viewModelScope.launch {

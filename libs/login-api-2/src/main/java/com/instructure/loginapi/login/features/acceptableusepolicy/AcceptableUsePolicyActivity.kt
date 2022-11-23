@@ -48,18 +48,17 @@ class AcceptableUsePolicyActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         setContentView(binding.root)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitle(R.string.acceptableUsePolicyTitle)
-        toolbar.setupAsCloseButton {
+        binding.toolbar.setTitle(R.string.acceptableUsePolicyTitle)
+        binding.toolbar.setupAsCloseButton {
             router.logout()
             finish()
         }
-        toolbar.setMenu(R.menu.menu_acceptable_use_policy, {
+        binding.toolbar.setMenu(R.menu.menu_acceptable_use_policy, {
             if (it.itemId == R.id.submit) withRequireNetwork { viewModel.acceptPolicy() }
         })
-        ViewStyler.themeToolbarLight(this, toolbar)
+        ViewStyler.themeToolbarLight(this, binding.toolbar)
         ViewStyler.themeSwitch(this, binding.acceptSwitch, getColor(R.color.textInfo))
-        ToolbarColorizeHelper.colorizeToolbar(toolbar, getColor(R.color.textDarkest), this, getColor(R.color.backgroundMedium))
+        ToolbarColorizeHelper.colorizeToolbar(binding.toolbar, getColor(R.color.textDarkest), this, getColor(R.color.backgroundMedium))
 
         viewModel.events.observe(this, { event ->
             event.getContentIfNotHandled()?.let {
@@ -68,7 +67,7 @@ class AcceptableUsePolicyActivity : AppCompatActivity() {
         })
 
         viewModel.data.observe(this, { data ->
-            val submitItem = toolbar.menu.getItem(0)
+            val submitItem = binding.toolbar.menu.getItem(0)
             submitItem.isEnabled = data.checked
         })
     }
