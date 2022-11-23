@@ -22,6 +22,7 @@ import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.espresso.ViewUtils
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -87,7 +88,7 @@ class SettingsE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Edit username to 'Unsaved userName' but DO NOT CLICK ON SAVE. Navigate back to Profile Settings Page without saving.")
         editProfileSettingsPage.editUserName("Unsaved userName")
-        Espresso.pressBack()
+        ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Assert that the username value remained $newUserName.")
         profileSettingsPage.assertUserNameIs(newUserName)
