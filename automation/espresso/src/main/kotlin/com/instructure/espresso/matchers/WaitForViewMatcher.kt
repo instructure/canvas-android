@@ -41,7 +41,7 @@ object WaitForViewMatcher {
     // https://github.com/braintree/braintree_android/blob/25513d76da88fe2ce9f476c4dc51f24cf6e26104/TestUtils/src/main/java/com/braintreepayments/testutils/ui/ViewHelper.java#L30
 
     // The viewMatcher is called on every view to determine what matches. Must be fast!
-    fun waitForView(viewMatcher: Matcher<View>, duration: Long): ViewInteraction {
+    fun waitForView(viewMatcher: Matcher<View>, duration: Long = 10): ViewInteraction {
         waiting.set(true)
         val waitTime = TimeUnit.SECONDS.toMillis(duration)
         val endTime = System.currentTimeMillis() + waitTime
