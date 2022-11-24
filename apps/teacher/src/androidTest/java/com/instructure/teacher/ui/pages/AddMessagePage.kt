@@ -16,8 +16,6 @@
  */
 package com.instructure.teacher.ui.pages
 
-import android.util.Log
-import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.material.chip.Chip
 import com.instructure.canvas.espresso.typedViewCondition
 import com.instructure.canvasapi2.models.Course
@@ -39,7 +37,7 @@ class AddMessagePage: BasePage() {
     private val editSubjectEditText by WaitForViewWithId(R.id.editSubject)
     private val addContactsButton by WaitForViewWithId(R.id.contactsImageButton)
 
-    override fun assertPageObjects() {
+    override fun assertPageObjects(duration: Long) {
         subjectTextView.assertDisplayed()
         chipsInput.assertDisplayed()
     }

@@ -66,7 +66,7 @@ class LoginSignInPage: BasePage() {
 
     //region Assertion Helpers
 
-    override fun assertPageObjects() {
+    override fun assertPageObjects(duration: Long) {
         signInRoot.assertDisplayed()
         toolbar.assertDisplayed()
 
