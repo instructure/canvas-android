@@ -22,7 +22,7 @@ class InboxPage: BasePage() {
     private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
     private val filterText by OnViewWithId(R.id.filterText)
 
-    override fun assertPageObjects() {
+    override fun assertPageObjects(duration: Long) {
         toolbarTitle.assertDisplayed()
     }
 
