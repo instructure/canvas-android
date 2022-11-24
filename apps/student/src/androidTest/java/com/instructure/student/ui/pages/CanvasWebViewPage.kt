@@ -89,6 +89,10 @@ open class CanvasWebViewPage : BasePage(R.id.contentWebView) {
                 .withContextualElement(findElement(subElementType, subElementValue))
                 .perform(webClick())
     }
+
+    fun waitForWebView() {
+        waitForView(allOf(withId(R.id.contentWebView), isDisplayed()))
+    }
 }
 
 /** data class that encapsulates info for a webview text check */
