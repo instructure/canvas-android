@@ -40,6 +40,10 @@ object AssignmentManager {
         AssignmentAPI.getAssignmentIncludeObservees(courseId, assignmentId, adapter, callback, params)
     }
 
+    fun getAssignmentIncludeObserveesAsync(assignmentId: Long, courseId: Long, forceNetwork: Boolean) = apiAsync<ObserveeAssignment> {
+        getAssignmentIncludeObservees(assignmentId, courseId, forceNetwork, it)
+    }
+
     fun getAssignmentAsync(assignmentId: Long, courseId: Long, forceNetwork: Boolean)
             = apiAsync<Assignment> { getAssignment(assignmentId, courseId, forceNetwork, it) }
 

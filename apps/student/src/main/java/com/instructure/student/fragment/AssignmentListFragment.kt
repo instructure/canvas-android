@@ -50,8 +50,8 @@ import com.instructure.student.adapter.assignment.AssignmentListByDateRecyclerAd
 import com.instructure.student.adapter.assignment.AssignmentListByTypeRecyclerAdapter
 import com.instructure.student.adapter.assignment.AssignmentListFilter
 import com.instructure.student.adapter.assignment.AssignmentListRecyclerAdapter
+import com.instructure.student.features.assignmentdetails.AssignmentDetailFragment
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.assignment_list_layout.*
@@ -98,7 +98,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
         override fun onRowClicked(assignment: Assignment, position: Int, isOpenDetail: Boolean) {
-            RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+            RouteMatcher.route(requireContext(), AssignmentDetailFragment.makeRoute(canvasContext, assignment.id))
         }
 
         override fun onRefreshFinished() {
