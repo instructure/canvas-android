@@ -91,7 +91,7 @@ open class CanvasWebViewPage : BasePage(R.id.contentWebView) {
     }
 
     fun waitForWebView() {
-        waitForViewWithId(R.id.contentWebView)
+        waitForView(allOf(withId(R.id.contentWebView), isDisplayed()))
     }
 }
 
