@@ -115,7 +115,7 @@ fun ViewInteraction.assertIsRefreshing(isRefreshing: Boolean) {
     check(matches(matcher))
 }
 
-open class IntentActionMatcher(private val intentType: String, private val dataMatcher: String) : TypeSafeMatcher<Intent>() {
+class IntentActionMatcher(private val intentType: String, private val dataMatcher: String) : TypeSafeMatcher<Intent>() {
 
     override fun describeTo(description: Description?) {
         description?.appendText("Intent Matcher")

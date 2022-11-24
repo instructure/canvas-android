@@ -288,7 +288,8 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Assert that the proper intents has launched, so the NavigationActivity has been launched with an Intent from SettingsActivity.")
         val calendarDataMatcherString = "https://calendar.google.com/calendar/r?cid=webcal://"
-        intended(object: IntentActionMatcher(Intent.ACTION_VIEW, calendarDataMatcherString) {})
+        val intentActionMatcher = IntentActionMatcher(Intent.ACTION_VIEW, calendarDataMatcherString)
+        intended(intentActionMatcher)
 
         Log.d(PREPARATION_TAG, "Release Intents.")
         Intents.release()
