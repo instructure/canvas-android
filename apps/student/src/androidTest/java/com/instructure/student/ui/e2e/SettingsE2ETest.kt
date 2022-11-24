@@ -21,7 +21,6 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -31,11 +30,11 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
+import com.instructure.student.ui.utils.IntentActionMatcher
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Test
 
@@ -44,9 +43,6 @@ class SettingsE2ETest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
-
-  //  @get:Rule
-  //  val intentsTestRule = IntentsTestRule(SettingsActivity::class.java)
 
     @E2E
     @Test
@@ -291,16 +287,10 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.clickOnSubscribe()
 
         Log.d(STEP_TAG, "Assert that the proper intents has launched, so the NavigationActivity has been launched with an Intent from SettingsActivity.")
-      //  intended(toPackage("org.chromium.webview_shell"))
-      //  intended(hasComponent(NavigationActivity::class.java.name))
-     //   val webcalLink = calendarLink.replace("https://", "webcal://")
-      //  val googleCalendarLink = "https://calendar.google.com/calendar/r?cid=$webcalLink"
-        val expectedIntent = CoreMatchers.allOf(
-            IntentMatchers.hasAction(Intent.ACTION_VIEW),
-            IntentMatchers.hasData("https://calendar.google.com/"),
-        )
+        val calendarDataMatcherString = "https://calendar.google.com/calendar/r?cid=webcal://"
+        intended(object: IntentActionMatcher(Intent.ACTION_VIEW, calendarDataMatcherString) {})
 
-        intended(expectedIntent)
+        Log.d(PREPARATION_TAG, "Release Intents.")
         Intents.release()
     }
 }
