@@ -25,14 +25,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
-import com.instructure.espresso.OnViewWithStringTextIgnoreCase
-import com.instructure.espresso.OnViewWithText
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.scrollTo
-import com.instructure.espresso.typeText
 import com.instructure.student.R
 
 // This is a little hokey, as the options that appear are somewhat governed by the results of
@@ -74,5 +69,31 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
     fun submitFeature() {
         submitFeatureLabel.scrollTo().click()
+    }
+
+    fun assertHelpMenuDisplayed() {
+        onView(withId(R.id.alertTitle) + withText("Help")).assertDisplayed()
+        onView(withId(R.id.helpDialog)).assertDisplayed()
+    }
+
+    fun assertHelpMenuContent() {
+
+        onView(withId(R.id.title) + withText(R.string.searchGuides))
+        onView(withId(R.id.subtitle) + withText(R.string.searchGuidesDetails))
+
+        onView(withId(R.id.title) + withText(R.string.askInstructor))
+        onView(withId(R.id.subtitle) + withText(R.string.askInstructorDetails))
+
+        onView(withId(R.id.title) + withText(R.string.reportProblem))
+        onView(withId(R.id.subtitle) + withText(R.string.reportProblemDetails))
+
+        onView(withId(R.id.title) + withText(R.string.shareYourLove))
+        onView(withId(R.id.subtitle) + withText(R.string.shareYourLoveDetails))
+
+        onView(withId(R.id.title) + withText("Submit a Feature Idea"))
+        onView(withId(R.id.subtitle) + withText("Have an idea to improve Canvas?"))
+
+        onView(withId(R.id.title) + withText("COVID-19 Canvas Resources"))
+        onView(withId(R.id.subtitle) + withText("Tips for teaching and learning online"))
     }
 }
