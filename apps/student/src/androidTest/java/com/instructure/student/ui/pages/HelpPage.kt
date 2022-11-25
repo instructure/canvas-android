@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.*
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
 import com.instructure.student.R
 
 // This is a little hokey, as the options that appear are somewhat governed by the results of
@@ -72,7 +73,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     fun assertHelpMenuDisplayed() {
-        onView(withId(R.id.alertTitle) + withText("Help")).assertDisplayed()
+        onView(withId(R.id.alertTitle) + withText(R.string.help)).assertDisplayed()
         onView(withId(R.id.helpDialog)).assertDisplayed()
     }
 
