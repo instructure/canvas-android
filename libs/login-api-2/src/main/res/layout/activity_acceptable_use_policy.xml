@@ -119,6 +119,7 @@
                     android:text="@string/acceptableUsePolicyAgree"
                     android:textSize="16sp"
                     android:textColor="@color/textDarkest"
+                    android:labelFor="@id/acceptSwitch"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
