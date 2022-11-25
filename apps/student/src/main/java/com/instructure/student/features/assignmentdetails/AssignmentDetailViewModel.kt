@@ -149,9 +149,17 @@ class AssignmentDetailViewModel @Inject constructor(
             }
         )
 
-        val attempts = assignment.submission?.submissionHistory?.mapIndexedNotNull { index, submission ->
-            val dateString = submission?.submittedAt?.let { getFormattedDate(it) }.orEmpty()
-            AssignmentDetailAttemptItemViewModel(AssignmentDetailAttemptViewData("${index + 1}. attempt", dateString))
+        val submissionHistory = assignment.submission?.submissionHistory
+        val attempts = submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
+            submission?.submittedAt?.let { getFormattedDate(it) }?.let {
+                AssignmentDetailAttemptItemViewModel(
+                    AssignmentDetailAttemptViewData(
+                        resources.getString(R.string.attempt, submissionHistory.size - index),
+                        it,
+                        submission
+                    )
+                )
+            }
         }.orEmpty()
 
         val submissionTypes = assignment.getSubmissionTypes()
@@ -184,7 +192,7 @@ class AssignmentDetailViewModel @Inject constructor(
             submissionStatusTint,
             submitButtonText,
             attempts,
-            assignment.submission,
+            assignment.submission.takeIf { it?.attempt != 0L },
             due,
             submissionTypes,
             assignment.description.orEmpty(),
@@ -206,9 +214,7 @@ class AssignmentDetailViewModel @Inject constructor(
     }
 
     fun onAttemptSelected(position: Int) {
-        val selectedSubmission = _data.value?.assignment?.submission?.submissionHistory?.getOrNull(position)?.apply {
-            assignment = _data.value?.assignment
-        }
+        val selectedSubmission = _data.value?.attempts?.getOrNull(position)?.data?.submission
         _data.value?.selectedSubmission = selectedSubmission
         _data.value?.notifyPropertyChanged(BR.selectedSubmission)
     }

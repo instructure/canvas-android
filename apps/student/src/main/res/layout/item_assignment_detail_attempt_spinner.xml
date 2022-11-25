@@ -35,7 +35,6 @@
             android:id="@+id/attemptTitle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="8dp"
             android:ellipsize="end"
             android:fontFamily="@font/lato_font_family"
             android:singleLine="true"
@@ -66,6 +65,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_default="wrap"
             tools:text="2023. Jan 31. 11:49" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

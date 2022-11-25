@@ -120,10 +120,21 @@
                         android:backgroundTint="@color/textDark"
                         android:foreground="?attr/selectableItemBackground"
                         android:onItemSelected="@{(parent, view, position, id) -> viewModel.onAttemptSelected(position)}"
+
+                        android:visibility="@{viewModel.data.attempts.size() > 1 ? View.VISIBLE : View.GONE}"
                         app:itemViewModels="@{viewModel.data.attempts}"
                         app:layoutRes="@{@layout/item_assignment_detail_attempt_spinner}"
                         app:layout_constraintTop_toBottomOf="@id/attemptDivider"
                         tools:ignore="RtlSymmetry" />
+
+                    <include
+                        android:id="@+id/attemptView"
+                        layout="@layout/item_assignment_detail_attempt_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{viewModel.data.attempts.size() == 1 ? View.VISIBLE : View.GONE}"
+                        app:itemViewModel="@{viewModel.data.firstAttemptOrNull}"
+                        app:layout_constraintTop_toBottomOf="@id/attemptSpinner" />
 
                     <View
                         android:id="@+id/gradleCellBackground"
@@ -133,7 +144,7 @@
                         android:background="@drawable/bg_rounded_outline_6dp"
                         android:onClick="@{()->viewModel.onGradeCellClicked()}"
                         app:layout_constraintBottom_toBottomOf="@id/gradleCell"
-                        app:layout_constraintTop_toBottomOf="@id/attemptSpinner" />
+                        app:layout_constraintTop_toBottomOf="@id/attemptView" />
 
                     <com.instructure.student.features.assignmentdetails.GradeCellView
                         android:id="@+id/gradleCell"
@@ -141,10 +152,11 @@
                         android:layout_height="wrap_content"
                         android:onClick="@{()->viewModel.onGradeCellClicked()}"
                         android:padding="16dp"
-                        app:gradeData="@{viewModel.data.selectedSubmission}"
+                        app:assignment="@{viewModel.data.assignment}"
                         app:layout_constraintEnd_toEndOf="@id/gradleCellBackground"
                         app:layout_constraintStart_toStartOf="@id/gradleCellBackground"
-                        app:layout_constraintTop_toTopOf="@id/gradleCellBackground" />
+                        app:layout_constraintTop_toTopOf="@id/gradleCellBackground"
+                        app:submission="@{viewModel.data.selectedSubmission}" />
 
                     <View
                         android:id="@+id/dueDivider"
@@ -152,6 +164,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="30dp"
                         android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.selectedSubmission == null ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/gradleCellBackground" />
 
                     <TextView
@@ -171,12 +184,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="@font/lato_font_family"
                         android:text="@{viewModel.data.dueDate}"
-                        android:textColor="@color/textDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="16sp"
-                        android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@id/dueLabel" />
 
                     <TextView
@@ -196,12 +208,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="@font/lato_font_family"
                         android:text="@{viewModel.data.submissionTypes}"
-                        android:textColor="@color/textDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="16sp"
-                        android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@id/submissionTypesLabel" />
 
                     <TextView
@@ -221,12 +232,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="@font/lato_font_family"
                         android:text="@string/noAssignmentDescriptionStudent"
-                        android:textColor="@color/textDark"
+                        android:textColor="@color/textDarkest"
                         android:textSize="16sp"
-                        android:textStyle="bold"
                         android:visibility="@{viewModel.data.description.empty ? View.VISIBLE : View.GONE}"
                         app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
 
@@ -240,7 +250,7 @@
                         android:visibility="@{viewModel.data.description.empty ? View.GONE : View.VISIBLE}"
                         app:htmlContent="@{viewModel.data.description}"
                         app:htmlTitle="@{viewModel.data.assignmentName}"
-                        app:layout_constraintTop_toBottomOf="@id/noDescriptionTextView"
+                        app:layout_constraintTop_toBottomOf="@id/descriptionLabel"
                         app:onLtiButtonPressed="@{(url) -> viewModel.onLtiButtonPressed(url)}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -254,7 +264,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/bg_button_rounded"
             android:backgroundTint="@color/backgroundInfo"
             android:foreground="?attr/selectableItemBackground"

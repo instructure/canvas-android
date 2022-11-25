@@ -18,11 +18,14 @@ data class AssignmentDetailViewData(
     val submissionTypes: String,
     val description: String,
     val ltiTool: LTITool?
-) : BaseObservable()
+) : BaseObservable() {
+    val firstAttemptOrNull = attempts.getOrNull(0)
+}
 
 data class AssignmentDetailAttemptViewData(
     val title: String,
-    val date: String
+    val date: String,
+    val submission: Submission
 )
 
 sealed class AssignmentDetailAction {

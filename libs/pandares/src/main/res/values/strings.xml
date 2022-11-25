@@ -1334,4 +1334,6 @@
     <string name="subscribeButton">Subscribe</string>
     <string name="switchToLightMode">Switch to Light Mode</string>
     <string name="switchToDarkMode">Switch to Dark Mode</string>
+
+    <string name="attempt">%d. attempt</string>
 </resources>

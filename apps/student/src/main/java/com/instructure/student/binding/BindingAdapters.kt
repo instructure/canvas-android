@@ -18,6 +18,7 @@ package com.instructure.student.binding
 
 import androidx.databinding.BindingAdapter
 import com.google.android.material.tabs.TabLayout
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.student.features.assignmentdetails.GradeCellView
 import com.instructure.student.features.elementary.course.ElementaryCourseTab
@@ -34,9 +35,8 @@ fun bindCourseTabs(tabLayout: TabLayout, tabs: List<ElementaryCourseTab>?) {
     }
 }
 
-@BindingAdapter("gradeData")
-fun bindGradeChart(gradeCell: GradeCellView, submission: Submission?) {
-    val assignment = submission?.assignment
-    val viewState = assignment?.let { GradeCellViewState.fromSubmission(gradeCell.context, it, submission) } ?: GradeCellViewState.Empty
-    gradeCell.setState(viewState)
+@BindingAdapter("submission", "assignment")
+fun GradeCellView.bindGradeChart(submission: Submission?, assignment: Assignment?) {
+    val viewState = assignment?.let { GradeCellViewState.fromSubmission(context, it, submission) } ?: GradeCellViewState.Empty
+    setState(viewState)
 }
