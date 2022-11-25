@@ -23,6 +23,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
+import com.heapanalytics.android.config.Options
 import com.instructure.canvasapi2.utils.*
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.AppTheme
@@ -84,7 +85,9 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager() {
         filter.addAction(Const.ACTION_MEDIA_UPLOAD_FAIL)
         LocalBroadcastManager.getInstance(this).registerReceiver(mediaUploadReceiver, filter)
 
-        Heap.init(this, BuildConfig.HEAP_APP_ID)
+        val options = Options()
+        options.disableTracking()
+        Heap.init(this, BuildConfig.HEAP_APP_ID, options)
     }
 
     override fun performLogoutOnAuthError() {

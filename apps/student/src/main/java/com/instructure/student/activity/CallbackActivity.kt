@@ -19,7 +19,9 @@ package com.instructure.student.activity
 
 import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UnreadCountManager
@@ -62,6 +64,8 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
 
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
+            setupHeapTracking()
+
             // Determine if user can masquerade
             if (ApiPrefs.canBecomeUser == null) {
                 if (ApiPrefs.domain.startsWith("siteadmin", true)) {
@@ -134,6 +138,12 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
         } catch {
             initialCoreDataLoadingComplete()
         }
+    }
+
+    private suspend fun setupHeapTracking() {
+        val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
+        val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
+        Heap.setTrackingEnabled(sendUsageMetrics)
     }
 
     private suspend fun getUnreadMessageCount() {

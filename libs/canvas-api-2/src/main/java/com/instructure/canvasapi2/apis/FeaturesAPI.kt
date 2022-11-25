@@ -45,6 +45,6 @@ object FeaturesAPI {
     }
 
     fun getEnvironmentFeatureFlags(adapter: RestBuilder, callback: StatusCallback<Map<String, Boolean>>, params: RestParams) {
-        callback.addCall(adapter.build(FeaturesInterface::class.java, params).getEnvironmentFeatureFlags())
+        callback.addCall(adapter.build(FeaturesInterface::class.java, params).getEnvironmentFeatureFlags()).enqueue(callback)
     }
 }

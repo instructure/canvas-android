@@ -22,7 +22,9 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
@@ -78,6 +80,8 @@ class SplashActivity : AppCompatActivity() {
                         LocaleUtils.restartApp(this@SplashActivity, LoginActivity::class.java)
                         return@weave
                     }
+
+                    setupHeapTracking()
 
                     // Determine if user is a Teacher, Ta, or Designer
                     // Use GlobalScope since this can continue executing after SplashActivity is destroyed
@@ -202,6 +206,12 @@ class SplashActivity : AppCompatActivity() {
         val oldLocale = ApiPrefs.effectiveLocale
         ApiPrefs.user = user
         return ApiPrefs.effectiveLocale != oldLocale
+    }
+
+    private suspend fun setupHeapTracking() {
+        val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
+        val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
+        Heap.setTrackingEnabled(sendUsageMetrics)
     }
 
     override fun onStop() {
