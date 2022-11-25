@@ -26,7 +26,7 @@ import com.instructure.teacher.activities.SplashActivity
 import com.instructure.teacher.tasks.TeacherLogoutTask
 
 class TeacherLoginNavigation(private val activity: FragmentActivity) : LoginNavigation(activity) {
-    override val checkElementary: Boolean = true
+    override val checkElementary: Boolean = false
 
     override fun logout() {
         TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()

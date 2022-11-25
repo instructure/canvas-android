@@ -41,8 +41,8 @@ class StudentAcceptableUsePolicyRouter(private val activity: FragmentActivity) :
         CookieManager.getInstance().flush()
 
         val intent = Intent(activity, NavigationActivity.startActivityClass)
-        if (activity.getIntent() != null && activity.getIntent().extras != null) {
-            intent.putExtras(activity.getIntent().extras!!)
+        activity.intent?.extras?.let { extras ->
+            intent.putExtras(extras)
         }
 
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

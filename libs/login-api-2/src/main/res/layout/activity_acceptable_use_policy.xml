@@ -50,7 +50,6 @@
                 android:layout_marginTop="24dp"
                 android:text="@string/acceptableUsePolicyDescription"
                 android:textSize="16sp"
-                android:textFontWeight="400"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="@color/textDarkest" />
@@ -85,7 +84,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/acceptableUsePolicyButton"
                     android:textSize="16sp"
-                    android:textFontWeight="400"
                     android:textColor="@color/textDarkest"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -120,7 +118,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/acceptableUsePolicyAgree"
                     android:textSize="16sp"
-                    android:textFontWeight="400"
                     android:textColor="@color/textDarkest"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -39,8 +39,8 @@ class StudentLoginNavigation(private val activity: FragmentActivity) : LoginNavi
         CookieManager.getInstance().flush()
 
         val intent = Intent(activity, NavigationActivity.startActivityClass)
-        if (activity.getIntent() != null && activity.getIntent().extras != null) {
-            intent.putExtras(activity.getIntent().extras!!)
+        activity.intent?.extras?.let { extras ->
+            intent.putExtras(extras)
         }
         return intent
     }
