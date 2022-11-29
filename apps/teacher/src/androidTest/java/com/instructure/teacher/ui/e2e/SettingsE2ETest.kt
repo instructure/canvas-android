@@ -22,7 +22,6 @@ import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
-import com.instructure.espresso.ViewUtils
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -86,12 +85,21 @@ class SettingsE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Click on Edit Pencil Icon on the toolbar.")
         profileSettingsPage.clickEditPencilIcon()
 
-        Log.d(STEP_TAG,"Edit username to 'Unsaved userName' but DO NOT CLICK ON SAVE. Navigate back to Profile Settings Page without saving.")
+        Log.d(STEP_TAG,"Edit username to 'Unsaved userName' but DO NOT CLICK ON SAVE.")
         editProfileSettingsPage.editUserName("Unsaved userName")
-        ViewUtils.pressBackButton(2)
 
-        Log.d(STEP_TAG,"Assert that the username value remained $newUserName.")
-        profileSettingsPage.assertUserNameIs(newUserName)
+        while(true) { //this is a workaround for that sometimes on FTL
+            try {
+                Log.d(STEP_TAG, "Press back button (without saving). The goal is to navigate back to the Profile Settings Page.")
+                Espresso.pressBack()
+
+                Log.d(STEP_TAG, "Assert that the username value remained $newUserName.")
+                profileSettingsPage.assertUserNameIs(newUserName)
+                break
+            } catch (e: NoMatchingViewException) {
+                Log.d(STEP_TAG, "The navigation is not on the Profile Settings Page yet, so we have to press the back button again.")
+            }
+        }
 
     }
 
