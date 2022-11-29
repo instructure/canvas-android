@@ -15,12 +15,7 @@
  */
 package com.instructure.teacher.ui
 
-import android.os.SystemClock.sleep
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
-import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.util.ago
@@ -137,7 +132,7 @@ class QuizDetailsPageTest: TeacherTest() {
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
         quizListPage.clickQuiz(quiz)
         quizDetailsPage.waitForRender()

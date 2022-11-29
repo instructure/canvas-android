@@ -32,7 +32,7 @@ class EditDashboardPageTest : TeacherTest() {
     @TestRail(ID = "C3109572")
     override fun displaysPageObjects() {
         setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
-        coursesListPage.openEditDashboard()
+        dashboardPage.clickEditDashboard()
         editDashboardPage.assertPageObjects()
     }
 
@@ -41,7 +41,7 @@ class EditDashboardPageTest : TeacherTest() {
     fun displaysCourseList() {
         val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
         val course = data.courses.values.toList()[0]
-        coursesListPage.openEditDashboard()
+        dashboardPage.clickEditDashboard()
         editDashboardPage.assertHasCourse(course.name)
     }
 
@@ -51,7 +51,7 @@ class EditDashboardPageTest : TeacherTest() {
         val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
         val courses = data.courses.values.toList()
 
-        coursesListPage.openEditDashboard()
+        dashboardPage.clickEditDashboard()
         editDashboardPage.toggleFavouringCourse(courses[0].name)
         editDashboardPage.assertCourseFavoured(courses[0])
     }
@@ -62,7 +62,7 @@ class EditDashboardPageTest : TeacherTest() {
         val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 1)
         val courses = data.courses.values.toList()
 
-        coursesListPage.openEditDashboard()
+        dashboardPage.clickEditDashboard()
         editDashboardPage.toggleFavouringCourse(courses[0].name)
         editDashboardPage.assertCourseUnfavoured(courses[0])
     }

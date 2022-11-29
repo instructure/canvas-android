@@ -15,11 +15,7 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.dataseeding.util.ago
@@ -154,7 +150,7 @@ class AssignmentSubmissionListPageTest : TeacherTest() {
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()

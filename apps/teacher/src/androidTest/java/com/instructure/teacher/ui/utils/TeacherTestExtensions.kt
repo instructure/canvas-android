@@ -335,7 +335,7 @@ fun TeacherTest.tokenLogin(teacher: CanvasUserApiModel, skipSplash: Boolean = tr
                 skipSplash
         )
     }
-    coursesListPage.assertPageObjects()
+    dashboardPage.assertPageObjects()
 }
 
 fun TeacherTest.tokenLogin(domain: String, token: String, user: User) {
@@ -354,7 +354,7 @@ fun TeacherTest.tokenLogin(domain: String, token: String, user: User) {
                 allOf(withId(R.id.emptyCoursesView), isDisplayed())),
             20000)
             .check(matches(isDisplayed()))
-    coursesListPage.assertPageObjects()
+    dashboardPage.assertPageObjects()
 }
 
 fun TeacherTest.openOverflowMenu() {

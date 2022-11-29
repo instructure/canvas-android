@@ -26,7 +26,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class CoursesListPageTest : TeacherTest() {
+class DashboardPageTest : TeacherTest() {
 
     @Test
     @TestRail(ID = "C3108898")
@@ -35,7 +35,7 @@ class CoursesListPageTest : TeacherTest() {
         val teacher = data.teachers[0]
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.assertPageObjects()
+        dashboardPage.assertPageObjects()
     }
 
     @Test
@@ -45,7 +45,7 @@ class CoursesListPageTest : TeacherTest() {
         val teacher = data.teachers[0]
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.assertDisplaysNoCoursesView()
+        dashboardPage.assertEmptyView()
     }
 
     @Test
@@ -56,7 +56,7 @@ class CoursesListPageTest : TeacherTest() {
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
 
-        coursesListPage.assertHasCourses(data.courses.values.toList())
+        dashboardPage.assertHasCourses(data.courses.values.toList())
     }
 
     @Test
@@ -66,6 +66,6 @@ class CoursesListPageTest : TeacherTest() {
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
 
-        coursesListPage.assertHasCourses(data.courses.values.toList())
+        dashboardPage.assertHasCourses(data.courses.values.toList())
     }
 }
