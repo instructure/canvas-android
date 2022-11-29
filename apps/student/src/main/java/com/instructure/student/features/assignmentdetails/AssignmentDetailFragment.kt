@@ -122,7 +122,7 @@ class AssignmentDetailFragment : Fragment(), Bookmarkable {
     }
 
     private fun handleAction(action: AssignmentDetailAction) {
-        val canvasContext = viewModel.course as? CanvasContext ?: return
+        val canvasContext = canvasContext as? CanvasContext ?: return
 
         when (action) {
             is AssignmentDetailAction.NavigateToLtiScreen -> {
@@ -242,7 +242,6 @@ class AssignmentDetailFragment : Fragment(), Bookmarkable {
         }
     }
 
-    //assignment: Assignment, courseId: Long, visibilities: SubmissionTypesVisibilities, ltiToolUrl: String? = null, ltiToolName: String? = null
     private fun showSubmitDialogView(assignment: Assignment) {
         val builder = AlertDialog.Builder(requireContext())
         val dialog = builder.setView(R.layout.dialog_submission_picker).create()

@@ -142,11 +142,11 @@ class AssignmentDetailViewModel @Inject constructor(
 
         val submissionStatusTint = resources.getColor(
             if (assignment.isSubmitted) {
-                R.color.textSuccess
+                R.color.backgroundSuccess
             } else if (assignment.submission?.missing.orDefault() || isMissingFromDueDate) {
-                R.color.textDanger
+                R.color.backgroundDanger
             } else {
-                R.color.textDark
+                R.color.backgroundDark
             }
         )
 

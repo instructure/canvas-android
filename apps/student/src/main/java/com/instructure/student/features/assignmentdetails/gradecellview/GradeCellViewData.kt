@@ -15,18 +15,18 @@ import com.instructure.student.R
 data class GradeCellViewData(
     val state: State,
     @ColorInt val tintColor: Int = Color.GRAY,
-    val chartPercent: Float? = null,
+    val chartPercent: Float = 0f,
     val showCompleteIcon: Boolean = false,
     val showIncompleteIcon: Boolean = false,
     val showPointsLabel: Boolean = false,
-    val score: String? = null,
-    val grade: String? = null,
-    val gradeContentDescription: String? = null,
-    val gradeCellContentDescription: String? = null,
-    val outOf: String? = null,
-    val outOfContentDescription: String? = null,
-    val latePenalty: String? = null,
-    val finalGrade: String? = null
+    val score: String = "",
+    val grade: String = "",
+    val gradeContentDescription: String = "",
+    val gradeCellContentDescription: String = "",
+    val outOf: String = "",
+    val outOfContentDescription: String = "",
+    val latePenalty: String = "",
+    val finalGrade: String = ""
 ) {
     enum class State {
         EMPTY,
@@ -44,7 +44,7 @@ data class GradeCellViewData(
                 || assignment.gradingType == Assignment.NOT_GRADED_TYPE
             ) {
                 GradeCellViewData(State.EMPTY)
-            } else if (submission.submittedAt != null && !submission.isGraded) {
+            } else if (submission.submittedAt != null && !submission.isGraded && !submission.excused) {
                 GradeCellViewData(State.SUBMITTED)
             } else {
                 val tintColor = CanvasContext.emptyCourseContext(assignment.courseId).textAndIconColor
@@ -104,7 +104,7 @@ data class GradeCellViewData(
                     // Adjust for late penalty, if any
                     if (submission.pointsDeducted.orDefault() > 0.0) {
                         grade = "" // Grade will be shown in the 'final grade' text
-                        val pointsDeducted = NumberHelper.formatDecimal(submission.pointsDeducted!!, 2, true)
+                        val pointsDeducted = NumberHelper.formatDecimal(submission.pointsDeducted.orDefault(), 2, true)
                         latePenalty = resources.getString(R.string.latePenalty, pointsDeducted)
                         finalGrade = resources.getString(R.string.finalGradeFormatted, submission.grade)
                     }
