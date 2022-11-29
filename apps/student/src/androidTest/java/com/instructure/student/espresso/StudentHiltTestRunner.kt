@@ -19,12 +19,10 @@ package com.instructure.student.espresso
 import android.app.Application
 import android.content.Context
 import com.instructure.canvas.espresso.CanvasRunner
-import com.instructure.student.util.Hilt_AppManager
-import dagger.hilt.android.testing.HiltTestApplication
 
 class StudentHiltTestRunner : CanvasRunner() {
 
     override fun newApplication(cl: ClassLoader?, className: String?, context: Context?): Application {
-        return super.newApplication(cl, Hilt_AppManager::class.java.name, context)
+        return super.newApplication(cl, StudentHiltTestApplication_Application::class.java.name, context)
     }
 }

@@ -20,6 +20,7 @@ import android.os.Build
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.startup.AppInitializer
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
@@ -33,6 +34,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
+import com.instructure.student.di.CustomWorkManagerInitializer
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.service.StudentPageViewService
 import com.pspdfkit.PSPDFKit
@@ -89,6 +91,8 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
         initFlutterEngine()
 
         Heap.init(this, BuildConfig.HEAP_APP_ID)
+
+        AppInitializer.getInstance(this).initializeComponent(CustomWorkManagerInitializer::class.java)
     }
 
     private fun initFlutterEngine() {

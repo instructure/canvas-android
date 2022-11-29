@@ -382,7 +382,17 @@
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove">
+            android:exported="false"
+            tools:node="merge">
+            <!-- disable default -->
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="@string/androidx_startup"
+                tools:node="remove" />
+            <!-- enable custom -->
+            <meta-data
+                android:name="com.instructure.student.di.CustomWorkManagerInitializer"
+                android:value="androidx.startup" />
         </provider>
 
     </application>
