@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object FeaturesManager {
 
+    const val SEND_USAGE_METRICS = "send_usage_metrics"
+
     fun getEnabledFeaturesForCourse(courseId: Long, forceNetwork: Boolean, callback: StatusCallback<List<String>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

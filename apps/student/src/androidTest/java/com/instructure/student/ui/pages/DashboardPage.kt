@@ -235,6 +235,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.navigationDrawerSettings).click()
     }
 
+    fun openHelpMenu() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
+    }
+
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()

@@ -118,6 +118,7 @@ class ModuleInteractionTest : StudentTest() {
 
         // Click the file module and verify that the file appears
         modulesPage.clickModuleItem(module,fileName, R.id.openButton)
+        canvasWebViewPage.waitForWebView()
         canvasWebViewPage.runTextChecks(fileCheck!!)
     }
 
