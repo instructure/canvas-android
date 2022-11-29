@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.google.firebase.messaging.FirebaseMessaging
+import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -39,6 +40,7 @@ class StudentLogoutTask(
         FlutterComm.reset()
         StudentPrefs.safeClearPrefs()
         WidgetUpdater.updateWidgets()
+        Heap.setTrackingEnabled(false)
     }
 
     override fun createLoginIntent(context: Context): Intent {

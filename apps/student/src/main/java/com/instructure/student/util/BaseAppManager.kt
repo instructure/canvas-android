@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
+import com.heapanalytics.android.config.Options
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.Logger
@@ -88,7 +89,9 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
 
         initFlutterEngine()
 
-        Heap.init(this, BuildConfig.HEAP_APP_ID)
+        val options = Options()
+        options.disableTracking()
+        Heap.init(this, BuildConfig.HEAP_APP_ID, options)
     }
 
     private fun initFlutterEngine() {
