@@ -35,6 +35,7 @@ import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
+import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -192,7 +193,7 @@ class AssignmentDetailViewModel @Inject constructor(
             submissionStatusTint,
             submitButtonText,
             attempts,
-            assignment.submission.takeIf { it?.attempt != 0L },
+            GradeCellViewData.fromSubmission(resources, assignment, assignment.submission),
             due,
             submissionTypes,
             assignment.description.orEmpty(),
@@ -214,9 +215,10 @@ class AssignmentDetailViewModel @Inject constructor(
     }
 
     fun onAttemptSelected(position: Int) {
+        val assignment = _data.value?.assignment
         val selectedSubmission = _data.value?.attempts?.getOrNull(position)?.data?.submission
-        _data.value?.selectedSubmission = selectedSubmission
-        _data.value?.notifyPropertyChanged(BR.selectedSubmission)
+        _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(resources, assignment, selectedSubmission)
+        _data.value?.notifyPropertyChanged(BR.selectedGradeCellViewData)
     }
 
     fun onLtiButtonPressed(url: String) {

@@ -3,6 +3,7 @@ package com.instructure.student.features.assignmentdetails
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.instructure.canvasapi2.models.*
+import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
 
 data class AssignmentDetailViewData(
     val assignment: Assignment,
@@ -13,7 +14,7 @@ data class AssignmentDetailViewData(
     val submissionStatusTint: Int,
     val submitButtonText: String,
     val attempts: List<AssignmentDetailAttemptItemViewModel>,
-    @Bindable var selectedSubmission: Submission?,
+    @Bindable var selectedGradeCellViewData: GradeCellViewData?,
     val dueDate: String,
     val submissionTypes: String,
     val description: String,

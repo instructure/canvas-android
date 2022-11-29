@@ -16,13 +16,11 @@
 
 package com.instructure.student.binding
 
+import androidx.annotation.ColorInt
 import androidx.databinding.BindingAdapter
 import com.google.android.material.tabs.TabLayout
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.student.features.assignmentdetails.GradeCellView
 import com.instructure.student.features.elementary.course.ElementaryCourseTab
-import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
+import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.DonutChartView
 
 @BindingAdapter("tabs")
 fun bindCourseTabs(tabLayout: TabLayout, tabs: List<ElementaryCourseTab>?) {
@@ -35,8 +33,8 @@ fun bindCourseTabs(tabLayout: TabLayout, tabs: List<ElementaryCourseTab>?) {
     }
 }
 
-@BindingAdapter("submission", "assignment")
-fun GradeCellView.bindGradeChart(submission: Submission?, assignment: Assignment?) {
-    val viewState = assignment?.let { GradeCellViewState.fromSubmission(context, it, submission) } ?: GradeCellViewState.Empty
-    setState(viewState)
+@BindingAdapter("progress", "color")
+fun DonutChartView.setProgress(progress: Float, @ColorInt color: Int) {
+    setColor(color)
+    setPercentage(progress, true)
 }

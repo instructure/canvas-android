@@ -6,6 +6,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData.State" />
+
         <variable
             name="viewModel"
             type="com.instructure.student.features.assignmentdetails.AssignmentDetailViewModel" />
@@ -120,7 +122,6 @@
                         android:backgroundTint="@color/textDark"
                         android:foreground="?attr/selectableItemBackground"
                         android:onItemSelected="@{(parent, view, position, id) -> viewModel.onAttemptSelected(position)}"
-
                         android:visibility="@{viewModel.data.attempts.size() > 1 ? View.VISIBLE : View.GONE}"
                         app:itemViewModels="@{viewModel.data.attempts}"
                         app:layoutRes="@{@layout/item_assignment_detail_attempt_spinner}"
@@ -136,27 +137,15 @@
                         app:itemViewModel="@{viewModel.data.firstAttemptOrNull}"
                         app:layout_constraintTop_toBottomOf="@id/attemptSpinner" />
 
-                    <View
-                        android:id="@+id/gradleCellBackground"
+                    <include
+                        android:id="@+id/gradeCell"
+                        layout="@layout/view_student_enhanced_grade_cell"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginHorizontal="16dp"
-                        android:background="@drawable/bg_rounded_outline_6dp"
-                        android:onClick="@{()->viewModel.onGradeCellClicked()}"
-                        app:layout_constraintBottom_toBottomOf="@id/gradleCell"
-                        app:layout_constraintTop_toBottomOf="@id/attemptView" />
-
-                    <com.instructure.student.features.assignmentdetails.GradeCellView
-                        android:id="@+id/gradleCell"
-                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
                         android:onClick="@{()->viewModel.onGradeCellClicked()}"
-                        android:padding="16dp"
-                        app:assignment="@{viewModel.data.assignment}"
-                        app:layout_constraintEnd_toEndOf="@id/gradleCellBackground"
-                        app:layout_constraintStart_toStartOf="@id/gradleCellBackground"
-                        app:layout_constraintTop_toTopOf="@id/gradleCellBackground"
-                        app:submission="@{viewModel.data.selectedSubmission}" />
+                        app:layout_constraintTop_toBottomOf="@id/attemptView"
+                        app:viewData="@{viewModel.data.selectedGradeCellViewData}" />
 
                     <View
                         android:id="@+id/dueDivider"
@@ -164,8 +153,8 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="30dp"
                         android:background="@color/borderMedium"
-                        android:visibility="@{viewModel.data.selectedSubmission == null ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@id/gradleCellBackground" />
+                        android:visibility="@{viewModel.data.selectedGradeCellViewData.state == State.EMPTY ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/gradeCell" />
 
                     <TextView
                         android:id="@+id/dueLabel"
