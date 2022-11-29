@@ -51,9 +51,9 @@ class StudentEditDashboardRepositoryTest {
     @Test
     fun `Returns courses when fetching courses`() = runBlockingTest {
         // Given
-        val coursesActive = listOf(Course(id = 1L, name = "Course"))
-        val coursesCompleted = listOf(Course(id = 2L, name = "Course"))
-        val coursesInvitedOrPending = listOf(Course(id = 3L, name = "Course"))
+        val coursesActive = listOf(Course(id = 1L, name = "Course", enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        val coursesCompleted = listOf(Course(id = 2L, name = "Course", enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
+        val coursesInvitedOrPending = listOf(Course(id = 3L, name = "Course", enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student))))
 
         val coursesDeferred: Deferred<DataResult<List<Course>>> = mockk()
         every { courseManager.getCoursesByEnrollmentStateAsync(any(), any()) } returns coursesDeferred

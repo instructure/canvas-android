@@ -27,7 +27,8 @@ class DiscussionRouterViewModel @Inject constructor(
     fun route(
         canvasContext: CanvasContext,
         discussionTopicHeader: DiscussionTopicHeader?,
-        discussionTopicHeaderId: Long
+        discussionTopicHeaderId: Long,
+        isAnnouncement: Boolean
     ) {
         viewModelScope.launch {
             try {
@@ -47,9 +48,9 @@ class DiscussionRouterViewModel @Inject constructor(
                             groupDiscussionHeader,
                             discussionRedesignEnabled
                         )
-                    } ?: routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
+                    } ?: routeToDiscussion(canvasContext, header, discussionRedesignEnabled, isAnnouncement)
                 } else {
-                    routeToDiscussion(canvasContext, header, discussionRedesignEnabled)
+                    routeToDiscussion(canvasContext, header, discussionRedesignEnabled, isAnnouncement)
                 }
 
             } catch (e: Exception) {
@@ -80,14 +81,16 @@ class DiscussionRouterViewModel @Inject constructor(
     private fun routeToDiscussion(
         canvasContext: CanvasContext,
         header: DiscussionTopicHeader,
-        discussionRedesignEnabled: Boolean
+        discussionRedesignEnabled: Boolean,
+        isAnnouncement: Boolean
     ) {
         _events.postValue(
             Event(
                 DiscussionRouterAction.RouteToDiscussion(
                     canvasContext,
                     discussionRedesignEnabled,
-                    header
+                    header,
+                    isAnnouncement
                 )
             )
         )

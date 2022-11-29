@@ -31,7 +31,7 @@ import org.hamcrest.CoreMatchers.containsString
 class QuizSubmissionViewRenderPage : BasePage(R.id.activity_root) {
 
     private val progressBar by OnViewWithId(R.id.webViewLoading)
-    private val webView by OnViewWithId(R.id.canvasWebView)
+    private val webView by OnViewWithId(R.id.contentWebView)
 
     fun assertDisplaysProgressBar() {
         progressBar.assertDisplayed()

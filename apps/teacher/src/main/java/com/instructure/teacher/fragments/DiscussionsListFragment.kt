@@ -20,7 +20,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -53,8 +52,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         RecyclerView.ViewHolder,
         DiscussionListAdapter>(), DiscussionListView {
 
-    val featureFlagProvider: FeatureFlagProvider = FeatureFlagProvider(UserManager, ApiPrefs)
-
     protected var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
     private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
@@ -67,7 +64,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun layoutResId(): Int = R.layout.fragment_discussion_list
     override val recyclerView: RecyclerView get() = discussionRecyclerView
 
-    override fun getPresenterFactory() = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements, featureFlagProvider.getDiscussionRedesignFeatureFlag())
+    override fun getPresenterFactory() = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements)
 
     override fun onPresenterPrepared(presenter: DiscussionListPresenter) {
         val emptyTitle = getString(if (mIsAnnouncements) R.string.noAnnouncements else R.string.noDiscussions)

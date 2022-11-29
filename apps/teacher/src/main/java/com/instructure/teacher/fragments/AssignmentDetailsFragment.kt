@@ -253,7 +253,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         noDescriptionTextView.setGone()
         descriptionProgressBar.announceForAccessibility(getString(R.string.loading))
         descriptionProgressBar.setVisible()
-        descriptionWebView.setWebChromeClient(object : WebChromeClient() {
+        descriptionWebViewWrapper.webView.setWebChromeClient(object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress >= 100) {
@@ -262,7 +262,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             }
         })
 
-        descriptionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        descriptionWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(requireActivity(), url)
             }
@@ -276,18 +276,14 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             override fun canRouteInternallyDelegate(url: String): Boolean = RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
         }
 
-        descriptionWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        descriptionWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
-        //make the WebView background transparent
-        descriptionWebView.setBackgroundColor(0)
-        descriptionWebView.setBackgroundResource(android.R.color.transparent)
-
         // Load description
-        loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), description, {
-            descriptionWebView.loadHtml(it, name, baseUrl = mAssignment.htmlUrl)
+        loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
+            descriptionWebViewWrapper.loadHtml(it, name, baseUrl = mAssignment.htmlUrl)
         }) {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCourse, it)
         }

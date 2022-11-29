@@ -32,9 +32,9 @@ import org.junit.Test
 @HiltAndroidTest
 class DashboardE2ETest : TeacherTest() {
 
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
+
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -52,7 +52,19 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Assert that the ${course1.name} and ${course2.name} courses are displayed.")
+        Log.d(STEP_TAG,"Assert that the '${course1.name}' and '${course2.name}' courses are displayed.")
+        dashboardPage.assertDisplaysCourses()
+        dashboardPage.assertDisplaysCourse(course1)
+        dashboardPage.assertDisplaysCourse(course2)
+
+        Log.d(STEP_TAG, "Switch to List View and assert that all the courses are displayed.")
+        dashboardPage.switchCourseView()
+        dashboardPage.assertDisplaysCourses()
+        dashboardPage.assertDisplaysCourse(course1)
+        dashboardPage.assertDisplaysCourse(course2)
+
+        Log.d(STEP_TAG, "Switch back to Card View and assert that all the courses are displayed.")
+        dashboardPage.switchCourseView()
         dashboardPage.assertDisplaysCourses()
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertDisplaysCourse(course2)
@@ -90,8 +102,43 @@ class DashboardE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Assert that both of the courses, ${course1.name} and ${course2.name} are displayed.")
+        Log.d(STEP_TAG,"Assert that both of the courses, '${course1.name}' and '${course2.name}' are displayed.")
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertDisplaysCourse(course2)
+
+        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button. Assert that the Edit Dashboard Page is loaded.")
+        dashboardPage.clickEditDashboard()
+        editDashboardPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on 'Select All' button.")
+        editDashboardPage.clickOnMassSelectButton(false)
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG,"Assert that both of the courses, '${course1.name}' and '${course2.name}' are displayed.")
+        dashboardPage.assertDisplaysCourse(course1)
+        dashboardPage.assertDisplaysCourse(course2)
+
+        Log.d(STEP_TAG, "Click on 'Edit nickname' menu of '${course1.name}' course.")
+        dashboardPage.clickCourseOverflowMenu(course1.name, "Edit nickname")
+
+        val newNickname = "New course nickname"
+        Log.d(STEP_TAG, "Change '${course1.name}' course's nickname to: '$newNickname'.")
+        dashboardPage.changeCourseNickname(newNickname)
+
+        Log.d(STEP_TAG, "Wait for Dashboard Page to be reloaded and assert that the course's name has been changed to '$newNickname'.")
+        dashboardPage.assertPageObjects()
+        dashboardPage.assertCourseTitle(newNickname)
+
+        Log.d(STEP_TAG, "Click on 'Edit nickname' menu of '$newNickname' course.")
+        dashboardPage.clickCourseOverflowMenu(newNickname, "Edit nickname")
+
+        Log.d(STEP_TAG, "Make the course nickname empty.")
+        dashboardPage.changeCourseNickname(EMPTY_STRING)
+
+        Log.d(STEP_TAG, "Wait for Dashboard Page to be reloaded. Assert that if there is no nickname for a course, the course's full name, '${course1.name}' will be displayed.")
+        dashboardPage.assertPageObjects()
+        dashboardPage.assertCourseTitle(course1.name)
     }
 }

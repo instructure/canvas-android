@@ -55,12 +55,12 @@ class CalendarEventFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        calendarEventWebView?.onResume()
+        calendarEventWebViewWrapper?.webView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        calendarEventWebView?.onPause()
+        calendarEventWebViewWrapper?.webView?.onPause()
     }
 
     override fun onCreateView(view: View) {}
@@ -86,11 +86,11 @@ class CalendarEventFragment : BaseFragment() {
     }
 
     private fun initWebView() {
-        with(calendarEventWebView) {
+        with(calendarEventWebViewWrapper.webView) {
             addVideoClient(requireActivity())
             canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
                 override fun launchInternalWebViewFragment(url: String) {
-                    activity?.startActivity(InternalWebViewActivity.createIntent(calendarEventWebView.context, url, "", true))
+                    activity?.startActivity(InternalWebViewActivity.createIntent(calendarEventWebViewWrapper.context, url, "", true))
                 }
 
                 override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
@@ -120,7 +120,7 @@ class CalendarEventFragment : BaseFragment() {
         locationSubtitle.text = viewState.locationSubtitle
 
         if (viewState.htmlContent.isNotEmpty()) {
-            loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), viewState.htmlContent, {
+            loadHtmlJob = calendarEventWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), viewState.htmlContent, {
                 loadCalendarHtml(it, viewState.eventTitle)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
@@ -129,8 +129,8 @@ class CalendarEventFragment : BaseFragment() {
     }
 
     private fun loadCalendarHtml(html: String, contentDescription: String) {
-        calendarEventWebView?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-        calendarEventWebView?.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
+        calendarEventWebViewWrapper?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+        calendarEventWebViewWrapper?.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
     }
 
     companion object {

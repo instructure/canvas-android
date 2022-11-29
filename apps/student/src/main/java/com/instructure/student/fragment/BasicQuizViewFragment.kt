@@ -41,6 +41,7 @@ import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
 import kotlinx.android.synthetic.main.fragment_webview.*
+import kotlinx.android.synthetic.main.fragment_webview.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -85,7 +86,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
         // Make sure we are prepared to handle file uploads for quizzes that allow them
         setupFilePicker()
-        canvasWebView?.setDarkModeSupport()
+        canvasWebViewWrapper?.webView?.setDarkModeSupport()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

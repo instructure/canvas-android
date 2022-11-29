@@ -118,7 +118,7 @@ class ShareExtensionE2ETest: StudentTest() {
         fileUploadPage.clickTurnIn()
 
         Log.d(STEP_TAG, "Assert that the submission upload was successful.")
-        shareExtensionStatusPage.assertPageObjects()
+        shareExtensionStatusPage.assertPageObjects(30)
         shareExtensionStatusPage.assertAssignmentSubmissionSuccess()
 
         Log.d(STEP_TAG, "Click on 'Done' button.")

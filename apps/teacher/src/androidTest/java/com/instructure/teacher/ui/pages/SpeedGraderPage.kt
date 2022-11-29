@@ -112,7 +112,7 @@ class SpeedGraderPage : BasePage() {
     }
 
     fun assertDisplaysTextSubmissionView() {
-        waitForViewWithId(R.id.textSubmissionWebView).assertVisible()
+        waitForViewWithId(R.id.contentWebView).assertVisible()
     }
 
     fun assertDisplaysTextSubmissionViewWithStudentName(studentName: String) {

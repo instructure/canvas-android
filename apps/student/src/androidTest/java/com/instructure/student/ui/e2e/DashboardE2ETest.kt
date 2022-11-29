@@ -32,13 +32,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class DashboardE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -77,6 +73,28 @@ class DashboardE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Assert that there is an unread e-mail so we have the number '1' on the Inbox bottom-menu icon as a badge.")
         dashboardPage.assertUnreadEmails(1)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    fun testHelpMenuE2E() {
+        Log.d(PREPARATION_TAG,"Seeding data.")
+        val data = seedData(students = 1, courses = 1)
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open Help Menu.")
+        dashboardPage.openHelpMenu()
+
+        Log.d(STEP_TAG, "Assert Help Menu Dialog is displayed.")
+        helpPage.assertHelpMenuDisplayed()
+
+        Log.d(STEP_TAG, "Assert that all the corresponding Help menu content are displayed.")
+        helpPage.assertHelpMenuContent()
     }
 
 }

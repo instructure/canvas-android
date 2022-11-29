@@ -34,28 +34,28 @@ import org.hamcrest.Matchers.containsString
 object CollaborationsPage {
 
     fun assertCurrentCollaborationsHeaderPresent() {
-        Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
+        Web.onWebView(Matchers.allOf(withId(R.id.contentWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.CLASS_NAME, "collaborations-header"))
                 .perform(DriverAtoms.webScrollIntoView())
                 .check(webMatches(getText(), containsString("Current Collaborations") ))
     }
 
     fun assertStartANewCollaborationPresent() {
-        Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
+        Web.onWebView(Matchers.allOf(withId(R.id.contentWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "h2"))
                 .perform(DriverAtoms.webScrollIntoView())
                 .checkRepeat(webMatches(getText(), containsString("Start a New Collaboration") ), 30)
     }
 
     fun assertGoogleDocsChoicePresent() {
-        Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
+        Web.onWebView(Matchers.allOf(withId(R.id.contentWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.ID, "collaboration_collaboration_type"))
                 .perform(DriverAtoms.webScrollIntoView())
                 .check(webMatches(getText(), containsString("Google Docs") ))
     }
 
     fun assertGoogleDocsExplanationPresent() {
-        Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
+        Web.onWebView(Matchers.allOf(withId(R.id.contentWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.ID, "google_docs_description"))
                 .perform(DriverAtoms.webScrollIntoView())
                 .check(webMatches(getText(), containsString("Google Docs is a great place to collaborate") ))

@@ -62,10 +62,10 @@ class DiscussionRouterViewModelTest {
 
         viewModel.events.observe(lifecycleOwner) {}
 
-        viewModel.route(course, discussionTopicHeader, 1L)
+        viewModel.route(course, discussionTopicHeader, 1L, false)
 
         assertEquals(
-            DiscussionRouterAction.RouteToDiscussion(course, false, discussionTopicHeader),
+            DiscussionRouterAction.RouteToDiscussion(course, false, discussionTopicHeader, false),
             viewModel.events.value?.getContentIfNotHandled()
         )
     }
@@ -79,10 +79,10 @@ class DiscussionRouterViewModelTest {
 
         viewModel.events.observe(lifecycleOwner) {}
 
-        viewModel.route(course, discussionTopicHeader, 1L)
+        viewModel.route(course, discussionTopicHeader, 1L, false)
 
         assertEquals(
-            DiscussionRouterAction.RouteToDiscussion(course, true, discussionTopicHeader),
+            DiscussionRouterAction.RouteToDiscussion(course, true, discussionTopicHeader, false),
             viewModel.events.value?.getContentIfNotHandled()
         )
     }
@@ -99,7 +99,7 @@ class DiscussionRouterViewModelTest {
 
         viewModel.events.observe(lifecycleOwner) {}
 
-        viewModel.route(group, discussionTopicHeader, 1L)
+        viewModel.route(group, discussionTopicHeader, 1L, false)
 
         assertEquals(
             DiscussionRouterAction.RouteToGroupDiscussion(group, 2L, groupDiscussionTopicHeader, false),
@@ -119,7 +119,7 @@ class DiscussionRouterViewModelTest {
 
         viewModel.events.observe(lifecycleOwner) {}
 
-        viewModel.route(group, discussionTopicHeader, 1L)
+        viewModel.route(group, discussionTopicHeader, 1L, false)
 
         assertEquals(
             DiscussionRouterAction.RouteToGroupDiscussion(group, 2L, groupDiscussionTopicHeader, true),
@@ -136,10 +136,10 @@ class DiscussionRouterViewModelTest {
 
         viewModel.events.observe(lifecycleOwner) {}
 
-        viewModel.route(course, null, 1L)
+        viewModel.route(course, null, 1L, false)
 
         assertEquals(
-            DiscussionRouterAction.RouteToDiscussion(course, true, discussionTopicHeader),
+            DiscussionRouterAction.RouteToDiscussion(course, true, discussionTopicHeader, false),
             viewModel.events.value?.getContentIfNotHandled()
         )
     }
@@ -153,10 +153,10 @@ class DiscussionRouterViewModelTest {
 
         viewModel.events.observe(lifecycleOwner) {}
 
-        viewModel.route(group, discussionTopicHeader, 1L)
+        viewModel.route(group, discussionTopicHeader, 1L, false)
 
         assertEquals(
-            DiscussionRouterAction.RouteToDiscussion(group, true, discussionTopicHeader),
+            DiscussionRouterAction.RouteToDiscussion(group, true, discussionTopicHeader, false),
             viewModel.events.value?.getContentIfNotHandled()
         )
     }
@@ -169,7 +169,7 @@ class DiscussionRouterViewModelTest {
 
         viewModel.events.observe(lifecycleOwner) {}
 
-        viewModel.route(course, null, 1L)
+        viewModel.route(course, null, 1L, false)
 
         assertEquals(
             DiscussionRouterAction.ShowToast("Error occurred. The topic may no longer be available."),
