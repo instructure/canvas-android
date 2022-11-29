@@ -243,14 +243,9 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     @Suppress("UsePropertyAccessSyntax")
     private fun configureDescription(assignment: Assignment): Unit = with(assignment) {
-        // Show "No description" layout if there is no description
-        if (assignment.description.isNullOrBlank()) {
-            noDescriptionTextView.setVisible()
-            return
-        }
+        noDescriptionTextView.setVisible(assignment.description.isNullOrBlank())
 
         // Show progress bar while loading description
-        noDescriptionTextView.setGone()
         descriptionProgressBar.announceForAccessibility(getString(R.string.loading))
         descriptionProgressBar.setVisible()
         descriptionWebViewWrapper.webView.setWebChromeClient(object : WebChromeClient() {
