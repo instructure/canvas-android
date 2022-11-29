@@ -15,12 +15,7 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
-import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
-import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
@@ -92,7 +87,7 @@ class SpeedGraderQuizSubmissionPageTest : TeacherTest() {
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
 
         quizListPage.clickQuiz(quiz)

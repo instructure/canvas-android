@@ -21,7 +21,7 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.User
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.clickProfileMenu
+import com.instructure.teacher.ui.utils.openLeftSideMenu
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
@@ -46,7 +46,7 @@ class NavDrawerPageTest: TeacherTest() {
         val teacher = data.teachers[0]
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.clickProfileMenu()
+        dashboardPage.openLeftSideMenu()
         return teacher
     }
 }
