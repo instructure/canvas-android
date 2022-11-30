@@ -17,10 +17,16 @@ data class AssignmentDetailViewData(
     @Bindable var selectedGradeCellViewData: GradeCellViewData?,
     val dueDate: String,
     val submissionTypes: String,
+    val allowedFileTypes: String,
     val description: String,
-    val ltiTool: LTITool?
+    val ltiTool: LTITool?,
+    val submitEnabled: Boolean,
+    val submitVisible: Boolean,
+    val descriptionLabelText: String,
+    val quizDetails: QuizViewViewData?,
+    val attemptsViewData: AttemptsViewData?
 ) : BaseObservable() {
-    val firstAttemptOrNull = attempts.getOrNull(0)
+    val firstAttemptOrNull = attempts.firstOrNull()
 }
 
 data class AssignmentDetailAttemptViewData(
@@ -28,6 +34,10 @@ data class AssignmentDetailAttemptViewData(
     val date: String,
     val submission: Submission
 )
+
+data class QuizViewViewData(val questionCount: String, val timeLimit: String, val allowedAttempts: String)
+
+data class AttemptsViewData(val allowedAttempts: String, val usedAttempts: String)
 
 sealed class AssignmentDetailAction {
     data class NavigateToLtiScreen(val url: String) : AssignmentDetailAction()

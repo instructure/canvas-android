@@ -1336,4 +1336,6 @@
     <string name="switchToDarkMode">Switch to Dark Mode</string>
 
     <string name="attempt">%d. attempt</string>
+    <string name="allowedAttempts">Allowed attempts:</string>
+    <string name="usedAttempts">Allowed used:</string>
 </resources>

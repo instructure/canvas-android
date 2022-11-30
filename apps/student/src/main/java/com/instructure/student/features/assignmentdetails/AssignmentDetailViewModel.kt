@@ -167,6 +167,10 @@ class AssignmentDetailViewModel @Inject constructor(
             .map { Assignment.submissionTypeToPrettyPrintString(it, resources) }
             .joinToString()
 
+        val allowedFileTypes = assignment.allowedExtensions.joinToString().takeIf {
+            assignment.getSubmissionTypes().contains(SubmissionType.ONLINE_UPLOAD)
+        }.orEmpty()
+
         val due = assignment.dueDate?.let { getFormattedDate(it) } ?: resources.getString(R.string.toDoNoDueDate)
 
         val submitEnabled = assignment.allowedAttempts == -1L || (assignment.submission?.attempt?.let {
@@ -184,6 +188,41 @@ class AssignmentDetailViewModel @Inject constructor(
             }
         )
 
+        // Observers shouldn't see the submit button OR if the course is soft concluded
+        val submitVisible = if (isObserver || !course?.isBetweenValidDateRange().orDefault()) {
+            false
+        } else {
+            when (assignment.turnInType) {
+                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
+                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmit
+                else -> false
+            }
+        }
+
+        val descriptionLabel = resources.getString(
+            if (assignment.turnInType == Assignment.TurnInType.QUIZ) R.string.instructions else R.string.description
+        )
+
+        val quizViewViewData = if (quizResult != null) QuizViewViewData(
+            questionCount = NumberHelper.formatInt(quizResult?.questionCount),
+            timeLimit = if (quizResult?.timeLimit != 0) {
+                resources.getString(R.string.timeLimit)
+                NumberHelper.formatInt(quizResult?.timeLimit)
+            } else {
+                resources.getString(R.string.quizNoTimeLimit)
+            },
+            allowedAttempts = if (quizResult?.allowedAttempts.orDefault() < 0) {
+                resources.getString(R.string.unlimited)
+            } else {
+                NumberHelper.formatInt(quizResult?.allowedAttempts)
+            }
+        ) else null
+
+        val attemptsViewData = if (assignment.allowedAttempts > 0) AttemptsViewData(
+            assignment.allowedAttempts.toString(),
+            assignment.submission?.attempt.orDefault().toString()
+        ) else null
+
         val viewData = AssignmentDetailViewData(
             assignment,
             assignment.name.orEmpty(),
@@ -196,8 +235,14 @@ class AssignmentDetailViewModel @Inject constructor(
             GradeCellViewData.fromSubmission(resources, assignment, assignment.submission),
             due,
             submissionTypes,
+            allowedFileTypes,
             assignment.description.orEmpty(),
-            ltiTool
+            ltiTool,
+            submitEnabled,
+            submitVisible,
+            descriptionLabel,
+            quizViewViewData,
+            attemptsViewData
         )
 
         _data.postValue(viewData)
