@@ -208,6 +208,14 @@ object UserManager {
         UserAPI.updateUserShortName(adapter, params, shortName, callback)
     }
 
+    fun acceptUserTermsAsync() = apiAsync<User> { acceptUserTerms(it) }
+
+    private fun acceptUserTerms(callback: StatusCallback<User>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+        UserAPI.updateUserTerms(adapter, params, callback)
+    }
+
     fun updateUsersAvatar(urlPath: String, callback: StatusCallback<User>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()

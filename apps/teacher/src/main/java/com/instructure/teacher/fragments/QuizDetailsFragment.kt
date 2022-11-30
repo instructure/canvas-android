@@ -322,11 +322,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     }
 
     private fun setupDescription(quiz: Quiz) {
-        // Show "No description" layout if there is no description
-        if (quiz.description.isNullOrBlank()) {
-            noInstructionsTextView.setVisible()
-            return
-        }
+        noInstructionsTextView.setVisible(quiz.description.isNullOrBlank())
 
         // Show progress bar while loading description
         instructionsProgressBar.announceForAccessibility(getString(R.string.loading))

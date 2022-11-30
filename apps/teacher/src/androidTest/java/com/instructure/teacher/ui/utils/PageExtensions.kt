@@ -27,4 +27,4 @@ fun BasePage.clickCoursesTab() { waitForViewWithId(R.id.tab_courses).perform(Vie
 
 fun BasePage.clickInboxTab() { waitForViewWithId(R.id.tab_inbox).perform(ViewActions.click()) }
 
-fun BasePage.clickProfileMenu() { waitForViewWithContentDescription(R.string.navigation_drawer_open).perform(ViewActions.click()) }
+fun BasePage.openLeftSideMenu() { waitForViewWithContentDescription(R.string.navigation_drawer_open).perform(ViewActions.click()) }

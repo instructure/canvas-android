@@ -73,7 +73,7 @@ class ChooseRecipientsPageTest: TeacherTest() {
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
 
-        coursesListPage.clickInboxTab()
+        dashboardPage.clickInboxTab()
         inboxPage.clickAddMessageFAB()
         addMessagePage.clickCourseSpinner()
         addMessagePage.selectCourseFromSpinner(course)

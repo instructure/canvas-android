@@ -21,8 +21,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -113,7 +111,7 @@ class SyllabusPageTest : TeacherTest() {
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
 
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openSyllabus()
 
         return data
