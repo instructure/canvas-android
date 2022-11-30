@@ -25,5 +25,9 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
+
+        <activity android:name=".features.acceptableusepolicy.AcceptableUsePolicyActivity"
+            android:theme="@style/LoginFlowTheme.NoActionBar"
+            android:launchMode="singleTop"/>
     </application>
 </manifest>

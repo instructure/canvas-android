@@ -19,5 +19,7 @@ import com.google.gson.annotations.SerializedName
 
 data class AuthenticatedSession(
         @SerializedName("session_url")
-        val sessionUrl: String
+        val sessionUrl: String,
+        @SerializedName("requires_terms_acceptance")
+        val requiresTermsAcceptance: Boolean? = false
 )
