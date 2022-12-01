@@ -19,6 +19,7 @@ package com.instructure.student.ui.utils
 import android.app.Activity
 import android.os.Environment
 import android.view.View
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -29,6 +30,7 @@ import com.instructure.espresso.swipeRight
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.espresso.StudentHiltTestApplication_Application
 import com.instructure.student.ui.pages.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
@@ -36,6 +38,7 @@ import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import java.io.File
+import javax.inject.Inject
 
 abstract class StudentTest : CanvasTest() {
 
@@ -43,6 +46,9 @@ abstract class StudentTest : CanvasTest() {
         StudentActivityTestRule(LoginActivity::class.java)
 
     lateinit var originalActivity : Activity
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
@@ -53,6 +59,10 @@ abstract class StudentTest : CanvasTest() {
     @Before
     fun recordOriginalActivity() {
         originalActivity = activityRule.activity
+        hiltRule.inject()
+
+        val application = originalActivity.application as? StudentHiltTestApplication_Application
+        application?.workerFactory = workerFactory
     }
 
     override val isTesting = BuildConfig.IS_TESTING

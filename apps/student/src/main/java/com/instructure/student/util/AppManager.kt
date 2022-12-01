@@ -19,6 +19,7 @@ package com.instructure.student.util
 
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -27,7 +28,7 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class AppManager : BaseAppManager(), Configuration.Provider {
+class AppManager : BaseAppManager() {
 
     @Inject
     lateinit var typefaceBehavior: TypefaceBehavior
@@ -44,8 +45,7 @@ class AppManager : BaseAppManager(), Configuration.Provider {
         StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
     }
 
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
+    override fun getWorkManagerFactory(): WorkerFactory {
+        return workerFactory
+    }
 }

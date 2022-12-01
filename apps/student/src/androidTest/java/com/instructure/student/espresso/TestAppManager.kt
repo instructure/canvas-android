@@ -20,11 +20,13 @@ import androidx.work.Configuration
 import androidx.work.WorkerFactory
 import com.instructure.student.util.BaseAppManager
 
-open class TestAppManager : BaseAppManager(), Configuration.Provider {
+open class TestAppManager : BaseAppManager() {
 
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
-            .setWorkerFactory(WorkerFactory.getDefaultWorkerFactory())
-            .build()
+    var workerFactory: WorkerFactory? = null
+
+    override fun getWorkManagerFactory(): WorkerFactory {
+        return workerFactory?.let {
+            it
+        } ?: WorkerFactory.getDefaultWorkerFactory()
     }
 }
