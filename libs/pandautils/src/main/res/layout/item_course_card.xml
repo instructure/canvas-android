@@ -111,7 +111,7 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginTop="6dp"
                         android:layout_marginEnd="8dp"
-                        android:text="@{itemViewModel.assignmentsInfo}"
+                        android:text="@{itemViewModel.getAssignmentsInfo(context)}"
                         android:textColor="@color/textDarkest"
                         android:textSize="13sp"
                         tools:text="Nothing due today" />

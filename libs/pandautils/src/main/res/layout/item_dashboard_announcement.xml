@@ -17,8 +17,6 @@
 
     <data>
 
-        <import type="com.instructure.pandautils.utils.ColorUtils" />
-
         <import type="android.view.View" />
 
         <variable
@@ -37,7 +35,7 @@
         android:minHeight="55dp"
         android:onClick="@{() -> itemViewModel.open()}"
         android:orientation="horizontal"
-        app:borderColor="@{itemViewModel.data.color}"
+        app:borderColor="@{context.getColor(itemViewModel.data.color)}"
         tools:backgroundTint="#00ACEC">
 
         <FrameLayout
@@ -45,7 +43,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="@drawable/announcement_card_icon_background"
-            android:backgroundTint="@{itemViewModel.data.color}"
+            android:backgroundTint="@{context.getColor(itemViewModel.data.color)}"
             tools:backgroundTint="#00ACEC">
 
             <ImageView
