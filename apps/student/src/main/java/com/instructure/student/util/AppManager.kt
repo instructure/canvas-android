@@ -45,7 +45,5 @@ class AppManager : BaseAppManager() {
         StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
     }
 
-    override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory
-    }
+    override fun getWorkManagerFactory(): WorkerFactory = workerFactory
 }
