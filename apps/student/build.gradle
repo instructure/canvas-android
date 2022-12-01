@@ -241,6 +241,7 @@ android {
 
     hilt {
         enableTransformForLocalTests = true
+        enableAggregatingTask = false
     }
 }
 

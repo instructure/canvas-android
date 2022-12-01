@@ -34,7 +34,7 @@ object Versions {
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.4.3"
-    const val HILT = "2.38.1"
+    const val HILT = "2.41"
     const val HILT_ANDROIDX = "1.0.0"
     const val LIFECYCLE = "2.3.1"
     const val FRAGMENT = "1.3.6"

@@ -77,6 +77,10 @@ android {
         dataBinding true
         viewBinding true
     }
+
+    hilt {
+        enableAggregatingTask = false
+    }
 }
 
 configurations {
