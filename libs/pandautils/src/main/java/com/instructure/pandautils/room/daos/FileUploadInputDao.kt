@@ -1,20 +1,20 @@
 package com.instructure.pandautils.room.daos
 
 import androidx.room.*
-import com.instructure.canvasapi2.db.entities.FileUploadInput
+import com.instructure.pandautils.room.entities.FileUploadInputEntity
 
 @Dao
 interface FileUploadInputDao {
 
     @Insert
-    suspend fun insert(fileUploadInput: FileUploadInput)
+    suspend fun insert(fileUploadInput: FileUploadInputEntity)
 
     @Delete
-    suspend fun delete(fileUploadInput: FileUploadInput)
+    suspend fun delete(fileUploadInput: FileUploadInputEntity)
 
     @Update
-    suspend fun update(fileUploadInput: FileUploadInput)
+    suspend fun update(fileUploadInput: FileUploadInputEntity)
 
-    @Query("SELECT * FROM FileUploadInput WHERE workerId=:workerId")
-    suspend fun findByWorkerId(workerId: String): FileUploadInput?
+    @Query("SELECT * FROM FileUploadInputEntity WHERE workerId=:workerId")
+    suspend fun findByWorkerId(workerId: String): FileUploadInputEntity?
 }

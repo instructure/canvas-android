@@ -1,11 +1,12 @@
-package com.instructure.canvasapi2.db.entities
+package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.SubmissionComment
 import java.util.*
 
 @Entity
-data class SubmissionComment(
+data class SubmissionCommentEntity(
     @PrimaryKey val id: Long = 0,
     val authorId: Long = 0,
     val authorName: String? = null,
@@ -14,7 +15,7 @@ data class SubmissionComment(
     val createdAt: Date? = null,
     val mediaCommentId: String? = null
 ) {
-    constructor(submissionComment: com.instructure.canvasapi2.models.SubmissionComment): this(
+    constructor(submissionComment: SubmissionComment): this(
         submissionComment.id,
         submissionComment.authorId,
         submissionComment.authorName,

@@ -40,22 +40,6 @@ data class SubmissionComment(
     val attachments: ArrayList<Attachment> = ArrayList(),
     val author: Author? = null
 ) : CanvasComparable<SubmissionComment>(), Parcelable {
-    constructor(
-        submissionComment: com.instructure.canvasapi2.db.entities.SubmissionComment,
-        author: com.instructure.canvasapi2.db.entities.Author?,
-        mediaComment: com.instructure.canvasapi2.db.entities.MediaComment?,
-        attachments: List<com.instructure.canvasapi2.db.entities.Attachment>?
-    ) : this(
-        submissionComment.id,
-        submissionComment.authorId,
-        submissionComment.authorName,
-        submissionComment.authorPronouns,
-        submissionComment.comment,
-        submissionComment.createdAt,
-        mediaComment?.let { MediaComment(it) },
-        attachments?.let { it.map { Attachment(it) } }?.let { ArrayList(it) } ?: ArrayList(),
-        author?.let { Author(it) }
-    )
 
     override val comparisonDate get() = createdAt
     override val comparisonString get() = authorName

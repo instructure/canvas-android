@@ -3,16 +3,16 @@ package com.instructure.pandautils.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.instructure.canvasapi2.db.entities.*
 import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.entities.*
 
 @Database(
     entities = [
-        Attachment::class,
-        Author::class,
-        FileUploadInput::class,
-        MediaComment::class,
-        SubmissionComment::class
+        AttachmentEntity::class,
+        AuthorEntity::class,
+        FileUploadInputEntity::class,
+        MediaCommentEntity::class,
+        SubmissionCommentEntity::class
     ], version = 1
 )
 @TypeConverters(Converters::class)

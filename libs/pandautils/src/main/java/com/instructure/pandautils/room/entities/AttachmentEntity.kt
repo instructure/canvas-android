@@ -1,11 +1,12 @@
-package com.instructure.canvasapi2.db.entities
+package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.Attachment
 import java.util.*
 
 @Entity
-data class Attachment(
+data class AttachmentEntity(
     @PrimaryKey val id: Long,
     val contentType: String? = null,
     val filename: String? = null,
@@ -20,7 +21,7 @@ data class Attachment(
     //Used for Submission comments
     val submissionCommentId: Long? = null
 ) {
-    constructor(attachment: com.instructure.canvasapi2.models.Attachment, workerId: String? = null, submissionCommentId: Long? = null) : this(
+    constructor(attachment: Attachment, workerId: String? = null, submissionCommentId: Long? = null) : this(
         attachment.id,
         attachment.contentType,
         attachment.filename,
@@ -33,4 +34,18 @@ data class Attachment(
         workerId,
         submissionCommentId
     )
+
+    fun toApiModel(): Attachment {
+        return Attachment(
+            id,
+            contentType,
+            filename,
+            displayName,
+            url,
+            thumbnailUrl,
+            previewUrl,
+            createdAt,
+            size
+        )
+    }
 }

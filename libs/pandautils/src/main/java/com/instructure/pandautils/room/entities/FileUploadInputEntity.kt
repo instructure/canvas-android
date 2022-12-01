@@ -1,10 +1,10 @@
-package com.instructure.canvasapi2.db.entities
+package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class FileUploadInput(
+data class FileUploadInputEntity(
     @PrimaryKey
     val workerId: String,
     val courseId: Long? = null,

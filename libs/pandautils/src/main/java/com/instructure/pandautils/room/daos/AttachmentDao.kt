@@ -1,26 +1,26 @@
 package com.instructure.pandautils.room.daos
 
 import androidx.room.*
-import com.instructure.canvasapi2.db.entities.Attachment
+import com.instructure.pandautils.room.entities.AttachmentEntity
 
 @Dao
 interface AttachmentDao {
 
     @Insert
-    suspend fun insert(attachment: Attachment)
+    suspend fun insert(attachment: AttachmentEntity)
 
     @Insert
-    suspend fun insertAll(attachments: List<Attachment>)
+    suspend fun insertAll(attachments: List<AttachmentEntity>)
 
     @Delete
-    suspend fun delete(attachment: Attachment)
+    suspend fun delete(attachment: AttachmentEntity)
 
     @Delete
-    suspend fun deleteAll(attachments: List<Attachment>)
+    suspend fun deleteAll(attachments: List<AttachmentEntity>)
 
     @Update
-    suspend fun update(attachment: Attachment)
+    suspend fun update(attachment: AttachmentEntity)
 
-    @Query("SELECT * FROM Attachment WHERE workerId=:parentId")
-    suspend fun findByParentId(parentId: String): List<Attachment>?
+    @Query("SELECT * FROM AttachmentEntity WHERE workerId=:parentId")
+    suspend fun findByParentId(parentId: String): List<AttachmentEntity>?
 }

@@ -468,15 +468,15 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
     }
 
     override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
-        workInfoLiveData.observe(viewLifecycleOwner) {
-            if (it.state == WorkInfo.State.SUCCEEDED) {
+        workInfoLiveData.observe(viewLifecycleOwner) { workInfo ->
+            if (workInfo.state == WorkInfo.State.SUCCEEDED) {
                 lifecycleScope.launch {
-                    uuid?.let {
-                        attachmentDao.findByParentId(it.toString())?.let {
-                            val attachments = it.map { Attachment(it) }
+                    uuid?.let { uuid ->
+                        attachmentDao.findByParentId(uuid.toString())?.let { attachmentEntities ->
+                            val attachments = attachmentEntities.map { it.toApiModel() }
                             presenter.addAttachments(attachments)
                             refreshAttachments()
-                            attachmentDao.deleteAll(it)
+                            attachmentDao.deleteAll(attachmentEntities)
                         } ?: toast(R.string.errorUploadingFile)
                     } ?: toast(R.string.errorUploadingFile)
                 }

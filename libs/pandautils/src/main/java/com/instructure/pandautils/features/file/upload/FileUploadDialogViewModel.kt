@@ -32,7 +32,7 @@ import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemVi
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.daos.FileUploadInputDao
-import com.instructure.canvasapi2.db.entities.FileUploadInput
+import com.instructure.pandautils.room.entities.FileUploadInputEntity
 import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -301,10 +301,10 @@ class FileUploadDialogViewModel @Inject constructor(
         }
     }
 
-    private fun getInputData(workerId: UUID, uris: List<Uri>): FileUploadInput {
+    private fun getInputData(workerId: UUID, uris: List<Uri>): FileUploadInputEntity {
         return when (uploadType) {
             FileUploadType.USER -> {
-                FileUploadInput(
+                FileUploadInputEntity(
                     workerId = workerId.toString(),
                     filePaths = uris.map { it.toString() },
                     action = FileUploadWorker.ACTION_USER_FILE,
@@ -312,7 +312,7 @@ class FileUploadDialogViewModel @Inject constructor(
                 )
             }
             FileUploadType.COURSE -> {
-                FileUploadInput(
+                FileUploadInputEntity(
                     workerId = workerId.toString(),
                     filePaths = uris.map { it.toString() },
                     action = FileUploadWorker.ACTION_COURSE_FILE,
@@ -321,7 +321,7 @@ class FileUploadDialogViewModel @Inject constructor(
                 )
             }
             FileUploadType.GROUP -> {
-                FileUploadInput(
+                FileUploadInputEntity(
                     workerId = workerId.toString(),
                     filePaths = uris.map { it.toString() },
                     action = FileUploadWorker.ACTION_GROUP_FILE,
@@ -330,21 +330,21 @@ class FileUploadDialogViewModel @Inject constructor(
                 )
             }
             FileUploadType.MESSAGE -> {
-                FileUploadInput(
+                FileUploadInputEntity(
                     workerId = workerId.toString(),
                     filePaths = uris.map { it.toString() },
                     action = FileUploadWorker.ACTION_MESSAGE_ATTACHMENTS
                 )
             }
             FileUploadType.DISCUSSION -> {
-                FileUploadInput(
+                FileUploadInputEntity(
                     workerId = workerId.toString(),
                     filePaths = uris.map { it.toString() },
                     action = FileUploadWorker.ACTION_DISCUSSION_ATTACHMENT
                 )
             }
             FileUploadType.QUIZ -> {
-                FileUploadInput(
+                FileUploadInputEntity(
                     workerId = workerId.toString(),
                     filePaths = uris.map { it.toString() },
                     action = FileUploadWorker.ACTION_QUIZ_FILE,
@@ -356,7 +356,7 @@ class FileUploadDialogViewModel @Inject constructor(
                 )
             }
             FileUploadType.SUBMISSION_COMMENT -> {
-                FileUploadInput(
+                FileUploadInputEntity(
                     workerId = workerId.toString(),
                     filePaths = uris.map { it.toString() },
                     action = FileUploadWorker.ACTION_SUBMISSION_COMMENT,
@@ -365,7 +365,7 @@ class FileUploadDialogViewModel @Inject constructor(
                 )
             }
             FileUploadType.TEACHER_SUBMISSION_COMMENT -> {
-                FileUploadInput(
+                FileUploadInputEntity(
                     workerId = workerId.toString(),
                     filePaths = uris.map { it.toString() },
                     action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
@@ -375,7 +375,7 @@ class FileUploadDialogViewModel @Inject constructor(
                 )
             }
             else -> {
-                FileUploadInput(
+                FileUploadInputEntity(
                     workerId = workerId.toString(),
                     filePaths = uris.map { it.toString() },
                     action = FileUploadWorker.ACTION_ASSIGNMENT_SUBMISSION,

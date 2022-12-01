@@ -23,14 +23,11 @@ import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
-import com.instructure.canvasapi2.db.entities.Author
-import com.instructure.canvasapi2.db.entities.FileUploadInput
-import com.instructure.canvasapi2.db.entities.MediaComment
-import com.instructure.canvasapi2.db.entities.SubmissionComment
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
@@ -39,6 +36,10 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.features.file.upload.preferences.FileUploadPreferences
 import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.entities.AuthorEntity
+import com.instructure.pandautils.room.entities.FileUploadInputEntity
+import com.instructure.pandautils.room.entities.MediaCommentEntity
+import com.instructure.pandautils.room.entities.SubmissionCommentEntity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.toJson
@@ -131,7 +132,7 @@ class FileUploadWorker @AssistedInject constructor(
                 ACTION_MESSAGE_ATTACHMENTS -> {
                     updateNotificationComplete(notificationId)
                     val attachmentEntities =
-                        attachments.map { com.instructure.canvasapi2.db.entities.Attachment(it, id.toString()) }
+                        attachments.map { com.instructure.pandautils.room.entities.AttachmentEntity(it, id.toString()) }
                     attachmentDao.insertAll(attachmentEntities)
                     Result.success()
                 }
@@ -162,14 +163,14 @@ class FileUploadWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun insertSubmissionComment(submissionComment: com.instructure.canvasapi2.models.SubmissionComment): Long {
+    private suspend fun insertSubmissionComment(submissionComment: SubmissionComment): Long {
         val submissionCommentId = submissionCommentDao.insert(
-            SubmissionComment(submissionComment)
+            SubmissionCommentEntity(submissionComment)
         )
 
         submissionComment.mediaComment?.let {
             mediaCommentDao.insert(
-                MediaComment(
+                MediaCommentEntity(
                     it
                 )
             )
@@ -177,12 +178,12 @@ class FileUploadWorker @AssistedInject constructor(
 
         submissionComment.author?.let {
             authorDao.insert(
-                Author(it)
+                AuthorEntity(it)
             )
         }
 
         val attachmentEntities = submissionComment.attachments.map {
-            com.instructure.canvasapi2.db.entities.Attachment(
+            com.instructure.pandautils.room.entities.AttachmentEntity(
                 attachment = it,
                 submissionCommentId = submissionCommentId
             )
@@ -192,7 +193,7 @@ class FileUploadWorker @AssistedInject constructor(
         return submissionCommentId
     }
 
-    private fun getArguments(inputData: FileUploadInput) {
+    private fun getArguments(inputData: FileUploadInputEntity) {
         courseId = inputData.courseId ?: INVALID_ID
         assignmentId = inputData.assignmentId ?: INVALID_ID
         quizId = inputData.quizId ?: INVALID_ID

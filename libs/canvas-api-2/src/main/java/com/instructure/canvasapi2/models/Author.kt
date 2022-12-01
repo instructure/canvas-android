@@ -31,13 +31,5 @@ data class Author(
     val pronouns: String? = null
 ) : CanvasModel<Author>() {
 
-    constructor(author: com.instructure.canvasapi2.db.entities.Author) : this(
-        author.id,
-        author.displayName,
-        author.avatarImageUrl,
-        author.htmlUrl,
-        author.pronouns
-    )
-
     override val comparisonString get() = displayName
 }

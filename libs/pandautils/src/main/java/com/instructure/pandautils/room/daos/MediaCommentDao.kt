@@ -4,18 +4,18 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Update
-import com.instructure.canvasapi2.db.entities.MediaComment
+import com.instructure.pandautils.room.entities.MediaCommentEntity
 
 @Dao
 interface MediaCommentDao {
 
     @Insert
-    suspend fun insert(mediaComment: MediaComment)
+    suspend fun insert(mediaComment: MediaCommentEntity)
 
     @Delete
-    suspend fun delete(mediaComment: MediaComment)
+    suspend fun delete(mediaComment: MediaCommentEntity)
 
     @Update
-    suspend fun update(mediaComment: MediaComment)
+    suspend fun update(mediaComment: MediaCommentEntity)
 
 }

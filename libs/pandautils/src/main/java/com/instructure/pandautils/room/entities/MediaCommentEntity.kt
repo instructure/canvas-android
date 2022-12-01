@@ -1,10 +1,11 @@
-package com.instructure.canvasapi2.db.entities
+package com.instructure.pandautils.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.MediaComment
 
 @Entity
-data class MediaComment(
+data class MediaCommentEntity(
     @PrimaryKey
     val mediaId: String,
     var displayName: String? = null,
@@ -12,11 +13,21 @@ data class MediaComment(
     var mediaType: String? = null,
     var contentType: String? = null
 ) {
-    constructor(mediaComment: com.instructure.canvasapi2.models.MediaComment): this(
+    constructor(mediaComment: MediaComment): this(
         mediaComment.mediaId!!,
         mediaComment.displayName,
         mediaComment.url,
         mediaComment.mediaType?.name,
         mediaComment.contentType
     )
+
+    fun toApiModel(): MediaComment {
+        return MediaComment(
+            mediaId,
+            displayName,
+            url,
+            mediaType?.let { MediaComment.MediaType.valueOf(it) },
+            contentType
+        )
+    }
 }

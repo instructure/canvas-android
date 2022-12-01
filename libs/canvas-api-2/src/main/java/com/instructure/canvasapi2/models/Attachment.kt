@@ -40,16 +40,4 @@ data class Attachment(
 ) : CanvasModel<Attachment>() {
     override val comparisonDate get() = createdAt
     override val comparisonString get() = displayName
-
-    constructor(attachment: com.instructure.canvasapi2.db.entities.Attachment) : this(
-        attachment.id,
-        attachment.contentType,
-        attachment.filename,
-        attachment.displayName,
-        attachment.url,
-        attachment.thumbnailUrl,
-        attachment.previewUrl,
-        attachment.createdAt,
-        attachment.size
-    )
 }

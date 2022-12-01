@@ -47,16 +47,16 @@ import instructure.androidblueprint.ListPresenter
 import kotlinx.coroutines.Job
 
 class SpeedGraderCommentsPresenter(
-        rawComments: List<SubmissionComment>,
-        val submissionHistory: List<Submission>,
-        val assignee: Assignee,
-        val courseId: Long,
-        val assignmentId: Long,
-        val groupMessage: Boolean,
-        val submissionCommentDao: SubmissionCommentDao,
-        val attachmentDao: AttachmentDao,
-        val authorDao: AuthorDao,
-        val mediaCommentDao: MediaCommentDao
+    rawComments: List<SubmissionComment>,
+    val submissionHistory: List<Submission>,
+    val assignee: Assignee,
+    val courseId: Long,
+    val assignmentId: Long,
+    val groupMessage: Boolean,
+    val submissionCommentDao: SubmissionCommentDao,
+    val attachmentDao: AttachmentDao,
+    val authorDao: AuthorDao,
+    val mediaCommentDao: MediaCommentDao
 ) : ListPresenter<SubmissionCommentWrapper, SpeedGraderCommentsView>(SubmissionCommentWrapper::class.java) {
 
     val mPageId = "${ApiPrefs.domain}-$courseId-$assignmentId-${assignee.id}"
@@ -64,6 +64,7 @@ class SpeedGraderCommentsPresenter(
 
     private val comments = rawComments.map { CommentWrapper(it) }
     private var sendingJob: Job? = null
+    private var fileUploadJob: Job? = null
 
     override fun loadData(forceNetwork: Boolean) {
 
@@ -71,7 +72,8 @@ class SpeedGraderCommentsPresenter(
             // Grab new submission comments
             tryWeave {
                 // Get updated submission
-                val updatedSubmission: Submission = awaitApi { SubmissionManager.getSingleSubmission(courseId, assignmentId, assignee.id, it, true) }
+                val updatedSubmission: Submission =
+                    awaitApi { SubmissionManager.getSingleSubmission(courseId, assignmentId, assignee.id, it, true) }
 
                 // Add normal comments
                 addNormalComments(updatedSubmission.submissionComments)
@@ -107,14 +109,15 @@ class SpeedGraderCommentsPresenter(
 
     fun addNormalComments(comments: List<SubmissionComment>) = data.addOrUpdate(comments.map { CommentWrapper(it) })
 
-    fun addSubmissionHistoryAsComments(submissionHistory: List<Submission>) = data.addOrUpdate(submissionHistory.map { SubmissionWrapper(it) })
+    fun addSubmissionHistoryAsComments(submissionHistory: List<Submission>) =
+        data.addOrUpdate(submissionHistory.map { SubmissionWrapper(it) })
 
     fun addPendingComments() {
         // Add pending comments
         val (drafts, pending) = TeacherPrefs.pendingSubmissionComments
-                .filter { it.pageId == mPageId }
-                .map { PendingCommentWrapper(it) }
-                .partition { it.pendingComment.status == CommentSendStatus.DRAFT }
+            .filter { it.pageId == mPageId }
+            .map { PendingCommentWrapper(it) }
+            .partition { it.pendingComment.status == CommentSendStatus.DRAFT }
         drafts.firstOrNull()?.let { viewCallback?.setDraftText(it.pendingComment.comment) }
         data.addOrUpdate(pending)
     }
@@ -127,7 +130,7 @@ class SpeedGraderCommentsPresenter(
     override fun getItemId(item: SubmissionCommentWrapper) = item.id
 
     override fun compare(item1: SubmissionCommentWrapper, item2: SubmissionCommentWrapper): Int =
-            item1.date.compareTo(item2.date)
+        item1.date.compareTo(item2.date)
 
     fun sendComment(text: String) {
         viewCallback?.setDraftText("")
@@ -167,7 +170,15 @@ class SpeedGraderCommentsPresenter(
                 }
 
                 val submission = awaitApi<Submission> {
-                    SubmissionManager.postSubmissionComment(courseId, assignmentId, userId, comment.pendingComment.comment ?: "", groupMessage, arrayListOf(), it)
+                    SubmissionManager.postSubmissionComment(
+                        courseId,
+                        assignmentId,
+                        userId,
+                        comment.pendingComment.comment ?: "",
+                        groupMessage,
+                        arrayListOf(),
+                        it
+                    )
                 }
 
                 submission.submissionComments.lastOrNull()?.let {
@@ -244,6 +255,7 @@ class SpeedGraderCommentsPresenter(
 
     override fun onDestroyed() {
         sendingJob?.cancel()
+        fileUploadJob?.cancel()
         super.onDestroyed()
     }
 
@@ -268,14 +280,16 @@ class SpeedGraderCommentsPresenter(
         }
 
         if (!TeacherPrefs.pendingSubmissionComments.any { it.workerId == workInfo.id }) {
-            TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { add(newComment) }
+            TeacherPrefs.pendingSubmissionComments =
+                TeacherPrefs.pendingSubmissionComments.toMutableList().apply { add(newComment) }
             val commentWrapper = PendingCommentWrapper(newComment)
             data.addOrUpdate(commentWrapper)
         }
     }
 
     fun retryFileUpload(pending: PendingSubmissionComment) {
-        TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
+        TeacherPrefs.pendingSubmissionComments =
+            TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
         data.remove(PendingCommentWrapper(pending))
         pending.workerInputData?.let { data ->
             selectedFilePaths = data.filePaths
@@ -284,18 +298,14 @@ class SpeedGraderCommentsPresenter(
     }
 
     private fun handleFileUploadSuccess(workInfo: WorkInfo) {
-        weave {
+        fileUploadJob = weave {
             TeacherPrefs.pendingSubmissionComments.find { it.workerId == workInfo.id }?.let { pending ->
-                TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
+                TeacherPrefs.pendingSubmissionComments =
+                    TeacherPrefs.pendingSubmissionComments.toMutableList().apply { remove(pending) }
                 data.remove(PendingCommentWrapper(pending))
                 val submissionCommentId = workInfo.outputData.getLong(FileUploadWorker.RESULT_SUBMISSION_COMMENT, 0L)
                 submissionCommentDao.findById(submissionCommentId)?.let {
-                    val submissionComment = SubmissionComment(
-                        it.submissionComment,
-                        it.author,
-                        it.mediaComment,
-                        it.attachments
-                    )
+                    val submissionComment = it.toApiModel()
                     dbCleanUp(it)
                     data.add(CommentWrapper(submissionComment))
                     SubmissionCommentsUpdated().post()
@@ -319,8 +329,10 @@ class SpeedGraderCommentsPresenter(
     }
 
     fun removeFailedFileUploads() {
-        val failedFileUploads = TeacherPrefs.pendingSubmissionComments.filter { it.status == CommentSendStatus.ERROR && it.workerId != null }
-        TeacherPrefs.pendingSubmissionComments = TeacherPrefs.pendingSubmissionComments.toMutableList().apply { removeAll(failedFileUploads) }
+        val failedFileUploads =
+            TeacherPrefs.pendingSubmissionComments.filter { it.status == CommentSendStatus.ERROR && it.workerId != null }
+        TeacherPrefs.pendingSubmissionComments =
+            TeacherPrefs.pendingSubmissionComments.toMutableList().apply { removeAll(failedFileUploads) }
     }
 
     fun onFileUploadWorkInfoChanged(workInfo: WorkInfo) {
@@ -336,6 +348,7 @@ class SpeedGraderCommentsPresenter(
     }
 
     private fun subscribePendingWorkers() {
-        viewCallback?.subscribePendingWorkers(TeacherPrefs.pendingSubmissionComments.filter { it.pageId == mPageId }.mapNotNull { it.workerId })
+        viewCallback?.subscribePendingWorkers(TeacherPrefs.pendingSubmissionComments.filter { it.pageId == mPageId }
+            .mapNotNull { it.workerId })
     }
 }

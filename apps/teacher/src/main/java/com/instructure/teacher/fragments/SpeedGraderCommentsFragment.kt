@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.instructure.canvasapi2.db.entities.FileUploadInput
+import com.instructure.pandautils.room.entities.FileUploadInputEntity
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
@@ -268,7 +268,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
                 .build()
 
-            val inputData = FileUploadInput(
+            val inputData = FileUploadInputEntity(
                 workerId = worker.id.toString(),
                 filePaths = fileUploadWorkerData.filePaths,
                 courseId = fileUploadWorkerData.courseId,
