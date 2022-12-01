@@ -17,6 +17,7 @@
 package com.instructure.student.features.documentscanning
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -66,6 +67,7 @@ class DocumentScanningActivity : ScanActivity() {
                 try {
                     fileOutputStream = FileOutputStream(file.absolutePath)
                     action.bitmap.compress(Bitmap.CompressFormat.JPEG, action.quality, fileOutputStream)
+                    val intent = Intent()
                     intent.data = file.toUri()
                     setResult(Activity.RESULT_OK, intent)
                     finish()
