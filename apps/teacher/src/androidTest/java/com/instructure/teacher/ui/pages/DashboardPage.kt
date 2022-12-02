@@ -201,4 +201,9 @@ class DashboardPage : BasePage() {
         onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
         onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
+
+    fun openHelpMenu() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
+    }
 }
