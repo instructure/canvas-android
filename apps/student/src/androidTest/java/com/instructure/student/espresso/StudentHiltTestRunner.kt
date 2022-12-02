@@ -19,7 +19,6 @@ package com.instructure.student.espresso
 import android.app.Application
 import android.content.Context
 import com.instructure.canvas.espresso.CanvasRunner
-import com.instructure.student.util.Hilt_AppManager
 import dagger.hilt.android.testing.HiltTestApplication
 
 class StudentHiltTestRunner : CanvasRunner() {
