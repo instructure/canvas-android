@@ -45,12 +45,14 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.databinding.FragmentAssignmentDetailBinding
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.mobius.assignmentDetails.launchAudio
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
@@ -125,6 +127,9 @@ class AssignmentDetailFragment : Fragment(), Bookmarkable {
         val canvasContext = canvasContext as? CanvasContext ?: return
 
         when (action) {
+            is AssignmentDetailAction.ShowToast -> {
+                toast(action.message)
+            }
             is AssignmentDetailAction.NavigateToLtiScreen -> {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), viewModel.course, action.url)
             }
@@ -281,7 +286,7 @@ class AssignmentDetailFragment : Fragment(), Bookmarkable {
 
         dialog.setOnShowListener {
             setupDialogRow(dialog, dialog.submissionEntryAudio, true) {
-
+                activity?.launchAudio({ toast(R.string.permissionDenied) }, ::showAudioRecordingView)
             }
             setupDialogRow(dialog, dialog.submissionEntryVideo, true) {
 
@@ -292,6 +297,15 @@ class AssignmentDetailFragment : Fragment(), Bookmarkable {
             }
         }
         dialog.show()
+    }
+
+    private fun showAudioRecordingView() {
+        floatingRecordingView.setContentType(RecordingMediaType.Audio)
+        floatingRecordingView.setVisible()
+        floatingRecordingView.stoppedCallback = {}
+        floatingRecordingView.recordingCallback = {
+            viewModel.uploadAudioSubmission(context, it)
+        }
     }
 
     companion object {

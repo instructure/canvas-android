@@ -105,12 +105,59 @@
                         tools:text="Submitted" />
 
                     <View
+                        android:id="@+id/lockedDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.lockedMessage.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/points" />
+
+                    <TextView
+                        android:id="@+id/lockedMessageLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/lato_font_family"
+                        android:text="@string/dueLabel"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.lockedMessage.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/lockedDivider" />
+
+                    <TextView
+                        android:id="@+id/lockMessageTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/lato_font_family"
+                        android:text="@{viewModel.data.lockedMessage}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.lockedMessage.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/lockedMessageLabel" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_panda_locked"
+                        android:visibility="@{viewModel.data.fullLocked ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lockMessageTextView" />
+
+                    <View
                         android:id="@+id/attemptDivider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="30dp"
                         android:background="@color/borderMedium"
-                        app:layout_constraintTop_toBottomOf="@id/points" />
+                        android:visibility="@{viewModel.data.attempts.size() > 1 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/lockMessageTextView" />
 
                     <Spinner
                         android:id="@+id/attemptSpinner"
@@ -166,6 +213,7 @@
                         android:text="@string/dueLabel"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
+                        android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/dueDivider" />
 
                     <TextView
@@ -178,6 +226,7 @@
                         android:text="@{viewModel.data.dueDate}"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
+                        android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/dueLabel" />
 
                     <TextView
@@ -401,6 +450,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="30dp"
                         android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/attemptsUsedTextView" />
 
                     <TextView
@@ -413,6 +463,7 @@
                         android:text="@string/description"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
+                        android:visibility="@{viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/descriptionDivider" />
 
                     <TextView
@@ -425,7 +476,7 @@
                         android:text="@string/noAssignmentDescriptionStudent"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
-                        android:visibility="@{viewModel.data.description.empty ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.data.description.empty &amp;&amp; !viewModel.data.fullLocked ? View.VISIBLE : View.GONE}"
                         app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
 
                     <com.instructure.pandautils.views.CanvasWebViewWrapper
@@ -435,7 +486,7 @@
                         android:background="@color/backgroundLightest"
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"
-                        android:visibility="@{viewModel.data.description.empty ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.data.description.empty || viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
                         app:htmlContent="@{viewModel.data.description}"
                         app:htmlTitle="@{viewModel.data.assignmentName}"
                         app:layout_constraintTop_toBottomOf="@id/descriptionLabel"
@@ -465,6 +516,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/swipeRefreshLayout"
             tools:text="Resubmit Assignment" />
+
+        <com.instructure.pandautils.views.FloatingRecordingView
+            android:id="@+id/floatingRecordingView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="12dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.instructure.pandautils.views.EmptyView
             android:id="@+id/emptyView"

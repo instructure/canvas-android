@@ -12,19 +12,21 @@ data class AssignmentDetailViewData(
     val submissionStatusText: String,
     val submissionStatusIcon: Int,
     val submissionStatusTint: Int,
-    val submitButtonText: String,
-    val attempts: List<AssignmentDetailAttemptItemViewModel>,
-    @Bindable var selectedGradeCellViewData: GradeCellViewData?,
-    val dueDate: String,
-    val submissionTypes: String,
-    val allowedFileTypes: String,
-    val description: String,
-    val ltiTool: LTITool?,
-    val submitEnabled: Boolean,
-    val submitVisible: Boolean,
-    val descriptionLabelText: String,
-    val quizDetails: QuizViewViewData?,
-    val attemptsViewData: AttemptsViewData?
+    val fullLocked: Boolean = false,
+    val lockedMessage: String = "",
+    val submitButtonText: String = "",
+    val submitEnabled: Boolean = false,
+    val submitVisible: Boolean = false,
+    val attempts: List<AssignmentDetailAttemptItemViewModel> = emptyList(),
+    @Bindable var selectedGradeCellViewData: GradeCellViewData? = GradeCellViewData(GradeCellViewData.State.EMPTY),
+    val dueDate: String = "",
+    val submissionTypes: String = "",
+    val allowedFileTypes: String = "",
+    val description: String = "",
+    val ltiTool: LTITool? = null,
+    val descriptionLabelText: String = "",
+    val quizDetails: QuizViewViewData? = null,
+    val attemptsViewData: AttemptsViewData? = null
 ) : BaseObservable() {
     val firstAttemptOrNull = attempts.firstOrNull()
 }
@@ -40,6 +42,7 @@ data class QuizViewViewData(val questionCount: String, val timeLimit: String, va
 data class AttemptsViewData(val allowedAttempts: String, val usedAttempts: String)
 
 sealed class AssignmentDetailAction {
+    data class ShowToast(val message: String) : AssignmentDetailAction()
     data class NavigateToLtiScreen(val url: String) : AssignmentDetailAction()
     data class NavigateToSubmissionScreen(val isObserver: Boolean) : AssignmentDetailAction()
     data class NavigateToQuizScreen(val quiz: Quiz) : AssignmentDetailAction()

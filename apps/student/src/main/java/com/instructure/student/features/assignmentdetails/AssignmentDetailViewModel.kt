@@ -17,7 +17,10 @@
 
 package com.instructure.student.features.assignmentdetails
 
+import android.app.Application
+import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import androidx.lifecycle.*
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
@@ -35,22 +38,29 @@ import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
+import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
+import com.squareup.sqldelight.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class AssignmentDetailViewModel @Inject constructor(
+    application: Application,
     savedStateHandle: SavedStateHandle,
     private val courseManager: CourseManager,
     private val assignmentManager: AssignmentManager,
     private val quizManager: QuizManager,
     private val submissionManager: SubmissionManager,
     private val resources: Resources
-) : ViewModel() {
+) : AndroidViewModel(application), Query.Listener {
 
     val state: LiveData<ViewState>
         get() = _state
@@ -72,8 +82,19 @@ class AssignmentDetailViewModel @Inject constructor(
     private var isObserver: Boolean = false
     private var quizResult: Quiz? = null
 
+    private val submissionQuery = Db.getInstance(getApplication()).submissionQueries
+        .getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id.orDefault())
+
     init {
+        submissionQuery.addListener(this)
         loadData()
+    }
+
+    override fun queryResultsChanged() {
+        viewModelScope.launch {
+            val submission = submissionQuery.executeAsList().lastOrNull()
+            Log.d("ASD", "${submission?.assignmentName}")
+        }
     }
 
     private fun loadData(forceNetwork: Boolean = true) {
@@ -110,7 +131,8 @@ class AssignmentDetailViewModel @Inject constructor(
 
                 bookmarker = bookmarker.copy(url = assignmentResult.htmlUrl)
 
-                dataLoaded(assignmentResult, ltiToolResult)
+                _data.postValue(getViewData(assignmentResult, ltiToolResult))
+                _state.postValue(ViewState.Success)
             } catch (ex: Exception) {
                 _state.postValue(ViewState.Error())
             }
@@ -118,7 +140,7 @@ class AssignmentDetailViewModel @Inject constructor(
     }
 
     @Suppress("DEPRECATION")
-    private fun dataLoaded(assignment: Assignment, ltiTool: LTITool?) {
+    private fun getViewData(assignment: Assignment, ltiTool: LTITool?): AssignmentDetailViewData {
         val points = resources.getQuantityString(
             R.plurals.quantityPointsAbbreviated,
             assignment.pointsPossible.toInt(),
@@ -149,6 +171,34 @@ class AssignmentDetailViewModel @Inject constructor(
                 R.color.backgroundDark
             }
         )
+
+        val submittedStatusIcon = if (assignment.isSubmitted) R.drawable.ic_complete_solid else R.drawable.ic_no
+
+        if (assignment.isLocked) {
+            val lockedMessage = assignment.unlockDate?.let {
+                if (assignment.lockInfo?.contextModule != null) {
+                    val name = assignment.lockInfo?.lockedModuleName
+                    resources.getString(R.string.lockedModule, name)
+                } else {
+                    val dateString = DateFormat.getDateInstance().format(it)
+                    val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(it)
+                    resources.getString(R.string.lockedSubtext, dateString, timeString)
+                }
+            }.orEmpty()
+
+            return AssignmentDetailViewData(
+                assignment = assignment,
+                assignmentName = assignment.name.orEmpty(),
+                points = points,
+                submissionStatusText = submittedLabelText,
+                submissionStatusIcon = submittedStatusIcon,
+                submissionStatusTint = submissionStatusTint,
+                fullLocked = true,
+                lockedMessage = lockedMessage
+            )
+        }
+
+        val partialLockedMessage = assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()).orDefault() }.orEmpty()
 
         val submissionHistory = assignment.submission?.submissionHistory
         val attempts = submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
@@ -223,30 +273,28 @@ class AssignmentDetailViewModel @Inject constructor(
             assignment.submission?.attempt.orDefault().toString()
         ) else null
 
-        val viewData = AssignmentDetailViewData(
-            assignment,
-            assignment.name.orEmpty(),
-            points,
-            submittedLabelText,
-            if (assignment.isSubmitted) R.drawable.ic_complete_solid else R.drawable.ic_no,
-            submissionStatusTint,
-            submitButtonText,
-            attempts,
-            GradeCellViewData.fromSubmission(resources, assignment, assignment.submission),
-            due,
-            submissionTypes,
-            allowedFileTypes,
-            assignment.description.orEmpty(),
-            ltiTool,
-            submitEnabled,
-            submitVisible,
-            descriptionLabel,
-            quizViewViewData,
-            attemptsViewData
+        return AssignmentDetailViewData(
+            assignment = assignment,
+            assignmentName = assignment.name.orEmpty(),
+            points = points,
+            submissionStatusText = submittedLabelText,
+            submissionStatusIcon = submittedStatusIcon,
+            submissionStatusTint = submissionStatusTint,
+            lockedMessage = partialLockedMessage,
+            submitButtonText = submitButtonText,
+            submitEnabled = submitEnabled,
+            submitVisible = submitVisible,
+            attempts = attempts,
+            selectedGradeCellViewData = GradeCellViewData.fromSubmission(resources, assignment, assignment.submission),
+            dueDate = due,
+            submissionTypes = submissionTypes,
+            allowedFileTypes = allowedFileTypes,
+            description = assignment.description.orEmpty(),
+            ltiTool = ltiTool,
+            descriptionLabelText = descriptionLabel,
+            quizDetails = quizViewViewData,
+            attemptsViewData = attemptsViewData
         )
-
-        _data.postValue(viewData)
-        _state.postValue(ViewState.Success)
     }
 
     private fun getFormattedDate(date: Date) = SimpleDateFormat("yyyy. MMM. dd. HH:mm", Locale.getDefault()).format(date)
@@ -320,6 +368,15 @@ class AssignmentDetailViewModel @Inject constructor(
             }
         } else {
             postAction(AssignmentDetailAction.ShowSubmitDialog(assignment))
+        }
+    }
+
+    fun uploadAudioSubmission(context: Context?, file: File?) {
+        val assignment = _data.value?.assignment
+        if (context != null && file != null && assignment != null && course != null) {
+            uploadAudioRecording(context, file, assignment, course)
+        } else {
+            postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.audioRecordingError)))
         }
     }
 }
