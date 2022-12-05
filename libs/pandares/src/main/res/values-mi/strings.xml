@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Tirohanga Ākonga</string>
 
 
+    <string name="rateOnThePlayStore">Reiti i runga i te Toa Play</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Ūpoko i tohua: %s</string>
     <string name="content_description_chosen_body">Tinana i tohua: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Kei te wātea te tauira</string>
     <string name="errorLoadingSubmission">He hapa i puta i te wā o te uta ana i te tāpaetanga</string>
     <string name="loadFullContent">Pātō ki te kite i te ihirangi katoa</string>
+    <string name="openLtiInExternalApp">Tap ki te whakatuwhera i te taupānga waho</string>
     <string name="dashboardTabImportantDates">Ngā rā nui</string>
     <string name="importantDatesEmptyTitle">Kaore ngā rā nui</string>
     <string name="important_dates">Ngā rā nui</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s karere kāore i pānuitia</item>
         <item quantity="other">%s karere kāore i pānuitia</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s whakamōhiotanga kāore anō kia pānuitia</item>
+        <item quantity="other">%s nga whakamohiotanga kaore ano kia panuitia</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Karekau he tuhipoka i tohua</string>
     <string name="emailNotifications">Ngā Īmēra Whakamōhiotanga</string>
     <string name="emailNotificationsImmediately">Tonu</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Wiki</string>
     <string name="emailNotificationsNever">Kaua rawa</string>
     <string name="selectFrequency">Tīpakohia te auau</string>
+    <string name="a11y_closeProgress">Katia te korero ahunga whakamua</string>
+    <string name="fileUploadProgress">%1$s ō %2$s</string>
+    <string name="fileUploadProgressSubtitle">Tukuake ki nga Kōnae</string>
+    <string name="submissionProgressSubtitle">Te tuku tukunga ki \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Tukuake ana tāpaetanga</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Tikiake ana ngā kōnae</string>
+    <string name="cancelSubmissionDialogTitle">Whakakore Tāpaetanga</string>
+    <string name="cancelSubmissionDialogMessage">Ka mukua me te whakakoretia to tāpaetanga.</string>
+    <string name="fileUploadError">I Rahua te Tukunga Kōnae</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Tukuatu ki Canvas mo %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Tukuake ki aku Kōnae</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Tuku taumahi</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Kōwhirihia he akoranga</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Kōwhiria he taumahi</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Whakakore Tukuake?</string>
+    <string name="cancelFileUploadMessage">Ma tenei ka whakakore i to tukunga ake.</string>
+    <string name="menuTitleFilterAssignments">Tātari taumahi</string>
+    <string name="filterAssignmentDialogTitle">Tātari Taumahi</string>
+    <string name="filterAssignmentsDialogCancel">Whakakore</string>
+    <string name="filterAssignmentAll">Katoa</string>
+    <string name="filterAssignmentLate">Tūreiti</string>
+    <string name="filterAssignmentMissing">Ngaro</string>
+    <string name="filterAssignmentGraded">Kōekehia</string>
+    <string name="filterAssignmentUpcoming">E haere mai ana</string>
+    <string name="createdByStudentView">I hangaia e te Tirohanga Tauira</string>
+    <string name="discussionErrorToast">I puta he hapa. Kare pea te kaupapa i te waatea.</string>
+    <string name="cameraPermissionPermanentlyDenied">I whakahēngia te whakaaetanga kāmera. Haere ki nga tautuhinga taupānga kia whakaaetia.</string>
 </resources>

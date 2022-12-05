@@ -1,0 +1,902 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">Tetapan</string>
+    <string name="tab_week">Minggu</string>
+    <string name="tab_inbox">Peti masuk</string>
+    <string name="tab_details">Butiran</string>
+    <string name="tab_questions">Soalan</string>
+    <string name="tab_submissions">Serahan</string>
+    <string name="tab_assignments">Tugasan</string>
+    <string name="tab_profile">Profil</string>
+    <string name="tab_people">Orang</string>
+    <string name="tab_quizzes">Kuiz</string>
+    <string name="tab_discussions">Perbincangan</string>
+    <string name="tab_announcements">Pengumuman</string>
+    <string name="tab_attendance">Kehadiran</string>
+    <string name="tab_pages">Halaman</string>
+    <string name="tab_todo">Untuk Dilakukan</string>
+    <string name="content_description_school_logo">Logo Sekolah</string>
+    <string name="search_guides">Buat Carian dalam Panduan Canvas</string>
+    <string name="canvas_guides">Panduan Canvas</string>
+    <string name="search_guides_icon">Ikon untuk Panduan Canvas</string>
+    <string name="search_guides_details">Jawapan untuk soalan lazim</string>
+    <string name="report_problem">Laporkan Masalah</string>
+    <string name="report_problem_icon"> Ikon untuk Laporkan Masalah</string>
+    <string name="report_problem_details">Jika apl menghadapi masalah, sila beritahu kami</string>
+    <string name="request_feature">Minta Ciri</string>
+    <string name="request_feature_icon">Ikon untuk Minta Ciri</string>
+    <string name="request_feature_details">Kongsikan idea anda dengan kami untuk menambah baik apl</string>
+    <string name="share_your_love">Kongsikan Rasa Teruja Anda terhadap Apl ini</string>
+    <string name="share_your_love_details">Berita kami mengenai bahagian yang anda gemari pada apl ini</string>
+    <string name="masquerade">Menyamar</string>
+    <string name="issue_with_teacher_app">Isu berkenaan Teacher App [Android]</string>
+    <string name="no_items_to_display_short">Tiada item</string>
+    <string name="rate_the_app">Nilaikan apl ini</string>
+    <string name="rate_the_app_icon">Ikon untuk Nilaikan apl ini</string>
+    <string name="teacher_log_out">Log Keluar</string>
+    <string name="teacher_switch_user">Tukar Pengguna</string>
+    <string name="under_construction">Dalam Pembinaan</string>
+    <string name="toolbar_event">Acara</string>
+    <string name="location">Lokasi</string>
+    <string name="event_date">Tarikh Acara</string>
+    <string name="course">Kursus</string>
+    <string name="profile">Profil</string>
+    <string name="share">Kongsi</string>
+    <string name="share_with">Kongsi Dengan&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Buka laci navigasi</string>
+    <string name="navigation_drawer_close">Tutup laci navigasi</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">(tiada subjek)</string>
+    <string name="compose_message">Karang mesej</string>
+    <string name="newMessage">Mesej Baharu</string>
+    <string name="courses">Kursus</string>
+    <string name="compose_message_no_ellipsis">Karang mesej</string>
+    <string name="send">Hantar</string>
+    <string name="attachment">Kepilan</string>
+    <string name="attachments">Lampiran</string>
+    <string name="not_available_offline">Fungsi tidak tersedia semasa berada luar talian</string>
+    <string name="empty_message">Mesej tidak boleh kosong!</string>
+    <string name="message_has_no_recipients">Mesej ini tiada penerima pada masa ini.</string>
+    <string name="course_spinner_title">Kursus:</string>
+    <string name="reply_to_message">Balas</string>
+    <string name="forward_message">Majukan Mesej</string>
+    <string name="label_to">Kepada</string>
+    <string name="label_course">Kursus</string>
+    <string name="label_subject">Subjek</string>
+
+    <string name="common_send">Hantar</string>
+    <string name="common_edit">Edit</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">Idea untuk Teacher App [Android]</string>
+    <string name="understand_request">Maklumat berikut akan membantu kami lebih memahami idea anda:</string>
+    <string name="send_mail">Hantar E-mel&#8230;</string>
+
+    <string name="color_1">Merah</string>
+    <string name="color_2">Merah jambu terang</string>
+    <string name="color_3">Gandaria</string>
+    <string name="color_4">Lembayung</string>
+    <string name="color_5">Ungu</string>
+    <string name="color_6">Loh</string>
+    <string name="color_7">Biru</string>
+    <string name="color_8">Sian</string>
+    <string name="color_9">Hijau</string>
+    <string name="color_10">Hijau Pucuk Pisang</string>
+    <string name="color_11">Kuning</string>
+    <string name="color_12">Emas</string>
+    <string name="color_13">Oren</string>
+    <string name="color_14">Merah jambu</string>
+    <string name="color_15">Kelabu</string>
+
+    <string name="attachment_icon">Ikon Kepilan</string>
+    <string name="star_icon">Ikon Bintang</string>
+    <string name="monologue">Monolog</string>
+
+    <string name="create_announcement_topic_title_hint">Tajuk Topik</string>
+    <string name="post_date">Tarikh Siar</string>
+    <string name="announcement">Pengumuman</string>
+    <string name="create_announcement_title">Pengumuman Baharu</string>
+    <string name="create_announcement_no_description">Penerangan diperlukan</string>
+    <string name="announcementDetails">Butiran Pengumuman</string>
+
+    <string name="no_title">Tiada Tajuk</string>
+    <string name="announcement_create_success">Pengumuman Dicipta!</string>
+    <string name="announcement_create_fail">Tidak dapat mencipta pengumuman. Sila semak sambungan anda dan cuba semula.</string>
+    <string name="create_announcement_delay_posting">Tunda Penyiaran</string>
+
+    <string name="discussion">Perbincangan</string>
+
+    <string name="sunday">Ahad</string>
+    <string name="monday">Isnin</string>
+    <string name="tuesday">Selasa</string>
+    <string name="wednesday">Rabu</string>
+    <string name="thursday">Khamis</string>
+    <string name="friday">Jumaat</string>
+    <string name="saturday">Sabtu</string>
+
+    <string name="add_attachment">Tambah Lampiran</string>
+    <string name="content_description_files">Ikon fail</string>
+    <string name="next">Seterusnya</string>
+    <string name="upload_to_cnavas">Muat Naik ke Canvas</string>
+    <string name="upload_my_files">Fail Saya</string>
+    <string name="upload_course_files">Fail Kursus</string>
+    <string name="upload_to">Muat Naik Ke</string>
+    <string name="message_attachments">Kepilan Mesej</string>
+    <string name="with">dengan</string>
+    <string name="discussion_attachment">Kepilkan fail</string>
+    <string name="select_files_or_photos">Pilih fail atau foto</string>
+    <string name="uploading_files">Memuat naik fail&#8230;</string>
+    <string name="no_attachment">(Tiada Kepilan)</string>
+    <string name="creating_announcement">Mencipta Pengumuman&#8230;</string>
+
+    <string name="copy_email">Salin alamat e-mel</string>
+    <string name="all_grading_periods">Semua Tempoh Penggredan</string>
+    <string name="no_submissions">Tiada serahan</string>
+    <string name="all_submissions_graded">Semua serahan digredkan</string>
+    <string name="icon">ikon</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="one">%d serahan perlu digredkan</item>
+        <item quantity="other">%d serahan perlu digredkan</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="one">Terdapat %d penerima tugasan tanpa gred.</item>
+        <item quantity="other">Terdapat %d penerima tugasan tanpa gred.</item>
+    </plurals>
+
+    <string name="inbox_empty_title">Tiada mesej</string>
+    <string name="inbox_empty_starred_title">Tiada Mesej Dibintangkan</string>
+    <string name="inbox_empty_message">Ketik \"+\" untuk mencipta perbualan baharu.</string>
+    <string name="inbox_empty_starred_message">Bintangkan mesej dengan mengetik bintang dalam mesej.</string>
+
+    <string name="reply">Balas</string>
+    <string name="replyAll">Balas Semua</string>
+    <string name="forward">Majukan</string>
+    <string name="star">Bintangkan</string>
+    <string name="archive">Arkib</string>
+    <string name="delete">Padam</string>
+    <string name="message">Mesej</string>
+    <string name="unarchive">Nyaharkib</string>
+    <string name="message_options">Pilihan Mesej</string>
+    <string name="markAsUnread">Tanda Sebagai Belum Dibaca</string>
+    <string name="message_delete_warning">Adakah anda pasti anda ingin memadamkan salinan mesej ini? Tindakan ini tidak boleh dibuat asal.</string>
+    <string name="conversation_delete_warning">Adakah anda pasti anda ingin memadamkan salinan perbualan anda ini? Tindakan ini tidak boleh dibuat asal.</string>
+    <string name="error_conversation_generic">Tidak dapat melaksanakan tindakan ini. Sila semak sambungan anda dan cuba semula.</string>
+    <string name="message_archived">Mesej diarkibkan!</string>
+    <string name="message_unarchived">Mesej dinyaharkibkan</string>
+    <string name="message_deleted">Mesej dipadamkan</string>
+    <string name="select_recipients">Pilih Penerima</string>
+    <string name="entire_group_selected">Seluruh kumpulan dipilih</string>
+    <string name="no_users_in_group">Tiada pengguna dalam kumpulan</string>
+
+    <string name="published">Telah diterbitkan</string>
+    <string name="not_published">Dinyahterbitkan</string>
+    <string name="published_content_description">Tanda semak diterbitkan</string>
+    <string name="points_with_value">mata</string>
+    <string name="point_with_value">mata</string>
+    <string name="no_due_date">Tiada Tarikh Siap</string>
+    <string name="due_date">Tarikh Siap</string>
+
+    <string name="view_replies">Lihat Balasan</string>
+    <string name="view_discussion">Lihat Perbincangan</string>
+
+    <string name="edit">Edit</string>
+    <string name="save">Simpan</string>
+    <string name="successfully_updated_assignment">Tugasan berjaya dikemas kini.</string>
+    <string name="successfully_updated_quiz">Kuiz berjaya dikemas kini.</string>
+    <string name="failure_updating_assignment">Sesuatu tidak kena semasa mengemas kini tugasan. Cuba semula.</string>
+    <string name="failure_deleting_assignment">Sesuatu tidak kena semasa memadamkan tugasan. Cuba semula.</string>
+    <string name="cant_unpublish">Tidak boleh menyahterbit jika terdapat serahan pelajar.</string>
+    <string name="messages">Mesej</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="one">+ %d Mesej</item>
+        <item quantity="other">+ %d Mesej</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="one">%d serahan perlu digredkan</item>
+        <item quantity="other">%d serahan perlu digredkan</item>
+    </plurals>
+
+    <string name="delete_assignment_message">Adakah anda pasti anda ingin memadamkan tugasan ini?</string>
+
+    <string name="max_count">Lebih 99</string>
+    <string name="message_student">Mesej Pelajar</string>
+
+    <string name="message_these_students">Mesej pelajar ini</string>
+    <string name="submission_status_missing">Tiada</string>
+    <string name="submission_status_late">Lewat</string>
+    <string name="submission_status_submitted">Diserahkan</string>
+    <string name="submission_status_not_submitted">Belum diserahkan</string>
+    <string name="submission_status_excused">Dimaafkan</string>
+    <string name="last_login_format">Log masuk terakhir: %s</string>
+
+    <string name="turnOnAnonymousGrading">Hidupkan Penggredan Tanpa Nama</string>
+    <string name="turnOffAnonymousGrading">Matikan Penggredan Tanpa Nama</string>
+    <string name="anonymousGradingLabel">Penggredan Tanpa Nama</string>
+    <string name="anonymousStudentLabel">Pelajar</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">Ciri Akan Datang</string>
+
+    <string-array name="submission_filters">
+        <item>Semua Serahan</item>
+        <item>Serahan Lewat</item>
+        <item>Serahan Tiada</item>
+        <item>Gred Tinggi</item>
+        <item>Gred Rendah</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>Mengikut Nama</item>
+        <item>Gred Tinggi hingga Rendah</item>
+        <item>Gred Rendah hingga Tinggi</item>
+    </string-array>
+
+    <string name="content_description_course_tab">Tab Kursus</string>
+    <string name="content_description_inbox_tab">Tab Peti Masuk</string>
+    <string name="content_description_profile_tab">Tab Profil</string>
+    <string name="close">Tutup</string>
+    <string name="no_course_selected">Sila pilih kursus</string>
+    <string name="discussion_reply_to_entry">Balasan Perbincangan</string>
+    <string name="announcement_reply_to_entry">Balasan Pengumuman</string>
+    <string name="error_text_missing">Tambah sedikit teks untuk menghantar mesej</string>
+    <string name="error_sending_message">Mesej ini tidak boleh dihantar. Ketik untuk mencuba semula.</string>
+    <string name="message_sent_successfully">Mesej berjaya dihantar.</string>
+    <string name="error_occurred">Ralat tidak dijangka berlaku.</string>
+    <string name="no_assignments_with_file_upload">Kursus ini tidak ada tugasan yang membenarkan muat naik fail.</string>
+    <string name="extension_not_allowed">Jenis fail yang dipilih tidak dibenarkan.</string>
+    <string name="allowed_extensions">Sambungan dibenarkan:&#160;</string>
+    <string name="files_uploaded_successfully">Fail berjaya dimuat naik.</string>
+    <string name="error_uploading_file">Ralat berlaku semasa memuat naik fail anda. Sila cuba semula.</string>
+    <string name="uploading_file">Memuat naik fail&#8230;</string>
+    <string name="no_apps">Peranti anda tidak mempunyai apa-apa aplikasi dipasang yang boleh menangani fail ini.</string>
+    <string name="turn_in">Serahkan</string>
+    <string name="error_getting_photo">Terdapat ralat untuk mendapatkan foto. Sila cuba semula.</string>
+    <string name="loading_files_indeterminate">Memuat Naik Fail&#8230;</string>
+    <string name="no_files_uploaded">Anda belum memilih apa-apa fail.</string>
+    <string name="file_upload_not_supported">Anda tidak boleh memuat naik fail ke tugasan yang dipilih.</string>
+    <string name="one_or_more_extension_not_allowed">Satu atau lebih fail mempunyai sambungan fail yang tidak dibenarkan</string>
+
+    <string name="inbox_all">Peti masuk</string>
+    <string name="inbox_unread">Belum dibaca</string>
+    <string name="inbox_starred">Dibintangkan</string>
+    <string name="inbox_sent">Telah dihantar</string>
+    <string name="inbox_archived">Diarkibkan</string>
+    <string name="inbox_all_messages">Semua</string>
+    <string name="uploading_file_num" formatted="false">Memuat naik %d daripada %d</string>
+    <string name="page_not_found">Halaman tidak ditemui.</string>
+    <string name="no_connection">Tiada Sambungan</string>
+    <string name="unauthorized_access">Anda tidak dibenarkan mengakses ini. Sama ada anda tidak mempunyai keizinan atau belum mempunyai akses (sebagai contoh kursus anda belum bermula)</string>
+    <string name="server_error">Ralat pelayan telah berlaku.</string>
+    <string name="error_loading_files">Ralat berlaku semasa memuatkan fail anda. Sila semak sambungan Internet anda dan cuba semula.</string>
+    <string name="files_submitted_successfully">Fail berjaya diserahkan.</string>
+    <string name="no_data_connection">Sila semak sambungan data anda dan cuba semula.</string>
+    <string name="teacher_logout_warning">Adakah anda pasti anda ingin log keluar?</string>
+    <string name="teacher_yes">Ya</string>
+    <string name="teacher_no">Tidak</string>
+    <string name="teacher_sending">Menghantar&#8230;</string>
+    <string name="teacher_cancel">Batal</string>
+    <string name="teacher_okay">OK</string>
+    <string name="teacher_upload">Muat naik</string>
+    <string name="settings">Tetapan</string>
+    <string name="edit_courses">Edit Kursus</string>
+    <string name="start_annotating">Mulakan Anotasi</string>
+    <string name="empty_speedgrader_content">Paparan SpeedGrader Kosong; Perlu Reka Bentuk</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">Tetapan Kursus</string>
+    <string name="course_name">Nama Kursus</string>
+    <string name="set_home_to">Tetapkan \'Laman Utama\'\ untuk...</string>
+    <string name="course_activity_stream">Strim Aktiviti Kursus</string>
+    <string name="pages_front_page">Muka Depan Halaman</string>
+    <string name="frontPage">Halaman Depan</string>
+    <string name="course_modules">Modul Kursus</string>
+    <string name="assignments_list">Senarai Tugasan</string>
+    <string name="syllabus">Silibus</string>
+    <!--End Course Settings-->
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">Berbilang Tarikh Siap</string>
+    <string name="everyone">Semua orang</string>
+    <string name="everyone_else">Semua orang</string>
+    <string name="unknown_student">Pelajar Tidak Diketahui</string>
+    <string name="closed">Ditutup</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">Cukup tempoh %1s pada %2s</string>
+    <string name="last_post" formatted="false">Siaran terakhir %s</string>
+    <string name="submission_types">Jenis Serahan</string>
+    <string name="full_due_date_details">Butiran tarikh siap yang penuh</string>
+    <string name="availability_label">Ketersediaan:</string>
+    <string name="available_to_label">Tersedia untuk:</string>
+    <string name="available_from_label">Tersedia dari:</string>
+    <string name="due_for_label">Untuk:</string>
+    <string name="due_label">Cukup tempoh:</string>
+    <string name="details_available_to_label">Tersedia untuk</string>
+    <string name="details_available_from_label">Tersedia dari</string>
+    <string name="details_due_for_label">Untuk</string>
+    <string name="due_date_header_label">Cukup tempoh</string>
+    <string name="assignment_details">Butiran Tugasan</string>
+    <string name="no_content">Tiada Kandungan</string>
+    <string name="submissions">Serahan</string>
+    <string name="no_assignment_description_filler">Permudahkan pelajar anda untuk membuat tugasan ini dengan menambah arahan.</string>
+    <string name="no_quiz_description_filler">Permudahkan pelajar anda untuk membuat kuiz ini dengan menambah arahan.</string>
+    <string name="page_title_due_dates">Tarikh Siap</string>
+    <string name="edit_assignment">Edit Tugasan</string>
+    <string name="edit_quiz">Edit Kuiz</string>
+    <string name="title">Tajuk</string>
+    <string name="description">Penerangan</string>
+    <string name="grade_total">Jumlah Gred</string>
+    <string name="grade">Gred</string>
+    <string name="enter_grade">Masukkan Gred</string>
+    <string name="override">Atasi</string>
+    <string name="calculated_by_rubric">Dikira mengikut rubrik</string>
+    <string name="customize_grade">Sesuaikan Gred</string>
+    <string name="out_of_points">Daripada %1$s</string>
+    <string name="gpa">GPA</string>
+    <string name="letter_grade">Gred Huruf</string>
+    <string name="excuse_student">Maafkan pelajar</string>
+    <string name="excuseGroup">Maafkan kumpulan</string>
+    <string name="complete_grade">Lengkap</string>
+    <string name="incomplete_grade">Tidak lengkap</string>
+    <string name="not_graded">Tidak Bergred</string>
+    <string name="excused">Dimaafkan</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s daripada %2$s</string>
+    <string name="publish">Terbitkan</string>
+    <string name="error_saving_assignment">Ralat berlaku semasa cuba menyimpan tugasan ini. Cuba semula.</string>
+    <string name="error_saving_quiz">Ralat berlaku semasa cuba menyimpan kuiz ini. Cuba semula.</string>
+    <string name="assignment_name_must_be_set">Nama tugasan mesti ditetapkan.</string>
+    <string name="announcement_name_must_be_set">Tajuk pengumuman mesti ditetapkan.</string>
+    <string name="quiz_title_must_be_set">Tajuk kuiz mesti ditetapkan.</string>
+    <string name="assignment_points_must_be_set">Mata tugasan mesti ditetapkan.</string>
+    <string name="assignment_points_must_be_a_number">Mata mungkin mestilah nombor</string>
+    <string name="quiz_points_must_be_set">Mata kuiz mesti ditetapkan.</string>
+    <string name="assignee_type_course_sections">Seksyen Kursus</string>
+    <string name="assignee_type_groups">Kumpulan</string>
+    <string name="assignee_type_students">Pelajar</string>
+    <string name="page_title_add_assignees">Tambah Penerima Tugasan</string>
+    <string name="assign_to">Tetapkan Kepada:</string>
+    <string name="available_from">Tersedia Dari</string>
+    <string name="available_to">Tersedia Untuk</string>
+    <string name="unlock_after_due_date_error">Nyahkunci tarikh tidak boleh sebelum tarikh siap</string>
+    <string name="lock_before_due_date_error">Tarikh kunci tidak boleh sebelum tarikh siap</string>
+    <string name="lock_after_unlock_error">Tarikh kunci tidak boleh sebelum tarikh nyahkunci</string>
+    <string name="assignee_blank_error">Penerima tugasan tidak boleh kosong</string>
+    <string name="remove">Alih Keluar</string>
+    <string name="add_due_date">Tambah Tarikh Siap</string>
+    <string name="full_submission_details">Butiran serahan penuh</string>
+    <string name="graded">Digredkan</string>
+    <string name="needsGrading">Memerlukan Penggredan</string>
+    <string name="not_submitted">Tidak Diserahkan</string>
+    <string name="a11y_viewSubmissionAction">lihat butiran serahan</string>
+    <string name="content_description_submission_donut_graded" formatted="false">Digredkan, %s daripada %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Perlu Digredkan, %s daripada %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Tidak diserahkan, %s daripada %s</string>
+    <string name="display_grade_as">Paparkan Gred sebagai&#8230;</string>
+    <string name="percentage">Peratusan</string>
+    <string name="complete_incomplete">Lengkap/Tidak Lengkap</string>
+    <string name="points">Mata</string>
+    <string name="gpa_scale">Skala GPA</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">Bukan guru?</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">Salah satu apl kami yang lain mungkin lebih sesuai. Ketik satu untuk melawati Play Store.</string>
+
+    <string name="sg_tab_grade">Gred</string>
+    <string name="sg_tab_comments">Komen</string>
+    <string name="sg_tab_files">Fail</string>
+    <string name="sg_tab_files_w_counter">Fail (%d)</string>
+    <string name="filter_submissions">Tapis Serahan</string>
+    <string name="all_submissions">Semua Serahan</string>
+    <string name="submitted_late">Diserahkan Lewat</string>
+    <string name="havent_submitted_yet">Belum Diserahkan</string>
+    <string name="havent_been_graded">Belum Digredkan</string>
+    <string name="scored_less_than">Mendapat Skor Kurang Daripada&#8230;</string>
+    <string name="scored_more_than">Mendapat Skor Lebih Daripada&#8230;</string>
+    <string name="scored_less_than_value">Mendapat Skor Kurang Daripada %s</string>
+    <string name="scored_more_than_value">Mendapat Skor Lebih Daripada %s</string>
+    <string name="add_comment">Tambah Komen</string>
+    <string name="editComment">Edit Komen</string>
+    <string name="deleteComment">Padam Komen</string>
+    <string name="deleteAnnotation">Padam Anotasi</string>
+    <string name="deleteCommentConfirmation">Adakah anda pasti anda mahu memadamkan komen ini?</string>
+    <string name="rubric_view_long_description">Lihat penerangan lanjut</string>
+    <string name="rubric">Rubrik</string>
+    <string name="enter_custom_value">Masukkan nilai tersuai</string>
+    <string name="success_saving_rubric_assessment">Pentaksiran rubrik disimpan</string>
+    <string name="error_saving_rubric_assessment">Ralat berlaku semasa menyimpan pentaksiran rubrik. Sila cuba semula.</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s daripada %2$s</string>
+    <string name="criterion_rating_customize_score">Sesuaikan Skor</string>
+    <string name="edit_criterion_comment">Edit kriteria komen</string>
+    <string name="sendMessageToHint">Mesej %s</string>
+    <string name="save_comment">Simpan komen</string>
+    <string name="cancel_editing_comment">Batalkan mengedit komen.</string>
+    <string name="skip">Langkau</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">Sesuaikan skor %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">"%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="one">daripada %s mata</item>
+        <item quantity="other">daripada %s mata</item>
+    </plurals>
+
+    <string name="tab_courses">Kursus</string>
+    <string name="course_options">Pilihan Kursus</string>
+    <string name="edit_favorite_courses">Edit Kursus Kegemaran</string>
+    <string name="feedback_form">Borang Maklum Balas</string>
+    <string name="see_all">Lihat Semua</string>
+    <string name="all_courses">Semua Kursus</string>
+    <string name="welcome">Selamat datang!</string>
+    <string name="empty_course_list_message">Tambah beberapa kursus kegemaran untuk menjadikan tempat ini laman utama anda.</string>
+    <string name="add_courses">Tambah Kursus</string>
+    <string name="unable_to_add_course_to_favorites">Kursus ini tidak boleh ditambah ke menu kursus pada masa ini</string>
+    <string name="grading_periods_filter">Penapis Tempoh Penggredan</string>
+    <string name="assignments">Tugasan</string>
+    <string name="clear_filter">Buang penapis</string>
+    <string name="due">Cukup tempoh %1$s</string>
+    <string name="updated">Dikemas Kini %1$s</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="one">%s memerlukan penggredan</item>
+        <item quantity="other">%s memerlukan penggredan</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="one">Perlu Digredkan</item>
+        <item quantity="other">Perlu Digredkan</item>
+    </plurals>
+    <string name="at">di</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s mata</item>
+        <item quantity="other">%s mata</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s mata</item>
+        <item quantity="other">%s mata</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="one">%d orang</item>
+        <item quantity="other">%d orang</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="one">%d kumpulan</item>
+        <item quantity="other">%d kumpulan</item>
+    </plurals>
+    <string name="cmp_closed">Ditutup</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">kegemaran</string>
+    <string name="content_description_not_favorite">bukan kegemaran</string>
+    <string name="edit_nickname">Edit nama panggilan</string>
+    <string name="edit_course_color">Edit warna kursus</string>
+    <string name="edit_course_nickname">Edit Nama Panggilan Kursus</string>
+
+    <string name="colorPickerDialogTitle">Warna Kursus</string>
+    <string name="colorPickerDialogMessage">Ini ialah tetapan warna peribadi anda. Hanya anda sahaja akan melihat warna ini untuk kursus ini.</string>
+    <string name="colorPickerError">Warna kursus tidak boleh ditetapkan pada masa ini.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Merah jambu</string>
+    <string name="contentDescriptionColorBarbie">Merah jambu terang</string>
+    <string name="contentDescriptionColorBarneyPurple">Lembayung</string>
+    <string name="contentDescriptionColorEggplant">Ungu</string>
+    <string name="contentDescriptionColorUltramarine">Biru Tua</string>
+    <string name="contentDescriptionColorOcean11">Biru</string>
+    <string name="contentDescriptionColorCyan">Sian</string>
+    <string name="contentDescriptionColorAquaMarine">Biru Laut</string>
+    <string name="contentDescriptionColorEmeraldGreen">Hijau Zamrud</string>
+    <string name="contentDescriptionColorFreshCutLawn">Hijau</string>
+    <string name="contentDescriptionColorChartreuse">Hijau Pucuk Pisang</string>
+    <string name="contentDescriptionColorSunFlower">Kuning</string>
+    <string name="contentDescriptionColorTangerine">Oren</string>
+    <string name="contentDescriptionColorBloodOrange">Oren Tua</string>
+    <string name="contentDescriptionColorSriracha">Merah</string>
+    <string name="launch_link_in_external_browser">Lancarkan pautan dalam pelayar luar</string>
+    <string name="contentDescriptionSelectedFile">Fail Dipilih</string>
+    <string name="contentDescriptionFileIcon">Ikon Fail</string>
+    <string name="contentDescriptionExpandPage">Kembangkan Halaman</string>
+    <string name="contentDescriptionCollapsePage">Kuncupkan Halaman</string>
+    <string name="noInternetConnectionTitle">Tiada Sambungan Internet</string>
+    <string name="noInternetConnectionMessage">Tindakan ini memerlukan sambungan Internet</string>
+
+    <string name="emptyDetailsMessage">Ketik pada item dalam senarai untuk melihat butiran</string>
+
+    <string name="assignmentQuizzes">Kuiz Tugasan</string>
+    <string name="practiceQuizzes">Kuiz Latihan</string>
+    <string name="gradedSurveys">Tinjauan Bergred</string>
+    <string name="surveys">Tinjauan</string>
+    <string name="editQuiz">Edit Butiran Kuiz</string>
+    <string name="requireAccessCode">Perlu Kod Akses</string>
+    <string name="accessCode">Kod Akses</string>
+    <string name="mustHaveAccessCode">Masukkan kod akses atau jangan minta kod akses.</string>
+    <string name="errorSavingQuiz">Ralat berlaku semasa cuba menyimpan kuiz ini. Cuba semula.</string>
+    <string name="successfullyUpdatedQuiz">Kuiz berjaya dikemas kini.</string>
+    <string name="quizType">Jenis Kuiz</string>
+
+    <string name="practiceQuiz">Berlatih Kuiz</string>
+    <string name="gradedQuiz">Kuiz Bergred</string>
+    <string name="gradedSurvey">Tinjauan Bergred</string>
+    <string name="ungradedSurvey">Tinjauan Tidak Bergred</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">Belum Diambil</string>
+
+    <string name="quizStatusComplete">Lengkap</string>
+    <string name="quizStatusPendingReview">Menunggu Semakan</string>
+    <string name="quizStatusInProgress">Sedang Berjalan</string>
+    <string name="quizStatusNotStarted">Tidak Dimulakan</string>
+
+
+    <string name="quiz_settings_label_quiz_type">Jenis Kuiz:</string>
+    <string name="quiz_settings_label_assignment_group">Kumpulan Tugasan:</string>
+    <string name="quiz_settings_label_shuffle_answers">Kocok Jawapan:</string>
+    <string name="quiz_settings_label_multiple_attempts">Berbilang Percubaan:</string>
+    <string name="quiz_settings_label_time_limit">Had Masa:</string>
+    <string name="quiz_settings_label_score_to_keep">Skor untuk Disimpan:</string>
+    <string name="quiz_settings_label_attempts">Percubaan:</string>
+    <string name="quiz_settings_label_view_responses">Lihat Maklum Balas:</string>
+    <string name="quiz_settings_label_show_correct_answers">Tunjuk Jawapan Betul:</string>
+    <string name="quiz_settings_label_one_question_at_a_time">Satu Soalan pada satu Masa:</string>
+    <string name="quiz_settings_label_ip_filter">Penapis IP:</string>
+    <string name="quiz_settings_label_points">Mata:</string>
+    <string name="quiz_settings_label_access_code">Kod Akses:</string>
+    <string name="quiz_settings_label_anonymous_submissions">Serahan Tanpa Nama:</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">Kunci Soalan Selepas Jawapan Diberikan:</string>
+
+    <string name="quizPreview">Pratonton Kuiz</string>
+    <string name="preview_quiz">Pratonton Kuiz</string>
+    <string name="quiz_details">Butiran Kuiz</string>
+    <string name="submission_versions">Versi serahan</string>
+    <string name="speedgrader_student_no_submissions">Pelajar ini tiada serahan untuk tugasan ini.</string>
+    <string name="speedgrader_group_no_submissions">Kumpulan ini tiada serahan untuk tugasan ini.</string>
+    <string name="speedgrader_unsupported_type">Jenis serahan tidak disokong</string>
+    <string name="unlimited">Tiada Had</string>
+    <string name="practice_quiz">Berlatih Kuiz</string>
+    <string name="graded_quiz">Kuiz Bergred</string>
+    <string name="graded_survey">Tinjauan Bergred</string>
+    <string name="ungraded_survey">Tinjauan Tidak Bergred</string>
+    <string name="no_time_limit">Tiada Had Masa</string>
+    <string name="immediately">Dengan Segera</string>
+    <string name="quiz_details_no_points_assigned">Tiada mata ditetapkan</string>
+
+    <string name="quiz_details_from_to">Dari %1$s hingga %2$s</string>
+    <string name="quiz_details_after">Selepas %1$s</string>
+    <string name="quiz_details_until">Hingga %1$s</string>
+    <string name="filterPointsMustBeSet">Masukkan nilai.</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="one">%d soalan</item>
+        <item quantity="other">%d soalan</item>
+    </plurals>
+
+    <string name="discussion_details">Butiran Perbincangan</string>
+    <string name="discussions_pinned">Dipinkan</string>
+    <string name="discussions_unpinned">Perbincangan</string>
+    <string name="discussions_closed">Ditutup untuk Komen</string>
+    <string name="discussions_open">Buka untuk Komen</string>
+    <string name="discussions_pin">Pinkan</string>
+    <string name="discussions_unpin">Nyahpin</string>
+    <string name="contentDescriptionDiscussionsOverflow">Lebih banyak pilihan</string>
+    <string name="discussions_options">Pilihan</string>
+    <string name="discussions_replies" formatted="false">%s Balasan</string>
+    <string name="discussions_unread" formatted="false">%s Belum dibaca</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">Adakah anda pasti anda mahu memadamkan balasan ini?</string>
+    <string name="discussions_replies_title">Balasan</string>
+    <string name="discussions_reply">Balas</string>
+    <string name="discussions_edit">Edit</string>
+    <string name="discussions_forbidden">Balasan hanya kelihatan kepada mereka yang telah menyiarkan sekurang-kurangnya satu balasan.</string>
+    <string name="discussions_delete">Padam Perbincangan</string>
+    <string name="discussions_delete_title">Padam Perbincangan?</string>
+    <string name="discussions_delete_message">Ini akan memadamkan seluruh perbincangan dan bebenang.</string>
+
+    <string name="dataUsageWarningTitle">Amaran Penggunaan Data</string>
+    <string name="dataUsageWarningMessage">Tindakan ini mungkin menggunakan amaun data yang besar, berkemungkinan dikenakan caj liputan. Adakah anda ingin meneruskan?</string>
+    <string name="doNotShowMessageAgain">Jangan tunjuk mesej ini lagi</string>
+    <string name="playMedia">Mainkan media</string>
+    <string name="submissionIsMediaFile">Serahan ini ialah fail media</string>
+    <string name="tryAgain">Cuba semula</string>
+    <string name="couldNotPlayFormat">Format media ini tidak disokong</string>
+    <string name="openWithAnotherApp">Buka dengan...</string>
+
+    <string name="speedgraderCommentAddedSubmission">Tugasan diserahkan. Ketik untuk melihat.</string>
+    <string name="speedgraderCommentSubmittedFiles">Fail diserahkan:</string>
+    <string name="no_submission_comments">Tiada komen serahan</string>
+    <string name="mediaUploadAudio">Muat Naik Media - Audio</string>
+    <string name="mediaUploadVideo">Muat Naik Media - Video</string>
+    <string name="speedgraderCommentQuizAttempt">Percubaan %d</string>
+    <string name="speedGraderTextSubmission">Serahan Teks</string>
+    <string name="speedGraderExternalToolSubmission">Serahan Alat Luar</string>
+    <string name="speedGraderDiscussionSubmission">Serahan Perbincangan</string>
+    <string name="speedGraderQuizSubmission">Serahan Kuiz</string>
+    <string name="speedGraderMediaFile">Fail Media</string>
+    <string name="submissionTypeAudio">Audio</string>
+    <string name="submissionTypeVideo">Video</string>
+    <string name="speedGraderUrlSubmission">Serahan URL</string>
+
+    <string name="unsupportedFileMessage">Mesej ini tidak boleh dipaparkan. Gunakan butang di bawah untuk membuka fail dengan apl lain pada peranti anda.</string>
+    <string name="speedGraderNoneMessage">Tugasan ini tidak membenarkan serahan.</string>
+    <string name="speedGraderOnPaperMessage">Tugasan ini hanya membenarkan serahan atas kertas.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Serahan ialah URL ke halaman luar. Ingat bahawa halaman ini mungkin telah berubah sejak serahan asal dibuat.</string>
+    <string name="speedGraderOpenUrl">Buka URL</string>
+    <string name="annotationError">Ralat Anotasi</string>
+    <string name="annotationDialogMessage">Anotasi telah dipadamkan daripada sumber yang lain.</string>
+
+    <string name="selectCourse">Pilih kursus</string>
+
+    <string name="sendIndividualMessage">Hantar mesej perseorangan kepada setiap penerima</string>
+
+    <string name="filterInbox">Tapis Peti Masuk</string>
+    <string name="selectCanvasContext">Pilih kursus atau kumpulan</string>
+
+    <string name="contentDescription_back">Kembali</string>
+
+    <string name="discussion_update_success">Pengeditan perbincangan berjaya.</string>
+    <string name="discussion_update_empty">Mesej perbincangan tidak boleh kosong.</string>
+    <string name="discussion_update_failure">Perbincangan ini tidak dapat diedit pada masa ini.</string>
+    <string name="discussion_sent_success">Balasan perbincangan berjaya.</string>
+    <string name="discussion_sent_empty">Balasan perbincangan tidak boleh kosong.</string>
+    <string name="discussion_sent_failure">Balasan perbincangan ini tidak dapat dihantar pada masa ini.</string>
+    <string name="discussion_first_to_respond">Jadi orang pertama yang memberikan maklum balas dengan menambah balasan.</string>
+    <string name="addMorePeopleToMessage">Tambah penerima lain. Mesej dialamatkan hanya kepada diri anda tidak boleh dihantar.</string>
+    <string name="tutorialSwipeMessage">Leret ke kiri atau ke kanan untuk melihat pelajar lain.</string>
+    <string name="tutorialRubricMessage">Ketik dan tahan nombor untuk melihat penerangan.</string>
+
+    <string name="viewQuizSubmission">Lihat Serahan</string>
+    <string name="gradeQuizSubmission">Gredkan Serahan</string>
+    <string name="comment">Komen</string>
+    <string name="messageStudentsWho">Mesej pelajar Yang&#8230;</string>
+
+    <string name="on">pada</string>
+
+    <string name="createDiscussion">Perbincangan Baharu</string>
+    <string name="options">Pilihan</string>
+    <string name="subscribe">Langgan</string>
+    <string name="allowThreadedReplies">Benarkan balasan berbebenang</string>
+    <string name="usersMustPost">Pengguna mesti membuat siaran sebelum melihat balasan</string>
+    <string name="allowUserComments">Benarkan pengguna untuk memberikan komen</string>
+    <string name="discussionTitleMustBeSet">Tajuk perbincangan mesti ditetapkan.</string>
+    <string name="discussionSuccessfullyCreated">Perbincangan berjaya dicipta!</string>
+    <string name="errorCreatingDiscussion">Ralat berlaku semasa cuba mencipta perbincangan ini. Cuba semula.</string>
+    <string name="editDiscussion">Edit Perbincangan</string>
+    <string name="discussionSuccessfullyUpdated">Perbincangan berjaya dikemas kini.</string>
+    <string name="input_text">Masukkan Teks</string>
+    <string name="announcementSuccessfullyCreated">Pengumuman berjaya dicipta.</string>
+    <string name="errorSavingAnnouncement">Ralat berlaku semasa cuba menyimpan pengumuman ini. Cuba semula.</string>
+    <string name="editAnnouncementTitle">Edit Pengumuman</string>
+    <string name="announcementSuccessfullyUpdated">Pengumuman berjaya dikemas kini.</string>
+    <string name="announcementDeleted">Pengumuman dipadamkan.</string>
+    <string name="postAt">Siarkan Pada</string>
+    <string name="errorDeletingAnnouncement">Ralat berlaku semasa cuba memadamkan pengumuman ini. Cuba semula.</string>
+    <string name="deleteAnnouncementDialogTitle">Padam Pengumuman?</string>
+    <string name="deleteAnnouncementDialogMessage">Adakah anda pasti anda ingin memadamkan pengumuman ini?</string>
+    <string name="deleteAnnouncement">Padam Pengumuman</string>
+    <string name="annotationErrorOccurred">Ralat yang tidak dijangka berlaku semasa memuatkan anotasi.</string>
+
+    <string name="account">Akaun</string>
+    <string name="changeUser">Tukar Pengguna</string>
+    <string name="general">Umum</string>
+    <string name="sendFeedback">Hantar Maklum Balas</string>
+    <string name="rateOnTheAppStore">Nilaikan di App Store</string>
+    <string name="privacyPolicy">Dasar Privasi</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">Terma Penggunaan</string>
+    <string name="searchGuides">Buat Carian dalam Panduan Canvas</string>
+    <string name="searchGuidesDetails">Cari jawapan kepada soalan biasa</string>
+    <string name="reportProblem">Laporkan Masalah</string>
+    <string name="reportProblemDetails">Jika apl menghadapi masalah, sila beritahu kami</string>
+    <string name="requestFeature">Minta Ciri</string>
+    <string name="requestFeatureDetails">Ada idea untuk menambah baik apl?</string>
+    <string name="shareYourLove">Kongsikan Rasa Teruja Anda terhadap Apl ini</string>
+    <string name="shareYourLoveDetails">Berita kami mengenai bahagian yang anda gemari pada apl ini</string>
+    <string name="canvasGuides">Panduan Canvas</string>
+    <string name="featureSubject">Idea untuk Canvas Teacher [Android]</string>
+    <string name="understandRequest">Maklumat berikut akan membantu kami lebih memahami idea anda:</string>
+    <string name="sendMail">Hantar E-mel&#8230;</string>
+    <string name="editProfile">Edit Profil</string>
+    <string name="name">Nama</string>
+    <string name="bio">Biodata</string>
+    <string name="profileEditSuccess">Profil telah dikemas kini</string>
+    <string name="profileEditFailure">Tidak dapat mengemas kini profil</string>
+    <string name="takePhoto">Ambil foto</string>
+    <string name="choosePhotoFromGallery">Pilih foto dari Galeri</string>
+    <string name="fileNotFound">Fail tidak ditemui.</string>
+    <string name="version" formatted="false">Versi %s</string>
+    <string name="fullVersion">Versi %s (%d)</string>
+    <string name="tap_to_view_submissions_list">Ketik untuk melihat senarai serahan</string>
+    <string name="assignmentDescriptionContentDescription">Penerangan Tugasan</string>
+    <string name="quizDescriptionContentDescription">Penerangan Kuiz</string>
+    <string name="removeDueDate">Alih Keluar Tarikh Siap</string>
+    <string name="removeDueDateMessage">Ini akan mengalih keluar tarikh siap dan semua penerima tugasan berkaitan.</string>
+    <string name="email">E-mel</string>
+    <string name="fullscreen">skrin penuh</string>
+    <string name="addNew">Tambah Baharu</string>
+    <string name="sendMessage">Hantar Mesej</string>
+    <string name="addMessage">Tambah Mesej</string>
+    <string name="messageThisStudent">Mesej pelajar ini</string>
+    <string name="scrollInstructions">Tatal untuk melihat semua butiran</string>
+    <string name="dueTime">Masa Siap</string>
+    <string name="available_from_date">Tersedia Dari Tarikh</string>
+    <string name="available_from_time">Tersedia Dari Masa</string>
+    <string name="available_to_date">Tersedia Hingga Tarikh</string>
+    <string name="available_to_time">Tersedia Hingga Masa</string>
+    <string name="addDescription">Tambah Penerangan</string>
+    <string name="post_time">Masa Siar</string>
+    <string name="allPeople">Semua Orang</string>
+    <string name="loading">Memuatkan</string>
+    <string name="saving">Menyimpan</string>
+    <string name="sendingSimple">Menghantar</string>
+    <string name="uploading">Sedang memuat naik</string>
+    <string name="retry">Cuba semula</string>
+    <string name="error_loading_submission">Terdapat masalah untuk memuatkan serahan ini.</string>
+    <string name="search">Cari</string>
+    <string name="filterPeople">Tapis Orang</string>
+    <string name="loadMore">Muatkan Lebih Banyak</string>
+    <string name="latestStudentActivityAtFormatted">Aktiviti terakhir pada %1$s di %2$s.</string>
+    <string name="errorLoadingStudentContextCard">Tidak dapat memuatkan butiran untuk pengguna ini.</string>
+    <string name="enrollmentTypeStudent">Pelajar</string>
+    <string name="enrollmentTypeTeacher">Guru</string>
+    <string name="enrollmentTypeObserver">Pemerhati</string>
+    <string name="enrollmentTypeTeachingAssistant">PP</string>
+    <string name="enrollmentTypeDesigner">Pereka bentuk</string>
+    <string name="enrollmentTypeUnknown">Tidak diketahui</string>
+    <string name="unableToLoadAttendance">Kehadiran tidak boleh dimuatkan pada masa ini.</string>
+    <string name="markRemainingAsPresent">Tandakan yang Berbaki sebagai Hadir</string>
+    <string name="markAllAsPresent">Tandakan Semua sebagai Hadir</string>
+    <string name="calendar">Kalendar</string>
+    <string name="filterSections">Tapis Seksyen</string>
+    <string name="addVideoComment">Tambah komen video</string>
+    <string name="addAudioComment">Tambah komen audio</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d jam, %2$d minit dan %3$d saat</string>
+    <string name="recordingTimerSpeechDivider">%1$s daripada %2$s</string>
+    <string name="replay">Main Semula</string>
+    <string name="stop">Hentikan</string>
+    <string name="startRecordingAudio">Mulakan rakaman audio</string>
+    <string name="stopRecordingAudio">Hentikan rakaman audio</string>
+    <string name="startRecordingVideo">Mulakan rakaman video</string>
+    <string name="stopRecordingVideo">Hentikan rakaman video</string>
+    <string name="closeRecordingView">Tutup pandangan rakaman</string>
+    <string name="deleteRecording">Padam rakaman</string>
+    <string name="videoCommentReplay">Mainkan Semula Komen Video</string>
+    <string name="addMediaComment">Tambah komen media</string>
+    <string name="copyrightHolder">Pemegang Hak Cipta</string>
+    <string name="access">Akses</string>
+    <string name="usageRights">Hak Penggunaan</string>
+    <string name="deleteFile">Padam Fail</string>
+    <string name="holdCopyright">Saya memegang hak cipta</string>
+    <string name="havePermission">Saya telah memperoleh keizinan untuk menggunakan fail</string>
+    <string name="publicDomain">Fail Domain Awam</string>
+    <string name="fairUse">Pengecualian Penggunaan Adil</string>
+    <string name="creativeCommons">Fail Creative Commons</string>
+    <string name="editFile">Edit Fail</string>
+    <string name="deleteFolder">Padam Folder</string>
+    <string name="editFolder">Edit Folder</string>
+    <string name="deleteFileMessage">Adakah anda pasti anda mahu memadamkan fail ini?</string>
+    <string name="deleteFolderMessage">Adakah anda pasti anda mahu memadamkan folder ini? Semua kandungan folder ini juga akan dipadamkan.</string>
+    <string name="newFolder">Folder Baharu</string>
+    <string name="createAFolder">Cipta Folder</string>
+    <string name="createFolder">Cipta Folder</string>
+    <string name="createAFile">Cipta Fail</string>
+    <string name="createFileFolderFabContentDesc">Tunjukkan Butang Cipta Fail dan Cipta Folder</string>
+    <string name="hideCreateFileFolderFabContentDesc">Sembunyikan Butang Cipta Fail dan Cipta Folder</string>
+    <string name="unpublish">Nyahterbit</string>
+    <string name="restrictedAccess">Akses Terhad</string>
+    <string name="restricted">Disekat</string>
+    <string name="hidden">Tersembunyi, fail di dalam akan tersedia dengan pautan.</string>
+    <string name="studentsWithLink">Hanya tersedia untuk pelajar dengan pautan. Tidak tersedia dalam fail pelajar.</string>
+    <string name="scheduleAvailability">Jadualkan ketersediaan pelajar</string>
+    <string name="folderCreationError">Ralat berlaku semasa penciptaan folder.</string>
+
+    <string name="setAsFrontPage">Tetapkan sebagai Halaman Depan</string>
+    <string name="canEdit">Boleh Diedit</string>
+    <string name="pageDetails">Butiran Halaman</string>
+    <string name="pageSuccessfullyUpdated">Halaman berjaya dikemas kini.</string>
+    <string name="pageSuccessfullyCreated">Halaman berjaya dicipta.</string>
+    <string name="editPageTitle">Edit Halaman</string>
+    <string name="createPageTitle">Cipta Halaman</string>
+    <string name="pageTitleMustBeSet">Tajuk halaman mesti ditetapkan.</string>
+    <string name="pageDeleteTitle">Padam Halaman?</string>
+    <string name="pageDelete">Padam Halaman</string>
+    <string name="pageDeleteMessage">Tindakan ini akan memadamkan halaman ini. Tindakan ini tidak boleh dibuat asal.</string>
+    <string name="errorSavingPage">Ralat berlaku semasa cuba menyimpan halaman ini. Cuba semula.</string>
+    <string name="frontPageUnpublishedError">Halaman tidak boleh menjadi halaman depan kemudian tidak diterbitkan.</string>
+
+    <string name="onlyTeachers">Hanya Guru</string>
+    <string name="teachersAndStudents">Guru dan Pelajar</string>
+    <string name="anyone">Sesiapa sahaja</string>
+    <string name="groupMembers">Hanya Ahli</string>
+    <string name="license">Lesen</string>
+    <string name="availableFromAfterTo">Tarikh akhir ketersediaan mestilah selepas tarikh mula</string>
+    <string name="errorDeletingFile">Ralat berlaku semasa memadamkan fail anda.</string>
+    <string name="errorDeletingFolder">Ralat berlaku semasa memadamkan folder ini</string>
+    <string name="errorUpdatingFile">Ralat berlaku semasa mengemas kini fail ini.</string>
+    <string name="errorUpdatingFolder">Ralat berlaku semasa mengemas kini folder ini</string>
+
+    <string name="toDoEmpty">Tiada apa-apa lagi untuk dilakukan!\n Nikmati hari anda</string>
+    <string name="toDoNoSubmissions">Tiada serahan untuk digredkan untuk tugasan ini.</string>
+    <string name="errorToDoRouteFailed">Ralat berlaku semasa cuba melihat Item Untuk Dilakukan</string>
+    <string name="errorIsDesigner">Pendaftaran Pereka Bentuk tidak boleh melihat ini.</string>
+
+    <string name="sections">Seksyen</string>
+    <string name="filterBy">Tapis Mengikut&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">untuk %s</string>
+    <string name="filterBySection">Tapis mengikut seksyen</string>
+    <string name="filterSubmissionsLowercase">Tapis serahan</string>
+    <string name="latePenalty">Denda lewat</string>
+    <string name="finalGrade">Gred Akhir</string>
+    <string name="moderatedGradingUnsupported">Penggredan dikendalikan tidak disokong dalam SpeedGrader mudah alih pada masa ini.</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">%s mata</item>
+        <item quantity="other">%s mata</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">%s mata</item>
+        <item quantity="other">%s mata</item>
+    </plurals>
+    <string name="profileSettings">Tetapan Profil</string>
+    <string name="downloadingFile">Memuat Turun Fail&#8230;</string>
+    <string name="fileDownloadedSuccessfully">Fail berjaya dimuat turun.</string>
+    <string name="tapToView">Ketik untuk melihat</string>
+    <string name="errorDownloadingFile">Ralat berlaku semasa memuat turun fail anda. Sila cuba semula.</string>
+
+    <string name="postTo">Siar Ke</string>
+    <string name="allSections">Semua Seksyen</string>
+
+    <string name="gauge">Tolok</string>
+    <string name="ltiLaunchFailure">Alat LTI ini tidak boleh ditetapkan pada masa ini.</string>
+    <string name="downloading">Memuat turun...</string>
+
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Silibus berjaya dikemas kini.</string>
+    <string name="errorSavingSyllabus">Ralat berlaku semasa cuba menyimpan silibus ini. Cuba semula.</string>
+    <string name="editSyllabusTitle">Edit Silibus</string>
+    <string name="editSyllabusContent">Kandungan</string>
+    <string name="editSyllabusDetails">Butiran</string>
+    <string name="editSyllabusShowCourseSummary">Paparkan ringkasan kursus</string>
+    <string name="editSyllabusContentAccessibilityLabel">Kandungan silibus</string>
+    <string name="no_grade">Tiada gred</string>
+    <string name="excuse">Maafkan</string>
+    <string name="speed_grader_overgraded_by">Digredkan Terlebih oleh %s</string>
+
+</resources>

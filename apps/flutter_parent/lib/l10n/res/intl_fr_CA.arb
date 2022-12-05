@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "Chercher un autre école",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "Saisir le nom de l’établissement scolaire ou du district…",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",

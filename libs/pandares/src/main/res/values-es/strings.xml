@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Vista del estudiante</string>
 
 
+    <string name="rateOnThePlayStore">Calificar en Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Cabeza seleccionada: %s</string>
     <string name="content_description_chosen_body">Cuerpo seleccionado: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Borrador disponible</string>
     <string name="errorLoadingSubmission">Ocurrió un error al cargar la entrega</string>
     <string name="loadFullContent">Presione aquí para ver el contenido completo</string>
+    <string name="openLtiInExternalApp">Tocar para abrir en una aplicación externa</string>
     <string name="dashboardTabImportantDates">Fechas importantes</string>
     <string name="importantDatesEmptyTitle">No hay fechas importantes</string>
     <string name="important_dates">Fechas importantes</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s mensajes no leídos</item>
         <item quantity="other">%s mensajes no leídos</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s notificación no leída</item>
+        <item quantity="other">%s notificaciones no leídas</item>
+    </plurals>
+
     <string name="noAnnotationSelected">No se seleccionó ninguna anotación</string>
     <string name="emailNotifications">Notificaciones por correo electrónico</string>
     <string name="emailNotificationsImmediately">Inmediatamente</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Semanalmente</string>
     <string name="emailNotificationsNever">Nunca</string>
     <string name="selectFrequency">Seleccionar frecuencia</string>
+    <string name="a11y_closeProgress">Cerrar diálogo de progreso</string>
+    <string name="fileUploadProgress">%1$s de %2$s</string>
+    <string name="fileUploadProgressSubtitle">Cargando a Archivos</string>
+    <string name="submissionProgressSubtitle">Cargando entrega a \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Cargando la entrega</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Carga de archivos</string>
+    <string name="cancelSubmissionDialogTitle">Cancelar entrega</string>
+    <string name="cancelSubmissionDialogMessage">Esto cancelará y eliminará su entrega.</string>
+    <string name="fileUploadError">No se pudo cargar el archivo</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Cargar a Canvas para %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Cargar a Mis archivos</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Entregar tarea</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Escoger un curso</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Elegir una tarea</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">¿Quiere cancelar la carga?</string>
+    <string name="cancelFileUploadMessage">Esto cancelará su carga.</string>
+    <string name="menuTitleFilterAssignments">Filtrar tareas</string>
+    <string name="filterAssignmentDialogTitle">Filtrar tareas</string>
+    <string name="filterAssignmentsDialogCancel">Cancelar</string>
+    <string name="filterAssignmentAll">Todo</string>
+    <string name="filterAssignmentLate">Atrasado</string>
+    <string name="filterAssignmentMissing">Faltante</string>
+    <string name="filterAssignmentGraded">Calificado</string>
+    <string name="filterAssignmentUpcoming">Próximo</string>
+    <string name="createdByStudentView">Creado por Student View</string>
+    <string name="discussionErrorToast">Ha ocurrido un error. Es posible que el tema ya no esté disponible.</string>
+    <string name="cameraPermissionPermanentlyDenied">Se denegó permanentemente el permiso a la cámara. Diríjase a la configuración de la aplicación para habilitarlo.</string>
 </resources>

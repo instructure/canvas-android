@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "ค้นหาสถานศึกษาอื่น",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "กรอกชื่อสถานศึกษาหรือเขตพื้นที่...",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",

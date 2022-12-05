@@ -64,7 +64,6 @@
     <string name="logout_no">No</string>
 
     <!--Smart Login-->
-
     <string name="loginNearYou">Cerca de ti</string>
     <string name="loginCanvasNetwork">Canvas Network</string>
     <string name="loginRightBehindYou">Apoyando tu aprendizaje</string>
@@ -93,7 +92,6 @@
     <string name="oneMile">1 milla (1,6 km)</string>
     <string name="miles">millas</string>
     <string name="kilometers">km</string>
-F
     <!-- String for submitting tickets -->
     <string name="device">Dispositivo</string>
     <string name="osVersion">Versión del sistema operativo</string>
@@ -123,10 +121,11 @@ F
     <string name="masqueradeErrorUserId">Debes introducir una identificación de usuario.</string>
     <string name="masqueradeErrorDomain">Debes introducir un dominio válido.</string>
     <string name="masqueradeError">Ha habido un error al intentar actuar como usuario.</string>
-    <string name="masqueradeInfo">\\"Actuar como\\" es básicamente iniciar sesión como si fueras este usuario pero sin una contraseña. Podrás realizar cualquier acción como si fueras este usuario y, desde el punto de vista de los demás usuarios, será como si este usuario las hubiera realizado. Sin embargo, los registros de auditoría indican que tú eres quien ha realizado las acciones en representación de este usuario.</string>
+    <string name="masqueradeInfo">\"Actuar como\" es básicamente iniciar sesión como si fueras este usuario pero sin una contraseña. Podrás realizar cualquier acción como si fueras este usuario y, desde el punto de vista de los demás usuarios, será como si este usuario las hubiera realizado. Sin embargo, los registros de auditoría indican que tú eres quien ha realizado las acciones en representación de este usuario.</string>
     <string name="masqueradingAs">Estás actuando como %s</string>
     <string name="stopActingAsTitle">Dejar de actuar como&#8230;</string>
     <string name="stopActingAsMessage">Dejarás de actuar como %s y volverás a tu cuenta.</string>
     <string name="weMadeChanges">Hemos realizado algunos cambios.</string>
     <string name="whatsNewText">Ver las novedades</string>
+    <string name="findAnotherSchool">Encontrar otra escuela</string>
 </resources>

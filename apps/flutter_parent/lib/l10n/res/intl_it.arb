@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "Trova un’altra scuola",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "Inserisci nome scuola o distretto…",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",
@@ -721,7 +728,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Syllabus": "Piano di studio",
+  "Syllabus": "Syllabus",
   "@Syllabus": {
     "description": "Label for the \"Syllabus\" tab in course details",
     "type": "text",
@@ -877,7 +884,7 @@
       "studentName": {}
     }
   },
-  "syllabusSubjectMessage": "Su: {studentName}, Piano di studio",
+  "syllabusSubjectMessage": "Su: {studentName}, Syllabus",
   "@syllabusSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a course syllabus",
     "type": "text",

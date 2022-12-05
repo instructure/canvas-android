@@ -118,7 +118,7 @@
     <string name="loadingAssignments">Aufgaben werden geladen...</string>
     <string name="noAssignmentSelected">Bitte wählen Sie eine Aufgabe</string>
     <string name="noAssignmentsWithFileUpload">Dieser Kurs hat keine Aufgaben, die Datei-Uploads erlauben.</string>
-    <string name="teacherNotAllowedFileSubmission">Als Lehrer dieses Kurses können Sie keine Dateien einreichen.</string>
+    <string name="teacherNotAllowedFileSubmission">Als Lehrende*r dieses Kurses können Sie keine Dateien einreichen.</string>
     <string name="noFilesUploaded">Sie haben keine Dateien ausgewählt.</string>
     <string name="oneOrMoreExtensionNotAllowed">Mindestens eine Datei hat eine unzulässige Dateierweiterung.</string>
     <string name="extensionNotAllowed">Der ausgewählte Dateityp ist nicht zulässig.</string>
@@ -142,7 +142,7 @@
     <string name="addCoursesGroups">Kurse bzw. Gruppen hinzufügen</string>
     <string name="noDiscussions">Keine Diskussionen</string>
     <string name="noDiscussionsSubtext">Beginnen Sie ein Gespräch mit anderen.</string>
-    <string name="noDiscussionsTeacher">Beginnen Sie ein Gespräch mit den Studenten.</string>
+    <string name="noDiscussionsTeacher">Beginnen Sie ein Gespräch mit den Studierenden.</string>
     <string name="nothingUnread">Posteingang Null!</string>
     <string name="nothingUnreadSubtext">Sie werden alle erfasst!</string>
     <string name="nothingStarred">Keine markierten Nachrichten</string>
@@ -169,7 +169,7 @@
     <string name="noEvents">Heute keine Ereignisse!</string>
     <string name="noEventsSubtext">Scheinbar ein großartiger Tag für Ruhe und Entspannung.</string>
     <string name="noSubmission">Keine Abgabe</string>
-    <string name="noSubmissionTeacher">Dieser Teilnehmer hat noch nichts abgegeben.</string>
+    <string name="noSubmissionTeacher">Diese/r Studierende*r hat noch nichts abgegeben.</string>
     <string name="locked">Gesperrt</string>
     <string name="lockedSubtext">Diese Aufgabe wird gesperrt bis %1$s um %2$s.</string>
     <string name="chooseFile">Eine Datei auswählen</string>
@@ -200,7 +200,7 @@
     <string name="inbox_sent">Gesendet</string>
     <string name="inbox_archived">Archiviert</string>
 
-    <string name="forbidden">Die Antworten sind nur für Benutzer sichtbar, die mindestens eine Antwort gepostet haben.</string>
+    <string name="forbidden">Die Antworten sind nur für Benutzer*innen sichtbar, die mindestens eine Antwort gepostet haben.</string>
 
     <string name="like">Like</string>
     <string name="likes">Likes</string>
@@ -229,7 +229,7 @@
 
     <!-- App Names -->
     <string name="utils_canvas">Canvas</string>
-    <string name="utils_canvasTeacher">Canvas-Lehrer</string>
+    <string name="utils_canvasTeacher">Canvas-Lehrende*r</string>
     <string name="utils_canvasParent">Canvas Parent</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
@@ -241,7 +241,7 @@
     <string name="utils_suggestions">Vorschläge für Android</string>
     <string name="utils_domain">Domäne</string>
     <string name="utils_versionNum">Version:</string>
-    <string name="utils_userId">Benutzer-ID</string>
+    <string name="utils_userId">Benutzer*in-ID</string>
     <string name="utils_email">E-Mail</string>
     <string name="utils_dontShowAgain">Nicht erneut anzeigen</string>
     <string name="utils_installDate">Installationsdatum:</string>
@@ -279,7 +279,7 @@
     <string name="utils_emptyDiscussions">Es sind keine Diskussionen zum Anzeigen in diesem Kursabschnitt vorhanden.</string>
     <string name="utils_description">Beschreibung</string>
     <string name="utils_allowThreadedReplies">Antworten aller Diskussionsstränge zulassen</string>
-    <string name="utils_usersMustPost">Teilnehmer müssen gepostet haben, bevor sie Antworten sehen können.</string>
+    <string name="utils_usersMustPost">Teilnehmer*innen müssen gepostet haben, bevor sie Antworten sehen können.</string>
     <string name="utils_discussionsClosed">Für Kommentare geschlossen</string>
     <string name="utils_discussionsOpen">Für Kommentare öffnen</string>
     <string name="utils_discussionsPin">Anheften</string>
@@ -305,7 +305,7 @@
     <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
     <string name="utils_lastPost" formatted="false">Letzter Post %s</string>
     <string name="utils_postedOnDate">Gepostet am %s</string>
-    <string name="utils_discussionPostBeforeRepliesEmptyText">Die Antworten sind nur für Benutzer sichtbar, die mindestens eine Antwort gepostet haben.</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Die Antworten sind nur für Benutzer*innen sichtbar, die mindestens eine Antwort gepostet haben.</string>
     <string name="utils_createAnnouncementDelayPosting">Posting verzögern</string>
     <string name="utils_postAt">Posten um</string>
     <string name="utils_postDate">Post-Datum</string>
@@ -485,4 +485,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s als nicht erledigt markiert</string>
     <string name="a11y_markAsDoneWithName">%s als erledigt markieren</string>
     <string name="a11y_markAsNotDoneWithName">%s als nicht erledigt markieren</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

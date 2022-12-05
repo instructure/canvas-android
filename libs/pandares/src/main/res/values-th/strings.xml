@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">มุมมองผู้เรียน</string>
 
 
+    <string name="rateOnThePlayStore">ให้คะแนนใน Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">หัวที่เลือก: %s</string>
     <string name="content_description_chosen_body">ลำดับที่เลือก: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">มีฉบับร่าง</string>
     <string name="errorLoadingSubmission">เกิดข้อผิดพลาดขณะโหลดผลงานจัดส่ง</string>
     <string name="loadFullContent">กดเลือกเพื่อดูเนื้อหาทั้งหมด</string>
+    <string name="openLtiInExternalApp">กดเลือกเพื่อเปิดแอพจากภายนอก</string>
     <string name="dashboardTabImportantDates">วันที่ที่สำคัญ</string>
     <string name="importantDatesEmptyTitle">ไม่มีวันที่ที่สำคัญ</string>
     <string name="important_dates">วันที่ที่สำคัญ</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s ข้อความที่ไม่ได้อ่าน</item>
         <item quantity="other">%s ข้อความที่ไม่ได้อ่าน</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s การแจ้งข้อมูลที่ไม่ได้อ่าน</item>
+        <item quantity="other">%s การแจ้งข้อมูลที่ไม่ได้อ่าน</item>
+    </plurals>
+
     <string name="noAnnotationSelected">ไม่ได้เลือกหมายเหตุกำกับใด ๆ</string>
     <string name="emailNotifications">การแจ้งข้อมูลทางอีเมล</string>
     <string name="emailNotificationsImmediately">ทันที</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">รายสัปดาห์</string>
     <string name="emailNotificationsNever">ไม่เลย</string>
     <string name="selectFrequency">เลือกความถี่</string>
+    <string name="a11y_closeProgress">ปิดกล่องโต้ตอบแสดงความคืบหน้า</string>
+    <string name="fileUploadProgress">%1$s จาก %2$s</string>
+    <string name="fileUploadProgressSubtitle">กำลังอัพโหลดไปที่ไฟล์ (Files)</string>
+    <string name="submissionProgressSubtitle">กำลังอัพโหลดผลงานจัดส่งไปยัง \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">กำลังอัพโหลดผลงานจัดส่ง</string>
+    <string name="dashboardNotificationUploadingFilesTitle">กำลังอัพโหลดไฟล์</string>
+    <string name="cancelSubmissionDialogTitle">ยกเลิกการจัดส่ง</string>
+    <string name="cancelSubmissionDialogMessage">นี่จะเป็นการยกเลิกและลบผลงานจัดส่งของคุณ</string>
+    <string name="fileUploadError">อัพโหลดไฟล์ล้มเหลว</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">อัพโหลดไปยัง Canvas สำหรับ %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">อัพโหลดไป ไฟล์ของฉัน (My Files)</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">จัดส่งภารกิจ</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">เลือกบทเรียน</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">เลือกภารกิจ</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">ยกเลิกการอัพโหลดหรือไม่</string>
+    <string name="cancelFileUploadMessage">นี่จะเป็นการยกเลิกการอัพโหลดของคุณ</string>
+    <string name="menuTitleFilterAssignments">กรองภารกิจ</string>
+    <string name="filterAssignmentDialogTitle">กรองภารกิจ</string>
+    <string name="filterAssignmentsDialogCancel">ยกเลิก</string>
+    <string name="filterAssignmentAll">ทั้งหมด</string>
+    <string name="filterAssignmentLate">ล่าช้า</string>
+    <string name="filterAssignmentMissing">ขาดหาย</string>
+    <string name="filterAssignmentGraded">ให้เกรดแล้ว</string>
+    <string name="filterAssignmentUpcoming">เร็ว ๆ นี้</string>
+    <string name="createdByStudentView">จัดทำผ่านมุมมองผู้เรียน (Student View)</string>
+    <string name="discussionErrorToast">เกิดข้อผิดพลาดขึ้น หัวข้อนี้อาจไม่พร้อมใช้งานอีกต่อไป</string>
+    <string name="cameraPermissionPermanentlyDenied">สิทธิ์อนุญาตกล้องถูกปฏิเสธเป็นการถาวร ไปที่การตั้งค่าแอพเพื่อให้อนุญาต</string>
 </resources>

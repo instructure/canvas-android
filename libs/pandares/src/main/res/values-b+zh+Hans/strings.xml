@@ -1031,6 +1031,7 @@
     <string name="tab_student_view">学生视图</string>
 
 
+    <string name="rateOnThePlayStore">在 Play Store 中评级</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">已选头部：%s</string>
     <string name="content_description_chosen_body">已选身体：%s</string>
@@ -1219,6 +1220,7 @@
     <string name="submissionDraftAvailableTitle">可用草稿</string>
     <string name="errorLoadingSubmission">加载提交项时发生错误</string>
     <string name="loadFullContent">点击以查看完整内容</string>
+    <string name="openLtiInExternalApp">点击以在外部应用程序中打开</string>
     <string name="dashboardTabImportantDates">重要日期</string>
     <string name="importantDatesEmptyTitle">没有重要日期</string>
     <string name="important_dates">重要日期</string>
@@ -1260,6 +1262,10 @@
     <plurals name="a11y_inboxUnreadCount">
         <item quantity="other">%s条未读消息</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="other">%s条未读通知</item>
+    </plurals>
+
     <string name="noAnnotationSelected">未选择任何批注</string>
     <string name="emailNotifications">电子邮件通知</string>
     <string name="emailNotificationsImmediately">立即</string>
@@ -1267,4 +1273,32 @@
     <string name="emailNotificationsWeekly">每周</string>
     <string name="emailNotificationsNever">从不</string>
     <string name="selectFrequency">选择频率</string>
+    <string name="a11y_closeProgress">关闭进度对话框</string>
+    <string name="fileUploadProgress">%1$s，共%2$s</string>
+    <string name="fileUploadProgressSubtitle">上传到文件</string>
+    <string name="submissionProgressSubtitle">上传提交项到\"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">正在上传提交作业</string>
+    <string name="dashboardNotificationUploadingFilesTitle">上传文件</string>
+    <string name="cancelSubmissionDialogTitle">取消提交</string>
+    <string name="cancelSubmissionDialogMessage">此操作将取消并删除您的提交项。</string>
+    <string name="fileUploadError">文件上传失败</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">为%s上传到Canvas。</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">上传到“我的文件”</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">提交作业</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">选择课程</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">选择作业</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s，%2$s</string>
+    <string name="cancelFileUploadTitle">是否取消上传？</string>
+    <string name="cancelFileUploadMessage">您的上传将取消。</string>
+    <string name="menuTitleFilterAssignments">筛选作业</string>
+    <string name="filterAssignmentDialogTitle">筛选作业</string>
+    <string name="filterAssignmentsDialogCancel">取消</string>
+    <string name="filterAssignmentAll">全部</string>
+    <string name="filterAssignmentLate">迟交</string>
+    <string name="filterAssignmentMissing">未交</string>
+    <string name="filterAssignmentGraded">已评分</string>
+    <string name="filterAssignmentUpcoming">即将到来</string>
+    <string name="createdByStudentView">由学生视图创建</string>
+    <string name="discussionErrorToast">发生错误。该主题不再可用。</string>
+    <string name="cameraPermissionPermanentlyDenied">相机权限被永久拒绝。请转到应用设置以授予权限。</string>
 </resources>

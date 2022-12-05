@@ -485,4 +485,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s har markerats som ej färdig</string>
     <string name="a11y_markAsDoneWithName">%s Markera som färdig</string>
     <string name="a11y_markAsNotDoneWithName">%s Markera som ej färdig</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

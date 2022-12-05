@@ -37,6 +37,6 @@
     <string name="sendingSimple">E tuku ana</string>
     <string name="pspdf__annotation_type_stamp">Tuhi Tae</string>
     <string name="removedComment">Kua tangohia %1$s e %2$s</string>
-    <string name="pspdf__stamp_standard_section"></string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

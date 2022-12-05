@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "Jwenn yon lòt lekòl",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "Antre non lekòl la oswa distri a...",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",

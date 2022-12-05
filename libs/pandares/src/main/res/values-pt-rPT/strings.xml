@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Vista de aluno</string>
 
 
+    <string name="rateOnThePlayStore">Taxa na Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Cabeça escolhida: %s</string>
     <string name="content_description_chosen_body">Corpo escolhido: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Projeto disponível</string>
     <string name="errorLoadingSubmission">Ocorreu um erro durante a submissão do carregamento</string>
     <string name="loadFullContent">Toque para ver o conteúdo completo</string>
+    <string name="openLtiInExternalApp">Toque para abrir em aplicação externa</string>
     <string name="dashboardTabImportantDates">Datas importantes</string>
     <string name="importantDatesEmptyTitle">Não há datas importantes</string>
     <string name="important_dates">Datas importantes</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s mensagem não lida</item>
         <item quantity="other">%s mensagens não lidas</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s notificação não lida</item>
+        <item quantity="other">%s notificações não lidas</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Nenhuma anotação selecionada</string>
     <string name="emailNotifications">Notificações de Email</string>
     <string name="emailNotificationsImmediately">Imediatamente</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Semanalmente</string>
     <string name="emailNotificationsNever">Nunca</string>
     <string name="selectFrequency">Selecionar a frequência</string>
+    <string name="a11y_closeProgress">Fechar diálogo de progresso</string>
+    <string name="fileUploadProgress">%1$s de %2$s</string>
+    <string name="fileUploadProgressSubtitle">Carregamento para ficheiros</string>
+    <string name="submissionProgressSubtitle">A carregar o envio para \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">A carregar o envio</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Carregamento de ficheiros</string>
+    <string name="cancelSubmissionDialogTitle">Cancelar subscrição</string>
+    <string name="cancelSubmissionDialogMessage">Isto irá cancelar e eliminar a sua submissão.</string>
+    <string name="fileUploadError">Carregamento de ficheiros falhado</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Carregar em Canvas para %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Carregar para os Meus Ficheiros</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Enviar tarefa</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Escolha uma disciplina</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Escolha uma tarefa</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Cancelar carregamento?</string>
+    <string name="cancelFileUploadMessage">Isto irá cancelar o seu carregamento.</string>
+    <string name="menuTitleFilterAssignments">Atribuições do filtro</string>
+    <string name="filterAssignmentDialogTitle">Atribuições do filtro</string>
+    <string name="filterAssignmentsDialogCancel">Cancelar</string>
+    <string name="filterAssignmentAll">Todos</string>
+    <string name="filterAssignmentLate">Atrasado</string>
+    <string name="filterAssignmentMissing">Em falta</string>
+    <string name="filterAssignmentGraded">Classificado</string>
+    <string name="filterAssignmentUpcoming">Em breve</string>
+    <string name="createdByStudentView">Criado por Vista de aluno</string>
+    <string name="discussionErrorToast">Um erro ocorreu. O tópico pode já não estar disponível.</string>
+    <string name="cameraPermissionPermanentlyDenied">A permissão da câmara foi permanentemente negada. Ir para as definições da aplicação para a permitir.</string>
 </resources>

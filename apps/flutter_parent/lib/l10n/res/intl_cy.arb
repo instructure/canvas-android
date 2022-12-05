@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "Dod o hyd i ysgol arall",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "Rhowch ardal neu enw’r ysgol...",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",

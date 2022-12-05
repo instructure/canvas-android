@@ -50,7 +50,7 @@
     <string name="rate_the_app">Bewerten der App</string>
     <string name="rate_the_app_icon">Symbol für „Bewerten der App“</string>
     <string name="teacher_log_out">Abmelden</string>
-    <string name="teacher_switch_user">Benutzer wechseln</string>
+    <string name="teacher_switch_user">Benutzer*in wechseln</string>
     <string name="under_construction">In Bau</string>
     <string name="toolbar_event">Event</string>
     <string name="location">Standort</string>
@@ -186,7 +186,7 @@
     <string name="message_deleted">Nachricht gelöscht</string>
     <string name="select_recipients">Empfänger auswählen</string>
     <string name="entire_group_selected">Gesamte Gruppe ausgewählt</string>
-    <string name="no_users_in_group">Keine Benutzer in Gruppe</string>
+    <string name="no_users_in_group">Keine Benutzer*innen in Gruppe</string>
 
     <string name="published">Veröffentlicht</string>
     <string name="not_published">Nicht veröffentlicht</string>
@@ -205,7 +205,7 @@
     <string name="successfully_updated_quiz">Quiz erfolgreich aktualisiert</string>
     <string name="failure_updating_assignment">Aktualisierung der Aufgabe fehlgeschlagen. Versuchen Sie es erneut.</string>
     <string name="failure_deleting_assignment">Löschen der Aufgabe fehlgeschlagen. Versuchen Sie es erneut.</string>
-    <string name="cant_unpublish">Zurückziehen nicht möglich, wenn es Studentenabgaben gibt</string>
+    <string name="cant_unpublish">Zurückziehen nicht möglich, wenn es Studierendenabgaben gibt</string>
     <string name="messages">Nachrichten</string>
     <plurals name="reply_message_plus_label">
         <item quantity="one">+ %d Nachricht</item>
@@ -218,9 +218,9 @@
 
     <string name="delete_assignment_message">Möchten Sie diese Aufgabe wirklich löschen?</string>
     <string name="max_count">über 99</string>
-    <string name="message_student">Studenten benachrichtigen</string>
+    <string name="message_student">Studierende*n benachrichtigen</string>
 
-    <string name="message_these_students">Diese Studenten benachrichtigen</string>
+    <string name="message_these_students">Diese Studierende benachrichtigen</string>
     <string name="submission_status_missing">Fehlt</string>
     <string name="submission_status_late">Verspätet</string>
     <string name="submission_status_submitted">Abgegeben</string>
@@ -231,7 +231,7 @@
     <string name="turnOnAnonymousGrading">Anonyme Benotung einschalten</string>
     <string name="turnOffAnonymousGrading">Anonyme Benotung ausschalten</string>
     <string name="anonymousGradingLabel">Anonyme Benotung</string>
-    <string name="anonymousStudentLabel">Student</string>
+    <string name="anonymousStudentLabel">Studierende*r</string>
 
     <!-- TODO -->
     <string name="coming_soon">Funktion kommt in Kürze</string>
@@ -316,12 +316,12 @@
     <string name="multiple_due_dates">Mehrere Abgabetermine</string>
     <string name="everyone">Jeder</string>
     <string name="everyone_else">Alle anderen</string>
-    <string name="unknown_student">Unbekannter Student</string>
+    <string name="unknown_student">Unbekannte/r Studierende*r</string>
     <string name="closed">Geschlossen</string>
     <string name="no_date_filler">--</string>
     <string name="due_date_at_time" formatted="false">Fällig am %1s um %2s</string>
     <string name="last_post" formatted="false">Letzter Post %s</string>
-    <string name="submission_types">Einsendungsarten</string>
+    <string name="submission_types">Abgabearten</string>
     <string name="full_due_date_details">Vollständige Details zum Abgabedatum</string>
     <string name="availability_label">Verfügbarkeit:</string>
     <string name="available_to_label">Verfügbar für:</string>
@@ -334,7 +334,7 @@
     <string name="due_date_header_label">Fällig</string>
     <string name="assignment_details">Aufgabendetails</string>
     <string name="no_content">Keine Inhalte vorhanden</string>
-    <string name="submissions">Übermittlungen</string>
+    <string name="submissions">Abgaben</string>
     <string name="no_assignment_description_filler">Helfen Sie Ihren Studenten bei dieser Aufgabe mit zusätzlichen Anweisungen.</string>
     <string name="no_quiz_description_filler">Helfen Sie Ihren Studenten bei diesem Quiz mit zusätzlichen Anweisungen.</string>
     <string name="page_title_due_dates">Abgabetermine</string>
@@ -370,7 +370,7 @@
     <string name="quiz_points_must_be_set">Quizpunkte müssen festgelegt werden.</string>
     <string name="assignee_type_course_sections">Kursabschnitte</string>
     <string name="assignee_type_groups">Gruppen</string>
-    <string name="assignee_type_students">Studenten</string>
+    <string name="assignee_type_students">Studierende</string>
     <string name="page_title_add_assignees">Aufgabenempfänger hinzufügen</string>
     <string name="assign_to">Zuweisen</string>
     <string name="available_from">Verfügbar von</string>
@@ -412,7 +412,7 @@
         <item>@string/gpa_scale</item>
     </string-array>
 
-  <string name="not_a_teacher">Kein Lehrer?</string>
+  <string name="not_a_teacher">Kein Lehrende*r?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Eine unserer anderen Apps passt möglicherweise besser. Tippen Sie auf eine, um den Play Store zu besuchen.</string>
     <string name="sg_tab_grade">Note</string>
     <string name="sg_tab_comments">Kommentare</string>
@@ -623,7 +623,7 @@
     <string name="discussions_replies_title">Antworten</string>
     <string name="discussions_reply">Antwort</string>
     <string name="discussions_edit">Ändern</string>
-    <string name="discussions_forbidden">Die Antworten sind nur für Benutzer sichtbar, die mindestens eine Antwort gepostet haben.</string>
+    <string name="discussions_forbidden">Die Antworten sind nur für Benutzer*innen sichtbar, die mindestens eine Antwort gepostet haben.</string>
     <string name="discussions_delete">Diskussion löschen</string>
     <string name="discussions_delete_title">Diskussion löschen?</string>
     <string name="discussions_delete_message">Dies löscht die ganze Diskussion samt Thread.</string>
@@ -683,7 +683,7 @@
     <string name="viewQuizSubmission">Abgabe anzeigen</string>
     <string name="gradeQuizSubmission">Keine benotete Abgabe</string>
     <string name="comment">Kommentar</string>
-    <string name="messageStudentsWho">Studenten benachrichtigen, die &#8230;</string>
+    <string name="messageStudentsWho">Benachrichtigen von Studierenden, die &#8230;</string>
 
     <string name="on">am</string>
 
@@ -691,7 +691,7 @@
     <string name="options">Optionen</string>
     <string name="subscribe">Anmelden</string>
     <string name="allowThreadedReplies">Antworten aller Diskussionsstränge zulassen</string>
-    <string name="usersMustPost">Benutzer müssen gepostet haben, bevor sie Antworten sehen können.</string>
+    <string name="usersMustPost">Benutzer*innen müssen gepostet haben, bevor sie Antworten sehen können.</string>
     <string name="allowUserComments">Benutzern Kommentare erlauben</string>
     <string name="discussionTitleMustBeSet">Ein Diskussionstitel muss festgelegt werden.</string>
     <string name="discussionSuccessfullyCreated">Die Diskussion wurde erstellt.</string>
@@ -712,9 +712,10 @@
     <string name="annotationErrorOccurred">Unerwarteter Fehler beim Laden von Anmerkungen</string>
 
     <string name="account">Konto</string>
-    <string name="changeUser">Benutzer wechseln</string>
+    <string name="changeUser">Benutzer*in wechseln</string>
     <string name="general">Allgemein</string>
     <string name="sendFeedback">Feedback senden</string>
+    <string name="rateOnTheAppStore">Im App Store bewerten</string>
     <string name="privacyPolicy">Datenschutzrichtlinien</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Nutzungsbedingungen</string>
@@ -722,7 +723,7 @@
     <string name="searchGuidesDetails">Antworten auf häufige Fragen suchen</string>
     <string name="reportProblem">Ein Problem melden</string>
     <string name="reportProblemDetails">Wenn sich die App ungewöhnlich verhält, sagen Sie uns Bescheid</string>
-    <string name="requestFeature">Ein Feature anfordern</string>
+    <string name="requestFeature">Ein Merkmal anfordern</string>
     <string name="requestFeatureDetails">Haben Sie eine Idee, wie man die App verbessern könnte?</string>
     <string name="shareYourLove">Teilen Sie Ihre Liebe für die App anderen mit.</string>
     <string name="shareYourLoveDetails">Sagen Sie uns, was Sie an der App besonders mögen.</string>
@@ -750,7 +751,7 @@
     <string name="addNew">Neu hinzufügen</string>
     <string name="sendMessage">Nachricht senden</string>
     <string name="addMessage">Nachricht hinzufügen</string>
-    <string name="messageThisStudent">Eine Nachricht an diesen Studenten schicken</string>
+    <string name="messageThisStudent">Eine Nachricht an diese/n Studierende*n schicken</string>
     <string name="scrollInstructions">Blättern, um alle Details zu sehen</string>
     <string name="dueTime">Rechtzeitig</string>
     <string name="available_from_date">Datum „Verfügbar von“</string>
@@ -770,11 +771,11 @@
     <string name="filterPeople">Personen filtern</string>
     <string name="loadMore">Mehr laden</string>
     <string name="latestStudentActivityAtFormatted">Letzte Aktivität am %1$s um %2$s.</string>
-    <string name="errorLoadingStudentContextCard">Details für diesen Benutzer konnten nicht geladen werden.</string>
-    <string name="enrollmentTypeStudent">Student</string>
-    <string name="enrollmentTypeTeacher">Dozent</string>
-    <string name="enrollmentTypeObserver">Beobachter</string>
-    <string name="enrollmentTypeTeachingAssistant">Lehrassistent</string>
+    <string name="errorLoadingStudentContextCard">Details für diese/n Benutzer*in konnten nicht geladen werden.</string>
+    <string name="enrollmentTypeStudent">Studierende*r</string>
+    <string name="enrollmentTypeTeacher">Lehrende*r</string>
+    <string name="enrollmentTypeObserver">Beobachter*in</string>
+    <string name="enrollmentTypeTeachingAssistant">Lehrassistent*in</string>
     <string name="enrollmentTypeDesigner">Designer</string>
     <string name="enrollmentTypeUnknown">Unbekannt</string>
     <string name="unableToLoadAttendance">Teilnahme konnte zu diesem Zeitpunkt nicht geladen werden.</string>
@@ -821,8 +822,8 @@
     <string name="restrictedAccess">Beschränkter Zugriff</string>
     <string name="restricted">Eingeschränkt</string>
     <string name="hidden">Ausgeblendet. Die darin enthaltenen Dateien sind über Links verfügbar.</string>
-    <string name="studentsWithLink">Nur verfügbar für Studenten mit Link. In Studentendateien nicht verfügbar.</string>
-    <string name="scheduleAvailability">Studentenverfügbarkeit planen</string>
+    <string name="studentsWithLink">Nur verfügbar für Studierende mit Link. In Studierendendateien nicht verfügbar.</string>
+    <string name="scheduleAvailability">Studierendeverfügbarkeit planen</string>
     <string name="folderCreationError">Fehler beim Anlegen eines Ordners.</string>
 
     <string name="setAsFrontPage">Als Frontseite einstellen</string>
@@ -839,8 +840,8 @@
     <string name="errorSavingPage">Fehler beim Speichern dieser Seite. Versuchen Sie es erneut.</string>
     <string name="frontPageUnpublishedError">Eine unveröffentlichte Seite kann nicht die Vorderseite sein.</string>
 
-    <string name="onlyTeachers">Nur Dozenten</string>
-    <string name="teachersAndStudents">Lehrer und Studenten</string>
+    <string name="onlyTeachers">Nur Lehrende</string>
+    <string name="teachersAndStudents">Lehrende und Studierende</string>
     <string name="anyone">Jeder</string>
     <string name="groupMembers">Nur Mitglieder</string>
     <string name="license">Lizenz</string>
@@ -888,7 +889,7 @@
     <string name="syllabusSuccessfullyUpdated">Kursplan erfolgreich aktualisiert.</string>
     <string name="errorSavingSyllabus">Fehler beim Speichern des Kursplans. Versuchen Sie es erneut.</string>
     <string name="editSyllabusTitle">Kursplan bearbeiten</string>
-    <string name="editSyllabusContent">Content</string>
+    <string name="editSyllabusContent">Inhalt</string>
     <string name="editSyllabusDetails">Details</string>
     <string name="editSyllabusShowCourseSummary">Zusammenfassung des Kurses anzeigen</string>
     <string name="editSyllabusContentAccessibilityLabel">Inhalt des Kursplans</string>
