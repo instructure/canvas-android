@@ -930,7 +930,7 @@
     <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
     <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
     <string name="fileTypeNotSupported">Mathau o Ffeil Anghydnaws</string>
-    <string name="fileTypeNotSupportedBody">Dydy\'r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
+    <string name="fileTypeNotSupportedBody">Dydy&apos;r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Gwedd Myfyriwr</string>
 
 
+    <string name="rateOnThePlayStore">Sgorio’r Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Dewis pen: %s</string>
     <string name="content_description_chosen_body">Dewis corff: %s</string>
@@ -1113,8 +1114,8 @@
     <string name="discussions_unknown_date">Dyddiad Anhysbys</string>
     <string name="a11y_gradeLetterMinusContentDescription">%s. minws</string>
     <string name="a11y_letterGrade">%s.</string>
-    <string name="a11y_gradeCellContentDescription">%1$s %2$s</string>
-    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%1$s %2$s, %3$s</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Munud</item>
@@ -1126,8 +1127,8 @@
     <string name="noConferencesMessage">Does dim cynadleddau i’w dangos eto</string>
     <string name="noConferenceDescription">Does dim disgrifiad ar gyfer y gynhadledd hon</string>
     <string name="conferenceListError">Gwall wrth lwytho’ch cynadleddau</string>
-    <string name="conferenceConcludedDateAtTime">Wedi dirwyn i ben %1$s am %2$s</string>
-    <string name="conferenceStartedDateAtTime">Wedi dechrau %1$s am %2$s</string>
+    <string name="conferenceConcludedDateAtTime">Wedi dirwyn i ben %s am %s</string>
+    <string name="conferenceStartedDateAtTime">Wedi dechrau %s am %s</string>
     <string name="notStarted">Heb ei ddechrau</string>
     <string name="inProgress">Ar y Gweill</string>
     <string name="join">Ymuno</string>
@@ -1138,7 +1139,7 @@
     <string name="conferenceInProgress">Cynhadledd ar waith</string>
 
     <string name="a11y_criterion_content_description">Sgoriau maen prawf %s</string>
-    <string name="a11y_criterion_description_content_description">%1$s, %2$s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">rhagor o wybodaeth</string>
     <string name="a11y_create_file_folder_visible">Botymau Creu Ffeil a Creu Ffolder yn weladwy</string>
     <string name="a11y_create_file_folder_gone">Botymau Creu Ffeil a Creu Ffolder yn gudd</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Drafft ar gael</string>
     <string name="errorLoadingSubmission">Gwall wrth lwytho cyflwyniad</string>
     <string name="loadFullContent">Tapiwch i weld y cynnwys llawn</string>
+    <string name="openLtiInExternalApp">Tapiwch i agor mewn ap allanol</string>
     <string name="dashboardTabImportantDates">Dyddiadau Pwysig</string>
     <string name="importantDatesEmptyTitle">Dim dyddiadau pwysig</string>
     <string name="important_dates">Dyddiadau Pwysig</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s neges heb ei darllen</item>
         <item quantity="other">%s neges heb ei darllen</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s hysbysiad heb ei ddarllen</item>
+        <item quantity="other">%s hysbysiad heb eu darllen</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Dim anodiad wedi’i ddewis</string>
     <string name="emailNotifications">Hysbysiadau E-bost</string>
     <string name="emailNotificationsImmediately">Yn syth</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Pob wythnos</string>
     <string name="emailNotificationsNever">Byth</string>
     <string name="selectFrequency">Dewis amlder</string>
+    <string name="a11y_closeProgress">Cau’r deialog cynnydd</string>
+    <string name="fileUploadProgress">%1$s o %2$s</string>
+    <string name="fileUploadProgressSubtitle">Wrthi’n llwytho i fyny i Ffeiliau</string>
+    <string name="submissionProgressSubtitle">Wrthi’n llwytho cyflwyniad i fyny i \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Llwytho cyflwyniad i fyny</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Wrthi’n llwytho ffeiliau i fyny</string>
+    <string name="cancelSubmissionDialogTitle">Canslo Cyflwyniad</string>
+    <string name="cancelSubmissionDialogMessage">Bydd hyn yn canslo ac yn dileu eich cyflwyniad.</string>
+    <string name="fileUploadError">Wedi methu llwytho ffeil i fyny</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Llwytho i fyny i Canvas ar gyfer %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Llwytho i fyny i Fy Ffeiliau</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Cyflwyno aseiniad</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Dewis cwrs</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Dewis aseiniad</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Canslo’r broses llwytho i fyny?</string>
+    <string name="cancelFileUploadMessage">Bydd hyn yn canslo eich ffeil sy’n cael ei llwytho i fyny.</string>
+    <string name="menuTitleFilterAssignments">Hidlo aseiniadau</string>
+    <string name="filterAssignmentDialogTitle">Hidlo Aseiniadau</string>
+    <string name="filterAssignmentsDialogCancel">Canslo</string>
+    <string name="filterAssignmentAll">Y cyfan</string>
+    <string name="filterAssignmentLate">Yn Hwyr</string>
+    <string name="filterAssignmentMissing">Ar goll</string>
+    <string name="filterAssignmentGraded">Wedi graddio</string>
+    <string name="filterAssignmentUpcoming">I ddod</string>
+    <string name="createdByStudentView">Wedi’i Greu gan Wedd Myfyriwr</string>
+    <string name="discussionErrorToast">Cafwyd gwall. Efallai nad yw’r pwnc hwn ar gael mwyach.</string>
+    <string name="cameraPermissionPermanentlyDenied">Mae’r hawl camera wedi’i wrthod am byth. Ewch i osodiadau’r ap i’w ganiatáu.</string>
 </resources>

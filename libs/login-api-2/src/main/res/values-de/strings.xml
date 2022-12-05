@@ -30,21 +30,21 @@
     <string name="confirm">Bestätigen</string>
     <string name="cancel">Abbrechen</string>
     <string name="help">Hilfe</string>
-    <string name="enterURL">Geben Sie Ihre Canvas URL ein:</string>
-    <string name="signIntoCanvasNetwork">Sie versuchen sich im Canvas Network anzumelden?</string>
+    <string name="enterURL">Geben Sie Ihre Canvas-URL ein:</string>
+    <string name="signIntoCanvasNetwork">Sie versuchen sich im Canvas-Netzwerk anzumelden?</string>
     <string name="remove">Entfernen</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
-    <string name="userId">Benutzer-ID</string>
+    <string name="userId">Benutzer*in-ID</string>
     <string name="domain">Domäne</string>
 
-    <string name="actAsUser">Handeln als Benutzer</string>
-    <string name="stopActAsUser">Nicht mehr handeln als Benutzer</string>
+    <string name="actAsUser">Handeln als Benutzer*in</string>
+    <string name="stopActAsUser">Nicht mehr handeln als Benutzer*in</string>
     <!--Multiple User Sign in -->
-    <string name="removeUser">Diesen Benutzer entfernen?</string>
-    <string name="removedForever">Sie müssen sich bei diesem Benutzer erneut anmelden, um auf seine Inhalte zugreifen zu können.</string>
+    <string name="removeUser">Diese/n Benutzer*in entfernen?</string>
+    <string name="removedForever">Sie müssen sich bei diesem/dieser Benutzer*in erneut anmelden, um auf seine Inhalte zugreifen zu können.</string>
 
     <!--Content Descriptions-->
-    <string name="canvasLogo">Canvas Logo</string>
+    <string name="canvasLogo">Canvas-Logo</string>
 
     <string name="canvasLoginOn">Canvas_Login: EIN</string>
     <string name="canvasLoginOff">Canvas_Login: AUS</string>
@@ -53,7 +53,7 @@
     <string name="username">Benutzername</string>
     <string name="password">Kennwort</string>
     <string name="authenticationRequired">Authentifizierung erforderlich</string>
-    <string name="invalidEmailPassword">Ungültige E-Mail oder Passwort</string>
+    <string name="invalidEmailPassword">E-Mail-Adresse oder Kennwort ungültig</string>
     <string name="login">Anmeldung</string>
     <string name="logout">Abmelden</string>
 
@@ -65,7 +65,7 @@
 
     <!--Smart Login-->
     <string name="loginNearYou">In Ihrer Nähe</string>
-    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginCanvasNetwork">Canvas-Netzwerk</string>
     <string name="loginRightBehindYou">Direkt hinter Ihnen</string>
     <string name="loginCanvasHelp">Finden Sie Ihre Schule nicht? Geben Sie die URL der Schule ein oder gehen Sie hierhin für Hilfe.</string>
     <string name="loginCanvasHelpWithUser">Geben Sie die URL der Schule ein oder gehen Sie hierhin für Hilfe.</string>
@@ -107,7 +107,7 @@
     <string name="whatsYourSchoolName">Wie heißt Ihre Schule?</string>
     <string name="next">Weiter</string>
     <string name="schoolInstructureCom">school.instructure.com</string>
-    <string name="contentDescription_removePreviousUser">Vorherigen Benutzer entfernen</string>
+    <string name="contentDescription_removePreviousUser">Vorherige/n Benutzer*in entfernen</string>
     <string name="accountDomainFooter">Finden Sie Ihre Schule nicht? Geben Sie den vollständigen URL der Schule ein.</string>
     <string name="accountDomainFooterLink">Tippen Sie hier, um Hilfe zu erhalten.</string>
 
@@ -119,12 +119,13 @@
 
     <string name="masqueradeErrorUserId">Sie müssen eine Benutzer-ID eingeben.</string>
     <string name="masqueradeErrorDomain">Sie müssen eine gültige Domäne eingeben.</string>
-    <string name="masqueradeError">Fehler beim Versuch, als Benutzer zu handeln</string>
-    <string name="masqueradeInfo">\"Handeln als\" heißt im Grunde, sich als dieser Benutzer ohne Kennwort anzumelden. Sie können beliebige Maßnahmen ergreifen, als wären Sie dieser Benutzer, und aus der Sicht anderer Benutzer wird es sein, als ob dieser Benutzer sie ausführt. Die Audit-Protokolle zeichnen auf, dass Sie die Aktionen im Namen des Benutzers durchgeführt haben.</string>
+    <string name="masqueradeError">Fehler beim Versuch, als Benutzer*in zu handeln</string>
+    <string name="masqueradeInfo">\"Handeln als\" heißt im Grunde, sich als diese/r Benutzer*in ohne Kennwort anzumelden. Sie können beliebige Maßnahmen ergreifen, als wären Sie diese/r Benutzer*in, und aus der Sicht anderer Benutzer*innen wird es sein, als ob diese/r Benutzer*in sie ausführt. Die Audit-Protokolle zeichnen auf, dass Sie die Aktionen im Namen des Benutzers durchgeführt haben.</string>
     <string name="masqueradingAs">Sie handeln als %s.</string>
-    <string name="stopActingAsTitle">Aufhören, als Benutzer [...] zu handeln</string>
+    <string name="stopActingAsTitle">Aufhören, als Benutzer*in [...] zu handeln</string>
     <string name="stopActingAsMessage">Sie hören auf, als %s zu handeln, und kehren zu Ihrem Konto zurück.</string>
 
     <string name="weMadeChanges">Wir haben ein paar kleine Veränderungen vorgenommen.</string>
     <string name="whatsNewText">Was ist neu?</string>
+    <string name="findAnotherSchool">Eine andere Schule finden</string>
 </resources>

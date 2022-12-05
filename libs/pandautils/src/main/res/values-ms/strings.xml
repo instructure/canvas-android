@@ -1,0 +1,489 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">Pilih Media</string>
+    <string name="takeVideo">Ambil Video</string>
+    <string name="noCameraOnDevice">Tiada Kamera</string>
+    <string name="takePhoto">Ambil Foto</string>
+    <string name="choosePhotoFromGallery">Pilih Foto Dari Galeri</string>
+
+    <string name="utils_edit">Edit</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Memuat Naik ke Canvas</string>
+    <string name="preparingUpload">Menyediakan muat naik</string>
+    <string name="loadingFilesIndeterminate">Memuat Naik Fail&#8230;</string>
+    <string name="fileUploadSuccess">Muat Naik Berjaya</string>
+    <string name="noNetwork">Rangkaian tidak tersedia - sila cuba semula kemudian.</string>
+    <string name="uploadMessage">"Muat naik sedang berjalan. Semak pemberitahuan untuk status muat naik.</string>
+    <string name="uploadingFile">Memuat naik fail&#8230;</string>
+    <string name="errorUploadingFile">Ralat berlaku semasa memuat naik fail anda. Sila cuba semula.</string>
+    <string name="fileSubmission">Serah Fail</string>
+    <string name="uploadFiles">Muat Naik Fail</string>
+    <string name="upload">Muat naik</string>
+    <string name="errorSendingMessage">Ralat berlaku semasa menghantar mesej anda. Sila cuba semula.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Muat Naik Pemberitahuan</string>
+    <string name="notificationChannelNameFileUploadsDescription">Pemberitahuan Canvas untuk muat naik yang sedang berjalan.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="addFile">Tambah Fail</string>
+
+    <string name="fromCamera">Kamera</string>
+    <string name="fromGallery">Galeri</string>
+    <string name="fromDevice">Peranti</string>
+    <string name="fromDocumentScanning">Pengimbas</string>
+    <string name="fromOtherApplication">Lain</string>
+    <string name="Domain">Domain</string>
+    <string name="files">Fail</string>
+    <string name="file">Fail</string>
+    <string name="fileTalkBack">Fail %s</string>
+    <string name="folderTalkBack">Folder %s</string>
+    <string name="addItem">Tambah Item</string>
+    <string name="assignment">Tugasan</string>
+    <string name="attachedFiles">Fail yang Dikepilkan</string>
+    <string name="turnIn">Serahkan</string>
+    <string name="course">Kursus</string>
+    <string name="sending">Menghantar&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Bintang Penilaian Satu</string>
+    <string name="star2">Bintang Penilaian Dua</string>
+    <string name="star3">Bintang Penilaian Tiga</string>
+    <string name="star4">Bintang Penilaian Empat</string>
+    <string name="star5">Bintang Penilaian Lima</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Anda melebihi kuota storan fail anda pada masa ini.</string>
+    <string name="errorSubmittingFiles">Ralat berlaku semasa menyerahkan fail anda. Sila cuba semula.</string>
+    <string name="errorLoadingFiles">Ralat berlaku semasa memuatkan fail anda. Sila semak sambungan Internet anda dan cuba semula.</string>
+    <string name="filesUploadedSuccessfully">Fail berjaya dimuat naik.</string>
+    <string name="filesSubmittedSuccessfully">Fail berjaya diserahkan.</string>
+    <string name="messageSentSuccessfully">Mesej berjaya dihantar.</string>
+    <string name="shareWithCanvas">Apl lain boleh berkongsi fail dengan Canvas! Cari ikon di bawah dalam apl dan ketik pada Canvas.</string>
+    <string name="shareWithCanvas2">Tindakan ini akan membuka apl ini. Kemudian pilih sahaja kursus dan tugasan ingin anda serahkan fail.</string>
+    <string name="contentDescriptionSocialShare">Ikon kongsi</string>
+    <string name="submitAssignment">Serahkan Tugasan</string>
+    <string name="assignmentHeader">Tugasan :</string>
+    <string name="submittingAssignment">Menyerahkan tugasan&#8230;</string>
+    <string name="conversations">Perbualan </string>
+    <string name="inbox">Peti masuk </string>
+    <string name="divider">Pembahagi</string>
+    <string name="legal">Undang-undang</string>
+    <string name="completeHomework">LENGKAPKAN Kerja rumah anda</string>
+    <string name="takeExam">Ambil Peperiksaan</string>
+    <string name="fileIcon">Ikon Fail</string>
+    <string name="uploadingFileNum" formatted="false">Memuat naik %d daripada %d</string>
+    <string name="fileLocked" formatted="false">%s telah dikunci.</string>
+    <string name="filePermissionGranted">Fail kini sedia untuk dimuat turun, sila cuba semula.</string>
+    <string name="filePermissionDenied">Fail tidak boleh dimuat turun tanpa pemberian keizinan.</string>
+    <string name="pleaseTryAgain">Keizinan Diberikan, sila cuba semula.</string>
+    <string name="pickFile">Pilih Fail</string>
+    <string name="assignmentSubmissionUpload">Memuat naik serahan untuk %s</string>
+    <string name="assignmentSubmissionError">Serahan gagal untuk %s</string>
+    <string name="assignmentSubmissionComplete">Berjaya menyerahkan %s</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Ralat tidak dijangka berlaku.</string>
+    <string name="serverError">Ralat pelayan telah berlaku.</string>
+    <string name="unauthorized">Anda tidak dibenarkan mengakses ini. Sama ada anda tidak mempunyai keizinan atau belum mempunyai akses (sebagai contoh kursus anda belum bermula)</string>
+    <string name="fileNoLongerExists">Fail tersebut tidak lagi wujud.</string>
+    <string name="invalidAccessToken">Sesi anda telah tamat tempoh. Sila log masuk untuk memulakan sesi baharu.</string>
+    <string name="uploadingFromSourceFailed">Pemuatnaikan  fail daripada sumber ini tidak dapat dilengkapkan.</string>
+    <string name="errorGettingPhoto">Terdapat ralat untuk mendapatkan foto. Sila cuba semula.</string>
+    <string name="errorTextMissing">Tambah sedikit teks untuk menghantar mesej</string>
+
+    <string name="fileUploadNotSupported">Anda tidak boleh memuat naik fail ke tugasan yang dipilih.</string>
+    <string name="noCourseSelected">Sila pilih kursus</string>
+    <string name="selectCourse">Pilih kursus</string>
+    <string name="selectAssignment">Pilih tugasan</string>
+    <string name="loadingAssignments">Memuatkan tugasan...</string>
+    <string name="noAssignmentSelected">Sila pilih tugasan</string>
+    <string name="noAssignmentsWithFileUpload">Kursus ini tidak ada tugasan yang membenarkan muat naik fail.</string>
+    <string name="teacherNotAllowedFileSubmission">Sebagai guru dalam kursus ini, anda tidak boleh menyerahkan fail</string>
+    <string name="noFilesUploaded">Anda belum memilih apa-apa fail.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Satu atau lebih fail mempunyai sambungan fail yang tidak dibenarkan</string>
+    <string name="extensionNotAllowed">Jenis fail yang dipilih tidak dibenarkan.</string>
+    <string name="allowedExtensions">Sambungan dibenarkan:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Sila semak sambungan data anda dan cuba semula. </string>
+    <string name="noApps">Peranti anda tidak mempunyai apa-apa aplikasi dipasang yang boleh menangani fail ini.</string>
+    <string name="noAppsShort">Tidak dapat dibuka</string>
+    <string name="unexpectedErrorOpeningFile">Ralat tidak dijangka berlaku semasa cuba membuka fail.</string>
+    <string name="unexpectedErrorDownloadingFile">Ralat tidak dijangka berlaku semasa cuba memuat turun fail.</string>
+
+    <string name="done">Siap</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Untuk menggunakan ciri ini, keizinan mesti diberikan terlebih dahulu.</string>
+    <string name="noConnection">Tiada Sambungan</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">Kursus &amp; dan kumpulan kegemaran anda akan ditunjukkan di sini.</string>
+    <string name="addCoursesGroups">Tambah Kursus/Kumpulan</string>
+    <string name="noDiscussions">Tiada Perbincangan</string>
+    <string name="noDiscussionsSubtext">Mulakan perbualan dengan orang lain.</string>
+    <string name="noDiscussionsTeacher">Mulakan perbualan dengan pelajar anda.</string>
+    <string name="nothingUnread">Peti Masuk Kosong!</string>
+    <string name="nothingUnreadSubtext">Anda telah mengetahui semua maklumat terkini!</string>
+    <string name="nothingStarred">Tiada Mesej Dibintangkan</string>
+    <string name="nothingStarredSubtext">Simpan mesej penting dalam seksyen ini dengan mengetik bintang dalam setiap mesej.</string>
+    <string name="nothingSent">Tiada Apa-apa Telah Dihantar</string>
+    <string name="nothingSentSubtext">Anda belum menghantar apa-apa mesej.</string>
+    <string name="nothingArchived">Tiada Apa-apa Telah Diarkibkan</string>
+    <string name="nothingArchivedSubtext">Anda belum mengarkibkan apa-apa mesej.</string>
+    <string name="noQuizzes">Tiada Kuiz</string>
+    <string name="noQuizzesSubtext">Maaf, belum ada kuiz yang wujud.</string>
+    <string name="noQuizzesTeacher">Tiada kuiz yang diterbitkan untuk dipaparkan.</string>
+    <string name="noAnnouncements">Tiada Pengumuman</string>
+    <string name="noAnnouncementsSubtext">Belum ada apa-apa diumumkan.</string>
+    <string name="noCourses">Tiada Kursus</string>
+    <string name="noCoursesSubtext">Nampaknya tidak terdapat apa-apa kursus yang dikaitkan dengan akaun ini. Lawati laman web untuk mencipta kursus hari ini.</string>
+    <string name="noAssignments">Tiada Tugasan</string>
+    <string name="noAssignmentsSubtext">Nampaknya tugasan belum dicipta dalam ruang ini. Masa untuk keluar dan meneroka.</string>
+    <string name="noAssignmentsTeacher">Nampaknya belum ada tugasan diterbitkan.</string>
+    <string name="noFiles">Tiada Fail</string>
+    <string name="noFilesForAssignment">Nampaknya tiada fail untuk serahan ini</string>
+    <string name="noFilesSubtext">Tiada fail yang berkaitan dengan akaun ini.</string>
+    <string name="emptyFolder">Folder ini kosong</string>
+    <string name="notSupported">Tidak Disokong</string>
+    <string name="noEvents">Tiada Acara Hari Ini!</string>
+    <string name="noEventsSubtext">Nampaknya ini hari yang baik untuk berehat dan bersantai.</string>
+    <string name="noSubmission">Tiada Serahan</string>
+    <string name="noSubmissionTeacher">Pelajar ini belum ada serahan.</string>
+    <string name="locked">Berkunci</string>
+    <string name="lockedSubtext">Tugasan ini berkunci hingga %1$s pada %2$s.</string>
+    <string name="chooseFile">Pilih Fail</string>
+    <string name="chooseFileSubtext">Kepilkan fail pada serahan anda dengan mengetik pilihan di bawah.</string>
+    <string name="chooseFileForUploadSubtext">Pilih fail untuk dimuat naik dengan mengetik pilihan di bawah</string>
+    <string name="noNotifications">Tiada Pemberitahuan</string>
+    <string name="noNotificationsSubtext">Belum ada apa-apa untuk diberitahu.</string>
+    <string name="noTodos">Bagus!</string>
+    <string name="noTodosSubtext">Senarai untuk dilakukan anda kosong. Masa untuk berehat.</string>
+    <string name="noSyllabus">Tiada Silibus</string>
+    <string name="noSyllabusSubtext">Silibus belum dicipta.</string>
+    <string name="noBookmarks">Tiada Penanda</string>
+    <string name="noBookmarksSubtext">Penanda ialah pintasan untuk mana-mana skrin dalam apl. Tambah penanda pada skrin yang ingin anda tandakan.</string>
+    <string name="noModules">Tiada Modul</string>
+    <string name="noModulesSubtext">Nampaknya belum ada modul diciptakan.</string>
+    <string name="noPages">Tiada Halaman</string>
+    <string name="noPagesSubtext">Nampaknya belum ada halaman diciptakan.</string>
+    <string name="modulesLockedSubtext">Modul telah dinyahdayakan untuk kursus ini.</string>
+    <string name="modulesLocked">Sesuatu Tidak Kena</string>
+
+    <!--General-->
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+
+    <string name="inbox_all">Peti masuk</string>
+    <string name="inbox_unread">Belum dibaca</string>
+    <string name="inbox_starred">Dibintangkan</string>
+    <string name="inbox_sent">Telah dihantar</string>
+    <string name="inbox_archived">Diarkibkan</string>
+
+    <string name="forbidden">Balasan hanya kelihatan kepada mereka yang telah menyiarkan sekurang-kurangnya satu balasan.</string>
+
+    <string name="like">Like</string>
+    <string name="likes">Like</string>
+    <string name="lockedAssignmentNotModule">Tugasan ini berkunci.</string>
+    <string name="deletedEntryNoChildren">Masukan perbincangan yang dipadamkan ini tidak ada apa-apa balasan.</string>
+    <string name="deleted">Telah Dipadamkan</string>
+    <string name="deleted_by">[Dipadam oleh %1$s]</string>
+    <string name="lockedDiscussionDesc">Perbincangan ini adalah sebahagian daripada modul %s dan belum dinyahkunci.</string>
+    <string name="gradedDiscussion">Perbincangan Digredkan</string>
+    <string name="pointsPossible">Mata Mungkin</string>
+    <string name="sideCommentEntry">Dalam perbincangan jenis ini, anda tidak boleh memberikan komen pada mana-mana masukan pada peringkat ini.</string>
+
+    <string name="accessibility_overflow">Limpahan</string>
+
+    <string name="discussion_response">Komen</string>
+    <string name="discussion_responses">Komen</string>
+    <string name="discussion_unread">Belum dibaca</string>
+    <string name="discussion_reply">Balas</string>
+    <string name="close">Tutup</string>
+
+    <string name="noInternetConnectionTitle">Tiada Sambungan Internet</string>
+    <string name="noInternetConnectionMessage">Tindakan ini memerlukan sambungan Internet</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
+    <string name="formattedAvatarAction">Lihat butiran pengguna untuk %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Bagaimana keadaan kita sekarang?</string>
+    <string name="utils_rateUs">Berapakah nilai yang akan anda berikan kepada kami?</string>
+    <string name="utils_doBetter">Apakah yang boleh kita tambah baik?</string>
+    <string name="utils_sendFeedback">Hantar Maklum Balas</string>
+    <string name="utils_suggestions">Cadangan untuk Android</string>
+    <string name="utils_domain">Domain</string>
+    <string name="utils_versionNum">Versi:</string>
+    <string name="utils_userId">ID Pengguna</string>
+    <string name="utils_email">E-mel</string>
+    <string name="utils_dontShowAgain">Jangan tunjuk lagi</string>
+    <string name="utils_installDate">Tarikh Pemasangan:</string>
+    <string name="utils_device">Peranti</string>
+    <string name="utils_osVersion">Versi OS</string>
+    <string name="loading">Memuatkan</string>
+    <string name="save">Simpan</string>
+    <string name="cropInstructions">Cubit dan seret untuk melaraskan imej.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s Balasan</item>
+        <item quantity="other">%s Balasan</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">Balasan ini dipadamkan %s</string>
+    <string name="utils_discussionsUnknownAuthor">Pengarang Tidak Diketahui</string>
+    <string name="utils_discussionsReply">Balas</string>
+    <string name="utils_discussionsEdit">Edit</string>
+    <string name="utils_discussionsDeleteWarning">Adakah anda pasti anda mahu memadamkan balasan ini?</string>
+    <string name="utils_availableToLabel">Tersedia untuk:</string>
+    <string name="utils_availableFromLabel">Tersedia dari:</string>
+    <string name="utils_dueDateHeaderLabel">Cukup tempoh</string>
+    <string name="utils_dueLabel">Cukup tempoh:</string>
+    <string name="utils_delete">Padam</string>
+    <string name="utils_dueDateAtTime" formatted="false">Cukup tempoh %1s pada %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">Ketersediaan:</string>
+    <string name="utils_pinnedIcon">Ikon untuk perbincangan yang dipinkan</string>
+    <string name="utils_pinDiscussion">Pinkan Perbincangan </string>
+    <string name="utils_unpinDiscussion">Nyahpin Perbincangan </string>
+    <string name="utils_discussionPinned">Perbincangan Dipinkan</string>
+    <string name="utils_pinnedDiscussions">Dipinkan</string>
+    <string name="utils_discussionUnpinned">Perbincangan</string>
+    <string name="utils_emptyDiscussions">Tiada perbincangan untuk ditunjukkan dalam seksyen ini.</string>
+    <string name="utils_description">Penerangan</string>
+    <string name="utils_allowThreadedReplies">Benarkan balasan berbebenang</string>
+    <string name="utils_usersMustPost">Pelajar mesti membuat siaran sebelum melihat balasan</string>
+    <string name="utils_discussionsClosed">Ditutup untuk Komen</string>
+    <string name="utils_discussionsOpen">Buka untuk Komen</string>
+    <string name="utils_discussionsPin">Pinkan</string>
+    <string name="utils_discussionsUnpin">Nyahpin</string>
+    <string name="utils_discussionsOptions">Pilihan</string>
+    <string name="utils_discussionsDeleteTitle">Padam Perbincangan?</string>
+    <string name="utils_discussionsDelete">Padam Perbincangan</string>
+    <string name="utils_discussionsDeleteMessage">Ini akan memadamkan seluruh perbincangan dan bebenang.</string>
+    <string name="utils_discussionSentSuccess">Balasan perbincangan berjaya.</string>
+    <string name="utils_discussionUpdateSuccess">Pengeditan perbincangan berjaya.</string>
+    <string name="utils_discussionSentEmpty">Balasan perbincangan tidak boleh kosong.</string>
+    <string name="utils_discussionSentFailure">Balasan perbincangan ini tidak dapat dihantar pada masa ini.</string>
+    <string name="utils_createDiscussion">Perbincangan Baharu</string>
+    <string name="utils_editDiscussion">Edit Perbincangan</string>
+    <string name="utils_discussionDetails">Butiran Perbincangan</string>
+    <string name="utils_discussionSuccessfullyUpdated">Perbincangan berjaya dikemas kini.</string>
+    <string name="utils_saving">Menyimpan</string>
+    <string name="utils_discussionSuccessfullyCreated">Perbincangan berjaya dicipta!</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">Kepilan tidak boleh ditambah pada perbincangan ini. Sila semak kuota fail anda dan cuba semula.</string>
+    <string name="utils_noTitle">Tiada Tajuk</string>
+    <string name="utils_discussionsReplies_Title">Balasan</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">Lebih banyak pilihan</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">Siaran terakhir %s</string>
+    <string name="utils_postedOnDate">Disiarkan pada %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Balasan hanya kelihatan kepada mereka yang telah menyiarkan sekurang-kurangnya satu balasan.</string>
+    <string name="utils_createAnnouncementDelayPosting">Tunda Penyiaran</string>
+    <string name="utils_postAt">Siarkan Pada</string>
+    <string name="utils_postDate">Tarikh Siar</string>
+    <string name="utils_postTime">Masa Siar</string>
+    <string name="utils_editAnnouncementTitle">Edit Pengumuman</string>
+    <string name="utils_createAnnouncementTitle">Pengumuman Baharu</string>
+    <string name="utils_announcementDetails">Butiran Pengumuman</string>
+    <string name="utils_createAnnouncementNoDescription">Penerangan diperlukan</string>
+    <string name="utils_errorSavingAnnouncement">Ralat berlaku semasa cuba menyimpan pengumuman ini. Cuba semula.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Pengumuman berjaya dikemas kini.</string>
+    <string name="utils_announcementSuccessfullyCreated">Pengumuman berjaya dicipta.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s Belum dibaca</item>
+        <item quantity="other">%s Belum dibaca</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">Tambah Lampiran</item>
+        <item quantity="one">Tambah Lampiran</item>
+        <item quantity="other">Tambah Lampiran</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">Nyahkunci tarikh tidak boleh sebelum tarikh siap</string>
+    <string name="utils_lockBeforeDueDateError">Tarikh kunci tidak boleh sebelum tarikh siap</string>
+    <string name="utils_lockAfterUnlockError">Tarikh kunci tidak boleh sebelum tarikh nyahkunci</string>
+    <string name="utils_assigneeBlankError">Penerima tugasan tidak boleh kosong</string>
+    <string name="utils_assignTo">Tetapkan Kepada:</string>
+    <string name="utils_availableFrom">Tersedia Dari</string>
+    <string name="utils_availableTo">Tersedia Untuk</string>
+    <string name="utils_availableFromDate">Tersedia Dari Tarikh</string>
+    <string name="utils_availableFromTime">Tersedia Dari Masa</string>
+    <string name="utils_availableToDate">Tersedia Hingga Tarikh</string>
+    <string name="utils_availableToTime">Tersedia Hingga Masa</string>
+    <string name="utils_dueDate">Tarikh Siap</string>
+    <string name="utils_dueTime">Masa Siap</string>
+    <string name="utils_addNew">Tambah Baharu</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">Muat Turun Kepilan</string>
+    <string name="utils_removeAttachment">Alih keluar kepilan</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">Teruskan tanpa menyimpan?</string>
+    <string name="utils_continueWithoutSavingMessage">Adakah anda pasti anda ingin meneruskan tanpa menyimpan?</string>
+    <string name="utils_continueUnsaved">Teruskan</string>
+    <string name="utils_exitWithoutSavingTitle">Keluar tanpa menyimpan?</string>
+    <string name="utils_exitWithoutSavingMessage">Adakah anda pasti anda ingin keluar tanpa menyimpan?</string>
+    <string name="utils_exitUnsaved">Keluar</string>
+    <string name="utils_cancel">Batal</string>
+
+    <string name="utils_contentDescriptionFiles">Ikon fail</string>
+    <string name="utils_turn_in">Serahkan</string>
+    <string name="utils_upload">Muat naik</string>
+    <string name="utils_okay">OK</string>
+    <string name="utils_loadingFilesIndeterminate">Memuat Naik Fail&#8230;</string>
+    <string name="utils_allowedExtensions">Sambungan dibenarkan:&#160;</string>
+    <string name="utils_extensionNotAllowed">Jenis fail yang dipilih tidak dibenarkan.</string>
+    <string name="utils_errorUploadingFile">Ralat berlaku semasa memuat naik fail anda. Sila cuba semula.</string>
+    <string name="utils_filesUploadedSuccessfully">Fail berjaya dimuat naik.</string>
+    <string name="utils_uploadingFiles">Memuat naik fail&#8230;</string>
+    <string name="utils_uploadingFile">Memuat naik fail&#8230;</string>
+    <string name="utils_noApps">Peranti anda tidak mempunyai apa-apa aplikasi dipasang yang boleh menangani fail ini.</string>
+    <string name="utils_errorGettingPhoto">Terdapat ralat untuk mendapatkan foto. Sila cuba semula.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">Satu atau lebih fail mempunyai sambungan fail yang tidak dibenarkan</string>
+    <string name="utils_fileUploadNotSupported">Anda tidak boleh memuat naik fail ke tugasan yang dipilih.</string>
+    <string name="utils_noFilesUploaded">Anda belum memilih apa-apa fail.</string>
+    <string name="utils_attachments">Lampiran</string>
+    <string name="utils_uploadTo">Muat Naik Ke </string>
+    <string name="utils_uploadToCanvas">Muat Naik ke Canvas</string>
+    <string name="utils_uploadMyFiles">Fail Saya</string>
+    <string name="utils_uploadCourseFiles">Fail Kursus</string>
+    <string name="utils_uploadGroupFiles">Fail Kumpulan</string>
+    <string name="utils_uploadToSubmissionComment">Muat Naik ke Komen Serahan</string>
+    <string name="utils_attachFile">Kepilkan fail</string>
+    <string name="utils_with">dengan</string>
+
+    <string name="notificationPrimaryInboxTitle">Pemberitahuan Canvas</string>
+    <string name="notificationChannelNamePrimary">Pemberitahuan Canvas Umum</string>
+    <string name="notificationChannelDescriptionPrimary">Konfigurasi pemberitahuan yang selanjutnya boleh dibuat dalam seksyen Keutamaan Pemberitahuan Canvas.</string>
+    <plurals name="notificationGroupContent">
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
+        <item quantity="other">%d pemberitahuan baharu</item>
+    </plurals>
+
+    <string name="copyLinkAddress">Salin pautan alamat</string>
+    <string name="copyLink">Salin Pautan</string>
+    <string name="linkCopied">Pautan disalin</string>
+    <string name="link">Pautan</string>
+    <string name="fileExists">Fail Wujud</string>
+    <string name="replace">Gantikan</string>
+    <string name="shareLink">Kongsi pautan</string>
+
+    <string name="utils_launchExternalTool">Lancarkan Alat Luar</string>
+    <string name="utils_externalToolTitle">Alat Luar</string>
+    <string name="utils_placeholderTitle">Alat Luar</string>
+    <string name="utils_placeholderDescription">Lawati akaun web Canvas anda untuk mengedit alat luar ini.</string>
+    <string name="utils_unableToViewInBrowser">Kami tidak dapat mencari apl luar untuk melihat alat LTI ini.</string>
+
+    <string name="utils_unsupportedFileMessage">Mesej ini tidak boleh dipaparkan. Gunakan butang di bawah untuk membuka fail dengan apl lain pada peranti anda.</string>
+    <string name="utils_openWithAnotherApp">Buka dengan...</string>
+    <string name="utils_couldNotPlayFormat">Format media ini tidak disokong</string>
+    <string name="utils_fullscreen">skrin penuh</string>
+
+    <string name="utils_dataUsageWarningTitle">Amaran Penggunaan Data</string>
+    <string name="utils_dataUsageWarningMessage">Tindakan ini mungkin menggunakan amaun data yang besar, berkemungkinan dikenakan caj liputan. Adakah anda ingin meneruskan?</string>
+    <string name="utils_doNotShowMessageAgain">Jangan tunjuk mesej ini lagi</string>
+
+    <string name="utils_no_data_connection">Sila semak sambungan data anda dan cuba semula.</string>
+    <string name="utils_playMedia">Mainkan media</string>
+    <string name="utils_tryAgain">Cuba semula</string>
+    <string name="image_uploading">Memuat Naik Imej...</string>
+    <string name="image_upload_error">Ralat Muat Naik Imej</string>
+    <string name="retry">Cuba semula</string>
+    <string name="search">Cari</string>
+    <string name="searchAssignmentsHint">Cari Tugasan</string>
+    <string name="searchAnnouncementsHint">Cari Pengumuman</string>
+    <string name="searchDiscussionsHint">Cari Perbincangan</string>
+    <string name="searchPagesHint">Cari Halaman</string>
+    <string name="searchQuizzesHint">Cari Kuiz</string>
+    <string name="noItemsMatchingQuery">Tiada item sepadan \"%s\"</string>
+
+    <string name="selected">Dipilih</string>
+
+    <string name="notificationChannelNameInAppUpdate">Pemberitahuan kemas kini aplikasi</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Pemberitahuan Canvas untuk kemas kini dalam apl.</string>
+    <string name="appUpdateReadyTitle">Apl sedia untuk dikemas kini</string>
+    <string name="appUpdateReadyDescription">Mulakan semula apl untuk memasang versi baharu</string>
+    <string name="nothing_planned_yet">Belum ada apa-apa dirancang</string>
+    <string name="schedule_tag_graded">Digredkan</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d Balasan</item>
+        <item quantity="other">%d Balasan></item>
+    </plurals>
+    <string name="schedule_tag_feedback">Maklum balas</string>
+    <string name="schedule_tag_late">Lewat</string>
+    <string name="schedule_tag_redo">Buat semula</string>
+    <string name="schedule_tag_excused">Dimaafkan</string>
+    <string name="tomorrow">Esok</string>
+    <string name="yesterday">Semalam</string>
+    <string name="schedule_calendar_event_due_text">Pada %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s kepada %2$s</string>
+    <string name="schedule_todo_due_text">Untuk Dilakukan: %s</string>
+    <string name="schedule_due_text">Cukup tempoh: %s</string>
+    <string name="show_missing_items_title">Tunjukkan %d item yang tiada</string>
+    <string name="hide_missing_items_title">Sembunyikan %d item yang tiada</string>
+    <string name="schedule_error_message">Tidak dapat mengambil jadual anda</string>
+    <string name="schedule_todo_title">Untuk Dilakukan</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s mata</item>
+        <item quantity="one">%s mata</item>
+        <item quantity="other">%s mata</item>
+    </plurals>
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f mata</item>
+        <item quantity="one">%.1f mata</item>
+        <item quantity="other">%.1f mata</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">Semua Hari</string>
+    <string name="schedule_tag_missing">Tiada</string>
+    <string name="previous_week">Minggu Sebelumnya</string>
+    <string name="next_week">Minggu Seterusnya</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Kursus %s</string>
+    <string name="a11y_announcement">Pengumuman</string>
+    <string name="a11y_discussion_topic">Perbincangan</string>
+    <string name="a11y_calendar_event">Acara kalendar</string>
+    <string name="a11y_assignment">Tugasan</string>
+    <string name="a11y_planner_note">Nota perancang</string>
+    <string name="a11y_quiz">Kuiz</string>
+    <string name="a11y_todo">Untuk Dilakukan</string>
+    <string name="a11y_page">Halaman</string>
+    <string name="a11y_marked_as_done">Ditandakan sebagai siap</string>
+    <string name="a11y_not_marked_as_done">Tidak ditandakan sebagai siap</string>
+    <string name="error_loading_course_details">Op! Ralat berlaku semasa memuatkan butiran kursus.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s ditandakan sebagai tidak siap</string>
+    <string name="a11y_markAsDoneWithName">%s Tanda sebagai siap</string>
+    <string name="a11y_markAsNotDoneWithName">%s Tanda sebagai tidak siap</string>
+
+</resources>

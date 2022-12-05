@@ -1,0 +1,40 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="inputText">Masukkan Teks</string>
+    <string name="cancel">Batal</string>
+    <string name="comment">Komen</string>
+    <string name="skip">Langkau</string>
+    <string name="comments">Komen</string>
+    <string name="error_loading_submission">Terdapat masalah untuk memuatkan serahan ini.</string>
+    <string name="retry">Cuba semula</string>
+    <string name="annotationErrorOccurred">Ralat yang tidak dijangka berlaku semasa memuatkan anotasi.</string>
+    <string name="annotationError">Ralat Anotasi</string>
+    <string name="annotationDialogMessage">Anotasi telah dipadamkan daripada sumber yang lain.</string>
+    <string name="errorSendingMessage">Mesej ini tidak boleh dihantar. Ketik untuk mencuba semula.</string>
+    <string name="addAnnotationComment">Tambah Komen</string>
+    <string name="editComment">Edit Komen</string>
+    <string name="deleteComment">Padam Komen</string>
+    <string name="deleteAnnotation">Padam Anotasi</string>
+    <string name="deleteCommentConfirmation">Adakah anda pasti anda mahu memadamkan komen ini?</string>
+    <string name="deleteHeadCommentConfirmation">Apabila memadamkan komen ini, semua komen yang berkaitan dengan anotasi ini akan turut terpadam. Adakah anda pasti anda ingin melakukan ini?</string>
+    <string name="sendingSimple">Menghantar</string>
+    <string name="pspdf__annotation_type_stamp">Warna Nota</string>
+    <string name="removedComment">Dialih keluar %1$s oleh %2$s</string>
+
+</resources>

@@ -1031,6 +1031,7 @@
     <string name="tab_student_view">受講者ビュー</string>
 
 
+    <string name="rateOnThePlayStore">Play Store で評価する</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">選択した頭部：%s</string>
     <string name="content_description_chosen_body">選択したボディ：%s</string>
@@ -1219,6 +1220,7 @@
     <string name="submissionDraftAvailableTitle">ドラフト版</string>
     <string name="errorLoadingSubmission">提出物読み込み中にエラーが発生しました</string>
     <string name="loadFullContent">タップしてすべてのコンテンツを表示する</string>
+    <string name="openLtiInExternalApp">タップして外部アプリで開く</string>
     <string name="dashboardTabImportantDates">重要な日付</string>
     <string name="importantDatesEmptyTitle">重要な日付なし</string>
     <string name="important_dates">重要な日付</string>
@@ -1260,6 +1262,10 @@
     <plurals name="a11y_inboxUnreadCount">
         <item quantity="other">%sの未読メッセージ</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="other">%s通の未読の通知</item>
+    </plurals>
+
     <string name="noAnnotationSelected">注釈が選択されていません</string>
     <string name="emailNotifications">メール通知</string>
     <string name="emailNotificationsImmediately">ただちに</string>
@@ -1267,4 +1273,32 @@
     <string name="emailNotificationsWeekly">毎週</string>
     <string name="emailNotificationsNever">今後実行しない</string>
     <string name="selectFrequency">頻度を選択する</string>
+    <string name="a11y_closeProgress">進捗状況ダイアログを閉じる</string>
+    <string name="fileUploadProgress">%1$s / %2$s</string>
+    <string name="fileUploadProgressSubtitle">ファイルアップロード中</string>
+    <string name="submissionProgressSubtitle">提出物を\"%s\"にアップロード中</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">提出物をアップロードしています</string>
+    <string name="dashboardNotificationUploadingFilesTitle">ファイルアップロード中</string>
+    <string name="cancelSubmissionDialogTitle">提出をキャンセル</string>
+    <string name="cancelSubmissionDialogMessage">これにより、送信がキャンセルおよび削除されます。</string>
+    <string name="fileUploadError">ファイルのアップロードに失敗しました</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Canvas に%sをアップロードする。</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">私のファイルにアップロードする</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">課題を提出</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">コースを選択する</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">課題を洗濯</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s、%2$s</string>
+    <string name="cancelFileUploadTitle">アップロードをキャンセルしますか？</string>
+    <string name="cancelFileUploadMessage">これにより、アップロードがキャンセルされます。</string>
+    <string name="menuTitleFilterAssignments">課題を絞り込む</string>
+    <string name="filterAssignmentDialogTitle">課題を絞り込む</string>
+    <string name="filterAssignmentsDialogCancel">キャンセル</string>
+    <string name="filterAssignmentAll">すべて</string>
+    <string name="filterAssignmentLate">提出遅れ</string>
+    <string name="filterAssignmentMissing">提出なし</string>
+    <string name="filterAssignmentGraded">採点済み</string>
+    <string name="filterAssignmentUpcoming">今後の</string>
+    <string name="createdByStudentView">受講者ビューで作成</string>
+    <string name="discussionErrorToast">エラーが発生しました。トピックが使用できなくなった可能性があります。</string>
+    <string name="cameraPermissionPermanentlyDenied">カメラの権限が永久的に拒否されました。アプリの設定から許可してください。</string>
 </resources>

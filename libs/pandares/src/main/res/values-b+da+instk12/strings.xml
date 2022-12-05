@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Visning for elever</string>
 
 
+    <string name="rateOnThePlayStore">Vurder i Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valgt hoved: %s</string>
     <string name="content_description_chosen_body">Valgt krop: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Udkast tilgængeligt</string>
     <string name="errorLoadingSubmission">Der opstod en fejl under indlæsning af aflevering</string>
     <string name="loadFullContent">Tryk for at se alt indholdet</string>
+    <string name="openLtiInExternalApp">Tryk for at åbne i ekstern app</string>
     <string name="dashboardTabImportantDates">Vigtige datoer</string>
     <string name="importantDatesEmptyTitle">Ingen vigtige datoer</string>
     <string name="important_dates">Vigtige datoer</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s ulæst besked</item>
         <item quantity="other">%s ulæste beskeder</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s ulæst meddelelse</item>
+        <item quantity="other">%s ulæste meddelelser</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Der er ikke valgt nogen anmærkning</string>
     <string name="emailNotifications">E-mail-meddelelser</string>
     <string name="emailNotificationsImmediately">Straks</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Ugentlig</string>
     <string name="emailNotificationsNever">Aldrig</string>
     <string name="selectFrequency">Vælg frekvens</string>
+    <string name="a11y_closeProgress">Luk statusdialog</string>
+    <string name="fileUploadProgress">%1$s af %2$s</string>
+    <string name="fileUploadProgressSubtitle">Uploader til filer</string>
+    <string name="submissionProgressSubtitle">Uploader indsendelse til \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Uploader aflevering</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Uploader filer</string>
+    <string name="cancelSubmissionDialogTitle">Annuller aflevering</string>
+    <string name="cancelSubmissionDialogMessage">Dette annullerer og sletter din aflevering.</string>
+    <string name="fileUploadError">Filupload mislykkedes</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Upload til Canvas for %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Uploader til Mine filer</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Aflever opgave</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Vælg et fag</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Vælg en opgave</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Annuller upload?</string>
+    <string name="cancelFileUploadMessage">Dette annullerer din upload.</string>
+    <string name="menuTitleFilterAssignments">Filtrer opgaver</string>
+    <string name="filterAssignmentDialogTitle">Filtrer opgaver</string>
+    <string name="filterAssignmentsDialogCancel">Annullér</string>
+    <string name="filterAssignmentAll">Alle</string>
+    <string name="filterAssignmentLate">Sen</string>
+    <string name="filterAssignmentMissing">Mangler</string>
+    <string name="filterAssignmentGraded">Bedømt</string>
+    <string name="filterAssignmentUpcoming">Kommende</string>
+    <string name="createdByStudentView">Skabt i visning for elever</string>
+    <string name="discussionErrorToast">Fejl opstod. Emnet er muligvis ikke længere tilgængeligt.</string>
+    <string name="cameraPermissionPermanentlyDenied">Kameratilladelse blev permanent nægtet. Gå til appindstillinger for at tillade det.</string>
 </resources>

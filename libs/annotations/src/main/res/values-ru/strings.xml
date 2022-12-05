@@ -38,6 +38,6 @@
     <string name="pspdf__annotation_type_stamp">Отметить цвет</string>
 
     <string name="removedComment">%1$s удален %2$s</string>
-    <string name="pspdf__stamp_standard_section"></string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

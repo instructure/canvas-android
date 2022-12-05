@@ -485,4 +485,5 @@
     <string name="a11y_schedule_marked_as_not_done">%s merkt sem ólokið</string>
     <string name="a11y_markAsDoneWithName">%s Merkja sem lokið</string>
     <string name="a11y_markAsNotDoneWithName">%s Merkja sem ólokið</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 </resources>

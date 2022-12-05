@@ -128,4 +128,5 @@
     <string name="stopActingAsMessage">Lopetat toimimasta käyttäjänä %s ja palaat tilillesi.</string>
     <string name="weMadeChanges">Olemme tehneet muutamia muutoksia.</string>
     <string name="whatsNewText">Mitä uutta</string>
+    <string name="findAnotherSchool">Etsi muu koulu</string>
 </resources>

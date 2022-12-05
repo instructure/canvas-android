@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Studentvisning</string>
 
 
+    <string name="rateOnThePlayStore">Vurder på Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valgt hode: %s</string>
     <string name="content_description_chosen_body">Valgt kropp: %s</string>
@@ -1234,6 +1235,7 @@
     <string name="submissionDraftAvailableTitle">Utkast tilgjengelig</string>
     <string name="errorLoadingSubmission">Det oppsto en feil under lasting av innleveringer</string>
     <string name="loadFullContent">Klikk for å se hele innholdet</string>
+    <string name="openLtiInExternalApp">Trykk for å åpne i ekstern app</string>
     <string name="dashboardTabImportantDates">Viktige datoer</string>
     <string name="importantDatesEmptyTitle">Ingen viktige datoer</string>
     <string name="important_dates">Viktige datoer</string>
@@ -1276,6 +1278,11 @@
         <item quantity="one">%s uleste melding</item>
         <item quantity="other">%s uleste meldinger</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s ulest varsling</item>
+        <item quantity="other">%s uleste varslinger</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Ingen merknad valgt</string>
     <string name="emailNotifications">E-post varslinger</string>
     <string name="emailNotificationsImmediately">Umiddelbart</string>
@@ -1283,4 +1290,32 @@
     <string name="emailNotificationsWeekly">Ukentlig</string>
     <string name="emailNotificationsNever">Aldri</string>
     <string name="selectFrequency">Velg frekvens</string>
+    <string name="a11y_closeProgress">Lukk fremgangsdialog</string>
+    <string name="fileUploadProgress">%1$s av %2$s</string>
+    <string name="fileUploadProgressSubtitle">Last opp til Filer</string>
+    <string name="submissionProgressSubtitle">Laster opp innlevering til \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Laster opp innlevering</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Laste opp filer</string>
+    <string name="cancelSubmissionDialogTitle">Avbryt innlevering</string>
+    <string name="cancelSubmissionDialogMessage">Dette avbryter og sletter innleveringen din.</string>
+    <string name="fileUploadError">Filopplasting mislyktes</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Last opp til Canvas for %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Last opp til Mine filer</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Lever oppgave</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Velg et emne</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Velg en oppgave</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Avbryt opplasting?</string>
+    <string name="cancelFileUploadMessage">Dette vil avbryte opplastingen din.</string>
+    <string name="menuTitleFilterAssignments">Filtrer oppgaver</string>
+    <string name="filterAssignmentDialogTitle">Filtrer Oppgaver</string>
+    <string name="filterAssignmentsDialogCancel">Avbryt</string>
+    <string name="filterAssignmentAll">Alle</string>
+    <string name="filterAssignmentLate">Sent</string>
+    <string name="filterAssignmentMissing">Mangler</string>
+    <string name="filterAssignmentGraded">Vurdert</string>
+    <string name="filterAssignmentUpcoming">Kommende</string>
+    <string name="createdByStudentView">Laget av Studentvisning</string>
+    <string name="discussionErrorToast">Det oppsto en feil. Temaet er kanskje ikke tilgjengelig lenger.</string>
+    <string name="cameraPermissionPermanentlyDenied">Kameratillatelse ble midlertidig nektet. Gå til appinnstillinger for å tillate det.</string>
 </resources>

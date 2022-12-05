@@ -128,4 +128,5 @@
     <string name="stopActingAsMessage">Usted dejará de actuar en nombre de %s y volverá a su cuenta.</string>
     <string name="weMadeChanges">Hemos realizado algunos cambios.</string>
     <string name="whatsNewText">Ver las novedades</string>
+    <string name="findAnotherSchool">Buscar otra escuela</string>
 </resources>

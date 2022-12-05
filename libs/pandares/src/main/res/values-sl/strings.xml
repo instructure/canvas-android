@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Pogled študenta</string>
 
 
+    <string name="rateOnThePlayStore">Oceni v Trgovini Play</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Izbrana glava: %s</string>
     <string name="content_description_chosen_body">Izbrano telo: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Na voljo je osnutek</string>
     <string name="errorLoadingSubmission">Med nalaganjem oddaje je prišlo do napake</string>
     <string name="loadFullContent">Tapnite za ogled celotne vsebine</string>
+    <string name="openLtiInExternalApp">Tapnite za odpiranje v zunanji aplikaciji</string>
     <string name="dashboardTabImportantDates">Pomembni datumi</string>
     <string name="importantDatesEmptyTitle">Ni pomembnih datumov</string>
     <string name="important_dates">Pomembni datumi</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s neprebrano sporočilo</item>
         <item quantity="other">%s neprebranih(-i/a) sporočil(-i/a)</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s neprebrano obvestilo</item>
+        <item quantity="other">%s neprebranih obvestil</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Izbrana ni nobena opomba</string>
     <string name="emailNotifications">E-poštno obveščanje</string>
     <string name="emailNotificationsImmediately">Takoj</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Tedensko</string>
     <string name="emailNotificationsNever">Nikoli</string>
     <string name="selectFrequency">Izberite pogostost</string>
+    <string name="a11y_closeProgress">Zapri pogovorno okno za napredovanje</string>
+    <string name="fileUploadProgress">%1$s od %2$s</string>
+    <string name="fileUploadProgressSubtitle">Nalagam v datoteke</string>
+    <string name="submissionProgressSubtitle">Nalagam oddajo v \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Nalaganje oddaje</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Nalaganje datotek</string>
+    <string name="cancelSubmissionDialogTitle">Prekliči oddajo</string>
+    <string name="cancelSubmissionDialogMessage">S tem boste preklicali in izbrisali oddajo.</string>
+    <string name="fileUploadError">Nalaganje datoteke ni uspelo</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Naloži v Canvas za %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Nalagam v Moje datoteke</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Oddaj nalogo</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Izberite predmet</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Izberite nalogo</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Želite preklicati nalaganje?</string>
+    <string name="cancelFileUploadMessage">S tem boste nalaganje preklicali.</string>
+    <string name="menuTitleFilterAssignments">Dodelitve filtrov</string>
+    <string name="filterAssignmentDialogTitle">Dodelitve filtrov</string>
+    <string name="filterAssignmentsDialogCancel">Prekliči</string>
+    <string name="filterAssignmentAll">Vse</string>
+    <string name="filterAssignmentLate">Zamuda</string>
+    <string name="filterAssignmentMissing">Manjkajoče</string>
+    <string name="filterAssignmentGraded">Ocenjeno</string>
+    <string name="filterAssignmentUpcoming">Prihodnje</string>
+    <string name="createdByStudentView">Ustvarjeno v pogledu študenta</string>
+    <string name="discussionErrorToast">Prišlo je napake. Tema morda ni več na voljo.</string>
+    <string name="cameraPermissionPermanentlyDenied">Dovoljenje za kamero je bilo trajno zavrnjeno. Pojdite v nastavitve aplikacije, da to omogočite.</string>
 </resources>
