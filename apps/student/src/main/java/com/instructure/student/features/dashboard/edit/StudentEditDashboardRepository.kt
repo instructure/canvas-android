@@ -40,9 +40,9 @@ class StudentEditDashboardRepository(
             courseManager.getCoursesByEnrollmentStateAsync("invited_or_pending", true)
         ).awaitAll()
 
-        val currentCourses = currentCoursesDeferred.dataOrThrow.filter { it.isStudent }
-        val pastCourses = pastCoursesDeferred.dataOrThrow.filter { it.isStudent }
-        val futureCourses = futureCoursesDeferred.dataOrThrow.filter { it.isStudent }
+        val currentCourses = currentCoursesDeferred.dataOrThrow
+        val pastCourses = pastCoursesDeferred.dataOrThrow
+        val futureCourses = futureCoursesDeferred.dataOrThrow
 
         return listOf(currentCourses, pastCourses, futureCourses)
     }
