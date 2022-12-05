@@ -46,7 +46,7 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
     }
 
     fun assertCourseNameDisplayed(courseName: String) {
-        onView(withId(R.id.importantLinksCourseName) + withText(courseName)).assertDisplayed()
+        onView(withId(R.id.importantLinksCourseName) + withText(courseName)).scrollTo().assertDisplayed()
     }
 
     fun assertStudentApplicationsHeaderDisplayed() {
