@@ -35,7 +35,7 @@ class ResourcesPage : BasePage(R.id.resourcesPage) {
     private val coursesRecyclerView by OnViewWithId(R.id.actionItemsRecyclerView)
 
     fun assertImportantLinksAndWebContentDisplayed(content: String) {
-        importantLinksTitle.assertDisplayed()
+        importantLinksTitle.scrollTo().assertDisplayed()
         Web.onWebView()
             .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "html"))
             .check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(content)))
