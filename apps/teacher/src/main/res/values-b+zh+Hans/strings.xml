@@ -703,6 +703,7 @@
     <string name="changeUser">更改用户</string>
     <string name="general">一般</string>
     <string name="sendFeedback">发送反馈</string>
+    <string name="rateOnTheAppStore">给应用商店评分</string>
     <string name="privacyPolicy">隐私政策</string>
     <string name="EULA">最终用户许可协议</string>
     <string name="termsOfUse">使用条款</string>
