@@ -61,6 +61,7 @@ abstract class TeacherTest : CanvasTest() {
     val editDashboardPage = EditDashboardPage()
     val settingsPage = SettingsPage()
     val legalPage = LegalPage()
+    val helpPage = HelpPage()
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val profileSettingsPage = ProfileSettingsPage()
     val editProfileSettingsPage = EditProfileSettingsPage()
