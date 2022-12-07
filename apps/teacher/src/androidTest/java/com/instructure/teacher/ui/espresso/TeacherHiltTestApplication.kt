@@ -16,8 +16,7 @@
 
 package com.instructure.teacher.ui.espresso
 
-import com.instructure.teacher.utils.BaseAppManager
 import dagger.hilt.android.testing.CustomTestApplication
 
-@CustomTestApplication(BaseAppManager::class)
+@CustomTestApplication(TestAppManager::class)
 interface TeacherHiltTestApplication
