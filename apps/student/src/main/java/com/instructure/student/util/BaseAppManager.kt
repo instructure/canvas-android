@@ -22,11 +22,13 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.canvasapi2.utils.*
+import com.heapanalytics.android.Heap
+import com.heapanalytics.android.config.Options
 import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
-import com.instructure.loginapi.login.tasks.LogoutTask
-import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
@@ -34,19 +36,13 @@ import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.service.StudentPageViewService
-import com.instructure.student.tasks.StudentLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 import com.zynksoftware.documentscanner.ui.DocumentScanner
-import dagger.hilt.EntryPoint
-import dagger.hilt.EntryPoints
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
-import javax.inject.Inject
 
 open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
 
@@ -92,6 +88,10 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
         PageViewUploadService.schedule(this, StudentPageViewService::class.java)
 
         initFlutterEngine()
+
+        val options = Options()
+        options.disableTracking()
+        Heap.init(this, BuildConfig.HEAP_APP_ID, options)
     }
 
     private fun initFlutterEngine() {

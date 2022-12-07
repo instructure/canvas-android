@@ -72,14 +72,35 @@
                     android:letterSpacing="0.1"
                     android:textAllCaps="true"
                     android:textColor="@color/login_teacherAppTheme"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    android:layout_marginBottom="36dp"/>
+
+                <Button
+                    android:id="@+id/openRecentSchool"
+                    style="@style/LoginButtonStyle.Filled"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:layout_marginHorizontal="48dp"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="T. Wilson University Really Long University That Takes More Than 3 Rows"/>
+
+                <Button
+                    android:id="@+id/findAnotherSchool"
+                    style="@style/LoginButtonStyle.Outline"
+                    android:layout_marginHorizontal="48dp"
+                    android:layout_marginBottom="32dp"
+                    android:text="@string/findAnotherSchool"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
 
                 <Button
                     android:id="@+id/findMySchool"
-                    style="@style/ButtonStyle"
-                    android:layout_width="240dp"
-                    android:layout_marginTop="36dp"
-                    android:text="@string/findMySchool"/>
+                    style="@style/LoginButtonStyle.Filled"
+                    android:layout_marginHorizontal="48dp"
+                    android:layout_marginBottom="36dp"
+                    android:text="@string/findMySchool" />
 
                 <LinearLayout
                     android:id="@+id/secondaryLoginContainer"

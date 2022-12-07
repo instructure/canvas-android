@@ -38,4 +38,5 @@
     <string name="pspdf__annotation_type_stamp">Barva opombe</string>
     <string name="removedComment">Odstranjeno %1$s, odstranil %2$s</string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

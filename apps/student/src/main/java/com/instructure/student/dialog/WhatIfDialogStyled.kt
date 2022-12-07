@@ -43,7 +43,7 @@ class WhatIfDialogStyled : DialogFragment() {
 
     private var callback: (Double?, Double) -> Unit by Delegates.notNull()
     private var assignment: Assignment by ParcelableArg()
-    private var courseColor: Int by IntArg()
+    private var textButtonColor: Int by IntArg()
 
     private var currentScoreView: AppCompatEditText? = null
 
@@ -78,9 +78,9 @@ class WhatIfDialogStyled : DialogFragment() {
 
         val dialog = builder.create()
         dialog.setOnShowListener {
-            if (courseColor != 0) {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(courseColor)
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(courseColor)
+            if (textButtonColor != 0) {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(textButtonColor)
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textButtonColor)
             }
         }
 
@@ -97,12 +97,12 @@ class WhatIfDialogStyled : DialogFragment() {
     }
 
     companion object {
-        fun show(fragmentManager: FragmentManager, assignment: Assignment, courseColor: Int, callback: (Double?, Double) -> Unit) {
+        fun show(fragmentManager: FragmentManager, assignment: Assignment, textButtonColor: Int, callback: (Double?, Double) -> Unit) {
             (fragmentManager.findFragmentByTag(WhatIfDialogStyled::class.java.simpleName) as? WhatIfDialogStyled)?.dismissAllowingStateLoss()
 
             WhatIfDialogStyled().apply {
                 this.assignment = assignment
-                this.courseColor = courseColor
+                this.textButtonColor = textButtonColor
                 this.callback = callback
             }.show(fragmentManager, WhatIfDialogStyled::class.java.simpleName)
         }

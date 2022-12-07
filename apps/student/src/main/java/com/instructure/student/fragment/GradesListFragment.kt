@@ -86,7 +86,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerAdapter = GradesListRecyclerAdapter(requireContext(), course, adapterToFragmentCallback, adapterToGradesCallback, gradingPeriodsCallback, object : WhatIfDialogStyled.WhatIfDialogCallback {
             override fun onClick(assignment: Assignment, position: Int) {
-                WhatIfDialogStyled.show(requireFragmentManager(), assignment, course.color) { whatIf, _ ->
+                WhatIfDialogStyled.show(requireFragmentManager(), assignment, course.textAndIconColor) { whatIf, _ ->
                     //Create dummy submission for what if grade
                     //check to see if grade is empty for reset
                     if (whatIf == null) {

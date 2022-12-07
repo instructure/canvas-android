@@ -46,7 +46,7 @@ class AddMessagePageTest: TeacherTest() {
     @Test
     fun displayPageObjectsNewMessage() {
         logIn()
-        coursesListPage.clickInboxTab()
+        dashboardPage.clickInboxTab()
         inboxPage.clickAddMessageFAB()
         addMessagePage.assertComposeNewMessageObjectsDisplayed()
     }
@@ -64,7 +64,7 @@ class AddMessagePageTest: TeacherTest() {
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.clickInboxTab()
+        dashboardPage.clickInboxTab()
 
         val chosenConversation = data.conversations.values.first { item -> item.isStarred }
         inboxPage.clickConversation(chosenConversation)

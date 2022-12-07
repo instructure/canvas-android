@@ -72,7 +72,7 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
                 }
             }
 
-            val permissionsDeferred = CourseManager.getPermissionsAsync(course.dataOrThrow.id, listOf(CanvasContextPermission.MANAGE_CONTENT))
+            val permissionsDeferred = CourseManager.getPermissionsAsync(course.dataOrThrow.id, listOf(CanvasContextPermission.MANAGE_CONTENT, CanvasContextPermission.MANAGE_COURSE_CONTENT_EDIT))
             val permissionsResult = permissionsDeferred.await()
 
             consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult, permissionsResult, summaryAllowed))

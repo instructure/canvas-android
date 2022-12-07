@@ -43,8 +43,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-const val TODO_COLOR = "#0081BD"
-
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
         private val apiPrefs: ApiPrefs,
@@ -55,7 +53,8 @@ class ScheduleViewModel @Inject constructor(
         private val calendarEventManager: CalendarEventManager,
         private val assignmentManager: AssignmentManager,
         private val missingItemsPrefs: MissingItemsPrefs,
-        private val dateTimeProvider: DateTimeProvider
+        private val dateTimeProvider: DateTimeProvider,
+        private val colorKeeper: ColorKeeper
 ) : ViewModel() {
 
     private lateinit var startDate: Date
@@ -108,6 +107,10 @@ class ScheduleViewModel @Inject constructor(
                 val courses = courseManager.getCoursesAsync(forceNetwork).await()
                 coursesMap = courses.dataOrThrow
                         .associateBy { it.id }
+
+                courses.dataOrThrow.forEach {
+                    colorKeeper.addToCache(it.contextId, getCourseColor(it))
+                }
 
                 plannerItems = plannerManager.getPlannerItemsAsync(
                         forceNetwork,
@@ -175,6 +178,7 @@ class ScheduleViewModel @Inject constructor(
 
     private fun createMissingItems(): ScheduleMissingItemsGroupItemViewModel {
         val missingItems = missingSubmissions.map { assignment ->
+            val color = if (coursesMap.containsKey(assignment.courseId)) coursesMap[assignment.courseId].textAndIconColor else resources.getColor(R.color.textInfo)
             ScheduleMissingItemViewModel(
                     data = ScheduleMissingItemData(
                             title = assignment.name,
@@ -187,7 +191,7 @@ class ScheduleViewModel @Inject constructor(
                             points = getPointsText(assignment.pointsPossible),
                             type = if (assignment.discussionTopicHeader != null) PlannerItemType.DISCUSSION else PlannerItemType.ASSIGNMENT,
                             courseName = coursesMap[assignment.courseId]?.name,
-                            courseColor = getCourseColor(coursesMap[assignment.courseId]),
+                            courseColor = color,
                             contentDescription = createMissingItemContentDescription(assignment)
                     ),
                     open = {
@@ -256,10 +260,11 @@ class ScheduleViewModel @Inject constructor(
         val courseViewModels = coursePlannerMap.entries
                 .sortedBy { it.key?.name }
                 .map { entry ->
+                    val color = if (coursesMap.containsKey(entry.key?.id)) coursesMap[entry.key?.id].textAndIconColor else resources.getColor(R.color.textInfo)
                     val scheduleViewData = ScheduleCourseViewData(
                             entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
                             entry.key != null && !entry.key!!.homeroomCourse,
-                            getCourseColor(entry.key),
+                            color,
                             entry.key?.imageUrl ?: "",
                             entry.value.map {
                                 createPlannerItemViewModel(it)
@@ -570,8 +575,7 @@ class ScheduleViewModel @Inject constructor(
     private fun getCourseColor(course: Course?): String {
         return when {
             !course?.courseColor.isNullOrEmpty() -> course?.courseColor!!
-            !course?.name.isNullOrEmpty() -> ColorApiHelper.K5_DEFAULT_COLOR
-            else -> TODO_COLOR
+            else -> ColorApiHelper.K5_DEFAULT_COLOR
         }
     }
 

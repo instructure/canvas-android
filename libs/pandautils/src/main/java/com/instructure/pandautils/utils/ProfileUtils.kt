@@ -26,21 +26,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.Dimension
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
-import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.R
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
-import de.hdodenhof.circleimageview.CircleImageView
-import java.util.Locale
+import java.util.*
 
 
 object ProfileUtils {
@@ -66,66 +57,22 @@ object ProfileUtils {
         }
     }
 
-    fun loadAvatarForUser(avatar: CircleImageView, user: User) {
-        loadAvatarForUser(avatar, user.name, user.avatarUrl)
-    }
-
-    fun loadAvatarForUser(avatar: CircleImageView, user: BasicUser) {
-        loadAvatarForUser(avatar, user.name, user.avatarUrl)
-    }
-
-    fun loadAvatarForUser(avatar: CircleImageView, user: Author) {
-        loadAvatarForUser(avatar, user.displayName, user.avatarImageUrl)
-    }
-
-    fun loadAvatarForUser(avatar: CircleImageView, name: String?, url: String?) {
-        val context = avatar.context
+    fun loadAvatarForUser(
+        imageView: ImageView,
+        name: String?,
+        url: String?,
+        @Dimension altAvatarBorderWidth: Int = imageView.context.resources.getDimension(R.dimen.avatar_border_width_thin).toInt()
+    ) {
         if (shouldLoadAltAvatarImage(url)) {
-            Picasso.with(context).cancelRequest(avatar)
-            avatar.setAvatarImage(context, name)
+            imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), altAvatarBorderWidth))
         } else {
-            Picasso.with(context)
-                    .load(url)
-                    .fit()
-                    .placeholder(R.drawable.recipient_avatar_placeholder)
-                    .centerCrop()
-                    .into(avatar, object : Callback {
-                        override fun onSuccess() {}
-
-                        override fun onError() {
-                            avatar.setAvatarImage(context, name)
-                        }
-                    })
+            imageView.loadCircularImage(url, R.drawable.recipient_avatar_placeholder) {
+                imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), altAvatarBorderWidth))
+            }
         }
     }
 
-    fun loadAvatarForUser(imageView: ImageView, name: String?, url: String?) {
-        val context = imageView.context
-        if (shouldLoadAltAvatarImage(url)) {
-            val avatarDrawable = createAvatarDrawable(context, name ?: "")
-            imageView.setImageDrawable(avatarDrawable)
-        } else {
-            Glide.with(imageView)
-                .load(url)
-                .placeholder(R.drawable.recipient_avatar_placeholder)
-                .circleCrop()
-                .addListener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        val avatarDrawable = createAvatarDrawable(context, name ?: "")
-                        imageView.setImageDrawable(avatarDrawable)
-                        return false
-                    }
-
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        return false
-                    }
-
-                })
-                .into(imageView)
-        }
-    }
-
-    private fun createAvatarDrawable(context: Context, userName: String): Drawable {
+    private fun createAvatarDrawable(context: Context, userName: String, @Dimension borderWidth: Int): Drawable {
         val initials = getUserInitials(userName)
         val color = ContextCompat.getColor(context, R.color.textDark)
         return TextDrawable.builder()
@@ -135,7 +82,7 @@ object ProfileUtils {
             .toUpperCase()
             .useFont(Typeface.DEFAULT_BOLD)
             .textColor(color)
-            .withBorder(context.DP(0.5f).toInt())
+            .withBorder(borderWidth)
             .withBorderColor(color)
             .endConfig()
             .buildRound(initials, Color.WHITE)
@@ -156,7 +103,7 @@ object ProfileUtils {
      * If there are more than two participants, a group avatar will be shown and accessibility will be disabled.
      */
     fun configureAvatarForConversation(
-        avatar: CircleImageView,
+        avatar: ImageView,
         conversation: Conversation,
         onClick: ((BasicUser) -> Unit)? = null
     ) {

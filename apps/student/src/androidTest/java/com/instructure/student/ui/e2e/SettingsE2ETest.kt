@@ -16,8 +16,11 @@
  */
 package com.instructure.student.ui.e2e
 
+import android.content.Intent
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -27,6 +30,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
+import com.instructure.student.ui.utils.IntentActionMatcher
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -36,13 +40,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class SettingsE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -53,7 +53,7 @@ class SettingsE2ETest : StudentTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -115,7 +115,7 @@ class SettingsE2ETest : StudentTest() {
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -164,7 +164,7 @@ class SettingsE2ETest : StudentTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -186,7 +186,7 @@ class SettingsE2ETest : StudentTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -219,7 +219,7 @@ class SettingsE2ETest : StudentTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -258,5 +258,40 @@ class SettingsE2ETest : StudentTest() {
             remoteConfigSettingsPage.verifyRemoteConfigParamValue(param, initialValues.get(param.rc_name)!!)
         }
 
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testSubscribeToCalendar() {
+
+        Log.d(PREPARATION_TAG, "Initialize Intents.")
+        Intents.init()
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
+        dashboardPage.launchSettingsPage()
+        settingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on 'Subscribe to Calendar'.")
+        settingsPage.openSubscribeToCalendar()
+
+        Log.d(STEP_TAG, "Click on the 'SUBSCRIBE' button of the pop-up dialog.")
+        settingsPage.clickOnSubscribe()
+
+        Log.d(STEP_TAG, "Assert that the proper intents has launched, so the NavigationActivity has been launched with an Intent from SettingsActivity.")
+        val calendarDataMatcherString = "https://calendar.google.com/calendar/r?cid=webcal://"
+        val intentActionMatcher = IntentActionMatcher(Intent.ACTION_VIEW, calendarDataMatcherString)
+        intended(intentActionMatcher)
+
+        Log.d(PREPARATION_TAG, "Release Intents.")
+        Intents.release()
     }
 }

@@ -96,7 +96,7 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
         commentEditText.setText(mDefaultString)
 
         // Theme save button
-        DrawableCompat.setTint(saveCommentButton.drawable, ThemePrefs.buttonColor)
+        DrawableCompat.setTint(saveCommentButton.drawable, ThemePrefs.textButtonColor)
 
         // Style the dialog
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)

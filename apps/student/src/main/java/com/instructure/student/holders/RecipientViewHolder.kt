@@ -16,9 +16,10 @@
 package com.instructure.student.holders
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.Pronouns
@@ -39,15 +40,17 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         holder: RecipientViewHolder,
         recipient: Recipient,
         adapterCallback: (Recipient, Int, Boolean) -> Unit,
-        selectionColor: Int,
         isSelected: Boolean,
         canMessageAll: Boolean
     ) = with(itemView) {
 
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
+                val selectionColor = context.getColor(R.color.backgroundInfo)
                 setBackgroundColor(selectionColor and selectionTransparencyMask)
-                avatar.setImageDrawable(ColorDrawable(selectionColor))
+                avatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_circle)?.apply {
+                    mutate().setTintList(ColorStateList.valueOf(selectionColor))
+                })
                 checkMarkImageView.setVisible()
                 ColorUtils.colorIt(Color.WHITE, checkMarkImageView)
             } else {
@@ -100,7 +103,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         // Set checked if recipient is selected
         checkBox.isChecked = isSelected
-        ViewStyler.themeCheckBox(context, checkBox, selectionColor)
+        ViewStyler.themeCheckBox(context, checkBox, ThemePrefs.brandColor)
         title.contentDescription = if (isSelected) context.getString(R.string.selectedListItem, recipient.name) else recipient.name
 
         // Set whole item listener

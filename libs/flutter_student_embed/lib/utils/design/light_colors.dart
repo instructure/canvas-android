@@ -8,6 +8,8 @@ class LightColors {
 
   static const textDark = Color(0xFF6B7780);
 
+  static const textLightest = Color(0xFFFFFFFF);
+
   static const backgroundLightest = Color(0xFFFFFFFF);
 
   static const backgroundLight = Color(0xFFF5F5F5);

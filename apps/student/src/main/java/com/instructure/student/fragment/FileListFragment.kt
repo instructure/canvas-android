@@ -231,16 +231,16 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         themeToolbar()
         if (canvasContext.type == CanvasContext.Type.USER) ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeFAB(addFab, ThemePrefs.buttonColor)
-        ViewStyler.themeFAB(addFileFab, ThemePrefs.buttonColor)
-        ViewStyler.themeFAB(addFolderFab, ThemePrefs.buttonColor)
+        ViewStyler.themeFAB(addFab)
+        ViewStyler.themeFAB(addFileFab)
+        ViewStyler.themeFAB(addFolderFab)
     }
 
     private fun themeToolbar() {
         // We style the toolbar white for user files
         if (canvasContext.type == CanvasContext.Type.USER) {
-            ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.textDarkest))
-            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+            ViewStyler.themeProgressBar(fileLoadingProgressBar, ThemePrefs.primaryTextColor)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         } else {
             ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.white))
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
@@ -375,8 +375,8 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                 .create()
 
         dialog.setOnShowListener {
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
         }
 
         dialog.show()

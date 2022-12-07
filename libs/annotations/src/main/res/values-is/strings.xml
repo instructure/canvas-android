@@ -38,4 +38,5 @@
     <string name="pspdf__annotation_type_stamp">Litur glósu</string>
     <string name="removedComment">Fjarlægt %1$s af %2$s</string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

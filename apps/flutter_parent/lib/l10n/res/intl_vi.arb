@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "Tìm trường khác",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "Nhập tên trường hoặc học khu...",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",

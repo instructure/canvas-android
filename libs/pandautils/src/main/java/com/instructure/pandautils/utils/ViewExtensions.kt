@@ -54,10 +54,14 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.signature.ObjectKey
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
@@ -68,10 +72,9 @@ import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.abc_search_view.view.*
 import kotlinx.coroutines.delay
-import java.util.Locale
+import java.util.*
 
 /** Convenience extension for setting a click listener */
 @Suppress("NOTHING_TO_INLINE")
@@ -505,24 +508,6 @@ fun View.clearAvatarA11y() {
     setAccessibilityDelegate(null)
 }
 
-@JvmName("setUserAvatarImage")
-fun CircleImageView.setAvatarImage(context: Context, userName: String?) {
-    val initials = ProfileUtils.getUserInitials(userName)
-    val color = ContextCompat.getColor(context, R.color.textDark)
-    val drawable = TextDrawable.builder()
-            .beginConfig()
-            .height(context.resources.getDimensionPixelSize(com.instructure.pandautils.R.dimen.avatar_size))
-            .width(context.resources.getDimensionPixelSize(com.instructure.pandautils.R.dimen.avatar_size))
-            .toUpperCase()
-            .useFont(Typeface.DEFAULT_BOLD)
-            .textColor(color)
-            .endConfig()
-            .buildRound(initials, Color.WHITE)
-    this.borderColor = color
-    this.borderWidth = context.DP(0.5f).toInt()
-    this.setImageDrawable(drawable)
-}
-
 /**
  * Loads the given resource as this Toolbar's icon, assigns it the given content description, and
  * propagates its clicks to the provided function.
@@ -771,4 +756,46 @@ fun View.fadeAnimationWithAction(action: () -> Unit) {
     })
 
     startAnimation(fadeOutAnim)
+}
+
+/**
+ * Load model into ImageView as a circle image using Glide
+ *
+ * @param model - Any object supported by Glide (Uri, File, Bitmap, String, resource id as Int, ByteArray, and Drawable)
+ * @param placeholder - Placeholder drawable
+ * @param onFailure - Called when an exception occurs during a load
+ */
+@SuppressLint("CheckResult")
+fun <T> ImageView.loadCircularImage(
+    model: T,
+    placeholder: Int? = null,
+    onFailure: (() -> Unit)? = null
+) {
+    Glide.with(context)
+        .asBitmap()
+        .load(model)
+        .apply { placeholder?.let { placeholder(it) } }
+        .apply(RequestOptions.circleCropTransform())
+        .addListener(object : RequestListener<Bitmap> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Bitmap>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                onFailure?.invoke()
+                return true
+            }
+
+            override fun onResourceReady(
+                resource: Bitmap?,
+                model: Any?,
+                target: Target<Bitmap>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                return false
+            }
+        })
+        .into(this)
 }

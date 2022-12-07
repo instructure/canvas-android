@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Góc Nhìn Của Sinh Viên</string>
 
 
+    <string name="rateOnThePlayStore">Đánh giá trên Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Đầu được chọn: %s</string>
     <string name="content_description_chosen_body">Thân được chọn: %s</string>
@@ -1234,6 +1235,7 @@
     <string name="submissionDraftAvailableTitle">Có Bản Nháp</string>
     <string name="errorLoadingSubmission">Đã xảy ra lỗi khi tải bài nộp</string>
     <string name="loadFullContent">Nhấn để xem nội dung đầy đủ</string>
+    <string name="openLtiInExternalApp">Bấm để mở trong ứng dụng bên ngoài</string>
     <string name="dashboardTabImportantDates">Những Ngày Quan Trọng</string>
     <string name="importantDatesEmptyTitle">Không có ngày quan trọng</string>
     <string name="important_dates">Những Ngày Quan Trọng</string>
@@ -1276,6 +1278,11 @@
         <item quantity="one">%s tin nhắn chưa đọc</item>
         <item quantity="other">%s tin nhắn chưa đọc</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s thông báo chưa đọc</item>
+        <item quantity="other">%s thông báo chưa đọc</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Không có chú thích nào được chọn</string>
     <string name="emailNotifications">Thông Báo Email</string>
     <string name="emailNotificationsImmediately">Ngay Lập Tức</string>
@@ -1283,4 +1290,32 @@
     <string name="emailNotificationsWeekly">Hằng Tuần</string>
     <string name="emailNotificationsNever">Không Bao Giờ</string>
     <string name="selectFrequency">Chọn tần số</string>
+    <string name="a11y_closeProgress">Đóng hộp thoại tiến trình</string>
+    <string name="fileUploadProgress">%1$s / %2$s</string>
+    <string name="fileUploadProgressSubtitle">Đang tải lên tới Các Tập Tin</string>
+    <string name="submissionProgressSubtitle">Đang tải bài nộp tới \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Tải Lên Bài Nộp</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Đang tải Các Tập Tin</string>
+    <string name="cancelSubmissionDialogTitle">Hủy Nộp</string>
+    <string name="cancelSubmissionDialogMessage">Thao tác này sẽ hủy và xóa bài nộp của bạn.</string>
+    <string name="fileUploadError">Tải Lên Các Tập Tin Không Thành Công</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Tải lên tới Canvas cho %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Tải lên tới Các Tập Tin Của Tôi</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Nộp bài tập</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Lựa chọn một khóa học</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Lựa chọn một bài tập</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Hủy Tải Lên?</string>
+    <string name="cancelFileUploadMessage">Thao tác này sẽ hủy quá trình tải lên của bạn.</string>
+    <string name="menuTitleFilterAssignments">Lọc bài tập</string>
+    <string name="filterAssignmentDialogTitle">Lọc Bài Tập</string>
+    <string name="filterAssignmentsDialogCancel">Hủy</string>
+    <string name="filterAssignmentAll">Tất Cả</string>
+    <string name="filterAssignmentLate">Trễ</string>
+    <string name="filterAssignmentMissing">Bị Thiếu</string>
+    <string name="filterAssignmentGraded">Đã Chấm Điểm</string>
+    <string name="filterAssignmentUpcoming">Sắp Có</string>
+    <string name="createdByStudentView">Được Góc Nhìn Của Sinh Viên Tạo Ra</string>
+    <string name="discussionErrorToast">Đã xảy ra lỗi. Chủ đề có thể không còn nữa.</string>
+    <string name="cameraPermissionPermanentlyDenied">Quyền truy cập camera đã bị từ chối vĩnh viễn. Đi tới cài đặt ứng dụng để cho phép truy cập. </string>
 </resources>

@@ -2,14 +2,15 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.*
+import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
+import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
+import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.repeatedlyUntil
 import com.instructure.teacher.ui.utils.repeatedlyUntilNot
 
 @Suppress("unused")
@@ -50,7 +51,7 @@ class LoginSignInPage : BasePage() {
 
     //region Assertion Helpers
 
-    override fun assertPageObjects() {
+    override fun assertPageObjects(duration: Long) {
         signInRoot.assertDisplayed()
         toolbar.assertDisplayed()
 

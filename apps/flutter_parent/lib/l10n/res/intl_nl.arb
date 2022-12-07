@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "Zoek een andere school",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "Voer de naam van de school of onderwijskoepel in…",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",

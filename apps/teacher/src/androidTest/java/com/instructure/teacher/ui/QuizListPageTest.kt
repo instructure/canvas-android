@@ -86,7 +86,7 @@ class QuizListPageTest : TeacherTest() {
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
 
         return quizzes

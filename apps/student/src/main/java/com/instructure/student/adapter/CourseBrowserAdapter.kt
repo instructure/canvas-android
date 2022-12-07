@@ -26,7 +26,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.util.TabHelper
 import kotlinx.android.synthetic.main.adapter_course_browser.view.*
@@ -38,11 +38,11 @@ class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContex
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             HOME -> CourseBrowserHomeViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(CourseBrowserHomeViewHolder.HOLDER_RES_ID, parent, false), canvasContext.color, canvasContext, homePageTitle)
+                    .inflate(CourseBrowserHomeViewHolder.HOLDER_RES_ID, parent, false), canvasContext, homePageTitle)
             WEB_VIEW_ITEM -> CourseBrowserWebViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(CourseBrowserWebViewHolder.HOLDER_RES_ID, parent, false), canvasContext.color)
+                    .inflate(CourseBrowserWebViewHolder.HOLDER_RES_ID, parent, false), canvasContext.textAndIconColor)
             else -> CourseBrowserViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(CourseBrowserViewHolder.HOLDER_RES_ID, parent, false), canvasContext.color)
+                    .inflate(CourseBrowserViewHolder.HOLDER_RES_ID, parent, false), canvasContext.textAndIconColor)
         }
     }
 
@@ -72,7 +72,7 @@ class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContex
     }
 }
 
-class CourseBrowserHomeViewHolder(view: View, val color: Int, val canvasContext: CanvasContext, private val homePageTitle: String? = null) : RecyclerView.ViewHolder(view) {
+class CourseBrowserHomeViewHolder(view: View, val canvasContext: CanvasContext, private val homePageTitle: String? = null) : RecyclerView.ViewHolder(view) {
 
     fun bind(holder: CourseBrowserHomeViewHolder, tab: Tab, clickedCallback: (Tab) -> Unit) {
         holder.itemView.homeLabel.text = tab.label

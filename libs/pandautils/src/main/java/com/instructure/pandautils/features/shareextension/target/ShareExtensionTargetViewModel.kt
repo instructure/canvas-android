@@ -33,7 +33,7 @@ import com.instructure.pandautils.features.shareextension.target.itemviewmodels.
 import com.instructure.pandautils.features.shareextension.target.itemviewmodels.ShareExtensionCourseItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.backgroundColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -67,6 +67,8 @@ class ShareExtensionTargetViewModel @Inject constructor(
 
     private var uploadType: FileUploadType = FileUploadType.USER
 
+    var isAccessibilityEnabled = false
+
     init {
         fetchCourses()
     }
@@ -79,7 +81,7 @@ class ShareExtensionTargetViewModel @Inject constructor(
                         .dataOrThrow
 
                 val courseViewModels = courses
-                        .map { ShareExtensionCourseItemViewModel(ShareExtensionCourseViewData(it.name, ColorKeeper.getOrGenerateColor(it.contextId))) }
+                        .map { ShareExtensionCourseItemViewModel(ShareExtensionCourseViewData(it.name, it.backgroundColor)) }
                 _data.postValue(ShareExtensionTargetViewData(apiPrefs.user?.name, courseViewModels, uploadType))
             } catch (e: Exception) {
                 _events.postValue(Event(ShareExtensionTargetAction.ShowToast(resources.getString(R.string.errorOccurred))))
@@ -92,12 +94,19 @@ class ShareExtensionTargetViewModel @Inject constructor(
         selectedCourse = courses[position]
         selectedAssignment = null
         assignments = emptyList()
+        updateSpinnerContentDescriptions(resources.getString(R.string.loadingAssignments))
         fetchAssignment(selectedCourse?.id ?: throw IllegalArgumentException())
     }
 
     fun onAssignmentSelected(position: Int) {
         if (assignments.isNotEmpty()) {
             selectedAssignment = assignments[position]
+            updateSpinnerContentDescriptions(
+                resources.getString(
+                    R.string.a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment,
+                    selectedAssignment?.name
+                )
+            )
         }
     }
 
@@ -115,7 +124,8 @@ class ShareExtensionTargetViewModel @Inject constructor(
                                 && it.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)
                     } ?: emptyList()
 
-            val assignmentViewModels = if (assignments.isNullOrEmpty()) {
+            val assignmentViewModels = if (assignments.isEmpty()) {
+                updateSpinnerContentDescriptions(resources.getString(R.string.noAssignmentsWithFileUpload))
                 listOf(ShareExtensionAssignmentItemViewModel(ShareExtensionAssignmentViewData(resources.getString(R.string.noAssignmentsWithFileUpload))))
             } else {
                 assignments.map {
@@ -125,6 +135,20 @@ class ShareExtensionTargetViewModel @Inject constructor(
             _data.value?.assignments = assignmentViewModels
             _data.value?.notifyPropertyChanged(BR.assignments)
         }
+    }
+
+    private fun updateSpinnerContentDescriptions(assignmentContentDescription: String) {
+        _events.postValue(
+            Event(
+                ShareExtensionTargetAction.UpdateSpinnerContentDescriptions(
+                    resources.getString(
+                        R.string.a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse,
+                        selectedCourse?.name
+                    ),
+                    assignmentContentDescription
+                )
+            )
+        )
     }
 
     fun assignmentTargetSelected() {

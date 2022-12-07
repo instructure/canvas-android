@@ -19,19 +19,15 @@ package com.instructure.teacher.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
-import android.util.TypedValue
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.AsyncTaskLoader
 import androidx.loader.content.Loader
-import com.bumptech.glide.Glide
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.managers.FileUploadManager
@@ -53,7 +49,6 @@ import com.instructure.pandautils.utils.MediaUploadUtils.takeNewPhotoBecausePerm
 import com.instructure.teacher.R
 import com.instructure.teacher.factory.ProfileEditFragmentPresenterFactory
 import com.instructure.teacher.presenters.ProfileEditFragmentPresenter
-import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.ProfileEditFragmentView
@@ -88,30 +83,13 @@ class ProfileEditFragment : BasePresenterFragment<
 
         val user = user
 
-        if(ProfileUtils.shouldLoadAltAvatarImage(user?.avatarUrl)) {
-            val initials = ProfileUtils.getUserInitials(user?.shortName ?: "")
-            val color = requireContext().getColorCompat(R.color.textDark)
-            val drawable = TextDrawable.builder()
-                    .beginConfig()
-                    .height(requireContext().resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                    .width(requireContext().resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                    .toUpperCase()
-                    .useFont(Typeface.DEFAULT_BOLD)
-                    .textColor(color)
-                    .endConfig()
-                    .buildRound(initials, Color.WHITE)
-            usersAvatar.borderColor = requireContext().getColorCompat(R.color.textDark)
-            usersAvatar.borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6F, requireContext().resources.displayMetrics).toInt()
-            usersAvatar.setImageDrawable(drawable)
-        } else {
-            updateAvatarImage(user?.avatarUrl)
-        }
+        ProfileUtils.loadAvatarForUser(usersAvatar, user?.shortName, user?.avatarUrl, 0)
 
         usersName.setText(user?.shortName)
         usersName.hint = user?.shortName
 
         ViewStyler.themeEditText(requireContext(), usersName, ThemePrefs.brandColor)
-        ViewStyler.colorImageView(profileCameraIcon, ThemePrefs.buttonColor)
+        ViewStyler.colorImageView(profileCameraIcon, ThemePrefs.textButtonColor)
         ViewStyler.themeProgressBar(profileCameraLoadingIndicator, ThemePrefs.brandColor)
 
         //Restore loader if necessary
@@ -135,7 +113,7 @@ class ProfileEditFragment : BasePresenterFragment<
         toolbar.setupMenu(R.menu.menu_save_generic) { saveProfile() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     override fun readyToLoadUI(user: User?) {
@@ -157,9 +135,7 @@ class ProfileEditFragment : BasePresenterFragment<
     }
 
     private fun updateAvatarImage(url: String?) {
-        usersAvatar.borderColor = Color.WHITE
-        usersAvatar.borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6F, requireContext().resources.displayMetrics).toInt()
-        Glide.with(requireContext()).load(url).into(usersAvatar)
+        ProfileUtils.loadAvatarForUser(usersAvatar, user?.shortName, url, 0)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

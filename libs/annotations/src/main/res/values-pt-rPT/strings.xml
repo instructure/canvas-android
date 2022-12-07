@@ -39,4 +39,5 @@
 
     <string name="removedComment">Removido %1$s por %2$s</string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

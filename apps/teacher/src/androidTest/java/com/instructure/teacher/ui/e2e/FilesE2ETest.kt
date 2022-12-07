@@ -116,7 +116,7 @@ class FilesE2ETest: TeacherTest() {
                 token = student.token
         )
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 

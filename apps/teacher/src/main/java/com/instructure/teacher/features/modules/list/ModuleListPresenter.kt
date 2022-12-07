@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 import com.instructure.teacher.features.modules.list.ui.ModuleListViewState
@@ -36,7 +36,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
 
         val indentWidth = context.DP(10).toInt()
 
-        val courseColor = model.course.color
+        val iconTint = model.course.textAndIconColor
 
         items += model.modules.map { module ->
             val moduleItems: List<ModuleListItemData> = if (module.items.isNotEmpty()) {
@@ -53,7 +53,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                                 enabled = false
                         )
                     } else {
-                        createModuleItemData(item, context, indentWidth, courseColor, item.id in model.loadingModuleItemIds)
+                        createModuleItemData(item, context, indentWidth, iconTint, item.id in model.loadingModuleItemIds)
                     }
                 }
             } else {

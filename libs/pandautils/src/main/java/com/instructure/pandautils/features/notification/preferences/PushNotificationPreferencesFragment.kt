@@ -28,15 +28,18 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_notification_preferences.*
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_NOTIFICATION_PREFERENCES)
 @PageView(url = "profile/communication")
 @AndroidEntryPoint
 class PushNotificationPreferencesFragment : Fragment() {
+
+    @Inject
+    lateinit var toolbarSetupBehavior: ToolbarSetupBehavior
 
     private val viewModel: PushNotificationPreferencesViewModel by viewModels()
 
@@ -51,8 +54,7 @@ class PushNotificationPreferencesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
-
+        toolbarSetupBehavior.setupToolbar(toolbar)
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
@@ -64,11 +66,6 @@ class PushNotificationPreferencesFragment : Fragment() {
         when (action) {
             is NotificationPreferencesAction.ShowSnackbar -> Snackbar.make(requireView(), action.snackbar, Snackbar.LENGTH_LONG).show()
         }
-    }
-
-    private fun setupToolbar() {
-        toolbar.setupAsBackButton { requireActivity().onBackPressed() }
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     companion object {

@@ -52,13 +52,13 @@ class CalendarDay extends StatelessWidget {
 
     if (isToday) {
       textStyle = Theme.of(context).accentTextTheme.headline5;
-      decoration = BoxDecoration(color: theme.accentColor, shape: BoxShape.circle);
+      decoration = BoxDecoration(color: StudentColors.buttonColor, shape: BoxShape.circle);
     } else if (isSelected) {
-      textStyle = textStyle.copyWith(color: Theme.of(context).accentColor);
+      textStyle = textStyle.copyWith(color: StudentColors.textButtonColor);
       decoration = BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: theme.accentColor,
+          color: StudentColors.textButtonColor,
           width: 2,
         ),
       );
@@ -66,8 +66,8 @@ class CalendarDay extends StatelessWidget {
 
     return InkResponse(
       enableFeedback: true,
-      highlightColor: theme.accentColor.withOpacity(0.35),
-      splashColor: theme.accentColor.withOpacity(0.35),
+      highlightColor: StudentColors.buttonColor.withOpacity(0.35),
+      splashColor: StudentColors.buttonColor.withOpacity(0.35),
       onTap: () => onDaySelected(date),
       child: Container(
         height: dayHeight,
@@ -114,7 +114,7 @@ class CalendarDay extends StatelessWidget {
               return Container(
                 width: 4,
                 height: 4,
-                decoration: BoxDecoration(color: Theme.of(context).accentColor, shape: BoxShape.circle),
+                decoration: BoxDecoration(color: StudentColors.textButtonColor, shape: BoxShape.circle),
               );
             }),
           );

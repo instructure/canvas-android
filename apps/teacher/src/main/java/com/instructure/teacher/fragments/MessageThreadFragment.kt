@@ -89,8 +89,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
                         .create()
 
                 dialog.setOnShowListener {
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
                 }
 
                 dialog.show()
@@ -158,8 +158,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
                             .create()
 
                     dialog.setOnShowListener {
-                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-                        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+                        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
                     }
 
                     dialog.show()

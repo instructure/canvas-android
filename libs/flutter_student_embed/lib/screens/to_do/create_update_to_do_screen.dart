@@ -281,14 +281,12 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
     return Theme(
       data: Theme.of(buildContext).copyWith(
         colorScheme: ColorScheme.light(
-            primary: StudentColors.primaryColor,
-            primaryVariant: StudentColors.primaryColor,
-            onPrimary: Colors.white,
+            primary: StudentColors.textButtonColor,
+            primaryVariant: StudentColors.textButtonColor,
+            onPrimary: StudentColors.textLightest,
             surface: StudentColors.backgroundLightest,
             background: StudentColors.backgroundLightest,
-            onSurface: StudentColors.textDarkest,
-            onSecondary: StudentColors.textDarkest,
-            onBackground: StudentColors.textDarkest),
+            onSurface: StudentColors.textDarkest),
         dialogBackgroundColor: StudentColors.backgroundLightestElevated,
       ),
       child: child,

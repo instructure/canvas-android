@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.interfaces.BookmarkAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
@@ -129,7 +130,7 @@ object BookmarkBinder {
         }
 
         holder.title.text = bookmark.name
-        val courseColor = ColorKeeper.getOrGenerateColor(RouteMatcher.getContextIdFromURL(bookmark.url) ?: "")
+        val courseColor = RouteMatcher.getContextFromUrl(bookmark.url).textAndIconColor
 
         holder.icon.setImageDrawable(ColorUtils.colorIt(courseColor, holder.icon.drawable))
         holder.overflow.visibility = if (isShortcutActivity) View.INVISIBLE else View.VISIBLE

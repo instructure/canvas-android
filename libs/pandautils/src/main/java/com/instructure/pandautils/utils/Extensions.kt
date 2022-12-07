@@ -40,3 +40,11 @@ fun Long.humanReadableByteCount(): String {
 fun Long?.orDefault(default: Long = 0): Long {
     return this ?: default
 }
+
+fun Int?.orDefault(default: Int = 0): Int {
+    return this ?: default
+}
+
+fun Boolean?.orDefault(default: Boolean = false): Boolean {
+    return this ?: default
+}

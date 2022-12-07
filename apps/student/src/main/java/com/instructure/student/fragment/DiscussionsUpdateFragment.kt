@@ -65,7 +65,7 @@ class DiscussionsUpdateFragment : ParentFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rceTextEditor.setHint(R.string.rce_empty_description)
-        rceTextEditor.setHtml(discussionEntry.message, "", "", ThemePrefs.brandColor, ThemePrefs.buttonColor)
+        rceTextEditor.setHtml(discussionEntry.message, "", "", ThemePrefs.brandColor, ThemePrefs.textButtonColor)
 
         discussionEntry.attachments?.firstOrNull()?.let {
             val attachmentView = AttachmentView(requireContext())

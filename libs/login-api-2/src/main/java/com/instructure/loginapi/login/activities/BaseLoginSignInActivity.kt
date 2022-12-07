@@ -53,11 +53,13 @@ import com.instructure.canvasapi2.utils.ApiPrefs.protocol
 import com.instructure.canvasapi2.utils.ApiPrefs.refreshToken
 import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.Logger.d
+import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.api.MobileVerifyAPI.mobileVerify
 import com.instructure.loginapi.login.dialog.AuthenticationDialog
 import com.instructure.loginapi.login.dialog.AuthenticationDialog.Companion.newInstance
 import com.instructure.loginapi.login.dialog.AuthenticationDialog.OnAuthenticationSet
+import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyActivity
 import com.instructure.loginapi.login.model.DomainVerificationResult
 import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.snicker.SnickerDoodle
@@ -66,16 +68,18 @@ import com.instructure.loginapi.login.util.Const.CANVAS_LOGIN_FLOW
 import com.instructure.loginapi.login.util.Const.MASQUERADE_FLOW
 import com.instructure.loginapi.login.util.Const.MOBILE_VERIFY_FLOW
 import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
+import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
+import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
-import kotlinx.android.synthetic.main.activity_find_school.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
+import javax.inject.Inject
 
 abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSet {
     companion object {
@@ -88,7 +92,6 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         }
     }
 
-    protected abstract fun launchApplicationMainActivityIntent(): Intent
     protected abstract fun refreshWidgets()
     protected abstract fun userAgent(): String
 
@@ -103,6 +106,9 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     private val progressBarHandler = Handler()
 
     private val viewModel: LoginViewModel by viewModels()
+
+    @Inject
+    lateinit var navigation: LoginNavigation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -452,7 +458,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                             )
                             add(this@BaseLoginSignInActivity, user)
                             refreshWidgets()
-                            handleLaunchApplicationMainActivityIntent()
+                            LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
+                            navigation.startLogin(viewModel, false)
                         }
                     }
                 })
@@ -486,21 +493,6 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         shouldShowProgressBar = true
         webViewProgressBar.setVisible()
         webViewProgressBar.announceForAccessibility(getString(R.string.loading))
-    }
-
-    /**
-     * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
-     */
-    protected open fun handleLaunchApplicationMainActivityIntent() {
-        viewModel.checkCanvasForElementaryFeature().observe(this, Observer { event: Event<Boolean>? ->
-            event?.getContentIfNotHandled()?.let { result: Boolean ->
-                val intent = launchApplicationMainActivityIntent()
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                intent.putExtra("canvas_for_elementary", result)
-                startActivity(intent)
-                finish()
-            }
-        })
     }
 
     //region Snicker Doodles

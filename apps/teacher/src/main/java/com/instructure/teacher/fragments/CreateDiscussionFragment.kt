@@ -260,8 +260,8 @@ class CreateDiscussionFragment : BasePresenterFragment<
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
 
-        sendButton?.setTextColor(ThemePrefs.buttonColor)
-        saveButton?.setTextColor(ThemePrefs.buttonColor)
+        sendButton?.setTextColor(ThemePrefs.textButtonColor)
+        saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     fun setupViews() {
@@ -275,12 +275,12 @@ class CreateDiscussionFragment : BasePresenterFragment<
             },
                     getString(R.string.discussion_details),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor)
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         } else {
             descriptionRCEView.setHtml(mDescription ?: mDiscussionTopicHeader?.message,
                     getString(R.string.discussion_details),
                     getString(R.string.rce_empty_description),
-                    ThemePrefs.brandColor, ThemePrefs.buttonColor)
+                    ThemePrefs.brandColor, ThemePrefs.textButtonColor)
         }
 
         // When the RCE editor has focus we want the label to be darker so it matches the title's functionality

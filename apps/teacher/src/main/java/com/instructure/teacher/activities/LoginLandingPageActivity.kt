@@ -34,11 +34,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
-    override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationWorker.scheduleJob(this, ApiPrefs.isMasquerading)
-        return SplashActivity.createIntent(this, null)
-    }
-
     override fun loginWithQRIntent(): Intent = Intent(this, TeacherLoginWithQRActivity::class.java)
 
     override fun loginWithQRCodeEnabled(): Boolean = true
@@ -51,14 +46,7 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun themeColor(): Int = ContextCompat.getColor(this, R.color.login_teacherAppTheme)
 
-    override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent = SignInActivity.createIntent(this, AccountDomain(snickerDoodle.domain))
-
-    override fun startApp() {
-        val intent = launchApplicationMainActivityIntent()
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
+    override fun signInActivityIntent(accountDomain: AccountDomain): Intent = SignInActivity.createIntent(this, accountDomain)
 
     companion object {
         fun createIntent(context: Context): Intent {

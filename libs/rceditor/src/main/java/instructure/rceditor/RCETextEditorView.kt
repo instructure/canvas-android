@@ -255,12 +255,12 @@ class RCETextEditorView @JvmOverloads constructor(
         accessibilityTitle: String,
         hint: String,
         @ColorInt themeColor: Int,
-        @ColorInt buttonColor: Int
+        @ColorInt dialogButtonsColor: Int
     ) {
         editor.applyHtml(html.orEmpty(), accessibilityTitle)
         editor.setPlaceholder(hint)
         this.themeColor = themeColor
-        this.buttonColor = buttonColor
+        this.buttonColor = dialogButtonsColor
     }
 
     fun setHint(hint: String) = editor.setPlaceholder(hint)

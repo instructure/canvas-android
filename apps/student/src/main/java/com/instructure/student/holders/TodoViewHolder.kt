@@ -3,8 +3,6 @@ package com.instructure.student.holders
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 
 import com.instructure.student.R
@@ -13,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.*
 import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
@@ -45,17 +42,17 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         when {
             item.canvasContext?.name != null -> {
                 course.text = item.canvasContext!!.name
-                course.setTextColor(ColorKeeper.getOrGenerateColor(item.canvasContext))
+                course.setTextColor(item.canvasContext.textAndIconColor)
             }
             item.scheduleItem?.contextType == CanvasContext.Type.USER -> {
                 course.text = context.getString(R.string.PersonalCalendar)
-                course.setTextColor(ColorKeeper.getOrGenerateColor(item.canvasContext))
+                course.setTextColor(item.canvasContext.textAndIconColor)
             }
             else -> course.text = ""
         }
 
         // Get courseColor
-        val courseColor = item.canvasContext?.color ?: ContextCompat.getColor(context, R.color.textDarkest)
+        val iconColor = item.canvasContext?.textAndIconColor ?: ContextCompat.getColor(context, R.color.textDarkest)
 
         if (item.isChecked) {
             setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundMedium))
@@ -95,7 +92,7 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             item.assignment!!.discussionTopicHeader != null -> R.drawable.ic_discussion
             else -> R.drawable.ic_assignment
         }
-        val drawable = ColorKeeper.getColoredDrawable(context, drawableResId, courseColor)
+        val drawable = ColorKeeper.getColoredDrawable(context, drawableResId, iconColor)
         icon.setImageDrawable(drawable)
     }
 

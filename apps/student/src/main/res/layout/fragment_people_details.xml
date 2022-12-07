@@ -41,15 +41,14 @@
                 android:layout_below="@id/userBackground"
                 android:background="@drawable/shadow_top_bottom"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/avatar"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="@dimen/people_details_margin"
-                android:background="@android:color/transparent"
-                app:civ_border_width="0dp" />
+                android:layout_marginTop="16dp"
+                android:background="@android:color/transparent" />
 
             <LinearLayout
                 android:layout_width="match_parent"

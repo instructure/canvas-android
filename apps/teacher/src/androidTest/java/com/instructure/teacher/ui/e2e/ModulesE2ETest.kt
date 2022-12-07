@@ -1,10 +1,10 @@
 package com.instructure.teacher.ui.e2e
 
 import android.util.Log
-import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.refresh
-import com.instructure.dataseeding.api.*
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.ModulesApi
+import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.ModuleItemTypes
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
@@ -38,7 +38,7 @@ class   ModulesE2ETest : TeacherTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course)

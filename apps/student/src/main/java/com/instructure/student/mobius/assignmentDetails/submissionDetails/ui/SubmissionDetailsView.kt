@@ -106,7 +106,7 @@ class SubmissionDetailsView(
         drawerTabLayout.setupWithViewPager(drawerViewPager)
 
         // Tint the tab with the course color
-        val tint = canvasContext.color
+        val tint = canvasContext.textAndIconColor
         drawerTabLayout.setSelectedTabIndicatorColor(tint)
         drawerTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.textDarkest), tint)
 

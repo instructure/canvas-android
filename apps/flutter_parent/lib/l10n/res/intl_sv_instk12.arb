@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "Hitta en annan skola",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "Ange skolans namn eller distrikt...",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",

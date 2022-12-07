@@ -18,27 +18,22 @@ package com.instructure.teacher.activities
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.Typeface
+import android.content.res.Configuration
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.PluralsRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.bumptech.glide.Glide
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.managers.CourseNicknameManager
+import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
@@ -61,8 +56,6 @@ import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.ColorPickerDialog
@@ -75,23 +68,24 @@ import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.tasks.TeacherLogoutTask
-import com.instructure.teacher.utils.*
-import com.instructure.teacher.utils.AppType
+import com.instructure.teacher.utils.LoggingUtility
+import com.instructure.teacher.utils.TeacherPrefs
+import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.viewinterface.InitActivityView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_init.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(), InitActivityView,
-    CoursesFragment.CourseListCallback, AllCoursesFragment.CourseBrowserCallback, InitActivityInteractions,
+class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(),
+    InitActivityView, DashboardFragment.CourseBrowserCallback, InitActivityInteractions,
     MasqueradingDialog.OnMasqueradingSet, ErrorReportDialog.ErrorReportDialogResultListener {
 
     @Inject
@@ -142,6 +136,15 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+        if (!ThemePrefs.isThemeApplied) {
+            // This will be only called when we change dark/light mode, because the Theme is already applied before in the SplashActivity.
+            updateTheme()
+        }
+
         typefaceBehaviour.overrideFont(FontFamily.REGULAR.fontPath)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
 
@@ -168,6 +171,14 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             val themeSelector = ThemeSelectorBottomSheet()
             themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
             ThemePrefs.themeSelectionShown = true
+        }
+    }
+
+    private fun updateTheme() {
+        lifecycleScope.launch {
+            val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, false) }
+            ThemePrefs.applyCanvasTheme(theme, this@InitActivity)
+            bottomBar?.applyTheme(ThemePrefs.brandColor, getColor(R.color.textDarkest))
         }
     }
 
@@ -340,23 +351,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         if (user != null) {
             navigationDrawerUserName.text = Pronouns.span(user.shortName, user.pronouns)
             navigationDrawerUserEmail.text = user.primaryEmail
-
-            if (ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {
-                val initials = ProfileUtils.getUserInitials(user.shortName ?: "")
-                val color = getColorCompat(R.color.textDark)
-                val drawable = TextDrawable.builder()
-                    .beginConfig()
-                    .height(resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                    .width(resources.getDimensionPixelSize(R.dimen.profileAvatarSize))
-                    .toUpperCase()
-                    .useFont(Typeface.DEFAULT_BOLD)
-                    .textColor(color)
-                    .endConfig()
-                    .buildRound(initials, Color.WHITE)
-                navigationDrawerProfileImage.setImageDrawable(drawable)
-            } else {
-                Glide.with(this).load(user.avatarUrl).into(navigationDrawerProfileImage)
-            }
+            ProfileUtils.loadAvatarForUser(navigationDrawerProfileImage, user.shortName, user.avatarUrl)
         }
     }
 
@@ -393,8 +388,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     private fun addCoursesFragment() {
-        if (supportFragmentManager.findFragmentByTag(CoursesFragment::class.java.simpleName) == null) {
-            setBaseFragment(CoursesFragment.getInstance())
+        if (supportFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName) == null) {
+            setBaseFragment(DashboardFragment.getInstance())
         } else if (resources.getBoolean(R.bool.isDeviceTablet)) {
             container.visibility = View.VISIBLE
             masterDetailContainer.visibility = View.GONE
@@ -503,15 +498,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         ft.replace(R.id.master, fragment, fragment::class.java.simpleName)
         ft.replace(R.id.detail, detailFragment, detailFragment.javaClass.simpleName)
         ft.commit()
-    }
-
-    override fun onShowAllCoursesList() {
-        addFragment(AllCoursesFragment.getInstance())
-    }
-
-    override fun onShowEditFavoritesList() {
-        val args = EditFavoritesFragment.makeBundle(AppType.TEACHER)
-        RouteMatcher.route(this, Route(EditFavoritesFragment::class.java, null, args))
     }
 
     override fun onEditCourseNickname(course: Course) {

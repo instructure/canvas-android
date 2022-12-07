@@ -148,12 +148,12 @@ object AssignmentsApi {
     /** Seed some assignments, given a CreateAssignmentRequest and numAssignments.
      *     Returns a list of AssignmentApiModel objects.
      */
-    fun seedAssignments(request: AssignmentsApi.CreateAssignmentRequest, numAssignments: Int) : List<AssignmentApiModel> {
+    fun seedAssignments(request: CreateAssignmentRequest, numAssignments: Int) : List<AssignmentApiModel> {
         val seededAssignments = mutableListOf<AssignmentApiModel>()
 
         seededAssignments.addAll(
                 (0 until numAssignments).map {
-                    AssignmentsApi.createAssignment(request)
+                    createAssignment(request)
                 })
 
         return seededAssignments

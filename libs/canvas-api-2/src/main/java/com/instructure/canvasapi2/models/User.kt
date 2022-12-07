@@ -17,9 +17,9 @@
 
 package com.instructure.canvasapi2.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.util.ArrayList
 
 @Parcelize
 data class User(
@@ -49,7 +49,9 @@ data class User(
         @SerializedName("k5_user")
         val k5User: Boolean = false,
         @SerializedName("root_account")
-        val rootAccount: String? = null
+        val rootAccount: String? = null,
+        val isFakeStudent: Boolean = false,
+        val calendar: UserCalendar? = null
 ) : CanvasContext() {
     override val comparisonString get() = name
     override val type get() = CanvasContext.Type.USER
@@ -97,3 +99,6 @@ data class User(
     fun canUpdateAvatar(): Boolean = permissions != null && permissions!!.canUpdateAvatar
     fun canUpdateName(): Boolean = permissions != null && permissions!!.canUpdateName
 }
+
+@Parcelize
+data class UserCalendar(val ics: String) : Parcelable

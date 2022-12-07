@@ -39,4 +39,5 @@
 
     <string name="removedComment">Fjernet %1$s af %2$s</string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

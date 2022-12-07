@@ -34,7 +34,7 @@ class CourseBrowserPageTest : TeacherTest() {
         val course = data.courses.values.first()
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.assertPageObjects()
     }
 }

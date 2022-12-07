@@ -28,11 +28,13 @@ import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.utils.ApiPrefs.getValidToken
 import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
 import com.instructure.loginapi.login.BuildConfig
+import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.view.CanvasLoadingView
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
+import javax.inject.Inject
 
 abstract class BaseLoginInitActivity : AppCompatActivity() {
 
@@ -54,18 +56,15 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
      */
     protected abstract fun beginLoginFlowIntent(): Intent?
 
-    protected abstract fun launchApplicationMainActivityIntent(): Intent
-
     @ColorInt
     protected abstract fun themeColor(): Int
 
     protected abstract fun userAgent(): String
 
-    protected abstract val isTesting: Boolean
-
-    protected abstract fun logout()
-
     private val viewModel: LoginViewModel by viewModels()
+
+    @Inject
+    lateinit var navigation: LoginNavigation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,19 +90,7 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                 startActivity(beginLoginFlowIntent())
             } else {
                 // Start App
-                viewModel.checkIfTokenIsValid().observe(this, Observer { event ->
-                    event.getContentIfNotHandled()?.let {
-                        if (it) {
-                            startApp()
-                            // We only want to finish here on debug builds, our login bypass for UI testing depends
-                            // on a function called by this class, which then finishes the activity.
-                            // See loginWithToken() in Teacher's InitLoginActivity.
-                            if (!isTesting) finish()
-                        } else {
-                            logout()
-                        }
-                    }
-                })
+                navigation.startLogin(viewModel, true)
             }
         } else {
             Handler().postDelayed({
@@ -114,34 +101,11 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                         startActivity(beginLoginFlowIntent())
                     } else {
                         //Start App
-                        viewModel.checkIfTokenIsValid().observe(this, Observer { event ->
-                            event.getContentIfNotHandled()?.let {
-                                if (it) {
-                                    startApp()
-                                    finish()
-                                } else {
-                                    logout()
-                                }
-                            }
-                        })
+                        navigation.startLogin(viewModel, true)
                     }
                 }
             }, 1750) // This delay allows the animation to finish.
         }
-    }
-
-    /**
-     * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
-     */
-    protected open fun startApp() {
-        viewModel.checkCanvasForElementaryFeature().observe(this, Observer { event: Event<Boolean>? ->
-            event?.getContentIfNotHandled()?.let { result: Boolean ->
-                val intent = launchApplicationMainActivityIntent()
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                intent.putExtra("canvas_for_elementary", result)
-                startActivity(intent)
-            }
-        })
     }
 
     private fun applyTheme() {

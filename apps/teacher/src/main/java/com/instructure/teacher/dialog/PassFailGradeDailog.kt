@@ -99,8 +99,8 @@ class PassFailGradeDailog : AppCompatDialogFragment() {
                 .create()
 
         passFailDialog.setOnShowListener {
-            passFailDialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
-            passFailDialog.getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+            passFailDialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            passFailDialog.getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
         }
 
         return passFailDialog

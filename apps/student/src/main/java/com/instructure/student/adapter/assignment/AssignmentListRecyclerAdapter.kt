@@ -23,14 +23,16 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
 import com.instructure.student.holders.AssignmentViewHolder
@@ -45,7 +47,8 @@ abstract class AssignmentListRecyclerAdapter (
         context: Context,
         private val canvasContext: CanvasContext,
         private val adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
-        isTesting: Boolean = false
+        isTesting: Boolean = false,
+        filter: AssignmentListFilter = AssignmentListFilter.ALL
 ) : ExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder>(
         context,
         AssignmentGroup::class.java,
@@ -56,6 +59,16 @@ abstract class AssignmentListRecyclerAdapter (
     override var currentGradingPeriod: GradingPeriod? = null
     private var apiJob: WeaveJob? = null
     protected var assignmentGroups: List<AssignmentGroup> = emptyList()
+
+    var filter: AssignmentListFilter = AssignmentListFilter.ALL
+    set(value) {
+        field = value
+        if (isAllPagesLoaded) {
+            clear()
+            populateData()
+            onCallbackFinished(ApiType.CACHE)
+        }
+    }
 
     var searchQuery: String = ""
         set(value) {
@@ -70,6 +83,7 @@ abstract class AssignmentListRecyclerAdapter (
     init {
         isExpandedByDefault = true
         isDisplayEmptyCell = true
+        this.filter = filter
         if (!isTesting) loadData()
     }
 
@@ -171,7 +185,7 @@ abstract class AssignmentListRecyclerAdapter (
             assignmentGroup: AssignmentGroup,
             assignment: Assignment
     ) {
-        (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.color, adapterToAssignmentsCallback)
+        (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.backgroundColor, adapterToAssignmentsCallback)
     }
 
     override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder, assignmentGroup: AssignmentGroup) {
@@ -230,4 +244,12 @@ abstract class AssignmentListRecyclerAdapter (
         super.cancel()
         apiJob?.cancel()
     }
+}
+
+enum class AssignmentListFilter {
+    ALL,
+    LATE,
+    MISSING,
+    GRADED,
+    UPCOMING
 }

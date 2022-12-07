@@ -310,7 +310,7 @@
     <string name="frontPage">Pagina iniziale</string>
     <string name="course_modules">Moduli dei corsi</string>
     <string name="assignments_list">Elenco compiti</string>
-    <string name="syllabus">Piano di studio</string>
+    <string name="syllabus">Syllabus</string>
     <!--End Course Settings-->
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Più date di scadenza</string>
@@ -887,13 +887,13 @@
     <string name="ltiLaunchFailure">Impossibile caricare questo strumento LTI in questo momento.</string>
     <string name="downloading">Download in corso...</string>
     <!-- Edit Syllabus -->
-    <string name="syllabusSuccessfullyUpdated">Programma Piano di studio aggiornato correttamente.</string>
-    <string name="errorSavingSyllabus">Si è verificato un errore durante il tentativo di salvare il Programma Piano di studio. Riprova.</string>
-    <string name="editSyllabusTitle">Modifica Programma Piano di studio</string>
+    <string name="syllabusSuccessfullyUpdated">Syllabus aggiornato correttamente.</string>
+    <string name="errorSavingSyllabus">Si è verificato un errore durante il tentativo di salvare il syllabus. Riprova.</string>
+    <string name="editSyllabusTitle">Modifica syllabus</string>
     <string name="editSyllabusContent">Contenuto</string>
     <string name="editSyllabusDetails">Dettagli</string>
     <string name="editSyllabusShowCourseSummary">Mostra riepilogo corsi</string>
-    <string name="editSyllabusContentAccessibilityLabel">Contenuto Programma Piano di studio</string>
+    <string name="editSyllabusContentAccessibilityLabel">Contenuto syllabus</string>
 
     <string name="no_grade">Nessun voto</string>
     <string name="excuse">Giustifica</string>

@@ -99,14 +99,14 @@ open class InternalWebviewFragment : ParentFragment() {
         val rootView = inflater.inflate(R.layout.fragment_webview, container, false) ?: return null
 
         with(rootView) {
-            canvasWebView.settings.loadWithOverviewMode = true
-            originalUserAgentString = canvasWebView.settings.userAgentString
-            canvasWebView.settings.userAgentString = ApiPrefs.userAgent
-            canvasWebView.setInitialScale(100)
-            canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
+            canvasWebViewWrapper.webView.settings.loadWithOverviewMode = true
+            originalUserAgentString = canvasWebViewWrapper.webView.settings.userAgentString
+            canvasWebViewWrapper.webView.settings.userAgentString = ApiPrefs.userAgent
+            canvasWebViewWrapper.webView.setInitialScale(100)
+            canvasWebViewWrapper.webView.setDarkModeSupport(webThemeDarkeningOnly = true)
             webViewLoading?.setVisible(true)
 
-            canvasWebView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
+            canvasWebViewWrapper.webView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
                 override fun onProgressChangedCallback(view: WebView?, newProgress: Int) {
                     if (newProgress == 100) {
                         webViewLoading?.setGone()
@@ -116,8 +116,8 @@ open class InternalWebviewFragment : ParentFragment() {
             }
 
             // Open a new page to view some types of embedded video content
-            canvasWebView.addVideoClient(requireActivity())
-            canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            canvasWebViewWrapper.webView.addVideoClient(requireActivity())
+            canvasWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
                 override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                     openMedia(canvasContext, url, filename)
                 }
@@ -169,7 +169,7 @@ open class InternalWebviewFragment : ParentFragment() {
                     RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true, allowUnsupportedRouting)
                 }
             }
-            canvasWebView.setMediaDownloadCallback(object : CanvasWebView.MediaDownloadCallback{
+            canvasWebViewWrapper.webView.setMediaDownloadCallback(object : CanvasWebView.MediaDownloadCallback{
                 override fun downloadMedia(mime: String?, url: String?, filename: String?) {
                     downloadUrl = url
                     downloadFilename = filename
@@ -184,7 +184,7 @@ open class InternalWebviewFragment : ParentFragment() {
             })
 
             if (savedInstanceState != null) {
-                canvasWebView?.restoreState(savedInstanceState)
+                canvasWebViewWrapper?.webView?.restoreState(savedInstanceState)
             }
         }
 
@@ -227,12 +227,12 @@ open class InternalWebviewFragment : ParentFragment() {
 
     override fun onResume() {
         super.onResume()
-        canvasWebView?.onResume()
+        canvasWebViewWrapper?.webView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        canvasWebView?.onPause()
+        canvasWebViewWrapper?.webView?.onPause()
     }
 
     override fun onStop() {
@@ -242,7 +242,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        canvasWebView?.saveState(outState)
+        canvasWebViewWrapper?.webView?.saveState(outState)
     }
 
     override fun onDestroyView() {
@@ -263,7 +263,7 @@ open class InternalWebviewFragment : ParentFragment() {
     //endregion
 
     //region Parent Fragment Overrides
-    override fun handleBackPressed() = canvasWebView?.handleGoBack() ?: false
+    override fun handleBackPressed() = canvasWebViewWrapper?.webView?.handleGoBack() ?: false
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.launchExternalWeb) {
@@ -294,9 +294,9 @@ open class InternalWebviewFragment : ParentFragment() {
             // We want to check for Modules as well, since the fragments within the viewpager won't show up as top level
             if (clazz != null && (InternalWebviewFragment::class.java.isAssignableFrom(clazz)
                     || CourseModuleProgressionFragment::class.java.isAssignableFrom(clazz))) {
-                canvasWebView.onResume()
+                canvasWebViewWrapper.webView.onResume()
             } else {
-                canvasWebView.onPause()
+                canvasWebViewWrapper.webView.onPause()
             }
         }
     }
@@ -305,12 +305,12 @@ open class InternalWebviewFragment : ParentFragment() {
     //region Functionality
     fun canGoBack(): Boolean {
         return if (!shouldCloseFragment) {
-            canvasWebView?.canGoBack() ?: false
+            canvasWebViewWrapper?.webView?.canGoBack() ?: false
         } else false
     }
 
     fun getCanvasLoading(): ProgressBar? = webViewLoading
-    fun getCanvasWebView(): CanvasWebView? = canvasWebView
+    fun getCanvasWebView(): CanvasWebView? = canvasWebViewWrapper?.webView
     fun getIsUnsupportedFeature(): Boolean = isUnsupportedFeature
     private fun getReferer(): Map<String, String> = mutableMapOf(Pair("Referer", ApiPrefs.domain))
 
@@ -326,12 +326,12 @@ open class InternalWebviewFragment : ParentFragment() {
 
     fun loadHtml(data: String, mimeType: String, encoding: String, historyUrl: String?) {
         // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-        canvasWebView?.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
+        canvasWebViewWrapper?.webView?.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
     }
 
     fun loadUrl(targetUrl: String?) {
         if (!html.isNullOrBlank()) {
-            canvasWebView?.loadHtml(html!!, title ?: "")
+            canvasWebViewWrapper?.loadHtml(html!!, title ?: "")
             return
         }
 
@@ -351,7 +351,7 @@ open class InternalWebviewFragment : ParentFragment() {
                     }
                 } else {
                     // External URL, use the non-Canvas specific user agent string
-                    canvasWebView.settings.userAgentString = originalUserAgentString
+                    canvasWebViewWrapper.webView.settings.userAgentString = originalUserAgentString
                 }
 
                 if (getIsUnsupportedFeature()) {
@@ -362,13 +362,13 @@ open class InternalWebviewFragment : ParentFragment() {
                             .build().toString()
                 }
 
-                canvasWebView?.loadUrl(url!!, getReferer())
+                canvasWebViewWrapper?.webView?.loadUrl(url!!, getReferer())
             }
         }
     }
 
     protected fun populateWebView(content: String) = populateWebView(content, null)
-    protected fun populateWebView(content: String, title: String?) = canvasWebView?.loadHtml(content, title)
+    protected fun populateWebView(content: String, title: String?) = canvasWebViewWrapper?.loadHtml(content, title)
 
     fun setShouldLoadUrl(shouldLoadUrl: Boolean) {
         this.shouldLoadUrl = shouldLoadUrl

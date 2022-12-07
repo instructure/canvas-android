@@ -70,7 +70,11 @@ class FileUploadDialogFragment : DialogFragment() {
     private var dialogCallback: ((Int) -> Unit)? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
-        if (isPermissionGranted) takePicture()
+        if (isPermissionGranted) {
+            takePicture()
+        } else if (!requireActivity().shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+            toast(R.string.cameraPermissionPermanentlyDenied, Toast.LENGTH_LONG)
+        }
     }
 
     private val takePictureContract = registerForActivityResult(ActivityResultContracts.TakePicture()) { imageSaved ->
@@ -154,10 +158,10 @@ class FileUploadDialogFragment : DialogFragment() {
 
         dialog.setOnShowListener {
             val positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-            positive.setTextColor(ThemePrefs.buttonColor)
+            positive.setTextColor(ThemePrefs.textButtonColor)
             positive.setOnClickListener { uploadClicked() }
             val negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-            negative.setTextColor(ThemePrefs.buttonColor)
+            negative.setTextColor(ThemePrefs.textButtonColor)
             negative.setOnClickListener {
                 cancelClicked()
             }

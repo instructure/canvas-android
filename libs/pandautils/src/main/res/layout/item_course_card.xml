@@ -51,9 +51,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:importantForAccessibility="no"
-                    android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                    android:background="@{itemViewModel.data.color.textAndIconColor()}"
                     app:imageUrl="@{itemViewModel.data.imageUrl}"
-                    app:overlayColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                    app:overlayColor="@{itemViewModel.data.color.textAndIconColor()}"
                     tools:background="@color/backgroundInfo"/>
 
                 <TextView
@@ -66,7 +66,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
-                    android:textColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                    android:textColor="@{itemViewModel.data.color.textAndIconColor()}"
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:maxLines="2"
@@ -80,7 +80,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                    android:background="@{itemViewModel.data.color.textAndIconColor()}"
                     tools:background="@color/backgroundInfo" />
 
                 <LinearLayout
@@ -100,7 +100,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:src="@drawable/ic_homeroom_todo"
-                        android:tint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                        android:tint="@{itemViewModel.data.color.textAndIconColor()}"
                         android:importantForAccessibility="no"
                         tools:tint="@color/textInfo" />
 
@@ -111,7 +111,7 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginTop="6dp"
                         android:layout_marginEnd="8dp"
-                        android:text="@{itemViewModel.assignmentsInfo}"
+                        android:text="@{itemViewModel.getAssignmentsInfo(context)}"
                         android:textColor="@color/textDarkest"
                         android:textSize="13sp"
                         tools:text="Nothing due today" />
@@ -144,7 +144,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:src="@drawable/ic_homeroom_announcement"
-                        android:tint="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+                        android:tint="@{itemViewModel.data.color.textAndIconColor()}"
                         android:importantForAccessibility="no"
                         tools:tint="@color/textInfo" />
 

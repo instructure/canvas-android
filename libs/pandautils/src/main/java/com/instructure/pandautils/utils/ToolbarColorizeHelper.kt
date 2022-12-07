@@ -17,6 +17,7 @@
 package com.instructure.pandautils.utils
 
 import android.app.Activity
+import android.content.res.ColorStateList
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.Toolbar
@@ -40,7 +41,7 @@ object ToolbarColorizeHelper {
      * @param toolbarIconsColor the target color of toolbar icons
      * @param activity reference to activity needed to register observers
      */
-    fun colorizeToolbar(toolbar: Toolbar, toolbarIconsColor: Int, activity: Activity) {
+    fun colorizeToolbar(toolbar: Toolbar, toolbarIconsColor: Int, activity: Activity, disabledColor: Int? = null) {
         toolbar.children.forEach { v ->
             when (v) {
             // Step 1: Change the color of back button (or open drawer button).
@@ -50,7 +51,13 @@ object ToolbarColorizeHelper {
             // Step 2: Change the color of any ActionMenuViews - icons that are not back button, nor text, nor overflow menu icon.
                 is ActionMenuView -> v.children<ActionMenuItemView>().forEach { menuItemView ->
                     // Sets text color for ActionMenuItemView when icon is not present
-                    menuItemView.setTextColor(toolbarIconsColor)
+                    if (disabledColor != null) {
+                        val colorStateList = ViewStyler.generateColorStateList(intArrayOf(android.R.attr.state_enabled) to toolbarIconsColor,
+                            intArrayOf() to disabledColor)
+                        menuItemView.setTextColor(colorStateList)
+                    } else {
+                        menuItemView.setTextColor(toolbarIconsColor)
+                    }
                     menuItemView.compoundDrawables.filterNotNull().forEach {
                         // Double-post the tinting process, otherwise vector drawables won't be tinted the first time they are decoded
                         ColorUtils.tintIt(toolbarIconsColor, it)

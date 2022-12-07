@@ -26,11 +26,14 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
 import io.mockk.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -45,8 +48,9 @@ class CourseCardCreatorTest {
     private val announcementManager: AnnouncementManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val events: MutableLiveData<Event<HomeroomAction>> = mockk(relaxed = true)
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
-    private val courseCardCreator = CourseCardCreator(plannerManager, userManager, announcementManager, resources)
+    private val courseCardCreator = CourseCardCreator(plannerManager, userManager, announcementManager, resources, colorKeeper)
 
     @Before
     fun setUp() {
@@ -63,6 +67,15 @@ class CourseCardCreatorTest {
         every { userManager.getAllMissingSubmissionsAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
+
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
+        every { ColorKeeper.darkTheme } returns false
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
@@ -77,6 +90,8 @@ class CourseCardCreatorTest {
 
         // Then
         verify { plannerManager.getPlannerItemsAsync(any(), eq(todayString!!), eq(tomorrowString!!)) }
+
+        unmockkAll()
     }
 
     @Test
@@ -103,7 +118,6 @@ class CourseCardCreatorTest {
         // Then
         assertEquals(1, courseCards.size)
         assertEquals("Test course", courseCards[0].data.courseName)
-        assertEquals("#123456", courseCards[0].data.courseColor)
         assertEquals("www.imageurl.com", courseCards[0].data.imageUrl)
     }
 
@@ -227,19 +241,6 @@ class CourseCardCreatorTest {
         // Then
         assertEquals(1, courseCards.size)
         assertEquals("", courseCards[0].data.assignmentsMissingText)
-    }
-
-    @Test
-    fun `Create course card with default color if no color is set`() = runBlockingTest {
-        // Given
-        val courses = listOf(Course(id = 1, name = "Test course"))
-
-        // When
-        val courseCards = courseCardCreator.createCourseCards(courses, false, false, events)
-
-        // Then
-        assertEquals(1, courseCards.size)
-        assertEquals("#394B58", courseCards[0].data.courseColor)
     }
 
     private fun createPlannerItem(courseId: Long, plannableType: PlannableType, submitted: Boolean, missing: Boolean): PlannerItem {

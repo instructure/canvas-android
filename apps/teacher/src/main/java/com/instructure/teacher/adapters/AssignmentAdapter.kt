@@ -29,7 +29,7 @@ import com.instructure.teacher.presenters.AssignmentListPresenter
 import com.instructure.teacher.viewinterface.AssignmentListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
-class AssignmentAdapter(context: Context, expandablePresenter: AssignmentListPresenter, private val mCourseColor: Int, private val mCallback: (Assignment) -> Unit) :
+class AssignmentAdapter(context: Context, expandablePresenter: AssignmentListPresenter, private val iconColor: Int, private val mCallback: (Assignment) -> Unit) :
         SyncExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder, AssignmentListView>(context, expandablePresenter) {
 
     override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder {
@@ -53,7 +53,7 @@ class AssignmentAdapter(context: Context, expandablePresenter: AssignmentListPre
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: AssignmentGroup, item: Assignment) {
-        context?.let { (holder as AssignmentViewHolder).bind(it, item, mCourseColor, mCallback) }
+        context?.let { (holder as AssignmentViewHolder).bind(it, item, iconColor, mCallback) }
     }
 
 }

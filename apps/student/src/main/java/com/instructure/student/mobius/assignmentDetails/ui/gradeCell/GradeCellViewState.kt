@@ -21,10 +21,12 @@ import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 
 sealed class GradeCellViewState {
@@ -80,7 +82,7 @@ sealed class GradeCellViewState {
             /* The accent color, which determines the graph color and color of the late penalty text, should match
              * the course color. The only exception to this is when the submission for a Complete/Incomplete assignment
              * is graded as Incomplete, in which case the accent color should match the gray text color */
-            val accentColor = ColorKeeper.getOrGenerateColor("course_${assignment.courseId}")
+            val accentColor = CanvasContext.emptyCourseContext(assignment.courseId).textAndIconColor
 
             /* The 'Out of' text abbreviates the word "points" to "pts" which is read as "P T S" by screen readers, so
              * we use a second string with the full word "points" as a content description. */

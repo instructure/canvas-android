@@ -36,7 +36,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.Navigation
-import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -44,7 +44,10 @@ import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
@@ -60,7 +63,6 @@ import kotlinx.android.synthetic.main.dialog_submission_picker.*
 import kotlinx.android.synthetic.main.dialog_submission_picker_media.*
 import kotlinx.android.synthetic.main.fragment_assignment_details.*
 import kotlinx.coroutines.Job
-import java.net.URLDecoder
 
 class AssignmentDetailsView(
         val canvasContext: CanvasContext,
@@ -87,10 +89,10 @@ class AssignmentDetailsView(
             toolbar.setMenu(R.menu.bookmark_menu) { consumer?.accept(AssignmentDetailsEvent.AddBookmarkClicked) }
         }
 
-        submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
-        submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
-        draftAvailableSubtitle.setTextColor(ThemePrefs.buttonColor)
-        submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
+        submissionStatusFailedSubtitle.setTextColor(ThemePrefs.textButtonColor)
+        submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.textButtonColor)
+        draftAvailableSubtitle.setTextColor(ThemePrefs.textButtonColor)
+        submissionAndRubricLabel.setTextColor(ThemePrefs.textButtonColor)
         submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
 
@@ -131,7 +133,7 @@ class AssignmentDetailsView(
     }
 
     private fun setupDescriptionView() {
-        descriptionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        descriptionWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(context as FragmentActivity, url)
             }
@@ -146,7 +148,7 @@ class AssignmentDetailsView(
             }
         }
 
-        descriptionWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        descriptionWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) {
                 InternalWebviewFragment.loadInternalWebView(
                     context,
@@ -173,7 +175,7 @@ class AssignmentDetailsView(
             submissionRubricButton.setVisible(visibilities.submissionAndRubricButton)
             lockImageContainer.setVisible(visibilities.lockedImage)
             noDescriptionContainer.setVisible(visibilities.noDescriptionLabel)
-            descriptionWebView.setVisible(visibilities.description)
+            descriptionWebViewWrapper.setVisible(visibilities.description)
             allowedAttemptsContainer.setVisible(visibilities.allowedAttempts)
             submitButton.isEnabled = visibilities.submitButtonEnabled && visibilities.submitButton
             if (visibilities.submitButtonEnabled) {
@@ -217,14 +219,11 @@ class AssignmentDetailsView(
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
-            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description,
-                { html, contentDescription -> loadDescriptionHtml(html, contentDescription, state.htmlUrl) }, {
-                    val args = LtiLaunchFragment.makeLTIBundle(
-                        URLDecoder.decode(it, "utf-8"), context.getString(R.string.utils_externalToolTitle), true
-                    )
-                    RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
-                }, state.assignmentName
-            )
+            loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(context, state.description, {
+                loadDescriptionHtml(it, state.assignmentName, state.htmlUrl)
+            }) {
+                LtiLaunchFragment.routeLtiLaunchFragment(context, canvasContext, it)
+            }
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
         if(state.visibilities.discussionTopicHeader) renderDiscussionTopicHeader(state.discussionHeaderViewState!!)
@@ -234,7 +233,7 @@ class AssignmentDetailsView(
     }
 
     private fun loadDescriptionHtml(html: String, contentDescription: String?, baseUrl: String?) {
-        descriptionWebView.loadHtml(html, contentDescription, baseUrl = baseUrl)
+        descriptionWebViewWrapper.loadHtml(html, contentDescription, baseUrl = baseUrl)
     }
 
     private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {
@@ -260,7 +259,7 @@ class AssignmentDetailsView(
 
     override fun onDispose() {
         loadHtmlJob?.cancel()
-        descriptionWebView.stopLoading()
+        descriptionWebViewWrapper.webView.stopLoading()
     }
 
     fun showSubmitDialogView(assignment: Assignment, courseId: Long, visibilities: SubmissionTypesVisibilities, ltiToolUrl: String? = null, ltiToolName: String? = null) {
@@ -343,7 +342,7 @@ class AssignmentDetailsView(
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
         logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
-        RouteMatcher.route(context, DiscussionDetailsFragment.makeRoute(canvasContext, discussionTopicHeaderId))
+        RouteMatcher.route(context, DiscussionRouterFragment.makeRoute(canvasContext, discussionTopicHeaderId))
     }
 
     fun showDiscussionAttachment(canvasContext: CanvasContext, discussionAttachment: Attachment) {

@@ -22,7 +22,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import androidx.work.await
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
@@ -44,7 +46,6 @@ import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.toHexString
 import org.threeten.bp.OffsetDateTime
 import java.util.*
 import javax.inject.Inject
@@ -80,9 +81,11 @@ class DashboardNotificationsViewModel @Inject constructor(
     private var groupMap: Map<Long, Group> = emptyMap()
 
     private val runningWorkersObserver = Observer<List<UUID>> {
-        _data.value?.uploadItems?.forEach { it.clear() }
-        _data.value?.uploadItems = getUploads(it)
-        _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+        viewModelScope.launch {
+            _data.value?.uploadItems?.forEach { it.clear() }
+            _data.value?.uploadItems = getUploads(it).filterNotNull()
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+        }
     }
 
     init {
@@ -116,7 +119,7 @@ class DashboardNotificationsViewModel @Inject constructor(
             val conferenceViewModels = getConferences(forceNetwork)
             items.addAll(conferenceViewModels)
 
-            val uploadViewModels = getUploads(fileUploadPreferences.getRunningWorkerIds())
+            val uploadViewModels = getUploads(fileUploadPreferences.getRunningWorkerIds()).filterNotNull()
 
             _data.postValue(DashboardNotificationsViewData(items, uploadViewModels))
         }
@@ -133,9 +136,9 @@ class DashboardNotificationsViewModel @Inject constructor(
         return accountNotifications?.map {
 
             val color = when (it.icon) {
-                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> resources.getColor(R.color.backgroundDanger)
-                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> resources.getColor(R.color.backgroundWarning)
-                else -> resources.getColor(R.color.backgroundInfo)
+                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> R.color.backgroundDanger
+                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> R.color.backgroundWarning
+                else -> R.color.backgroundInfo
             }
 
             val icon = when (it.icon) {
@@ -151,7 +154,7 @@ class DashboardNotificationsViewModel @Inject constructor(
                     id = it.id,
                     subject = it.subject,
                     message = it.message,
-                    color = "#${color.toHexString()}",
+                    color = color,
                     icon = icon
                 ),
                 this@DashboardNotificationsViewModel::dismissAnnouncement,
@@ -220,15 +223,16 @@ class DashboardNotificationsViewModel @Inject constructor(
         }
     }
 
-    private fun getUploads(runningWorkerIds: List<UUID>) = runningWorkerIds.map {
-        val workInfo = workManager.getWorkInfoById(it).get()
-        val uploadViewData = UploadViewData(
-            workInfo.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
-            workInfo.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
-            "#${resources.getColor(R.color.backgroundInfo).toHexString()}",
-        )
-        UploadItemViewModel(it, workManager, uploadViewData) { uuid ->
-            _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
+    private suspend fun getUploads(runningWorkerIds: List<UUID>) = runningWorkerIds.map { uuid ->
+        val workInfo: WorkInfo? = workManager.getWorkInfoById(uuid).await()
+        workInfo?.let {
+            val uploadViewData = UploadViewData(
+                it.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
+                it.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty()
+            )
+            UploadItemViewModel(uuid, workManager, uploadViewData) { uuid ->
+                _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))
+            }
         }
     }
 
