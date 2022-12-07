@@ -63,7 +63,7 @@ class InboxE2ETest: StudentTest() {
         GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
         GroupsApi.createGroupMembership(group.id, student2.id, teacher.token)
 
-        Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId} , password: ${student1.password}")
+        Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId}.")
         tokenLogin(student1)
         dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course)
@@ -124,7 +124,7 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Log out with ${student1.name} student.")
         dashboardPage.logOut()
 
-        Log.d(STEP_TAG,"Login with user: ${student2.name}, login id: ${student2.loginId} , password: ${student2.password}")
+        Log.d(STEP_TAG,"Login with user: ${student2.name}, login id: ${student2.loginId}.")
         tokenLogin(student2)
         dashboardPage.waitForRender()
 

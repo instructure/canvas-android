@@ -19,6 +19,7 @@ package com.instructure.teacher.ui.utils
 import android.app.Activity
 import android.content.Context
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.utils.PandaAppResetter
 import com.instructure.pandautils.utils.ThemePrefs
@@ -30,6 +31,7 @@ class TeacherActivityTestRule<T: Activity>(activityClass: Class<T>) : Instructur
         PandaAppResetter.reset(context)
         TeacherPrefs.safeClearPrefs()
         PreviousUsersUtils.clear(context)
+        LoginPrefs.clearPrefs()
 
         // We need to set this true so the theme selector won't stop our tests.
         ThemePrefs.themeSelectionShown = true

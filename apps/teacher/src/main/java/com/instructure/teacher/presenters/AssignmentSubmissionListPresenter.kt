@@ -30,7 +30,6 @@ import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
 import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.Job
 import java.util.*
-import kotlin.collections.ArrayList
 
 class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var mFilter: SubmissionListFilter) : SyncPresenter<GradeableStudentSubmission, AssignmentSubmissionListView>(GradeableStudentSubmission::class.java) {
 
@@ -79,7 +78,10 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
                     // Students need the enrollment info
                     var user = enrollmentMap[it.id]?.user
                     // Users can be enrolled in multiple sections, so we need to get all of them
-                    user = user?.copy(enrollments = user.enrollments + enrollments.filter { it.userId == user?.id })
+                    user = user?.copy(
+                        enrollments = user.enrollments + enrollments.filter { enrollment -> enrollment.userId == user?.id },
+                        isFakeStudent = it.isFakeStudent
+                    )
                     // Need to null out the user object to prevent infinite parcels
                     user?.enrollments?.forEach { it.user = null }
                     user

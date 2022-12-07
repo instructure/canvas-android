@@ -31,7 +31,7 @@ import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 class DiscussionListAdapter(
     context: Context,
     expandablePresenter: DiscussionListPresenter,
-    private val mCourseColor: Int,
+    private val iconColor: Int,
     private val mIsAnnouncement: Boolean,
     private val mCallback: (DiscussionTopicHeader) -> Unit,
     private val mOverflowCallback: (String?, DiscussionTopicHeader) -> Unit
@@ -66,6 +66,6 @@ class DiscussionListAdapter(
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: String, item: DiscussionTopicHeader) {
-        context?.let { (holder as DiscussionListHolder).bind(it, item, group, mCourseColor, mIsAnnouncement, mCallback, mOverflowCallback) }
+        context?.let { (holder as DiscussionListHolder).bind(it, item, group, iconColor, mIsAnnouncement, mCallback, mOverflowCallback) }
     }
 }

@@ -25,13 +25,13 @@ import com.instructure.teacher.viewinterface.FileListView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class FileListAdapter(
-        private val mContext: Context,
-        private val mCourseColor: Int,
-        presenter: FileListPresenter,
-        private val mCallback: (FileFolder) -> Unit) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder, FileListView>(mContext, presenter) {
+    private val mContext: Context,
+    private val iconColor: Int,
+    presenter: FileListPresenter,
+    private val mCallback: (FileFolder) -> Unit) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder, FileListView>(mContext, presenter) {
 
     override fun bindHolder(model: FileFolder, holder: FileFolderViewHolder, position: Int) {
-        holder.bind(model, mCourseColor, mContext, mCallback)
+        holder.bind(model, iconColor, mContext, mCallback)
     }
 
     override fun createViewHolder(v: View, viewType: Int) = FileFolderViewHolder(v)

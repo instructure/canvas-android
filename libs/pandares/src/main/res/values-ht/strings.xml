@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Afichaj Elèv</string>
 
 
+    <string name="rateOnThePlayStore">Evalye nan Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Antèt chwazi: %s</string>
     <string name="content_description_chosen_body">Kò chwazi: %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Bouyon Disponib</string>
     <string name="errorLoadingSubmission">Yon erè fèt pandan chajman soumisyon an</string>
     <string name="loadFullContent">Tape pou wè tout kontni an</string>
+    <string name="openLtiInExternalApp">Tape pou ouvri nan app ekstèn</string>
     <string name="dashboardTabImportantDates">Dat Enpòtan</string>
     <string name="importantDatesEmptyTitle">Pa gen Dat Enpòtan</string>
     <string name="important_dates">Dat Enpòtan</string>
@@ -1263,8 +1265,8 @@
     <string name="appThemeSystem">Menm ak aparèy la</string>
     <string name="themeSelectorTitle">Canvas disponib kounye a an mòd sonm</string>
     <string name="themeSelectorDescription">Chwazi app pou chanje mòd la</string>
-    <string name="themeSelectorLightTheme">Mòd klere</string>
-    <string name="themeSelectorDarkTheme">Mòd sonm</string>
+    <string name="themeSelectorLightTheme">Tèm klere</string>
+    <string name="themeSelectorDarkTheme">Tèm fonse</string>
     <string name="themeSelectorDeviceTheme">Menm ak mòd aparèy la</string>
     <string name="themeSelectorSave">Anrejistre</string>
     <string name="themeSelectorChangeLater">Ou ka chanje l apre nan paramèt app la.</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s mesaj poko li</item>
         <item quantity="other">%s mesaj poko li</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s notofikasyon ki poko li</item>
+        <item quantity="other">%s notofikasyon ki poko li</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Pa gen anotasyon ki seleksyone</string>
     <string name="emailNotifications">Avètisman Imèl</string>
     <string name="emailNotificationsImmediately">Kounye a menm</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Chak semenn</string>
     <string name="emailNotificationsNever">Jamè</string>
     <string name="selectFrequency">Seleksyone frekans</string>
+    <string name="a11y_closeProgress">Fèmen dyalìg pwogrè</string>
+    <string name="fileUploadProgress">%1$s de %2$s</string>
+    <string name="fileUploadProgressSubtitle">Transfere nan Fichye</string>
+    <string name="submissionProgressSubtitle">Transfere Soumisyon nan \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Chajman Soumisyon</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Ajoute Fichye</string>
+    <string name="cancelSubmissionDialogTitle">Anile Soumisyon</string>
+    <string name="cancelSubmissionDialogMessage">Aksyon sa a ap anile epi efase soumisyon w lan.</string>
+    <string name="fileUploadError">Transfè Fichye Echwe</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Transfere nan Canvas pou %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Transfere nan Fichye Mwen</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Soumèt devwa</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Chwazi yon kou</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Chwazi yon devwa</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Anile Transfè?</string>
+    <string name="cancelFileUploadMessage">Sa ap anile transfè w la.</string>
+    <string name="menuTitleFilterAssignments">Filtre devwa</string>
+    <string name="filterAssignmentDialogTitle">Filtre devwa yo</string>
+    <string name="filterAssignmentsDialogCancel">Anile</string>
+    <string name="filterAssignmentAll">Tout</string>
+    <string name="filterAssignmentLate">An reta</string>
+    <string name="filterAssignmentMissing">Manke</string>
+    <string name="filterAssignmentGraded">Klase</string>
+    <string name="filterAssignmentUpcoming">Pwochen</string>
+    <string name="createdByStudentView">Kreye pa Afichaj Elèv</string>
+    <string name="discussionErrorToast">Yon erè pase. Sijè a kapab pa disponib ankò.</string>
+    <string name="cameraPermissionPermanentlyDenied">Pèmisyon kamera a te refize an pèmanans. Ale nan paramèt app la pou otorize li.</string>
 </resources>

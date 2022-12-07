@@ -16,6 +16,7 @@
   -->
 
 <resources>
+
     <string name="inputText">Syöttöteksti</string>
     <string name="cancel">Peruuta</string>
     <string name="comment">Kommentti</string>
@@ -37,4 +38,5 @@
     <string name="pspdf__annotation_type_stamp">Huomautuksen väri</string>
     <string name="removedComment">Kohteen %1$s poistaja %2$s</string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

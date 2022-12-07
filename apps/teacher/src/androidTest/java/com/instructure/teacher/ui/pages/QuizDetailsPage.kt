@@ -39,7 +39,7 @@ class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
     private val dueDatesLayout by OnViewWithId(R.id.dueLayout)
     private val submissionsLayout by OnViewWithId(R.id.submissionsLayout)
     private val viewAllSubmissions by OnViewWithId(R.id.viewAllSubmissions)
-    private val instructionsWebView by WaitForViewWithId(R.id.instructionsWebView, autoAssert = false)
+    private val instructionsWebView by WaitForViewWithId(R.id.contentWebView, autoAssert = false)
     private val noInstructionsTextView by WaitForViewWithId(R.id.noInstructionsTextView, autoAssert = false)
     private val availabilityTextView by OnViewWithId(R.id.availabilityTextView, autoAssert = false)
     private val availabilityLayout by OnViewWithId(R.id.availabilityLayout, autoAssert = false)
@@ -50,7 +50,7 @@ class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
     private val notSubmittedDonut by OnViewWithId(R.id.notSubmittedWrapper)
 
     fun assertDisplaysInstructions() {
-        scrollTo(R.id.instructionsWebView)
+        scrollTo(R.id.contentWebView)
         instructionsWebView.assertVisible()
     }
 

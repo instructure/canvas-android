@@ -90,7 +90,7 @@
             android:importantForAccessibility="no"
             android:text="@{itemViewModel.data.courseName}"
             android:textAllCaps="true"
-            android:textColor="@{ColorUtils.parseColor(itemViewModel.data.courseColor)}"
+            android:textColor="@{itemViewModel.data.courseColor}"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/title"

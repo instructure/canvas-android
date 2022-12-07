@@ -39,4 +39,5 @@
 
     <string name="removedComment">移除%1$s者 %2$s</string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

@@ -42,7 +42,7 @@
         android:tint="@color/textDark"
         app:srcCompat="@drawable/ic_overflow_white_18dp"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/authorAvatar"
         android:layout_width="@dimen/message_avatar_dimen"
         android:layout_height="@dimen/message_avatar_dimen"

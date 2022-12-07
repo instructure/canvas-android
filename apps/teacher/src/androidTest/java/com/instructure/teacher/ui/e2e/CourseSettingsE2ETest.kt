@@ -52,12 +52,12 @@ class CourseSettingsE2ETest : TeacherTest() {
         val firstCourse = data.coursesList[0]
         val secondCourse = data.coursesList[1]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
 
         Log.d(STEP_TAG, "Open ${firstCourse.name} course and click on Course Settings button.")
         dashboardPage.waitForRender()
-        coursesListPage.openCourse(firstCourse)
+        dashboardPage.openCourse(firstCourse)
         courseBrowserPage.clickSettingsButton()
 
         Log.d(
@@ -92,11 +92,11 @@ class CourseSettingsE2ETest : TeacherTest() {
         )
         Espresso.pressBack()
         dashboardPage.waitForRender()
-        coursesListPage.assertDisplaysCourse(newCourseName)
+        dashboardPage.assertDisplaysCourse(newCourseName)
 
         Log.d(STEP_TAG, "Open ${secondCourse.name} course and click on Course Settings button.")
         dashboardPage.waitForRender()
-        coursesListPage.openCourse(secondCourse)
+        dashboardPage.openCourse(secondCourse)
         courseBrowserPage.clickSettingsButton()
 
         Log.d(
@@ -122,7 +122,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         )
         Espresso.pressBack()
         dashboardPage.waitForRender()
-        coursesListPage.assertDisplaysCourse(secondCourse.name)
+        dashboardPage.assertDisplaysCourse(secondCourse.name)
 
         Log.d(
             STEP_TAG,
@@ -130,7 +130,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         )
         refresh()
         dashboardPage.waitForRender()
-        coursesListPage.assertDisplaysCourse(newCourseName)
-        coursesListPage.assertDisplaysCourse(secondCourse.name)
+        dashboardPage.assertDisplaysCourse(newCourseName)
+        dashboardPage.assertDisplaysCourse(secondCourse.name)
     }
 }

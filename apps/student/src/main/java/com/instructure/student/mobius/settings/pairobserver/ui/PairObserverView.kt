@@ -25,10 +25,7 @@ import com.google.zxing.BarcodeFormat
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.settings.pairobserver.PairObserverEvent
@@ -44,7 +41,7 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     override fun applyTheme() {
-        ViewStyler.themeToolbarLight(context as Activity, toolbar)
+        ViewStyler.themeToolbarColored(context as Activity, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     override fun onConnect(output: Consumer<PairObserverEvent>) {

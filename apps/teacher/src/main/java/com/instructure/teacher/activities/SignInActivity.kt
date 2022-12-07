@@ -31,23 +31,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_SIGN_IN)
 @AndroidEntryPoint
 class SignInActivity : BaseLoginSignInActivity() {
-    override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationWorker.scheduleJob(this, isMasquerading)
-        CookieManager.getInstance().flush()
-        return SplashActivity.createIntent(this, null)
-    }
 
     override fun userAgent(): String = "androidTeacher"
 
     override fun refreshWidgets() {
         //No Widgets in Teacher
-    }
-
-    override fun handleLaunchApplicationMainActivityIntent() {
-        val intent = launchApplicationMainActivityIntent()
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
     }
 
     companion object {

@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.DiscussionEntryPostBody
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.utils.APIHelper
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -88,6 +87,9 @@ object DiscussionAPI {
         @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/rating")
         fun rateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Query("rating") rating: Int): Call<Void>
 
+        @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/read")
+        fun markDiscussionTopicRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<Void>
+
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
         fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
 
@@ -137,6 +139,9 @@ object DiscussionAPI {
                 @Path("contextId") contextId: Long,
                 @Path("topicId") topicId: Long,
                 @Body body: DiscussionTopicPostBody): Call<DiscussionTopicHeader>
+
+        @GET("{contextType}/{contextId}/discussion_topics/{topicId}")
+        fun getDiscussionTopicHeader(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<DiscussionTopicHeader>
     }
 
     fun createDiscussion(adapter: RestBuilder,
@@ -270,6 +275,11 @@ object DiscussionAPI {
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).rateDiscussionEntry(contextType, canvasContext.id, topicId, entryId, rating)).enqueue(callback)
     }
 
+    fun markDiscussionTopicRead(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<Void>, params: RestParams) {
+        val contextType = CanvasContext.getApiContext(canvasContext)
+        callback.addCall(adapter.build(DiscussionInterface::class.java, params).markDiscussionTopicRead(contextType, canvasContext.id, topicId)).enqueue(callback)
+    }
+
     fun markDiscussionTopicEntryRead(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, callback: StatusCallback<Void>, params: RestParams) {
         val contextType = CanvasContext.getApiContext(canvasContext)
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).markDiscussionTopicEntryRead(contextType, canvasContext.id, topicId, entryId)).enqueue(callback)
@@ -306,5 +316,9 @@ object DiscussionAPI {
 
     fun deleteDiscussionEntry(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, callback: StatusCallback<Void>, params: RestParams) {
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).deleteDiscussionEntry(CanvasContext.getApiContext(canvasContext), canvasContext.id, topicId, entryId)).enqueue(callback)
+    }
+
+    fun getDiscussionTopicHeader(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<DiscussionTopicHeader>, params: RestParams) {
+        callback.addCall(adapter.build(DiscussionInterface::class.java, params).getDiscussionTopicHeader(CanvasContext.getApiContext(canvasContext), canvasContext.id, topicId)).enqueue(callback)
     }
 }

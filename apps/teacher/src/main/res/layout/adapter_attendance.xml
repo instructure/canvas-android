@@ -26,7 +26,7 @@
     android:paddingTop="4dp"
     android:paddingBottom="4dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/studentAvatar"
         android:layout_width="40dp"
         android:layout_height="40dp"

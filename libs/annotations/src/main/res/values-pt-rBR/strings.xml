@@ -16,6 +16,7 @@
   -->
 
 <resources>
+
     <string name="inputText">Texto de entrada</string>
     <string name="cancel">Cancelar</string>
     <string name="comment">Comentário</string>
@@ -37,4 +38,5 @@
     <string name="pspdf__annotation_type_stamp">Cor da observação</string>
     <string name="removedComment">Removido %1$s por %2$s</string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

@@ -15,16 +15,8 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.espresso.randomString
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
@@ -185,7 +177,7 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
 
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()

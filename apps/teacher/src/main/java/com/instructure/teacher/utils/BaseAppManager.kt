@@ -22,18 +22,20 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.heapanalytics.android.Heap
+import com.heapanalytics.android.config.Options
 import com.instructure.canvasapi2.utils.*
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
-import com.instructure.teacher.BuildConfig
 
 open class BaseAppManager : com.instructure.canvasapi2.AppManager() {
 
@@ -82,6 +84,10 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager() {
         filter.addAction(Const.ACTION_MEDIA_UPLOAD_SUCCESS)
         filter.addAction(Const.ACTION_MEDIA_UPLOAD_FAIL)
         LocalBroadcastManager.getInstance(this).registerReceiver(mediaUploadReceiver, filter)
+
+        val options = Options()
+        options.disableTracking()
+        Heap.init(this, BuildConfig.HEAP_APP_ID, options)
     }
 
     override fun performLogoutOnAuthError() {

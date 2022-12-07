@@ -22,15 +22,12 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.waitForViewWithId
-import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withDescendant
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
@@ -57,11 +54,11 @@ class FileUploadPage : BasePage() {
     }
 
     fun clickUpload() {
-        onView(allOf(isAssignableFrom(Button::class.java),containsTextCaseInsensitive("upload"))).click()
+        onView(allOf(isAssignableFrom(Button::class.java), withText(R.string.upload))).click()
     }
 
     fun clickTurnIn() {
-        onView(containsTextCaseInsensitive("turn in")).click()
+        onView(withText(R.string.turnIn)).click()
     }
 
     fun removeFile(filename: String) {

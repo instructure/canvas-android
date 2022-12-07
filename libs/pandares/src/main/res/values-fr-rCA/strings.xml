@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Vue étudiant</string>
 
 
+    <string name="rateOnThePlayStore">Évaluer sur le Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Entête choisi : %s</string>
     <string name="content_description_chosen_body">Corps choisi : %s</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Ébauche disponible</string>
     <string name="errorLoadingSubmission">Une erreur s\'est produite lors du chargement des envois</string>
     <string name="loadFullContent">Appuyez pour voir le contenu complet</string>
+    <string name="openLtiInExternalApp">Tapez pour ouvrir dans une application externe</string>
     <string name="dashboardTabImportantDates">Dates importantes</string>
     <string name="importantDatesEmptyTitle">Aucune date importante</string>
     <string name="important_dates">Dates importantes</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s message non lu</item>
         <item quantity="other">%s messages non lus</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s notification non lue</item>
+        <item quantity="other">%s notifications non lues</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Aucune annotation sélectionnée</string>
     <string name="emailNotifications">Notifications par courriel</string>
     <string name="emailNotificationsImmediately">Immédiatement</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Hebdomadaire</string>
     <string name="emailNotificationsNever">Jamais</string>
     <string name="selectFrequency">Sélectionner la fréquence</string>
+    <string name="a11y_closeProgress">Fermer le dialogue de progression</string>
+    <string name="fileUploadProgress">%1$s sur %2$s</string>
+    <string name="fileUploadProgressSubtitle">Téléversement des fichiers</string>
+    <string name="submissionProgressSubtitle">Téléversement de l’envoi vers \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Téléversement de l’envoi</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Téléversement des fichiers</string>
+    <string name="cancelSubmissionDialogTitle">Annuler l\'envoi</string>
+    <string name="cancelSubmissionDialogMessage">Cela annulera et supprimera votre envoi.</string>
+    <string name="fileUploadError">Le téléversement du fichier a échoué</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Téléversement sur Canvas pour %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Téléversement vers Mes Fichiers</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Envoyer la tâche</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choisir un cours</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choisir une tâche</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Annuler le téléversement?</string>
+    <string name="cancelFileUploadMessage">Cela annulera votre téléversement.</string>
+    <string name="menuTitleFilterAssignments">Filtrer les tâches</string>
+    <string name="filterAssignmentDialogTitle">Filtrer les tâches</string>
+    <string name="filterAssignmentsDialogCancel">Annuler</string>
+    <string name="filterAssignmentAll">Tout</string>
+    <string name="filterAssignmentLate">En retard</string>
+    <string name="filterAssignmentMissing">Manquant</string>
+    <string name="filterAssignmentGraded">Noté</string>
+    <string name="filterAssignmentUpcoming">À venir</string>
+    <string name="createdByStudentView">Créé par Student View</string>
+    <string name="discussionErrorToast">Une erreur est survenue. Le sujet n’est peut-être plus disponible.</string>
+    <string name="cameraPermissionPermanentlyDenied">L’autorisation de la caméra a été définitivement refusée. Accédez aux paramètres de l’application pour l’autoriser.</string>
 </resources>

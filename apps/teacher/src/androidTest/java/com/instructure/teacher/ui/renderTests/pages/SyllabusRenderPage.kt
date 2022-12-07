@@ -17,21 +17,17 @@
 package com.instructure.teacher.ui.renderTests.pages
 
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.web.assertion.WebViewAssertions
-import androidx.test.espresso.web.sugar.Web
-import androidx.test.espresso.web.webdriver.DriverAtoms
-import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
-import com.instructure.teacher.ui.pages.SyllabusPage
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.pages.SyllabusPage
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
 
 class SyllabusRenderPage : SyllabusPage() {
 
     private val tabs by OnViewWithId(R.id.syllabusTabLayout)
-    private val webView by WaitForViewWithId(R.id.syllabusWebView)
+    private val webView by WaitForViewWithId(R.id.contentWebView)
     private val eventsRecycler by WaitForViewWithId(R.id.syllabusEventsRecyclerView)
     private val eventsEmpty by WaitForViewWithId(R.id.syllabusEmptyView)
     private val eventsError by WaitForViewWithId(R.id.syllabusEventsError)

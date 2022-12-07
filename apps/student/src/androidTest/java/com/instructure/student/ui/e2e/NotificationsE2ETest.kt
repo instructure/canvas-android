@@ -98,7 +98,7 @@ class NotificationsE2ETest : StudentTest() {
         Log.d(PREPARATION_TAG,"Create and publish a quiz with the previously seeded questions.")
         QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 

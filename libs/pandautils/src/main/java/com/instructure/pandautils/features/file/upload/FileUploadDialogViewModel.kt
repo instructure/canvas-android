@@ -66,9 +66,6 @@ class FileUploadDialogViewModel @Inject constructor(
     private var position: Int = -1
 
     var dialogCallback: ((Int) -> Unit)? = null
-    var attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null
-    var selectedUriStringsCallback: ((List<String>) -> Unit)? = null
-    var workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
 
     private var filesToUpload = mutableListOf<FileUploadData>()
 
@@ -82,10 +79,7 @@ class FileUploadDialogViewModel @Inject constructor(
         position: Int,
         quizId: Long,
         userId: Long,
-        dialogCallback: ((Int) -> Unit)? = null,
-        attachmentCallback: ((Int, FileSubmitObject?) -> Unit)? = null,
-        selectedFilePathsCallback: ((List<String>) -> Unit)? = null,
-        workerCallback: ((UUID, LiveData<WorkInfo>) -> Unit)? = null
+        dialogCallback: ((Int) -> Unit)? = null
     ) {
         this.assignment = assignment
         files?.forEach { uri ->
@@ -105,65 +99,58 @@ class FileUploadDialogViewModel @Inject constructor(
         dialogCallback?.let {
             this.dialogCallback = it
         }
-        attachmentCallback?.let {
-            this.attachmentCallback = it
-        }
-        selectedFilePathsCallback?.let {
-            this.selectedUriStringsCallback = it
-        }
-        workerCallback?.let {
-            this.workerCallback = it
-        }
         updateItems()
     }
 
     fun onCameraClicked() {
         if (isOneFileOnly && filesToUpload.isNotEmpty()) {
-            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly)))
             return
         }
-        _events.postValue(Event(FileUploadAction.TakePhoto))
+        _events.value = Event(FileUploadAction.TakePhoto)
     }
 
     fun onGalleryClicked() {
         if (isOneFileOnly && filesToUpload.isNotEmpty()) {
-            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly)))
             return
         }
 
         if (isOneFileOnly) {
-            _events.postValue(Event(FileUploadAction.PickImage))
+            _events.value = Event(FileUploadAction.PickImage)
         } else {
-            _events.postValue(Event(FileUploadAction.PickMultipleImage))
+            _events.value = Event(FileUploadAction.PickMultipleImage)
         }
     }
 
     fun onFilesClicked() {
         if (isOneFileOnly && filesToUpload.isNotEmpty()) {
-            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly))))
+            _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly)))
             return
         }
 
         if (isOneFileOnly) {
-            _events.postValue(Event(FileUploadAction.PickFile))
+            _events.value = Event(FileUploadAction.PickFile)
         } else {
-            _events.postValue(Event(FileUploadAction.PickMultipleFile))
+            _events.value = Event(FileUploadAction.PickMultipleFile)
         }
     }
 
     fun addFile(fileUri: Uri) {
         val submitObject = getUriContents(fileUri)
-        submitObject?.let {
-            if (it.errorMessage.isNullOrEmpty()) {
-                val added = addIfExtensionAllowed(fileUri, it)
+        if (submitObject != null) {
+            if (submitObject.errorMessage.isNullOrEmpty()) {
+                val added = addIfExtensionAllowed(fileUri, submitObject)
                 if (added) {
                     updateItems()
                 }
             } else {
-                _events.postValue(Event(FileUploadAction.ShowToast(it.errorMessage
-                        ?: resources.getString(R.string.errorOccurred))))
+                _events.value = Event(FileUploadAction.ShowToast(submitObject.errorMessage
+                        ?: resources.getString(R.string.errorOccurred)))
             }
-        } ?: _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.errorOccurred))))
+        } else {
+            _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.errorOccurred)))
+        }
     }
 
     fun addFiles(fileUris: List<Uri>) {
@@ -215,7 +202,7 @@ class FileUploadDialogViewModel @Inject constructor(
                     return true
                 }
             }
-            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.extensionNotAllowed))))
+            _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.extensionNotAllowed)))
             return false
         }
 
@@ -227,7 +214,7 @@ class FileUploadDialogViewModel @Inject constructor(
             return true
         }
 
-        _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.extensionNotAllowed))))
+        _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.extensionNotAllowed)))
         return false
     }
 
@@ -255,7 +242,7 @@ class FileUploadDialogViewModel @Inject constructor(
 
     private fun isExtensionAllowed(filePath: String): Boolean {
         if (assignment == null) {
-            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.noAssignmentSelected))))
+            _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.noAssignmentSelected)))
             return false
         }
         if (assignment!!.allowedExtensions.isEmpty()) return true
@@ -267,18 +254,18 @@ class FileUploadDialogViewModel @Inject constructor(
 
     fun uploadFiles() {
         if (filesToUpload.size == 0) {
-            _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.noFilesUploaded))))
+            _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.noFilesUploaded)))
         } else {
             if (uploadType == FileUploadType.ASSIGNMENT) {
 
                 if (!checkIfFileSubmissionAllowed()) { //see if we can actually submit files to this assignment
-                    _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.fileUploadNotSupported))))
+                    _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.fileUploadNotSupported)))
                     return
                 }
 
                 filesToUpload.forEach {
                     if (!isExtensionAllowed(it.fileSubmitObject.fullPath)) {
-                        _events.postValue(Event(FileUploadAction.ShowToast(resources.getString(R.string.oneOrMoreExtensionNotAllowed))))
+                        _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.oneOrMoreExtensionNotAllowed)))
                         return
                     }
                 }
@@ -348,22 +335,21 @@ class FileUploadDialogViewModel @Inject constructor(
 
     private fun startUpload(data: Data) {
         if (uploadType == FileUploadType.DISCUSSION) {
-            attachmentCallback?.invoke(FileUploadDialogFragment.EVENT_ON_FILE_SELECTED, getAttachmentUri())
+            _events.value = Event(FileUploadAction.AttachmentSelectedAction(FileUploadDialogFragment.EVENT_ON_FILE_SELECTED, getAttachmentUri()))
         } else {
             val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
                     .setInputData(data)
                     .build()
 
-            selectedUriStringsCallback?.invoke(filesToUpload.map { it.uri.toString() })
-            workerCallback?.invoke(worker.id, workManager.getWorkInfoByIdLiveData(worker.id))
+            _events.value = Event(FileUploadAction.UploadStartedAction(worker.id, workManager.getWorkInfoByIdLiveData(worker.id), filesToUpload.map { it.uri.toString() }))
             workManager.enqueue(worker)
             dialogCallback?.invoke(FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN)
         }
-        _events.postValue(Event(FileUploadAction.UploadStarted))
+        _events.value = Event(FileUploadAction.UploadStarted)
     }
 
     fun onCancelClicked() {
         dialogCallback?.invoke(FileUploadDialogFragment.EVENT_DIALOG_CANCELED)
-        attachmentCallback?.invoke(FileUploadDialogFragment.EVENT_DIALOG_CANCELED, null)
+        _events.value = Event(FileUploadAction.AttachmentSelectedAction(FileUploadDialogFragment.EVENT_DIALOG_CANCELED, null))
     }
 }

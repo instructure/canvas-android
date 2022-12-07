@@ -274,6 +274,16 @@ object SubmissionManager {
         postStudentAnnotationSubmission(canvasContext, assignmentId, annotatableAttachmentId, it)
     }
 
+    fun markSubmissionAsRead(
+        courseId: Long,
+        assignmentId: Long,
+        callback: StatusCallback<Void>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = true)
+        SubmissionAPI.markSubmissionAsRead(adapter, params, courseId, assignmentId, callback)
+    }
+
     private fun postStudentAnnotationSubmission(
         canvasContext: CanvasContext,
         assignmentId: Long,

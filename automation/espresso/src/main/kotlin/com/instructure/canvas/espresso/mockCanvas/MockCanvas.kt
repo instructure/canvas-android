@@ -506,7 +506,8 @@ fun MockCanvas.addCourse(
         isPublic = isPublic,
         homeroomCourse = isHomeroom,
         gradingPeriods = gradingPeriodList,
-        courseColor = "#008EE2"
+        courseColor = "#008EE2",
+        restrictEnrollmentsToCourseDate = concluded
     )
     courses += course.id to course
 

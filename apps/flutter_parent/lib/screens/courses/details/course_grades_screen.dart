@@ -371,7 +371,10 @@ class _AssignmentRow extends StatelessWidget {
     final localizations = L10n(context);
 
     final submission = assignment.submission(studentId);
-    if (submission?.grade != null) {
+    if (submission?.excused ?? false) {
+      text = localizations.gradeFormatScoreOutOfPointsPossible(localizations.excused, points);
+      semantics = localizations.contentDescriptionScoreOutOfPointsPossible('', points);
+    } else if (submission?.grade != null) {
       text = localizations.gradeFormatScoreOutOfPointsPossible(submission.grade, points);
       semantics = localizations.contentDescriptionScoreOutOfPointsPossible(submission.grade, points);
     } else {

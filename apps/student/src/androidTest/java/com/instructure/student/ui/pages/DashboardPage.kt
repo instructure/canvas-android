@@ -235,6 +235,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.navigationDrawerSettings).click()
     }
 
+    fun openHelpMenu() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
+    }
+
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
@@ -251,7 +256,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     // Assumes that a single announcement is showing
     fun assertAnnouncementDetailsDisplayed(announcement: AccountNotification) {
-        WaitForViewWithId(R.id.canvasWebView)
+        WaitForViewWithId(R.id.contentWebView)
         // Include isDisplayed() in the matcher to differentiate from other views with this text
         onView(withText(announcement.subject) + isDisplayed()).assertDisplayed()
     }

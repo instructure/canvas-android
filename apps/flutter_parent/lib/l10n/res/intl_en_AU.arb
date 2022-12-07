@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "Find another school",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "Enter school name or district…",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",
@@ -798,7 +805,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "All Grading Periods": "All Grading Periods",
+  "All Grading Periods": "All Marking Periods",
   "@All Grading Periods": {
     "description": "Label for selecting all grading periods",
     "type": "text",
@@ -866,7 +873,7 @@
       "pointsPossible": {}
     }
   },
-  "gradesSubjectMessage": "Regarding: {studentName}, Grades",
+  "gradesSubjectMessage": "Regarding: {studentName}, Marks",
   "@gradesSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a student's grades",
     "type": "text",
@@ -1185,7 +1192,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "assignmentGradeAboveThreshold": "Assignment Grade Above {threshold}",
+  "assignmentGradeAboveThreshold": "Assignment Mark Above {threshold}",
   "@assignmentGradeAboveThreshold": {
     "description": "Title for alerts when an assignment grade is above the threshold value",
     "type": "text",
@@ -1196,7 +1203,7 @@
       "threshold": {}
     }
   },
-  "assignmentGradeBelowThreshold": "Assignment Grade Below {threshold}",
+  "assignmentGradeBelowThreshold": "Assignment Mark Below {threshold}",
   "@assignmentGradeBelowThreshold": {
     "description": "Title for alerts when an assignment grade is below the threshold value",
     "type": "text",
@@ -1207,7 +1214,7 @@
       "threshold": {}
     }
   },
-  "courseGradeAboveThreshold": "Course Grade Above {threshold}",
+  "courseGradeAboveThreshold": "Course Mark Above {threshold}",
   "@courseGradeAboveThreshold": {
     "description": "Title for alerts when a course grade is above the threshold value",
     "type": "text",
@@ -1218,7 +1225,7 @@
       "threshold": {}
     }
   },
-  "courseGradeBelowThreshold": "Course Grade Below {threshold}",
+  "courseGradeBelowThreshold": "Course Mark Below {threshold}",
   "@courseGradeBelowThreshold": {
     "description": "Title for alerts when a course grade is below the threshold value",
     "type": "text",
@@ -1285,7 +1292,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "submissionStatusSuccessSubtitle": "This assignment was submitted on {date} at {time} and is waiting to be graded",
+  "submissionStatusSuccessSubtitle": "This assignment was submitted on {date} at {time} and is waiting to be marked",
   "@submissionStatusSuccessSubtitle": {
     "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
     "type": "text",
@@ -1427,7 +1434,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Grade percentage": "Grade percentage",
+  "Grade percentage": "Mark percentage",
   "@Grade percentage": {
     "type": "text",
     "placeholders_order": [],

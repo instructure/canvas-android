@@ -120,7 +120,7 @@ class QuizzesE2ETest: StudentTest() {
         val quizPublished = createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId} , password: ${student.password}")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -221,12 +221,12 @@ class QuizzesE2ETest: StudentTest() {
         quizListPage.selectQuiz(quizPublished)
 
         Log.d(STEP_TAG,"Assert (on web) that the ${quizPublished.title} quiz now has a history.")
-        onWebView(withId(R.id.canvasWebView))
+        onWebView(withId(R.id.contentWebView))
                 .withElement(findElement(Locator.ID, "quiz-submission-version-table"))
                 .withContextualElement(findElement(Locator.CLASS_NAME, "desc"))
                 .perform(webScrollIntoView())
                 .check(webMatches(getText(),containsString("Attempt History")))
-        onWebView(withId(R.id.canvasWebView))
+        onWebView(withId(R.id.contentWebView))
                 .withElement(findElement(Locator.CLASS_NAME, "ic-Table--header-row"))
                 .perform(webScrollIntoView())
                 .check(webMatches(getText(),containsString("LATEST")))

@@ -259,6 +259,13 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "findAnotherSchool": "尋找其他學校",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "domainSearchInputHint": "輸入學校名稱或地區…",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",

@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.holders.DiscussionExpandableViewHolder
@@ -95,7 +96,7 @@ open class DiscussionListRecyclerAdapter(
 
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: String, discussionTopicHeader: DiscussionTopicHeader) {
-        context.let { (holder as DiscussionListHolder).bind(it, discussionTopicHeader, ColorKeeper.getOrGenerateColor(canvasContext), isDiscussions, callback) }
+        context.let { (holder as DiscussionListHolder).bind(it, discussionTopicHeader, canvasContext.textAndIconColor, isDiscussions, callback) }
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: String, isExpanded: Boolean) {

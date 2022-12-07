@@ -151,6 +151,28 @@ class ShareExtensionInteractionTest : StudentTest() {
         fileUploadPage.assertFileDisplayed("sample.jpg")
     }
 
+    @Test
+    fun shareExtensionNoAssignmentTest() {
+        val data = createMockData()
+        val student = data.students[0]
+        val uri = setupFileOnDevice("sample.jpg")
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        login(student)
+        device.pressHome()
+
+        shareExternalFile(uri)
+
+        device.findObject(UiSelector().text("Canvas")).click()
+        device.waitForIdle()
+
+        shareExtensionTargetPage.selectSubmission()
+        shareExtensionTargetPage.assertNoAssignmentSelectedStringDisplayed()
+        shareExtensionTargetPage.pressNext()
+        shareExtensionTargetPage.assertPageObjects() //Make sure that we are still on the Target Page.
+    }
+
+
     // Clicking spinner item not working.
     @Test
     @Stub
@@ -230,7 +252,7 @@ class ShareExtensionInteractionTest : StudentTest() {
         fileUploadPage.clickTurnIn()
 
         shareExtensionStatusPage.assertPageObjects()
-        shareExtensionStatusPage.assertAssignemntSubmissionSuccess()
+        shareExtensionStatusPage.assertAssignmentSubmissionSuccess()
     }
 
     private fun createMockData(): MockCanvas {

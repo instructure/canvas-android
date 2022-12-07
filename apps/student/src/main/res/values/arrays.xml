@@ -20,4 +20,12 @@
         <item>@string/sortByDialogTimeOption</item>
         <item>@string/sortByDialogTypeOption</item>
     </string-array>
+
+    <string-array name="assignmentsFilterOptions">
+        <item>@string/filterAssignmentAll</item>
+        <item>@string/filterAssignmentLate</item>
+        <item>@string/filterAssignmentMissing</item>
+        <item>@string/filterAssignmentGraded</item>
+        <item>@string/filterAssignmentUpcoming</item>
+    </string-array>
 </resources>

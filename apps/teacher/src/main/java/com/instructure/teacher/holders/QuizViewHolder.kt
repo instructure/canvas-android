@@ -41,10 +41,10 @@ class QuizViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         DrawableCompat.setTint(itemView.ungradedCount.background, ThemePrefs.brandColor)
     }
 
-    fun bind(context: Context, quiz: Quiz, courseColor: Int, callback: (Quiz) -> Unit) = with(itemView){
+    fun bind(context: Context, quiz: Quiz, iconColor: Int, callback: (Quiz) -> Unit) = with(itemView){
         quizLayout.setOnClickListener { callback(quiz) }
         quizTitle.text = quiz.title
-        quizIcon.setIcon(R.drawable.ic_quiz, courseColor)
+        quizIcon.setIcon(R.drawable.ic_quiz, iconColor)
         quizIcon.setPublishedStatus(quiz.published)
         publishedBar.visibility = if (quiz.published) View.VISIBLE else View.INVISIBLE
 

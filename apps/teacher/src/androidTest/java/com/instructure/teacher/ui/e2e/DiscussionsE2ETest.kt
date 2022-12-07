@@ -46,7 +46,7 @@ class DiscussionsE2ETest : TeacherTest() {
         val course = data.coursesList[0]
         val discussion = data.discussionsList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId} , password: ${teacher.password}")
+        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 

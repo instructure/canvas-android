@@ -44,7 +44,7 @@ class InboxRecipientsFragment : ParentFragment() {
     override fun title(): String = getString(R.string.selectRecipients)
 
     override fun applyTheme() {
-        (view?.findViewById<View>(R.id.menu_done) as? TextView)?.setTextColor(ThemePrefs.buttonColor)
+        (view?.findViewById<View>(R.id.menu_done) as? TextView)?.setTextColor(ThemePrefs.textButtonColor)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 

@@ -38,6 +38,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.*
@@ -58,7 +59,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
-class InboxComposeMessageFragment : ParentFragment() {
+class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
 
     private val conversation by NullableParcelableArg<Conversation>(key = Const.CONVERSATION)
     private val participants by ParcelableArrayListArg<Recipient>(key = PARTICIPANTS)
@@ -96,7 +97,7 @@ class InboxComposeMessageFragment : ParentFragment() {
     override fun title(): String = getString(R.string.composeMessage)
 
     override fun applyTheme() {
-        ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
+        ColorUtils.colorIt(ThemePrefs.textButtonColor, contactsImageButton)
         ViewStyler.themeSwitch(requireContext(), sendIndividualSwitch, ThemePrefs.brandColor)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.themeProgressBar(savingProgressBar, requireContext().getColor(R.color.textDarkest))
@@ -284,7 +285,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                 }
                 R.id.menu_attachment -> {
                     val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())
-                    FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::fileUploadLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                    FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
                 }
                 else -> return@setOnMenuItemClickListener false
             }
@@ -442,15 +443,15 @@ class InboxComposeMessageFragment : ParentFragment() {
         }
     }
 
-    private fun fileUploadLiveDataCallback(uuid: UUID, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
                 it.outputData.getStringArray(FileUploadWorker.RESULT_ATTACHMENTS)
-                        ?.map { it.fromJson<Attachment>() }
-                        ?.let {
-                            this.attachments.addAll(it)
-                            refreshAttachments()
-                        } ?: toast(R.string.errorUploadingFile)
+                    ?.map { it.fromJson<Attachment>() }
+                    ?.let {
+                        this.attachments.addAll(it)
+                        refreshAttachments()
+                    } ?: toast(R.string.errorUploadingFile)
             }
         }
     }

@@ -24,6 +24,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.heapanalytics.android'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -39,8 +40,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 52
-        versionName = '1.19.0'
+        versionCode = 53
+        versionName = '1.20.0'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -104,6 +105,12 @@ android {
                 // you can speed up your build by disabling mapping file uploading.
                 mappingFileUploadEnabled false
             }
+
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+
+            ext {
+                heapEnabled = true
+            }
         }
         release {
             minifyEnabled true
@@ -119,6 +126,11 @@ android {
             buildConfigField "boolean", "POINT_EIGHT", "false"
             buildConfigField "boolean", "POINT_NINE", "false"
 
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
+
+            ext {
+                heapEnabled = true
+            }
         }
     }
 
@@ -127,11 +139,6 @@ android {
             force 'android.arch.lifecycle:runtime:1.0.3'
 
             force Libs.KOTLIN_COROUTINES_CORE
-
-            // Some libraries want to resolve never versions of this library that requires targetSdkVersion 31.
-            // Once we upgrade the targetSdkVersion this should be removed.
-            force 'androidx.core:core:1.6.0'
-            force 'androidx.core:core-ktx:1.6.0'
         }
     }
 
@@ -284,6 +291,8 @@ dependencies {
     /* WorkManager */
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
+
+    implementation Libs.HEAP
 }
 
 apply plugin: 'com.google.gms.google-services'

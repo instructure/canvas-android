@@ -30,7 +30,7 @@ object Versions {
     /* Others */
     const val APOLLO = "2.5.9"
     const val CRASHLYTICS = "17.2.1"
-    const val PSPDFKIT = "8.1.0"
+    const val PSPDFKIT = "8.3.0"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.4.3"
@@ -41,6 +41,7 @@ object Versions {
     const val GLIDE_VERSION = "4.12.0"
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.9.1"
+    const val HEAP = "1.10.5"
 }
 
 object Libs {
@@ -152,6 +153,8 @@ object Libs {
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.6"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
+
+    const val HEAP = "com.heapanalytics.android:heap-android-client:${Versions.HEAP}"
 }
 
 object Plugins {
@@ -164,6 +167,7 @@ object Plugins {
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
+    const val HEAP = "com.heapanalytics.android:heap-android-gradle:${Versions.HEAP}"
 }
 
 object BuildScan {

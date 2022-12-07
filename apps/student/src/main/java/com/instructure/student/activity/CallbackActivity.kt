@@ -19,7 +19,9 @@ package com.instructure.student.activity
 
 import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UnreadCountManager
@@ -38,18 +40,20 @@ import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.InboxFragment
+import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
 
-abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountInvalidated {
+abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountInvalidated, NotificationListFragment.OnNotificationCountInvalidated {
 
     private var loadInitialDataJob: Job? = null
 
     abstract fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?)
     abstract fun updateUnreadCount(unreadCount: Int)
+    abstract fun updateNotificationCount(notificationCount: Int)
     abstract fun initialCoreDataLoadingComplete()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +64,8 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
 
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
+            setupHeapTracking()
+
             // Determine if user can masquerade
             if (ApiPrefs.canBecomeUser == null) {
                 if (ApiPrefs.domain.startsWith("siteadmin", true)) {
@@ -78,18 +84,21 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
                 || termsOfService.selfRegistrationType == SelfRegistration.OBSERVER
 
             // Grab colors
-            if (ColorKeeper.hasPreviouslySynced) {
-                UserManager.getColors(userColorsCallback, true)
-            } else {
-                ColorKeeper.addToCache(awaitApi<CanvasColor> { UserManager.getColors(it, true) })
-                ColorKeeper.hasPreviouslySynced = true
+            // We don't show custom course colors for K5 view so we need to skip this so we don't overwrite course colors.
+            if (!ApiPrefs.showElementaryView) {
+                if (ColorKeeper.previouslySynced) {
+                    UserManager.getColors(userColorsCallback, true)
+                } else {
+                    ColorKeeper.addToCache(awaitApi<CanvasColor> { UserManager.getColors(it, true) })
+                    ColorKeeper.previouslySynced = true
+                }
             }
 
             // Grab theme
             if (ThemePrefs.isThemeApplied) {
                 ThemeManager.getTheme(themeCallback, true)
             } else {
-                ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) })
+                ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) }, this@CallbackActivity)
             }
 
             // Refresh pandata info if null or expired
@@ -123,10 +132,18 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
             // get unread count of conversations
             getUnreadMessageCount()
 
+            getUnreadNotificationCount()
+
             initialCoreDataLoadingComplete()
         } catch {
             initialCoreDataLoadingComplete()
         }
+    }
+
+    private suspend fun setupHeapTracking() {
+        val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
+        val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
+        Heap.setTrackingEnabled(sendUsageMetrics)
     }
 
     private suspend fun getUnreadMessageCount() {
@@ -137,10 +154,18 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
         }
     }
 
+    private fun getUnreadNotificationCount() {
+        UnreadCountManager.getUnreadNotificationCount(object : StatusCallback<List<UnreadNotificationCount>>() {
+            override fun onResponse(data: Call<List<UnreadNotificationCount>>, response: Response<List<UnreadNotificationCount>>) {
+                updateNotificationCount(response.body()?.sumOf { it.unreadCount.orDefault() }.orDefault())
+            }
+        }, true)
+    }
+
     private val themeCallback = object : StatusCallback<CanvasTheme>() {
         override fun onResponse(response: Response<CanvasTheme>, linkHeaders: LinkHeaders, type: ApiType) {
             //store the theme
-            response.body()?.let { ThemePrefs.applyCanvasTheme(it) }
+            response.body()?.let { ThemePrefs.applyCanvasTheme(it, this@CallbackActivity) }
 
             // Update Flutter with the theme
             FlutterComm.sendUpdatedTheme()
@@ -151,7 +176,7 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
         override fun onResponse(response: Response<CanvasColor>, linkHeaders: LinkHeaders, type: ApiType) {
             if (type == ApiType.API) {
                 ColorKeeper.addToCache(response.body())
-                ColorKeeper.hasPreviouslySynced = true
+                ColorKeeper.previouslySynced = true
             }
         }
     }
@@ -199,6 +224,10 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
         } catch {
 
         }
+    }
+
+    override fun invalidateNotificationCount() {
+        getUnreadNotificationCount()
     }
 
     /**

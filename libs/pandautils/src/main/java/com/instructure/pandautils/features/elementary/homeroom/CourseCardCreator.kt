@@ -27,6 +27,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.ColorKeeper
 import kotlinx.coroutines.awaitAll
 import org.threeten.bp.LocalDate
 
@@ -34,7 +35,8 @@ class CourseCardCreator(
     private val plannerManager: PlannerManager,
     private val userManager: UserManager,
     private val announcementManager: AnnouncementManager,
-    private val resources: Resources
+    private val resources: Resources,
+    private val colorKeeper: ColorKeeper
 ) {
 
     suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean,
@@ -63,15 +65,14 @@ class CourseCardCreator(
                     assignmentsDueTexts[course.id] ?: "",
                     assignmentsMissingTexts[course.id] ?: "",
                     announcements[index]?.title ?: "",
-                    getCourseColor(course),
+                    ColorKeeper.getOrGenerateColor(course),
                     course.imageUrl ?: "")
 
                 CourseCardItemViewModel(
                     viewData,
                     { events.postValue(Event(HomeroomAction.OpenCourse(course))) },
                     { events.postValue(Event(HomeroomAction.OpenAssignments(course))) },
-                    { openAnnouncementDetails(events, course, announcements[index]) },
-                    resources.getColor(R.color.textDanger, null)
+                    { openAnnouncementDetails(events, course, announcements[index]) }
                 )
             }
     }
@@ -131,14 +132,6 @@ class CourseCardCreator(
             ""
         } else {
             resources.getString(R.string.missing, missingCount)
-        }
-    }
-
-    private fun getCourseColor(course: Course): String {
-        return if (!course.courseColor.isNullOrEmpty()) {
-            course.courseColor!!
-        } else {
-            ColorApiHelper.K5_DEFAULT_COLOR
         }
     }
 

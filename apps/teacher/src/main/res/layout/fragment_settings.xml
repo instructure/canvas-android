@@ -124,7 +124,7 @@
                 android:minHeight="?android:listPreferredItemHeight"
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
-                android:text="@string/rateOnTheAppStore"
+                android:text="@string/rateOnThePlayStore"
                 android:textColor="@color/textDarkest"
                 android:textSize="16sp"/>
 

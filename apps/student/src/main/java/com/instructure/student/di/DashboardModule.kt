@@ -17,7 +17,9 @@
 package com.instructure.student.di
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.student.features.dashboard.edit.StudentEditDashboardRouter
 import com.instructure.student.features.dashboard.notifications.StudentDashboardRouter
 import dagger.Module
 import dagger.Provides
@@ -31,5 +33,10 @@ class DashboardModule {
     @Provides
     fun provideDashboardRouter(activity: FragmentActivity): DashboardRouter {
         return StudentDashboardRouter(activity)
+    }
+
+    @Provides
+    fun provideEditDashboardRouter(activity: FragmentActivity): EditDashboardRouter {
+        return StudentEditDashboardRouter(activity)
     }
 }

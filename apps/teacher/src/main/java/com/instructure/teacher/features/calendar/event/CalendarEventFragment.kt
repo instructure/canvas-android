@@ -24,11 +24,13 @@ import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BaseFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.loadHtmlWithIframes
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
@@ -37,7 +39,6 @@ import com.instructure.teacher.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_calendar_event.*
 import kotlinx.android.synthetic.main.fragment_syllabus.toolbar
 import kotlinx.coroutines.Job
-import java.net.URLDecoder
 
 @ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
 class CalendarEventFragment : BaseFragment() {
@@ -54,12 +55,12 @@ class CalendarEventFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        calendarEventWebView?.onResume()
+        calendarEventWebViewWrapper?.webView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        calendarEventWebView?.onPause()
+        calendarEventWebViewWrapper?.webView?.onPause()
     }
 
     override fun onCreateView(view: View) {}
@@ -85,11 +86,11 @@ class CalendarEventFragment : BaseFragment() {
     }
 
     private fun initWebView() {
-        with(calendarEventWebView) {
+        with(calendarEventWebViewWrapper.webView) {
             addVideoClient(requireActivity())
             canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
                 override fun launchInternalWebViewFragment(url: String) {
-                    activity?.startActivity(InternalWebViewActivity.createIntent(calendarEventWebView.context, url, "", true))
+                    activity?.startActivity(InternalWebViewActivity.createIntent(calendarEventWebViewWrapper.context, url, "", true))
                 }
 
                 override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
@@ -119,16 +120,17 @@ class CalendarEventFragment : BaseFragment() {
         locationSubtitle.text = viewState.locationSubtitle
 
         if (viewState.htmlContent.isNotEmpty()) {
-            loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, viewState.htmlContent, ::loadCalendarHtml, { url ->
-                val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
-            }, viewState.eventTitle)
+            loadHtmlJob = calendarEventWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), viewState.htmlContent, {
+                loadCalendarHtml(it, viewState.eventTitle)
+            }) {
+                LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+            }
         }
     }
 
-    private fun loadCalendarHtml(html: String, contentDescription: String?) {
-        calendarEventWebView?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-        calendarEventWebView?.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
+    private fun loadCalendarHtml(html: String, contentDescription: String) {
+        calendarEventWebViewWrapper?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+        calendarEventWebViewWrapper?.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
     }
 
     companion object {

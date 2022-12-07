@@ -33,6 +33,7 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
     private val pairObserverLabel by OnViewWithId(R.id.pairObserver, autoAssert = false)
     private val aboutLabel by OnViewWithId(R.id.about)
     private val legalLabel by OnViewWithId(R.id.legal)
+    private val subscribeCalendarLabel by OnViewWithId(R.id.subscribeToCalendar, autoAssert = false)
     private val remoteConfigLabel by OnViewWithId(R.id.remoteConfigParams)
     private val appThemeTitle by OnViewWithId(R.id.appThemeTitle)
     private val appThemeStatus by OnViewWithId(R.id.appThemeStatus)
@@ -57,13 +58,21 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
         profileSettingLabel.scrollTo().click()
     }
 
+    fun openSubscribeToCalendar() {
+        subscribeCalendarLabel.scrollTo().click()
+    }
+
+    fun clickOnSubscribe() {
+        onView(withText(R.string.subscribeButton)).click()
+    }
+
     fun openAppThemeSettings() {
         appThemeTitle.scrollTo().click()
     }
 
     fun selectAppTheme(appTheme: String)
     {
-            onView(withText(appTheme) + withParent(R.id.select_dialog_listview)).click()
+        onView(withText(appTheme) + withParent(R.id.select_dialog_listview)).click()
     }
 
     fun assertAppThemeTitleTextColor(expectedTextColor: String) {

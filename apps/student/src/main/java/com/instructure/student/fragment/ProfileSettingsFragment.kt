@@ -84,7 +84,7 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
 
     override fun applyTheme() {
         toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     private fun setupViews() {

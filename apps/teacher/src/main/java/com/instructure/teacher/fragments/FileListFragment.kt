@@ -21,6 +21,7 @@ import android.os.Handler
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
@@ -63,11 +65,9 @@ class FileListFragment : BaseSyncFragment<
         FileListPresenter,
         FileListView,
         FileFolderViewHolder,
-        FileListAdapter>(), FileListView {
+        FileListAdapter>(), FileListView, FileUploadDialogParent {
 
     private lateinit var mRecyclerView: RecyclerView
-
-    private val courseColor by lazy { ColorKeeper.getOrGenerateColor(mCanvasContext) }
 
     private var mCanvasContext: CanvasContext by ParcelableArg(Course())
     private var currentFolder: FileFolder by ParcelableArg(FileFolder())
@@ -176,17 +176,17 @@ class FileListFragment : BaseSyncFragment<
     }
 
     override fun createAdapter(): FileListAdapter {
-        return FileListAdapter(requireContext(), courseColor, presenter) {
+        return FileListAdapter(requireContext(), mCanvasContext.textAndIconColor, presenter) {
             if (it.displayName.isValid()) {
                 // This is a file
-                val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.mCanvasContext, R.drawable.ic_document)
+                val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, mCanvasContext.backgroundColor, presenter.mCanvasContext, R.drawable.ic_document)
                 if (it.isHtmlFile) {
                     /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
                     accessed as an authenticated preview to work correctly */
-                    val bundle = ViewHtmlFragment.makeAuthSessionBundle(mCanvasContext, it, it.displayName.orEmpty(), courseColor, editableFile)
+                    val bundle = ViewHtmlFragment.makeAuthSessionBundle(mCanvasContext, it, it.displayName.orEmpty(), mCanvasContext.backgroundColor, editableFile)
                     RouteMatcher.route(requireActivity(), Route(ViewHtmlFragment::class.java, null, bundle))
                 } else {
-                    viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, courseColor, editableFile)
+                    viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, mCanvasContext.backgroundColor, editableFile)
                 }
             } else {
                 // This is a folder
@@ -226,16 +226,16 @@ class FileListFragment : BaseSyncFragment<
     }
 
     private fun setupViews() {
-        ViewStyler.themeFAB(addFab, ThemePrefs.buttonColor)
-        ViewStyler.themeFAB(addFileFab, ThemePrefs.buttonColor)
-        ViewStyler.themeFAB(addFolderFab, ThemePrefs.buttonColor)
+        ViewStyler.themeFAB(addFab)
+        ViewStyler.themeFAB(addFileFab)
+        ViewStyler.themeFAB(addFolderFab)
 
         addFab.setOnClickListener { animateFabs() }
         addFileFab.setOnClickListener {
             animateFabs()
             handleClick(childFragmentManager) {
                 val bundle = FileUploadDialogFragment.createContextBundle(null, mCanvasContext, presenter.currentFolder.id)
-                FileUploadDialogFragment.newInstance(bundle, workerLiveDataCallback = this::workInfoLiveDataCallback).show(childFragmentManager, FileUploadDialogFragment.TAG)
+                FileUploadDialogFragment.newInstance(bundle).show(childFragmentManager, FileUploadDialogFragment.TAG)
             }
         }
 
@@ -263,7 +263,7 @@ class FileListFragment : BaseSyncFragment<
         })
     }
 
-    private fun workInfoLiveDataCallback(uuid: UUID, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
             if (it.state == WorkInfo.State.SUCCEEDED) {
                 presenter.refresh(true)
@@ -298,7 +298,7 @@ class FileListFragment : BaseSyncFragment<
         if (mCanvasContext.isUser) {
             // User's files, no CanvasContext
             ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-        } else ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, courseColor, requireContext().getColor(R.color.white))
+        } else ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     private fun animateFabs() = if (fabOpen) {

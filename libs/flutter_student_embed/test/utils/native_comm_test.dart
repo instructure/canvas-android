@@ -93,6 +93,7 @@ void main() {
       'primaryColor': Colors.red.value.toRadixString(16),
       'accentColor': Colors.orange.value.toRadixString(16),
       'buttonColor': Colors.yellow.value.toRadixString(16),
+      'textButtonColor': Colors.yellow.value.toRadixString(16),
       'primaryTextColor': Colors.green.value.toRadixString(16),
       'contextColors': {
         'course_123': Colors.blue.value.toRadixString(16),
@@ -108,6 +109,7 @@ void main() {
     expect(StudentColors.primaryColor.value, Colors.red.value);
     expect(StudentColors.accentColor.value, Colors.orange.value);
     expect(StudentColors.buttonColor.value, Colors.yellow.value);
+    expect(StudentColors.textButtonColor.value, Colors.yellow.value);
     expect(StudentColors.primaryTextColor.value, Colors.green.value);
     expect(StudentColors.contextColors['course_123'].value, Colors.blue.value);
     expect(StudentColors.contextColors['course_456'].value, Colors.purple.value);
