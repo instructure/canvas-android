@@ -47,7 +47,7 @@ class PersonContextPageTest : TeacherTest() {
         val teacher = data.teachersList[0]
 
         tokenLogin(teacher)
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openPeopleTab()
         peopleListPage.clickPerson(teacher)
         return Pair(teacher, course)

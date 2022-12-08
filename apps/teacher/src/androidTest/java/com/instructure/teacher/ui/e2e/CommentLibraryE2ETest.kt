@@ -72,7 +72,7 @@ class CommentLibraryE2ETest : TeacherTest() {
         tokenLogin(teacher)
 
         Log.d(STEP_TAG,"Navigate to submission's comments tab.")
-        coursesListPage.openCourse(course)
+        dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(testAssignment)
         assignmentDetailsPage.openSubmissionsPage()

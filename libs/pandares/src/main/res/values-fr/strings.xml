@@ -1044,6 +1044,7 @@
     <string name="tab_student_view">Affichage élève</string>
 
 
+    <string name="rateOnThePlayStore">Évaluer sur le Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Tête sélectionnée : %s</string>
     <string name="content_description_chosen_body">Corps sélectionné : %s</string>
@@ -1126,8 +1127,8 @@
     <string name="noConferencesMessage">Il n’y a aucune conférence à afficher pour le moment</string>
     <string name="noConferenceDescription">Il n\'y a aucune description pour cette conférence</string>
     <string name="conferenceListError">Une erreur est survenue lors du chargement de vos conférences</string>
-    <string name="conferenceConcludedDateAtTime">Terminé le %1$s à %2$s</string>
-    <string name="conferenceStartedDateAtTime">A démarré le %1$s à %2$s</string>
+    <string name="conferenceConcludedDateAtTime">Terminé le %s à %s</string>
+    <string name="conferenceStartedDateAtTime">A démarré le %s à %s</string>
     <string name="notStarted">Non commencé</string>
     <string name="inProgress">En cours</string>
     <string name="join">Rejoindre</string>
@@ -1233,6 +1234,7 @@
     <string name="submissionDraftAvailableTitle">Brouillon disponible</string>
     <string name="errorLoadingSubmission">Une erreur est survenue pendant le chargement des cours</string>
     <string name="loadFullContent">Appuyez pour voir le contenu entier.</string>
+    <string name="openLtiInExternalApp">Appuyez pour ouvrir dans une application externe</string>
     <string name="dashboardTabImportantDates">Dates importantes</string>
     <string name="importantDatesEmptyTitle">Aucune date importante</string>
     <string name="important_dates">Dates importantes</string>
@@ -1275,6 +1277,11 @@
         <item quantity="one">%s message non lu</item>
         <item quantity="other">%s Messages non lus</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s notification non lue</item>
+        <item quantity="other">%s notifications non lues</item>
+    </plurals>
+
     <string name="noAnnotationSelected">Aucune annotation sélectionnée</string>
     <string name="emailNotifications">Notifications par courriel</string>
     <string name="emailNotificationsImmediately">Immédiatement</string>
@@ -1282,4 +1289,32 @@
     <string name="emailNotificationsWeekly">Toutes les semaines</string>
     <string name="emailNotificationsNever">Jamais</string>
     <string name="selectFrequency">Sélectionnez la fréquence</string>
+    <string name="a11y_closeProgress">Fermer la boîte de dialogue de progression</string>
+    <string name="fileUploadProgress">%1$s sur %2$s</string>
+    <string name="fileUploadProgressSubtitle">Envoi vers les fichiers...</string>
+    <string name="submissionProgressSubtitle">Envoi de la soumission vers \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">Envoi en cours</string>
+    <string name="dashboardNotificationUploadingFilesTitle">Envoi des fichiers...</string>
+    <string name="cancelSubmissionDialogTitle">Annuler la soumission</string>
+    <string name="cancelSubmissionDialogMessage">Ceci annulera et supprimera votre soumission.</string>
+    <string name="fileUploadError">Échec de l’envoi de fichier</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Envoi vers Canvas pour %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Envoi vers Mes Fichiers</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Soumettre le travail</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choisir un cours</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choisir un travail</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Annuler l’envoi ?</string>
+    <string name="cancelFileUploadMessage">Cette action annulera votre envoi.</string>
+    <string name="menuTitleFilterAssignments">Filtrer les travaux</string>
+    <string name="filterAssignmentDialogTitle">Filtrer les travaux</string>
+    <string name="filterAssignmentsDialogCancel">Annuler</string>
+    <string name="filterAssignmentAll">Tous</string>
+    <string name="filterAssignmentLate">En retard</string>
+    <string name="filterAssignmentMissing">Manquant</string>
+    <string name="filterAssignmentGraded">Noté</string>
+    <string name="filterAssignmentUpcoming">Prochainement</string>
+    <string name="createdByStudentView">Créé par Student View</string>
+    <string name="discussionErrorToast">Une erreur est survenue. Le sujet n’est peut-être plus disponible.</string>
+    <string name="cameraPermissionPermanentlyDenied">L\'autorisation d\'accès à l’appareil photo a été refusée de manière permanente. Rendez-vous dans les paramètres d\'application pour l\'autoriser.</string>
 </resources>

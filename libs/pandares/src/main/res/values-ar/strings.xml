@@ -1095,6 +1095,7 @@
     <string name="tab_student_view">طريقة عرض الطالب</string>
 
 
+    <string name="rateOnThePlayStore">التقييم على Play Store</string>
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">اختر الرأس: %s</string>
     <string name="content_description_chosen_body">اختر الجسم: %s</string>
@@ -1288,6 +1289,7 @@
     <string name="submissionDraftAvailableTitle">المسودة متوفرة</string>
     <string name="errorLoadingSubmission">حدث خطأ أثناء تحميل الإرسال</string>
     <string name="loadFullContent">اضغط للاطلاع على المحتوى الكامل</string>
+    <string name="openLtiInExternalApp">اضغط على فتح في التطبيق الخارجي</string>
     <string name="dashboardTabImportantDates">التواريخ الهامة</string>
     <string name="importantDatesEmptyTitle">لا توجد تواريخ هامة</string>
     <string name="important_dates">التواريخ الهامة</string>
@@ -1316,7 +1318,7 @@
     <string name="appThemeLight">فاتح</string>
     <string name="appThemeDark">داكن</string>
     <string name="appThemeSystem">مثل الجهاز</string>
-    <string name="themeSelectorTitle">Canvas متاح الآن في النسق الداكن</string>
+    <string name="themeSelectorTitle">Canvas متاح الآن بالنسق الداكن</string>
     <string name="themeSelectorDescription">اختر نسق التطبيق</string>
     <string name="themeSelectorLightTheme">النسق الفاتح</string>
     <string name="themeSelectorDarkTheme">النسق الداكن</string>
@@ -1334,6 +1336,15 @@
         <item quantity="many">%s من الرسائل غير المقروءة</item>
         <item quantity="other">%s من الرسائل غير المقروءة</item>
     </plurals>
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="zero">%s من الإشعارات غير المقروءة</item>
+        <item quantity="one">%s إشعار غير مقروء</item>
+        <item quantity="two">%s من الإشعارات غير المقروءة</item>
+        <item quantity="few">%s من الإشعارات غير المقروءة</item>
+        <item quantity="many">%s من الإشعارات غير المقروءة</item>
+        <item quantity="other">%s من الإشعارات غير المقروءة</item>
+    </plurals>
+
     <string name="noAnnotationSelected">لم يتم تحديد تعليق توضيحي</string>
     <string name="emailNotifications">إعلامات البريد الإلكتروني</string>
     <string name="emailNotificationsImmediately">فورًا</string>
@@ -1341,4 +1352,32 @@
     <string name="emailNotificationsWeekly">أسبوعيًا</string>
     <string name="emailNotificationsNever">أبدًا</string>
     <string name="selectFrequency">حدد التكرار</string>
+    <string name="a11y_closeProgress">إغلاق مربع حوار التقدم</string>
+    <string name="fileUploadProgress">%1$s من %2$s</string>
+    <string name="fileUploadProgressSubtitle">جارٍ التحميل إلى الملفات</string>
+    <string name="submissionProgressSubtitle">جارٍ تحميل الإرسال إلى \"%s\"</string>
+    <string name="dashboardNotificationUploadingSubmissionTitle">جارٍ تحميل الإرسال</string>
+    <string name="dashboardNotificationUploadingFilesTitle">جارٍ تحميل الملفات</string>
+    <string name="cancelSubmissionDialogTitle">إلغاء الإرسال</string>
+    <string name="cancelSubmissionDialogMessage">سيؤدي هذا إلى إلغاء وحذف إرسالك.</string>
+    <string name="fileUploadError">تعذر تحميل الملف</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">التحميل إلى Canvas لـ %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">التحميل إلى ملفاتي</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">إرسال المهمة</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">اختر مساقًا</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">اختر مهمة</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s، %2$s</string>
+    <string name="cancelFileUploadTitle">هل تريد إلغاء التحميل؟</string>
+    <string name="cancelFileUploadMessage">سيؤدي هذا إلى إلغاء تحميلك.</string>
+    <string name="menuTitleFilterAssignments">تصفية المهام</string>
+    <string name="filterAssignmentDialogTitle">تصفية المهام</string>
+    <string name="filterAssignmentsDialogCancel">إلغاء</string>
+    <string name="filterAssignmentAll">الكل</string>
+    <string name="filterAssignmentLate">متأخر</string>
+    <string name="filterAssignmentMissing">مفقود</string>
+    <string name="filterAssignmentGraded">تم تقييم الدرجة</string>
+    <string name="filterAssignmentUpcoming">القادمة</string>
+    <string name="createdByStudentView">تم الإنشاء في طريقة عرض الطالب</string>
+    <string name="discussionErrorToast">حدث خطأ ما. ربما لم يعد الموضوع متاحًا.</string>
+    <string name="cameraPermissionPermanentlyDenied">تم رفض إذن الكاميرا بشكل دائم. انتقل إلى إعدادات التطبيق للسماح به.</string>
 </resources>

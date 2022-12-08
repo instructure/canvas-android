@@ -38,7 +38,7 @@ class InboxMessagePage: BasePage() {
     private val replyTextView by OnViewWithId(R.id.reply)
 
 
-    override fun assertPageObjects() {
+    override fun assertPageObjects(duration: Long) {
         starImageButton.assertDisplayed()
         subjectTextView.assertDisplayed()
         messageRecyclerView.assertDisplayed()

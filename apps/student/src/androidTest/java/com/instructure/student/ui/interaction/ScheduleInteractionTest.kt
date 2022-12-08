@@ -48,13 +48,6 @@ class ScheduleInteractionTest : StudentTest() {
 
     override fun displaysPageObjects() = Unit
 
-    @Before
-    fun setUp() {
-        if (!this::dateTimeProvider.isInitialized) {
-            hiltRule.inject()
-        }
-    }
-
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
     fun testShowCorrectHeaderItems() {

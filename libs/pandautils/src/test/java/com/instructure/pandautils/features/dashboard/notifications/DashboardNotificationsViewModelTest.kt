@@ -137,8 +137,6 @@ class DashboardNotificationsViewModelTest {
     }
 
     private fun setupResources() {
-        every { resources.getColor(R.color.backgroundDanger) } returns Color.parseColor("#EE0612")
-        every { resources.getColor(R.color.backgroundWarning) } returns Color.parseColor("#FC5E13")
         every { resources.getString(R.string.courseInviteTitle) } returns "You have been invited"
         every { resources.getString(R.string.errorOccurred) } returns "An unexpected error occurred."
     }
@@ -158,28 +156,28 @@ class DashboardNotificationsViewModelTest {
                 1,
                 "AC1",
                 "AC1",
-                color = 0,
+                color = R.color.backgroundDanger,
                 icon = R.drawable.ic_warning
             ),
             AnnouncementViewData(
                 2,
                 "AC2",
                 "AC2",
-                color = 0,
+                color = R.color.backgroundInfo,
                 icon = R.drawable.ic_calendar
             ),
             AnnouncementViewData(
                 3,
                 "AC3",
                 "AC3",
-                color = 0,
+                color = R.color.backgroundInfo,
                 icon = R.drawable.ic_question_mark
             ),
             AnnouncementViewData(
                 4,
                 "AC4",
                 "AC4",
-                color = 0,
+                color = R.color.backgroundWarning,
                 icon = R.drawable.ic_warning
             ),
         )
@@ -460,11 +458,7 @@ class DashboardNotificationsViewModelTest {
         )
 
         val expectedData = listOf(
-            UploadViewData(
-                title,
-                subTitle,
-                0
-            )
+            UploadViewData(title, subTitle)
         )
 
         viewModel.loadData()

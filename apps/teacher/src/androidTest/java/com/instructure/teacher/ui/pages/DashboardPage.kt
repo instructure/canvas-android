@@ -24,6 +24,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
@@ -60,6 +61,19 @@ class DashboardPage : BasePage() {
         scrollAndAssertDisplayed(matcher)
     }
 
+    fun assertDisplaysCourse(courseName: String) {
+        val matcher = allOf(
+            withText(courseName),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        scrollAndAssertDisplayed(matcher)
+    }
+
+    fun assertHasCourses(mCourses: List<Course>) {
+        for (course in mCourses) onView(withId(R.id.titleTextView) + withText(course.name) + withAncestor(R.id.swipeRefreshLayout)).assertDisplayed()
+    }
+
     fun assertCourseNotDisplayed(course: CourseApiModel) {
         val matcher = allOf(
             withText(course.name),
@@ -67,6 +81,10 @@ class DashboardPage : BasePage() {
             withAncestor(R.id.swipeRefreshLayout)
         )
         onView(matcher).check(doesNotExist())
+    }
+
+    fun assertEmptyView() {
+        emptyView.assertDisplayed()
     }
 
     fun assertCourseTitle(courseTitle: String) {
@@ -92,6 +110,14 @@ class DashboardPage : BasePage() {
 
     fun openCourse(courseName: String) {
         onView(withText(courseName)).click()
+    }
+
+    fun openCourse(course: CourseApiModel) {
+        onView(withText(course.name)).click()
+    }
+
+    fun openCourse(course: Course) {
+        onView(withText(course.name)).click()
     }
 
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
@@ -174,5 +200,10 @@ class DashboardPage : BasePage() {
     fun changeCourseNickname(changeTo: String) {
         onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
         onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+    }
+
+    fun openHelpMenu() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
     }
 }

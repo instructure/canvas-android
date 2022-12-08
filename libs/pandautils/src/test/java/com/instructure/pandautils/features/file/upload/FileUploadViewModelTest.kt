@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.file.upload.worker.FileUploadBundleCreator
+import com.instructure.pandautils.room.daos.FileUploadInputDao
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +53,7 @@ class FileUploadViewModelTest {
     private val resources: Resources = mockk(relaxed = true)
     private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
-    private val fileUploadBundleCreator = FileUploadBundleCreator()
+    private val fileUploadInputDao: FileUploadInputDao = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -300,6 +300,6 @@ class FileUploadViewModelTest {
     }
 
     private fun createViewModel(): FileUploadDialogViewModel {
-        return FileUploadDialogViewModel(fileUploadUtilsHelper, resources, workManager, fileUploadBundleCreator)
+        return FileUploadDialogViewModel(fileUploadUtilsHelper, resources, workManager, fileUploadInputDao)
     }
 }

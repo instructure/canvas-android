@@ -141,4 +141,26 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.assertPageObjects()
         dashboardPage.assertCourseTitle(course1.name)
     }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    fun testHelpMenuE2E() {
+        Log.d(PREPARATION_TAG,"Seeding data.")
+        val data = seedData(teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+
+        Log.d(STEP_TAG,"Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open Help Menu.")
+        dashboardPage.openHelpMenu()
+
+        Log.d(STEP_TAG, "Assert Help Menu Dialog is displayed.")
+        helpPage.assertHelpMenuDisplayed()
+
+        Log.d(STEP_TAG, "Assert that all the corresponding Help menu content are displayed.")
+        helpPage.assertHelpMenuContent()
+    }
 }

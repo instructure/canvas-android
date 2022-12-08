@@ -15,17 +15,17 @@
  */
 package com.instructure.student.ui.utils
 
+import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.assertThat
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -43,6 +43,7 @@ fun ViewInteraction.assertLineCount(lineCount: Int) {
     }
     check(matches(matcher))
 }
+
 
 fun ViewInteraction.getView(): View {
     lateinit var matchingView: View
@@ -112,4 +113,15 @@ fun ViewInteraction.assertIsRefreshing(isRefreshing: Boolean) {
         }
     }
     check(matches(matcher))
+}
+
+class IntentActionMatcher(private val intentType: String, private val dataMatcher: String) : TypeSafeMatcher<Intent>() {
+
+    override fun describeTo(description: Description?) {
+        description?.appendText("Intent Matcher")
+    }
+
+    override fun matchesSafely(item: Intent?): Boolean {
+        return (intentType == item?.action) && (item?.dataString?.contains(dataMatcher) ?: false)
+    }
 }

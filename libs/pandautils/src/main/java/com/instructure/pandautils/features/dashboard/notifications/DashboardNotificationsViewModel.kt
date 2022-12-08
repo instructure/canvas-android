@@ -136,9 +136,9 @@ class DashboardNotificationsViewModel @Inject constructor(
         return accountNotifications?.map {
 
             val color = when (it.icon) {
-                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> resources.getColor(R.color.backgroundDanger)
-                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> resources.getColor(R.color.backgroundWarning)
-                else -> resources.getColor(R.color.backgroundInfo)
+                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> R.color.backgroundDanger
+                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> R.color.backgroundWarning
+                else -> R.color.backgroundInfo
             }
 
             val icon = when (it.icon) {
@@ -228,8 +228,7 @@ class DashboardNotificationsViewModel @Inject constructor(
         workInfo?.let {
             val uploadViewData = UploadViewData(
                 it.progress.getString(PROGRESS_DATA_TITLE).orEmpty(),
-                it.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty(),
-                resources.getColor(R.color.backgroundInfo),
+                it.progress.getString(PROGRESS_DATA_ASSIGNMENT_NAME).orEmpty()
             )
             UploadItemViewModel(uuid, workManager, uploadViewData) { uuid ->
                 _events.postValue(Event(DashboardNotificationsActions.OpenProgressDialog(uuid)))

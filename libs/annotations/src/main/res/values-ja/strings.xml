@@ -38,6 +38,6 @@
     <string name="pspdf__annotation_type_stamp">ノートの色</string>
 
     <string name="removedComment">%1$sにより除去済%2$s</string>
-    <string name="pspdf__stamp_standard_section"></string>
 
+    <string name="pspdf__stamp_standard_section"></string>
 </resources>

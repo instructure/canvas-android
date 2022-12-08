@@ -32,7 +32,7 @@ class ChooseRecipientsPage: BasePage() {
     private val menuDone by WaitForViewWithId(R.id.menuDone)
     private val checkBox by WaitForViewWithId(R.id.checkBox)
 
-    override fun assertPageObjects() {
+    override fun assertPageObjects(duration: Long) {
         toolbar.assertDisplayed()
         recyclerView.assertDisplayed()
         menuDone.assertDisplayed()

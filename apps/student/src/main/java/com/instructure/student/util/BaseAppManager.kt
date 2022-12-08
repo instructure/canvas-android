@@ -20,9 +20,13 @@ import android.os.Build
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.work.Configuration
+import androidx.work.WorkManager
+import androidx.work.WorkerFactory
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
+import com.heapanalytics.android.config.Options
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.Logger
@@ -43,7 +47,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
 
-open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
+abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling, Configuration.Provider {
 
     override fun onCreate() {
         if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
@@ -88,7 +92,9 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
 
         initFlutterEngine()
 
-        Heap.init(this, BuildConfig.HEAP_APP_ID)
+        val options = Options()
+        options.disableTracking()
+        Heap.init(this, BuildConfig.HEAP_APP_ID, options)
     }
 
     private fun initFlutterEngine() {
@@ -148,6 +154,13 @@ open class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEv
     }
 
     override fun performLogoutOnAuthError() = Unit
+
+    override fun getWorkManagerConfiguration(): Configuration =
+        Configuration.Builder()
+            .setWorkerFactory(getWorkManagerFactory())
+            .build()
+
+    abstract fun getWorkManagerFactory(): WorkerFactory
 
     companion object {
         private const val FLUTTER_ENGINE_ID = "flutter_engine_embed"

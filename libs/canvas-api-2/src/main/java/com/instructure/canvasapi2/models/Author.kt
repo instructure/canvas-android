@@ -21,14 +21,15 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Author(
-        override val id: Long = 0,
-        @SerializedName("display_name")
-        var displayName: String? = null,
-        @SerializedName("avatar_image_url")
-        var avatarImageUrl: String? = null,
-        @SerializedName("html_url")
-        var htmlUrl: String? = null,
-        val pronouns: String? = null
+    override val id: Long = 0,
+    @SerializedName("display_name")
+    var displayName: String? = null,
+    @SerializedName("avatar_image_url")
+    var avatarImageUrl: String? = null,
+    @SerializedName("html_url")
+    var htmlUrl: String? = null,
+    val pronouns: String? = null
 ) : CanvasModel<Author>() {
+
     override val comparisonString get() = displayName
 }

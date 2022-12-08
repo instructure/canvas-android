@@ -35,18 +35,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
-    override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationWorker.scheduleJob(this, ApiPrefs.isMasquerading)
-
-        CookieManager.getInstance().flush()
-
-        val intent = Intent(this, NavigationActivity.startActivityClass)
-        if (getIntent() != null && getIntent().extras != null) {
-            intent.putExtras(getIntent().extras!!)
-        }
-        return intent
-    }
-
     override fun beginFindSchoolFlow(): Intent {
         return FindSchoolActivity.createIntent(this)
     }

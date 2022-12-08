@@ -1334,6 +1334,12 @@
     <string name="subscribeButton">Subscribe</string>
     <string name="switchToLightMode">Switch to Light Mode</string>
     <string name="switchToDarkMode">Switch to Dark Mode</string>
+    <string name="acceptableUsePolicyDescription">Either you\'re a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.</string>
+    <string name="acceptableUsePolicyTitle">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyButton">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyAgree">I agree to the Acceptable Use Policy.</string>
+    <string name="acceptableUsePolicySubmit">Submit</string>
+    <string name="acceptFail">Failed to submit terms acceptance.</string>
 
     <string name="attempt">%d. attempt</string>
     <string name="allowedAttempts">Allowed attempts:</string>
