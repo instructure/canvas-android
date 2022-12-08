@@ -6,11 +6,14 @@ import com.instructure.pandautils.room.entities.FileUploadInputEntity
 @Dao
 interface FileUploadInputDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(fileUploadInput: FileUploadInputEntity)
 
     @Delete
     suspend fun delete(fileUploadInput: FileUploadInputEntity)
+
+    @Delete
+    suspend fun deleteAll(fileUploadInputs: List<FileUploadInputEntity>)
 
     @Update
     suspend fun update(fileUploadInput: FileUploadInputEntity)
