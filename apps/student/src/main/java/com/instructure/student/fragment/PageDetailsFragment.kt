@@ -204,7 +204,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
             // Load the html with the helper function to handle iframe cases
             loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), body, {
-                canvasWebViewWrapper.loadHtml(it, page.title, baseUrl = page.htmlUrl)
+                canvasWebViewWrapper?.loadHtml(it, page.title, baseUrl = page.htmlUrl)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
             }
