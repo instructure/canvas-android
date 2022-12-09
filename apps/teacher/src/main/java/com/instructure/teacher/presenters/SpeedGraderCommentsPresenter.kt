@@ -75,7 +75,7 @@ class SpeedGraderCommentsPresenter(
     private var retryFileUploadJob: Job? = null
     private var fileUploadFailureJob: Job? = null
     private var removeJob: Job? = null
-    private var subscibeJob: Job? = null
+    private var subscribeJob: Job? = null
 
     override fun loadData(forceNetwork: Boolean) {
 
@@ -272,7 +272,7 @@ class SpeedGraderCommentsPresenter(
         saveFileCommentJob?.cancel()
         retryFileUploadJob?.cancel()
         fileUploadFailureJob?.cancel()
-        subscibeJob?.cancel()
+        subscribeJob?.cancel()
         super.onDestroyed()
     }
 
@@ -292,29 +292,38 @@ class SpeedGraderCommentsPresenter(
 
     private fun createPendingFileComment(workInfo: WorkInfo) {
         saveFileCommentJob = weave {
-            val fileUploadInput = FileUploadInputEntity(
-                workerId = workInfo.id.toString(),
-                courseId = courseId,
-                assignmentId = assignmentId,
-                userId = assignee.id,
-                filePaths = selectedFilePaths.orEmpty(),
-                action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT
-            )
-            fileUploadInputDao.insert(fileUploadInput)
-
-            val newComment = PendingSubmissionComment(mPageId).apply {
-                this.workerId = workInfo.id
-                this.status = CommentSendStatus.SENDING
-                this.workerInputData = FileUploadWorkerData(
-                    selectedFilePaths.orEmpty(),
-                    courseId,
-                    assignmentId,
-                    assignee.id
+            var fileUploadInput = fileUploadInputDao.findByWorkerId(workInfo.id.toString())
+            if (fileUploadInput == null) {
+                fileUploadInput = FileUploadInputEntity(
+                    workerId = workInfo.id.toString(),
+                    courseId = courseId,
+                    assignmentId = assignmentId,
+                    userId = assignee.id,
+                    filePaths = selectedFilePaths.orEmpty(),
+                    action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT
                 )
+                fileUploadInputDao.insert(fileUploadInput)
             }
-            pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
 
-            val commentWrapper = PendingCommentWrapper(newComment)
+            val comment = pendingSubmissionCommentDao.findByPageId(mPageId)?.find {
+                it.fileUploadInput?.workerId == workInfo.id.toString()
+            }
+            val commentWrapper = if (comment == null) {
+                val newComment = PendingSubmissionComment(mPageId).apply {
+                    this.workerId = workInfo.id
+                    this.status = CommentSendStatus.SENDING
+                    this.workerInputData = FileUploadWorkerData(
+                        selectedFilePaths.orEmpty(),
+                        courseId,
+                        assignmentId,
+                        assignee.id
+                    )
+                }
+                pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
+                PendingCommentWrapper(newComment)
+            } else {
+                PendingCommentWrapper(comment.toApiModel())
+            }
             data.addOrUpdate(commentWrapper)
         }
 
@@ -395,7 +404,7 @@ class SpeedGraderCommentsPresenter(
     }
 
     private fun subscribePendingWorkers() {
-        subscibeJob = weave {
+        subscribeJob = weave {
             val pendingComments = pendingSubmissionCommentDao.findByPageId(mPageId).orEmpty()
             viewCallback?.subscribePendingWorkers(pendingComments.mapNotNull { UUID.fromString( it.pendingSubmissionCommentEntity.workerId) })
         }
