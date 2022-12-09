@@ -716,8 +716,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun loadHTMLTopic(html: String, contentDescription: String?) {
-        setupHeaderWebView()
-        discussionTopicHeaderWebViewWrapper.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
+        if (discussionTopicHeaderWebViewWrapper != null) {
+            setupHeaderWebView()
+            discussionTopicHeaderWebViewWrapper.loadHtml(html, contentDescription, baseUrl = discussionTopicHeader.htmlUrl)
+        }
     }
 
     private fun loadDiscussionTopicViews(html: String) {
@@ -725,7 +727,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionProgressBar.setGone()
 
         loadHeaderHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
-            discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
+            discussionRepliesWebViewWrapper?.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
         })
 
         swipeRefreshLayout.isRefreshing = false
