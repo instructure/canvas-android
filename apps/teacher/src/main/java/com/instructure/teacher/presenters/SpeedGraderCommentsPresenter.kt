@@ -64,12 +64,10 @@ class SpeedGraderCommentsPresenter(
     var selectedFilePaths: List<String>? = null
 
     private val comments = rawComments.map { CommentWrapper(it) }
-    private var sendingJob: Job? = null
     private var fileUploadJob: Job? = null
     private var pendingSubmissionCommentFetchJob: Job? = null
     private var sendCommentJob: Job? = null
     private var updateCommentJob: Job? = null
-    private var createCommentJob: Job? = null
     private var saveDraftJob: Job? = null
     private var saveFileCommentJob: Job? = null
     private var retryFileUploadJob: Job? = null
@@ -262,17 +260,16 @@ class SpeedGraderCommentsPresenter(
     }
 
     override fun onDestroyed() {
-        sendingJob?.cancel()
         fileUploadJob?.cancel()
         pendingSubmissionCommentFetchJob?.cancel()
         sendCommentJob?.cancel()
         updateCommentJob?.cancel()
-        createCommentJob?.cancel()
         saveDraftJob?.cancel()
         saveFileCommentJob?.cancel()
         retryFileUploadJob?.cancel()
         fileUploadFailureJob?.cancel()
         subscribeJob?.cancel()
+        removeJob?.cancel()
         super.onDestroyed()
     }
 
@@ -331,7 +328,13 @@ class SpeedGraderCommentsPresenter(
 
     fun retryFileUpload(pending: PendingSubmissionComment) {
         retryFileUploadJob = weave {
-            pendingSubmissionCommentDao.delete(PendingSubmissionCommentEntity(pending))
+            val pendingEntity = pendingSubmissionCommentDao.findById(pending.id)
+            val fileUploadInputEntity = pendingEntity?.workerId?.let {
+                fileUploadInputDao.findByWorkerId(it)
+            }
+            if (fileUploadInputEntity != null) fileUploadInputDao.delete(fileUploadInputEntity)
+            if (pendingEntity != null) pendingSubmissionCommentDao.delete(pendingEntity)
+
             data.remove(PendingCommentWrapper(pending))
             pending.workerInputData?.let { data ->
                 selectedFilePaths = data.filePaths
@@ -368,11 +371,11 @@ class SpeedGraderCommentsPresenter(
 
     private fun handleFileUploadFailure(workInfo: WorkInfo) {
         fileUploadFailureJob = weave {
-            pendingSubmissionCommentDao.findByWorkerId(workInfo.id.toString())?.apply {
-                status = CommentSendStatus.ERROR.toString()
+            pendingSubmissionCommentDao.findByWorkerIdWithInputData(workInfo.id.toString())?.apply {
+                this.pendingSubmissionCommentEntity.status = CommentSendStatus.ERROR.toString()
             }?.let {
                 data.addOrUpdate(PendingCommentWrapper(it.toApiModel()))
-                pendingSubmissionCommentDao.update(it)
+                pendingSubmissionCommentDao.update(it.pendingSubmissionCommentEntity)
             }
         }
     }
