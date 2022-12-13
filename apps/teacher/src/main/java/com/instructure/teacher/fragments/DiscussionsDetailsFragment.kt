@@ -449,7 +449,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         discussionRepliesWebViewWrapper.webView.onResume()
 
         setupWebView(discussionTopicHeaderWebViewWrapper.webView, false)
-        setupWebView(discussionRepliesWebViewWrapper.webView, true, addDarkTheme = true)
+        setupWebView(discussionRepliesWebViewWrapper.webView, true, addDarkTheme = !discussionRepliesWebViewWrapper.themeSwitched)
         discussionRepliesWebViewWrapper.onThemeChanged = { themeChanged, html ->
             setupWebView(discussionRepliesWebViewWrapper.webView, true, addDarkTheme = !themeChanged)
             discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)

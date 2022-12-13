@@ -724,15 +724,15 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionRepliesWebViewWrapper.setVisible()
         discussionProgressBar.setGone()
 
-        loadHeaderHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
+        setupRepliesWebView()
+
+        loadRepliesHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
             discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
         })
 
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)
         postBeforeViewingRepliesTextView.setGone()
-
-        setupRepliesWebView()
     }
     //endregion Loading
 
