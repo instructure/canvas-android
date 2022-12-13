@@ -33,10 +33,8 @@ interface PendingSubmissionCommentDao {
     @Query("SELECT * FROM PendingSubmissionCommentEntity WHERE id=:id")
     suspend fun findById(id: Long): PendingSubmissionCommentEntity?
 
+    @Transaction
     @Query("SELECT * FROM PendingSubmissionCommentEntity WHERE status=:status AND workerId IS NOT NULL")
     suspend fun findByStatus(status: String): List<PendingSubmissionCommentWithFileUploadInput>?
-
-    @Query("SELECT * FROM PendingSubmissionCommentEntity WHERE filePath=:filePath AND pageId=:pageId")
-    suspend fun findByFilePathAndPageId(filePath: String, pageId: String): PendingSubmissionCommentEntity?
 
 }
