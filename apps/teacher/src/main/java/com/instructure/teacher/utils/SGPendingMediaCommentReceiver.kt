@@ -22,61 +22,66 @@ import android.content.Intent
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
+import com.instructure.pandautils.room.daos.PendingSubmissionCommentDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.events.UploadMediaCommentUpdateEvent
 import com.instructure.teacher.events.post
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import java.io.File
+import javax.inject.Inject
 
 /**
  * Captures broadcasts from the NotoriousUploadService
  *
  * Handles successful as well as failed uploads
  */
+@AndroidEntryPoint
 class SGPendingMediaCommentReceiver : BroadcastReceiver() {
+
+    @Inject
+    lateinit var pendingSubmissionCommentDao: PendingSubmissionCommentDao
+
+    private val scope = CoroutineScope(SupervisorJob())
+
     override fun onReceive(context: Context?, intent: Intent?) {
-        val extras = intent?.extras ?: return
+        scope.launch {
+            val extras = intent?.extras ?: return@launch
 
-        val mediaPath = extras.getString(Const.MEDIA_FILE_PATH) ?: return
-        val pageId = extras.getString(Const.PAGE_ID) ?: return
+            val mediaPath = extras.getString(Const.MEDIA_FILE_PATH) ?: return@launch
+            val pageId = extras.getString(Const.PAGE_ID) ?: return@launch
+            val mediaCommentId = extras.getLong(Const.ID)
 
-        // This can be null if the comment failed to send
-        val submissionComments = extras.getParcelableArrayList<SubmissionComment>(Const.SUBMISSION_COMMENT_LIST)
+            // This can be null if the comment failed to send
+            val submissionComments = extras.getParcelableArrayList<SubmissionComment>(Const.SUBMISSION_COMMENT_LIST)
 
-        var pendingComments = TeacherPrefs.pendingSubmissionComments
-        val pendingSubmissionComment: PendingSubmissionComment = pendingComments.find { it.filePath == mediaPath } ?: return
+            val pendingSubmissionCommentEntity = pendingSubmissionCommentDao.findById(mediaCommentId) ?: return@launch
 
-        if (extras.containsKey(Const.ERROR)) {
-            // There was an error sending the media file
+            if (extras.containsKey(Const.ERROR)) {
+                // There was an error sending the media file
+                // Update the status of the pending comment to reflect failed statue
+                pendingSubmissionCommentEntity.status =
+                    CommentSendStatus.ERROR.toString()
+                pendingSubmissionCommentDao.update(pendingSubmissionCommentEntity)
 
-            // Update the status of the pending comment to reflect failed statue
-            pendingComments.find { it.id == pendingSubmissionComment.id }?.let {
-                pendingComments -= it
-                it.status = CommentSendStatus.ERROR
-                pendingComments += it
-                TeacherPrefs.pendingSubmissionComments = pendingComments
-            }
+                // Let the world know the shame of this failed comment
+                sendUploadMediaCommentUpdateEvent(pageId, pendingSubmissionCommentEntity.toApiModel())
+            } else {
+                // No errors sending media comment
 
-            // Let the world know the shame of this failed comment
-            sendUploadMediaCommentUpdateEvent(pageId, pendingSubmissionComment)
-        } else {
-            // No errors sending media comment
+                // Remove pending comment from db
+                submissionComments?.lastOrNull()?.let { submissionComment ->
+                    // Remove pending comment from sharedPrefs
+                    pendingSubmissionCommentDao.delete(pendingSubmissionCommentEntity)
 
-            // Remove pending comment from prefs
-            submissionComments?.lastOrNull()?.let { submissionComment ->
-
-                // Remove pending comment from sharedPrefs
-                pendingComments.find { it.id == pendingSubmissionComment.id }?.let {
-
-                    // No error, remove pending comment
-                    pendingComments -= it
-                    TeacherPrefs.pendingSubmissionComments = pendingComments
+                    sendUploadMediaCommentUpdateEvent(
+                        pageId,
+                        pendingSubmissionCommentEntity.toApiModel(),
+                        submissionComment
+                    )
                 }
-
-                // Delete media file
-                File(pendingSubmissionComment.filePath).delete()
-
-                sendUploadMediaCommentUpdateEvent(pageId, pendingSubmissionComment, submissionComment)
             }
         }
     }
