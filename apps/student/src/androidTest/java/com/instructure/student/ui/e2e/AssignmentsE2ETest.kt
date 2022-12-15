@@ -252,7 +252,6 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.verifyAssignmentGraded("22")
 
-
         Log.d(STEP_TAG,"Navigate to submission details Comments Tab.")
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
@@ -269,6 +268,13 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Assert that $newComment is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
+
+        Log.d(STEP_TAG, "Open the 'Files' tab of the submission and assert if the file is present there as well.")
+        submissionDetailsPage.openFiles()
+
+        Log.d(STEP_TAG,"Assert that ${uploadInfo.fileName} file has been displayed.")
+        submissionDetailsPage.assertFileDisplayed(uploadInfo.fileName)
+
     }
 
     @E2E
