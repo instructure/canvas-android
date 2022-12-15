@@ -215,10 +215,12 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                     backgroundColor = requireContext().getColor(R.color.backgroundInfo)
                 }
             }
-            if (filterPosition == 0) {
-                BadgeUtils.detachBadgeDrawable(badgeDrawable, toolbar, R.id.menu_filter_assignments)
-            } else {
-                BadgeUtils.attachBadgeDrawable(badgeDrawable!!, toolbar, R.id.menu_filter_assignments)
+            toolbar?.let {
+                if (filterPosition == 0) {
+                    BadgeUtils.detachBadgeDrawable(badgeDrawable, it, R.id.menu_filter_assignments)
+                } else {
+                    BadgeUtils.attachBadgeDrawable(badgeDrawable!!, it, R.id.menu_filter_assignments)
+                }
             }
         }, 100)
     }
