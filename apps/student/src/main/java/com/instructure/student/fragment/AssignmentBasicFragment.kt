@@ -137,7 +137,7 @@ class AssignmentBasicFragment : ParentFragment() {
         }
 
         loadHtmlJob = assignmentWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
-            assignmentWebViewWrapper.loadHtml(it, assignment.name)
+            assignmentWebViewWrapper?.loadHtml(it, assignment.name)
         }, {
             LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
         })

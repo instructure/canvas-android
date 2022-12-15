@@ -233,7 +233,7 @@ class AssignmentDetailsView(
     }
 
     private fun loadDescriptionHtml(html: String, contentDescription: String?, baseUrl: String?) {
-        descriptionWebViewWrapper.loadHtml(html, contentDescription, baseUrl = baseUrl)
+        descriptionWebViewWrapper?.loadHtml(html, contentDescription, baseUrl = baseUrl)
     }
 
     private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {
