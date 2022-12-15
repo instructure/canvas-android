@@ -41,6 +41,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
@@ -369,6 +370,7 @@ object RouteMatcher : BaseRouteMatcher() {
             CreateOrEditPageDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = CreateOrEditPageDetailsFragment.newInstance(route.arguments)
             FullscreenInternalWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = FullscreenInternalWebViewFragment.newInstance(route.arguments)
             InternalWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = InternalWebViewFragment.newInstance(route.arguments)
+            HtmlContentFragment::class.java.isAssignableFrom(cls) -> fragment = HtmlContentFragment.newInstance(route.arguments)
         } //NOTE: These should remain at or near the bottom to give fragments that extend InternalWebViewFragment the chance first
 
         return fragment as Type?

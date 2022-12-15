@@ -41,4 +41,10 @@ class DatabaseModule {
     fun provideSubmissionCommentDao(appDatabase: AppDatabase): SubmissionCommentDao {
         return appDatabase.submissionCommentDao()
     }
+
+    @Provides
+    @Singleton
+    fun providePendingSubmissionCommentDao(appDatabase: AppDatabase): PendingSubmissionCommentDao {
+        return appDatabase.pendingSubmissionCommentDao()
+    }
 }

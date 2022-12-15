@@ -10,6 +10,7 @@ import com.instructure.pandautils.features.discussion.details.DiscussionDetailsW
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
+import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.argsWithContext
@@ -187,6 +188,8 @@ object RouteResolver {
             fragment = FullscreenInternalWebViewFragment.newInstance(route.arguments)
         } else if (InternalWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = InternalWebViewFragment.newInstance(route.arguments)
+        } else if (HtmlContentFragment::class.java.isAssignableFrom(cls)) {
+            fragment = HtmlContentFragment.newInstance(route.arguments)
         }//NOTE: These should remain at or near the bottom to give fragments that extend InternalWebViewFragment the chance first
 
         return fragment as Type?
