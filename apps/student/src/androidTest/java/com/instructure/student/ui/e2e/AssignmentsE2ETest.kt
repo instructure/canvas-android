@@ -21,11 +21,13 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
+import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -33,6 +35,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -45,9 +48,7 @@ import org.junit.Test
 class AssignmentsE2ETest: StudentTest() {
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @Rule
     @JvmField
@@ -355,6 +356,166 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Assert that ${letterGradeTextAssignment.name} assignment is displayed with the corresponding grade: 16.")
         assignmentListPage.assertHasAssignment(letterGradeTextAssignment, "16")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testFilterAndSortAssignmentsE2E() {
+        Log.d(PREPARATION_TAG,"Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        val upcomingAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+            courseId = course.id,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            gradingType = GradingType.LETTER_GRADE,
+            teacherToken = teacher.token,
+            pointsPossible = 20.0
+        ))
+
+        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        val missingAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+            courseId = course.id,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            gradingType = GradingType.LETTER_GRADE,
+            teacherToken = teacher.token,
+            pointsPossible = 20.0,
+            dueAt = 2.days.ago.iso8601
+        ))
+
+        Log.d(PREPARATION_TAG,"Seeding a GRADED assignment for ${course.name} course.")
+        val gradedAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+            courseId = course.id,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            gradingType = GradingType.LETTER_GRADE,
+            teacherToken = teacher.token,
+            pointsPossible = 20.0
+        ))
+
+        Log.d(PREPARATION_TAG,"Grade the '${gradedAssignment.name}' with '11' points out of 20.")
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = course.id,
+            assignmentId = gradedAssignment.id,
+            studentId = student.id,
+            postedGrade = "11",
+            excused = false
+        )
+
+        Log.d(PREPARATION_TAG,"Create an Assignment Group for '${course.name}' course.")
+        val assignmentGroup = AssignmentGroupsApi.createAssignmentGroup(
+            token = teacher.token,
+            courseId = course.id,
+            name = "Discussions",
+            position = null,
+            groupWeight = null,
+            sisSourceId = null
+        )
+
+        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        val otherTypeAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+            courseId = course.id,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            gradingType = GradingType.LETTER_GRADE,
+            teacherToken = teacher.token,
+            pointsPossible = 20.0,
+            assignmentGroupId = assignmentGroup.id
+        ))
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the corresponding assignment are displayed on the Assignment List Page.")
+        assignmentListPage.assertHasAssignment(upcomingAssignment)
+        assignmentListPage.assertHasAssignment(missingAssignment)
+        assignmentListPage.assertHasAssignment(otherTypeAssignment)
+        assignmentListPage.assertHasAssignment(gradedAssignment)
+
+        Log.d(STEP_TAG, "Click on the 'Filter' menu on the toolbar.")
+        assignmentListPage.clickFilterMenu()
+
+        Log.d(STEP_TAG, "Filter the MISSING assignments.")
+        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.MISSING)
+
+        Log.d(STEP_TAG, "Assert that the '${missingAssignment.name}' MISSING assignment is displayed and the others at NOT.")
+        assignmentListPage.assertHasAssignment(missingAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
+
+        Log.d(STEP_TAG, "Click on the 'Filter' menu on the toolbar.")
+        assignmentListPage.clickFilterMenu()
+
+        Log.d(STEP_TAG, "Filter the GRADED assignments.")
+        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.GRADED)
+
+        Log.d(STEP_TAG, "Assert that the '${gradedAssignment.name}' GRADED assignment is displayed.")
+        assignmentListPage.assertHasAssignment(gradedAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(missingAssignment.name)
+
+        Log.d(STEP_TAG, "Click on the 'Filter' menu on the toolbar.")
+        assignmentListPage.clickFilterMenu()
+
+        Log.d(STEP_TAG, "Set back the filter to show ALL the assignments like by default.")
+        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.ALL)
+        assignmentListPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that by default, the 'Sort by Time' is selected.")
+        assignmentListPage.assertSortByButtonShowsSortByTime()
+
+        Log.d(STEP_TAG, "Select 'Sort by Type' sorting.")
+        assignmentListPage.selectSortByType()
+
+        Log.d(STEP_TAG, "Assert that after the selection, the button is really changed to 'Sort by Type'.")
+        assignmentListPage.assertPageObjects()
+        assignmentListPage.assertSortByButtonShowsSortByType()
+
+        Log.d(STEP_TAG, "Assert that still all the assignment are displayed and the corresponding groups (Assignments, Discussions) as well.")
+        assignmentListPage.assertAssignmentItemCount(4, 2) //Two groups: Assignments and Discussions
+        assignmentListPage.assertAssignmentGroupDisplayed("Assignments")
+        assignmentListPage.assertAssignmentGroupDisplayed("Discussions")
+        assignmentListPage.assertHasAssignment(upcomingAssignment)
+        assignmentListPage.assertHasAssignment(missingAssignment)
+        assignmentListPage.assertHasAssignment(otherTypeAssignment)
+        assignmentListPage.assertHasAssignment(gradedAssignment)
+
+        Log.d(STEP_TAG, "Collapse the 'Assignments' assignment group and assert that it's items are not displayed when the group is collapsed.")
+        assignmentListPage.expandCollapseAssignmentGroup("Assignments")
+        assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(missingAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
+
+        Log.d(STEP_TAG, "Assert that the other group's item is still displayed.")
+        assignmentListPage.assertHasAssignment(otherTypeAssignment)
+
+        Log.d(STEP_TAG, "Expand the 'Assignments' assignment group.")
+        assignmentListPage.expandCollapseAssignmentGroup("Assignments")
+
+        Log.d(STEP_TAG, "Click on the 'Search' (magnifying glass) icon at the toolbar.")
+        assignmentListPage.clickOnSearchButton()
+
+        Log.d(STEP_TAG, "Type the name of the '${missingAssignment.name}' assignment.")
+        assignmentListPage.typeToSearchBar(missingAssignment.name.drop(5))
+
+        Log.d(STEP_TAG, "Assert that the '${missingAssignment.name}' assignment has been found by previously typed search string.")
+        sleep(3000) // Allow the search input to propagate
+        assignmentListPage.assertHasAssignment(missingAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
+
     }
 
     @E2E
