@@ -18,20 +18,23 @@
 package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants.ASSIGNMENT_ID
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants.CANVAS_CONTEXT_ID
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants.DOMAIN_PARAM
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants.SCREEN_OF_ORIGIN
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants.USER_CONTEXT_ID
+import com.heapanalytics.android.Heap
 
 object Analytics {
 
     fun logEvent(eventName: String, bundle: Bundle? = null) {
-
+        val map = bundle?.let { bundle ->
+            bundle.keySet()
+                .filter { it.isNotBlank() && it.isNotEmpty() }
+                .associateWith {
+                bundle.getString(it)
+            }
+        }
+        Heap.track(eventName, map)
     }
 
     fun logEvent(eventName: String) {
-
+        Heap.track(eventName, null)
     }
 
     fun setUserProperty(propertyName: String, propertyValue: String) {
