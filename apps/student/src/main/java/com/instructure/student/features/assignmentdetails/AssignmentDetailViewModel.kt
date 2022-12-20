@@ -20,7 +20,6 @@ package com.instructure.student.features.assignmentdetails
 import android.app.Application
 import android.content.Context
 import android.content.res.Resources
-import android.util.Log
 import androidx.lifecycle.*
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
@@ -82,6 +81,8 @@ class AssignmentDetailViewModel @Inject constructor(
     private var isObserver: Boolean = false
     private var quizResult: Quiz? = null
 
+    private var isUploading = false
+
     private val submissionQuery = Db.getInstance(getApplication()).submissionQueries
         .getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id.orDefault())
 
@@ -93,7 +94,27 @@ class AssignmentDetailViewModel @Inject constructor(
     override fun queryResultsChanged() {
         viewModelScope.launch {
             val submission = submissionQuery.executeAsList().lastOrNull()
-            Log.d("ASD", "${submission?.assignmentName}")
+            val attempts = _data.value?.attempts
+            submission?.let { dbSubmission ->
+                if (dbSubmission.progress == null) {
+                    isUploading = true
+                    _data.value?.attempts = attempts?.toMutableList()?.apply {
+                        add(0, AssignmentDetailAttemptItemViewModel(
+                            AssignmentDetailAttemptViewData(
+                                resources.getString(R.string.attempt, attempts.size + 1),
+                                getFormattedDate(dbSubmission.lastActivityDate?.toInstant()?.toEpochMilli()?.let { Date(it) } ?: Date()),
+                                isUploading = true
+                            )
+                        ))
+                    }.orEmpty()
+                    _data.value?.notifyPropertyChanged(BR.attempts)
+                }
+            } ?: run {
+                if (isUploading) {
+                    isUploading = false
+                    refreshAttempts()
+                }
+            }
         }
     }
 
@@ -137,6 +158,34 @@ class AssignmentDetailViewModel @Inject constructor(
                 _state.postValue(ViewState.Error())
             }
         }
+    }
+
+    private fun refreshAttempts() {
+        viewModelScope.launch {
+            val assignmentResult = if (isObserver) {
+                assignmentManager.getAssignmentIncludeObserveesAsync(assignmentId, course?.id.orDefault(), true)
+            } else {
+                assignmentManager.getAssignmentAsync(assignmentId, course?.id.orDefault(), true)
+            }.await().dataOrThrow as Assignment
+
+            _data.value?.attempts = getAttemptsByHistory(assignmentResult)
+            _data.value?.notifyPropertyChanged(BR.attempts)
+        }
+    }
+
+    private fun getAttemptsByHistory(assignment: Assignment): List<AssignmentDetailAttemptItemViewModel> {
+        val submissionHistory = assignment.submission?.submissionHistory
+        return submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
+            submission?.submittedAt?.let { getFormattedDate(it) }?.let {
+                AssignmentDetailAttemptItemViewModel(
+                    AssignmentDetailAttemptViewData(
+                        resources.getString(R.string.attempt, submissionHistory.size - index),
+                        it,
+                        submission
+                    )
+                )
+            }
+        }.orEmpty()
     }
 
     @Suppress("DEPRECATION")
@@ -200,18 +249,7 @@ class AssignmentDetailViewModel @Inject constructor(
 
         val partialLockedMessage = assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()).orDefault() }.orEmpty()
 
-        val submissionHistory = assignment.submission?.submissionHistory
-        val attempts = submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
-            submission?.submittedAt?.let { getFormattedDate(it) }?.let {
-                AssignmentDetailAttemptItemViewModel(
-                    AssignmentDetailAttemptViewData(
-                        resources.getString(R.string.attempt, submissionHistory.size - index),
-                        it,
-                        submission
-                    )
-                )
-            }
-        }.orEmpty()
+        val attempts = getAttemptsByHistory(assignment)
 
         val submissionTypes = assignment.getSubmissionTypes()
             .map { Assignment.submissionTypeToPrettyPrintString(it, resources) }
@@ -309,8 +347,9 @@ class AssignmentDetailViewModel @Inject constructor(
 
     fun onAttemptSelected(position: Int) {
         val assignment = _data.value?.assignment
-        val selectedSubmission = _data.value?.attempts?.getOrNull(position)?.data?.submission
-        _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(resources, assignment, selectedSubmission)
+        val attempt = _data.value?.attempts?.getOrNull(position)?.data
+        val selectedSubmission = attempt?.submission
+        _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(resources, assignment, selectedSubmission, attempt?.isUploading.orDefault())
         _data.value?.notifyPropertyChanged(BR.selectedGradeCellViewData)
     }
 

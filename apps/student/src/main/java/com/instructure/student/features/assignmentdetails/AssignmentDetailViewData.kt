@@ -17,7 +17,7 @@ data class AssignmentDetailViewData(
     val submitButtonText: String = "",
     val submitEnabled: Boolean = false,
     val submitVisible: Boolean = false,
-    val attempts: List<AssignmentDetailAttemptItemViewModel> = emptyList(),
+    @Bindable var attempts: List<AssignmentDetailAttemptItemViewModel> = emptyList(),
     @Bindable var selectedGradeCellViewData: GradeCellViewData? = GradeCellViewData(GradeCellViewData.State.EMPTY),
     val dueDate: String = "",
     val submissionTypes: String = "",
@@ -34,7 +34,8 @@ data class AssignmentDetailViewData(
 data class AssignmentDetailAttemptViewData(
     val title: String,
     val date: String,
-    val submission: Submission
+    val submission: Submission? = null,
+    val isUploading: Boolean = false
 )
 
 data class QuizViewViewData(val questionCount: String, val timeLimit: String, val allowedAttempts: String)

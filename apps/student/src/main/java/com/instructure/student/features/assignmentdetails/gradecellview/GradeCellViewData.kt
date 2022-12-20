@@ -31,13 +31,16 @@ data class GradeCellViewData(
     enum class State {
         EMPTY,
         SUBMITTED,
-        GRADED
+        GRADED,
+        UPLOADING
     }
 
     companion object {
         @Suppress("DEPRECATION")
-        fun fromSubmission(resources: Resources, assignment: Assignment?, submission: Submission?): GradeCellViewData {
-            return if (
+        fun fromSubmission(resources: Resources, assignment: Assignment?, submission: Submission?, uploading: Boolean = false): GradeCellViewData {
+            return if (uploading) {
+                GradeCellViewData(State.UPLOADING)
+            } else if (
                 assignment == null
                 || submission == null
                 || (submission.submittedAt == null && !submission.isGraded)
