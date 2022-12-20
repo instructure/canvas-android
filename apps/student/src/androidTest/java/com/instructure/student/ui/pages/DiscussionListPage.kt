@@ -174,6 +174,6 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
 
     fun assertAnnouncementLocked(announcementName: String) {
         val ancestorMatcher = allOf(withId(R.id.discussionLayout), withDescendant(withId(R.id.discussionTitle) + withText(announcementName)))
-        onView(allOf(withId(R.id.nestedIcon), withContentDescription("Locked"), withAncestor(ancestorMatcher))).assertDisplayed()
+        onView(allOf(withId(R.id.nestedIcon), withContentDescription(R.string.locked), withAncestor(ancestorMatcher))).assertDisplayed()
     }
 }
