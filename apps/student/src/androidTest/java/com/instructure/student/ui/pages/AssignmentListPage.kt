@@ -17,8 +17,10 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
@@ -26,10 +28,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -71,6 +70,30 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
 
     fun assertHasAssignment(assignment: Assignment, expectedGrade: String? = null) {
         assertHasAssignmentCommon(assignment.name!!, assignment.dueAt, expectedGrade)
+    }
+
+    fun clickOnSearchButton() {
+        onView(withId(R.id.search)).click()
+    }
+
+    fun typeToSearchBar(textToType: String) {
+        waitForViewWithId(R.id.search_src_text).replaceText(textToType)
+    }
+
+    fun assertAssignmentNotDisplayed(assignmentName: String) {
+        onView(withText(assignmentName) + withId(R.id.title) + hasSibling(withId(R.id.description))).check(doesNotExist())
+    }
+
+    fun assertAssignmentItemCount(expectedItemCount: Int, groupCount: Int) {
+        Espresso.onView(allOf(withId(R.id.listView) + ViewMatchers.withParent(withId(R.id.swipeRefreshLayout)))).waitForCheck(RecyclerViewItemCountAssertion(expectedItemCount + groupCount))
+    }
+
+    fun assertAssignmentGroupDisplayed(groupName: String) {
+        onView(withId(R.id.title) + withText(groupName) + hasSibling(withId(R.id.expand_collapse))).scrollTo().assertDisplayed()
+    }
+
+    fun expandCollapseAssignmentGroup(groupName: String) {
+        onView(withId(R.id.expand_collapse) + hasSibling(withId(R.id.title) + withText(groupName))).scrollTo().click()
     }
 
     private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedGrade: String? = null) {
@@ -148,5 +171,21 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
     fun selectSortByType() {
         sortByButton.click()
         onView(withText(R.string.sortByDialogTypeOption)).click()
+    }
+
+    fun clickFilterMenu() {
+        onView(withId(R.id.menu_filter_assignments)).click()
+    }
+
+    fun filterAssignments(filterType: AssignmentType) {
+        onView(withText(filterType.assignmentType) + withParent(withId(R.id.select_dialog_listview))).click()
+    }
+
+    enum class AssignmentType(val assignmentType: Int) {
+        ALL(R.string.filterAssignmentAll),
+        LATE(R.string.filterAssignmentLate),
+        MISSING(R.string.filterAssignmentMissing),
+        GRADED(R.string.filterAssignmentGraded),
+        UPCOMING(R.string.filterAssignmentUpcoming)
     }
 }
