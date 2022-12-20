@@ -45,6 +45,7 @@ import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
 
@@ -67,7 +68,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysCourse(course: CourseApiModel) {
-        val matcher = allOf(withText(course.name), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
+        assertDisplaysCourse(course.name)
+    }
+
+    fun assertDisplaysCourse(courseName: String) {
+        val matcher = allOf(withText(courseName), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
         scrollAndAssertDisplayed(matcher)
     }
 
@@ -240,6 +245,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
     }
 
+    fun toggleShowGrades() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerShowGradesSwitch).scrollTo().click()
+    }
+
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
@@ -301,6 +311,48 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun assertInviteGone(courseName: String) {
         onView(withText(courseName) + withAncestor(R.id.dashboardNotifications)).check(doesNotExist())
+    }
+
+    fun switchCourseView() {
+        onView(ViewMatchers.withId(R.id.menu_dashboard_cards)).click()
+    }
+
+    fun clickEditDashboard() {
+        onView(withId(R.id.editDashboardTextView)).click()
+    }
+
+    fun assertCourseNotDisplayed(course: CourseApiModel) {
+        val matcher = allOf(
+            withText(course.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
+    fun changeCourseNickname(changeTo: String) {
+        onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
+        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+    }
+
+    fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
+        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(withId(R.id.cardView) + withDescendant(withId(R.id.titleTextView) + withText(courseTitle)))
+        onView(courseOverflowMatcher).click()
+        waitForView(withId(R.id.title) + withText(menuTitle)).click()
+    }
+
+    fun assertCourseGrade(courseName: String, courseGrade: String) {
+        val siblingMatcher = allOf(withId(R.id.textContainer), withDescendant(withId(R.id.titleTextView) + withText(courseName)))
+        val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
+
+        onView(matcher).assertDisplayed()
+    }
+
+    fun assertCourseGradeNotDisplayed(courseName: String, courseGrade: String) {
+        val siblingMatcher = allOf(withId(R.id.textContainer), withDescendant(withId(R.id.titleTextView) + withText(courseName)))
+        val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
+
+        onView(matcher).check(matches(Matchers.not(isDisplayed())))
     }
 }
 
