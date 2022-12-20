@@ -96,7 +96,10 @@ class AssignmentDetailViewModel @Inject constructor(
             val submission = submissionQuery.executeAsList().lastOrNull()
             val attempts = _data.value?.attempts
             submission?.let { dbSubmission ->
-                if (dbSubmission.progress == null) {
+                _data.value?.hasDraft = dbSubmission.isDraft.orDefault()
+                _data.value?.notifyPropertyChanged(BR.hasDraft)
+
+                if (dbSubmission.progress == 0.0) {
                     isUploading = true
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
                         add(0, AssignmentDetailAttemptItemViewModel(
@@ -152,7 +155,9 @@ class AssignmentDetailViewModel @Inject constructor(
 
                 bookmarker = bookmarker.copy(url = assignmentResult.htmlUrl)
 
-                _data.postValue(getViewData(assignmentResult, ltiToolResult))
+                val hasDraft = submissionQuery.executeAsList().lastOrNull()?.isDraft.orDefault()
+
+                _data.postValue(getViewData(assignmentResult, ltiToolResult, hasDraft))
                 _state.postValue(ViewState.Success)
             } catch (ex: Exception) {
                 _state.postValue(ViewState.Error())
@@ -189,7 +194,7 @@ class AssignmentDetailViewModel @Inject constructor(
     }
 
     @Suppress("DEPRECATION")
-    private fun getViewData(assignment: Assignment, ltiTool: LTITool?): AssignmentDetailViewData {
+    private fun getViewData(assignment: Assignment, ltiTool: LTITool?, hasDraft: Boolean): AssignmentDetailViewData {
         val points = resources.getQuantityString(
             R.plurals.quantityPointsAbbreviated,
             assignment.pointsPossible.toInt(),
@@ -331,7 +336,8 @@ class AssignmentDetailViewModel @Inject constructor(
             ltiTool = ltiTool,
             descriptionLabelText = descriptionLabel,
             quizDetails = quizViewViewData,
-            attemptsViewData = attemptsViewData
+            attemptsViewData = attemptsViewData,
+            hasDraft = hasDraft
         )
     }
 
@@ -360,6 +366,10 @@ class AssignmentDetailViewModel @Inject constructor(
     fun onGradeCellClicked() {
         Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
         postAction(AssignmentDetailAction.NavigateToSubmissionScreen(isObserver))
+    }
+
+    fun onDraftClicked() {
+
     }
 
     fun onSubmitButtonClicked() {

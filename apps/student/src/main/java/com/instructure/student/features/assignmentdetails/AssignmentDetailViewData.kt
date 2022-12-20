@@ -26,7 +26,8 @@ data class AssignmentDetailViewData(
     val ltiTool: LTITool? = null,
     val descriptionLabelText: String = "",
     val quizDetails: QuizViewViewData? = null,
-    val attemptsViewData: AttemptsViewData? = null
+    val attemptsViewData: AttemptsViewData? = null,
+    @Bindable var hasDraft: Boolean = false
 ) : BaseObservable() {
     val firstAttemptOrNull = attempts.firstOrNull()
 }

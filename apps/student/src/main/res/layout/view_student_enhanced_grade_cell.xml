@@ -64,12 +64,12 @@
 
         <TextView
             android:id="@+id/uploadingTitle"
-            style="@style/TextFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="6dp"
+            android:fontFamily="@font/lato_font_family"
             android:paddingTop="20dp"
-            android:text="Submission Uploading,,,"
+            android:text="@string/submissionStatusUploadingTitle"
             android:textColor="@color/textDarkest"
             android:textSize="20sp"
             android:visibility="@{viewData.state == viewData.State.UPLOADING ? View.VISIBLE : View.GONE}"
@@ -81,12 +81,12 @@
 
         <TextView
             android:id="@+id/uploadingSubtitle"
-            style="@style/TextFont.Regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:fontFamily="@font/lato_font_family"
             android:paddingBottom="20dp"
-            android:text="Tap to view progress"
+            android:text="@string/submissionStatusUploadingSubtitle"
             android:textColor="@color/textInfo"
             android:visibility="@{viewData.state == viewData.State.UPLOADING ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -96,10 +96,10 @@
 
         <TextView
             android:id="@+id/submittedTitle"
-            style="@style/TextFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="6dp"
+            android:fontFamily="@font/lato_font_family"
             android:paddingTop="20dp"
             android:text="@string/submissionStatusSuccessTitle"
             android:textColor="@color/textDarkest"
@@ -115,10 +115,10 @@
 
         <TextView
             android:id="@+id/submittedSubtitle"
-            style="@style/TextFont.Regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:fontFamily="@font/lato_font_family"
             android:paddingBottom="20dp"
             android:text="@string/submissionStatusSuccessSubtitle"
             android:textColor="@color/textDark"

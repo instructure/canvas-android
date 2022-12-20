@@ -151,13 +151,48 @@
                         app:layout_constraintTop_toBottomOf="@id/lockMessageTextView" />
 
                     <View
+                        android:id="@+id/draftDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.hasDraft ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/lockMessageTextView" />
+
+                    <TextView
+                        android:id="@+id/draftTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:drawablePadding="6dp"
+                        android:fontFamily="@font/lato_font_family"
+                        android:gravity="center_horizontal"
+                        android:onClick="@{()->viewModel.onDraftClicked()}"
+                        android:text="@string/submissionDraftAvailableTitle"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="20sp"
+                        android:visibility="@{viewModel.data.hasDraft ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/draftDivider" />
+
+                    <TextView
+                        android:id="@+id/draftSubtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_horizontal"
+                        android:onClick="@{()->viewModel.onDraftClicked()}"
+                        android:text="@string/submissionDraftAvailableSubtitle"
+                        android:textColor="@color/textInfo"
+                        android:visibility="@{viewModel.data.hasDraft ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/draftTitle" />
+
+                    <View
                         android:id="@+id/attemptDivider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="30dp"
                         android:background="@color/borderMedium"
-                        android:visibility="@{viewModel.data.attempts.size() > 1 ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/lockMessageTextView" />
+                        app:layout_constraintTop_toBottomOf="@id/draftSubtitle" />
 
                     <Spinner
                         android:id="@+id/attemptSpinner"
