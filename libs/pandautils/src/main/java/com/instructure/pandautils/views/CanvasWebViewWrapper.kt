@@ -61,6 +61,11 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
                 onThemeChanged(themeSwitched, html)
             }
         }
+
+        val layoutParams = LinearLayout.LayoutParams(context, attrs)
+        val webViewLayoutParams = binding.contentWebView.layoutParams
+        webViewLayoutParams.height = layoutParams.height
+        binding.contentWebView.layoutParams = webViewLayoutParams
     }
 
     private fun changeButtonTheme() {
