@@ -19,6 +19,7 @@ package com.instructure.student.fragment
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.PageManager
@@ -124,6 +125,12 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                     RouteMatcher.openMedia(activity, url)
                 }
             }
+        }
+
+        val layoutParams = getCanvasWebView()?.layoutParams
+        layoutParams?.let {
+            it.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            getCanvasWebView()?.layoutParams = it
         }
     }
 
