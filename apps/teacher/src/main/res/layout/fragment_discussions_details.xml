@@ -412,6 +412,7 @@
                         android:contentDescription="@string/attachment"
                         android:padding="8dp"
                         android:visibility="gone"
+                        app:tint="@color/textDarkest"
                         app:srcCompat="@drawable/ic_attachment"/>
 
                 </LinearLayout>
