@@ -20,7 +20,6 @@ package com.instructure.student.fragment
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -28,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
@@ -55,6 +55,8 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFrag
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.assignment_list_layout.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @com.google.android.material.badge.ExperimentalBadgeUtils
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
@@ -209,7 +211,8 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun updateBadge() {
-        Handler().postDelayed({
+        lifecycleScope.launch {
+            delay(100)
             if (badgeDrawable == null) {
                 badgeDrawable = BadgeDrawable.create(requireContext()).apply {
                     backgroundColor = requireContext().getColor(R.color.backgroundInfo)
@@ -222,9 +225,8 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                     BadgeUtils.attachBadgeDrawable(badgeDrawable!!, it, R.id.menu_filter_assignments)
                 }
             }
-        }, 100)
+        }
     }
-
 
     override fun applyTheme() {
         setupToolbarMenu(toolbar, R.menu.menu_assignment_list)
