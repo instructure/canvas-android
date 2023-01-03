@@ -36,7 +36,8 @@ data class AssignmentDetailAttemptViewData(
     val title: String,
     val date: String,
     val submission: Submission? = null,
-    val isUploading: Boolean = false
+    val isUploading: Boolean = false,
+    val isFailed: Boolean = false
 )
 
 data class QuizViewViewData(val questionCount: String, val timeLimit: String, val allowedAttempts: String)
@@ -67,4 +68,5 @@ sealed class AssignmentDetailAction {
     data class NavigateToLtiLaunchScreen(val title: String, val ltiTool: LTITool?) : AssignmentDetailAction()
     data class ShowMediaDialog(val assignment: Assignment) : AssignmentDetailAction()
     data class ShowSubmitDialog(val assignment: Assignment) : AssignmentDetailAction()
+    data class NavigateToUploadStatusScreen(val submissionId: Long) : AssignmentDetailAction()
 }

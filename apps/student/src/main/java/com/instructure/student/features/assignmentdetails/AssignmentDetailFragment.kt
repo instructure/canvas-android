@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Assignment
@@ -51,9 +50,11 @@ import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.databinding.FragmentAssignmentDetailBinding
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.launchAudio
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
@@ -69,7 +70,7 @@ import kotlinx.android.synthetic.main.fragment_assignment_details.*
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 @AndroidEntryPoint
-class AssignmentDetailFragment : Fragment(), Bookmarkable {
+class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
 
     @get:PageViewUrlParam(name = "assignmentId")
     val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
@@ -80,30 +81,7 @@ class AssignmentDetailFragment : Fragment(), Bookmarkable {
 
     override val bookmark: Bookmarker by lazy { viewModel.bookmarker }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAssignmentDetailBinding.inflate(inflater, container, false)
-        binding?.lifecycleOwner = this
-        binding?.viewModel = viewModel
-        return binding?.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupScreen()
-
-        viewModel.events.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let {
-                handleAction(it)
-            }
-        }
-
-        viewModel.data.observe(viewLifecycleOwner) {
-
-        }
-    }
-
-    private fun setupScreen() {
+    override fun applyTheme() {
         binding?.toolbar?.apply {
             setupAsBackButton {
                 activity?.onBackPressed()
@@ -120,6 +98,31 @@ class AssignmentDetailFragment : Fragment(), Bookmarkable {
             }
 
             ViewStyler.themeToolbarColored(requireActivity(), this, viewModel.course)
+        }
+    }
+
+    override fun title() = ""
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentAssignmentDetailBinding.inflate(inflater, container, false)
+        binding?.lifecycleOwner = this
+        binding?.viewModel = viewModel
+        return binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        applyTheme()
+
+        viewModel.events.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        }
+
+        viewModel.data.observe(viewLifecycleOwner) {
+
         }
     }
 
@@ -179,6 +182,9 @@ class AssignmentDetailFragment : Fragment(), Bookmarkable {
             }
             is AssignmentDetailAction.ShowSubmitDialog -> {
                 showSubmitDialogView(action.assignment)
+            }
+            is AssignmentDetailAction.NavigateToUploadStatusScreen -> {
+                RouteMatcher.route(requireContext(), UploadStatusSubmissionFragment.makeRoute(action.submissionId))
             }
         }
     }

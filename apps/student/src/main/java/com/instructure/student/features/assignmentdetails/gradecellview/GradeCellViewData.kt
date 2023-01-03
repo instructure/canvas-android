@@ -32,14 +32,23 @@ data class GradeCellViewData(
         EMPTY,
         SUBMITTED,
         GRADED,
-        UPLOADING
+        UPLOADING,
+        FAILED
     }
 
     companion object {
         @Suppress("DEPRECATION")
-        fun fromSubmission(resources: Resources, assignment: Assignment?, submission: Submission?, uploading: Boolean = false): GradeCellViewData {
+        fun fromSubmission(
+            resources: Resources,
+            assignment: Assignment?,
+            submission: Submission?,
+            uploading: Boolean = false,
+            failed: Boolean = false
+        ): GradeCellViewData {
             return if (uploading) {
                 GradeCellViewData(State.UPLOADING)
+            } else if (failed) {
+                GradeCellViewData(State.FAILED)
             } else if (
                 assignment == null
                 || submission == null

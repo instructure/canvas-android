@@ -95,6 +95,38 @@
             app:layout_constraintTop_toBottomOf="@id/uploadingTitle" />
 
         <TextView
+            android:id="@+id/failedTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="6dp"
+            android:fontFamily="@font/lato_font_family"
+            android:paddingTop="20dp"
+            android:text="@string/submissionStatusFailedTitle"
+            android:textColor="@color/textDarkest"
+            android:textSize="20sp"
+            android:visibility="@{viewData.state == viewData.State.FAILED ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/uploadingSubtitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gradeLabel"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/failedSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="@font/lato_font_family"
+            android:paddingBottom="20dp"
+            android:text="@string/submissionStatusFailedSubtitle"
+            android:textColor="@color/textInfo"
+            android:visibility="@{viewData.state == viewData.State.FAILED ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/failedTitle" />
+
+        <TextView
             android:id="@+id/submittedTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

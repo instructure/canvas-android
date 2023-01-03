@@ -49,6 +49,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import com.instructure.student.Submission as DataBaseSubmission
 
 @HiltViewModel
 class AssignmentDetailViewModel @Inject constructor(
@@ -81,6 +82,7 @@ class AssignmentDetailViewModel @Inject constructor(
     private var isObserver: Boolean = false
     private var quizResult: Quiz? = null
 
+    private var dbSubmission: DataBaseSubmission? = null
     private var isUploading = false
 
     private val submissionQuery = Db.getInstance(getApplication()).submissionQueries
@@ -94,19 +96,35 @@ class AssignmentDetailViewModel @Inject constructor(
     override fun queryResultsChanged() {
         viewModelScope.launch {
             val submission = submissionQuery.executeAsList().lastOrNull()
+            dbSubmission = submission
             val attempts = _data.value?.attempts
             submission?.let { dbSubmission ->
-                _data.value?.hasDraft = dbSubmission.isDraft.orDefault()
+                val isDraft = dbSubmission.isDraft.orDefault()
+                _data.value?.hasDraft = isDraft
                 _data.value?.notifyPropertyChanged(BR.hasDraft)
 
-                if (dbSubmission.progress == 0.0) {
+                val dateString = getFormattedDate(dbSubmission.lastActivityDate?.toInstant()?.toEpochMilli()?.let { Date(it) } ?: Date())
+                if (!isDraft && !isUploading) {
                     isUploading = true
                     _data.value?.attempts = attempts?.toMutableList()?.apply {
                         add(0, AssignmentDetailAttemptItemViewModel(
                             AssignmentDetailAttemptViewData(
                                 resources.getString(R.string.attempt, attempts.size + 1),
-                                getFormattedDate(dbSubmission.lastActivityDate?.toInstant()?.toEpochMilli()?.let { Date(it) } ?: Date()),
+                                dateString,
                                 isUploading = true
+                            )
+                        ))
+                    }.orEmpty()
+                    _data.value?.notifyPropertyChanged(BR.attempts)
+                }
+                if (isUploading && submission.errorFlag) {
+                    _data.value?.attempts = attempts?.toMutableList()?.apply {
+                        removeFirst()
+                        add(0, AssignmentDetailAttemptItemViewModel(
+                            AssignmentDetailAttemptViewData(
+                                resources.getString(R.string.attempt, attempts.size),
+                                dateString,
+                                isFailed = true
                             )
                         ))
                     }.orEmpty()
@@ -155,7 +173,9 @@ class AssignmentDetailViewModel @Inject constructor(
 
                 bookmarker = bookmarker.copy(url = assignmentResult.htmlUrl)
 
-                val hasDraft = submissionQuery.executeAsList().lastOrNull()?.isDraft.orDefault()
+                val dbSubmission = submissionQuery.executeAsList().lastOrNull()
+                this@AssignmentDetailViewModel.dbSubmission = dbSubmission
+                val hasDraft = dbSubmission?.isDraft.orDefault()
 
                 _data.postValue(getViewData(assignmentResult, ltiToolResult, hasDraft))
                 _state.postValue(ViewState.Success)
@@ -355,7 +375,7 @@ class AssignmentDetailViewModel @Inject constructor(
         val assignment = _data.value?.assignment
         val attempt = _data.value?.attempts?.getOrNull(position)?.data
         val selectedSubmission = attempt?.submission
-        _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(resources, assignment, selectedSubmission, attempt?.isUploading.orDefault())
+        _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(resources, assignment, selectedSubmission, attempt?.isUploading.orDefault(), attempt?.isFailed.orDefault())
         _data.value?.notifyPropertyChanged(BR.selectedGradeCellViewData)
     }
 
@@ -364,12 +384,34 @@ class AssignmentDetailViewModel @Inject constructor(
     }
 
     fun onGradeCellClicked() {
-        Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
-        postAction(AssignmentDetailAction.NavigateToSubmissionScreen(isObserver))
+        if (isUploading) {
+            when (dbSubmission?.submissionType) {
+                SubmissionType.ONLINE_TEXT_ENTRY.apiString -> onDraftClicked()
+                SubmissionType.ONLINE_UPLOAD.apiString, SubmissionType.MEDIA_RECORDING.apiString -> postAction(
+                    AssignmentDetailAction.NavigateToUploadStatusScreen(dbSubmission?.assignmentId.orDefault())
+                )
+                SubmissionType.ONLINE_URL.apiString -> postAction(
+                    AssignmentDetailAction.NavigateToUrlSubmissionScreen(
+                        _data.value?.assignment?.name,
+                        dbSubmission?.submissionEntry,
+                        dbSubmission?.errorFlag.orDefault()
+                    )
+                )
+            }
+        } else {
+            Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
+            postAction(AssignmentDetailAction.NavigateToSubmissionScreen(isObserver))
+        }
     }
 
     fun onDraftClicked() {
-
+        postAction(
+            AssignmentDetailAction.NavigateToTextEntryScreen(
+                _data.value?.assignment?.name,
+                dbSubmission?.submissionEntry,
+                dbSubmission?.errorFlag.orDefault()
+            )
+        )
     }
 
     fun onSubmitButtonClicked() {
@@ -413,7 +455,7 @@ class AssignmentDetailViewModel @Inject constructor(
                         postAction(AssignmentDetailAction.NavigateToLtiLaunchScreen(assignment.name.orEmpty(), it))
                     }
                 }
-                else -> {}
+                else -> Unit
             }
         } else {
             postAction(AssignmentDetailAction.ShowSubmitDialog(assignment))
