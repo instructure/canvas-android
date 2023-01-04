@@ -158,6 +158,9 @@ class AssignmentDetailsView(
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
+
+        descriptionWebViewWrapper.webView.focusable = View.NOT_FOCUSABLE
+        descriptionWebViewWrapper.webView.isFocusableInTouchMode = false
     }
 
     override fun render(state: AssignmentDetailsViewState) {
