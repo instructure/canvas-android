@@ -18,6 +18,8 @@ package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -783,17 +785,20 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onDiscussionReplyCreated(event: DiscussionEntryEvent) {
-        event.once(discussionTopicHeader.id.toString()) {
-            populateDiscussionData(true, event.topLevelReplyPosted)
+        populateDiscussionData(true, event.topLevelReplyPosted)
 
-            discussionTopicHeader.incrementDiscussionSubentryCount() // Update subentry count
-            discussionTopicHeader.lastReplyDate?.time = Date().time // Update last post time
-            if (!groupDiscussion) {
-                DiscussionTopicHeaderEvent(discussionTopicHeader).post()
-            }
-            // needed for when discussions are in modules
-            applyTheme()
+        discussionTopicHeader.incrementDiscussionSubentryCount() // Update subentry count
+        discussionTopicHeader.lastReplyDate?.time = Date().time // Update last post time
+        if (!groupDiscussion) {
+            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
         }
+        // needed for when discussions are in modules
+        applyTheme()
+
+        // We don't want to remove the event immediately because more screens might need to process it
+        Handler(Looper.getMainLooper()).postDelayed({
+            EventBus.getDefault().removeStickyEvent(event)
+        }, 100)
     }
 
     @Suppress("unused")
