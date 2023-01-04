@@ -111,7 +111,8 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
     fun loadDataWithBaseUrl(url: String?, data: String, mimeType: String?, encoding: String?, history: String?) {
         html = data
         initVisibility(data)
-        binding.contentWebView.loadDataWithBaseURL(url, data, mimeType, encoding, history)
+        val formattedHtml = formatHtml(data)
+        binding.contentWebView.loadDataWithBaseURL(url, formattedHtml, mimeType, encoding, history)
     }
 
     private fun initVisibility(html: String) {
@@ -121,6 +122,29 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
         } else {
             binding.themeSwitchButton.setGone()
         }
+    }
+
+    private fun formatHtml(data: String): String {
+        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES && !themeSwitched
+
+        val style = if (darkTheme) {
+            """
+                @media (prefers-color-scheme: dark) {
+                        html {
+                            filter: invert(100%) hue-rotate(180deg);
+                        }
+                        img:not(.ignore-color-scheme), video:not(.ignore-color-scheme), iframe:not(.ignore-color-scheme), .ignore-color-scheme {
+                            filter: invert(100%) hue-rotate(180deg) !important;
+                        }
+                    }
+            """.trimIndent()
+        } else {
+            ""
+        }
+
+        return data
+            .replace("{\$DARK_THEME}", style)
     }
 
 }
