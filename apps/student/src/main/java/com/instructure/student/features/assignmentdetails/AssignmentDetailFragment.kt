@@ -19,10 +19,12 @@ package com.instructure.student.features.assignmentdetails
 
 import android.app.Dialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -52,7 +54,9 @@ import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.mobius.assignmentDetails.getVideoUri
 import com.instructure.student.mobius.assignmentDetails.launchAudio
+import com.instructure.student.mobius.assignmentDetails.needsPermissions
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
@@ -78,6 +82,25 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
 
     private var binding: FragmentAssignmentDetailBinding? = null
     private val viewModel: AssignmentDetailViewModel by viewModels()
+
+    private var captureVideoUri: Uri? = null
+    private val captureVideoContract = registerForActivityResult(ActivityResultContracts.CaptureVideo()) {
+        val assignment = viewModel.data.value?.assignment
+        if (assignment != null && captureVideoUri != null && it) {
+            RouteMatcher.route(requireContext(), PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, captureVideoUri!!))
+        } else {
+            toast(R.string.videoRecordingError)
+        }
+    }
+
+    private val mediaPickerContract = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
+        val assignment = viewModel.data.value?.assignment
+        if (assignment != null) {
+            RouteMatcher.route(requireContext(), PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, it))
+        } else {
+            toast(R.string.unexpectedErrorOpeningFile)
+        }
+    }
 
     override val bookmark: Bookmarker by lazy { viewModel.bookmarker }
 
@@ -295,11 +318,18 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
                 activity?.launchAudio({ toast(R.string.permissionDenied) }, ::showAudioRecordingView)
             }
             setupDialogRow(dialog, dialog.submissionEntryVideo, true) {
-
+                activity?.needsPermissions({
+                    captureVideoUri = requireActivity().getVideoUri()
+                    captureVideoContract.launch(captureVideoUri)
+                }, {
+                    toast(R.string.permissionDenied)
+                },
+                    PermissionUtils.CAMERA,
+                    PermissionUtils.RECORD_AUDIO
+                )
             }
-
             setupDialogRow(dialog, dialog.submissionEntryMediaFile, true) {
-
+                mediaPickerContract.launch(arrayOf("video/*", "audio/*"))
             }
         }
         dialog.show()
