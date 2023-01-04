@@ -24,6 +24,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
 import 'package:flutter_parent/utils/db/user_colors_db.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
@@ -75,6 +76,8 @@ class SplashScreenInteractor {
     SplashScreenData data = SplashScreenData(isObserver, ApiPrefs.getCurrentLogin().canMasquerade);
 
     if (data.isObserver || data.canMasquerade) await updateUserColors();
+
+    await FeaturesUtils.checkUsageMetricFeatureFlag();
 
     return data;
   }
