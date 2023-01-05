@@ -20,6 +20,7 @@ import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/user_colors.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/api/features_api.dart';
 import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
@@ -41,6 +42,7 @@ void main() {
   _MockAuthApi authApi = _MockAuthApi();
   final mockScanner = MockBarcodeScanner();
   MockUserApi userApi = MockUserApi();
+  _MockFeaturesApi featuresApi = _MockFeaturesApi();
 
   Login login = Login((b) => b
     ..domain = 'domain'
@@ -66,6 +68,7 @@ void main() {
     locator.registerLazySingleton<AuthApi>(() => authApi);
     locator.registerLazySingleton<BarcodeScanVeneer>(() => mockScanner);
     locator.registerLazySingleton<UserApi>(() => userApi);
+    locator.registerLazySingleton<FeaturesApi>(() => featuresApi);
   });
 
   setUp(() async {
@@ -87,6 +90,8 @@ void main() {
 
     // Default return value for user api
     when(userApi.getUserColors()).thenAnswer((_) async => UserColors());
+
+    when(featuresApi.getFeatureFlags()).thenAnswer((_) async => {'send_usage_metrics' : false});
 
     await setupPlatformChannels();
   });
@@ -271,3 +276,5 @@ class _MockAccountsApi extends Mock implements AccountsApi {}
 class _MockDashboardInteractor extends Mock implements DashboardInteractor {}
 
 class _MockAuthApi extends Mock implements AuthApi {}
+
+class _MockFeaturesApi extends Mock implements FeaturesApi {}

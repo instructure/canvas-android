@@ -14,6 +14,7 @@
 
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter_parent/network/api/features_api.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 class FeaturesUtils {
 
@@ -27,7 +28,7 @@ class FeaturesUtils {
 
   static Future<void> checkUsageMetricFeatureFlag() async {
     await init();
-    final featureFlags = await FeaturesApi().getFeatureFlags();
+    final featureFlags = await locator<FeaturesApi>().getFeatureFlags();
     await _prefs.setBool(KEY_SEND_USAGE_METRICS, featureFlags['send_usage_metrics'] == true);
   }
 
@@ -37,6 +38,8 @@ class FeaturesUtils {
   }
 
   static Future<void> performLogout() async {
-    await _prefs.clear();
+    if (_prefs != null) {
+      await _prefs.clear();
+    }
   }
 }
