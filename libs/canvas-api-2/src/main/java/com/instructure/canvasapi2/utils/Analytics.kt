@@ -19,10 +19,13 @@ package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
 import com.heapanalytics.android.Heap
+import com.instructure.canvasapi2.BuildConfig
 
 object Analytics {
 
     fun logEvent(eventName: String, bundle: Bundle? = null) {
+        if (BuildConfig.IS_TESTING) return
+
         val map = bundle?.let { bundle ->
             bundle.keySet()
                 .filter { it.isNotBlank() && it.isNotEmpty() }
@@ -34,6 +37,8 @@ object Analytics {
     }
 
     fun logEvent(eventName: String) {
+        if (!BuildConfig.IS_TESTING) return
+
         Heap.track(eventName, null)
     }
 

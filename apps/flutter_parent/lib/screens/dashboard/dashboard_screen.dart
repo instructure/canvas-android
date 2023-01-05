@@ -567,11 +567,11 @@ class DashboardState extends State<DashboardScreen> {
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     await ParentTheme.of(context).setSelectedStudent(null);
     await ApiPrefs.performLogout(switchingLogins: switchingUsers, app: ParentApp.of(context));
-    await FeaturesUtils.performLogout();
     MasqueradeUI.of(context).refresh();
-    locator<Analytics>()
+    await locator<Analytics>()
         .logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
     locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+    await FeaturesUtils.performLogout();
   }
 
   _navDrawerHeader(User user) => Column(
