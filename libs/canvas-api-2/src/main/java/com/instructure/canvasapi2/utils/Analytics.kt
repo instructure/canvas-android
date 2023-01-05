@@ -37,7 +37,7 @@ object Analytics {
     }
 
     fun logEvent(eventName: String) {
-        if (!BuildConfig.IS_TESTING) return
+        if (BuildConfig.IS_TESTING) return
 
         Heap.track(eventName, null)
     }

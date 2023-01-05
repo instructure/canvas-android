@@ -13,12 +13,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import 'package:flutter_parent/models/feature_flags.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class FeaturesApi {
 
-  Future<Map<String, bool>> getFeatureFlags() {
+  Future<FeatureFlags> getFeatureFlags() {
     var dio = canvasDio(forceRefresh: true);
 
     return fetch(dio.get('/features/environment'));

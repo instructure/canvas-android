@@ -29,7 +29,7 @@ class FeaturesUtils {
   static Future<void> checkUsageMetricFeatureFlag() async {
     await init();
     final featureFlags = await locator<FeaturesApi>().getFeatureFlags();
-    await _prefs.setBool(KEY_SEND_USAGE_METRICS, featureFlags['send_usage_metrics'] == true);
+    await _prefs.setBool(KEY_SEND_USAGE_METRICS, featureFlags.sendUsageMetrics);
   }
 
   static Future<bool> getUsageMetricFeatureFlag() async {
