@@ -18,6 +18,8 @@ package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -383,20 +385,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 openMedia(canvasContext, url, filename)
             }
 
-            override fun onPageStartedCallback(webView: WebView, url: String) {
-                // This executes a JavaScript to add the dark theme.
-                // It won't work exactl when the page starts to load, because the html document is not yet created,
-                // so we add a little delay to make sure the script can modify the document.
-                if (addDarkTheme) {
-                    webView.postDelayed({ webView.addDarkThemeToHtmlDocument() }, 100)
-                }
-            }
-            override fun onPageFinishedCallback(webView: WebView, url: String) {
-                // This is just a fallback if in some cases the document wouldn't be loaded after the delay
-                if (addDarkTheme) {
-                    webView.addDarkThemeToHtmlDocument()
-                }
-            }
+            override fun onPageStartedCallback(webView: WebView, url: String) = Unit
+            override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
         }
 
         webView.addVideoClient(requireActivity())
@@ -574,8 +564,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             // Need to check here again in case we were only routed with a url instead of a whole discussionTopicHeader.
             updateToGroupIfNecessary()
 
-            determinePermissions()
-
             loadDiscussionTopicHeaderViews(discussionTopicHeader)
             addAccessibilityButton()
 
@@ -738,11 +726,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
     //endregion Loading
 
-    private fun determinePermissions() {
-        // Might still be needed once COMMS-868 is implemented, TBD
-        //TODO: determine what permissions are available to student relative to course and discussion.
-    }
-
     private fun setupAssignmentDetails(assignment: Assignment) = with(assignment) {
         pointsTextView.setVisible()
         // Points possible
@@ -802,17 +785,20 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onDiscussionReplyCreated(event: DiscussionEntryEvent) {
-        event.once(discussionTopicHeader.id.toString()) {
-            populateDiscussionData(true, event.topLevelReplyPosted)
+        populateDiscussionData(true, event.topLevelReplyPosted)
 
-            discussionTopicHeader.incrementDiscussionSubentryCount() // Update subentry count
-            discussionTopicHeader.lastReplyDate?.time = Date().time // Update last post time
-            if (!groupDiscussion) {
-                DiscussionTopicHeaderEvent(discussionTopicHeader).post()
-            }
-            // needed for when discussions are in modules
-            applyTheme()
+        discussionTopicHeader.incrementDiscussionSubentryCount() // Update subentry count
+        discussionTopicHeader.lastReplyDate?.time = Date().time // Update last post time
+        if (!groupDiscussion) {
+            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
         }
+        // needed for when discussions are in modules
+        applyTheme()
+
+        // We don't want to remove the event immediately because more screens might need to process it
+        Handler(Looper.getMainLooper()).postDelayed({
+            EventBus.getDefault().removeStickyEvent(event)
+        }, 100)
     }
 
     @Suppress("unused")
