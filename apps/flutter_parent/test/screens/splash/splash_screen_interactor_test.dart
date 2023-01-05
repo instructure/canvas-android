@@ -15,6 +15,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/account_permissions.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
+import 'package:flutter_parent/models/feature_flags.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/user_colors.dart';
@@ -91,7 +92,7 @@ void main() {
     // Default return value for user api
     when(userApi.getUserColors()).thenAnswer((_) async => UserColors());
 
-    when(featuresApi.getFeatureFlags()).thenAnswer((_) async => {'send_usage_metrics' : false});
+    when(featuresApi.getFeatureFlags()).thenAnswer((_) async => FeatureFlags());
 
     await setupPlatformChannels();
   });
