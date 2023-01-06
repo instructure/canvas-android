@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.BuildConfig
 object Analytics {
 
     fun logEvent(eventName: String, bundle: Bundle? = null) {
-        if (BuildConfig.IS_TESTING) return
+        if (BuildConfig.DEBUG) return
 
         val map = bundle?.let { bundle ->
             bundle.keySet()
@@ -37,7 +37,7 @@ object Analytics {
     }
 
     fun logEvent(eventName: String) {
-        if (BuildConfig.IS_TESTING) return
+        if (BuildConfig.DEBUG) return
 
         Heap.track(eventName, null)
     }
