@@ -95,6 +95,8 @@ dependencies:
   # Routing
   fluro: ^2.0.3
 
+  encrypt: ^5.0.1
+
 dev_dependencies:
   flutter_driver:
     sdk: flutter

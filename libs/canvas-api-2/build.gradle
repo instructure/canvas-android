@@ -150,6 +150,8 @@ dependencies {
 
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
+
+    implementation Libs.HEAP
 }
 
 // Define our pact-publish object
