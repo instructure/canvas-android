@@ -23,10 +23,14 @@ class DiscussionRouteHelper(
                 featuresManager.getEnabledFeaturesForCourseAsync(canvasContext.id, false).await().dataOrNull
             featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
         } else if (canvasContext.isGroup) {
-            val featureFlags =
-                featuresManager.getEnabledFeaturesForCourseAsync((canvasContext as Group).courseId, false)
-                    .await().dataOrNull
-            featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
+            val group = canvasContext as Group
+            val discussionFeatureFlagEnabled = if (group.courseId == 0L) {
+                val featureFlags = featuresManager.getEnvironmentFeatureFlagsAsync(false).await().dataOrNull
+                featureFlags?.get("react_discussions_post") == true
+            } else {
+                featuresManager.getEnabledFeaturesForCourseAsync(group.courseId, false).await().dataOrNull?.contains("react_discussions_post") == true
+            }
+            discussionFeatureFlagEnabled && featureFlagProvider.getDiscussionRedesignFeatureFlag()
         } else {
             false
         }
