@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
@@ -32,6 +33,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -45,15 +47,14 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.databinding.FragmentAssignmentDetailBinding
-import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
-import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.getVideoUri
 import com.instructure.student.mobius.assignmentDetails.launchAudio
 import com.instructure.student.mobius.assignmentDetails.needsPermissions
@@ -65,6 +66,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextS
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.router.RouteMatcher
+import com.instructure.student.util.getResourceSelectorUrl
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.course_module_progression.*
 import kotlinx.android.synthetic.main.dialog_submission_picker.*
@@ -85,7 +87,7 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
 
     private var captureVideoUri: Uri? = null
     private val captureVideoContract = registerForActivityResult(ActivityResultContracts.CaptureVideo()) {
-        val assignment = viewModel.data.value?.assignment
+        val assignment = viewModel.assignment
         if (assignment != null && captureVideoUri != null && it) {
             RouteMatcher.route(requireContext(), PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, captureVideoUri!!))
         } else {
@@ -94,7 +96,7 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
     }
 
     private val mediaPickerContract = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
-        val assignment = viewModel.data.value?.assignment
+        val assignment = viewModel.assignment
         if (assignment != null) {
             RouteMatcher.route(requireContext(), PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, it))
         } else {
@@ -113,7 +115,7 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
             title = context?.getString(R.string.assignmentDetails)
             subtitle = viewModel.course?.name
 
-            val navigation = context as? Navigation
+            val navigation = activity as? Navigation
             if (navigation?.canBookmark().orDefault(true)) {
                 setMenu(R.menu.bookmark_menu) {
                     navigation?.addBookmark()
@@ -137,20 +139,20 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
         super.onViewCreated(view, savedInstanceState)
 
         applyTheme()
+        setupDescriptionView()
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
         }
-
-        viewModel.data.observe(viewLifecycleOwner) {
-
-        }
     }
 
     private fun handleAction(action: AssignmentDetailAction) {
-        val canvasContext = canvasContext as? CanvasContext ?: return
+        val canvasContext = canvasContext as? CanvasContext ?: run {
+            toast(R.string.generalUnexpectedError)
+            return
+        }
 
         when (action) {
             is AssignmentDetailAction.ShowToast -> {
@@ -204,7 +206,7 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
                 showMediaDialog()
             }
             is AssignmentDetailAction.ShowSubmitDialog -> {
-                showSubmitDialogView(action.assignment)
+                showSubmitDialogView(action.assignment, action.studioLTITool)
             }
             is AssignmentDetailAction.NavigateToUploadStatusScreen -> {
                 RouteMatcher.route(requireContext(), UploadStatusSubmissionFragment.makeRoute(action.submissionId))
@@ -249,23 +251,21 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
                     assignment.name.orEmpty()
                 )
             )
-        }
+        } ?: toast(R.string.generalUnexpectedError)
     }
 
-    private fun navigateToStudioScreen(assignment: Assignment) {
-        viewModel.data.value?.ltiTool?.let {
-            Analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
-            RouteMatcher.route(
-                requireContext(),
-                StudioWebViewFragment.makeRoute(
-                    canvasContext,
-                    it.url.orEmpty(),
-                    it.name.orEmpty(),
-                    true,
-                    assignment
-                )
+    private fun navigateToStudioScreen(assignment: Assignment, studioLTITool: LTITool?) {
+        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
+        RouteMatcher.route(
+            requireContext(),
+            StudioWebViewFragment.makeRoute(
+                canvasContext,
+                studioLTITool?.getResourceSelectorUrl(canvasContext, assignment).orEmpty(),
+                studioLTITool?.name.orEmpty(),
+                true,
+                assignment
             )
-        }
+        )
     }
 
     private fun setupDialogRow(dialog: Dialog, view: View, visibility: Boolean, onClick: () -> Unit) {
@@ -276,7 +276,7 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun showSubmitDialogView(assignment: Assignment) {
+    private fun showSubmitDialogView(assignment: Assignment, studioLTITool: LTITool?) {
         val builder = AlertDialog.Builder(requireContext())
         val dialog = builder.setView(R.layout.dialog_submission_picker).create()
         val submissionTypes = assignment.getSubmissionTypes()
@@ -299,7 +299,7 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
                 dialog.submissionEntryStudio,
                 (submissionTypes.contains(SubmissionType.ONLINE_UPLOAD) && assignment.isStudioEnabled)
             ) {
-                navigateToStudioScreen(assignment)
+                navigateToStudioScreen(assignment, studioLTITool)
             }
             setupDialogRow(dialog, dialog.submissionEntryStudentAnnotation, submissionTypes.contains(SubmissionType.STUDENT_ANNOTATION)) {
                 navigateToAnnotationSubmissionScreen(assignment)
@@ -336,11 +336,45 @@ class AssignmentDetailFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun showAudioRecordingView() {
-        floatingRecordingView.setContentType(RecordingMediaType.Audio)
-        floatingRecordingView.setVisible()
-        floatingRecordingView.stoppedCallback = {}
-        floatingRecordingView.recordingCallback = {
-            viewModel.uploadAudioSubmission(context, it)
+        binding?.floatingRecordingView?.apply {
+            setContentType(RecordingMediaType.Audio)
+            setVisible()
+            stoppedCallback = {}
+            recordingCallback = {
+                viewModel.uploadAudioSubmission(context, it)
+            }
+        }
+    }
+
+    private fun setupDescriptionView() {
+        binding?.descriptionWebViewWrapper?.webView?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                RouteMatcher.openMedia(requireActivity(), url)
+            }
+
+            override fun onPageFinishedCallback(webView: WebView, url: String) {}
+            override fun onPageStartedCallback(webView: WebView, url: String) {}
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                return RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
+            }
+
+            override fun routeInternallyCallback(url: String) {
+                viewModel.assignment?.let {
+                    val extras = Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(canvasContext, it)) }
+                    RouteMatcher.routeUrl(requireContext(), url, ApiPrefs.domain, extras)
+                }
+            }
+        }
+
+        binding?.descriptionWebViewWrapper?.webView?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+            override fun launchInternalWebViewFragment(url: String) {
+                InternalWebviewFragment.loadInternalWebView(
+                    context,
+                    InternalWebviewFragment.makeRoute(canvasContext, url, false)
+                )
+            }
+
+            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
     }
 

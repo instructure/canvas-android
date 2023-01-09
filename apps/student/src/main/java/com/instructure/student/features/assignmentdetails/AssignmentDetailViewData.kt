@@ -1,17 +1,18 @@
 package com.instructure.student.features.assignmentdetails
 
+import androidx.annotation.ColorRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.instructure.canvasapi2.models.*
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
 
 data class AssignmentDetailViewData(
-    val assignment: Assignment,
     val assignmentName: String,
     val points: String,
     val submissionStatusText: String,
     val submissionStatusIcon: Int,
-    val submissionStatusTint: Int,
+    @ColorRes val submissionStatusTint: Int,
+    val submissionStatusVisible: Boolean,
     val fullLocked: Boolean = false,
     val lockedMessage: String = "",
     val submitButtonText: String = "",
@@ -23,13 +24,13 @@ data class AssignmentDetailViewData(
     val submissionTypes: String = "",
     val allowedFileTypes: String = "",
     val description: String = "",
-    val ltiTool: LTITool? = null,
     val descriptionLabelText: String = "",
     val quizDetails: QuizViewViewData? = null,
     val attemptsViewData: AttemptsViewData? = null,
     @Bindable var hasDraft: Boolean = false
 ) : BaseObservable() {
     val firstAttemptOrNull = attempts.firstOrNull()
+    val noDescriptionVisible = description.isEmpty() && !fullLocked
 }
 
 data class AssignmentDetailAttemptViewData(
@@ -67,6 +68,6 @@ sealed class AssignmentDetailAction {
     data class NavigateToAnnotationSubmissionScreen(val assignment: Assignment) : AssignmentDetailAction()
     data class NavigateToLtiLaunchScreen(val title: String, val ltiTool: LTITool?) : AssignmentDetailAction()
     data class ShowMediaDialog(val assignment: Assignment) : AssignmentDetailAction()
-    data class ShowSubmitDialog(val assignment: Assignment) : AssignmentDetailAction()
+    data class ShowSubmitDialog(val assignment: Assignment, val studioLTITool: LTITool?) : AssignmentDetailAction()
     data class NavigateToUploadStatusScreen(val submissionId: Long) : AssignmentDetailAction()
 }

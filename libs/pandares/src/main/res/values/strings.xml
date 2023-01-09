@@ -1341,7 +1341,8 @@
     <string name="acceptableUsePolicySubmit">Submit</string>
     <string name="acceptFail">Failed to submit terms acceptance.</string>
 
-    <string name="attempt">%d. attempt</string>
+    <string name="attempt">Attempt %d</string>
     <string name="allowedAttempts">Allowed attempts:</string>
     <string name="usedAttempts">Attempts used:</string>
+    <string name="generalUnexpectedError">An unexpected error occurred.</string>
 </resources>

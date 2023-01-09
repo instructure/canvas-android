@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_rounded_outline_6dp"
         android:contentDescription="@{viewData.gradeCellContentDescription}"
+        android:foreground="?android:attr/selectableItemBackground"
         android:padding="16dp"
         android:visibility="@{viewData.state == viewData.State.EMPTY ? View.GONE : View.VISIBLE}">
 

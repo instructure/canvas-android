@@ -17,7 +17,6 @@
 
 package com.instructure.student.features.assignmentdetails
 
-import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.*
@@ -37,10 +36,10 @@ import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
-import com.instructure.student.db.Db
-import com.instructure.student.db.getInstance
+import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignmentdetails.gradecellview.GradeCellViewData
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
+import com.instructure.student.util.getStudioLTITool
 import com.squareup.sqldelight.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -49,18 +48,18 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import com.instructure.student.Submission as DataBaseSubmission
+import com.instructure.student.Submission as DatabaseSubmission
 
 @HiltViewModel
 class AssignmentDetailViewModel @Inject constructor(
-    application: Application,
     savedStateHandle: SavedStateHandle,
     private val courseManager: CourseManager,
     private val assignmentManager: AssignmentManager,
     private val quizManager: QuizManager,
     private val submissionManager: SubmissionManager,
-    private val resources: Resources
-) : AndroidViewModel(application), Query.Listener {
+    private val resources: Resources,
+    database: StudentDb
+) : ViewModel(), Query.Listener {
 
     val state: LiveData<ViewState>
         get() = _state
@@ -82,11 +81,16 @@ class AssignmentDetailViewModel @Inject constructor(
     private var isObserver: Boolean = false
     private var quizResult: Quiz? = null
 
-    private var dbSubmission: DataBaseSubmission? = null
+    private var externalLTITool: LTITool? = null
+    private var studioLTITool: LTITool? = null
+
+    private var dbSubmission: DatabaseSubmission? = null
     private var isUploading = false
 
-    private val submissionQuery = Db.getInstance(getApplication()).submissionQueries
-        .getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id.orDefault())
+    var assignment: Assignment? = null
+        private set
+
+    private val submissionQuery = database.submissionQueries.getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id.orDefault())
 
     init {
         submissionQuery.addListener(this)
@@ -139,11 +143,11 @@ class AssignmentDetailViewModel @Inject constructor(
         }
     }
 
-    private fun loadData(forceNetwork: Boolean = true) {
+    private fun loadData(forceNetwork: Boolean = false) {
         _state.postValue(ViewState.Loading)
         viewModelScope.launch {
             try {
-                val courseResult = courseManager.getCourseWithGradeAsync(course?.id.orDefault(), true).await().dataOrThrow
+                val courseResult = courseManager.getCourseWithGradeAsync(course?.id.orDefault(), forceNetwork).await().dataOrThrow
 
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 
@@ -158,7 +162,7 @@ class AssignmentDetailViewModel @Inject constructor(
                 } else null
 
                 val ltiToolId = assignmentResult.externalToolAttributes?.contentId.orDefault()
-                val ltiToolResult = if (ltiToolId != 0L) {
+                externalLTITool = if (ltiToolId != 0L) {
                     assignmentManager.getExternalToolLaunchUrlAsync(course?.id.orDefault(), ltiToolId, assignmentId).await().dataOrThrow
                 } else {
                     if (!assignmentResult.url.isNullOrEmpty() && assignmentResult.getSubmissionTypes().contains(SubmissionType.EXTERNAL_TOOL)) {
@@ -171,16 +175,22 @@ class AssignmentDetailViewModel @Inject constructor(
                     courseId = assignmentResult.courseId
                 }
 
+                studioLTITool = if (assignmentResult.getSubmissionTypes().contains(SubmissionType.ONLINE_UPLOAD)) {
+                    course?.id?.getStudioLTITool()?.dataOrNull
+                } else null
+                assignmentResult.isStudioEnabled = studioLTITool != null
+
                 bookmarker = bookmarker.copy(url = assignmentResult.htmlUrl)
 
                 val dbSubmission = submissionQuery.executeAsList().lastOrNull()
                 this@AssignmentDetailViewModel.dbSubmission = dbSubmission
                 val hasDraft = dbSubmission?.isDraft.orDefault()
 
-                _data.postValue(getViewData(assignmentResult, ltiToolResult, hasDraft))
+                assignment = assignmentResult
+                _data.postValue(getViewData(assignmentResult, hasDraft))
                 _state.postValue(ViewState.Success)
             } catch (ex: Exception) {
-                _state.postValue(ViewState.Error())
+                _state.postValue(ViewState.Error(resources.getString(R.string.errorLoadingAssignment)))
             }
         }
     }
@@ -214,7 +224,7 @@ class AssignmentDetailViewModel @Inject constructor(
     }
 
     @Suppress("DEPRECATION")
-    private fun getViewData(assignment: Assignment, ltiTool: LTITool?, hasDraft: Boolean): AssignmentDetailViewData {
+    private fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailViewData {
         val points = resources.getQuantityString(
             R.plurals.quantityPointsAbbreviated,
             assignment.pointsPossible.toInt(),
@@ -223,23 +233,27 @@ class AssignmentDetailViewModel @Inject constructor(
 
         val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
 
+        // Don't mark LTI assignments as missing when overdue as they usually won't have a real submission for it
+        val isMissing = assignment.submission?.missing.orDefault() || (assignment.turnInType != Assignment.TurnInType.EXTERNAL_TOOL
+                && assignment.dueAt != null
+                && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING)
+
         val submittedLabelText = resources.getString(
-            if (assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED) {
+            if (isMissing) {
+                R.string.missingAssignment
+            } else if (!assignment.isSubmitted) {
+                R.string.notSubmitted
+            } else if (assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED) {
                 R.string.gradedSubmissionLabel
             } else {
                 R.string.submitted
             }
         )
 
-        // Don't mark LTI assignments as missing when overdue as they usually won't have a real submission for it
-        val isMissingFromDueDate = assignment.turnInType != Assignment.TurnInType.EXTERNAL_TOOL
-                && assignment.dueAt != null
-                && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING
-
         val submissionStatusTint = resources.getColor(
             if (assignment.isSubmitted) {
                 R.color.backgroundSuccess
-            } else if (assignment.submission?.missing.orDefault() || isMissingFromDueDate) {
+            } else if (isMissing) {
                 R.color.backgroundDanger
             } else {
                 R.color.backgroundDark
@@ -247,6 +261,10 @@ class AssignmentDetailViewModel @Inject constructor(
         )
 
         val submittedStatusIcon = if (assignment.isSubmitted) R.drawable.ic_complete_solid else R.drawable.ic_no
+
+        // Submission Status under title - We only show Graded or nothing at all for PAPER/NONE
+        val submissionStatusVisible = assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED
+                || (assignment.turnInType != Assignment.TurnInType.ON_PAPER && assignment.turnInType != Assignment.TurnInType.NONE)
 
         if (assignment.isLocked) {
             val lockedMessage = assignment.unlockDate?.let {
@@ -261,12 +279,12 @@ class AssignmentDetailViewModel @Inject constructor(
             }.orEmpty()
 
             return AssignmentDetailViewData(
-                assignment = assignment,
                 assignmentName = assignment.name.orEmpty(),
                 points = points,
                 submissionStatusText = submittedLabelText,
                 submissionStatusIcon = submittedStatusIcon,
                 submissionStatusTint = submissionStatusTint,
+                submissionStatusVisible = submissionStatusVisible,
                 fullLocked = true,
                 lockedMessage = lockedMessage
             )
@@ -337,12 +355,12 @@ class AssignmentDetailViewModel @Inject constructor(
         ) else null
 
         return AssignmentDetailViewData(
-            assignment = assignment,
             assignmentName = assignment.name.orEmpty(),
             points = points,
             submissionStatusText = submittedLabelText,
             submissionStatusIcon = submittedStatusIcon,
             submissionStatusTint = submissionStatusTint,
+            submissionStatusVisible = submissionStatusVisible,
             lockedMessage = partialLockedMessage,
             submitButtonText = submitButtonText,
             submitEnabled = submitEnabled,
@@ -353,7 +371,6 @@ class AssignmentDetailViewModel @Inject constructor(
             submissionTypes = submissionTypes,
             allowedFileTypes = allowedFileTypes,
             description = assignment.description.orEmpty(),
-            ltiTool = ltiTool,
             descriptionLabelText = descriptionLabel,
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
@@ -368,11 +385,11 @@ class AssignmentDetailViewModel @Inject constructor(
     }
 
     fun refresh() {
-        loadData()
+        loadData(true)
     }
 
     fun onAttemptSelected(position: Int) {
-        val assignment = _data.value?.assignment
+        val assignment = assignment
         val attempt = _data.value?.attempts?.getOrNull(position)?.data
         val selectedSubmission = attempt?.submission
         _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(resources, assignment, selectedSubmission, attempt?.isUploading.orDefault(), attempt?.isFailed.orDefault())
@@ -392,7 +409,7 @@ class AssignmentDetailViewModel @Inject constructor(
                 )
                 SubmissionType.ONLINE_URL.apiString -> postAction(
                     AssignmentDetailAction.NavigateToUrlSubmissionScreen(
-                        _data.value?.assignment?.name,
+                        assignment?.name,
                         dbSubmission?.submissionEntry,
                         dbSubmission?.errorFlag.orDefault()
                     )
@@ -407,7 +424,7 @@ class AssignmentDetailViewModel @Inject constructor(
     fun onDraftClicked() {
         postAction(
             AssignmentDetailAction.NavigateToTextEntryScreen(
-                _data.value?.assignment?.name,
+                assignment?.name,
                 dbSubmission?.submissionEntry,
                 dbSubmission?.errorFlag.orDefault()
             )
@@ -416,7 +433,7 @@ class AssignmentDetailViewModel @Inject constructor(
 
     fun onSubmitButtonClicked() {
         val course = course ?: return
-        val assignment = _data.value?.assignment ?: return
+        val assignment = assignment ?: return
         val turnInType = assignment.turnInType
         val submissionTypes = assignment.getSubmissionTypes()
         val hasSingleSubmissionType = submissionTypes.size == 1
@@ -450,7 +467,7 @@ class AssignmentDetailViewModel @Inject constructor(
                 SubmissionType.STUDENT_ANNOTATION -> postAction(AssignmentDetailAction.NavigateToAnnotationSubmissionScreen(assignment))
                 SubmissionType.MEDIA_RECORDING -> postAction(AssignmentDetailAction.ShowMediaDialog(assignment))
                 SubmissionType.EXTERNAL_TOOL, SubmissionType.BASIC_LTI_LAUNCH -> {
-                    _data.value?.ltiTool?.let {
+                    externalLTITool.let {
                         Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
                         postAction(AssignmentDetailAction.NavigateToLtiLaunchScreen(assignment.name.orEmpty(), it))
                     }
@@ -458,12 +475,12 @@ class AssignmentDetailViewModel @Inject constructor(
                 else -> Unit
             }
         } else {
-            postAction(AssignmentDetailAction.ShowSubmitDialog(assignment))
+            postAction(AssignmentDetailAction.ShowSubmitDialog(assignment, studioLTITool))
         }
     }
 
     fun uploadAudioSubmission(context: Context?, file: File?) {
-        val assignment = _data.value?.assignment
+        val assignment = assignment
         if (context != null && file != null && assignment != null && course != null) {
             uploadAudioRecording(context, file, assignment, course)
         } else {
